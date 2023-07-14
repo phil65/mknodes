@@ -1,0 +1,226 @@
+[tool.hatch]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.version]
+source = "regex_commit"
+commit_extra_args = ["-e"]
+path = "markdownizer/__init__.py"
+
+[project.entry-points."mkdocs.plugins"]
+linkreplacer = "markdownizer.__linkreplacer:LinkReplacerPlugin"
+
+[tool.hatch.envs.default]
+python = "3.10"
+dependencies = [
+    "black",
+    "mypy",
+    "ruff",
+    "pytest",
+    "pytest-cov",
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "pymdown-extensions",
+    "mkdocs-literate-nav",
+    "mkdocs-include-markdown-plugin",
+    # "mkdocs-autorefs",
+    "mkdocs-glightbox",
+    "mkdocs-section-index",
+    "mkdocs-gen-files",
+    "mkdocs-macros-plugin",
+
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest"
+test-cov-xml = "pytest --cov-report=xml"
+lint = [
+  "black .",
+  "ruff --fix .",
+  "mypy markdownizer/",
+]
+lint-check = [
+  "black --check .",
+  "ruff .",
+  "mypy markdownizer/",
+]
+docs-serve = "hatch run mkdocs serve"
+docs-build = "hatch run mkdocs build"
+
+[build-system]
+requires = ["hatchling", "hatch-regex-commit"]
+build-backend = "hatchling.build"
+
+[project]
+name = "markdownizer"
+authors = [
+  { name = "markdownizer", email = "philipptemminghoff@gmail.com" }
+]
+description = "Generate docs with ease."
+readme = "README.md"
+dynamic = ["version"]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+]
+requires-python = ">=3.10"
+dependencies = [
+]
+
+[project.urls]
+Documentation = "https://phil65.github.io/markdownizer/"
+Source = "https://github.com/phil65/markdownizer"
+
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = [
+    "tests",
+]
+junit_family = "xunit2"
+qt_log_level_fail = "CRITICAL"
+log_cli = true
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+addopts = "--cov=markdownizer/ --cov-report=term-missing"
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "@overload",
+    "except ImportError",
+    'if __name__ == "__main__":'
+]
+
+[tool.mypy]
+python_version = "3.10"
+disable_error_code = ["assignment", "misc", "attr-defined", "import", "misc", "attr-defined"]
+
+[tool.ruff]
+line-length = 90
+select = [
+    # "A",    # Flake8-builtins
+    # "ANN",  # Flake8-Annotations
+    # "ASYNC",  # Flake8-Async
+    # "ARG",  # # Flake8-Unused-Arguments
+    "B",    # flake8-bugbear
+    # "BLE",  # Flake8-blind-except
+    "C",
+    "C4",   # flake8-comprehensions
+    # "C90",  # MCCabe
+    # "COM",  #  Flake8-commas
+    "CPY",  #  Copyright-related rules
+    "D",    # PyDocStyle
+    # "DTZ",  # Flake8- Datetimez
+    "E",    # PyCodeStyle Error
+    # "EM",   # flake8-errmsg
+    # "ERA",  #  Eradicate
+    "EXE",  # flake8-executable
+    "F",    # PyFlakes
+    "FA",  # flake8-future-annotations
+    # "FBT",  # flake8-boolean-trap
+    # "FIX",  # flake8-fixme
+    "FLY",  # flynt
+    # "G",    #  flake8-logging-format
+    "I",    # ISort
+    "ICN",  # Flake8-import-conventions
+    "INP",  # flake8-no-pep420
+    "INT",  # flake8-gettext
+    "ISC",  # flake8-implicit-str-concat
+    # "N",    # pep8-naming
+    # "NPY",  # numpy-specific rules
+    # "PD",   # pandas-vet
+    "PERF", # perflint
+    # "PGH",  # pygrep-hooks
+    "PIE",  # flake8-pie
+    "PLE",  # PyLint Error
+    "PLC",  # PyLint convention
+    # "PLW",  # PyLint Warning
+    # "PLR",  # PyLint refactor
+    # "PT",   # flake8-pytest-style
+    "PTH",  # flake8-use-pathlib
+    "PYI",  # flake8-pyi
+    # "Q",    # flake8-quotes
+    # "RET",  # flake8-return
+    "RSE",  # flake8-raise
+    "RUF",  # ruff-specific rules
+    # "S",    # flake8-bandit
+    # "SIM",  # flake8-simplify
+    "SLF",  # flake8-self
+    "SLOT",  # flake8-slots
+    # "T",
+    # "TD",   # flake8-todos
+    "T10",  # flake8-debugger
+    # "T20",  # flake8-print
+    # "TCH",  # flake8-type-checking
+    "TID",  # flake8-tidy-imports
+    # "TRY",  # tryceratops
+    "UP",   # PyUpgrade
+    "W",    # PyCodeStyle warning
+    "YTT",  # flake8-2020
+]
+ignore = [
+    "C408",  # Unnecessary {obj_type} call (rewrite as a literal)
+    "B905",  # zip() without an explicit strict= parameter
+    "C901",  # {name} is too complex ({complexity} > {max_complexity})
+    "D100",  # Missing docstring in public module
+    "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
+    "D103",  # Missing docstring in public function
+    "D104",  # Missing docstring in public package
+    "D105",  # Missing docstring in magic method
+    "D106",  # Missing docstring in public nested class
+    "D107",  # Missing docstring in __init__
+    "D203",  # 1 blank line required before class docstring
+    "D204",  # 1 blank line required after class docstring
+    "D213",  # Multi-line docstring summary should start at the second line
+    "D215",  # Section underline is over-indented ("{name}")
+    "D400",  # First line should end with a period
+    "D401",  # First line of docstring should be in imperative mood: "{first_line}"
+    "D404",  # First word of the docstring should not be "This"
+    "D406",  # Section name should end with a newline ("{name}")
+    "D407",  # Missing dashed underline after section ("{name}")
+    "D408",  # Section underline should be in the line following the section's name ("{name}")
+    "D409",  # Section underline should match the length of its name ("{name}")
+    "D413",  # Missing blank line after last section ("{name}")
+    "SLF001",# Private member accessed
+    "RUF012", # Mutable class attributes should be annotated
+    "RUF013", # PEP 484 prohibits implicit `Optional`
+]
+extend-exclude = [
+    'docs',
+    '__init__.py',
+    "prettyqt/qt/",
+]
+target-version = "py310"
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.isort]
+lines-after-imports = 2
+lines-between-types = 1
+# atomic = true
+force-sort-within-sections = true
+combine-as-imports = true
+
+[tool.black]
+line-length = 90
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | tests/.*/setup.py
+)/
+'''
