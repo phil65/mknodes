@@ -30,7 +30,9 @@ class MarkdownNode(node.BaseNode):
 
     def to_markdown(self):
         """Outputs markdown for self and all children."""
-        text = self._to_markdown() + "\n"
+        text = self._to_markdown()
+        if text:
+            text += "\n"
         return f"## {self.header}\n\n{text}" if self.header else text
 
     @property

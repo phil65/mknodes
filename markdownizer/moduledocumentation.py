@@ -25,8 +25,9 @@ class ModuleDocumentation(nav.Nav):
         if self.module is None:
             raise RuntimeError(f"Couldnt load module {module!r}")
         self.is_package = hasattr(self.module, "__path__")
-        self.module_name = self.module.__name__
-        self.module_path = self.module.__file__
+        self.module_name = self.module.__name__.split(".")[-1]
+        self.module_path = self.module.__name__
+        self.file_path = self.module.__file__
         super().__init__(section=self.module_name, **kwargs)
         self._exclude = exclude_modules or []
         self.root_path = pathlib.Path(f"./{self.module_name}")
@@ -82,37 +83,37 @@ class ModuleDocumentation(nav.Nav):
         _seen=None,
     ):
         mod = classhelpers.to_module(submodule) if submodule else self.module
+        seen = _seen or set()
         if mod is None:
             return
-        if recursive:
-            seen = _seen or set()
-            for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
-                not_in_all = (
-                    not hasattr(submod, "__all__") or submod_name not in mod.__all__
+        for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
+            not_in_all = hasattr(mod, "__all__") and submod_name not in mod.__all__
+            filtered_by_all = filter_by___all__ and not_in_all
+            # from_self = submod_name.startswith(self.module_name)
+            not_filtered_by_pred = predicate(mod) if predicate else True
+            # if mod.__name__.startswith(self.module_name) and (
+            #     predicate(mod) if predicate else True
+            # ):
+            if not filtered_by_all and not_filtered_by_pred:
+                print(submod_name, flush=True)
+                yield submod
+            if recursive and submod not in seen:
+                seen.add(submod)
+                yield from self.iter_modules(
+                    submod,
+                    recursive=True,
+                    filter_by___all__=filter_by___all__,
+                    predicate=predicate,
+                    _seen=seen,
                 )
-                filtered_by_all = filter_by___all__ and not_in_all
-                from_self = submod_name.startswith(self.module_name)
-                if from_self and submod not in seen and not filtered_by_all:
-                    seen.add(submod)
-                    yield from self.iter_modules(
-                        submod,
-                        recursive=True,
-                        filter_by___all__=filter_by___all__,
-                        predicate=predicate,
-                        _seen=seen,
-                    )
-        if mod.__name__.startswith(self.module_name) and (
-            predicate(mod) if predicate else True
-        ):
-            yield mod
 
-    def iter_modules_for_glob(self, glob="*/*.py"):
-        for path in self.iter_files(glob):
-            module_path = path.with_suffix("")
-            parts = tuple(module_path.parts)
-            complete_module_path = f"{self.module_name}." + ".".join(parts)
-            with contextlib.suppress(ImportError, AttributeError):
-                yield importlib.import_module(complete_module_path)
+    # def iter_modules_for_glob(self, glob="*/*.py"):
+    #     for path in self.iter_files(glob):
+    #         module_path = path.with_suffix("")
+    #         parts = tuple(module_path.parts)
+    #         complete_module_path = f"{self.module_name}." + ".".join(parts)
+    #         with contextlib.suppress(ImportError, AttributeError):
+    #             yield importlib.import_module(complete_module_path)
 
     def iter_classes_for_glob(
         self, glob="*/*.py", recursive: bool = False, avoid_duplicates: bool = True
