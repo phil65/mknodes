@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import contextlib
 import importlib
 import inspect
@@ -44,6 +45,7 @@ class ModuleDocumentation(nav.Nav):
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
         filter_by___all__: bool = False,
+        predicate: Callable | None = None,
         _seen=None,
     ):
         mod = classhelpers.to_module(submodule) if submodule else self.module
@@ -54,14 +56,55 @@ class ModuleDocumentation(nav.Nav):
             for _submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
                 if submod.__name__.startswith(self.module_name) and submod not in seen:
                     seen.add(submod)
-                    yield from self.iter_classes(submod, recursive=True, _seen=seen)
+                    yield from self.iter_classes(
+                        submod,
+                        recursive=True,
+                        filter_by___all__=filter_by___all__,
+                        predicate=predicate,
+                        _seen=seen,
+                    )
         for klass_name, klass in inspect.getmembers(mod, inspect.isclass):
             if filter_by___all__ and (
                 not hasattr(mod, "__all__") or klass_name not in mod.__all__
             ):
                 continue
+            if predicate and not predicate(klass):
+                continue
             if klass.__module__.startswith(self.module_name):
                 yield klass
+
+    def iter_modules(
+        self,
+        submodule: types.ModuleType | str | tuple | list | None = None,
+        recursive: bool = False,
+        filter_by___all__: bool = False,
+        predicate: Callable | None = None,
+        _seen=None,
+    ):
+        mod = classhelpers.to_module(submodule) if submodule else self.module
+        if mod is None:
+            return
+        if recursive:
+            seen = _seen or set()
+            for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
+                not_in_all = (
+                    not hasattr(submod, "__all__") or submod_name not in mod.__all__
+                )
+                filtered_by_all = filter_by___all__ and not_in_all
+                from_self = submod_name.startswith(self.module_name)
+                if from_self and submod not in seen and not filtered_by_all:
+                    seen.add(submod)
+                    yield from self.iter_modules(
+                        submod,
+                        recursive=True,
+                        filter_by___all__=filter_by___all__,
+                        predicate=predicate,
+                        _seen=seen,
+                    )
+        if mod.__name__.startswith(self.module_name) and (
+            predicate(mod) if predicate else True
+        ):
+            yield mod
 
     def iter_modules_for_glob(self, glob="*/*.py"):
         for path in self.iter_files(glob):
