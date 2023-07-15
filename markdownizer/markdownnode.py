@@ -36,12 +36,13 @@ class MarkdownNode(node.BaseNode):
     @property
     def resolved_parts(self) -> tuple[str, ...]:
         from markdownizer import nav
+
         parent = self
         parts = [self.section] if isinstance(self, nav.Nav) and self.section else []
         while parent := parent.parent_item:
             if isinstance(parent, nav.Nav) and parent.section:
                 parts.append(parent.section)
-        return tuple(parts)
+        return tuple(reversed(parts))
 
     @property
     def resolved_file_path(self):
@@ -65,7 +66,7 @@ class MarkdownNode(node.BaseNode):
         dct: dict[str, str | bytes] = {}
         for des in self.descendants:
             sections = [i.section for i in des.ancestors if isinstance(i, nav.Nav)]
-            section = "/".join(i for i in sections if i is not None)
+            section = "/".join(i for i in reversed(sections) if i is not None)
             if section:
                 section += "/"
             files_for_item = {f"{section}{k}": v for k, v in des.virtual_files().items()}
@@ -103,7 +104,6 @@ class Text(MarkdownNode):
 
     def _to_markdown(self) -> str:
         return self.text if isinstance(self.text, str) else self.text.to_markdown()
-
 
 
 if __name__ == "__main__":
