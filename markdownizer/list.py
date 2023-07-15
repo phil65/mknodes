@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import logging
 
-import markdownizer
+from markdownizer import basesection, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class List(markdownizer.BaseSection):
+class List(basesection.BaseSection):
     def __init__(self, listitems: list[str] | None = None, header: str = ""):
         super().__init__(header)
         self.listitems = listitems
@@ -33,7 +33,7 @@ class List(markdownizer.BaseSection):
         if not self.listitems:
             return ""
         item_str = "".join(
-            f"<li>{markdownizer.linked(i)}</li>" if make_link else f"<li>{i}</li>"
+            f"<li>{utils.linked(i)}</li>" if make_link else f"<li>{i}</li>"
             for i in self.listitems[:shorten_after]
         )
         if shorten_after and len(self.listitems) > shorten_after:

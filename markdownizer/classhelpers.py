@@ -108,6 +108,8 @@ def get_topmost_module_path_for_klass(klass: type) -> str:
 
     If a class is imported in any of its parent modules, return that "shorter" path.
 
+    So for a class "submodule.classmodule.Class", it could return "submodule.Class"
+
     Arguments:
         klass: Klass to get the path for.
     """

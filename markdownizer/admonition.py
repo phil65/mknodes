@@ -4,7 +4,7 @@ import logging
 import textwrap
 from typing import Literal
 
-import markdownizer
+from markdownizer import basesection
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ AdmonitionTypeStr = Literal[
 ]
 
 
-class Admonition(markdownizer.Text):
+class Admonition(basesection.Text):
     def __init__(
         self,
         typ: AdmonitionTypeStr,

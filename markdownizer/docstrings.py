@@ -5,15 +5,14 @@ import logging
 import os
 import types
 
-import markdownizer
 
-from markdownizer import classhelpers, utils
+from markdownizer import classhelpers, utils, basesection
 
 
 logger = logging.getLogger(__name__)
 
 
-class DocStrings(markdownizer.Text):
+class DocStrings(basesection.Text):
     def __init__(
         self,
         obj: types.ModuleType | str | os.PathLike | type,

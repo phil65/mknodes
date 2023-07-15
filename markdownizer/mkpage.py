@@ -5,9 +5,7 @@ import os
 import pathlib
 import types
 
-import markdownizer
-
-from markdownizer import classhelpers, utils
+from markdownizer import basesection, classhelpers, utils, mermaiddiagram, docstrings, table
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +13,7 @@ logger = logging.getLogger(__name__)
 HEADER = "---\n{options}\n---\n\n"
 
 
-class Document(markdownizer.BaseSection):
+class MkPage(basesection.BaseSection):
     def __init__(
         self,
         items: list | None = None,
@@ -23,8 +21,9 @@ class Document(markdownizer.BaseSection):
         hide_nav: bool = False,
         hide_path: bool = False,
         path: str | os.PathLike = "",
+        parent=None
     ):
-        super().__init__()
+        super().__init__(parent=parent)
         self.items = items or []
         self.path = path
         self.header_options = {}
@@ -74,13 +73,14 @@ class Document(markdownizer.BaseSection):
             lines.extend(f"  - {area}" for area in self.header_options[option])
         return HEADER.format(options="\n".join(lines))
 
-    def append(self, other: str | markdownizer.BaseSection):
+    def append(self, other: str | basesection.BaseSection):
         if isinstance(other, str):
-            other = markdownizer.Text(other)
+            other = basesection.Text(other)
+        other.parent_item = self
         self.items.append(other)
 
 
-class ClassDocument(Document):
+class ClassPage(MkPage):
     def __init__(
         self,
         klass: type,
@@ -111,21 +111,21 @@ class ClassDocument(Document):
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
         self.append(
-            markdownizer.DocStrings(
+            docstrings.DocStrings(
                 f"{module_path}.{self.klass.__name__}", header="DocStrings"
             ),
         )
-        if table := markdownizer.Table.get_ancestor_table_for_klass(self.klass):
-            self.append(table)
+        if tbl := table.Table.get_ancestor_table_for_klass(self.klass):
+            self.append(tbl)
         self.append(
-            markdownizer.MermaidDiagram.for_classes(
+            mermaiddiagram.MermaidDiagram.for_classes(
                 [self.klass], header="Inheritance diagram"
             ),
         )
-        # self.append(markdownizer.MermaidDiagram.for_subclasses([self.klass]))
+        # self.append(mermaiddiagram.MermaidDiagram.for_subclasses([self.klass]))
 
 
-class ModuleDocument(Document):
+class ModulePage(MkPage):
     """Document showing info about a module.
 
     Arguments:
@@ -156,16 +156,16 @@ class ModuleDocument(Document):
         if doc := self.module.__doc__:
             self.append(doc)
         if self.docstrings:
-            self.append(markdownizer.DocStrings(f'{".".join(self.parts)}'))
+            self.append(docstrings.DocStrings(f'{".".join(self.parts)}'))
         if self.show_class_table:
             klasses = list(
                 classhelpers.iter_classes_for_module(
                     self.parts, module_filter=self.parts[0]
                 )
             )
-            self.append(markdownizer.Table.get_classes_table(klasses))
+            self.append(table.Table.get_classes_table(klasses))
 
 
 if __name__ == "__main__":
-    doc = Document()
+    doc = Page()
     # print(doc.children)

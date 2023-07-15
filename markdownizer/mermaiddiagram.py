@@ -4,8 +4,7 @@ import textwrap
 
 from typing import Literal
 
-import markdownizer
-
+from markdownizer import basesection, utils
 
 GraphTypeStr = Literal["TODO"]
 
@@ -30,7 +29,7 @@ def get_connections(objects, child_getter, id_getter=None):
 
 
 
-class MermaidDiagram(markdownizer.Code):
+class MermaidDiagram(basesection.Code):
     TYPE_MAP = dict(
         flow="graph",
         sequence="sequenceDiagram",
@@ -71,9 +70,9 @@ class MermaidDiagram(markdownizer.Code):
         items, connections = get_connections(
             klasses, child_getter=lambda x: x.__bases__
         )
-        items = [markdownizer.label_for_class(i) for i in items]
+        items = [utils.label_for_class(i) for i in items]
         connections = [
-            (markdownizer.label_for_class(i), markdownizer.label_for_class(j))
+            (utils.label_for_class(i), utils.label_for_class(j))
             for i, j in connections
         ]
         return cls(
@@ -106,7 +105,7 @@ class MermaidDiagram(markdownizer.Code):
         return f"```mermaid\n{text}\n```"
 
 
-class MermaidMindMap(markdownizer.Code):
+class MermaidMindMap(basesection.Code):
     def __init__(self, items: dict, header: str = ""):
         super().__init__(language="mermaid", header=header)
 

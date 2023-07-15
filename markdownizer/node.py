@@ -5,7 +5,7 @@ import logging
 
 from typing_extensions import Self
 
-from markdownizer.utils import get_repr
+from markdownizer import utils
 
 import re
 
@@ -359,7 +359,7 @@ class BaseNode:
         self.children: list[Self] = []
 
     def __repr__(self):
-        return get_repr(self)
+        return utils.get_repr(self)
 
     def __iter__(self) -> Iterator[Self]:
         return iter(self.children)

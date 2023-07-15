@@ -4,7 +4,8 @@ import logging
 
 import mkdocs_gen_files
 
-from markdownizer import utils, node
+from markdownizer import node, utils
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +18,8 @@ class BaseSection(node.BaseNode):
     by one tree.
     """
 
-    def __init__(self, header: str = ""):
-        super().__init__()
+    def __init__(self, header: str = "", parent: BaseSection | None = None):
+        super().__init__(parent=parent)
         self.header = header
 
     def __str__(self):
@@ -33,7 +34,13 @@ class BaseSection(node.BaseNode):
 
     def all_virtual_files(self):
         """Return a dictionary containing all virtual files of itself and all children."""
-        dct = {k: v for des in self.descendants for k, v in des.virtual_files().items()}
+        from markdownizer import nav
+
+        dct = {}
+        for des in self.descendants:
+            sections = [i.section for i in des.ancestors if isinstance(i, nav.Nav)]
+            section = "/".join(sections)
+            dct |= {f"{section}{k}": v  for k, v in des.virtual_files().items()}
         return dct | self.virtual_files()
 
     def write(self):
@@ -70,15 +77,17 @@ class Code(Text):
         self,
         language: str,
         text: str | BaseSection = "",
+        *,
+        title: str = "",
         header: str = "",
         linenums: int | None = None,
-        hl_lines: list[int] | None = None,
-        title: str = "",
+        highlight_lines: list[int] | None = None,
     ):
         super().__init__(text, header)
         self.language = language
         self.title = title
         self.linenums = linenums
+        self.highlight_lines = highlight_lines
 
     def _to_markdown(self) -> str:
         title = f" title={self.title}" if self.title else ""

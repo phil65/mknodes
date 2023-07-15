@@ -7,12 +7,12 @@ from collections.abc import Callable, Mapping, Sequence
 
 from typing_extensions import Self
 
-import markdownizer
+from markdownizer import basesection, utils
 
 logger = logging.getLogger(__name__)
 
 
-class Table(markdownizer.BaseSection):
+class Table(basesection.BaseSection):
     def __init__(
         self,
         data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,
@@ -79,19 +79,19 @@ class Table(markdownizer.BaseSection):
             filter_fn = always_true
         for kls in klasses:
             subclasses = [subkls for subkls in kls.__subclasses__() if filter_fn(subkls)]
-            subclass_links = [markdownizer.link_for_class(sub) for sub in subclasses]
-            subclass_str = markdownizer.to_html_list(
+            subclass_links = [utils.link_for_class(sub) for sub in subclasses]
+            subclass_str = utils.to_html_list(
                 subclass_links, shorten_after=shorten_lists_after
             )
             parents = kls.__bases__
-            parent_links = [markdownizer.link_for_class(parent) for parent in parents]
-            parent_str = markdownizer.to_html_list(
+            parent_links = [utils.link_for_class(parent) for parent in parents]
+            parent_str = utils.to_html_list(
                 parent_links, shorten_after=shorten_lists_after
             )
             desc = kls.__doc__.split("\n")[0] if isinstance(kls.__doc__, str) else ""
-            desc = markdownizer.escaped(desc)
-            name = markdownizer.link_for_class(kls, size=4, bold=True)
-            module = markdownizer.styled(kls.__module__, size=1, recursive=True)
+            desc = utils.escaped(desc)
+            name = utils.link_for_class(kls, size=4, bold=True)
+            module = utils.styled(kls.__module__, size=1, recursive=True)
             data = dict(
                 Name=f"{name}<br>{module}<br>{desc}",
                 # Module=kls.__module__,
@@ -110,14 +110,14 @@ class Table(markdownizer.BaseSection):
         rows = [
             (
                 submod_name,
-                # markdownizer.link_for_class(submod, size=4, bold=True),
+                # utils.link_for_class(submod, size=4, bold=True),
                 (
                     submod.__doc__.split("\n")[0]
                     if submod.__doc__
                     else "*No docstrings defined.*"
                 ),
                 (
-                    markdownizer.to_html_list(submod.__all__, make_link=True)
+                    utils.to_html_list(submod.__all__, make_link=True)
                     if hasattr(submod, "__all__")
                     else ""
                 ),
@@ -130,7 +130,10 @@ class Table(markdownizer.BaseSection):
 
     @classmethod
     def get_ancestor_table_for_klass(cls, klass: type) -> Self | None:
-        subclasses = klass.__subclasses__()
+        try:
+            subclasses = klass.__subclasses__()
+        except TypeError:
+            subclasses = []
         if not subclasses:
             return None
         # STRIP_CODE = r"```[^\S\r\n]*[a-z]*\n.*?\n```"
@@ -140,7 +143,7 @@ class Table(markdownizer.BaseSection):
             for kls in subclasses
         ]
         data = dict(
-            Class=[markdownizer.link_for_class(kls) for kls in subclasses],
+            Class=[utils.link_for_class(kls) for kls in subclasses],
             Module=[kls.__module__ for kls in subclasses],
             Description=desc,
         )
