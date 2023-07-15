@@ -2,12 +2,11 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Sequence
 import logging
+import re
 
 from typing_extensions import Self
 
 from markdownizer import utils
-
-import re
 
 
 _MAXCACHE = 20
@@ -486,19 +485,6 @@ class BaseNode:
             child_item.pretty_print(indent + 1)
 
 
-class Node(BaseNode):
-    """Like BaseNode, but with one object attached to the node."""
-
-    # __slots__ = ("obj",)
-
-    def __init__(self, obj, parent: Self | None = None):
-        super().__init__(parent)
-        self.obj = obj
-
-    def __repr__(self):
-        return get_repr(self, self.obj)
-
-
 def preorder_iter(
     tree: BaseNode,
     filter_condition: Callable[[BaseNode], bool] | None = None,
@@ -560,5 +546,5 @@ def preorder_iter(
 
 
 if __name__ == "__main__":
-    model = Node("test")
+    model = BaseNode()
     model.parent()

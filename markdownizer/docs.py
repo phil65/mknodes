@@ -5,7 +5,7 @@ import pathlib
 
 import mkdocs_gen_files
 
-from markdownizer import nav, moduledocumentation
+from markdownizer import moduledocumentation, nav
 
 
 logger = logging.getLogger(__name__)

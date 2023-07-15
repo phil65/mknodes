@@ -6,8 +6,8 @@ from typing import Literal
 
 from markdownizer import basesection, utils
 
-GraphTypeStr = Literal["TODO"]
 
+GraphTypeStr = Literal["TODO"]
 
 
 def get_connections(objects, child_getter, id_getter=None):
@@ -26,7 +26,6 @@ def get_connections(objects, child_getter, id_getter=None):
     for obj in objects:
         add_connections(obj)
     return items, connections
-
 
 
 class MermaidDiagram(basesection.Code):
@@ -67,13 +66,10 @@ class MermaidDiagram(basesection.Code):
 
     @classmethod
     def for_classes(cls, klasses, header: str = ""):
-        items, connections = get_connections(
-            klasses, child_getter=lambda x: x.__bases__
-        )
+        items, connections = get_connections(klasses, child_getter=lambda x: x.__bases__)
         items = [utils.label_for_class(i) for i in items]
         connections = [
-            (utils.label_for_class(i), utils.label_for_class(j))
-            for i, j in connections
+            (utils.label_for_class(i), utils.label_for_class(j)) for i, j in connections
         ]
         return cls(
             graph_type="flow",

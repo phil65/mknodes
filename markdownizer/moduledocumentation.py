@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import contextlib
 import importlib
 import inspect
 import logging
+import os
 import pathlib
 import types
 
-from markdownizer import classhelpers, nav, table, mkpage
+from markdownizer import classhelpers, mkpage, nav, table
 
 
 logger = logging.getLogger(__name__)
@@ -92,9 +94,7 @@ class ModuleDocumentation(nav.Nav):
             # parent=self,
         )
         # page += self.get_dependency_table()
-        page += table.Table.get_module_overview(
-            self.module_name, predicate=predicate
-        )
+        page += table.Table.get_module_overview(self.module_name, predicate=predicate)
         return page
 
     def add_class_page(self, klass, **kwargs):
@@ -131,8 +131,7 @@ class ModuleDocumentation(nav.Nav):
         return table.DependencyTable(self.module_name)
 
     def add_dependency_page(self, path: str | os.PathLike, **kwargs):
-        page = mkpage.MkPage(path=path, parent=parent, **kwargs)
-        page.parent_item = self
+        page = mkpage.MkPage(path=path, parent=self, **kwargs)
         page += self.get_dependency_table()
         self.pages.append(page)
         path = pathlib.Path(path)

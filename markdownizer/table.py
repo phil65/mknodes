@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping, Sequence
 import importlib
 import inspect
 import logging
-from collections.abc import Callable, Mapping, Sequence
 
 from typing_extensions import Self
 
 from markdownizer import basesection, utils
+
 
 logger = logging.getLogger(__name__)
 

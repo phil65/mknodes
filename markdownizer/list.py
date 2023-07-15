@@ -16,14 +16,11 @@ class List(basesection.BaseSection):
     def __str__(self):
         return self.to_markdown()
 
-    def __repr__(self):
-        return get_repr(self, self.listitems)
-
     def __len__(self):
         return len(self.listitems)
 
     def __repr__(self):
-        return get_repr(self, listitems=self.listitems)
+        return utils.get_repr(self, listitems=self.listitems)
 
     def _to_markdown(self):
         lines = [f"  - {i}" for i in self.listitems]

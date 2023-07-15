@@ -5,8 +5,7 @@ import logging
 import os
 import types
 
-
-from markdownizer import classhelpers, utils, basesection
+from markdownizer import basesection, classhelpers, utils
 
 
 logger = logging.getLogger(__name__)

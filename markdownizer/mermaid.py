@@ -3,6 +3,7 @@ from __future__ import annotations
 import dataclasses
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 # Link are created following the documentation here :
@@ -49,7 +50,7 @@ class Node:
         sub_nodes: list = None,
     ):
         sub_nodes = sub_nodes or []
-        self.id = helpers.to_snake(identifier)
+        self.id = identifier  # helpers.to_snake(identifier)
         self.content = content if content else self.id
         self.shape = NODE_SHAPES[shape]
         self.sub_nodes = sub_nodes

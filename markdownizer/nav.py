@@ -6,7 +6,7 @@ import pathlib
 
 import mkdocs_gen_files
 
-from markdownizer import basesection, utils, nav, mkpage
+from markdownizer import basesection, mkpage, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -39,6 +39,7 @@ class Nav(basesection.BaseSection):
         if isinstance(item, str):
             item = tuple(item.split("."))
         self.nav[item] = pathlib.Path(value).as_posix()
+
     #     self._mapping[item] = value
 
     # def __getitem__(self, item):
@@ -54,15 +55,14 @@ class Nav(basesection.BaseSection):
         self.pages = [i for i in items if not isinstance(i, Nav)]
 
     def create_nav(self, section: str | os.PathLike) -> nav.Nav:
-        nav = nav.Nav(section=section, module_name=self.module_name)
-        nav.parent_item = self
+        navi = nav.Nav(section=section, parent=self)
         self.nav[(section,)] = f"{section}/"
-        self.navs.append(nav)
-        return nav
+        self.navs.append(navi)
+        return navi
 
     def write_navs(self):
-        for nav in self.navs:
-            nav.write()
+        for navi in self.navs:
+            navi.write()
 
     def virtual_files(self):
         return {self.path: self.to_markdown()}
@@ -78,6 +78,6 @@ class Nav(basesection.BaseSection):
 
 
 if __name__ == "__main__":
-    nav = Nav(section="prettyqt")
-    nav.nav["test"] = "t/"
-    print(nav)
+    navi = Nav(section="prettyqt")
+    navi.nav["test"] = "t/"
+    print(navi)

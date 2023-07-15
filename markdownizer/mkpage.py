@@ -5,7 +5,14 @@ import os
 import pathlib
 import types
 
-from markdownizer import basesection, classhelpers, utils, mermaiddiagram, docstrings, table
+from markdownizer import (
+    basesection,
+    classhelpers,
+    docstrings,
+    mermaiddiagram,
+    table,
+    utils,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -21,7 +28,7 @@ class MkPage(basesection.BaseSection):
         hide_nav: bool = False,
         hide_path: bool = False,
         path: str | os.PathLike = "",
-        parent=None
+        parent=None,
     ):
         super().__init__(parent=parent)
         self.items = items or []
@@ -167,5 +174,5 @@ class ModulePage(MkPage):
 
 
 if __name__ == "__main__":
-    doc = Page()
+    doc = MkPage()
     # print(doc.children)
