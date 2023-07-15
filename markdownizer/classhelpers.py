@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-import collections
-
 from collections.abc import Iterator, Sequence
 import contextlib
-import functools
 import importlib
 import inspect
 import logging
-import operator
 import types
 import typing
 
@@ -18,38 +14,18 @@ T = typing.TypeVar("T", bound=type)
 
 logger = logging.getLogger(__name__)
 
-# def add_docs(klass):
-#     import pathlib
-#     from prettyqt import paths
-#     klass_name = klass.__name__
-#     qclass = klass
-#     for k in klass.mro():
-#         if k.__name__.startswith("Q"):
-#             qclass = k
-#             break
-#     module = k.__module__.split(".")[1]
-#     path = paths.DOCSTRING_PATH /  module
-#     filepath = path / f"Q{klass_name.replace('Mixin', '')}.txt"
-#     if filepath.exists():
-#         klass.__doc__ =  filepath.read_text()
-#     return klass
-
-
-def lca_type(classes: list[type]) -> type:
-    return next(
-        iter(
-            functools.reduce(
-                operator.and_,
-                (collections.Counter(Klass.mro()) for Klass in classes),
-            )
-        )
-    )
-
 
 def to_module(
     module: str | Sequence[str] | types.ModuleType,
     return_none: bool = True,
 ) -> types.ModuleType | None:
+    """Returns a module for given module path. If module is given, just return it.
+
+    Arguments:
+        module: A ModuleType, str or sequence.
+        return_none: In case module cant get imported, return None.
+                     If False, Exception is thrown.
+    """
     match module:
         case (str(), *_) | str():
             module_path = module if isinstance(module, str) else ".".join(module)
@@ -67,6 +43,13 @@ def to_module(
 
 
 def to_module_parts(module: Sequence[str] | str | types.ModuleType) -> tuple[str, ...]:
+    """Returns a tuple describing the module path.
+
+    Result is of form ("module", "submodule", "subsubmodule")
+
+    Arguments:
+        module: A ModuleType, str or sequence.
+    """
     match module:
         case (str(), *_):
             return tuple(module)
@@ -76,83 +59,6 @@ def to_module_parts(module: Sequence[str] | str | types.ModuleType) -> tuple[str
             return tuple(module.__name__.split("."))
         case _:
             raise TypeError(module)
-
-
-def find_common_ancestor(cls_list: list[type]) -> type:
-    mros = [list(inspect.getmro(cls)) for cls in cls_list]
-    track = collections.defaultdict(int)
-    while mros:
-        for mro in mros:
-            cur = mro.pop(0)
-            track[cur] += 1
-            if (
-                track[cur] >= len(cls_list)
-                and not cur.__name__.endswith("Mixin")
-                and cur.__name__.startswith("Q")
-            ):
-                return cur
-            if len(mro) == 0:
-                mros.remove(mro)
-    raise TypeError("Couldnt find common base class")
-
-
-def get_subclasses(klass: type, include_abstract: bool = False) -> typing.Iterator[type]:
-    if getattr(klass.__subclasses__, "__self__", None) is None:
-        return
-    for i in klass.__subclasses__():
-        yield from get_subclasses(i)
-        if include_abstract or not inspect.isabstract(i):
-            yield i
-
-
-def get_class_by_name(
-    klass_name: str, *, parent_type: type = object, module_filter: list[str] | None = None
-) -> type | None:
-    return next(
-        (
-            kls
-            for kls in get_subclasses(parent_type)
-            if kls.__name__ == klass_name
-            and (module_filter is None or kls.__module__.split(".")[0] in module_filter)
-        ),
-        None,
-    )
-
-
-def get_qt_parent_class(klass: type, only_direct: bool = False) -> type | None:
-    """Get Qt-based parent class for given type.
-
-    Arguments:
-        klass: class to get parent type from
-        only_direct: whether only the direct parent should be checked.
-    """
-    if only_direct:
-        name = klass.mro()[0].__name__
-        return klass if name.startswith(("PyQt", "PySide")) else None
-    return next(
-        (kls for kls in klass.mro() if kls.__module__.startswith(("PyQt", "PySide"))),
-        None,
-    )
-
-
-def get_class_for_id(base_class: T, id_: str) -> T:
-    """Get subclass of base class which has an attribute "ID" with given id.
-
-    Arguments:
-        base_class: Class to check subclasses from.
-        id_: id to search for.
-    """
-    base_classes = (
-        typing.get_args(base_class)
-        if isinstance(base_class, types.UnionType)
-        else (base_class,)
-    )
-    for base_class in base_classes:
-        for Klass in get_subclasses(base_class):
-            if "ID" in Klass.__dict__ and id_ == Klass.ID:
-                logger.debug(f"found class for id {Klass.ID!r}")
-                return Klass
-    raise ValueError(f"Couldnt find class with id {id_!r} for base class {base_class}")
 
 
 def iter_classes_for_module(
@@ -173,11 +79,11 @@ def iter_classes_for_module(
         filter_by___all__: Whether to filter based on whats defined in __all__.
         recursive: import all submodules recursively and also yield their classes.
     """
-    module = to_module(module)
-    if not module:
+    mod = to_module(module)
+    if not mod:
         return []
     if recursive:
-        for _name, submod in inspect.getmembers(module, inspect.ismodule):
+        for _name, submod in inspect.getmembers(mod, inspect.ismodule):
             if submod.__name__.startswith(module_filter or ""):
                 yield from iter_classes_for_module(
                     submod,
@@ -186,9 +92,9 @@ def iter_classes_for_module(
                     filter_by___all__=filter_by___all__,
                     recursive=True,
                 )
-    for klass_name, kls in inspect.getmembers(module, inspect.isclass):
-        has_all = hasattr(module, "__all__")
-        if filter_by___all__ and (not has_all or klass_name not in module.__all__):
+    for klass_name, kls in inspect.getmembers(mod, inspect.isclass):
+        has_all = hasattr(mod, "__all__")
+        if filter_by___all__ and (not has_all or klass_name not in mod.__all__):
             continue
         if type_filter is not None and not issubclass(kls, type_filter):
             continue
@@ -198,7 +104,13 @@ def iter_classes_for_module(
 
 
 def get_topmost_module_path_for_klass(klass: type) -> str:
-    """Return path of topmost module containing given class."""
+    """Return path of topmost module containing given class.
+
+    If a class is imported in any of its parent modules, return that "shorter" path.
+
+    Arguments:
+        klass: Klass to get the path for.
+    """
     path = klass.__module__
     parts = path.split(".")
     while parts:
