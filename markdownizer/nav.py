@@ -12,7 +12,7 @@ from markdownizer import basesection, mkpage, nav, utils
 logger = logging.getLogger(__name__)
 
 
-class Nav(basesection.BaseSection):
+class Nav(basesection.MarkdownNode):
     def __init__(
         self, section: str | os.PathLike | None, filename: str = "SUMMARY.md", **kwargs
     ):

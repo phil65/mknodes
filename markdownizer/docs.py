@@ -5,7 +5,7 @@ import pathlib
 
 import mkdocs_gen_files
 
-from markdownizer import moduledocumentation, nav
+from markdownizer import moduledocumentation, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -17,6 +17,9 @@ class Docs(nav.Nav):
         self._editor = mkdocs_gen_files.editor.FilesEditor.current()
         self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
         self.files = self._editor.files
+
+    def __repr__(self):
+        return utils.get_repr(self, path=str(self._docs_dir))
 
     def create_documentation(self, module) -> moduledocumentation.ModuleDocumentation:
         nav = moduledocumentation.ModuleDocumentation(module=module, parent=self)

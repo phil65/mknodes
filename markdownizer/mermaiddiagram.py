@@ -7,7 +7,7 @@ from typing import Literal
 from markdownizer import basesection, utils
 
 
-GraphTypeStr = Literal["TODO"]
+GraphTypeStr = Literal["flow"]  # TODO
 
 
 def get_connections(objects, child_getter, id_getter=None):
@@ -28,7 +28,7 @@ def get_connections(objects, child_getter, id_getter=None):
     return items, connections
 
 
-class MermaidDiagram(basesection.Code):
+class MermaidDiagram(basesection.MarkdownNode):
     TYPE_MAP = dict(
         flow="graph",
         sequence="sequenceDiagram",
@@ -51,7 +51,7 @@ class MermaidDiagram(basesection.Code):
         attributes: dict[str, str] | None = None,
         header: str = "",
     ):
-        super().__init__(language="mermaid", header=header)
+        super().__init__(header=header)
         self.graph_type = (
             graph_type if graph_type not in self.TYPE_MAP else self.TYPE_MAP[graph_type]
         )
@@ -63,6 +63,11 @@ class MermaidDiagram(basesection.Code):
         self.items = set(items)
         self.connections = set(connections)
         self.attributes = attributes or {}
+
+    def __repr__(self):
+        return utils.get_repr(
+            self, graph_type=self.graph_type, orientation=self.orientation
+        )
 
     @classmethod
     def for_classes(cls, klasses, header: str = ""):
@@ -101,10 +106,6 @@ class MermaidDiagram(basesection.Code):
         return f"```mermaid\n{text}\n```"
 
 
-class MermaidMindMap(basesection.Code):
+class MermaidMindMap(basesection.MarkdownNode):
     def __init__(self, items: dict, header: str = ""):
-        super().__init__(language="mermaid", header=header)
-
-    @classmethod
-    def from_index(self, model):
-        pass
+        super().__init__(header=header)

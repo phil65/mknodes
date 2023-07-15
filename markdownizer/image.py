@@ -9,7 +9,7 @@ from markdownizer import basesection
 logger = logging.getLogger(__name__)
 
 
-class Image(basesection.BaseSection):
+class Image(basesection.MarkdownNode):
     def __init__(
         self, path: str, caption: str, title: str = "Image title", header: str = ""
     ):

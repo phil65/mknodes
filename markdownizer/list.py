@@ -8,7 +8,7 @@ from markdownizer import basesection, utils
 logger = logging.getLogger(__name__)
 
 
-class List(basesection.BaseSection):
+class List(basesection.MarkdownNode):
     def __init__(self, listitems: list[str] | None = None, header: str = ""):
         super().__init__(header)
         self.listitems = listitems

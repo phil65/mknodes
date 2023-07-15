@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 # based on anyTree resolver, credits to them.
 
+
 class BaseResolver:
     _match_cache = {}
 
@@ -318,9 +319,6 @@ class ChildResolverError(ResolverError):
             node, child, ", ".join(names)
         )
         super().__init__(node, child, msg)
-
-
-logger = logging.getLogger(__name__)
 
 
 class NodeResolver(BaseResolver):

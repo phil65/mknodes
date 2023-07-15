@@ -10,7 +10,7 @@ from markdownizer import node, utils
 logger = logging.getLogger(__name__)
 
 
-class BaseSection(node.BaseNode):
+class MarkdownNode(node.BaseNode):
     """Base class for everything which can be expressed as Markup.
 
     The class inherits from BaseNode. The idea is that starting from the
@@ -18,7 +18,7 @@ class BaseSection(node.BaseNode):
     by one tree.
     """
 
-    def __init__(self, header: str = "", parent: BaseSection | None = None):
+    def __init__(self, header: str = "", parent: MarkdownNode | None = None):
         super().__init__(parent=parent)
         self.header = header
 
@@ -43,7 +43,7 @@ class BaseSection(node.BaseNode):
         """
         from markdownizer import nav
 
-        dct = {}
+        dct: dict[str, str | bytes] = {}
         for des in self.descendants:
             sections = [i.section for i in des.ancestors if isinstance(i, nav.Nav)]
             section = "/".join(i for i in sections if i is not None)
@@ -63,13 +63,13 @@ class BaseSection(node.BaseNode):
                 file.write(v)
 
 
-class Text(BaseSection):
+class Text(MarkdownNode):
     """Class for any Markup text.
 
-    All classes inheriting from BaseSection can get converted to this Type.
+    All classes inheriting from MarkdownNode can get converted to this Type.
     """
 
-    def __init__(self, text: str | BaseSection = "", header: str = "", parent=None):
+    def __init__(self, text: str | MarkdownNode = "", header: str = "", parent=None):
         super().__init__(header=header, parent=parent)
         self.text = text
 
@@ -86,7 +86,7 @@ class Code(Text):
     def __init__(
         self,
         language: str,
-        text: str | BaseSection = "",
+        text: str | MarkdownNode = "",
         *,
         title: str = "",
         header: str = "",
@@ -106,5 +106,5 @@ class Code(Text):
 
 
 if __name__ == "__main__":
-    section = BaseSection(module_name="prettyqt")
+    section = MarkdownNode(header="fff")
     section.to_markdown()

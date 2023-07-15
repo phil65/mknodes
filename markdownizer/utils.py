@@ -14,7 +14,6 @@ BASE_URL = "https://doc.qt.io/qtforpython-6/PySide6/"
 BUILTIN_URL = "https://docs.python.org/3/library/{mod}.html#{name}"
 
 
-
 def get_repr(_obj: Any, *args: Any, **kwargs: Any) -> str:
     """Get a suitable __repr__ string for an object.
 
@@ -27,7 +26,6 @@ def get_repr(_obj: Any, *args: Any, **kwargs: Any) -> str:
     parts = [repr(val) for val in args]
     kw_parts = [f"{name}={val!r}" for name, val in kwargs.items()]
     return f"{classname}({', '.join(parts + kw_parts)})"
-
 
 
 def escaped(text: str, entity_type: str | None = None) -> str:
@@ -132,8 +130,7 @@ def to_html_list(
 
 
 if __name__ == "__main__":
-
-    print(link_for_class(print))
+    link_for_class(logging.LogRecord)
 
     # print(doc.to_markdown())
     # print(text)

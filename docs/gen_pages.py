@@ -19,6 +19,15 @@ mkdocs_documentation = docs.create_documentation(module=mkdocs)
 own_documentation = docs.create_documentation(module=markdownizer)
 inspect_documentation = docs.create_documentation(module=inspect)
 
+subnav = docs.create_nav("subnav")
+page = subnav.create_page("My first page!")
+page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
+page2 = subnav.create_page("And a second one")
+subsubnav = subnav.create_nav("SubSubNav")
+subsubnav = subsubnav.create_page("SubSubPage")
+page2.add_mkdocstrings(logging.LogRecord)
+page2.add_mkdocstrings("collections.Counter")
+
 for klass in own_documentation.iter_classes():
     own_documentation.add_class_page(klass=klass)
 
@@ -28,13 +37,5 @@ for klass in inspect_documentation.iter_classes():
 for klass in mkdocs_documentation.iter_classes(recursive=True):
     mkdocs_documentation.add_class_page(klass=klass)
 
-# nav = docs.create_nav(section="ast")
-
-# for klass in astdocs.iter_classes_for_module("ast"):
-#     nav.add_class_page(klass=klass, path=f"{klass.__name__}.md")
-
-# nav.pretty_print()
-print(str(docs))
-
-# nav.write()
-docs.write()
+docs.pretty_print()
+# docs.write()

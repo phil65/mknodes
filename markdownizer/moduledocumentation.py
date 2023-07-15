@@ -21,10 +21,12 @@ class ModuleDocumentation(nav.Nav):
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)
+        if self.module is None:
+            raise RuntimeError(f"Couldnt load module {module!r}")
         self.is_package = hasattr(self.module, "__path__")
         self.module_name = self.module.__name__
         self.module_path = self.module.__file__
-        super().__init__(section=self.module_name)
+        super().__init__(section=self.module_name, **kwargs)
         self._exclude = exclude_modules or []
         self.root_path = pathlib.Path(f"./{self.module_name}")
 

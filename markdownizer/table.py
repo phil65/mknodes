@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
-import importlib
 import inspect
 import logging
+
+import types
 
 from typing_extensions import Self
 
@@ -13,7 +14,7 @@ from markdownizer import basesection, classhelpers, utils
 logger = logging.getLogger(__name__)
 
 
-class Table(basesection.BaseSection):
+class Table(basesection.MarkdownNode):
     def __init__(
         self,
         data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,
@@ -105,7 +106,7 @@ class Table(basesection.BaseSection):
 
     @classmethod
     def get_module_overview(
-        cls, module: str | None = None, predicate: Callable | None = None
+        cls, module: str | types.ModuleType, predicate: Callable | None = None
     ):
         mod = classhelpers.to_module(module, return_none=False)
         rows = [

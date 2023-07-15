@@ -43,7 +43,7 @@ class Admonition(basesection.Text):
     def _to_markdown(self) -> str:
         block_start = "???" if self.collapsible else "!!!"
         title = f'"{self.title}"'
-        text = textwrap.indent(self.text, "    ")
+        text = textwrap.indent(str(self.text), "    ")
         return f"{block_start} {self.typ} {title}\n{text}\n\n"
 
 

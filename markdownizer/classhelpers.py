@@ -36,7 +36,7 @@ def to_module(
                 logger.warning(f"Could not import {module_path!r}")
                 if return_none:
                     return None
-                raise e
+                raise ImportError from e
         case types.ModuleType():
             return module
         case _:
@@ -62,6 +62,7 @@ def to_module_parts(module: Sequence[str] | str | types.ModuleType) -> tuple[str
             return module.parts
         case _:
             raise TypeError(module)
+    return None
 
 
 def iter_classes_for_module(

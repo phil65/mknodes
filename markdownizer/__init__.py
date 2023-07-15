@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .admonition import Admonition
-from .basesection import BaseSection, Code, Text
+from .basesection import MarkdownNode, Code, Text
 from .docs import Docs
 from .docstrings import DocStrings
 from .image import BinaryImage, Image
@@ -14,7 +14,7 @@ from .table import Table
 
 
 __all__ = [
-    "BaseSection",
+    "MarkdownNode",
     "Docs",
     "Nav",
     "DocStrings",

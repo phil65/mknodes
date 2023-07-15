@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 HEADER = "---\n{options}\n---\n\n"
 
 
-class MkPage(basesection.BaseSection):
+class MkPage(basesection.MarkdownNode):
     def __init__(
         self,
         items: list | None = None,
@@ -82,7 +82,7 @@ class MkPage(basesection.BaseSection):
             lines.extend(f"  - {area}" for area in self.header_options[option])
         return HEADER.format(options="\n".join(lines))
 
-    def append(self, other: str | basesection.BaseSection):
+    def append(self, other: str | basesection.MarkdownNode):
         if isinstance(other, str):
             other = basesection.Text(other)
         other.parent_item = self
@@ -143,6 +143,10 @@ class ClassPage(MkPage):
                 self.parts = classhelpers.to_module_parts(module_path)
         self._build()
 
+    def __repr__(self):
+        return utils.get_repr(self, klass=self.klass.__name__, path=self.path)
+
+
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
         self.append(
@@ -186,6 +190,9 @@ class ModulePage(MkPage):
         self.docstrings = docstrings
         self.show_class_table = show_class_table
         self._build()
+
+    def __repr__(self):
+        return utils.get_repr(self, module=self.module.__name__, path=self.path)
 
     def _build(self):
         if doc := self.module.__doc__:
