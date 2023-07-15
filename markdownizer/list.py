@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import logging
 
-from markdownizer import basesection, utils
+from markdownizer import markdownnode, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class List(basesection.MarkdownNode):
+class List(markdownnode.MarkdownNode):
     def __init__(self, listitems: list[str] | None = None, header: str = ""):
         super().__init__(header)
         self.listitems = listitems

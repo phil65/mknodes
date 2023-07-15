@@ -8,13 +8,13 @@ import types
 
 from typing_extensions import Self
 
-from markdownizer import basesection, classhelpers, utils
+from markdownizer import markdownnode, classhelpers, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Table(basesection.MarkdownNode):
+class Table(markdownnode.MarkdownNode):
     def __init__(
         self,
         data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,

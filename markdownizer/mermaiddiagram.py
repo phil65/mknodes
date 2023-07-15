@@ -4,7 +4,7 @@ import textwrap
 
 from typing import Literal
 
-from markdownizer import basesection, utils
+from markdownizer import markdownnode, utils
 
 
 GraphTypeStr = Literal["flow"]  # TODO
@@ -28,7 +28,7 @@ def get_connections(objects, child_getter, id_getter=None):
     return items, connections
 
 
-class MermaidDiagram(basesection.MarkdownNode):
+class MermaidDiagram(markdownnode.MarkdownNode):
     TYPE_MAP = dict(
         flow="graph",
         sequence="sequenceDiagram",
@@ -106,6 +106,6 @@ class MermaidDiagram(basesection.MarkdownNode):
         return f"```mermaid\n{text}\n```"
 
 
-class MermaidMindMap(basesection.MarkdownNode):
+class MermaidMindMap(markdownnode.MarkdownNode):
     def __init__(self, items: dict, header: str = ""):
         super().__init__(header=header)

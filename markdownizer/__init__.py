@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from .admonition import Admonition
-from .basesection import MarkdownNode, Code, Text
+from .markdownnode import MarkdownNode, Text
+from .code import Code
 from .docs import Docs
 from .docstrings import DocStrings
 from .image import BinaryImage, Image

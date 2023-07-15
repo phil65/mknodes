@@ -6,13 +6,13 @@ import pathlib
 
 import mkdocs_gen_files
 
-from markdownizer import basesection, mkpage, nav, utils
+from markdownizer import markdownnode, mkpage, nav, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Nav(basesection.MarkdownNode):
+class Nav(markdownnode.MarkdownNode):
     def __init__(
         self, section: str | os.PathLike | None, filename: str = "SUMMARY.md", **kwargs
     ):

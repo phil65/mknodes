@@ -5,7 +5,7 @@ import textwrap
 
 from typing import Literal
 
-from markdownizer import basesection
+from markdownizer import markdownnode
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ AdmonitionTypeStr = Literal[
 ]
 
 
-class Admonition(basesection.Text):
+class Admonition(markdownnode.Text):
     def __init__(
         self,
         typ: AdmonitionTypeStr,

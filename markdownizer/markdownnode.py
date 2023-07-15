@@ -80,30 +80,6 @@ class Text(MarkdownNode):
         return self.text if isinstance(self.text, str) else self.text.to_markdown()
 
 
-class Code(Text):
-    """Class representing a Code block."""
-
-    def __init__(
-        self,
-        language: str,
-        text: str | MarkdownNode = "",
-        *,
-        title: str = "",
-        header: str = "",
-        linenums: int | None = None,
-        highlight_lines: list[int] | None = None,
-        parent=None,
-    ):
-        super().__init__(text, header=header, parent=parent)
-        self.language = language
-        self.title = title
-        self.linenums = linenums
-        self.highlight_lines = highlight_lines
-
-    def _to_markdown(self) -> str:
-        title = f" title={self.title}" if self.title else ""
-        return f"```{self.language}{title}\n{self.text}\n```"
-
 
 if __name__ == "__main__":
     section = MarkdownNode(header="fff")

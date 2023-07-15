@@ -8,7 +8,7 @@ from typing import Any
 
 from markdownizer import (
     admonition,
-    basesection,
+    markdownnode,
     classhelpers,
     docstrings,
     mermaiddiagram,
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 HEADER = "---\n{options}\n---\n\n"
 
 
-class MkPage(basesection.MarkdownNode):
+class MkPage(markdownnode.MarkdownNode):
     def __init__(
         self,
         items: list | None = None,
@@ -82,9 +82,9 @@ class MkPage(basesection.MarkdownNode):
             lines.extend(f"  - {area}" for area in self.header_options[option])
         return HEADER.format(options="\n".join(lines))
 
-    def append(self, other: str | basesection.MarkdownNode):
+    def append(self, other: str | markdownnode.MarkdownNode):
         if isinstance(other, str):
-            other = basesection.Text(other)
+            other = markdownnode.Text(other)
         other.parent_item = self
         self.items.append(other)
 

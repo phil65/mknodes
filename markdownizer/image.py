@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 import pathlib
 
-from markdownizer import basesection
+from markdownizer import markdownnode
 
 
 logger = logging.getLogger(__name__)
 
 
-class Image(basesection.MarkdownNode):
+class Image(markdownnode.MarkdownNode):
     def __init__(
         self, path: str, caption: str, title: str = "Image title", header: str = ""
     ):
