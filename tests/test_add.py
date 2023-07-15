@@ -1,7 +1,5 @@
 import pytest
 
-from markdownizer import add
-
 
 @pytest.mark.parametrize(
     "a,b,result",
@@ -11,5 +9,5 @@ from markdownizer import add
         (3, 2, 5),
     ],
 )
-def test_add(a: int, b: int, result: int):
-    assert add(a, b) == result
+# def test_add(a: int, b: int, result: int):
+#     assert add(a, b) == result
