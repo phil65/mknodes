@@ -4,8 +4,8 @@ from collections.abc import Iterator, Sequence
 import contextlib
 import importlib
 import inspect
-import pathlib
 import logging
+import pathlib
 import types
 import typing
 

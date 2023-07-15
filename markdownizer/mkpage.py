@@ -4,13 +4,14 @@ import logging
 import os
 import pathlib
 import types
+
 from typing import Any
 
 from markdownizer import (
     admonition,
-    markdownnode,
     classhelpers,
     docstrings,
+    markdownnode,
     mermaiddiagram,
     table,
     utils,
@@ -145,7 +146,6 @@ class ClassPage(MkPage):
 
     def __repr__(self):
         return utils.get_repr(self, klass=self.klass.__name__, path=self.path)
-
 
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")

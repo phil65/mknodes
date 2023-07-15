@@ -3,12 +3,11 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 import inspect
 import logging
-
 import types
 
 from typing_extensions import Self
 
-from markdownizer import markdownnode, classhelpers, utils
+from markdownizer import classhelpers, markdownnode, utils
 
 
 logger = logging.getLogger(__name__)

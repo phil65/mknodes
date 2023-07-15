@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import pathlib
+import types
 
 from typing import TYPE_CHECKING
 
@@ -83,7 +84,7 @@ class Nav(markdownnode.MarkdownNode):
         return "".join(self.nav.build_literate_nav())
 
     def create_page(self, title: str, **kwargs):
-        filename = title + ".md"
+        filename = f"{title}.md"
         self.__setitem__(title, filename)
         page = mkpage.MkPage(path=filename, parent=self, **kwargs)
         self.pages.append(page)

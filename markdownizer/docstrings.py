@@ -5,7 +5,7 @@ import logging
 import os
 import types
 
-from markdownizer import markdownnode, classhelpers, utils
+from markdownizer import classhelpers, markdownnode, utils
 
 
 logger = logging.getLogger(__name__)
