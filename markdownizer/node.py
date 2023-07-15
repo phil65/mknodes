@@ -14,6 +14,8 @@ _MAXCACHE = 20
 logger = logging.getLogger(__name__)
 
 
+# based on anyTree resolver, credits to them.
+
 class BaseResolver:
     _match_cache = {}
 
@@ -101,9 +103,6 @@ class BaseResolver:
             ...
         RootResolverError: Cannot go above root node Node('/top')
 
-        .. note:: Please not that :any:`get()` returned `None` in exactly that case above,
-                  which was a bug until version 1.8.1.
-
         Case insensitive matching:
 
         >>> r.get(top, '/TOP')
@@ -115,7 +114,7 @@ class BaseResolver:
         >>> r.get(top, '/TOp')
         Node('/top')
         """
-        node, parts = self.__start(root_node, path, self.__cmp)
+        node, parts = self._start(root_node, path, self.__cmp)
         for part in parts:
             if part == "..":
                 parent = self.get_parent(node)
@@ -201,10 +200,10 @@ class BaseResolver:
             ...
         RootResolverError: Cannot go above root node Node('/top')
         """
-        node, parts = self.__start(root_node, path, self.__match)
-        return self.__glob(node, parts)
+        node, parts = self._start(root_node, path, self.__match)
+        return self._glob(node, parts)
 
-    def __start(self, node, path: str, cmp_):
+    def _start(self, node, path: str, cmp_):
         sep = self.get_separator(node)
         parts = path.split(sep)
         # resolve root
@@ -221,7 +220,7 @@ class BaseResolver:
             parts.pop(0)
         return node, parts
 
-    def __glob(self, node, parts):
+    def _glob(self, node, parts):
         assert node is not None
         nodes = []
         if parts:
@@ -233,10 +232,10 @@ class BaseResolver:
                 if parent is None:
                     raise RootResolverError(node)
                 else:
-                    nodes += self.__glob(parent, remainder)
+                    nodes += self._glob(parent, remainder)
             elif name in ("", "."):
-                nodes += self.__glob(node, remainder)
-            elif matches := self.__find(node, name, remainder):
+                nodes += self._glob(node, remainder)
+            elif matches := self._find(node, name, remainder):
                 nodes += matches
             elif self.is_wildcard(name):
                 nodes += matches
@@ -247,14 +246,14 @@ class BaseResolver:
             nodes = [node]
         return nodes
 
-    def __find(self, node, pat, remainder):
+    def _find(self, node, pat, remainder):
         matches = []
         for child in self.get_children(node):
             name = self.get_attribute(child)
             try:
                 if self.__match(name, pat):
                     if remainder:
-                        matches += self.__glob(child, remainder)
+                        matches += self._glob(child, remainder)
                     else:
                         matches.append(child)
             except ResolverError as exc:  # noqa: PERF203

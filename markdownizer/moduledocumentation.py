@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import contextlib
 import importlib
 import inspect
 import logging
-import os
 import pathlib
 import types
 
-from markdownizer import classhelpers, mkpage, nav, table
+from markdownizer import classhelpers, mkpage, nav
 
 
 logger = logging.getLogger(__name__)
@@ -87,15 +85,14 @@ class ModuleDocumentation(nav.Nav):
                     seen.add((klass, path))
                     yield klass, path
 
-    def add_overview_page(self, predicate: Callable | None = None):
-        page = mkpage.MkPage(
-            hide_toc=True,
-            path=pathlib.Path(self.section, "index.md"),
-            # parent=self,
-        )
-        # page += self.get_dependency_table()
-        page += table.Table.get_module_overview(self.module_name, predicate=predicate)
-        return page
+    # def add_overview_page(self, predicate: Callable | None = None):
+    #     page = mkpage.MkPage(
+    #         hide_toc=True,
+    #         path=pathlib.Path("index.md"),
+    #         # parent=self,
+    #     )
+    #     page += table.Table.get_module_overview(self.module_name, predicate=predicate)
+    #     return page
 
     def add_class_page(self, klass, **kwargs):
         parts = classhelpers.get_topmost_module_path_for_klass(klass).split(".")
@@ -108,7 +105,7 @@ class ModuleDocumentation(nav.Nav):
             parent=self,
             **kwargs,
         )
-        self[(*parts, klass.__name__)] = path.with_name(f"{klass.__name__}.md")
+        self[(*parts[1:], klass.__name__)] = path.with_name(f"{klass.__name__}.md")
         self.pages.append(page)
         return page
 
@@ -119,7 +116,7 @@ class ModuleDocumentation(nav.Nav):
         page = mkpage.ModulePage(
             hide_toc=True,
             module=complete_mod_path,
-            path=pathlib.Path(self.section, path),
+            path=path,
             parent=self,
             **kwargs,
         )
@@ -127,20 +124,8 @@ class ModuleDocumentation(nav.Nav):
         self.pages.append(page)
         return page
 
-    def get_dependency_table(self) -> table.Table:
-        return table.DependencyTable(self.module_name)
-
-    def add_dependency_page(self, path: str | os.PathLike, **kwargs):
-        page = mkpage.MkPage(path=path, parent=self, **kwargs)
-        page += self.get_dependency_table()
-        self.pages.append(page)
-        path = pathlib.Path(path)
-        parts = path.parts[:-1]
-        self[parts] = path.with_name("dependencies.md")
-        return page
-
 
 if __name__ == "__main__":
     doc = ModuleDocumentation(module="mkdocs")
-    page = doc.add_overview_page()
+    page = doc.add_class_page(ModuleDocumentation)
     print(page)

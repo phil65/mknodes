@@ -100,6 +100,7 @@ markdown_extensions:
     # linenums: true
 - pymdownx.inlinehilite  # syntax highlighting inside line (`#!py mycode`)
 - pymdownx.snippets  # syntax highlighting
+- pymdownx.details
 - pymdownx.superfences:  # syntax highlighting
     custom_fences:
     - name: mermaid

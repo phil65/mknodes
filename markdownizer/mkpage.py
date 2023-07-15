@@ -7,6 +7,7 @@ import types
 from typing import Any
 
 from markdownizer import (
+    admonition,
     basesection,
     classhelpers,
     docstrings,
@@ -86,6 +87,32 @@ class MkPage(basesection.BaseSection):
             other = basesection.Text(other)
         other.parent_item = self
         self.items.append(other)
+
+    def add_admonition(
+        self,
+        text: str,
+        typ: admonition.AdmonitionTypeStr = "info",
+        title: str | None = None,
+        collapsible: bool = False,
+    ):
+        item = admonition.Admonition(
+            typ=typ,
+            text=text,
+            title=title,
+            collapsible=collapsible,
+        )
+        self.append(item)
+        return item
+
+    def add_mkdocstrings(
+        self,
+        obj: types.ModuleType | str | os.PathLike | type,
+        header: str = "",
+        for_topmost: bool = False,
+    ):
+        item = docstrings.DocStrings(obj=obj, header=header, for_topmost=for_topmost)
+        self.append(item)
+        return item
 
 
 class ClassPage(MkPage):
@@ -176,4 +203,6 @@ class ModulePage(MkPage):
 
 if __name__ == "__main__":
     doc = MkPage()
+    doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
+    print(doc)
     # print(doc.children)

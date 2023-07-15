@@ -4,6 +4,7 @@ from collections.abc import Iterator, Sequence
 import contextlib
 import importlib
 import inspect
+import pathlib
 import logging
 import types
 import typing
@@ -57,6 +58,8 @@ def to_module_parts(module: Sequence[str] | str | types.ModuleType) -> tuple[str
             return tuple(module.split("."))
         case types.ModuleType():
             return tuple(module.__name__.split("."))
+        case pathlib.Path() if not module.is_absolute():
+            return module.parts
         case _:
             raise TypeError(module)
 

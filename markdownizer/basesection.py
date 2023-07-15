@@ -26,23 +26,31 @@ class BaseSection(node.BaseNode):
         return self.to_markdown()
 
     def to_markdown(self):
+        """Outputs markdown for self and all children."""
         text = self._to_markdown() + "\n"
         return f"## {self.header}\n\n{text}" if self.header else text
 
     def virtual_files(self):
+        """Virtual, this can be overridden by nodes if they want files to be included."""
         return {}
 
-    def all_virtual_files(self):
-        """Return a dictionary containing all virtual files of itself and all children."""
+    def all_virtual_files(self) -> dict[str, str | bytes]:
+        """Return a dictionary containing all virtual files of itself and all children.
+
+        Dict key contains the filename, dict value contains the file content.
+
+        The resulting filepath is determined based on the tree hierarchy.
+        """
         from markdownizer import nav
 
         dct = {}
         for des in self.descendants:
             sections = [i.section for i in des.ancestors if isinstance(i, nav.Nav)]
-            section = "/".join(sections)
+            section = "/".join(i for i in sections if i is not None)
             if section:
                 section += "/"
-            dct |= {f"{section}{k}": v for k, v in des.virtual_files().items()}
+            files_for_item = {f"{section}{k}": v for k, v in des.virtual_files().items()}
+            dct |= files_for_item
         return dct | self.virtual_files()
 
     def write(self):
@@ -61,8 +69,8 @@ class Text(BaseSection):
     All classes inheriting from BaseSection can get converted to this Type.
     """
 
-    def __init__(self, text: str | BaseSection = "", header: str = ""):
-        super().__init__(header=header)
+    def __init__(self, text: str | BaseSection = "", header: str = "", parent=None):
+        super().__init__(header=header, parent=parent)
         self.text = text
 
     def __repr__(self):
@@ -84,8 +92,9 @@ class Code(Text):
         header: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
+        parent=None,
     ):
-        super().__init__(text, header)
+        super().__init__(text, header=header, parent=parent)
         self.language = language
         self.title = title
         self.linenums = linenums

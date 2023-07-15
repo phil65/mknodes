@@ -71,11 +71,20 @@ class Nav(basesection.BaseSection):
     def to_markdown(self):
         return "".join(self.nav.build_literate_nav())
 
-    def add_document(self, nav_path: str | tuple, file_path: os.PathLike | str, **kwargs):
-        self.__setitem__(nav_path, file_path)
-        page = mkpage.MkPage(**kwargs)
+    def create_page(self, title: str, **kwargs):
+        filename = title + ".md"
+        self.__setitem__(title, filename)
+        page = mkpage.MkPage(path=filename, parent=self, **kwargs)
         self.pages.append(page)
         return page
+
+    @property
+    def section_path(self) -> tuple[str, ...]:
+        parent = self
+        parts = [self.section]
+        while parent := parent.parent_item:
+            parts.append(parent.section)
+        return tuple(reversed([p for p in parts if p is not None]))
 
 
 if __name__ == "__main__":

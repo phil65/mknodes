@@ -33,15 +33,16 @@ class Admonition(basesection.Text):
         text: str,
         title: str | None = None,
         collapsible: bool = False,
+        **kwargs,
     ):
-        super().__init__(text=text)
+        super().__init__(text=text, **kwargs)
         self.typ = typ
         self.title = title
         self.collapsible = collapsible
 
     def _to_markdown(self) -> str:
         block_start = "???" if self.collapsible else "!!!"
-        title = repr(self.title) if self.title else ""
+        title = f'"{self.title}"'
         text = textwrap.indent(self.text, "    ")
         return f"{block_start} {self.typ} {title}\n{text}\n\n"
 
@@ -61,3 +62,8 @@ class Admonition(basesection.Text):
 #         for item in self.items:
 #             header = f"=== {header!r}"
 #             text = textwrap.indent(item.to_markdown(), "        ")
+
+
+if __name__ == "__main__":
+    admonition = Admonition("info", "hello")
+    print(admonition)
