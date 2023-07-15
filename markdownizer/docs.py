@@ -5,7 +5,7 @@ import pathlib
 
 import mkdocs_gen_files
 
-from markdownizer import moduledocumentation, nav, utils
+from markdownizer import nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -21,14 +21,15 @@ class Docs(nav.Nav):
     def __repr__(self):
         return utils.get_repr(self, path=str(self._docs_dir))
 
-    def create_documentation(self, module) -> moduledocumentation.ModuleDocumentation:
-        nav = moduledocumentation.ModuleDocumentation(module=module, parent=self)
-        self.nav[(nav.module_name,)] = f"{nav.module_name}/"
-        self.navs.append(nav)
-        return nav
-
 
 if __name__ == "__main__":
-    doc = Docs()
-    page = doc.add_overview_page()
-    print(page)
+    docs = Docs()
+    subnav = docs.create_nav("subnav")
+    page = subnav.create_page("My first page!")
+    page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
+    page2 = subnav.create_page("And a second one")
+    subsubnav = subnav.create_nav("SubSubNav")
+    subsubnav = subsubnav.create_page("SubSubPage")
+    from pprint import pprint
+
+    pprint(docs.all_virtual_files())

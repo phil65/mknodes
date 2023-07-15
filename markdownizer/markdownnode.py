@@ -25,10 +25,29 @@ class MarkdownNode(node.BaseNode):
     def __str__(self):
         return self.to_markdown()
 
+    def _to_markdown(self):
+        return NotImplemented
+
     def to_markdown(self):
         """Outputs markdown for self and all children."""
         text = self._to_markdown() + "\n"
         return f"## {self.header}\n\n{text}" if self.header else text
+
+    @property
+    def resolved_parts(self) -> tuple[str, ...]:
+        from markdownizer import nav
+        parent = self
+        parts = [self.section] if isinstance(self, nav.Nav) and self.section else []
+        while parent := parent.parent_item:
+            if isinstance(parent, nav.Nav) and parent.section:
+                parts.append(parent.section)
+        return tuple(parts)
+
+    @property
+    def resolved_file_path(self):
+        filename = str(self.path) if hasattr(self, "path") else ""
+        path = "/".join(self.resolved_parts) + "/" + filename
+        return path
 
     def virtual_files(self):
         """Virtual, this can be overridden by nodes if they want files to be included."""
@@ -61,6 +80,12 @@ class MarkdownNode(node.BaseNode):
             mode = "w" if isinstance(v, str) else "wb"
             with mkdocs_gen_files.open(k, mode) as file:
                 file.write(v)
+
+    def pretty_print(self, indent: int = 0):
+        text = indent * "    " + repr(self) + "->" + self.resolved_file_path
+        logger.info(text)
+        for child_item in self.children:
+            child_item.pretty_print(indent + 1)
 
 
 class Text(MarkdownNode):

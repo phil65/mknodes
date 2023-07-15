@@ -4,10 +4,15 @@ import logging
 import os
 import pathlib
 
+from typing import TYPE_CHECKING
+
 import mkdocs_gen_files
 
 from markdownizer import markdownnode, mkpage, nav, utils
 
+
+if TYPE_CHECKING:
+    from markdownizer import moduledocumentation
 
 logger = logging.getLogger(__name__)
 
@@ -78,16 +83,21 @@ class Nav(markdownnode.MarkdownNode):
         self.pages.append(page)
         return page
 
-    @property
-    def section_path(self) -> tuple[str, ...]:
-        parent = self
-        parts = [self.section]
-        while parent := parent.parent_item:
-            parts.append(parent.section)
-        return tuple(reversed([p for p in parts if p is not None]))
+    def create_documentation(
+        self, module: types.ModuleType | str
+    ) -> moduledocumentation.ModuleDocumentation:
+        from markdownizer import moduledocumentation
+
+        nav = moduledocumentation.ModuleDocumentation(module=module, parent=self)
+        self.nav[(nav.module_name,)] = f"{nav.module_name}/"
+        self.navs.append(nav)
+        return nav
 
 
 if __name__ == "__main__":
     navi = Nav(section="prettyqt")
     navi.nav["test"] = "t/"
-    print(navi)
+    navi2 = navi.create_nav("2")
+    navi3 = navi2.create_nav("3")
+
+    print(navi3.resolved_parts)
