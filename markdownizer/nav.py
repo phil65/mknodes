@@ -19,7 +19,10 @@ logger = logging.getLogger(__name__)
 
 class Nav(markdownnode.MarkdownNode):
     def __init__(
-        self, section: str | os.PathLike | None, filename: str = "SUMMARY.md", **kwargs
+        self,
+        section: str | os.PathLike | None = None,
+        filename: str = "SUMMARY.md",
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.section = section
@@ -33,11 +36,14 @@ class Nav(markdownnode.MarkdownNode):
         # self._mapping = {}
         self.navs: list[nav.Nav] = []
         self.pages: list[mkpage.MkPage] = []
+        # self._editor = mkdocs_gen_files.editor.FilesEditor.current()
+        # self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
+        # self.files = self._editor.files
 
     def __repr__(self):
         return utils.get_repr(
             self,
-            section=self.section,
+            section=self.section or "<root>",
             filename=self.filename,
         )
 
@@ -95,9 +101,13 @@ class Nav(markdownnode.MarkdownNode):
 
 
 if __name__ == "__main__":
-    navi = Nav(section="prettyqt")
-    navi.nav["test"] = "t/"
-    navi2 = navi.create_nav("2")
-    navi3 = navi2.create_nav("3")
+    docs = Nav()
+    subnav = docs.create_nav("subnav")
+    page = subnav.create_page("My first page!")
+    page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
+    page2 = subnav.create_page("And a second one")
+    subsubnav = subnav.create_nav("SubSubNav")
+    subsubnav = subsubnav.create_page("SubSubPage")
+    from pprint import pprint
 
-    print(navi3.resolved_parts)
+    pprint(docs.all_virtual_files())
