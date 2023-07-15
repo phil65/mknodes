@@ -34,7 +34,7 @@ def to_module(
             except (ImportError, AttributeError) as e:
                 logger.warning(f"Could not import {module_path!r}")
                 if return_none:
-                    return
+                    return None
                 raise e
         case types.ModuleType():
             return module

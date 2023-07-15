@@ -355,7 +355,7 @@ class BaseNode:
 
     def __init__(self, parent: Self | None = None):
         self.parent_item = parent
-        self.children: list[Self] = []
+        self.children: list[BaseNode] = []
 
     def __repr__(self):
         return utils.get_repr(self)
@@ -427,19 +427,23 @@ class BaseNode:
     @property
     def left_sibling(self) -> Self | None:
         """Get sibling left of self."""
-        if self.parent_item:
-            children = self.parent_item.children
-            if child_idx := children.index(self):
-                return self.parent_item.children[child_idx - 1]
+        if not self.parent_item:
+            return None
+        children = self.parent_item.children
+        if child_idx := children.index(self):
+            return self.parent_item.children[child_idx - 1]
+        return None
 
     @property
     def right_sibling(self) -> Self | None:
         """Get sibling right of self."""
-        if self.parent_item:
-            children = self.parent_item.children
-            child_idx = children.index(self)
-            if child_idx + 1 < len(children):
-                return self.parent_item.children[child_idx + 1]
+        if not self.parent_item:
+            return None
+        children = self.parent_item.children
+        child_idx = children.index(self)
+        if child_idx + 1 < len(children):
+            return self.parent_item.children[child_idx + 1]
+        return None
 
     @property
     def node_path(self) -> Iterable[Self]:

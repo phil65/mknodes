@@ -26,6 +26,6 @@ class Docs(nav.Nav):
 
 
 if __name__ == "__main__":
-    doc = Docs(module="mkdocs")
+    doc = Docs()
     page = doc.add_overview_page()
     print(page)

@@ -14,19 +14,17 @@ logger = logging.getLogger(__name__)
 
 class Nav(basesection.BaseSection):
     def __init__(
-        self,
-        section: str | os.PathLike,
-        filename: str = "SUMMARY.md",
+        self, section: str | os.PathLike, filename: str = "SUMMARY.md", **kwargs
     ):
-        super().__init__()
+        super().__init__(**kwargs)
         self.section = section
         self.filename = filename
         self.path = pathlib.Path(section) / self.filename
         self.nav = mkdocs_gen_files.Nav()
         self.indentation = 0
         # self._mapping = {}
-        self.navs = []
-        self.pages = []
+        self.navs: list[nav.Nav] = []
+        self.pages: list[mkpage.MkPage] = []
 
     def __repr__(self):
         return utils.get_repr(

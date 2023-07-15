@@ -4,6 +4,7 @@ import logging
 import os
 import pathlib
 import types
+from typing import Any
 
 from markdownizer import (
     basesection,
@@ -33,7 +34,7 @@ class MkPage(basesection.BaseSection):
         super().__init__(parent=parent)
         self.items = items or []
         self.path = path
-        self.header_options = {}
+        self.header_options: dict[str, Any] = {}
         if hide_toc:
             self.header_options.setdefault("hide", []).append("toc")
         if hide_nav:

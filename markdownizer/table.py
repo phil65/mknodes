@@ -7,7 +7,7 @@ import logging
 
 from typing_extensions import Self
 
-from markdownizer import basesection, utils
+from markdownizer import basesection, classhelpers, utils
 
 
 logger = logging.getLogger(__name__)
@@ -107,7 +107,7 @@ class Table(basesection.BaseSection):
     def get_module_overview(
         cls, module: str | None = None, predicate: Callable | None = None
     ):
-        mod = importlib.import_module(module)
+        mod = classhelpers.to_module(module, return_none=False)
         rows = [
             (
                 submod_name,
@@ -153,4 +153,4 @@ class Table(basesection.BaseSection):
 
 if __name__ == "__main__":
     table = Table()
-    print(logger.warning(table))
+    logger.warning(table)
