@@ -40,7 +40,9 @@ class BaseSection(node.BaseNode):
         for des in self.descendants:
             sections = [i.section for i in des.ancestors if isinstance(i, nav.Nav)]
             section = "/".join(sections)
-            dct |= {f"{section}{k}": v  for k, v in des.virtual_files().items()}
+            if section:
+                section += "/"
+            dct |= {f"{section}{k}": v for k, v in des.virtual_files().items()}
         return dct | self.virtual_files()
 
     def write(self):
