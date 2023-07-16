@@ -97,6 +97,7 @@ class Nav(markdownnode.MarkdownNode):
         hide_nav: bool = False,
         hide_path: bool = False,
     ):
+        """Add a page to the Nav."""
         filename = f"{title}.md"
         self.__setitem__(title, filename)
         page = mkpage.MkPage(
@@ -114,6 +115,7 @@ class Nav(markdownnode.MarkdownNode):
         module: types.ModuleType | str,
         filter_by___all__: bool = False,
     ) -> moduledocumentation.ModuleDocumentation:
+        """Add a module documentation to the Nav."""
         from markdownizer import moduledocumentation
 
         nav = moduledocumentation.ModuleDocumentation(

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 
 # import contextlib
 # import importlib
@@ -45,7 +45,8 @@ class ModuleDocumentation(nav.Nav):
             filename=self.filename,
         )
 
-    def iter_files(self, glob: str = "*/*.py"):
+    def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:
+        """Iter through files based on glob."""
         for path in sorted(self.root_path.rglob(glob)):
             if (
                 all(i not in path.parts for i in self._exclude)
@@ -59,8 +60,16 @@ class ModuleDocumentation(nav.Nav):
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
         predicate: Callable | None = None,
-        _seen=None,
-    ):
+        _seen: set | None = None,
+    ) -> Iterator[type]:
+        """Iterate over all classes of the module.
+
+        Arguments:
+            submodule: filter based on a submodule
+            recursive: whether to only iterate over members of current module
+                       or whether it should also include classes from submodules.
+            predicate: filter classes based on a predicate.
+        """
         mod = classhelpers.to_module(submodule) if submodule else self.module
         if mod is None:
             return
@@ -91,8 +100,16 @@ class ModuleDocumentation(nav.Nav):
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
         predicate: Callable | None = None,
-        _seen=None,
-    ):
+        _seen: set | None = None,
+    ) -> Iterator[types.ModuleType]:
+        """Iterate over all submodules of the module.
+
+        Arguments:
+            submodule: filter based on a submodule
+            recursive: whether to only iterate over members of current module
+                       or whether it should also include modules from submodules.
+            predicate: filter classes based on a predicate.
+        """
         mod = classhelpers.to_module(submodule) if submodule else self.module
         seen = _seen or set()
         if mod is None:
@@ -123,8 +140,11 @@ class ModuleDocumentation(nav.Nav):
     #             yield importlib.import_module(complete_module_path)
 
     def iter_classes_for_glob(
-        self, glob="*/*.py", recursive: bool = False, avoid_duplicates: bool = True
-    ):
+        self,
+        glob: str = "*/*.py",
+        recursive: bool = False,
+        avoid_duplicates: bool = True,
+    ) -> Iterator[tuple[type, pathlib.Path]]:
         """Yields (class, path) tuples."""
         seen = set()
         for path in self.iter_files(glob):
@@ -147,13 +167,25 @@ class ModuleDocumentation(nav.Nav):
     #     page += table.Table.get_module_overview(self.module_name, predicate=predicate)
     #     return page
 
-    def add_class_page(self, klass, **kwargs):
-        parts = classhelpers.get_topmost_module_path_for_klass(klass).split(".")
+    def add_class_page(
+        self, klass: type, find_topmost: bool = True, **kwargs
+    ) -> mkpage.ClassPage:
+        """Add a page showing information about a class.
+
+        Arguments:
+            klass: klass to build a page for
+            find_topmost: Whether to use a module path from a parent package if available
+            kwargs: keyword arguments passed to CLassPage
+        """
+        if find_topmost:
+            parts = classhelpers.get_topmost_module_path_for_klass(klass).split(".")
+        else:
+            parts = klass.__module__.split(".")
         # parts = klass.__module__.split(".")
         path = pathlib.Path(f"{klass.__name__}.md")
         page = mkpage.ClassPage(
             klass=klass,
-            module_path=parts,
+            module_path=tuple(parts),
             path=path,
             parent=self,
             **kwargs,
@@ -162,12 +194,13 @@ class ModuleDocumentation(nav.Nav):
         self.pages.append(page)
         return page
 
-    def add_module_overview(self, **kwargs):
+    def add_module_overview(self, **kwargs) -> modulepage.ModulePage:
+        """Add a page showing all submodules."""
         path = pathlib.Path("index.md")
         # parts = path.parts[:-1]
         page = mkpage.ModulePage(
             hide_toc=True,
-            module=self.module,
+            module=self.module,  # type: ignore
             path=path,
             parent=self,
             **kwargs,
