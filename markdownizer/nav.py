@@ -39,6 +39,7 @@ class Nav(markdownnode.MarkdownNode):
             if section
             else pathlib.Path(self.filename)
         )
+        self.path = self.path.as_posix()
         self.nav = mkdocs_gen_files.Nav()
         # self._mapping = {}
         self.navs: list[nav.Nav] = []
