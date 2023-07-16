@@ -45,7 +45,7 @@ class Table(markdownnode.MarkdownNode):
             self.data[k] = [v(i) for i in self.data[k]]
 
     def _to_markdown(self) -> str:
-        if not self.data:
+        if not any(self.data[k] for k in self.data.keys()):
             return ""
         formatters = [f"{{:<{self.width_for_column(c)}}}" for c in self.data.keys()]
         headers = [formatters[i].format(k) for i, k in enumerate(self.data.keys())]
