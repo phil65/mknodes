@@ -114,19 +114,20 @@ class DocStrings(markdownnode.Text):
         self.obj = obj
         match obj:
             case types.ModuleType():
-                self.module_path = obj.__name__
+                self.obj_path = obj.__name__
             case type():
                 if for_topmost:
-                    self.module_path = classhelpers.get_topmost_module_path_for_klass(obj)
+                    topmost_path = classhelpers.get_topmost_module_path_for_klass(obj)
+                    self.obj_path = f"{topmost_path}.{obj.__qualname__}"
                 else:
-                    self.module_path = f"{obj.__module__}.{obj.__qualname__}"
+                    self.obj_path = f"{obj.__module__}.{obj.__qualname__}"
             case str():
-                self.module_path = obj  # for setting a manual path
+                self.obj_path = obj  # for setting a manual path
             case tuple() | list():
-                self.module_path = ".".join(obj)
+                self.obj_path = ".".join(obj)
             case os.PathLike():
                 mod = importlib.import_module(os.fspath(obj))
-                self.module_path = mod.__name__
+                self.obj_path = mod.__name__
             case _:
                 raise TypeError(obj)
         self.options = self.OPTIONS_DEFAULT.copy()
@@ -163,7 +164,7 @@ class DocStrings(markdownnode.Text):
         return utils.get_repr(self, obj=self.obj)
 
     def _to_markdown(self) -> str:
-        md = f"::: {self.module_path}\n"
+        md = f"::: {self.obj_path}\n"
         if self.options:
             options = "\n".join(f"      {k}: {v!r}" for k, v in self.options.items())
             md = f"{md}    options:\n{options}\n"
