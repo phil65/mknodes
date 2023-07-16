@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Iterator
 
 import mkdocs_gen_files
 
@@ -89,6 +90,37 @@ class MarkdownNode(node.BaseNode):
         logger.info(text)
         for child_item in self.children:
             child_item.pretty_print(indent + 1)
+
+
+class MarkdownContainer(MarkdownNode):
+    """A base class for Nodes containing other MarkdownNodes."""
+
+    def __init__(self, items: list | None = None, **kwargs):
+        self.items = items or []
+        super().__init__(**kwargs)
+
+    def __add__(self, other: str | MarkdownNode):
+        self.append(other)
+        return self
+
+    def __iter__(self) -> Iterator[MarkdownNode]:
+        return iter(self.items)
+
+    def _to_markdown(self) -> str:
+        return "\n\n".join(i.to_markdown() for i in self.items)
+
+    def append(self, other: str | MarkdownNode):
+        if isinstance(other, str):
+            other = Text(other, parent=self)
+        self.items.append(other)
+
+    @property
+    def children(self) -> list[MarkdownNode]:
+        return self.items
+
+    @children.setter
+    def children(self, children: list[MarkdownNode]):
+        self.items = children
 
 
 class Text(MarkdownNode):

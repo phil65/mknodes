@@ -24,18 +24,17 @@ logger = logging.getLogger(__name__)
 HEADER = "---\n{options}\n---\n\n"
 
 
-class MkPage(markdownnode.MarkdownNode):
+class MkPage(markdownnode.MarkdownContainer):
     def __init__(
         self,
-        items: list | None = None,
         hide_toc: bool = False,
         hide_nav: bool = False,
         hide_path: bool = False,
         path: str | os.PathLike = "",
         parent: nav.Nav | None = None,
+        **kwargs: Any,
     ):
-        super().__init__(parent=parent)
-        self.items = items or []
+        super().__init__(parent=parent, **kwargs)
         self.path = path
         self.header_options: dict[str, Any] = {}
         if hide_toc:
@@ -48,30 +47,15 @@ class MkPage(markdownnode.MarkdownNode):
     def __repr__(self):
         return utils.get_repr(self, path=str(self.path))
 
-    def __add__(self, other):
-        self.append(other)
-        return self
-
-    def __iter__(self):
-        return iter(self.items)
-
     def __str__(self):
         return self.to_markdown()
-
-    @property
-    def children(self):
-        return self.items
-
-    @children.setter
-    def children(self, children):
-        self.items = children
 
     def virtual_files(self):
         return {self.path: self.to_markdown()}
 
     def to_markdown(self) -> str:
         header = self.get_header()
-        content_str = "\n\n".join(i.to_markdown() for i in self.items)
+        content_str = self._to_markdown()
         return header + content_str if header else content_str
 
     def get_header(self) -> str:
@@ -84,19 +68,13 @@ class MkPage(markdownnode.MarkdownNode):
             lines.extend(f"  - {area}" for area in self.header_options[option])
         return HEADER.format(options="\n".join(lines))
 
-    def append(self, other: str | markdownnode.MarkdownNode):
-        if isinstance(other, str):
-            other = markdownnode.Text(other)
-        other.parent_item = self
-        self.items.append(other)
-
     def add_admonition(
         self,
         text: str,
         typ: admonition.AdmonitionTypeStr = "info",
         title: str | None = None,
         collapsible: bool = False,
-    ):
+    ) -> admonition.Admonition:
         item = admonition.Admonition(
             typ=typ,
             text=text,
@@ -111,7 +89,7 @@ class MkPage(markdownnode.MarkdownNode):
         obj: types.ModuleType | str | os.PathLike | type,
         header: str = "",
         for_topmost: bool = False,
-    ):
+    ) -> docstrings.DocStrings:
         item = docstrings.DocStrings(obj=obj, header=header, for_topmost=for_topmost)
         self.append(item)
         return item
