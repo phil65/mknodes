@@ -30,6 +30,7 @@ dependencies = [
     "mkdocs-section-index",
     "mkdocs-gen-files",
     "mkdocs-macros-plugin",
+    "pygments",
     "typing_extensions",
 ]
 
@@ -66,6 +67,9 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "typing_extensions",
+    "mkdocs-gen-files",
+    "mkdocs",
 ]
 
 [project.urls]

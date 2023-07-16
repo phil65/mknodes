@@ -10,6 +10,7 @@ from typing import Any
 from markdownizer import (
     admonition,
     classhelpers,
+    code as codeblock,
     docstrings,
     markdownnode,
     mermaiddiagram,
@@ -72,6 +73,7 @@ class MkPage(markdownnode.MarkdownContainer):
         self,
         text: str,
         typ: admonition.AdmonitionTypeStr = "info",
+        *,
         title: str | None = None,
         collapsible: bool = False,
     ) -> admonition.Admonition:
@@ -87,10 +89,33 @@ class MkPage(markdownnode.MarkdownContainer):
     def add_mkdocstrings(
         self,
         obj: types.ModuleType | str | os.PathLike | type,
+        *,
         header: str = "",
         for_topmost: bool = False,
     ) -> docstrings.DocStrings:
         item = docstrings.DocStrings(obj=obj, header=header, for_topmost=for_topmost)
+        self.append(item)
+        return item
+
+    def add_code(
+        self,
+        code: str | markdownnode.MarkdownNode,
+        language: str = "",
+        *,
+        title: str = "",
+        header: str = "",
+        linenums: int | None = None,
+        highlight_lines: list[int] | None = None,
+    ):
+        item = codeblock.Code(
+            code=code,
+            language=language,
+            title=title,
+            header=header,
+            linenums=linenums,
+            highlight_lines=highlight_lines,
+            parent=self,
+        )
         self.append(item)
         return item
 
@@ -99,6 +124,7 @@ class ClassPage(MkPage):
     def __init__(
         self,
         klass: type,
+        *,
         module_path: tuple[str, ...] | str | None = None,
         path: str | os.PathLike = "",
         **kwargs,
