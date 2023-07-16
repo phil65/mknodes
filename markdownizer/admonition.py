@@ -27,6 +27,8 @@ AdmonitionTypeStr = Literal[
 
 
 class Admonition(markdownnode.Text):
+    """[Admonition](https://squidfunk.github.io/mkdocs-material/reference/admonitions/) info box."""  # noqa: E501
+
     def __init__(
         self,
         typ: AdmonitionTypeStr,

@@ -73,6 +73,11 @@ class Table(markdownnode.MarkdownNode):
             yield [self.data[k][j] or "" for k in self.data.keys()]
 
     def width_for_column(self, column: str | int):
+        """Returns the minimum width needed for given column.
+
+        Arguments:
+            column: Name or index of the column
+        """
         if isinstance(column, int):
             column = list(self.data.keys())[column]
         max_len = max(len(str(i)) for i in self.data[column])
