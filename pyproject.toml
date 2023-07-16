@@ -30,7 +30,7 @@ dependencies = [
     "mkdocs-section-index",
     "mkdocs-gen-files",
     "mkdocs-macros-plugin",
-
+    "typing_extensions",
 ]
 
 [tool.hatch.envs.default.scripts]
