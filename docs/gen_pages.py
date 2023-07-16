@@ -14,10 +14,12 @@ root_nav = markdownizer.Nav()
 
 home_nav = root_nav.create_nav("Home")
 
-intro_page = home_nav.create_page("Introduction")
-intro_page += "No time to write a documentation. So we will generate it."
-intro_page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
-intro_page += "This is the source for the complete documentation:"
+intro_page = home_nav.create_page("Introduction", hide_toc=True)
+intro_page += "### Not in the mood to write documentation? Let´s code it then!"
+intro_page.add_admonition(
+    "API is still evolving, so consider this a preview.", typ="danger", title="Warning!"
+)
+intro_page += "This is the source code for building this website:"
 intro_page.add_code(pathlib.Path(__file__).read_text(), language="py")
 
 
@@ -63,11 +65,11 @@ for klass in mkdocs_docs.iter_classes(recursive=True):
 
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
-tree_page = home_nav.create_page("Navigation tree")
+tree_page = home_nav.create_page("Navigation tree", hide_toc=True)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
 virtual_files = root_nav.all_virtual_files()
-files_page = home_nav.create_page("File map")
+files_page = home_nav.create_page("File map", hide_toc=True)
 files_page += markdownizer.Code(language="py", code=pprint.pformat(virtual_files))
 
 
