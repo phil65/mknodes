@@ -49,10 +49,17 @@ class Table(markdownnode.MarkdownNode):
     def _to_markdown(self) -> str:
         if not self.data:
             return ""
-        headers = [str(i) for i in self.data.keys()]
-        lines = [f"|{'|'.join(headers)}|", f"|{'--|--'.join('' for _ in headers)}|"]
-        lines.extend(f"|{'|'.join(row)}|" for row in self._iter_rows())
-        return "\n".join(lines)
+        formatters = [f"{{:<{self.width_for_column(c)}}}" for c in self.data.keys()]
+        headers = [formatters[i].format(k) for i, k in enumerate(self.data.keys())]
+        divider = [self.width_for_column(c) * "-" for c in self.data.keys()]
+        data = [
+            [formatters[i].format(k) for i, k in enumerate(row)]
+            for row in self._iter_rows()
+        ]
+        header_txt = "| " + " | ".join(headers) + " |"
+        divider_text = "| " + " | ".join(divider) + " |"
+        data_txt = ["| " + " | ".join(line) + " |" for line in data]
+        return "\n".join([header_txt, divider_text, *data_txt])
 
     @staticmethod
     def examples():
@@ -64,6 +71,12 @@ class Table(markdownnode.MarkdownNode):
         length = min(len(i) for i in self.data.values())
         for j, _ in enumerate(range(length)):
             yield [self.data[k][j] or "" for k in self.data.keys()]
+
+    def width_for_column(self, column: str | int):
+        if isinstance(column, int):
+            column = list(self.data.keys())[column]
+        max_len = max(len(str(i)) for i in self.data[column])
+        return max(len(column), max_len)
 
     @classmethod
     def for_items(cls, items, columns: dict[str, Callable]):
@@ -164,5 +177,5 @@ class Table(markdownnode.MarkdownNode):
 
 
 if __name__ == "__main__":
-    table = Table()
-    logger.warning(table)
+    table = Table(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
+    print(table)
