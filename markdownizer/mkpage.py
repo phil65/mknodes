@@ -124,7 +124,7 @@ class ClassPage(MkPage):
         self._build()
 
     def __repr__(self):
-        return utils.get_repr(self, klass=self.klass.__name__, path=self.path)
+        return utils.get_repr(self, klass=self.klass.__name__, path=str(self.path))
 
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
@@ -171,7 +171,7 @@ class ModulePage(MkPage):
         self._build()
 
     def __repr__(self):
-        return utils.get_repr(self, module=self.module.__name__, path=self.path)
+        return utils.get_repr(self, module=self.module.__name__, path=str(self.path))
 
     def _build(self):
         if doc := self.module.__doc__:

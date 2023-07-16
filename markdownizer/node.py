@@ -154,6 +154,11 @@ class BaseNode:
         for child_item in self.children:
             child_item.pprint(indent + 1)
 
+    def yield_nodes(self, indent: int = 0):
+        yield indent, self
+        for child_item in self.children:
+            yield from child_item.yield_nodes(indent + 1)
+
 
 def preorder_iter(
     tree: BaseNode,

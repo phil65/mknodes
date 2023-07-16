@@ -80,7 +80,7 @@ class Nav(markdownnode.MarkdownNode):
             navi.write()
 
     def virtual_files(self):
-        return {self.path: self.to_markdown()}
+        return {str(self.path): self.to_markdown()}
 
     def to_markdown(self):
         return "".join(self.nav.build_literate_nav())

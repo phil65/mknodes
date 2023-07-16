@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import contextlib
-import importlib
+
+# import contextlib
+# import importlib
 import inspect
 import logging
 import pathlib
 import types
 
-from markdownizer import classhelpers, mkpage, nav
+from markdownizer import classhelpers, mkpage, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,14 @@ class ModuleDocumentation(nav.Nav):
         super().__init__(section=self.module_name, **kwargs)
         self._exclude = exclude_modules or []
         self.root_path = pathlib.Path(f"./{self.module_name}")
+
+    def __repr__(self):
+        return utils.get_repr(
+            self,
+            module=self.module_name,
+            section=self.section or "<root>",
+            filename=self.filename,
+        )
 
     def iter_files(self, glob: str = "*/*.py"):
         for path in sorted(self.root_path.rglob(glob)):

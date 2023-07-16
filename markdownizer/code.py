@@ -60,12 +60,12 @@ class Code(markdownnode.Text):
 
     def _to_markdown(self) -> str:
         title = f" title={self.title!r}" if self.title else ""
-        return f"```{self.language}{title}\n{self.text}\n```"
+        return f"``` {self.language}{title}\n{self.text}\n```"
 
     @staticmethod
     def examples():
         yield dict(language="python", code="a = 1 + 2")
-        yield dict(language="javascript", code="Some JavaScript", title="Some Header")
+        yield dict(language="js", code="var z = x + y;", title="JavaScript")
 
     @classmethod
     def for_object(
