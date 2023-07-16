@@ -12,9 +12,9 @@ import mkdocs
 
 root_nav = markdownizer.Nav()
 
-home_nav = root_nav.create_nav("Home")
+home_nav = root_nav.add_nav("Home")
 
-intro_page = home_nav.create_page("Introduction", hide_toc=True)
+intro_page = home_nav.add_page("Introduction", hide_toc=True)
 intro_page += "### Not in the mood to write documentation? Let´s code it then!"
 intro_page.add_admonition(
     "API is still evolving, so consider this a preview.", typ="danger", title="Warning!"
@@ -44,15 +44,15 @@ def generate_example(kls: type[markdownizer.MarkdownNode]):
     return "\n".join(lines)
 
 
-nodes_nav = home_nav.create_nav("Markdown Nodes")
+nodes_nav = home_nav.add_nav("Markdown Nodes")
 # get_subclasses just calls __subclasses__ recursively.
 for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
     if example_text := generate_example(kls):
-        subpage = nodes_nav.create_page(kls.__name__)
+        subpage = nodes_nav.add_page(kls.__name__)
         subpage += example_text
 
 # Lets generate our Code documentation.
-own_docs = root_nav.create_documentation(module=markdownizer, filter_by___all__=True)
+own_docs = root_nav.add_documentation(module=markdownizer, filter_by___all__=True)
 own_docs.add_module_overview()
 for klass in own_docs.iter_classes():
     # the default class page contains MkDocStrings, a mermaid inheritance diagram
@@ -60,17 +60,17 @@ for klass in own_docs.iter_classes():
     own_docs.add_class_page(klass=klass)
 
 # We could also add docs for random other modules, too.
-mkdocs_docs = root_nav.create_documentation(module=mkdocs)
+mkdocs_docs = root_nav.add_documentation(module=mkdocs)
 for klass in mkdocs_docs.iter_classes(recursive=True):
     mkdocs_docs.add_class_page(klass=klass)
 
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
-tree_page = home_nav.create_page("Navigation tree", hide_toc=True)
+tree_page = home_nav.add_page("Navigation tree", hide_toc=True)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
 virtual_files = root_nav.all_virtual_files()
-files_page = home_nav.create_page("File map", hide_toc=True)
+files_page = home_nav.add_page("File map", hide_toc=True)
 files_page += markdownizer.Code(language="py", code=pprint.pformat(virtual_files))
 
 

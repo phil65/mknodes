@@ -121,6 +121,17 @@ class MkPage(markdownnode.MarkdownContainer):
 
 
 class ClassPage(MkPage):
+    """Page showing information about a class.
+
+    Arguments:
+        klass: class to show info for
+        module_path: If given, overrides module returned by class.__module__
+                     This can be useful if you want to link to an aliased class
+                     (for example a class imported to __init__.py)
+        path: some path for the file.
+        kwargs: keyword arguments passed to base class
+    """
+
     def __init__(
         self,
         klass: type,
@@ -129,16 +140,6 @@ class ClassPage(MkPage):
         path: str | os.PathLike = "",
         **kwargs,
     ):
-        """Page showing information about a class.
-
-        Arguments:
-            klass: class to show info for
-            module_path: If given, overrides module returned by class.__module__
-                         This can be useful if you want to link to an aliased class
-                         (for example a class imported to __init__.py)
-            path: some path for the file.
-            kwargs: keyword arguments passed to base class
-        """
         path = pathlib.Path(f"{klass.__name__}.md")
         super().__init__(path=path, **kwargs)
         self.klass = klass

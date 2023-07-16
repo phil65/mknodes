@@ -69,7 +69,7 @@ class Nav(markdownnode.MarkdownNode):
         self.navs = [i for i in items if isinstance(i, Nav)]
         self.pages = [i for i in items if not isinstance(i, Nav)]
 
-    def create_nav(self, section: str | os.PathLike) -> nav.Nav:
+    def add_nav(self, section: str | os.PathLike) -> nav.Nav:
         navi = nav.Nav(section=section, parent=self)
         self.nav[(section,)] = f"{section}/"
         self.navs.append(navi)
@@ -85,7 +85,7 @@ class Nav(markdownnode.MarkdownNode):
     def to_markdown(self):
         return "".join(self.nav.build_literate_nav())
 
-    def create_page(
+    def add_page(
         self,
         title: str,
         hide_toc: bool = False,
@@ -104,7 +104,7 @@ class Nav(markdownnode.MarkdownNode):
         self.pages.append(page)
         return page
 
-    def create_documentation(
+    def add_documentation(
         self,
         module: types.ModuleType | str,
         filter_by___all__: bool = False,
@@ -121,12 +121,12 @@ class Nav(markdownnode.MarkdownNode):
 
 if __name__ == "__main__":
     docs = Nav()
-    subnav = docs.create_nav("subnav")
-    page = subnav.create_page("My first page!")
+    subnav = docs.add_nav("subnav")
+    page = subnav.add_page("My first page!")
     page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
-    page2 = subnav.create_page("And a second one")
-    subsubnav = subnav.create_nav("SubSubNav")
-    subsubnav = subsubnav.create_page("SubSubPage")
+    page2 = subnav.add_page("And a second one")
+    subsubnav = subnav.add_nav("SubSubNav")
+    subsubnav = subsubnav.add_page("SubSubPage")
     from pprint import pprint
 
     pprint(docs.all_virtual_files())

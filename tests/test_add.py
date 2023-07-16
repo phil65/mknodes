@@ -15,14 +15,14 @@ import markdownizer
 )
 def test_resolved_path(a: int, b: int, result: int):
     nav = markdownizer.Nav()
-    subnav = nav.create_nav("subsection")
-    subsubnav = subnav.create_nav("subsubsection")
+    subnav = nav.add_nav("subsection")
+    subsubnav = subnav.add_nav("subsubsection")
     assert subsubnav.resolved_parts == ("subsection", "subsubsection")
 
 
 def test_creating_module_document():
     nav = markdownizer.Nav()
-    subnav = nav.create_nav("subsection")
-    module_docs = subnav.create_documentation(pytest)
+    subnav = nav.add_nav("subsection")
+    module_docs = subnav.add_documentation(pytest)
     klasses = list(module_docs.iter_classes())
     assert klasses
