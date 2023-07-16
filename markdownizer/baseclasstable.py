@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class BaseClassTable(table.Table):
+    """Table showing info for a list of classes."""
+
     def __init__(
         self,
         klasses: list[type],
@@ -49,6 +51,7 @@ class BaseClassTable(table.Table):
         from markdownizer import nav, table
 
         yield dict(klasses=[table.Table, BaseClassTable, nav.Nav])
+        yield dict(klasses=[table.Table, BaseClassTable, nav.Nav], layout="extended")
 
     def get_default_layout(self):
         desc = [

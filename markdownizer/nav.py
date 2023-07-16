@@ -19,7 +19,11 @@ logger = logging.getLogger(__name__)
 
 
 class Nav(markdownnode.MarkdownNode):
-    """Nav section, representing a nestable menu."""
+    """Nav section, representing a nestable menu.
+
+    A nav has a section name (exception can be the root), an associated virtual file
+    (in general a SUMMARY.md) and can contain other navs as well as pages.
+    """
 
     def __init__(
         self,

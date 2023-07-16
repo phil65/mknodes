@@ -26,7 +26,11 @@ HEADER = "---\n{options}\n---\n\n"
 
 
 class MkPage(markdownnode.MarkdownContainer):
-    """A node container with a physical Markdown file associated."""
+    """A node container representing a Markdown page.
+
+    A page contains a list of other Markdown nodes, has a virtual Markdown file
+    associated, and can have metadata (added as header)
+    """
 
     def __init__(
         self,

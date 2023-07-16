@@ -43,7 +43,9 @@ class ModulePage(mkpage.MkPage):
 
     @staticmethod
     def examples():
-        yield dict(module="markdownizer")
+        import markdownizer
+
+        yield dict(module=markdownizer)
 
     def _build(self):
         if doc := self.module.__doc__:

@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class ClassTable(baseclasstable.BaseClassTable):
+    """Table to show information about a specific class."""
+
     def __init__(
         self,
         klass: type,
