@@ -62,7 +62,6 @@ def to_module_parts(module: Sequence[str] | str | types.ModuleType) -> tuple[str
             return module.parts
         case _:
             raise TypeError(module)
-    return None
 
 
 def iter_classes_for_module(

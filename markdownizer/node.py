@@ -4,6 +4,8 @@ from collections.abc import Callable, Iterable, Iterator, Sequence
 import logging
 import re
 
+from typing import Any
+
 from typing_extensions import Self
 
 from markdownizer import utils
@@ -18,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class BaseResolver:
-    _match_cache = {}
+    _match_cache: dict[tuple[str, bool], re.Pattern] = {}
 
     def __init__(self, ignore_case: bool = False):
         """Base resolver. Subclass to get glob functionality.
@@ -204,7 +206,7 @@ class BaseResolver:
         node, parts = self._start(root_node, path, self.__match)
         return self._glob(node, parts)
 
-    def _start(self, node, path: str, cmp_):
+    def _start(self, node, path: str, cmp_) -> tuple[Any, list[str]]:
         sep = self.get_separator(node)
         parts = path.split(sep)
         # resolve root
@@ -247,7 +249,7 @@ class BaseResolver:
             nodes = [node]
         return nodes
 
-    def _find(self, node, pat, remainder):
+    def _find(self, node, pat: str, remainder) -> list:
         matches = []
         for child in self.get_children(node):
             name = self.get_attribute(child)
@@ -267,7 +269,7 @@ class BaseResolver:
         """Return `True` is a wildcard."""
         return "?" in path or "*" in path
 
-    def __match(self, name, pat):
+    def __match(self, name: str, pat: str) -> bool:
         k = (pat, self.ignore_case)
         try:
             re_pat = self._match_cache[k]
@@ -285,7 +287,7 @@ class BaseResolver:
         return name.upper() == pat.upper() if self.ignore_case else name == pat
 
     @staticmethod
-    def __translate(pat):
+    def __translate(pat: str) -> str:
         re_pat = ""
         for char in pat:
             if char == "*":

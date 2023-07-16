@@ -11,6 +11,8 @@ from .mkpage import ClassPage, MkPage, ModulePage
 from .moduledocumentation import ModuleDocumentation
 from .nav import Nav
 from .table import Table
+from .tabblock import TabBlock
+from .snippet import Snippet
 
 
 __all__ = [
@@ -29,6 +31,8 @@ __all__ = [
     "ClassPage",
     "ModulePage",
     "ModuleDocumentation",
+    "TabBlock",
+    "Snippet",
 ]
 
 __version__ = "0.0.1"

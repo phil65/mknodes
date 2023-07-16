@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class Table(markdownnode.MarkdownNode):
+    REQUIRED_EXTENSIONS = "tables"
+
     def __init__(
         self,
         data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,
