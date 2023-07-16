@@ -52,8 +52,9 @@ for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
         subpage += example_text
 
 # Lets generate our Code documentation.
-own_docs = root_nav.create_documentation(module=markdownizer)
-for klass in own_docs.iter_classes(filter_by___all__=True):
+own_docs = root_nav.create_documentation(module=markdownizer, filter_by___all__=True)
+own_docs.add_module_overview()
+for klass in own_docs.iter_classes():
     # the default class page contains MkDocStrings, a mermaid inheritance diagram
     # and tables with links to child classes.
     own_docs.add_class_page(klass=klass)

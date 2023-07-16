@@ -21,6 +21,7 @@ class ModuleDocumentation(nav.Nav):
     def __init__(
         self,
         module: types.ModuleType | str,
+        filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
         **kwargs,
     ):
@@ -28,6 +29,7 @@ class ModuleDocumentation(nav.Nav):
         if self.module is None:
             raise RuntimeError(f"Couldnt load module {module!r}")
         self.is_package = hasattr(self.module, "__path__")
+        self.filter_by___all__ = filter_by___all__
         self.module_name = self.module.__name__.split(".")[-1]
         self.module_path = self.module.__name__
         self.file_path = self.module.__file__
@@ -56,7 +58,6 @@ class ModuleDocumentation(nav.Nav):
         self,
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
-        filter_by___all__: bool = False,
         predicate: Callable | None = None,
         _seen=None,
     ):
@@ -71,12 +72,11 @@ class ModuleDocumentation(nav.Nav):
                     yield from self.iter_classes(
                         submod,
                         recursive=True,
-                        filter_by___all__=filter_by___all__,
                         predicate=predicate,
                         _seen=seen,
                     )
         for klass_name, klass in inspect.getmembers(mod, inspect.isclass):
-            if filter_by___all__ and (
+            if self.filter_by___all__ and (
                 not hasattr(mod, "__all__") or klass_name not in mod.__all__
             ):
                 continue
@@ -90,7 +90,6 @@ class ModuleDocumentation(nav.Nav):
         self,
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
-        filter_by___all__: bool = False,
         predicate: Callable | None = None,
         _seen=None,
     ):
@@ -100,7 +99,7 @@ class ModuleDocumentation(nav.Nav):
             return
         for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
             not_in_all = hasattr(mod, "__all__") and submod_name not in mod.__all__
-            filtered_by_all = filter_by___all__ and not_in_all
+            filtered_by_all = self.filter_by___all__ and not_in_all
             not_filtered_by_pred = predicate(mod) if predicate else True
             # if self.module_name in mod.__name__.split(".")
             if not filtered_by_all and not_filtered_by_pred:
@@ -111,7 +110,6 @@ class ModuleDocumentation(nav.Nav):
                 yield from self.iter_modules(
                     submod,
                     recursive=True,
-                    filter_by___all__=filter_by___all__,
                     predicate=predicate,
                     _seen=seen,
                 )
@@ -164,18 +162,17 @@ class ModuleDocumentation(nav.Nav):
         self.pages.append(page)
         return page
 
-    def add_module_page(self, module, path, **kwargs):
-        path = pathlib.Path(path)
-        complete_mod_path = f"{self.module_name}.{module}"
-        parts = path.parts[:-1]
+    def add_module_overview(self, **kwargs):
+        path = pathlib.Path("index.md")
+        # parts = path.parts[:-1]
         page = mkpage.ModulePage(
             hide_toc=True,
-            module=complete_mod_path,
+            module=self.module,
             path=path,
             parent=self,
             **kwargs,
         )
-        self[parts] = path.with_name("index.md")
+        self[self.module_name] = path
         self.pages.append(page)
         return page
 

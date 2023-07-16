@@ -105,11 +105,15 @@ class Nav(markdownnode.MarkdownNode):
         return page
 
     def create_documentation(
-        self, module: types.ModuleType | str
+        self,
+        module: types.ModuleType | str,
+        filter_by___all__: bool = False,
     ) -> moduledocumentation.ModuleDocumentation:
         from markdownizer import moduledocumentation
 
-        nav = moduledocumentation.ModuleDocumentation(module=module, parent=self)
+        nav = moduledocumentation.ModuleDocumentation(
+            module=module, filter_by___all__=filter_by___all__, parent=self
+        )
         self.nav[(nav.module_name,)] = f"{nav.module_name}/"
         self.navs.append(nav)
         return nav
