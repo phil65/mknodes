@@ -90,6 +90,7 @@ markdown_extensions:
 - pymdownx.mark
 - pymdownx.tilde
 - pymdownx.magiclink # auto-convert links
+- pymdownx.blocks.tab # new-style tabs
 # - pymdownx.saneheaders # require a whitespace after header #
 - pymdownx.tasklist:
     custom_checkbox: true
