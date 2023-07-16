@@ -17,7 +17,7 @@ class DocStrings(markdownnode.Text):
     """Docstring section (powered by mkdocstrings)."""
 
     REQUIRED_PLUGINS = "mkdocstrings"
-    OPTIONS_DEFAULT = {}
+    OPTIONS_DEFAULT: dict[str, Any] = {}
 
     def __init__(
         self,

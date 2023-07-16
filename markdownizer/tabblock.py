@@ -15,7 +15,7 @@ class TabBlock(markdownnode.MarkdownNode):
 
     def __init__(
         self,
-        tabs: dict[str, str],
+        tabs: dict[str, str | markdownnode.MarkdownNode],
         header: str = "",
     ):
         super().__init__(header=header)
@@ -25,7 +25,7 @@ class TabBlock(markdownnode.MarkdownNode):
         lines = []
         for k, v in self.tabs.items():
             lines.append(f"/// tab | {k}")
-            lines.extend(v.split("\n"))
+            lines.extend(str(v).split("\n"))
             lines.append("///\n")
         return "\n".join(lines)
 

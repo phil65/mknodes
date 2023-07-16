@@ -28,7 +28,7 @@ class Nav(markdownnode.MarkdownNode):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.section = section
+        self.section = str(section) if section else None
         self.filename = filename
         self.path = (
             pathlib.Path(section) / self.filename

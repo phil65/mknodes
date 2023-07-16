@@ -28,6 +28,8 @@ class Table(markdownnode.MarkdownNode):
         super().__init__(header=header)
         column_modifiers = column_modifiers or {}
         match data:
+            case None:
+                self.data = {}
             case Mapping():
                 self.data = {str(k): [str(i) for i in v] for k, v in data.items()}
             case ((str(), *_), *_):
