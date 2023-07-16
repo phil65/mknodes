@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 import logging
-from typing import Iterator
 
 import mkdocs_gen_files
 
@@ -103,8 +103,11 @@ class MarkdownContainer(MarkdownNode):
         self.append(other)
         return self
 
-    def __iter__(self) -> Iterator[MarkdownNode]:
+    def __iter__(self) -> Iterator[MarkdownNode]:  # type: ignore
         return iter(self.items)
+
+    def __repr__(self):
+        return utils.get_repr(self, items=self.items)
 
     def _to_markdown(self) -> str:
         return "\n\n".join(i.to_markdown() for i in self.items)
@@ -114,7 +117,7 @@ class MarkdownContainer(MarkdownNode):
             other = Text(other, parent=self)
         self.items.append(other)
 
-    @property
+    @property  # type: ignore
     def children(self) -> list[MarkdownNode]:
         return self.items
 

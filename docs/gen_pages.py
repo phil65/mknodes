@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-docs = markdownizer.Docs()
+docs = markdownizer.Nav()
 mkdocs_documentation = docs.create_documentation(module=mkdocs)
 own_documentation = docs.create_documentation(module=markdownizer)
 inspect_documentation = docs.create_documentation(module=inspect)

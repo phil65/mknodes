@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 import logging
 
 from markdownizer import markdownnode
@@ -15,7 +16,7 @@ class TabBlock(markdownnode.MarkdownNode):
 
     def __init__(
         self,
-        tabs: dict[str, str | markdownnode.MarkdownNode],
+        tabs: Mapping[str, str | markdownnode.MarkdownNode],
         header: str = "",
     ):
         super().__init__(header=header)

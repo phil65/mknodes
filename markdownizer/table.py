@@ -38,7 +38,7 @@ class Table(markdownnode.MarkdownNode):
                 for i, col in enumerate(data):
                     self.data[h[i]] = [str(j) for j in col]
             case (dict(), *_):
-                self.data = {k: [dic[k] for dic in data] for k in data[0]}
+                self.data = {k: [dic[k] for dic in data] for k in data[0]}  # type: ignore
             case ():
                 self.data = {}
             case _:

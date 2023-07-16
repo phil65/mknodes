@@ -11,7 +11,6 @@ from markdownizer import utils
 logger = logging.getLogger(__name__)
 
 
-
 class BaseNode:
     """A Node class that can be used to build trees."""
 
@@ -144,7 +143,10 @@ class BaseNode:
         )
 
     def row(self) -> int:
-        return self.parent_item.children.index(self) if self.parent_item else 0
+        if self.parent_item:
+            return self.parent_item.children.index(self)  # type: ignore
+        else:
+            return 0
 
     def pprint(self, indent: int = 0):
         text = indent * "    " + repr(self)

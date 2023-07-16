@@ -43,7 +43,9 @@ def to_module(
             raise TypeError(module)
 
 
-def to_module_parts(module: Sequence[str] | str | types.ModuleType) -> tuple[str, ...]:
+def to_module_parts(  # type: ignore
+    module: Sequence[str] | str | types.ModuleType,
+) -> tuple[str, ...]:
     """Returns a tuple describing the module path.
 
     Result is of form ("module", "submodule", "subsubmodule")
