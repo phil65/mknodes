@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class List(markdownnode.MarkdownNode):
+    """Class to show a formatted list."""
+
     def __init__(self, listitems: list[str] | None = None, header: str = ""):
         super().__init__(header)
         self.listitems = listitems or []

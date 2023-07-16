@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class Table(markdownnode.MarkdownNode):
+    """Class representing a formatted table."""
+
     REQUIRED_EXTENSIONS = "tables"
 
     def __init__(

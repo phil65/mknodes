@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import logging
-import textwrap
-
-from typing import Literal
 
 from markdownizer import markdownnode
 
@@ -12,6 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class TabBlock(markdownnode.MarkdownNode):
+    """pymdownx-based Tab block."""
+
     REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
 
     def __init__(

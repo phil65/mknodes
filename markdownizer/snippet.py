@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class Snippet(markdownnode.MarkdownNode):
     """Snippet to include markdown from another file.
 
-    See https://facelessuser.github.io/pymdown-extensions/extensions/snippets/.
+    [More info](https://facelessuser.github.io/pymdown-extensions/extensions/snippets/)
     """
 
     REQUIRED_EXTENSIONS = "pymdownx.snippets"

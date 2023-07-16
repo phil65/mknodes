@@ -29,6 +29,8 @@ def get_connections(objects, child_getter, id_getter=None):
 
 
 class MermaidDiagram(markdownnode.MarkdownNode):
+    """Class representing a mermaid diagram."""
+
     TYPE_MAP = dict(
         flow="graph",
         sequence="sequenceDiagram",

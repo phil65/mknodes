@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 class Nav(markdownnode.MarkdownNode):
+    """Nav section, representing a nestable menu."""
+
     def __init__(
         self,
         section: str | os.PathLike | None = None,

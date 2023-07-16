@@ -32,6 +32,13 @@ def get_function_body(func: types.MethodType | types.FunctionType | type) -> str
 class Code(markdownnode.Text):
     """Class representing a Code block."""
 
+    REQUIRED_EXTENSIONS = [
+        "pymdownx.highlight",
+        "pymdownx.inlinehilite",
+        "pymdownx.snippets",
+        "pymdownx.superfences",
+    ]
+
     def __init__(
         self,
         language: str,

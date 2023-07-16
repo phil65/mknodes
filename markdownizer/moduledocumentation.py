@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class ModuleDocumentation(nav.Nav):
+    """Nav for showing a module documenation."""
+
     def __init__(
         self,
         module: types.ModuleType | str,
