@@ -4,14 +4,18 @@ from .admonition import Admonition
 from .markdownnode import MarkdownNode, Text
 from .code import Code
 from .docstrings import DocStrings
-from .image import BinaryImage, Image
+from .image import Image
+from .binaryimage import BinaryImage
 from .list import List
 from .diagram import Diagram
-from .mkpage import ClassPage, MkPage, ModulePage
+from .mkpage import MkPage
+from .classpage import ClassPage
+from .modulepage import ModulePage
 from .moduledocumentation import ModuleDocumentation
 from .nav import Nav
 from .table import Table
-from .classtable import BaseClassTable, ClassTable
+from .baseclasstable import BaseClassTable
+from .classtable import ClassTable
 from .tabblock import TabBlock
 from .tabbed import Tabbed
 from .sourceandresult import SourceAndResult
