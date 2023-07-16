@@ -129,7 +129,7 @@ class ClassPage(MkPage):
         path: str | os.PathLike = "",
         **kwargs,
     ):
-        """Document showing info about a class.
+        """Page showing information about a class.
 
         Arguments:
             klass: class to show info for
@@ -139,7 +139,7 @@ class ClassPage(MkPage):
             path: some path for the file.
             kwargs: keyword arguments passed to base class
         """
-        path = pathlib.Path(path).with_name(f"{klass.__name__}.md")
+        path = pathlib.Path(f"{klass.__name__}.md")
         super().__init__(path=path, **kwargs)
         self.klass = klass
         match module_path:
@@ -151,6 +151,10 @@ class ClassPage(MkPage):
 
     def __repr__(self):
         return utils.get_repr(self, klass=self.klass.__name__, path=str(self.path))
+
+    @staticmethod
+    def examples():
+        yield dict(klass=ClassPage)
 
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
@@ -170,7 +174,7 @@ class ClassPage(MkPage):
 
 
 class ModulePage(MkPage):
-    """Document showing info about a module.
+    """Page showing information about a module.
 
     Arguments:
         module: ModuleType or path to model to show info for.
@@ -183,12 +187,12 @@ class ModulePage(MkPage):
         self,
         module: tuple[str, ...] | str | types.ModuleType,
         *,
-        path: str | os.PathLike = "",
+        path: str | os.PathLike = "index.md",
         docstrings: bool = False,
         show_class_table: bool = True,
         **kwargs,
     ):
-        path = pathlib.Path(path).with_name("index.md")
+        path = pathlib.Path(path)
         super().__init__(path=path, **kwargs)
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(self.parts)
@@ -198,6 +202,10 @@ class ModulePage(MkPage):
 
     def __repr__(self):
         return utils.get_repr(self, module=self.module.__name__, path=str(self.path))
+
+    @staticmethod
+    def examples():
+        yield dict(module="markdownizer")
 
     def _build(self):
         if doc := self.module.__doc__:

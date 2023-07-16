@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class Image(markdownnode.MarkdownNode):
+    """Image including optional caption."""
+
     def __init__(
         self, path: str, caption: str = "", title: str = "Image title", header: str = ""
     ):
@@ -28,6 +30,8 @@ class Image(markdownnode.MarkdownNode):
 
 
 class BinaryImage(Image):
+    """Binary data of an image which will become a file when the tree is written."""
+
     def __init__(
         self,
         data: bytes,
