@@ -11,19 +11,19 @@ from markdownizer import classhelpers, utils
 import mkdocs
 
 root_nav = markdownizer.Nav()
-
-home_nav = root_nav.add_nav("Home")
-
-intro_page = home_nav.add_page("Introduction", hide_toc=True)
-intro_page += "### Not in the mood to write documentation? Let´s code it then!"
-intro_page.add_admonition(
+page = markdownizer.MkPage(path="index.md", hide_toc=True, hide_nav=True)
+page += "### Not in the mood to write documentation? Let´s code it then!"
+page.add_admonition(
     "API is still evolving, so consider this a preview.", typ="danger", title="Warning!"
 )
-intro_page += "This is the source code for building this website:"
-intro_page.add_code(pathlib.Path(__file__).read_text(), language="py")
+page += "This is the source code for building this website:"
+page.add_code(pathlib.Path(__file__).read_text(), language="py")
+# page.add_code(str(page), language="markup")
+page.write()
 
 
 # now lets create the documentation. This is the "manual way" by building custom pages.
+home_nav = root_nav.add_nav("Home")
 nodes_nav = home_nav.add_nav("Nodes")
 # Basically everything interesting in this library inherits from MarkdownNode.
 # It´s the base class for all tree nodes we are building. The tree goes from the root nav
@@ -59,11 +59,11 @@ for klass in mkdocs_docs.iter_classes(recursive=True):
 
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
-tree_page = home_nav.add_page("Node tree", hide_toc=True)
+tree_page = root_nav.add_page("Node tree", hide_toc=True, hide_nav=True)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
 virtual_files = root_nav.all_virtual_files()
-files_page = home_nav.add_page("File map", hide_toc=True)
+files_page = root_nav.add_page("File map", hide_toc=True, hide_nav=True)
 files_page += markdownizer.Code(language="py", code=pprint.pformat(virtual_files))
 
 

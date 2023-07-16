@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 import logging
+import textwrap
 
 import mkdocs_gen_files
 
@@ -19,9 +20,12 @@ class MarkdownNode(node.BaseNode):
     by one tree.
     """
 
-    def __init__(self, header: str = "", parent: MarkdownNode | None = None):
+    def __init__(
+        self, header: str = "", indent: str = "", parent: MarkdownNode | None = None
+    ):
         super().__init__(parent=parent)
         self.header = header
+        self.indent = indent
 
     def __str__(self):
         return self.to_markdown()
@@ -38,6 +42,8 @@ class MarkdownNode(node.BaseNode):
         text = self._to_markdown()
         if text:
             text += "\n"
+        if self.indent:
+            text = textwrap.indent(text, self.indent)
         return f"## {self.header}\n\n{text}" if self.header else text
 
     @property
@@ -125,8 +131,7 @@ class MarkdownContainer(MarkdownNode):
         return "\n\n".join(i.to_markdown() for i in self.items)
 
     def append(self, other: str | MarkdownNode):
-        if isinstance(other, str):
-            other = Text(other, parent=self)
+        other = Text(other, parent=self) if isinstance(other, str) else other
         self.items.append(other)
 
     @property  # type: ignore

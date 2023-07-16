@@ -9,7 +9,7 @@ import logging
 import pathlib
 import types
 
-from markdownizer import classhelpers, mkpage, nav, utils
+from markdownizer import classhelpers, mkpage, modulepage, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -198,7 +198,7 @@ class ModuleDocumentation(nav.Nav):
         """Add a page showing all submodules."""
         path = pathlib.Path("index.md")
         # parts = path.parts[:-1]
-        page = mkpage.ModulePage(
+        page = modulepage.ModulePage(
             hide_toc=True,
             module=self.module,  # type: ignore
             path=path,

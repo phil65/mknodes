@@ -26,7 +26,7 @@ def get_repr(_obj: Any, *args: Any, **kwargs: Any) -> str:
     classname = type(_obj).__name__
     parts = [repr(val) for val in args]
     kw_parts = [
-        f"{k}={v.__name__ if isinstance(v, type | types.ModuleType) else repr(v)}"
+        f"{k}={v.__name__ if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType) else repr(v)}"  # noqa: E501
         for k, v in kwargs.items()
     ]
     return f"{classname}({', '.join(parts + kw_parts)})"
@@ -137,7 +137,9 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
     if not kwargs:
         return ""
     kwarg_list = [
-        f"{k}={v.__name__ if callable(v) else repr(v)}" for k, v in kwargs.items()
+        f"{k}={v.__name__ if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType) else repr(v)}"  # noqa: E501
+        for k, v in kwargs.items()
+        for k, v in kwargs.items()
     ]
     return ", ".join(kwarg_list)
 
