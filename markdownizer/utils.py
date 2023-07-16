@@ -129,6 +129,15 @@ def to_html_list(
     return f"<ul>{item_str}</ul>"
 
 
+def format_kwargs(kwargs: dict[str, Any]) -> str:
+    if not kwargs:
+        return ""
+    kwarg_list = [
+        f"{k}={v.__name__ if callable(v) else repr(v)}" for k, v in kwargs.items()
+    ]
+    return ", ".join(kwarg_list)
+
+
 if __name__ == "__main__":
     link_for_class(logging.LogRecord)
 

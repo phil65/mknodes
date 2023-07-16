@@ -16,6 +16,21 @@ T = typing.TypeVar("T", bound=type)
 logger = logging.getLogger(__name__)
 
 
+def get_subclasses(klass: type, include_abstract: bool = False) -> typing.Iterator[type]:
+    """Recursively iter all subclasses of given klass.
+
+    Arguments:
+        klass: class to get subclasses from
+        include_abstract: whether abstract base classes should be included.
+    """
+    if getattr(klass.__subclasses__, "__self__", None) is None:
+        return
+    for i in klass.__subclasses__():
+        yield from get_subclasses(i)
+        if include_abstract or not inspect.isabstract(i):
+            yield i
+
+
 def to_module(
     module: str | Sequence[str] | types.ModuleType,
     return_none: bool = True,

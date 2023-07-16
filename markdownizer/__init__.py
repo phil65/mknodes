@@ -12,6 +12,8 @@ from .moduledocumentation import ModuleDocumentation
 from .nav import Nav
 from .table import Table
 from .tabblock import TabBlock
+from .tabbed import Tabbed
+from .sourceandresult import SourceAndResult
 from .snippet import Snippet
 
 
@@ -32,6 +34,8 @@ __all__ = [
     "ModulePage",
     "ModuleDocumentation",
     "TabBlock",
+    "Tabbed",
+    "SourceAndResult",
     "Snippet",
 ]
 

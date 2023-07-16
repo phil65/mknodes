@@ -54,6 +54,12 @@ class Table(markdownnode.MarkdownNode):
         lines.extend(f"|{'|'.join(row)}|" for row in self._iter_rows())
         return "\n".join(lines)
 
+    @staticmethod
+    def examples():
+        yield dict(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
+        dicts = [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}]
+        yield dict(data=dicts)
+
     def _iter_rows(self):
         length = min(len(i) for i in self.data.values())
         for j, _ in enumerate(range(length)):

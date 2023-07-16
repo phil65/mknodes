@@ -22,6 +22,10 @@ class TabBlock(markdownnode.MarkdownNode):
         super().__init__(header=header)
         self.tabs = tabs
 
+    @staticmethod
+    def examples():
+        yield dict(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
+
     def _to_markdown(self) -> str:
         lines = []
         for k, v in self.tabs.items():

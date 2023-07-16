@@ -26,6 +26,10 @@ class MarkdownNode(node.BaseNode):
     def __str__(self):
         return self.to_markdown()
 
+    # @staticmethod
+    # def examples():
+    #     yield from ()
+
     def _to_markdown(self):
         return NotImplemented
 

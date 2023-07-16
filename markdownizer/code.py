@@ -42,7 +42,7 @@ class Code(markdownnode.Text):
     def __init__(
         self,
         language: str,
-        text: str | markdownnode.MarkdownNode = "",
+        code: str | markdownnode.MarkdownNode = "",
         *,
         title: str = "",
         header: str = "",
@@ -50,15 +50,22 @@ class Code(markdownnode.Text):
         highlight_lines: list[int] | None = None,
         parent=None,
     ):
-        super().__init__(text, header=header, parent=parent)
+        if isinstance(code, Code):
+            code = textwrap.indent(str(code), "    ")
+        super().__init__(code, header=header, parent=parent)
         self.language = language
         self.title = title
         self.linenums = linenums
         self.highlight_lines = highlight_lines
 
     def _to_markdown(self) -> str:
-        title = f" title={self.title}" if self.title else ""
+        title = f" title={self.title!r}" if self.title else ""
         return f"```{self.language}{title}\n{self.text}\n```"
+
+    @staticmethod
+    def examples():
+        yield dict(language="python", code="a = 1 + 2")
+        yield dict(language="javascript", code="Some JavaScript", title="Some Header")
 
     @classmethod
     def for_object(
@@ -80,7 +87,7 @@ class Code(markdownnode.Text):
         else:
             code = inspect.getsource(obj)
         code = textwrap.dedent(code) if dedent else code
-        return cls(language="py", text=code)
+        return cls(language="py", code=code)
 
 
 if __name__ == "__main__":

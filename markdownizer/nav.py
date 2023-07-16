@@ -85,10 +85,22 @@ class Nav(markdownnode.MarkdownNode):
     def to_markdown(self):
         return "".join(self.nav.build_literate_nav())
 
-    def create_page(self, title: str, **kwargs):
+    def create_page(
+        self,
+        title: str,
+        hide_toc: bool = False,
+        hide_nav: bool = False,
+        hide_path: bool = False,
+    ):
         filename = f"{title}.md"
         self.__setitem__(title, filename)
-        page = mkpage.MkPage(path=filename, parent=self, **kwargs)
+        page = mkpage.MkPage(
+            path=filename,
+            parent=self,
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            hide_path=hide_path,
+        )
         self.pages.append(page)
         return page
 
