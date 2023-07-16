@@ -13,6 +13,7 @@ from markdownizer import (
     docstrings,
     markdownnode,
     mermaiddiagram,
+    nav,
     table,
     utils,
 )
@@ -31,7 +32,7 @@ class MkPage(markdownnode.MarkdownNode):
         hide_nav: bool = False,
         hide_path: bool = False,
         path: str | os.PathLike = "",
-        parent=None,
+        parent: nav.Nav | None = None,
     ):
         super().__init__(parent=parent)
         self.items = items or []
@@ -169,7 +170,7 @@ class ModulePage(MkPage):
 
     Arguments:
         module: ModuleType or path to model to show info for.
-        module: Some path for the file.
+        path: Some path for the file. Default is index.md
         docstrings: Whether to show docstrings for given module.
         show_class_table: ModuleType or path to model to show info for.
     """
@@ -177,8 +178,8 @@ class ModulePage(MkPage):
     def __init__(
         self,
         module: tuple[str, ...] | str | types.ModuleType,
-        path: str | os.PathLike = "",
         *,
+        path: str | os.PathLike = "",
         docstrings: bool = False,
         show_class_table: bool = True,
         **kwargs,
