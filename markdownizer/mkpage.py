@@ -12,9 +12,9 @@ from markdownizer import (
     classhelpers,
     classtable,
     code as codeblock,
+    diagram,
     docstrings,
     markdownnode,
-    mermaiddiagram,
     nav,
     utils,
 )
@@ -167,8 +167,8 @@ class ClassPage(MkPage):
         self.append(item)
         if tbl := classtable.ClassTable(self.klass):
             self.append(tbl)
-        diagram = mermaiddiagram.ClassDiagram(self.klass, header="Inheritance diagram")
-        self.append(diagram)
+        item = diagram.ClassDiagram(self.klass, header="Inheritance diagram")
+        self.append(item)
 
 
 class ModulePage(MkPage):

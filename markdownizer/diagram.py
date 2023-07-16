@@ -29,7 +29,7 @@ def get_connections(objects, child_getter, id_getter=None):
     return items, connections
 
 
-class MermaidDiagram(markdownnode.MarkdownNode):
+class Diagram(markdownnode.MarkdownNode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     TYPE_MAP = dict(
@@ -79,7 +79,7 @@ class MermaidDiagram(markdownnode.MarkdownNode):
         return f"```mermaid\n{text}\n```"
 
 
-class ClassDiagram(MermaidDiagram):
+class ClassDiagram(Diagram):
     """Class diagram with several modes."""
 
     def __init__(
@@ -136,7 +136,7 @@ class ClassDiagram(MermaidDiagram):
         return f"```mermaid\n{text}\n```"
 
 
-class NodeDiagram(MermaidDiagram):
+class NodeDiagram(Diagram):
     """Can show the tree of a BaseNode."""
 
     def __init__(self, node: markdownnode.MarkdownNode, *args, **kwargs):
@@ -148,7 +148,7 @@ class NodeDiagram(MermaidDiagram):
 
     def _to_markdown(self) -> str:
         items, connections = get_connections(
-            [self.klass],
+            [self.node],
             child_getter=lambda x: x.children,
             id_getter=lambda x: repr(x),
         )

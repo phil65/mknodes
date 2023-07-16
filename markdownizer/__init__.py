@@ -6,7 +6,7 @@ from .code import Code
 from .docstrings import DocStrings
 from .image import BinaryImage, Image
 from .list import List
-from .mermaiddiagram import MermaidDiagram
+from .diagram import Diagram
 from .mkpage import ClassPage, MkPage, ModulePage
 from .moduledocumentation import ModuleDocumentation
 from .nav import Nav
@@ -28,7 +28,7 @@ __all__ = [
     "BinaryImage",
     "MkPage",
     "Admonition",
-    "MermaidDiagram",
+    "Diagram",
     "Table",
     "BaseClassTable",
     "ClassTable",
