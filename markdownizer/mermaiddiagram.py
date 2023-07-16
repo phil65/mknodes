@@ -29,7 +29,7 @@ def get_connections(objects, child_getter, id_getter=None):
 
 
 class MermaidDiagram(markdownnode.MarkdownNode):
-    """Class representing a mermaid diagram."""
+    """Class representing a mermaid diagram. Can show DAGs."""
 
     TYPE_MAP = dict(
         flow="graph",
@@ -47,9 +47,9 @@ class MermaidDiagram(markdownnode.MarkdownNode):
     def __init__(
         self,
         graph_type: GraphTypeStr,
-        items,
-        connections,
-        orientation: str = "",
+        items=None,
+        connections=None,
+        orientation: str = "TD",
         attributes: dict[str, str] | None = None,
         header: str = "",
     ):
@@ -62,43 +62,13 @@ class MermaidDiagram(markdownnode.MarkdownNode):
             if orientation not in self.ORIENTATION
             else self.ORIENTATION[orientation]
         )
-        self.items = set(items)
-        self.connections = set(connections)
+        self.items = set(items or [])
+        self.connections = set(connections or [])
         self.attributes = attributes or {}
 
     def __repr__(self):
         return utils.get_repr(
             self, graph_type=self.graph_type, orientation=self.orientation
-        )
-
-    @classmethod
-    def for_classes(cls, klasses, header: str = ""):
-        items, connections = get_connections(klasses, child_getter=lambda x: x.__bases__)
-        items = [utils.label_for_class(i) for i in items]
-        connections = [
-            (utils.label_for_class(i), utils.label_for_class(j)) for i, j in connections
-        ]
-        return cls(
-            graph_type="flow",
-            orientation="TD",
-            items=items,
-            connections=connections,
-            header=header,
-        )
-
-    @classmethod
-    def for_subclasses(cls, klasses, header: str = ""):
-        items, connections = get_connections(
-            klasses,
-            child_getter=lambda x: x.__subclasses__(),
-            id_getter=lambda x: x.__name__,
-        )
-        return cls(
-            graph_type="flow",
-            orientation="RL",
-            items=items,
-            connections=connections,
-            header=header,
         )
 
     def _to_markdown(self) -> str:
@@ -108,6 +78,84 @@ class MermaidDiagram(markdownnode.MarkdownNode):
         return f"```mermaid\n{text}\n```"
 
 
+class ClassDiagram(MermaidDiagram):
+    """Class diagram with several modes."""
+
+    def __init__(
+        self,
+        klass: type,
+        mode: Literal["parent_tree", "subclass_tree"] = "parent_tree",
+        *args,
+        **kwargs,
+    ):
+        self.klass = klass
+        self.mode = mode
+        super().__init__(graph_type="flow", **kwargs)
+
+    def __repr__(self):
+        return utils.get_repr(
+            self,
+            klass=self.klass,
+            mode=self.mode,
+            orientation=self.orientation,
+        )
+
+    @staticmethod
+    def examples():
+        yield dict(klass=ClassDiagram)
+
+    def _to_markdown(self) -> str:
+        if self.mode == "subclass_tree":
+            items, connections = get_connections(
+                [self.klass],
+                child_getter=lambda x: x.__subclasses__(),
+                id_getter=lambda x: x.__name__,
+            )
+        else:
+            items, connections = get_connections(
+                [self.klass],
+                child_getter=lambda x: x.__bases__,
+            )
+            items = [utils.label_for_class(i) for i in items]
+            connections = [
+                (utils.label_for_class(i), utils.label_for_class(j))
+                for i, j in connections
+            ]
+        items = list(items) + [f"{a} --> {b}" for a, b in connections]
+        item_str = textwrap.indent("\n".join(items), "  ")
+        text = f"{self.graph_type} {self.orientation}\n{item_str}"
+        return f"```mermaid\n{text}\n```"
+
+
+class NodeDiagram(MermaidDiagram):
+    """Can show the tree of a BaseNode."""
+
+    def __init__(self, node: markdownnode.MarkdownNode, *args, **kwargs):
+        self.node = node
+        super().__init__(graph_type="flow", **kwargs)
+
+    def __repr__(self):
+        return utils.get_repr(self, node=self.node, orientation=self.orientation)
+
+    def _to_markdown(self) -> str:
+        items, connections = get_connections(
+            [self.klass],
+            child_getter=lambda x: x.children,
+            id_getter=lambda x: repr(x),
+        )
+        items = list(items) + [f"{a} --> {b}" for a, b in connections]
+        item_str = textwrap.indent("\n".join(items), "  ")
+        text = f"{self.graph_type} {self.orientation}\n{item_str}"
+        return f"```mermaid\n{text}\n```"
+
+
 class MermaidMindMap(markdownnode.MarkdownNode):
+    """Mermaid Mindmap to display trees."""
+
     def __init__(self, items: dict, header: str = ""):
         super().__init__(header=header)
+
+
+if __name__ == "__main__":
+    diagram = ClassDiagram(MermaidMindMap)
+    print(diagram)

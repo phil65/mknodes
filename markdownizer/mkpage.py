@@ -151,7 +151,7 @@ class ClassPage(MkPage):
         self._build()
 
     def __repr__(self):
-        return utils.get_repr(self, klass=self.klass.__name__, path=str(self.path))
+        return utils.get_repr(self, klass=self.klass, path=str(self.path))
 
     @staticmethod
     def examples():
@@ -159,19 +159,13 @@ class ClassPage(MkPage):
 
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
-        self.append(
-            docstrings.DocStrings(
-                f"{module_path}.{self.klass.__name__}", header="DocStrings"
-            ),
-        )
+        path = f"{module_path}.{self.klass.__name__}"
+        item = docstrings.DocStrings(path, header="DocStrings")
+        self.append(item)
         if tbl := table.Table.get_ancestor_table_for_klass(self.klass):
             self.append(tbl)
-        self.append(
-            mermaiddiagram.MermaidDiagram.for_classes(
-                [self.klass], header="Inheritance diagram"
-            ),
-        )
-        # self.append(mermaiddiagram.MermaidDiagram.for_subclasses([self.klass]))
+        diagram = mermaiddiagram.ClassDiagram(self.klass, header="Inheritance diagram")
+        self.append(diagram)
 
 
 class ModulePage(MkPage):
@@ -202,7 +196,7 @@ class ModulePage(MkPage):
         self._build()
 
     def __repr__(self):
-        return utils.get_repr(self, module=self.module.__name__, path=str(self.path))
+        return utils.get_repr(self, module=self.module, path=str(self.path))
 
     @staticmethod
     def examples():

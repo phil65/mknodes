@@ -4,6 +4,7 @@ from importlib import metadata
 import logging
 import re
 import sys
+import types
 
 from typing import Any
 
@@ -24,7 +25,10 @@ def get_repr(_obj: Any, *args: Any, **kwargs: Any) -> str:
     """
     classname = type(_obj).__name__
     parts = [repr(val) for val in args]
-    kw_parts = [f"{name}={val!r}" for name, val in kwargs.items()]
+    kw_parts = [
+        f"{k}={v.__name__ if isinstance(v, type | types.ModuleType) else repr(v)}"
+        for k, v in kwargs.items()
+    ]
     return f"{classname}({', '.join(parts + kw_parts)})"
 
 

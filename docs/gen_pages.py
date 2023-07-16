@@ -26,40 +26,38 @@ intro_page.add_code(pathlib.Path(__file__).read_text(), language="py")
 def generate_example(kls: type[markdownizer.MarkdownNode]):
     if not hasattr(kls, "examples"):
         return ""
-    lines = [f"## Examples for {utils.link_for_class(kls)}\n"]
+    lines = []
     # "examples()" yields dicts with keyword arguments for building examples.
-    for sig in kls.examples():
+    for i, sig in enumerate(kls.examples(), start=1):
+        lines.append(f"## Example {i} for class {kls.__name__!r}\n")
         sig_txt = utils.format_kwargs(sig)
-        example = (
+        text = (
             f"node = markdownizer.{kls.__name__}({sig_txt})\n"
             + "str(node)  # or node.to_markdown()"
         )
-        example_code = markdownizer.Code(language="py", code=example)
-        lines.append(str(example_code))
-        instance = kls(**sig)
-        code = markdownizer.Code(language="markdown", code=instance)
-        tabs = {"Generated markdown": str(code), "Preview": str(instance)}
+        example = markdownizer.Code(language="py", code=text, title=f"example_{i}.py")
+        lines.append(str(example))
+        node = kls(**sig)
+        code = markdownizer.Code(language="markdown", code=node, title=f"result_{i}.md")
+        tabs = {"Generated markdown": str(code), "Preview": str(node)}
         tab_markdown = markdownizer.Tabbed(tabs).to_markdown()
-        lines.extend(("generates this Markdown:", tab_markdown, "<br><br><br>"))
+        lines.extend((tab_markdown, "<br><br><br>"))
     return "\n".join(lines)
 
 
-nodes_nav = home_nav.add_nav("Markdown Nodes")
+# now lets create the documentation. This is the "manual way" by building custom pages.
+nodes_nav = home_nav.add_nav("Nodes")
+# Basically everything interesting in this library inherits from MarkdownNode.
+# It´s the base class for all tree nodes we are building. The tree goes from the root nav
+# down to single markup elements.
 # get_subclasses just calls __subclasses__ recursively.
 for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
+    subpage = nodes_nav.add_page(kls.__name__)
     if example_text := generate_example(kls):
-        subpage = nodes_nav.add_page(kls.__name__)
         subpage += example_text
+    subpage.add_mkdocstrings(kls)
 
-# Lets generate our Code documentation.
-own_docs = root_nav.add_documentation(module=markdownizer, filter_by___all__=True)
-own_docs.add_module_overview()
-for klass in own_docs.iter_classes():
-    # the default class page contains MkDocStrings, a mermaid inheritance diagram
-    # and tables with links to child classes.
-    own_docs.add_class_page(klass=klass)
-
-# We could also add docs for random other modules, too.
+# We could also add docs for random other modules, too. This is the "semi-automated" way.
 mkdocs_docs = root_nav.add_documentation(module=mkdocs)
 for klass in mkdocs_docs.iter_classes(recursive=True):
     mkdocs_docs.add_class_page(klass=klass)
