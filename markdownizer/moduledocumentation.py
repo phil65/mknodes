@@ -73,7 +73,8 @@ class ModuleDocumentation(nav.Nav):
                 continue
             if predicate and not predicate(klass):
                 continue
-            if klass.__module__.startswith(self.module_name):
+            # if klass.__module__.startswith(self.module_name):
+            if self.module_name in klass.__module__.split("."):
                 yield klass
 
     def iter_modules(
@@ -91,11 +92,8 @@ class ModuleDocumentation(nav.Nav):
         for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
             not_in_all = hasattr(mod, "__all__") and submod_name not in mod.__all__
             filtered_by_all = filter_by___all__ and not_in_all
-            # from_self = submod_name.startswith(self.module_name)
             not_filtered_by_pred = predicate(mod) if predicate else True
-            # if mod.__name__.startswith(self.module_name) and (
-            #     predicate(mod) if predicate else True
-            # ):
+            # if self.module_name in mod.__name__.split(".")
             if not filtered_by_all and not_filtered_by_pred:
                 print(submod_name, flush=True)
                 yield submod
@@ -153,7 +151,7 @@ class ModuleDocumentation(nav.Nav):
             parent=self,
             **kwargs,
         )
-        self[(*parts[1:], klass.__name__)] = path.with_name(f"{klass.__name__}.md")
+        self[(*parts[1:], klass.__name__)] = path
         self.pages.append(page)
         return page
 
