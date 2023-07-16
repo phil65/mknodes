@@ -11,6 +11,7 @@ from .mkpage import ClassPage, MkPage, ModulePage
 from .moduledocumentation import ModuleDocumentation
 from .nav import Nav
 from .table import Table
+from .classtable import BaseClassTable, ClassTable
 from .tabblock import TabBlock
 from .tabbed import Tabbed
 from .sourceandresult import SourceAndResult
@@ -29,6 +30,8 @@ __all__ = [
     "Admonition",
     "MermaidDiagram",
     "Table",
+    "BaseClassTable",
+    "ClassTable",
     "List",
     "ClassPage",
     "ModulePage",

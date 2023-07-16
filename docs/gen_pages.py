@@ -23,28 +23,6 @@ intro_page += "This is the source code for building this website:"
 intro_page.add_code(pathlib.Path(__file__).read_text(), language="py")
 
 
-def generate_example(kls: type[markdownizer.MarkdownNode]):
-    if not hasattr(kls, "examples"):
-        return ""
-    lines = []
-    # "examples()" yields dicts with keyword arguments for building examples.
-    for i, sig in enumerate(kls.examples(), start=1):
-        lines.append(f"## Example {i} for class {kls.__name__!r}\n")
-        sig_txt = utils.format_kwargs(sig)
-        text = (
-            f"node = markdownizer.{kls.__name__}({sig_txt})\n"
-            + "str(node)  # or node.to_markdown()"
-        )
-        example = markdownizer.Code(language="py", code=text, title=f"example_{i}.py")
-        lines.append(str(example))
-        node = kls(**sig)
-        code = markdownizer.Code(language="markdown", code=node, title=f"result_{i}.md")
-        tabs = {"Generated markdown": str(code), "Preview": str(node)}
-        tab_markdown = markdownizer.Tabbed(tabs).to_markdown()
-        lines.extend((tab_markdown, "<br><br><br>"))
-    return "\n".join(lines)
-
-
 # now lets create the documentation. This is the "manual way" by building custom pages.
 nodes_nav = home_nav.add_nav("Nodes")
 # Basically everything interesting in this library inherits from MarkdownNode.
@@ -53,8 +31,25 @@ nodes_nav = home_nav.add_nav("Nodes")
 # get_subclasses just calls __subclasses__ recursively.
 for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
     subpage = nodes_nav.add_page(kls.__name__)
-    if example_text := generate_example(kls):
-        subpage += example_text
+    if hasattr(kls, "examples"):
+        # "examples()" yields dicts with constructor keyword arguments for building examples.
+        for i, sig in enumerate(kls.examples(), start=1):
+            subpage += f"## Example {i} for class {kls.__name__!r}\n"
+            sig_txt = utils.format_kwargs(sig)
+            text = (
+                f"node = markdownizer.{kls.__name__}({sig_txt})\n"
+                + "str(node)  # or node.to_markdown()"
+            )
+            subpage += markdownizer.Code(
+                language="py", code=text, title=f"example_{i}.py"
+            )
+            node = kls(**sig)
+            code = markdownizer.Code(
+                language="markdown", code=node, title=f"result_{i}.md"
+            )
+            tabs = {"Generated markdown": str(code), "Preview": str(node)}
+            subpage += markdownizer.Tabbed(tabs)
+            subpage.add_newlines(3)
     subpage.add_mkdocstrings(kls)
 
 # We could also add docs for random other modules, too. This is the "semi-automated" way.
@@ -64,7 +59,7 @@ for klass in mkdocs_docs.iter_classes(recursive=True):
 
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
-tree_page = home_nav.add_page("Navigation tree", hide_toc=True)
+tree_page = home_nav.add_page("Node tree", hide_toc=True)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
 virtual_files = root_nav.all_virtual_files()

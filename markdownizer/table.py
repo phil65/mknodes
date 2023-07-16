@@ -5,8 +5,6 @@ import inspect
 import logging
 import types
 
-from typing_extensions import Self
-
 from markdownizer import classhelpers, markdownnode, utils
 
 
@@ -80,57 +78,12 @@ class Table(markdownnode.MarkdownNode):
         """
         if isinstance(column, int):
             column = list(self.data.keys())[column]
-        max_len = max(len(str(i)) for i in self.data[column])
+        max_len = max((len(str(i)) for i in self.data[column]), default=0)
         return max(len(column), max_len)
 
     @classmethod
     def for_items(cls, items, columns: dict[str, Callable]):
         ls = [{k: v(item) for k, v in columns.items()} for item in items]
-        return cls(ls)
-
-    # class ClassTable(Table):
-
-    @classmethod
-    def get_classes_table(
-        cls,
-        klasses: list[type],
-        filter_fn: Callable | None = None,
-        shorten_lists_after: int = 10,
-    ) -> Self:
-        """Create a table containing information about a list of classes.
-
-        Includes columns for child and parent classes including links.
-        """
-        ls = []
-        if filter_fn is None:
-
-            def always_true(_):
-                return True
-
-            filter_fn = always_true
-        for kls in klasses:
-            subclasses = [subkls for subkls in kls.__subclasses__() if filter_fn(subkls)]
-            subclass_links = [utils.link_for_class(sub) for sub in subclasses]
-            subclass_str = utils.to_html_list(
-                subclass_links, shorten_after=shorten_lists_after
-            )
-            parents = kls.__bases__
-            parent_links = [utils.link_for_class(parent) for parent in parents]
-            parent_str = utils.to_html_list(
-                parent_links, shorten_after=shorten_lists_after
-            )
-            desc = kls.__doc__.split("\n")[0] if isinstance(kls.__doc__, str) else ""
-            desc = utils.escaped(desc)
-            name = utils.link_for_class(kls, size=4, bold=True)
-            module = utils.styled(kls.__module__, size=1, recursive=True)
-            data = dict(
-                Name=f"{name}<br>{module}<br>{desc}",
-                # Module=kls.__module__,
-                Children=subclass_str,
-                Inherits=parent_str,
-                # Description=desc,
-            )
-            ls.append(data)
         return cls(ls)
 
     @classmethod
@@ -159,28 +112,7 @@ class Table(markdownnode.MarkdownNode):
         rows = list(zip(*rows))
         return cls(rows, columns=["Name", "Information", "Members"])
 
-    @classmethod
-    def get_ancestor_table_for_klass(cls, klass: type) -> Self | None:
-        try:
-            subclasses = klass.__subclasses__()
-        except TypeError:
-            subclasses = []
-        if not subclasses:
-            return None
-        # STRIP_CODE = r"```[^\S\r\n]*[a-z]*\n.*?\n```"
-        # docs = [re.sub(STRIP_CODE, '', k.__module__, 0, re.DOTALL) for k in subclasses]
-        desc = [
-            kls.__doc__.split("\n")[0] if isinstance(kls.__doc__, str) else ""
-            for kls in subclasses
-        ]
-        data = dict(
-            Class=[utils.link_for_class(kls) for kls in subclasses],
-            Module=[kls.__module__ for kls in subclasses],
-            Description=desc,
-        )
-        return cls(data=data, header="Child classes")
-
 
 if __name__ == "__main__":
-    table = Table(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
+    table = Table.get_module_overview(module=utils)
     print(table)

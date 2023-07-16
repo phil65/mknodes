@@ -10,12 +10,12 @@ from typing import Any
 from markdownizer import (
     admonition,
     classhelpers,
+    classtable,
     code as codeblock,
     docstrings,
     markdownnode,
     mermaiddiagram,
     nav,
-    table,
     utils,
 )
 
@@ -68,6 +68,9 @@ class MkPage(markdownnode.MarkdownContainer):
             lines.append(f"{option}:")
             lines.extend(f"  - {area}" for area in self.header_options[option])
         return HEADER.format(options="\n".join(lines))
+
+    def add_newlines(self, num: int):
+        self.append("<br>" * num)
 
     def add_admonition(
         self,
@@ -162,7 +165,7 @@ class ClassPage(MkPage):
         path = f"{module_path}.{self.klass.__name__}"
         item = docstrings.DocStrings(path, header="DocStrings")
         self.append(item)
-        if tbl := table.Table.get_ancestor_table_for_klass(self.klass):
+        if tbl := classtable.ClassTable(self.klass):
             self.append(tbl)
         diagram = mermaiddiagram.ClassDiagram(self.klass, header="Inheritance diagram")
         self.append(diagram)
@@ -213,7 +216,7 @@ class ModulePage(MkPage):
                     self.parts, module_filter=self.parts[0]
                 )
             )
-            self.append(table.Table.get_classes_table(klasses))
+            self.append(classtable.BaseClassTable(klasses))
 
 
 if __name__ == "__main__":

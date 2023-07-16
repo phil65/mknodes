@@ -4,7 +4,7 @@ from collections.abc import Mapping
 import logging
 import textwrap
 
-from markdownizer import markdownnode
+from markdownizer import markdownnode, utils
 
 
 logger = logging.getLogger(__name__)
@@ -22,6 +22,9 @@ class Tabbed(markdownnode.MarkdownNode):
     ):
         super().__init__(header=header)
         self.tabs = tabs
+
+    def __repr__(self):
+        return utils.get_repr(self, tabs=self.tabs)
 
     @staticmethod
     def examples():
