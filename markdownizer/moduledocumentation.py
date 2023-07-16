@@ -164,7 +164,7 @@ class ModuleDocumentation(nav.Nav):
     #         path=pathlib.Path("index.md"),
     #         # parent=self,
     #     )
-    #     page += table.Table.get_module_overview(self.module_name, predicate=predicate)
+    #     page += markdownizer.ModuleTable(self.module_name, predicate=predicate)
     #     return page
 
     def add_class_page(

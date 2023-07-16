@@ -16,6 +16,7 @@ from .nav import Nav
 from .table import Table
 from .baseclasstable import BaseClassTable
 from .classtable import ClassTable
+from .moduletable import ModuleTable
 from .tabblock import TabBlock
 from .tabbed import Tabbed
 from .sourceandresult import SourceAndResult
@@ -39,6 +40,7 @@ __all__ = [
     "List",
     "ClassPage",
     "ModulePage",
+    "ModuleTable",
     "ModuleDocumentation",
     "TabBlock",
     "Tabbed",

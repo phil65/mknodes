@@ -47,7 +47,7 @@ class MkPage(markdownnode.MarkdownContainer):
         if hide_toc:
             self.header_options.setdefault("hide", []).append("toc")
         if hide_nav:
-            self.header_options.setdefault("hide", []).append("nav")
+            self.header_options.setdefault("hide", []).append("navigation")
         if hide_path:
             self.header_options.setdefault("hide", []).append("path")
 
@@ -77,6 +77,7 @@ class MkPage(markdownnode.MarkdownContainer):
         return HEADER.format(options="\n".join(lines))
 
     def add_newlines(self, num: int):
+        """Add line separators to the page."""
         self.append("<br>" * num)
 
     def add_admonition(

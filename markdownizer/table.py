@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
-import inspect
 import logging
-import types
 
-from markdownizer import classhelpers, markdownnode, utils
+from markdownizer import markdownnode
 
 
 logger = logging.getLogger(__name__)
@@ -86,33 +84,7 @@ class Table(markdownnode.MarkdownNode):
         ls = [{k: v(item) for k, v in columns.items()} for item in items]
         return cls(ls)
 
-    @classmethod
-    def get_module_overview(
-        cls, module: str | types.ModuleType, predicate: Callable | None = None
-    ):
-        mod = classhelpers.to_module(module, return_none=False)
-        rows = [
-            (
-                submod_name,
-                # utils.link_for_class(submod, size=4, bold=True),
-                (
-                    submod.__doc__.split("\n")[0]
-                    if submod.__doc__
-                    else "*No docstrings defined.*"
-                ),
-                (
-                    utils.to_html_list(submod.__all__, make_link=True)
-                    if hasattr(submod, "__all__")
-                    else ""
-                ),
-            )
-            for submod_name, submod in inspect.getmembers(mod, inspect.ismodule)
-            if (predicate is None or predicate(submod)) and "__" not in submod.__name__
-        ]
-        rows = list(zip(*rows))
-        return cls(rows, columns=["Name", "Information", "Members"])
-
 
 if __name__ == "__main__":
-    table = Table.get_module_overview(module=utils)
+    table = Table(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
     print(table)
