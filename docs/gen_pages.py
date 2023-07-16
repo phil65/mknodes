@@ -47,7 +47,7 @@ for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
             code = markdownizer.Code(
                 language="markdown", code=node, title=f"result_{i}.md"
             )
-            tabs = {"Generated markdown": str(code), "Preview": str(node)}
+            tabs = {"Preview": str(node), "Generated markdown": str(code)}
             subpage += markdownizer.Tabbed(tabs)
             subpage.add_newlines(3)
     subpage.add_mkdocstrings(kls)

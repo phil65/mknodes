@@ -100,8 +100,10 @@ class MarkdownContainer(MarkdownNode):
     """A base class for Nodes containing other MarkdownNodes."""
 
     def __init__(self, items: list | None = None, **kwargs):
-        self.items = items or []
         super().__init__(**kwargs)
+        self.items: list[MarkdownNode] = []
+        for item in items or []:
+            self.append(item)  # noqa: PERF402
 
     def __add__(self, other: str | MarkdownNode):
         self.append(other)
@@ -112,6 +114,12 @@ class MarkdownContainer(MarkdownNode):
 
     def __repr__(self):
         return utils.get_repr(self, items=self.items)
+
+    @staticmethod
+    def examples():
+        from markdownizer import code
+
+        yield dict(items=[code.Code(language="py", code="a = 1 + 2"), Text("abc")])
 
     def _to_markdown(self) -> str:
         return "\n\n".join(i.to_markdown() for i in self.items)
@@ -149,4 +157,6 @@ class Text(MarkdownNode):
 
 if __name__ == "__main__":
     section = MarkdownNode(header="fff")
-    section.to_markdown()
+    for example in MarkdownContainer.examples():
+        container = MarkdownContainer(**example)
+        print(container)

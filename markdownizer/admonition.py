@@ -44,9 +44,28 @@ class Admonition(markdownnode.Text):
 
     def _to_markdown(self) -> str:
         block_start = "???" if self.collapsible else "!!!"
-        title = f'"{self.title}"'
+        title = f'"{self.title}"' if self.title else ""
         text = textwrap.indent(str(self.text), "    ")
         return f"{block_start} {self.typ} {title}\n{text}\n\n"
+
+    @staticmethod
+    def examples():
+        for typ in [
+            "node",
+            "abstract",
+            "info",
+            "tip",
+            "success",
+            "question",
+            "warning",
+            "failure",
+            "danger",
+            "bug",
+            "example",
+            "quote",
+        ]:
+            yield dict(typ=typ, text=f"This is type {typ}", title=typ)
+        yield dict(typ="info", text="This is a collapsible menu", collapsible=True)
 
 
 # class TabWidget(Admonition):
