@@ -162,7 +162,7 @@ class DocStrings(markdownnode.Text):
         if self.options:
             options = "\n".join(f"      {k}: {v}" for k, v in self.options.items())
             md = f"{md}    options:\n{options}\n"
-        return f"{md}\n"
+        return md
 
 
 if __name__ == "__main__":

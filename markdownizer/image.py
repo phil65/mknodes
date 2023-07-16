@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Image(markdownnode.MarkdownNode):
     def __init__(
-        self, path: str, caption: str, title: str = "Image title", header: str = ""
+        self, path: str, caption: str = "", title: str = "Image title", header: str = ""
     ):
         super().__init__(header=header)
         self.title = title
