@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class DocStrings(markdownnode.Text):
+    REQUIRED_PLUGINS = "mkdocstrings"
     OPTIONS_DEFAULT = {}
 
     def __init__(

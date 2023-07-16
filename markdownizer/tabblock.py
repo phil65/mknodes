@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class TabBlock(markdownnode.MarkdownNode):
+    REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
+
     def __init__(
         self,
         tabs: dict[str, str],
