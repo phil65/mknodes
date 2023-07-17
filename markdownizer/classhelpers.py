@@ -58,6 +58,21 @@ def to_module(
             raise TypeError(module)
 
 
+def to_class(klass: type | str | tuple[str, ...] | list[str]):
+    match klass:
+        case type():
+            return klass
+        case str():
+            parts = klass.split(".")
+            mod = importlib.import_module(".".join(parts[:-1]))
+            return getattr(mod, parts[-1])
+        case tuple() | list():
+            mod = importlib.import_module(".".join(klass[:-1]))
+            return getattr(mod, klass[-1])
+        case _:
+            raise TypeError(klass)
+
+
 def to_module_parts(  # type: ignore
     module: Sequence[str] | str | types.ModuleType,
 ) -> tuple[str, ...]:
