@@ -75,6 +75,11 @@ class Nav(markdownnode.MarkdownNode):
         self.pages = [i for i in items if not isinstance(i, Nav)]
 
     def add_nav(self, section: str | os.PathLike) -> nav.Nav:
+        """Create a Sub-Nav, register it to given Nav and return it.
+
+        Arguments:
+            section: Name of the new nav.
+        """
         navi = nav.Nav(section=section, parent=self)
         self.nav[(section,)] = f"{section}/"
         self.navs.append(navi)
@@ -117,7 +122,12 @@ class Nav(markdownnode.MarkdownNode):
         module: types.ModuleType | str,
         filter_by___all__: bool = False,
     ) -> moduledocumentation.ModuleDocumentation:
-        """Add a module documentation to the Nav."""
+        """Add a module documentation to the Nav.
+
+        Arguments:
+            module: The module to create a documentation section for.
+            filter_by___all__: Whether the documentation
+        """
         from markdownizer import moduledocumentation
 
         nav = moduledocumentation.ModuleDocumentation(
