@@ -14,7 +14,7 @@ Another text
 """
 
 
-def test_list():
+def test_tabblock():
     tabs = dict(Tab1="Some text", Tab2="Another text")
     tabblock = markdownizer.TabBlock(tabs)
     assert str(tabblock) == EXPECTED

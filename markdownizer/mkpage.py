@@ -17,8 +17,7 @@ from markdownizer import (
     docstrings,
     markdownnode,
     nav,
-    tabbed,
-    tabblock,
+    tabs,
     utils,
 )
 
@@ -266,11 +265,11 @@ class MkPage(markdownnode.MarkdownContainer):
         **kwargs,
     ):
         if style == "tabbed":
-            tabs = tabbed.Tabbed(data, parent=self)
+            tabblock = tabs.Tabbed(data, parent=self)
         else:
-            tabs = tabblock.TabBlock(data, parent=self)
-        self.append(tabs)
-        return tabs
+            tabblock = tabs.TabBlock(data, parent=self)
+        self.append(tabblock)
+        return tabblock
 
 
 class ClassPage(MkPage):

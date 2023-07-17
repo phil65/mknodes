@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .admonition import Admonition
-from .markdownnode import MarkdownNode, Text
+from .markdownnode import MarkdownNode, MarkdownContainer, Text
 from .code import Code
 from .docstrings import DocStrings
 from .image import Image
@@ -17,14 +17,14 @@ from .table import Table
 from .baseclasstable import BaseClassTable
 from .classtable import ClassTable
 from .moduletable import ModuleTable
-from .tabblock import TabBlock
-from .tabbed import Tabbed
+from .tabs import TabBlock, Tabbed
 from .sourceandresult import SourceAndResult
 from .snippet import Snippet
 
 
 __all__ = [
     "MarkdownNode",
+    "MarkdownContainer",
     "Nav",
     "DocStrings",
     "Text",

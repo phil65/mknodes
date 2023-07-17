@@ -139,7 +139,6 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
     kwarg_list = [
         f"{k}={v.__name__ if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType) else repr(v)}"  # noqa: E501
         for k, v in kwargs.items()
-        for k, v in kwargs.items()
     ]
     return ", ".join(kwarg_list)
 

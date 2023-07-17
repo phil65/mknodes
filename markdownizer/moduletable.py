@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class ModuleTable(table.Table):
-    """Class representing a formatted table."""
+    """Class representing a formatted table containing information a module."""
 
     def __init__(
         self,
