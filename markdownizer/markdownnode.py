@@ -99,6 +99,18 @@ class MarkdownNode(node.BaseNode):
         for child_item in self.children:
             child_item.pretty_print(indent + 1)
 
+    def to_tree_graph(self, orientation: str = "TD") -> str:
+        """Returns markdown to display a tree graph of this node and all subnodes."""
+        items, connections = utils.get_connections(
+            [self],
+            child_getter=lambda x: x.children,
+            id_getter=lambda x: f"{type(x).__name__}_{id(x)}",
+        )
+        items = list(items) + [f"{a} --> {b}" for a, b in connections]
+        item_str = textwrap.indent("\n".join(items), "  ")
+        text = f"graph {orientation}\n{item_str}"
+        return f"```mermaid\n{text}\n```"
+
 
 class MarkdownContainer(MarkdownNode):
     """A base class for Nodes containing other MarkdownNodes."""

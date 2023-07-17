@@ -22,7 +22,7 @@ class LengthLimitRepr(reprlib.Repr):
 
 limit_repr = LengthLimitRepr()
 limit_repr.maxlist = 10
-limit_repr.maxstring = 60
+limit_repr.maxstring = 80
 
 
 def get_repr(_obj: Any, *args: Any, _shorten: bool = True, **kwargs: Any) -> str:
@@ -160,6 +160,24 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
             name = repr(v)
         kw_parts.append(f"{k}={name}")
     return ", ".join(kw_parts)
+
+
+def get_connections(objects, child_getter, id_getter=None):
+    items = set()
+    connections = []
+
+    def add_connections(item):
+        identifier = id_getter(item) if id_getter else item
+        if identifier not in items:
+            # if item.__module__.startswith(base_module):
+            items.add(identifier)
+            for base in child_getter(item):
+                connections.append((id_getter(base) if id_getter else base, identifier))
+                add_connections(base)
+
+    for obj in objects:
+        add_connections(obj)
+    return items, connections
 
 
 if __name__ == "__main__":
