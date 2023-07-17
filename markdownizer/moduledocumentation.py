@@ -196,7 +196,7 @@ class ModuleDocumentation(nav.Nav):
             parent=self,
             **kwargs,
         )
-        self[(*parts[1:], klass.__name__)] = path
+        self.nav[(*parts[1:], klass.__name__)] = pathlib.Path(page.path).as_posix()
         self.pages.append(page)
         return page
 
@@ -211,7 +211,8 @@ class ModuleDocumentation(nav.Nav):
             parent=self,
             **kwargs,
         )
-        self[self.module_name] = path
+        mod_path = tuple(self.module_name.split("."))
+        self.nav[mod_path] = pathlib.Path(page.path).as_posix()
         self.pages.append(page)
         return page
 

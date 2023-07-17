@@ -106,7 +106,6 @@ class Nav(markdownnode.MarkdownNode):
     ):
         """Add a page to the Nav."""
         filename = filename or f"{title}.md"
-        self.__setitem__(title, filename)
         page = mkpage.MkPage(
             path=filename,
             parent=self,
@@ -114,6 +113,8 @@ class Nav(markdownnode.MarkdownNode):
             hide_nav=hide_nav,
             hide_path=hide_path,
         )
+        title_path = tuple(title.split("."))
+        self.nav[title_path] = pathlib.Path(page.path).as_posix()
         self.pages.append(page)
         return page
 
