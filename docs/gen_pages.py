@@ -12,7 +12,7 @@ import mkdocs
 
 root_nav = markdownizer.Nav()
 page = markdownizer.MkPage(path="index.md", hide_toc=True, hide_nav=True)
-page += "### Not in the mood to write documentation? Let´s code it then!"
+page.add_header("Not in the mood to write documentation? Let´s code it then!", level=3)
 page.add_admonition(
     "API is still evolving, so consider this a preview.", typ="danger", title="Warning!"
 )
@@ -60,10 +60,12 @@ for klass in mkdocs_docs.iter_classes(recursive=True):
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
 tree_page = root_nav.add_page("Node tree", hide_toc=True, hide_nav=True)
+tree_page.add_header("This is the tree built by the website code.", level=3)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
 virtual_files = root_nav.all_virtual_files()
 files_page = root_nav.add_page("File map", hide_toc=True, hide_nav=True)
+files_page.add_header("..And these are the files connected to the tree.", level=3)
 files_page += markdownizer.Code(language="py", code=pprint.pformat(virtual_files))
 
 

@@ -80,6 +80,11 @@ class MkPage(markdownnode.MarkdownContainer):
         """Add line separators to the page."""
         self.append("<br>" * num)
 
+    def add_header(self, text: str, level: int = 2):
+        """Add line separators to the page."""
+        prefix = "#" * level
+        self.append(f"{prefix} {text}")
+
     def add_admonition(
         self,
         text: str,
