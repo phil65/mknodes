@@ -29,7 +29,12 @@ class List(markdownnode.MarkdownContainer):
         return len(self.items)
 
     def __repr__(self):
-        return utils.get_repr(self, items=self.items)
+        return utils.get_repr(
+            self,
+            items=self.items,
+            shorten_after=self.shorten_after,
+            as_links=self.as_links,
+        )
 
     @staticmethod
     def examples():

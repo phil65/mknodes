@@ -3,6 +3,7 @@ from __future__ import annotations
 from importlib import metadata
 import logging
 import re
+import reprlib
 import sys
 import types
 
@@ -15,21 +16,36 @@ BASE_URL = "https://doc.qt.io/qtforpython-6/PySide6/"
 BUILTIN_URL = "https://docs.python.org/3/library/{mod}.html#{name}"
 
 
-def get_repr(_obj: Any, *args: Any, **kwargs: Any) -> str:
+class LengthLimitRepr(reprlib.Repr):
+    pass
+
+
+limit_repr = LengthLimitRepr()
+limit_repr.maxlist = 10
+limit_repr.maxstring = 60
+
+
+def get_repr(_obj: Any, *args: Any, _shorten: bool = True, **kwargs: Any) -> str:
     """Get a suitable __repr__ string for an object.
 
     Args:
         _obj: The object to get a repr for.
+        _shorten: Whether to shorten the repr.
         *args: Arguments for the repr
         **kwargs: Keyword arguments for the repr
     """
+    my_repr = limit_repr.repr if _shorten else repr
     classname = type(_obj).__name__
-    parts = [repr(val) for val in args]
-    kw_parts = [
-        f"{k}={v.__name__ if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType) else repr(v)}"  # noqa: E501
-        for k, v in kwargs.items()
-    ]
-    return f"{classname}({', '.join(parts + kw_parts)})"
+    parts = [my_repr(val) for val in args]
+    kw_parts = []
+    for k, v in kwargs.items():
+        if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType):
+            name = v.__name__
+        else:
+            name = my_repr(v)
+        kw_parts.append(f"{k}={name}")
+    sig = ", ".join(parts + kw_parts)
+    return f"{classname}({sig})"
 
 
 def escaped(text: str, entity_type: str | None = None) -> str:
@@ -136,15 +152,16 @@ def to_html_list(
 def format_kwargs(kwargs: dict[str, Any]) -> str:
     if not kwargs:
         return ""
-    kwarg_list = [
-        f"{k}={v.__name__ if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType) else repr(v)}"  # noqa: E501
-        for k, v in kwargs.items()
-    ]
-    return ", ".join(kwarg_list)
+    kw_parts = []
+    for k, v in kwargs.items():
+        if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType):
+            name = v.__name__
+        else:
+            name = repr(v)
+        kw_parts.append(f"{k}={name}")
+    return ", ".join(kw_parts)
 
 
 if __name__ == "__main__":
-    link_for_class(logging.LogRecord)
-
-    # print(doc.to_markdown())
-    # print(text)
+    strings = [str(i) for i in range(1000)]
+    print(limit_repr.repr(strings))
