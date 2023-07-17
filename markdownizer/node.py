@@ -157,13 +157,14 @@ class BaseNode:
         else:
             return 0
 
-    def pprint(self, indent: int = 0):
-        text = indent * "    " + repr(self)
-        logger.info(text)
-        for child_item in self.children:
-            child_item.pprint(indent + 1)
+    def pprint(self, indent: int = 0, max_depth: int | None = None):
+        for _indent, child_item in self.yield_nodes(indent, max_depth):
+            text = _indent * "    " + repr(child_item)
+            logger.warning(text)
 
-    def yield_nodes(self, indent: int = 0):
+    def yield_nodes(self, indent: int = 0, max_depth: int | None = None):
+        if max_depth is not None and indent > max_depth:
+            return
         yield indent, self
         for child_item in self.children:
             yield from child_item.yield_nodes(indent + 1)
