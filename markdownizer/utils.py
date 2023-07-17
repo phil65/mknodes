@@ -5,6 +5,7 @@ import logging
 import re
 import reprlib
 import sys
+import textwrap
 import types
 
 from typing import Any
@@ -162,22 +163,43 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
     return ", ".join(kw_parts)
 
 
-def get_connections(objects, child_getter, id_getter=None):
-    items = set()
-    connections = []
+class ConnectionBuilder:
+    def __init__(self, objects, *args, **kwargs):
+        self.items = set()
+        self.connections = []
+        self._connect(objects)
 
-    def add_connections(item):
-        identifier = id_getter(item) if id_getter else item
-        if identifier not in items:
-            # if item.__module__.startswith(base_module):
-            items.add(identifier)
-            for base in child_getter(item):
-                connections.append((id_getter(base) if id_getter else base, identifier))
-                add_connections(base)
+    def _connect(self, objects):
+        def add_connections(item):
+            identifier = self.get_id(item)
+            if identifier not in self.items:
+                # if item.__module__.startswith(base_module):
+                self.items.add(identifier)
+                for base in self.get_children(item):
+                    self.connections.append((self.get_id(base), identifier))
+                    add_connections(base)
 
-    for obj in objects:
-        add_connections(obj)
-    return items, connections
+        for obj in objects:
+            add_connections(obj)
+
+    def get_children(self, item):
+        """This should return a list of children for the tree node."""
+        return NotImplemented
+
+    def get_id(self, item):
+        """This needs to return a unique identifier for an item."""
+        return item
+
+    def get_attributes(self, item):
+        return None
+
+    def get_title(self, item):
+        """This can be overridden for a nicer label."""
+        return self.get_id(item)
+
+    def get_graph_connection_text(self):
+        items = list(self.items) + [f"{a} --> {b}" for a, b in self.connections]
+        return textwrap.indent("\n".join(items), "  ")
 
 
 if __name__ == "__main__":

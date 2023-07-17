@@ -11,6 +11,22 @@ from markdownizer import markdownnode, utils
 GraphTypeStr = Literal["flow"]  # TODO
 
 
+class SubclassConnectionBuilder(utils.ConnectionBuilder):
+    def get_children(self, item):
+        return item.__subclasses__()
+
+    def get_id(self, item):
+        return utils.label_for_class(item)
+
+
+class ParentClassConnectionBuilder(utils.ConnectionBuilder):
+    def get_children(self, item):
+        return item.__bases__
+
+    def get_id(self, item):
+        return utils.label_for_class(item)
+
+
 class Diagram(markdownnode.MarkdownNode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
@@ -89,31 +105,21 @@ class ClassDiagram(Diagram):
     def _to_markdown(self) -> str:
         match self.mode:
             case "subclass_tree":
-                items, connections = utils.get_connections(
-                    [self.klass],
-                    child_getter=lambda x: x.__subclasses__(),
-                    id_getter=lambda x: x.__name__,
-                )
+                builder = SubclassConnectionBuilder([self.klass])
+                item_str = builder.get_graph_connection_text()
             case "parent_tree":
-                items, connections = utils.get_connections(
-                    [self.klass],
-                    child_getter=lambda x: x.__bases__,
-                )
-                items = [utils.label_for_class(i) for i in items]
-                connections = [
-                    (utils.label_for_class(i), utils.label_for_class(j))
-                    for i, j in connections
-                ]
+                builder = ParentClassConnectionBuilder([self.klass])
+                item_str = builder.get_graph_connection_text()
             case "mro":
                 items = [utils.label_for_class(i) for i in self.klass.mro()]
                 connections = [
                     (utils.label_for_class(i), utils.label_for_class(j))
                     for i, j in itertools.pairwise(self.klass.mro())
                 ]
+                items = list(items) + [f"{a} --> {b}" for a, b in connections]
+                item_str = textwrap.indent("\n".join(items), "  ")
             case _:
                 raise ValueError(self.mode)
-        items = list(items) + [f"{a} --> {b}" for a, b in connections]
-        item_str = textwrap.indent("\n".join(items), "  ")
         text = f"{self.graph_type} {self.orientation}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
@@ -126,5 +132,5 @@ class MermaidMindMap(markdownnode.MarkdownNode):
 
 
 if __name__ == "__main__":
-    diagram = ClassDiagram(MermaidMindMap, mode="mro")
+    diagram = ClassDiagram(MermaidMindMap, mode="parent_tree")
     print(diagram)

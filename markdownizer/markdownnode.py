@@ -12,6 +12,14 @@ from markdownizer import node, utils
 logger = logging.getLogger(__name__)
 
 
+class NodeConnectionBuilder(utils.ConnectionBuilder):
+    def get_children(self, item):
+        return item.children
+
+    def get_id(self, item):
+        return f"{type(item).__name__}_{id(item)}"
+
+
 class MarkdownNode(node.BaseNode):
     """Base class for everything which can be expressed as Markup.
 
@@ -101,13 +109,7 @@ class MarkdownNode(node.BaseNode):
 
     def to_tree_graph(self, orientation: str = "TD") -> str:
         """Returns markdown to display a tree graph of this node and all subnodes."""
-        items, connections = utils.get_connections(
-            [self],
-            child_getter=lambda x: x.children,
-            id_getter=lambda x: f"{type(x).__name__}_{id(x)}",
-        )
-        items = list(items) + [f"{a} --> {b}" for a, b in connections]
-        item_str = textwrap.indent("\n".join(items), "  ")
+        item_str = NodeConnectionBuilder([self]).get_graph_connection_text()
         text = f"graph {orientation}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
