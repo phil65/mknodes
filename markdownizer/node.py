@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Sequence
+import copy
 import logging
 
 from typing_extensions import Self
@@ -50,6 +51,14 @@ class BaseNode:
         obj = type(self).__new__(self.__class__)
         obj.__dict__.update(self.__dict__)
         return obj
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, copy.deepcopy(v, memo))
+        return result
 
     def append_child(self, item: Self):
         item.parent_item = self
