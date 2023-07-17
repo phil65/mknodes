@@ -108,7 +108,7 @@ class ModuleDocumentation(nav.Nav):
             submodule: filter based on a submodule
             recursive: whether to only iterate over members of current module
                        or whether it should also include modules from submodules.
-            predicate: filter classes based on a predicate.
+            predicate: filter modules based on a predicate.
         """
         mod = classhelpers.to_module(submodule) if submodule else self.module
         seen = _seen or set()
@@ -117,7 +117,7 @@ class ModuleDocumentation(nav.Nav):
         for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
             not_in_all = hasattr(mod, "__all__") and submod_name not in mod.__all__
             filtered_by_all = self.filter_by___all__ and not_in_all
-            not_filtered_by_pred = predicate(mod) if predicate else True
+            not_filtered_by_pred = predicate(submod) if predicate else True
             # if self.module_name in mod.__name__.split(".")
             if not filtered_by_all and not_filtered_by_pred:
                 print(submod_name, flush=True)
