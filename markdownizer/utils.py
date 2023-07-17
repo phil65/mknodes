@@ -128,12 +128,10 @@ def link_for_class(kls: type, **kwargs) -> str:
 
 
 def label_for_class(klass: type) -> str:
-    if klass.__module__.startswith(("PyQt", "PySide")):
-        return f"{klass.__module__.split('.')[-1]}.{klass.__name__}"
-    elif klass.__module__.startswith("prettyqt."):
+    if klass.__module__.startswith("prettyqt."):
         parts = klass.__module__.split(".")
         return f"{parts[1]}.{klass.__name__}"
-    return klass.__qualname__
+    return f"{klass.__module__.split('.')[-1]}.{klass.__name__}"
 
 
 def to_html_list(
@@ -165,22 +163,30 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
 
 class ConnectionBuilder:
     def __init__(self, objects, *args, **kwargs):
-        self.items = set()
+        self.item_dict = {}
         self.connections = []
         self._connect(objects)
 
     def _connect(self, objects):
         def add_connections(item):
             identifier = self.get_id(item)
-            if identifier not in self.items:
+            if identifier not in self.item_dict:
                 # if item.__module__.startswith(base_module):
-                self.items.add(identifier)
+                self.item_dict[identifier] = self.get_title(item)
                 for base in self.get_children(item):
                     self.connections.append((self.get_id(base), identifier))
                     add_connections(base)
 
         for obj in objects:
             add_connections(obj)
+
+    @property
+    def items(self):
+        return list(self.item_dict.keys())
+
+    @property
+    def titles(self):
+        return list(self.item_dict.values())
 
     def get_children(self, item):
         """This should return a list of children for the tree node."""
@@ -198,8 +204,12 @@ class ConnectionBuilder:
         return self.get_id(item)
 
     def get_graph_connection_text(self):
-        items = list(self.items) + [f"{a} --> {b}" for a, b in self.connections]
-        return textwrap.indent("\n".join(items), "  ")
+        lines = [
+            f'{identifier}["{title}"]'
+            for identifier, title in zip(self.items, self.titles)
+        ]
+        lines += [f"{a} --> {b}" for a, b in self.connections]
+        return textwrap.indent("\n".join(lines), "  ")
 
 
 if __name__ == "__main__":

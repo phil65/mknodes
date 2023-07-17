@@ -11,20 +11,42 @@ from markdownizer import markdownnode, utils
 GraphTypeStr = Literal["flow"]  # TODO
 
 
-class SubclassConnectionBuilder(utils.ConnectionBuilder):
-    def get_children(self, item):
+class BaseClassConnectionBuilder(utils.ConnectionBuilder):
+    def __init__(
+        self,
+        objects,
+        title_style: Literal["package.classname", "qualname"] = "package.classname",
+    ):
+        self.title_style = title_style
+        # self.object = objects[0]
+        super().__init__(objects)
+
+    def get_id(self, item: type) -> int:
+        return id(item)
+
+    def get_title(self, item: type) -> str:
+        return (
+            utils.label_for_class(item)
+            if self.title_style == "package.classname"
+            else item.__qualname__
+        )
+        # if item.__module__.split(".")[0] == self.object.__module__.split(".")[0]:
+        #     return f"**{text}**"
+        # else:
+        #     return text
+
+    def get_attributes(self, item) -> list[str]:
+        return [i for i in dir(item) if not i.startswith("__")]
+
+
+class SubclassConnectionBuilder(BaseClassConnectionBuilder):
+    def get_children(self, item: type) -> list[type]:
         return item.__subclasses__()
 
-    def get_id(self, item):
-        return utils.label_for_class(item)
 
-
-class ParentClassConnectionBuilder(utils.ConnectionBuilder):
-    def get_children(self, item):
+class ParentClassConnectionBuilder(BaseClassConnectionBuilder):
+    def get_children(self, item: type) -> tuple[type, ...]:
         return item.__bases__
-
-    def get_id(self, item):
-        return utils.label_for_class(item)
 
 
 class Diagram(markdownnode.MarkdownNode):

@@ -19,6 +19,9 @@ class NodeConnectionBuilder(utils.ConnectionBuilder):
     def get_id(self, item):
         return f"{type(item).__name__}_{id(item)}"
 
+    def get_title(self, item):
+        return f"{type(item).__name__}"
+
 
 class MarkdownNode(node.BaseNode):
     """Base class for everything which can be expressed as Markup.
