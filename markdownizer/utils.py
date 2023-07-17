@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from importlib import metadata
+import itertools
 import logging
 import re
 import reprlib
@@ -64,6 +66,20 @@ def escaped(text: str, entity_type: str | None = None) -> str:
         escape_chars = r"_*[]()~`>#+-=|{}.!"
 
     return re.sub(f"([{re.escape(escape_chars)}])", r"\\\1", text)
+
+
+def groupby(data, keyfunc: Callable | None = None):
+    data = sorted(data, key=keyfunc or (lambda x: x))
+    return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
+
+
+def groupby_first_letter(data, keyfunc: Callable | None = None):
+    data = sorted(data, key=keyfunc or (lambda x: x))
+
+    def first_letter(x):
+        return keyfunc(x)[0] if keyfunc else x[0]
+
+    return {k: list(g) for k, g in itertools.groupby(data, first_letter)}
 
 
 # import pathlib
@@ -161,5 +177,5 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
 
 
 if __name__ == "__main__":
-    strings = [str(i) for i in range(1000)]
+    strings = groupby_first_letter([str(i) for i in range(1000)])
     print(limit_repr.repr(strings))
