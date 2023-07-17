@@ -21,8 +21,10 @@ class ModuleDocumentation(nav.Nav):
     def __init__(
         self,
         module: types.ModuleType | str,
+        *,
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
+        section_name: str | None = None,
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)
@@ -33,7 +35,7 @@ class ModuleDocumentation(nav.Nav):
         self.module_name = self.module.__name__.split(".")[-1]
         self.module_path = self.module.__name__
         self.file_path = self.module.__file__
-        super().__init__(section=self.module_name, **kwargs)
+        super().__init__(section=section_name or self.module_name, **kwargs)
         self._exclude = exclude_modules or []
         self.root_path = pathlib.Path(f"./{self.module_name}")
 
