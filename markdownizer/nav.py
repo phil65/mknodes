@@ -93,12 +93,14 @@ class Nav(markdownnode.MarkdownNode):
     def add_page(
         self,
         title: str,
+        *,
         hide_toc: bool = False,
         hide_nav: bool = False,
         hide_path: bool = False,
+        filename: str | None = None,
     ):
         """Add a page to the Nav."""
-        filename = f"{title}.md"
+        filename = filename or f"{title}.md"
         self.__setitem__(title, filename)
         page = mkpage.MkPage(
             path=filename,
