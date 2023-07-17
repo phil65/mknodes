@@ -8,53 +8,59 @@ from markdownizer import markdownnode, utils
 logger = logging.getLogger(__name__)
 
 
-class List(markdownnode.MarkdownNode):
+class List(markdownnode.MarkdownContainer):
     """Class to show a formatted list."""
 
     def __init__(
         self,
-        listitems: list[str] | None = None,
+        items: list[str | markdownnode.MarkdownNode] | None = None,
         shorten_after: int | None = None,
+        as_links: bool = False,
         header: str = "",
     ):
-        super().__init__(header)
-        self.listitems = listitems or []
+        super().__init__(items=items, header=header)
         self.shorten_after = shorten_after
+        self.as_links = as_links
 
     def __str__(self):
         return self.to_markdown()
 
     def __len__(self):
-        return len(self.listitems)
+        return len(self.items)
 
     def __repr__(self):
-        return utils.get_repr(self, listitems=self.listitems)
+        return utils.get_repr(self, items=self.items)
 
     @staticmethod
     def examples():
-        yield dict(listitems=["Item 1", "Item 2", "Item 2"])
-        yield dict(listitems=["Item"] * 6, shorten_after=3)
+        yield dict(items=["Item 1", "Item 2", "Item 2"])
+        yield dict(items=["Item"] * 6, shorten_after=3)
+
+    def _prep(self, item):
+        return utils.linked(item) if self.as_links else str(item)
 
     def _to_markdown(self):
-        if not self.listitems:
+        if not self.items:
             return ""
-        lines = [f"  - {i}" for i in self.listitems[: self.shorten_after]]
-        if self.shorten_after and len(self.listitems) > self.shorten_after:
+        lines = [f"  - {self._prep(i)}" for i in self.items[: self.shorten_after]]
+        if self.shorten_after and len(self.items) > self.shorten_after:
             lines.append("  - ...")
-        return "\n" + "\n".join(lines) + "\n"
+        return "\n".join(lines) + "\n"
 
-    def to_html(self, make_link: bool = False):
-        if not self.listitems:
+    def to_html(self):
+        """Formats list in html as one single line.
+
+        Can be useful for including in Tables.
+        """
+        if not self.items:
             return ""
-        item_str = "".join(
-            f"<li>{utils.linked(i)}</li>" if make_link else f"<li>{i}</li>"
-            for i in self.listitems[: self.shorten_after]
-        )
-        if self.shorten_after and len(self.listitems) > self.shorten_after:
+        items = [f"<li>{self._prep(i)}</li>" for i in self.items[: self.shorten_after]]
+        item_str = "".join(items)
+        if self.shorten_after and len(self.items) > self.shorten_after:
             item_str += "<li>...</li>"
         return f"<ul>{item_str}</ul>"
 
 
 if __name__ == "__main__":
     section = List(["a", "b"], header="test")
-    print(section.to_markdown())
+    print(section.to_html())

@@ -40,8 +40,6 @@ class MarkdownNode(node.BaseNode):
     def to_markdown(self):
         """Outputs markdown for self and all children."""
         text = self._to_markdown()
-        if text:
-            text += "\n"
         if self.indent:
             text = textwrap.indent(text, self.indent)
         return f"## {self.header}\n\n{text}" if self.header else text

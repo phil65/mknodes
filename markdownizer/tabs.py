@@ -73,7 +73,7 @@ class Tabbed(BaseTabWidget):
         for tab in self.items:
             indented_text = textwrap.indent(str(tab).rstrip("\n"), prefix="    ")
             lines.extend((f'=== "{tab.title}"', indented_text))
-        return "\n".join(lines)
+        return "\n".join(lines) + "\n"
 
 
 class TabBlock(BaseTabWidget):
@@ -86,7 +86,7 @@ class TabBlock(BaseTabWidget):
         for tab in self.items:
             # TODO: perhaps always add "new: true" to first tab?
             lines.extend((f"/// tab | {tab.title}", str(tab).rstrip("\n"), "///\n"))
-        return "\n".join(lines)
+        return "\n".join(lines) + "\n"
 
 
 if __name__ == "__main__":

@@ -46,7 +46,11 @@ class ModuleDocumentation(nav.Nav):
         )
 
     def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:
-        """Iter through files based on glob."""
+        """Iter through files based on glob.
+
+        Arguments:
+            glob: glob to use for filtering
+        """
         for path in sorted(self.root_path.rglob(glob)):
             if (
                 all(i not in path.parts for i in self._exclude)

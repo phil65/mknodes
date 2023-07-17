@@ -26,4 +26,4 @@ class Image(markdownnode.MarkdownNode):
         if self.caption:
             lines.append(f"  <figcaption>{self.caption}</figcaption>")
         lines.append("</figure>")
-        return "\n".join(lines)
+        return "\n".join(lines) + "\n"
