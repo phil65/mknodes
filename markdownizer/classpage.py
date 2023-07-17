@@ -4,7 +4,14 @@ import logging
 import os
 import pathlib
 
-from markdownizer import classhelpers, classtable, diagram, docstrings, mkpage, utils
+from markdownizer import (
+    classdiagram,
+    classhelpers,
+    classtable,
+    docstrings,
+    mkpage,
+    utils,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -47,6 +54,11 @@ class ClassPage(mkpage.MkPage):
     def examples():
         yield dict(klass=ClassPage)
 
+    def add_class_diagram(self, mode: classdiagram.DiagramModeStr = "parent_tree"):
+        diagram = classdiagram.ClassDiagram(self.klass, mode=mode)
+        self.append(diagram)
+        return diagram
+
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
         path = f"{module_path}.{self.klass.__name__}"
@@ -54,7 +66,7 @@ class ClassPage(mkpage.MkPage):
         self.append(item)
         if tbl := classtable.ClassTable(self.klass):
             self.append(tbl)
-        item = diagram.ClassDiagram(self.klass, header="Inheritance diagram")
+        item = classdiagram.ClassDiagram(self.klass, header="Inheritance diagram")
         self.append(item)
 
 

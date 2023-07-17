@@ -8,6 +8,7 @@ from .image import Image
 from .binaryimage import BinaryImage
 from .list import List
 from .diagram import Diagram
+from .classdiagram import ClassDiagram
 from .mkpage import MkPage
 from .classpage import ClassPage
 from .modulepage import ModulePage
@@ -34,6 +35,8 @@ __all__ = [
     "MkPage",
     "Admonition",
     "Diagram",
+    "ClassDiagram",
+    "ConnectionBuilder",
     "Table",
     "BaseClassTable",
     "ClassTable",

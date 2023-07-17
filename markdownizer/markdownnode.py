@@ -6,17 +6,18 @@ import textwrap
 
 import mkdocs_gen_files
 
-from markdownizer import node, utils
+from markdownizer import connectionbuilder, node, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class NodeConnectionBuilder(utils.ConnectionBuilder):
+class NodeConnectionBuilder(connectionbuilder.ConnectionBuilder):
     def get_children(self, item):
         return item.children
 
     def get_id(self, item):
+        # id() would be enough, but name is sometimes useful for debugging.
         return f"{type(item).__name__}_{id(item)}"
 
     def get_title(self, item):
