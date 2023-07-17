@@ -120,20 +120,26 @@ class Nav(markdownnode.MarkdownNode):
     def add_documentation(
         self,
         module: types.ModuleType | str,
+        *,
         filter_by___all__: bool = False,
+        section_name: str | None = None,
     ) -> moduledocumentation.ModuleDocumentation:
         """Add a module documentation to the Nav.
 
         Arguments:
             module: The module to create a documentation section for.
             filter_by___all__: Whether the documentation
+            section_name: Override the name for the menu (default: module name)
         """
         from markdownizer import moduledocumentation
 
         nav = moduledocumentation.ModuleDocumentation(
-            module=module, filter_by___all__=filter_by___all__, parent=self
+            module=module,
+            filter_by___all__=filter_by___all__,
+            parent=self,
+            section_name=section_name,
         )
-        self.nav[(nav.module_name,)] = f"{nav.module_name}/"
+        self.nav[(nav.section,)] = f"{nav.section}/"
         self.navs.append(nav)
         return nav
 
