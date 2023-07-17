@@ -231,5 +231,8 @@ def preorder_iter(
 
 
 if __name__ == "__main__":
-    model = BaseNode()
-    model.parent()
+    node = BaseNode()
+    sub = BaseNode(parent=node)
+    subsub = BaseNode(parent=sub)
+    node.children = [sub, subsub]
+    node.pprint()

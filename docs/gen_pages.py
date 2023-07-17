@@ -8,7 +8,6 @@ import pprint
 import markdownizer
 from markdownizer import classhelpers, utils
 
-import mkdocs
 
 root_nav = markdownizer.Nav()
 page = markdownizer.MkPage(path="index.md", hide_toc=True, hide_nav=True)
@@ -28,13 +27,14 @@ nodes_nav = home_nav.add_nav("Nodes")
 # Basically everything interesting in this library inherits from MarkdownNode.
 # It´s the base class for all tree nodes we are building. The tree goes from the root nav
 # down to single markup elements.
-# get_subclasses just calls __subclasses__ recursively.
 for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
+    # get_subclasses just calls __subclasses__ recursively.
     subpage = nodes_nav.add_page(kls.__name__)
     if hasattr(kls, "examples"):
+        subpage += markdownizer.Code.for_object(kls.examples, header="Our combinations")
         # "examples()" yields dicts with constructor keyword arguments for building examples.
         for i, sig in enumerate(kls.examples(), start=1):
-            subpage.add_header(f"Example {i} for class {kls.__name__!r}\n", level=2)
+            subpage.add_header(f"Example {i} for class {kls.__name__!r}", level=2)
             sig_txt = utils.format_kwargs(sig)
             text = f"node = markdownizer.{kls.__name__}({sig_txt})\nstr(node)"
             subpage.add_code(language="py", code=text, title=f"example_{i}.py")
@@ -44,10 +44,12 @@ for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
             subpage.add_newlines(3)
     subpage.add_mkdocstrings(kls)
 
-# We could also add docs for random other modules, too. This is the "semi-automated" way.
-mkdocs_docs = root_nav.add_documentation(module=mkdocs)
-for klass in mkdocs_docs.iter_classes(recursive=True):
-    mkdocs_docs.add_class_page(klass=klass)
+# We could also add docs for random other modules, too. Lets document the std library.
+std_lib_nav = root_nav.add_nav("std_library")
+for stdlib_mod in ["pathlib", "inspect", "logging"]:
+    docs = std_lib_nav.add_documentation(module=stdlib_mod)
+    for klass in docs.iter_classes(recursive=True):
+        docs.add_class_page(klass=klass)
 
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
@@ -55,10 +57,11 @@ tree_page = root_nav.add_page("Node tree", hide_toc=True, hide_nav=True)
 tree_page.add_header("This is the tree built by the website code.", level=3)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
+# tree_page += nodes_nav.to_tree_graph(orientation="LR")
 virtual_files = root_nav.all_virtual_files()
 files_page = root_nav.add_page("File map", hide_toc=True, hide_nav=True)
 files_page.add_header("..And these are the files connected to the tree.", level=3)
 files_page += markdownizer.Code(language="py", code=pprint.pformat(virtual_files))
-
+# print(nodes_nav.to_tree_graph())
 
 root_nav.write()  # Finally, we write the whole tree.
