@@ -34,21 +34,13 @@ for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
     if hasattr(kls, "examples"):
         # "examples()" yields dicts with constructor keyword arguments for building examples.
         for i, sig in enumerate(kls.examples(), start=1):
-            subpage += f"## Example {i} for class {kls.__name__!r}\n"
+            subpage.add_header(f"Example {i} for class {kls.__name__!r}\n", level=2)
             sig_txt = utils.format_kwargs(sig)
-            text = (
-                f"node = markdownizer.{kls.__name__}({sig_txt})\n"
-                + "str(node)  # or node.to_markdown()"
-            )
-            subpage += markdownizer.Code(
-                language="py", code=text, title=f"example_{i}.py"
-            )
+            text = f"node = markdownizer.{kls.__name__}({sig_txt})\nstr(node)"
+            subpage.add_code(language="py", code=text, title=f"example_{i}.py")
             node = kls(**sig)
-            code = markdownizer.Code(
-                language="markdown", code=node, title=f"result_{i}.md"
-            )
-            tabs = {"Preview": str(node), "Generated markdown": str(code)}
-            subpage += markdownizer.Tabbed(tabs)
+            code = markdownizer.Code(language="md", code=node, title=f"result_{i}.md")
+            subpage.add_tabs({"Preview": str(node), "Generated markdown": str(code)})
             subpage.add_newlines(3)
     subpage.add_mkdocstrings(kls)
 
