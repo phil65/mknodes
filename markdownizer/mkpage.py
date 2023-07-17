@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 import logging
 import os
 import pathlib
@@ -16,6 +17,8 @@ from markdownizer import (
     docstrings,
     markdownnode,
     nav,
+    tabbed,
+    tabblock,
     utils,
 )
 
@@ -255,6 +258,19 @@ class MkPage(markdownnode.MarkdownContainer):
         )
         self.append(item)
         return item
+
+    def add_tabs(
+        self,
+        data: Mapping[str, str | markdownnode.MarkdownNode],
+        style="tabbed",
+        **kwargs,
+    ):
+        if style == "tabbed":
+            tabs = tabbed.Tabbed(data, parent=self)
+        else:
+            tabs = tabblock.TabBlock(data, parent=self)
+        self.append(tabs)
+        return tabs
 
 
 class ClassPage(MkPage):

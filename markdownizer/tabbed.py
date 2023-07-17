@@ -19,8 +19,9 @@ class Tabbed(markdownnode.MarkdownNode):
         self,
         tabs: Mapping[str, str | markdownnode.MarkdownNode],
         header: str = "",
+        **kwargs,
     ):
-        super().__init__(header=header)
+        super().__init__(header=header, **kwargs)
         self.tabs = tabs
 
     def __repr__(self):
