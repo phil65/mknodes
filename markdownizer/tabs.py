@@ -4,15 +4,13 @@ from collections.abc import Mapping
 import logging
 import textwrap
 
-import markdownizer
-
 from markdownizer import markdownnode, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Tab(markdownizer.MarkdownContainer):
+class Tab(markdownnode.MarkdownContainer):
     def __init__(
         self,
         title: str,
@@ -44,7 +42,7 @@ class BaseTabWidget(markdownnode.MarkdownContainer):
             items = [
                 Tab(
                     k,
-                    items=[markdownizer.Text(v) if isinstance(v, str) else v],
+                    items=[markdownnode.Text(v) if isinstance(v, str) else v],
                 )
                 for k, v in tabs.items()
             ]
@@ -53,7 +51,7 @@ class BaseTabWidget(markdownnode.MarkdownContainer):
         super().__init__(items=items, header=header)
 
     def __repr__(self):
-        return utils.get_repr(self, tabs=self.items)
+        return utils.get_repr(self, items=self.items)
 
     def to_dict(self):
         return {tab.title: str(tab) for tab in self.items}

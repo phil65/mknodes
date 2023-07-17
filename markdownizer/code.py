@@ -77,8 +77,10 @@ class Code(markdownnode.Text):
         | types.TracebackType
         | types.FrameType
         | types.CodeType,
+        *,
         dedent: bool = True,
         extract_body: bool = False,
+        header: str = "",
     ) -> Self:
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
             code = get_function_body(obj)
@@ -87,7 +89,7 @@ class Code(markdownnode.Text):
         else:
             code = inspect.getsource(obj)
         code = textwrap.dedent(code) if dedent else code
-        return cls(language="py", code=code)
+        return cls(language="py", code=code, header=header)
 
 
 if __name__ == "__main__":

@@ -10,10 +10,10 @@ from typing import Any, Literal
 
 from markdownizer import (
     admonition,
+    classdiagram,
     classhelpers,
     classtable,
     code as codeblock,
-    diagram,
     docstrings,
     markdownnode,
     nav,
@@ -316,7 +316,7 @@ class ClassPage(MkPage):
         self.append(item)
         if tbl := classtable.ClassTable(self.klass):
             self.append(tbl)
-        item = diagram.ClassDiagram(self.klass, header="Inheritance diagram")
+        item = classdiagram.ClassDiagram(self.klass, header="Inheritance diagram")
         self.append(item)
 
 
