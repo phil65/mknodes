@@ -38,12 +38,9 @@ class Nav(markdownnode.MarkdownNode):
             pathlib.Path(section) / self.filename
             if section
             else pathlib.Path(self.filename)
-        )
-        self.path = self.path.as_posix()
-        self.nav = mkdocs_gen_files.Nav()
+        ).as_posix()
+        self.nav: dict[tuple | str, nav.Nav | mkpage.MkPage] = {}
         # self._mapping = {}
-        self.navs: list[nav.Nav] = []
-        self.pages: list[mkpage.MkPage] = []
         # self._editor = mkdocs_gen_files.editor.FilesEditor.current()
         # self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
         # self.files = self._editor.files
@@ -55,10 +52,10 @@ class Nav(markdownnode.MarkdownNode):
             filename=self.filename,
         )
 
-    def __setitem__(self, item: tuple | str, value: str | os.PathLike):
+    def __setitem__(self, item: tuple | str, value: mkpage.MkPage | Nav):
         if isinstance(item, str):
             item = tuple(item.split("."))
-        self.nav[item] = pathlib.Path(value).as_posix()
+        self.nav[item] = value
 
     #     self._mapping[item] = value
 
@@ -66,13 +63,20 @@ class Nav(markdownnode.MarkdownNode):
     #     return self._mapping[item]
 
     @property
+    def navs(self):
+        return [node for node in self.nav.values() if isinstance(node, Nav)]
+
+    @property
+    def pages(self):
+        return [node for node in self.nav.values() if isinstance(node, mkpage.MkPage)]
+
+    @property
     def children(self):
-        return self.pages + self.navs
+        return self.nav.values()
 
     @children.setter
     def children(self, items):
-        self.navs = [i for i in items if isinstance(i, Nav)]
-        self.pages = [i for i in items if not isinstance(i, Nav)]
+        self.nav = dict(items)
 
     def add_nav(self, section: str | os.PathLike) -> nav.Nav:
         """Create a Sub-Nav, register it to given Nav and return it.
@@ -81,8 +85,7 @@ class Nav(markdownnode.MarkdownNode):
             section: Name of the new nav.
         """
         navi = nav.Nav(section=section, parent=self)
-        self.nav[(section,)] = f"{section}/"
-        self.navs.append(navi)
+        self.nav[(section,)] = navi
         return navi
 
     def write_navs(self):
@@ -93,7 +96,16 @@ class Nav(markdownnode.MarkdownNode):
         return {str(self.path): self.to_markdown()}
 
     def to_markdown(self):
-        return "".join(self.nav.build_literate_nav())
+        nav = mkdocs_gen_files.Nav()
+        for path, item in self.nav.items():
+            match item:
+                case mkpage.MkPage():
+                    nav[path] = pathlib.Path(item.path).as_posix()
+                case Nav():
+                    nav[path] = f"{item.section}/"
+                case _:
+                    raise TypeError(item)
+        return "".join(nav.build_literate_nav())
 
     def add_page(
         self,
@@ -113,9 +125,7 @@ class Nav(markdownnode.MarkdownNode):
             hide_nav=hide_nav,
             hide_path=hide_path,
         )
-        title_path = tuple(title.split("."))
-        self.nav[title_path] = pathlib.Path(page.path).as_posix()
-        self.pages.append(page)
+        self.nav[title] = page
         return page
 
     def add_documentation(
@@ -140,8 +150,7 @@ class Nav(markdownnode.MarkdownNode):
             parent=self,
             section_name=section_name,
         )
-        self.nav[(nav.section,)] = f"{nav.section}/"
-        self.navs.append(nav)
+        self.nav[(nav.section,)] = nav
         return nav
 
 
