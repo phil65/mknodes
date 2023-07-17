@@ -18,6 +18,8 @@ class List(markdownnode.MarkdownContainer):
         as_links: bool = False,
         header: str = "",
     ):
+        # if as_links:
+        #     items = [link.Link(i) for i in items]
         super().__init__(items=items, header=header)
         self.shorten_after = shorten_after
         self.as_links = as_links
