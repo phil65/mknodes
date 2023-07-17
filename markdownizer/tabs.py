@@ -15,6 +15,7 @@ class Tab(markdownnode.MarkdownContainer):
         self,
         title: str,
         items: list | None = None,
+        *,
         select: bool = False,
         attrs: dict | None = None,
         **kwargs,

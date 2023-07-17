@@ -14,6 +14,7 @@ class BaseClassConnectionBuilder(connectionbuilder.ConnectionBuilder):
     def __init__(
         self,
         objects,
+        *,
         title_style: Literal["package.classname", "qualname"] = "package.classname",
     ):
         self.title_style = title_style

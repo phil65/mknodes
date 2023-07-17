@@ -17,6 +17,7 @@ class ModuleTable(table.Table):
     def __init__(
         self,
         module: types.ModuleType | str | tuple[str, ...],
+        *,
         predicate: Callable | None = None,
         **kwargs,
     ):

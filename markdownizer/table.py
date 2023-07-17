@@ -18,6 +18,7 @@ class Table(markdownnode.MarkdownNode):
         self,
         data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,
         columns: Sequence[str] | None = None,
+        *,
         column_modifiers: dict[str, Callable[[str], str]] | None = None,
         header: str = "",
     ):

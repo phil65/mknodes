@@ -36,10 +36,11 @@ class MkPage(markdownnode.MarkdownContainer):
 
     def __init__(
         self,
+        path: str | os.PathLike = "",
+        *,
         hide_toc: bool = False,
         hide_nav: bool = False,
         hide_path: bool = False,
-        path: str | os.PathLike = "",
         parent: nav.Nav | None = None,
         **kwargs: Any,
     ):

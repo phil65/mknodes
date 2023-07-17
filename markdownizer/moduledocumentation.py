@@ -64,6 +64,7 @@ class ModuleDocumentation(nav.Nav):
     def iter_classes(
         self,
         submodule: types.ModuleType | str | tuple | list | None = None,
+        *,
         recursive: bool = False,
         predicate: Callable | None = None,
         _seen: set | None = None,
@@ -103,6 +104,7 @@ class ModuleDocumentation(nav.Nav):
 
     def iter_modules(
         self,
+        *,
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
         predicate: Callable | None = None,
@@ -148,6 +150,7 @@ class ModuleDocumentation(nav.Nav):
     def iter_classes_for_glob(
         self,
         glob: str = "*/*.py",
+        *,
         recursive: bool = False,
         avoid_duplicates: bool = True,
     ) -> Iterator[tuple[type, pathlib.Path]]:
@@ -174,13 +177,14 @@ class ModuleDocumentation(nav.Nav):
     #     return page
 
     def add_class_page(
-        self, klass: type, find_topmost: bool = True, **kwargs
+        self, klass: type, *, find_topmost: bool = True, flatten: bool = False, **kwargs
     ) -> mkpage.ClassPage:
         """Add a page showing information about a class.
 
         Arguments:
             klass: klass to build a page for
             find_topmost: Whether to use a module path from a parent package if available
+            flatten: Put page into top level nav if nested.
             kwargs: keyword arguments passed to CLassPage
         """
         if find_topmost:
@@ -196,12 +200,15 @@ class ModuleDocumentation(nav.Nav):
             parent=self,
             **kwargs,
         )
-        self.nav[(*parts[1:], klass.__name__)] = page
+        section = (klass.__name__,) if flatten else (*parts[1:], klass.__name__)
+        self.nav[section] = page
         return page
 
-    def add_module_overview(self, **kwargs) -> modulepage.ModulePage:
-        """Add a page showing all submodules."""
-        path = pathlib.Path("index.md")
+    def add_module_overview(
+        self, title: str | None = None, **kwargs
+    ) -> modulepage.ModulePage:
+        """Add a page showing all submodules. TODO: slugify?"""
+        path = pathlib.Path("index.md" if title is None else f"{title}.md")
         # parts = path.parts[:-1]
         page = modulepage.ModulePage(
             hide_toc=True,
@@ -210,7 +217,7 @@ class ModuleDocumentation(nav.Nav):
             parent=self,
             **kwargs,
         )
-        self.nav[self.module_name] = page
+        self.nav[title or self.module_name] = page
         return page
 
 

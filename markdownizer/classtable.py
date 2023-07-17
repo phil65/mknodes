@@ -16,6 +16,7 @@ class ClassTable(baseclasstable.BaseClassTable):
     def __init__(
         self,
         klass: type,
+        *,
         mode: Literal["sub_classes", "parent_classes"] = "sub_classes",
         **kwargs,
     ):

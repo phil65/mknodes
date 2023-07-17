@@ -15,6 +15,7 @@ class BinaryImage(image.Image):
         self,
         data: bytes,
         path: str,
+        *,
         caption: str = "",
         title: str = "Image title",
         header: str = "",

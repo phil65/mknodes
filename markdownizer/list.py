@@ -14,6 +14,7 @@ class List(markdownnode.MarkdownContainer):
     def __init__(
         self,
         items: list[str | markdownnode.MarkdownNode] | None = None,
+        *,
         shorten_after: int | None = None,
         as_links: bool = False,
         header: str = "",

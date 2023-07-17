@@ -17,9 +17,9 @@ class BaseClassTable(table.Table):
     def __init__(
         self,
         klasses: list[type],
+        *,
         layout: Literal["default", "extended"] = "default",
         filter_fn: Callable | None = None,
-        *args,
         **kwargs,
     ):
         self.klasses = klasses
