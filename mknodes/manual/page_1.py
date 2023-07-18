@@ -16,22 +16,24 @@ the MkClassDiagram Node.
 
 
 def create_page_1(root_nav: mknodes.Nav):
-    home_nav = root_nav.add_nav("User guide")
-    overview = home_nav.add_page("Overview")
-
-    # we are here right now.
-    overview.add_code(inspect.getsource(create_page_1))
-    nodes_nav = home_nav.add_nav("Nodes")
-
-    # for convenience, we can add strs directly to pages.
-    # they will get converted to a mknodes.Text node.
-    overview += INTRO_TEXT
-
     # Basic structure: Theres one root nav, navs can contain pages and other navs,
     # pages contain more atomic markup nodes, like text, tables, and diagrams.
     # These markup nodes in some cases can contain other Markup nodes.
     # It`s all one big tree.
 
+    home_nav = root_nav.add_nav("User guide")
+    overview = home_nav.add_page("Overview")
+
+    # this here is what you are reading right now.
+    overview.add_code(inspect.getsource(create_page_1))
+    nodes_nav = home_nav.add_nav("Nodes")
+
+    # for convenience, we can add strings directly to pages.
+    # they will get converted to a mknodes.Text node.
+    overview += INTRO_TEXT
+
+    # Lets take a look at the relations of the included nodes.
+    # It`s easy to show different diagrams for classes.
     subcls_page = home_nav.add_page("Subclass tree", hide_toc=True)
     subcls_page += mknodes.ClassDiagram(
         mknodes.MkNode, mode="subclass_tree", orientation="RL"

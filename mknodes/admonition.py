@@ -31,8 +31,9 @@ class Admonition(markdownnode.Text):
 
     def __init__(
         self,
-        typ: AdmonitionTypeStr,
         text: str,
+        typ: AdmonitionTypeStr = "info",
+        *,
         title: str | None = None,
         collapsible: bool = False,
         **kwargs,
@@ -86,5 +87,5 @@ class Admonition(markdownnode.Text):
 
 
 if __name__ == "__main__":
-    admonition = Admonition("info", "hello")
+    admonition = Admonition("hello")
     print(admonition)

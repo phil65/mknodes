@@ -96,7 +96,7 @@ def to_module_parts(  # type: ignore
             raise TypeError(module)
 
 
-def iter_classes_for_module(
+def iter_classes(
     module: types.ModuleType | str | tuple[str],
     *,
     type_filter: type | None | types.UnionType = None,
@@ -120,7 +120,7 @@ def iter_classes_for_module(
     if recursive:
         for _name, submod in inspect.getmembers(mod, inspect.ismodule):
             if submod.__name__.startswith(module_filter or ""):
-                yield from iter_classes_for_module(
+                yield from iter_classes(
                     submod,
                     type_filter=type_filter,
                     module_filter=submod.__name__,
@@ -164,5 +164,5 @@ def get_topmost_module_path_for_klass(klass: type) -> str:
 if __name__ == "__main__":
     from prettyqt import widgets
 
-    path = iter_classes_for_module(widgets, recursive=False)
+    path = iter_classes(widgets, recursive=False)
     print(len(list(path)))

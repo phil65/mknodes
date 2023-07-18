@@ -51,14 +51,14 @@ class ModulePage(mkpage.MkPage):
         if doc := self.module.__doc__:
             self.append(doc)
         if self.docstrings:
-            self.append(docstrings.DocStrings(f'{".".join(self.parts)}'))
+            item = docstrings.DocStrings(f'{".".join(self.parts)}')
+            self.append(item)
         if self.show_class_table:
             klasses = list(
-                classhelpers.iter_classes_for_module(
-                    self.parts, module_filter=self.parts[0]
-                )
+                classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0])
             )
-            self.append(baseclasstable.BaseClassTable(klasses))
+            table = baseclasstable.BaseClassTable(klasses)
+            self.append(table)
 
 
 if __name__ == "__main__":

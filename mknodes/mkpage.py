@@ -126,8 +126,8 @@ class MkPage(markdownnode.MkContainer):
             collapsible: whether the box should be collapsible by the user.
         """
         item = admonition.Admonition(
-            typ=typ,
             text=text,
+            typ=typ,
             title=title,
             collapsible=collapsible,
         )
