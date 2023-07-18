@@ -12,7 +12,7 @@ from .classdiagram import ClassDiagram
 from .mkpage import MkPage
 from .classpage import ClassPage
 from .modulepage import ModulePage
-from .moduledocumentation import ModuleDocumentation
+from .moduledocumentation import Documentation
 from .nav import Nav
 from .table import Table
 from .baseclasstable import BaseClassTable
@@ -44,7 +44,7 @@ __all__ = [
     "ClassPage",
     "ModulePage",
     "ModuleTable",
-    "ModuleDocumentation",
+    "Documentation",
     "TabBlock",
     "Tabbed",
     "SourceAndResult",

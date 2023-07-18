@@ -5,7 +5,7 @@ from __future__ import annotations
 import pathlib
 
 import mknodes
-from mknodes.manual import page_1, page_2, page_3
+from mknodes import manual
 
 
 HEADER = "Don´t write docs. Code them."
@@ -25,10 +25,9 @@ page.add_code(code)
 page += "Now check out the different pages!"
 page.write()
 
-page_1.create_page_1(root_nav)
-page_2.create_page_2(root_nav)
-page_3.create_page_3(root_nav)
+manual.create_page_1(root_nav)
+manual.create_page_2(root_nav)
+manual.create_page_3(root_nav)
 
-# This call will write everything to a virtual folder
-# (powered by mkgen-pages)
+# This call will write everything to a virtual folder (powered by mkgen-pages)
 root_nav.write()

@@ -17,7 +17,7 @@ from mknodes import classhelpers, classpage, modulepage, nav, utils
 logger = logging.getLogger(__name__)
 
 
-class ModuleDocumentation(nav.Nav):
+class Documentation(nav.Nav):
     """Nav for showing a module documenation.
 
     Arguments:
@@ -251,6 +251,6 @@ class ModuleDocumentation(nav.Nav):
 
 
 if __name__ == "__main__":
-    doc = ModuleDocumentation(module="mkdocs")
-    page = doc.add_class_page(ModuleDocumentation)
+    doc = Documentation(module="mkdocs")
+    page = doc.add_class_page(Documentation)
     print(page)

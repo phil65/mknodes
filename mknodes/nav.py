@@ -141,7 +141,7 @@ class Nav(markdownnode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
-    ) -> moduledocumentation.ModuleDocumentation:
+    ) -> moduledocumentation.Documentation:
         """Add a module documentation to the Nav.
 
         Arguments:
@@ -151,7 +151,7 @@ class Nav(markdownnode.MkNode):
         """
         from mknodes import moduledocumentation
 
-        nav = moduledocumentation.ModuleDocumentation(
+        nav = moduledocumentation.Documentation(
             module=module,
             filter_by___all__=filter_by___all__,
             parent=self,
