@@ -13,7 +13,7 @@ This code will show how to build a simple documentation section.
 def create_page_2(root_nav: mknodes.Nav):
     doc_section = root_nav.add_nav("Documentation")
 
-    overview = doc_section.add_page("Overview")
+    overview = doc_section.add_page("Overview", hide_toc=True)
     overview += mknodes.Text(INTRO_TEXT)
 
     # we are here right now.

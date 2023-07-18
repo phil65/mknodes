@@ -44,7 +44,7 @@ class Nav(markdownnode.MkNode):
             if section
             else pathlib.Path(self.filename)
         ).as_posix()
-        self.nav: dict[tuple | str, nav.Nav | mkpage.MkPage] = {}
+        self.nav: dict[tuple | str | None, nav.Nav | mkpage.MkPage] = {}
         # self._mapping = {}
         # self._editor = mkdocs_gen_files.editor.FilesEditor.current()
         # self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
@@ -91,8 +91,15 @@ class Nav(markdownnode.MkNode):
         self.nav[(section,)] = navi
         return navi
 
-    def add_index_page(self) -> mkpage.MkPage:
-        page = mkpage.MkPage(path="index.md", hide_toc=True, hide_nav=True, parent=self)
+    def add_index_page(
+        self,
+        hide_toc: bool = False,
+        hide_nav: bool = False,
+    ) -> mkpage.MkPage:
+        page = mkpage.MkPage(
+            path="index.md", hide_toc=hide_toc, hide_nav=hide_nav, parent=self
+        )
+        self.nav[None] = page
         return page
 
     def write_navs(self):
@@ -105,6 +112,12 @@ class Nav(markdownnode.MkNode):
     def to_markdown(self) -> str:
         nav = mkdocs_gen_files.Nav()
         for path, item in self.nav.items():
+            # current approach: index pages have path = None, they dont become part
+            # of the literate nav.
+            # Not sure what`s best here, lot of combinations possible with
+            # section-index etc.
+            if path is None:
+                continue
             match item:
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()
