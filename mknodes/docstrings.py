@@ -21,7 +21,12 @@ class DocStrings(markdownnode.Text):
 
     def __init__(
         self,
-        obj: types.ModuleType | str | os.PathLike | type,
+        obj: types.ModuleType
+        | str
+        | os.PathLike
+        | type
+        | types.FunctionType
+        | types.MethodType,
         for_topmost: bool = False,
         allow_inspection: bool | None = None,
         show_bases: bool | None = None,
