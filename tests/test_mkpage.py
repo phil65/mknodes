@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import markdownizer
+import mknodes
 
 
 def test_mkpage():
-    page = markdownizer.MkPage()
+    page = mknodes.MkPage()
     assert not str(page)

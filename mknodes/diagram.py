@@ -4,7 +4,7 @@ import textwrap
 
 from typing import Literal
 
-from markdownizer import markdownnode, utils
+from mknodes import markdownnode, utils
 
 
 GraphTypeStr = Literal["flow"]  # TODO

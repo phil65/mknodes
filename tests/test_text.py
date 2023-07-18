@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import markdownizer
+import mknodes
 
 
 def test_text():
-    nav = markdownizer.Text()
+    nav = mknodes.Text()
     assert not str(nav)

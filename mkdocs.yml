@@ -1,8 +1,8 @@
-site_name: Markdownizer
+site_name: MkNodes
 site_description: "Generate docs with ease."
-repo_url: "https://github.com/phil65/markdownizer"
-site_url: https://phil65.github.io/Markdownizer/
-watch: [mkdocs.yml, README.md, markdownizer/]
+repo_url: "https://github.com/phil65/mknodes"
+site_url: https://phil65.github.io/MkNodes/
+watch: [mkdocs.yml, README.md, mknodes/]
 copyright: Copyright &copy; 2023 Philipp Temminghoff
 
 theme:
@@ -119,9 +119,9 @@ extra:
   - icon: fontawesome/brands/github
     link: https://github.com/phil65
   - icon: fontawesome/brands/gitter
-    link: https://matrix.to/#/#markdownizer:gitter.im
+    link: https://matrix.to/#/#mknodes:gitter.im
   - icon: fontawesome/brands/python
-    link: https://pypi.org/project/markdownizer/
+    link: https://pypi.org/project/mknodes/
   # generator: false disable "made with Material"
   # version:  # multiple doc versions
   #   provider: mike

@@ -6,10 +6,10 @@ allow-direct-references = true
 [tool.hatch.version]
 source = "regex_commit"
 commit_extra_args = ["-e"]
-path = "markdownizer/__init__.py"
+path = "mknodes/__init__.py"
 
 [project.entry-points."mkdocs.plugins"]
-linkreplacer = "markdownizer.__linkreplacer:LinkReplacerPlugin"
+linkreplacer = "mknodes.__linkreplacer:LinkReplacerPlugin"
 
 [tool.hatch.envs.default]
 python = "3.10"
@@ -40,12 +40,12 @@ test-cov-xml = "pytest --cov-report=xml"
 lint = [
   "black .",
   "ruff --fix .",
-  "mypy markdownizer/",
+  "mypy mknodes/",
 ]
 lint-check = [
   "black --check .",
   "ruff .",
-  "mypy markdownizer/",
+  "mypy mknodes/",
 ]
 docs-serve = "hatch run mkdocs serve"
 docs-build = "hatch run mkdocs build"
@@ -55,9 +55,9 @@ requires = ["hatchling", "hatch-regex-commit"]
 build-backend = "hatchling.build"
 
 [project]
-name = "markdownizer"
+name = "mknodes"
 authors = [
-  { name = "markdownizer", email = "philipptemminghoff@gmail.com" }
+  { name = "mknodes", email = "philipptemminghoff@gmail.com" }
 ]
 description = "Generate docs with ease."
 readme = "README.md"
@@ -73,8 +73,8 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://phil65.github.io/markdownizer/"
-Source = "https://github.com/phil65/markdownizer"
+Documentation = "https://phil65.github.io/mknodes/"
+Source = "https://github.com/phil65/mknodes"
 
 
 [tool.pytest.ini_options]
@@ -86,7 +86,7 @@ junit_family = "xunit2"
 log_cli = true
 log_format = "%(asctime)s %(levelname)s %(message)s"
 log_date_format = "%Y-%m-%d %H:%M:%S"
-addopts = "--cov=markdownizer/ --cov-report=term-missing"
+addopts = "--cov=mknodes/ --cov-report=term-missing"
 
 [tool.coverage.report]
 exclude_lines = [

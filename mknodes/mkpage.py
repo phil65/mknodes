@@ -7,7 +7,7 @@ import types
 
 from typing import Any, Literal
 
-from markdownizer import (
+from mknodes import (
     admonition,
     code as codeblock,
     docstrings,

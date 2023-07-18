@@ -4,7 +4,7 @@ import logging
 import os
 import pathlib
 
-from markdownizer import (
+from mknodes import (
     classdiagram,
     classhelpers,
     classtable,

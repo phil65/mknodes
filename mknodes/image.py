@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import pathlib
 
-from markdownizer import markdownnode
+from mknodes import markdownnode
 
 
 logger = logging.getLogger(__name__)

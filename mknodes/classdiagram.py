@@ -4,7 +4,7 @@ import itertools
 
 from typing import Literal
 
-from markdownizer import connectionbuilder, diagram, utils
+from mknodes import connectionbuilder, diagram, utils
 
 
 DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]

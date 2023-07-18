@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import markdownizer
+import mknodes
 
 
 EXPECTED = """## test
@@ -11,10 +11,10 @@ EXPECTED = """## test
 
 
 def test_list():
-    ls = markdownizer.List()
+    ls = mknodes.List()
     assert not str(ls)
 
 
 def test_markdown():
-    ls = markdownizer.List(["a", "b"], header="test")
+    ls = mknodes.List(["a", "b"], header="test")
     assert str(ls) == EXPECTED

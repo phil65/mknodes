@@ -6,7 +6,7 @@ import textwrap
 
 import mkdocs_gen_files
 
-from markdownizer import connectionbuilder, node, utils
+from mknodes import connectionbuilder, node, utils
 
 
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class MkNode(node.BaseNode):
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:
-        from markdownizer import nav
+        from mknodes import nav
 
         parent = self
         parts = [self.section] if isinstance(self, nav.Nav) and self.section else []
@@ -87,7 +87,7 @@ class MkNode(node.BaseNode):
 
         The resulting filepath is determined based on the tree hierarchy.
         """
-        from markdownizer import nav
+        from mknodes import nav
 
         dct: dict[str, str | bytes] = {}
         for des in self.descendants:
@@ -147,7 +147,7 @@ class MkContainer(MkNode):
 
     @staticmethod
     def examples():
-        from markdownizer import code
+        from mknodes import code
 
         yield dict(items=[code.Code(language="py", code="a = 1 + 2"), Text("abc")])
 

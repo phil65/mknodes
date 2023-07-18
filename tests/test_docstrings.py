@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import markdownizer
+import mknodes
 
 
 def test_docstrings():
-    docstrings = markdownizer.DocStrings(obj=markdownizer)
-    assert str(docstrings) == "::: markdownizer\n"
+    docstrings = mknodes.DocStrings(obj=mknodes)
+    assert str(docstrings) == "::: mknodes\n"

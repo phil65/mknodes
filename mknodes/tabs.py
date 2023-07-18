@@ -4,7 +4,7 @@ from collections.abc import Mapping
 import logging
 import textwrap
 
-from markdownizer import markdownnode, utils
+from mknodes import markdownnode, utils
 
 
 logger = logging.getLogger(__name__)

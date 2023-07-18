@@ -9,11 +9,11 @@ from typing import TYPE_CHECKING
 
 import mkdocs_gen_files
 
-from markdownizer import markdownnode, mkpage, nav, utils
+from mknodes import markdownnode, mkpage, nav, utils
 
 
 if TYPE_CHECKING:
-    from markdownizer import moduledocumentation
+    from mknodes import moduledocumentation
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +147,7 @@ class Nav(markdownnode.MkNode):
             filter_by___all__: Whether the documentation
             section_name: Override the name for the menu (default: module name)
         """
-        from markdownizer import moduledocumentation
+        from mknodes import moduledocumentation
 
         nav = moduledocumentation.ModuleDocumentation(
             module=module,

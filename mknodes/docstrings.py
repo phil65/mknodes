@@ -7,7 +7,7 @@ import types
 
 from typing import Any, Literal
 
-from markdownizer import classhelpers, markdownnode, utils
+from mknodes import classhelpers, markdownnode, utils
 
 
 logger = logging.getLogger(__name__)

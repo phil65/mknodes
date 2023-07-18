@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from markdownizer import markdownnode, utils
+from mknodes import markdownnode, utils
 
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-import markdownizer
+import mknodes
 
 
 @pytest.mark.parametrize(
@@ -14,14 +14,14 @@ import markdownizer
     ],
 )
 def test_resolved_path(a: int, b: int, result: int):
-    nav = markdownizer.Nav()
+    nav = mknodes.Nav()
     subnav = nav.add_nav("subsection")
     subsubnav = subnav.add_nav("subsubsection")
     assert subsubnav.resolved_parts == ("subsection", "subsubsection")
 
 
 def test_creating_module_document():
-    nav = markdownizer.Nav()
+    nav = mknodes.Nav()
     subnav = nav.add_nav("subsection")
     module_docs = subnav.add_documentation(pytest)
     klasses = list(module_docs.iter_classes())

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import markdownizer
+import mknodes
 
 
 def test_virtual_files():
-    nav = markdownizer.Nav()
+    nav = mknodes.Nav()
     subnav = nav.add_nav("subsection")
     page = subnav.add_page("page")
-    img = markdownizer.BinaryImage(data=b"", path="Test.jpg")
+    img = mknodes.BinaryImage(data=b"", path="Test.jpg")
     page.append(img)

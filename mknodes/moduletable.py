@@ -5,7 +5,7 @@ import inspect
 import logging
 import types
 
-from markdownizer import classhelpers, table, utils
+from mknodes import classhelpers, table, utils
 
 
 logger = logging.getLogger(__name__)
@@ -50,9 +50,9 @@ class ModuleTable(table.Table):
 
     @staticmethod
     def examples():
-        import markdownizer
+        import mknodes
 
-        yield dict(module=markdownizer)
+        yield dict(module=mknodes)
 
 
 if __name__ == "__main__":

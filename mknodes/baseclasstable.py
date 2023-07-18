@@ -5,7 +5,7 @@ import logging
 
 from typing import Literal
 
-from markdownizer import table, utils
+from mknodes import table, utils
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class BaseClassTable(table.Table):
 
     @staticmethod
     def examples():
-        from markdownizer import nav, table
+        from mknodes import nav, table
 
         yield dict(klasses=[table.Table, BaseClassTable, nav.Nav])
         yield dict(klasses=[table.Table, BaseClassTable, nav.Nav], layout="extended")

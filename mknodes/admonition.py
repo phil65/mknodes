@@ -5,7 +5,7 @@ import textwrap
 
 from typing import Literal
 
-from markdownizer import markdownnode
+from mknodes import markdownnode
 
 
 logger = logging.getLogger(__name__)

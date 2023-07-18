@@ -1,18 +1,18 @@
-# Markdownizer
+# MkNodes
 
 <p align="center">
     <em>Generate docs with ease.</em>
 </p>
 
-[![build](https://github.com/phil65/markdownizer/workflows/Build/badge.svg)](https://github.com/phil65/markdownizer/actions)
-[![codecov](https://codecov.io/gh/phil65/markdownizer/branch/master/graph/badge.svg)](https://codecov.io/gh/phil65/markdownizer)
-[![PyPI version](https://badge.fury.io/py/markdownizer.svg)](https://badge.fury.io/py/markdownizer)
+[![build](https://github.com/phil65/mknodes/workflows/Build/badge.svg)](https://github.com/phil65/mknodes/actions)
+[![codecov](https://codecov.io/gh/phil65/mknodes/branch/master/graph/badge.svg)](https://codecov.io/gh/phil65/mknodes)
+[![PyPI version](https://badge.fury.io/py/mknodes.svg)](https://badge.fury.io/py/mknodes)
 
 ---
 
-**Documentation**: <a href="https://phil65.github.io/markdownizer/" target="_blank">https://phil65.github.io/markdownizer/</a>
+**Documentation**: <a href="https://phil65.github.io/mknodes/" target="_blank">https://phil65.github.io/mknodes/</a>
 
-**Source Code**: <a href="https://github.com/phil65/markdownizer" target="_blank">https://github.com/phil65/markdownizer</a>
+**Source Code**: <a href="https://github.com/phil65/mknodes" target="_blank">https://github.com/phil65/mknodes</a>
 
 ---
 

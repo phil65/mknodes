@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import prettyqt
-import markdownizer
+import mknodes
 
 prettyqt.import_all()
 
 QT_MODULE_ATTR = "QT_MODULE"
 
-root_nav = markdownizer.Nav()
-page = markdownizer.MkPage(path="index.md", hide_toc=True, hide_nav=True)
+root_nav = mknodes.Nav()
+page = mknodes.MkPage(path="index.md", hide_toc=True, hide_nav=True)
 page.add_header("Not in the mood to write documentation? Let´s code it then!", level=3)
 page.write()
 

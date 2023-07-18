@@ -5,7 +5,7 @@ import os
 import pathlib
 import types
 
-from markdownizer import baseclasstable, classhelpers, docstrings, mkpage, utils
+from mknodes import baseclasstable, classhelpers, docstrings, mkpage, utils
 
 
 logger = logging.getLogger(__name__)
@@ -43,9 +43,9 @@ class ModulePage(mkpage.MkPage):
 
     @staticmethod
     def examples():
-        import markdownizer
+        import mknodes
 
-        yield dict(module=markdownizer)
+        yield dict(module=mknodes)
 
     def _build(self):
         if doc := self.module.__doc__:

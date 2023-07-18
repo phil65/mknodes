@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 import logging
 
-from markdownizer import code, markdownnode, utils
+from mknodes import code, markdownnode, utils
 
 
 logger = logging.getLogger(__name__)

@@ -7,7 +7,7 @@ import types
 
 from typing_extensions import Self
 
-from markdownizer import markdownnode, utils
+from mknodes import markdownnode, utils
 
 
 logger = logging.getLogger(__name__)

@@ -9,7 +9,7 @@ import logging
 import pathlib
 import types
 
-from markdownizer import classhelpers, classpage, modulepage, nav, utils
+from mknodes import classhelpers, classpage, modulepage, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -180,7 +180,7 @@ class ModuleDocumentation(nav.Nav):
     #         path=pathlib.Path("index.md"),
     #         # parent=self,
     #     )
-    #     page += markdownizer.ModuleTable(self.module_name, predicate=predicate)
+    #     page += mknodes.ModuleTable(self.module_name, predicate=predicate)
     #     return page
 
     def add_module_overview(
