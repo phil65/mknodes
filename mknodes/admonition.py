@@ -69,23 +69,6 @@ class Admonition(markdownnode.Text):
         yield dict(typ="info", text="This is a collapsible menu", collapsible=True)
 
 
-# class TabWidget(Admonition):
-#     def __init__(
-#         self,
-#         items=None,
-#     ):
-#         super().__init__(header=header)
-#         self.items = items or []
-#         self.title = title
-
-#     def _to_markdown(self) -> str:
-#         lines = [f'!!! Example "{self.title}"']
-
-#         for item in self.items:
-#             header = f"=== {header!r}"
-#             text = textwrap.indent(item.to_markdown(), "        ")
-
-
 if __name__ == "__main__":
     admonition = Admonition("hello")
     print(admonition)

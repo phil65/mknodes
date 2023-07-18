@@ -40,6 +40,10 @@ class BaseClassConnectionBuilder(connectionbuilder.ConnectionBuilder):
 
 
 class SubclassConnectionBuilder(BaseClassConnectionBuilder):
+    def _connect(self, objects):
+        super()._connect(objects)
+        self.connections = [(i[1], i[0]) for i in self.connections]
+
     def get_children(self, item: type) -> list[type]:
         return item.__subclasses__()
 

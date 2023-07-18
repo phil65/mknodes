@@ -18,7 +18,7 @@ class BaseClassTable(table.Table):
         self,
         klasses: list[type],
         *,
-        layout: Literal["default", "extended"] = "extended",
+        layout: Literal["compact", "extended"] = "extended",
         filter_fn: Callable | None = None,
         **kwargs,
     ):
@@ -34,7 +34,7 @@ class BaseClassTable(table.Table):
         # STRIP_CODE = r"```[^\S\r\n]*[a-z]*\n.*?\n```"
         # docs = [re.sub(STRIP_CODE, '', k.__module__, 0, re.DOTALL) for k in klasses]
         match layout:
-            case "default":
+            case "compact":
                 data = [self.default_row_for_klass(kls) for kls in klasses]
             case "extended":
                 data = [self.extended_row_for_klass(kls) for kls in klasses]

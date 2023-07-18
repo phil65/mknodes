@@ -36,7 +36,7 @@ def create_page_1(root_nav: mknodes.Nav):
     # It`s easy to show different diagrams for classes.
     subcls_page = home_nav.add_page("Subclass tree", hide_toc=True)
     subcls_page += mknodes.ClassDiagram(
-        mknodes.MkNode, mode="subclass_tree", orientation="RL"
+        mknodes.MkNode, mode="subclass_tree", orientation="LR"
     )
     # let`s take a look at some of the mentioned Markup nodes.
     # Some of them have a `examples` classmethod which yields some example signatures

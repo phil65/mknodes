@@ -21,8 +21,9 @@ class Table(markdownnode.MkNode):
         *,
         column_modifiers: dict[str, Callable[[str], str]] | None = None,
         header: str = "",
+        **kwargs,
     ):
-        super().__init__(header=header)
+        super().__init__(header=header, **kwargs)
         column_modifiers = column_modifiers or {}
         match data:
             case None:

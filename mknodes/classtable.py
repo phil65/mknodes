@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import logging
 
 from typing import Literal
@@ -17,6 +18,8 @@ class ClassTable(baseclasstable.BaseClassTable):
         self,
         klass: type,
         *,
+        layout: Literal["compact", "extended"] = "extended",
+        filter_fn: Callable | None = None,
         mode: Literal["sub_classes", "parent_classes"] = "sub_classes",
         **kwargs,
     ):
@@ -32,7 +35,7 @@ class ClassTable(baseclasstable.BaseClassTable):
                 klasses = list(klass.__bases__)
             case _:
                 raise ValueError(self.mode)
-        super().__init__(klasses=klasses, **kwargs)
+        super().__init__(klasses=klasses, layout=layout, filter_fn=filter_fn, **kwargs)
 
     def __repr__(self):
         return utils.get_repr(

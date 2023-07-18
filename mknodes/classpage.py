@@ -36,11 +36,21 @@ class ClassPage(mkpage.MkPage):
         klass: type,
         *,
         module_path: tuple[str, ...] | str | None = None,
+        hide_toc: bool = False,
+        hide_nav: bool = False,
+        hide_path: bool = False,
         path: str | os.PathLike = "",
         **kwargs: Any,
     ):
+        # TODO: should path be settable?
         path = pathlib.Path(f"{klass.__name__}.md")
-        super().__init__(path=path, **kwargs)
+        super().__init__(
+            path=path,
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            hide_path=hide_path,
+            **kwargs,
+        )
         self.klass = klass
         match module_path:
             case None:

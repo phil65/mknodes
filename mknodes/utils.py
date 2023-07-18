@@ -204,6 +204,10 @@ def get_function_body(func: types.MethodType | types.FunctionType | type) -> str
     return "".join(source_lines)
 
 
+def get_deprecated_message(obj) -> str | None:
+    return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
+
+
 if __name__ == "__main__":
     strings = groupby_first_letter([str(i) for i in range(1000)])
     print(limit_repr.repr(strings))
