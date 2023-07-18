@@ -22,26 +22,28 @@ class ModuleTable(table.Table):
         **kwargs,
     ):
         self.module = classhelpers.to_module(module, return_none=False)
-        rows = [
-            (
-                submod_name,
-                # utils.link_for_class(submod, size=4, bold=True),
-                (
-                    submod.__doc__.split("\n")[0]
-                    if submod.__doc__
-                    else "*No docstrings defined.*"
-                ),
-                (
-                    utils.to_html_list(submod.__all__, make_link=True)
-                    if hasattr(submod, "__all__")
-                    else ""
-                ),
-            )
-            for submod_name, submod in inspect.getmembers(self.module, inspect.ismodule)
+        dicts = [
+            self.get_row_for_module(submod)
+            for _, submod in inspect.getmembers(self.module, inspect.ismodule)
             if (predicate is None or predicate(submod)) and "__" not in submod.__name__
         ]
-        rows = list(zip(*rows))
-        super().__init__(rows, columns=["Name", "Information", "Members"], **kwargs)
+        super().__init__(dicts, **kwargs)
+
+    def get_row_for_module(self, module: types.ModuleType) -> dict[str, str]:
+        return dict(
+            Name=module.__name__,
+            # utils.link_for_class(submod, size=4, bold=True),
+            Information=(
+                module.__doc__.split("\n")[0]
+                if module.__doc__
+                else "*No docstrings defined.*"
+            ),
+            Members=(
+                utils.to_html_list(module.__all__, make_link=True)
+                if hasattr(module, "__all__")
+                else ""
+            ),
+        )
 
     # def __repr__(self):
     #     return utils.get_repr(self, module=self.module)
