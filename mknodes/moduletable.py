@@ -33,10 +33,8 @@ class ModuleTable(table.Table):
         return dict(
             Name=module.__name__,
             # utils.link_for_class(submod, size=4, bold=True),
-            Information=(
-                module.__doc__.split("\n")[0]
-                if module.__doc__
-                else "*No docstrings defined.*"
+            Information=utils.get_first_doc_line(
+                module, fallback="*No docstrings defined.*"
             ),
             Members=(
                 utils.to_html_list(module.__all__, make_link=True)

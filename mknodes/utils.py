@@ -208,6 +208,13 @@ def get_deprecated_message(obj) -> str | None:
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
+def get_first_doc_line(obj, escape: bool = False, fallback: str = "") -> str:
+    doc = obj.__doc__.split("\n")[0] if isinstance(obj.__doc__, str) else fallback
+    if escape:
+        doc = escaped(doc)
+    return doc
+
+
 if __name__ == "__main__":
     strings = groupby_first_letter([str(i) for i in range(1000)])
     print(limit_repr.repr(strings))

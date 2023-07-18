@@ -54,11 +54,10 @@ class BaseClassTable(table.Table):
         yield dict(klasses=[table.Table, BaseClassTable, nav.Nav], layout="extended")
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:
-        desc = kls.__doc__.split("\n")[0] if isinstance(kls.__doc__, str) else ""
         return dict(
             Class=utils.link_for_class(kls),
             Module=kls.__module__,
-            Description=desc,
+            Description=utils.get_first_doc_line(kls),
         )
 
     def extended_row_for_klass(
@@ -76,8 +75,7 @@ class BaseClassTable(table.Table):
         parents = kls.__bases__
         parent_links = [utils.link_for_class(parent) for parent in parents]
         parent_str = utils.to_html_list(parent_links, shorten_after=shorten_lists_after)
-        desc = kls.__doc__.split("\n")[0] if isinstance(kls.__doc__, str) else ""
-        desc = utils.escaped(desc)
+        desc = utils.get_first_doc_line(kls, escape=True)
         name = utils.link_for_class(kls, size=4, bold=True)
         module = utils.styled(kls.__module__, size=1, recursive=True)
         return dict(
