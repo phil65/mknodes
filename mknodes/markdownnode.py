@@ -61,6 +61,7 @@ class MkNode(node.BaseNode):
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:
+        """Returns a tuple containing all section names."""
         from mknodes import nav
 
         parent = self
@@ -72,12 +73,16 @@ class MkNode(node.BaseNode):
 
     @property
     def resolved_file_path(self) -> str:
+        """Returns the resulting section/subsection/../filename.xyz path."""
         filename = str(self.path) if hasattr(self, "path") else ""
         path = "/".join(self.resolved_parts) + "/" + filename
         return path
 
     def virtual_files(self):
-        """Virtual, this can be overridden by nodes if they want files to be included."""
+        """Returns a dict containing the virtual files attached to this tree element.
+
+        This can be overridden by nodes if they want files to be included in the build.
+        """
         return {}
 
     def all_virtual_files(self) -> dict[str, str | bytes]:
