@@ -23,11 +23,16 @@ class Nav(markdownnode.MarkdownNode):
 
     A nav has a section name (exception can be the root), an associated virtual file
     (in general a SUMMARY.md) and can contain other navs as well as pages.
+
+    Arguments:
+        section: Section name for the Nav
+        filename: FileName for the resulting nav
     """
 
     def __init__(
         self,
         section: str | os.PathLike | None = None,
+        *,
         filename: str = "SUMMARY.md",
         **kwargs,
     ):
@@ -92,10 +97,10 @@ class Nav(markdownnode.MarkdownNode):
         for navi in self.navs:
             navi.write()
 
-    def virtual_files(self):
+    def virtual_files(self) -> dict[str, str]:
         return {str(self.path): self.to_markdown()}
 
-    def to_markdown(self):
+    def to_markdown(self) -> str:
         nav = mkdocs_gen_files.Nav()
         for path, item in self.nav.items():
             match item:

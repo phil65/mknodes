@@ -20,7 +20,7 @@ class NodeConnectionBuilder(connectionbuilder.ConnectionBuilder):
         # id() would be enough, but name is sometimes useful for debugging.
         return f"{type(item).__name__}_{id(item)}"
 
-    def get_title(self, item):
+    def get_title(self, item) -> str:
         return f"{type(item).__name__}"
 
 
@@ -30,6 +30,11 @@ class MarkdownNode(node.BaseNode):
     The class inherits from BaseNode. The idea is that starting from the
     root nav (aka Docs) down to nested Markup blocks, the whole project can be represented
     by one tree.
+
+    Arguments:
+        header: Optional header for contained Markup
+        indent: Indentation of given Markup (unused ATM)
+        parent: Parent for building the tree
     """
 
     def __init__(
@@ -49,7 +54,7 @@ class MarkdownNode(node.BaseNode):
     def _to_markdown(self):
         return NotImplemented
 
-    def to_markdown(self):
+    def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
         text = self._to_markdown()
         if self.indent:
@@ -68,7 +73,7 @@ class MarkdownNode(node.BaseNode):
         return tuple(reversed(parts))
 
     @property
-    def resolved_file_path(self):
+    def resolved_file_path(self) -> str:
         filename = str(self.path) if hasattr(self, "path") else ""
         path = "/".join(self.resolved_parts) + "/" + filename
         return path
@@ -105,14 +110,19 @@ class MarkdownNode(node.BaseNode):
             with mkdocs_gen_files.open(k, mode) as file:
                 file.write(v)
 
-    def pretty_print(self, indent: int = 0):
-        text = indent * "    " + repr(self) + "->" + self.resolved_file_path
+    def pretty_print(self, _indent: int = 0):
+        """PrettyPrint node and its children."""
+        text = _indent * "    " + repr(self) + "->" + self.resolved_file_path
         logger.info(text)
         for child_item in self.children:
-            child_item.pretty_print(indent + 1)
+            child_item.pretty_print(_indent + 1)
 
     def to_tree_graph(self, orientation: str = "TD") -> str:
-        """Returns markdown to display a tree graph of this node and all subnodes."""
+        """Returns markdown to display a tree graph of this node and all subnodes.
+
+        Arguments:
+            orientation: Orientation of resulting graph
+        """
         item_str = NodeConnectionBuilder([self]).get_graph_connection_text()
         text = f"graph {orientation}\n{item_str}"
         return f"```mermaid\n{text}\n```"

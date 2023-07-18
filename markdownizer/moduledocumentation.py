@@ -16,7 +16,14 @@ logger = logging.getLogger(__name__)
 
 
 class ModuleDocumentation(nav.Nav):
-    """Nav for showing a module documenation."""
+    """Nav for showing a module documenation.
+
+    Arguments:
+        module: Module to document
+        filter_by___all__: Whether to filter stuff according to "__all__"
+        exclude_modules: List of modules to exclude
+        section_name: Optional section name override
+    """
 
     def __init__(
         self,
@@ -133,48 +140,11 @@ class ModuleDocumentation(nav.Nav):
             if recursive and submod not in seen:
                 seen.add(submod)
                 yield from self.iter_modules(
-                    submod,
+                    submodule=submod,
                     recursive=True,
                     predicate=predicate,
                     _seen=seen,
                 )
-
-    # def iter_modules_for_glob(self, glob="*/*.py"):
-    #     for path in self.iter_files(glob):
-    #         module_path = path.with_suffix("")
-    #         parts = tuple(module_path.parts)
-    #         complete_module_path = f"{self.module_name}." + ".".join(parts)
-    #         with contextlib.suppress(ImportError, AttributeError):
-    #             yield importlib.import_module(complete_module_path)
-
-    def iter_classes_for_glob(
-        self,
-        glob: str = "*/*.py",
-        *,
-        recursive: bool = False,
-        avoid_duplicates: bool = True,
-    ) -> Iterator[tuple[type, pathlib.Path]]:
-        """Yields (class, path) tuples."""
-        seen = set()
-        for path in self.iter_files(glob):
-            module_path = path.with_suffix("")
-            parts = tuple(self.module_name, *module_path.parts)
-            module = classhelpers.to_module(parts)
-            if not module:
-                return
-            for klass in self.iter_classes(module, recursive=recursive):
-                if (klass, path) not in seen or not avoid_duplicates:
-                    seen.add((klass, path))
-                    yield klass, path
-
-    # def add_overview_page(self, predicate: Callable | None = None):
-    #     page = mkpage.MkPage(
-    #         hide_toc=True,
-    #         path=pathlib.Path("index.md"),
-    #         # parent=self,
-    #     )
-    #     page += markdownizer.ModuleTable(self.module_name, predicate=predicate)
-    #     return page
 
     def add_class_page(
         self, klass: type, *, find_topmost: bool = True, flatten: bool = False, **kwargs
@@ -204,10 +174,25 @@ class ModuleDocumentation(nav.Nav):
         self.nav[section] = page
         return page
 
+    # def add_overview_page(self, predicate: Callable | None = None):
+    #     page = mkpage.MkPage(
+    #         hide_toc=True,
+    #         path=pathlib.Path("index.md"),
+    #         # parent=self,
+    #     )
+    #     page += markdownizer.ModuleTable(self.module_name, predicate=predicate)
+    #     return page
+
     def add_module_overview(
         self, title: str | None = None, **kwargs
     ) -> modulepage.ModulePage:
-        """Add a page showing all submodules. TODO: slugify?"""
+        """Add a page showing all submodules.
+
+        Arguments:
+            title: Override title for the section.
+            kwargs: kwargs passed to ModulePage.
+        """
+        # TODO: slugify?
         path = pathlib.Path("index.md" if title is None else f"{title}.md")
         # parts = path.parts[:-1]
         page = modulepage.ModulePage(
@@ -219,6 +204,41 @@ class ModuleDocumentation(nav.Nav):
         )
         self.nav[title or self.module_name] = page
         return page
+
+    # def iter_modules_for_glob(self, glob="*/*.py"):
+    #     for path in self.iter_files(glob):
+    #         module_path = path.with_suffix("")
+    #         parts = tuple(module_path.parts)
+    #         complete_module_path = f"{self.module_name}." + ".".join(parts)
+    #         with contextlib.suppress(ImportError, AttributeError):
+    #             yield importlib.import_module(complete_module_path)
+
+    # def iter_classes_for_glob(
+    #     self,
+    #     glob: str = "*/*.py",
+    #     *,
+    #     recursive: bool = False,
+    #     avoid_duplicates: bool = True,
+    # ) -> Iterator[tuple[type, pathlib.Path]]:
+    #     """Yields (class, path) tuples.
+
+    #     Arguments:
+    #         glob: glob to use for module file selection.
+    #         recursive: Whether to search recursively.
+    #         avoid_duplicates:
+
+    #     """
+    #     seen = set()
+    #     for path in self.iter_files(glob):
+    #         module_path = path.with_suffix("")
+    #         parts = tuple(self.module_name, *module_path.parts)
+    #         module = classhelpers.to_module(parts)
+    #         if not module:
+    #             return
+    #         for klass in self.iter_classes(module, recursive=recursive):
+    #             if (klass, path) not in seen or not avoid_duplicates:
+    #                 seen.add((klass, path))
+    #                 yield klass, path
 
 
 if __name__ == "__main__":

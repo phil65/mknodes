@@ -29,7 +29,7 @@ class ClassTable(baseclasstable.BaseClassTable):
                 except TypeError:
                     klasses = []
             case "parent_classes":
-                klasses = klass.__bases__
+                klasses = list(klass.__bases__)
             case _:
                 raise ValueError(self.mode)
         super().__init__(klasses=klasses, **kwargs)

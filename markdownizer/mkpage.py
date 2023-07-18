@@ -76,11 +76,20 @@ class MkPage(markdownnode.MarkdownContainer):
         return HEADER.format(options="\n".join(lines))
 
     def add_newlines(self, num: int):
-        """Add line separators to the page."""
+        """Add line separators to the page.
+
+        Arguments:
+            num: Amount of newlines to add.
+        """
         self.append("<br>" * num)
 
     def add_header(self, text: str, level: int = 2):
-        """Add line separators to the page."""
+        """Add line separators to the page.
+
+        Arguments:
+            text: header text
+            level: header level
+        """
         prefix = "#" * level
         self.append(f"{prefix} {text}")
 
@@ -243,6 +252,16 @@ class MkPage(markdownnode.MarkdownContainer):
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
     ):
+        """Add code block to the page.
+
+        Arguments:
+            code: Code
+            language: language for syntax highlighting
+            title: Optional title for the code block
+            header: Optional header for the code block
+            linenums: Optional start line number for the code block
+            highlight_lines: Optional highlighting of a line range.
+        """
         item = codeblock.Code(
             code=code,
             language=language,
@@ -261,10 +280,17 @@ class MkPage(markdownnode.MarkdownContainer):
         style="tabbed",
         **kwargs,
     ):
+        """Add tabs to the page.
+
+        Arguments:
+            data: tab data
+            style: Whether to use new-style (tabblock) or old-style (tabbed) tabs.
+            kwargs: Keyword arguments passed to Tabs
+        """
         if style == "tabbed":
-            tabblock = tabs.Tabbed(data, parent=self)
+            tabblock = tabs.Tabbed(data, parent=self, **kwargs)
         else:
-            tabblock = tabs.TabBlock(data, parent=self)
+            tabblock = tabs.TabBlock(data, parent=self, **kwargs)
         self.append(tabblock)
         return tabblock
 
