@@ -10,7 +10,7 @@ from markdownizer import markdownnode, utils
 GraphTypeStr = Literal["flow"]  # TODO
 
 
-class Diagram(markdownnode.MarkdownNode):
+class Diagram(markdownnode.MkNode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     TYPE_MAP = dict(

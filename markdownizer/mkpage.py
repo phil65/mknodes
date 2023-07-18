@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 HEADER = "---\n{options}\n---\n\n"
 
 
-class MkPage(markdownnode.MarkdownContainer):
+class MkPage(markdownnode.MkContainer):
     """A node container representing a Markdown page.
 
     A page contains a list of other Markdown nodes, has a virtual Markdown file
@@ -244,7 +244,7 @@ class MkPage(markdownnode.MarkdownContainer):
 
     def add_code(
         self,
-        code: str | markdownnode.MarkdownNode,
+        code: str | markdownnode.MkNode,
         language: str = "",
         *,
         title: str = "",
@@ -276,7 +276,7 @@ class MkPage(markdownnode.MarkdownContainer):
 
     def add_tabs(
         self,
-        data: Mapping[str, str | markdownnode.MarkdownNode],
+        data: Mapping[str, str | markdownnode.MkNode],
         style="tabbed",
         **kwargs,
     ):

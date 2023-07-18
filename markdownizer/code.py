@@ -26,7 +26,7 @@ class Code(markdownnode.Text):
     def __init__(
         self,
         language: str,
-        code: str | markdownnode.MarkdownNode = "",
+        code: str | markdownnode.MkNode = "",
         *,
         title: str = "",
         header: str = "",

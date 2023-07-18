@@ -9,7 +9,7 @@ from markdownizer import code, markdownnode, utils
 logger = logging.getLogger(__name__)
 
 
-class SourceAndResult(markdownnode.MarkdownNode):
+class SourceAndResult(markdownnode.MkNode):
     """Class to show the source of a Callable combined with its stringified result."""
 
     def __init__(self, fn: Callable, header: str = ""):

@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Nav(markdownnode.MarkdownNode):
+class Nav(markdownnode.MkNode):
     """Nav section, representing a nestable menu.
 
     A nav has a section name (exception can be the root), an associated virtual file

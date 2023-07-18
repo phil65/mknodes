@@ -8,7 +8,7 @@ from markdownizer import markdownnode
 logger = logging.getLogger(__name__)
 
 
-class Link(markdownnode.MarkdownNode):
+class Link(markdownnode.MkNode):
     """A simple Link."""
 
     def __init__(

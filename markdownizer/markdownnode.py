@@ -24,7 +24,7 @@ class NodeConnectionBuilder(connectionbuilder.ConnectionBuilder):
         return f"{type(item).__name__}"
 
 
-class MarkdownNode(node.BaseNode):
+class MkNode(node.BaseNode):
     """Base class for everything which can be expressed as Markup.
 
     The class inherits from BaseNode. The idea is that starting from the
@@ -37,9 +37,7 @@ class MarkdownNode(node.BaseNode):
         parent: Parent for building the tree
     """
 
-    def __init__(
-        self, header: str = "", indent: str = "", parent: MarkdownNode | None = None
-    ):
+    def __init__(self, header: str = "", indent: str = "", parent: MkNode | None = None):
         super().__init__(parent=parent)
         self.header = header
         self.indent = indent
@@ -128,20 +126,20 @@ class MarkdownNode(node.BaseNode):
         return f"```mermaid\n{text}\n```"
 
 
-class MarkdownContainer(MarkdownNode):
-    """A base class for Nodes containing other MarkdownNodes."""
+class MkContainer(MkNode):
+    """A base class for Nodes containing other MkNodes."""
 
     def __init__(self, items: list | None = None, **kwargs):
         super().__init__(**kwargs)
-        self.items: list[MarkdownNode] = []
+        self.items: list[MkNode] = []
         for item in items or []:
             self.append(item)  # noqa: PERF402
 
-    def __add__(self, other: str | MarkdownNode):
+    def __add__(self, other: str | MkNode):
         self.append(other)
         return self
 
-    def __iter__(self) -> Iterator[MarkdownNode]:  # type: ignore
+    def __iter__(self) -> Iterator[MkNode]:  # type: ignore
         return iter(self.items)
 
     def __repr__(self):
@@ -156,26 +154,26 @@ class MarkdownContainer(MarkdownNode):
     def _to_markdown(self) -> str:
         return "\n\n".join(i.to_markdown() for i in self.items)
 
-    def append(self, other: str | MarkdownNode):
+    def append(self, other: str | MkNode):
         other = Text(other, parent=self) if isinstance(other, str) else other
         self.items.append(other)
 
     @property  # type: ignore
-    def children(self) -> list[MarkdownNode]:
+    def children(self) -> list[MkNode]:
         return self.items
 
     @children.setter
-    def children(self, children: list[MarkdownNode]):
+    def children(self, children: list[MkNode]):
         self.items = children
 
 
-class Text(MarkdownNode):
+class Text(MkNode):
     """Class for any Markup text.
 
-    All classes inheriting from MarkdownNode can get converted to this Type.
+    All classes inheriting from MkNode can get converted to this Type.
     """
 
-    def __init__(self, text: str | MarkdownNode = "", header: str = "", parent=None):
+    def __init__(self, text: str | MkNode = "", header: str = "", parent=None):
         super().__init__(header=header, parent=parent)
         self.text = text
 
@@ -187,7 +185,7 @@ class Text(MarkdownNode):
 
 
 if __name__ == "__main__":
-    section = MarkdownNode(header="fff")
-    for example in MarkdownContainer.examples():
-        container = MarkdownContainer(**example)
+    section = MkNode(header="fff")
+    for example in MkContainer.examples():
+        container = MkContainer(**example)
         print(container)

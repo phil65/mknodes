@@ -9,7 +9,7 @@ from markdownizer import markdownnode, utils
 logger = logging.getLogger(__name__)
 
 
-class Snippet(markdownnode.MarkdownNode):
+class Snippet(markdownnode.MkNode):
     """Snippet to include markdown from another file.
 
     [More info](https://facelessuser.github.io/pymdown-extensions/extensions/snippets/)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .admonition import Admonition
-from .markdownnode import MarkdownNode, MarkdownContainer, Text
+from .markdownnode import MkNode, MkContainer, Text
 from .code import Code
 from .docstrings import DocStrings
 from .image import Image
@@ -24,8 +24,8 @@ from .snippet import Snippet
 
 
 __all__ = [
-    "MarkdownNode",
-    "MarkdownContainer",
+    "MkNode",
+    "MkContainer",
     "Nav",
     "DocStrings",
     "Text",

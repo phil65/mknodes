@@ -9,7 +9,7 @@ from markdownizer import markdownnode
 logger = logging.getLogger(__name__)
 
 
-class Image(markdownnode.MarkdownNode):
+class Image(markdownnode.MkNode):
     """Image including optional caption."""
 
     def __init__(

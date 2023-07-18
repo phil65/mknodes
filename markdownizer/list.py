@@ -8,12 +8,12 @@ from markdownizer import markdownnode, utils
 logger = logging.getLogger(__name__)
 
 
-class List(markdownnode.MarkdownContainer):
+class List(markdownnode.MkContainer):
     """Class to show a formatted list."""
 
     def __init__(
         self,
-        items: list[str | markdownnode.MarkdownNode] | None = None,
+        items: list[str | markdownnode.MkNode] | None = None,
         *,
         shorten_after: int | None = None,
         as_links: bool = False,

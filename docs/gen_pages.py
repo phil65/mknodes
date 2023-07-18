@@ -22,12 +22,17 @@ page.write()
 
 
 # now lets create the documentation. This is the "manual way" by building custom pages.
-home_nav = root_nav.add_nav("Home")
+home_nav = root_nav.add_nav("User guide")
 nodes_nav = home_nav.add_nav("Nodes")
-# Basically everything interesting in this library inherits from MarkdownNode.
+# Basically everything interesting in this library inherits from MkNode.
 # It´s the base class for all tree nodes we are building. The tree goes from the root nav
-# down to single markup elements.
-for kls in classhelpers.get_subclasses(markdownizer.MarkdownNode):
+# down to single markup elements. We can show the subclass tree by using
+# the MkClassDiagram Node.
+subcls_page = home_nav.add_page("Subclass tree")
+subcls_page += markdownizer.ClassDiagram(
+    markdownizer.MkNode, mode="subclass_tree", orientation="RL"
+)
+for kls in classhelpers.get_subclasses(markdownizer.MkNode):
     # get_subclasses just calls __subclasses__ recursively.
     subpage = nodes_nav.add_page(kls.__name__)
     if hasattr(kls, "examples"):
@@ -54,14 +59,15 @@ for stdlib_mod in ["pathlib", "inspect", "logging"]:
 # Lets show some info about the tree we built.
 # The tree starts from the root nav down to the Markup elements.
 tree_page = root_nav.add_page("Node tree", hide_toc=True, hide_nav=True)
-tree_page.add_header("This is the tree built by the website code.", level=3)
+tree_page.add_header("This is the tree we built up to now.", level=3)
 lines = [f"{indent * '    '} {repr(node)}" for indent, node in root_nav.yield_nodes()]
 tree_page += markdownizer.Code(language="py", code="\n".join(lines))
 # tree_page += nodes_nav.to_tree_graph(orientation="LR")
 virtual_files = root_nav.all_virtual_files()
 files_page = root_nav.add_page("File map", hide_toc=True, hide_nav=True)
-files_page.add_header("..And these are the files connected to the tree.", level=3)
-files_page += markdownizer.Code(language="py", code=pprint.pformat(virtual_files))
+files_page.add_header("These are the 'virtual' files attached to the tree:", level=3)
+file_txt = pprint.pformat(list(virtual_files.keys()))
+files_page += markdownizer.Code(language="py", code=file_txt)
 # print(nodes_nav.to_tree_graph())
 
 root_nav.write()  # Finally, we write the whole tree.

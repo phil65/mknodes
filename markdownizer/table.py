@@ -9,7 +9,7 @@ from markdownizer import markdownnode
 logger = logging.getLogger(__name__)
 
 
-class Table(markdownnode.MarkdownNode):
+class Table(markdownnode.MkNode):
     """Class representing a formatted table."""
 
     REQUIRED_EXTENSIONS = "tables"

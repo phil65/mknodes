@@ -10,7 +10,7 @@ from markdownizer import markdownnode, utils
 logger = logging.getLogger(__name__)
 
 
-class Tab(markdownnode.MarkdownContainer):
+class Tab(markdownnode.MkContainer):
     def __init__(
         self,
         title: str,
@@ -30,10 +30,10 @@ class Tab(markdownnode.MarkdownContainer):
         yield from ()
 
 
-class BaseTabWidget(markdownnode.MarkdownContainer):
+class BaseTabWidget(markdownnode.MkContainer):
     def __init__(
         self,
-        tabs: Mapping[str, str | markdownnode.MarkdownNode] | list[Tab],
+        tabs: Mapping[str, str | markdownnode.MkNode] | list[Tab],
         header: str = "",
         **kwargs,
     ):
