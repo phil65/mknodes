@@ -19,7 +19,7 @@ class SourceAndResult(markdownnode.MkNode):
     @staticmethod
     def examples():
         def test():
-            return code.Code(language="py", code="a = 2 + 4")
+            return code.Code(code="a = 2 + 4")
 
         yield dict(fn=test)
 

@@ -154,7 +154,7 @@ class MkContainer(MkNode):
     def examples():
         from mknodes import code
 
-        yield dict(items=[code.Code(language="py", code="a = 1 + 2"), Text("abc")])
+        yield dict(items=[code.Code(code="a = 1 + 2"), Text("abc")])
 
     def _to_markdown(self) -> str:
         return "\n\n".join(i.to_markdown() for i in self.items)

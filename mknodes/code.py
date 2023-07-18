@@ -25,8 +25,8 @@ class Code(markdownnode.Text):
 
     def __init__(
         self,
-        language: str,
         code: str | markdownnode.MkNode = "",
+        language: str = "py",
         *,
         title: str = "",
         header: str = "",
@@ -73,7 +73,7 @@ class Code(markdownnode.Text):
         else:
             code = inspect.getsource(obj)
         code = textwrap.dedent(code) if dedent else code
-        return cls(language="py", code=code, header=header)
+        return cls(code=code, header=header)
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ from mknodes import (
     admonition,
     code as codeblock,
     docstrings,
+    link,
     markdownnode,
     nav,
     tabs,
@@ -82,6 +83,21 @@ class MkPage(markdownnode.MkContainer):
             num: Amount of newlines to add.
         """
         self.append("<br>" * num)
+
+    def add_link(
+        self,
+        url: str,
+        title: str = "",
+    ) -> link.Link:
+        """Add a Link to the page.
+
+        Arguments:
+            url: URL to link to.
+            title: Text to display for the link
+        """
+        item = link.Link(url)
+        self.append(item)
+        return item
 
     def add_header(self, text: str, level: int = 2):
         """Add line separators to the page.
@@ -245,7 +261,7 @@ class MkPage(markdownnode.MkContainer):
     def add_code(
         self,
         code: str | markdownnode.MkNode,
-        language: str = "",
+        language: str = "py",
         *,
         title: str = "",
         header: str = "",
@@ -297,6 +313,7 @@ class MkPage(markdownnode.MkContainer):
 
 if __name__ == "__main__":
     doc = MkPage()
+    doc.add_link("test")
     doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
     # print(doc.children)

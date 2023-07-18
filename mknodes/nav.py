@@ -91,6 +91,10 @@ class Nav(markdownnode.MkNode):
         self.nav[(section,)] = navi
         return navi
 
+    def add_index_page(self) -> mkpage.MkPage:
+        page = mkpage.MkPage(path="index.md", hide_toc=True, hide_nav=True, parent=self)
+        return page
+
     def write_navs(self):
         for navi in self.navs:
             navi.write()
@@ -118,7 +122,7 @@ class Nav(markdownnode.MkNode):
         hide_nav: bool = False,
         hide_path: bool = False,
         filename: str | None = None,
-    ):
+    ) -> mkpage.MkPage:
         """Add a page to the Nav."""
         filename = filename or utils.slugify(f"{title}.md")
         page = mkpage.MkPage(
