@@ -36,6 +36,7 @@ class DocStrings(markdownnode.Text):
         show_category_heading: bool | None = None,
         show_symbol_type_heading: bool | None = None,
         show_symbol_type_toc: bool | None = None,
+        inherited_members: bool | None = None,
         members: list[str] | None = None,
         members_order: Literal["alphabetical", "source"] | None = None,
         filters: list[str] | None = None,
@@ -83,6 +84,7 @@ class DocStrings(markdownnode.Text):
                                       class, func and attr).
             show_symbol_type_toc: Show the symbol type in the Table of
                                   Contents (e.g. mod, class, func and attr).
+            inherited_members: Also show inherited members.
             members: An explicit list of members to render.
             members_order: The members ordering to use.
             filters: A list of filters applied to filter objects based on their name.
@@ -144,6 +146,7 @@ class DocStrings(markdownnode.Text):
         self.options["show_category_heading"] = show_category_heading
         self.options["show_symbol_type_heading"] = show_symbol_type_heading
         self.options["show_symbol_type_toc"] = show_symbol_type_toc
+        self.options["inherited_members"] = inherited_members
         self.options["members"] = members
         self.options["members_order"] = members_order
         self.options["filters"] = filters

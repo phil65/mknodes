@@ -277,8 +277,8 @@ class MkPage(markdownnode.MkContainer):
     def add_tabs(
         self,
         data: Mapping[str, str | markdownnode.MkNode],
-        style="tabbed",
-        **kwargs,
+        style: Literal["tabbed", "tabblock"] = "tabbed",
+        **kwargs: Any,
     ):
         """Add tabs to the page.
 

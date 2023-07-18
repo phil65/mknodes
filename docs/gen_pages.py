@@ -53,6 +53,7 @@ for kls in classhelpers.get_subclasses(mknodes.MkNode):
 std_lib_nav = root_nav.add_nav("std_library")
 for stdlib_mod in ["pathlib", "inspect", "logging"]:
     docs = std_lib_nav.add_documentation(module=stdlib_mod)
+    docs.add_module_overview()
     for klass in docs.iter_classes(recursive=True):
         docs.add_class_page(klass=klass)
 

@@ -9,6 +9,8 @@ import logging
 import pathlib
 import types
 
+from typing import Any
+
 from mknodes import classhelpers, classpage, modulepage, nav, utils
 
 
@@ -147,7 +149,12 @@ class ModuleDocumentation(nav.Nav):
                 )
 
     def add_class_page(
-        self, klass: type, *, find_topmost: bool = True, flatten: bool = False, **kwargs
+        self,
+        klass: type,
+        *,
+        find_topmost: bool = True,
+        flatten: bool = False,
+        **kwargs: Any,
     ) -> classpage.ClassPage:
         """Add a page showing information about a class.
 
@@ -184,7 +191,9 @@ class ModuleDocumentation(nav.Nav):
     #     return page
 
     def add_module_overview(
-        self, title: str | None = None, **kwargs
+        self,
+        title: str | None = None,
+        **kwargs: Any,
     ) -> modulepage.ModulePage:
         """Add a page showing all submodules.
 

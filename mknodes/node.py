@@ -27,9 +27,6 @@ class BaseNode:
     def __iter__(self) -> Iterator[Self]:
         yield from self.children
 
-    def __getitem__(self, index: int) -> Self:
-        return self.children[index]
-
     def __rshift__(self, other: Self):
         """Set children using >> bitshift operator for self >> other.
 

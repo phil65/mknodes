@@ -4,6 +4,8 @@ import logging
 import os
 import pathlib
 
+from typing import Any
+
 from mknodes import (
     classdiagram,
     classhelpers,
@@ -35,7 +37,7 @@ class ClassPage(mkpage.MkPage):
         *,
         module_path: tuple[str, ...] | str | None = None,
         path: str | os.PathLike = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         path = pathlib.Path(f"{klass.__name__}.md")
         super().__init__(path=path, **kwargs)

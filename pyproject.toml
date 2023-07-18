@@ -195,7 +195,6 @@ ignore = [
 extend-exclude = [
     'docs',
     '__init__.py',
-    "prettyqt/qt/",
 ]
 target-version = "py310"
 

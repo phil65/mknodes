@@ -18,7 +18,7 @@ class BaseClassTable(table.Table):
         self,
         klasses: list[type],
         *,
-        layout: Literal["default", "extended"] = "default",
+        layout: Literal["default", "extended"] = "extended",
         filter_fn: Callable | None = None,
         **kwargs,
     ):

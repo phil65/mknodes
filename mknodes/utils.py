@@ -69,6 +69,13 @@ def escaped(text: str, entity_type: str | None = None) -> str:
     return re.sub(f"([{re.escape(escape_chars)}])", r"\\\1", text)
 
 
+def slugify(text: str) -> str:
+    text = text.lower()
+    text = re.sub("[^0-9a-zA-Z_.]", "_", text)
+    text = re.sub("^[^a-zA-Z_#]+", "", text)
+    return text
+
+
 def groupby(data, keyfunc: Callable | None = None):
     data = sorted(data, key=keyfunc or (lambda x: x))
     return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
@@ -94,7 +101,12 @@ def groupby_first_letter(data, keyfunc: Callable | None = None):
 
 
 def linked(identifier: str, title: str | None = None) -> str:
-    suffix = "" if identifier.startswith(("http:", "https:", "www.")) else ".md"
+    suffix = (
+        ""
+        if identifier.startswith(("http:", "https:", "www."))
+        or identifier.endswith(".md")
+        else ".md"
+    )
     return f"[{identifier if title is None else title}]({identifier}{suffix})"
 
 

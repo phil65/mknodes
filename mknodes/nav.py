@@ -57,15 +57,13 @@ class Nav(markdownnode.MkNode):
             filename=self.filename,
         )
 
-    def __setitem__(self, item: tuple | str, value: mkpage.MkPage | Nav):
+    def __setitem__(self, item: tuple | str, node: mkpage.MkPage | Nav):
         if isinstance(item, str):
             item = tuple(item.split("."))
-        self.nav[item] = value
+        self.nav[item] = node
 
-    #     self._mapping[item] = value
-
-    # def __getitem__(self, item):
-    #     return self._mapping[item]
+    def __getitem__(self, index: tuple) -> mkpage.MkPage | Nav:
+        return self.nav[index]
 
     @property
     def navs(self):
@@ -122,7 +120,7 @@ class Nav(markdownnode.MkNode):
         filename: str | None = None,
     ):
         """Add a page to the Nav."""
-        filename = filename or f"{title}.md"
+        filename = filename or utils.slugify(f"{title}.md")
         page = mkpage.MkPage(
             path=filename,
             parent=self,
