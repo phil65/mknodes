@@ -165,7 +165,7 @@ class Documentation(nav.Nav):
             kwargs: keyword arguments passed to CLassPage
         """
         if find_topmost:
-            parts = classhelpers.get_topmost_module_path_for_klass(klass).split(".")
+            parts = classhelpers.get_topmost_module_path(klass).split(".")
         else:
             parts = klass.__module__.split(".")
         # parts = klass.__module__.split(".")

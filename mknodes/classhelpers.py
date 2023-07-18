@@ -138,7 +138,7 @@ def iter_classes(
         yield kls
 
 
-def get_topmost_module_path_for_klass(klass: type) -> str:
+def get_topmost_module_path(obj: type | types.FunctionType | types.MethodType) -> str:
     """Return path of topmost module containing given class.
 
     If a class is imported in any of its parent modules, return that "shorter" path.
@@ -146,16 +146,23 @@ def get_topmost_module_path_for_klass(klass: type) -> str:
     So for a class "submodule.classmodule.Class", it could return "submodule.Class"
 
     Arguments:
-        klass: Klass to get the path for.
+        obj: Klass to get the path for.
     """
-    path = klass.__module__
+    path = obj.__module__
+    match obj:
+        case type():
+            fn = inspect.isclass
+        case types.MethodType():
+            fn = inspect.ismethod
+        case types.FunctionType():
+            fn = inspect.isfunction
     parts = path.split(".")
     while parts:
         with contextlib.suppress(TypeError):
             new_path = ".".join(parts)
             mod = importlib.import_module(new_path)
-            klasses = [kls for _kls_name, kls in inspect.getmembers(mod, inspect.isclass)]
-            if klass in klasses:
+            objs = [i for _i_name, i in inspect.getmembers(mod, fn)]
+            if obj in objs:
                 path = new_path
         parts = parts[:-1]
     return path

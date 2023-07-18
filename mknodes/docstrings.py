@@ -122,9 +122,9 @@ class DocStrings(markdownnode.Text):
         match obj:
             case types.ModuleType():
                 self.obj_path = obj.__name__
-            case type():
+            case type() | types.FunctionType() | types.MethodType():
                 if for_topmost:
-                    topmost_path = classhelpers.get_topmost_module_path_for_klass(obj)
+                    topmost_path = classhelpers.get_topmost_module_path(obj)
                     self.obj_path = f"{topmost_path}.{obj.__qualname__}"
                 else:
                     self.obj_path = f"{obj.__module__}.{obj.__qualname__}"
