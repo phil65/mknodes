@@ -9,7 +9,7 @@ import logging
 import pathlib
 import types
 
-from markdownizer import classhelpers, mkpage, modulepage, nav, utils
+from markdownizer import classhelpers, classpage, modulepage, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -178,7 +178,7 @@ class ModuleDocumentation(nav.Nav):
 
     def add_class_page(
         self, klass: type, *, find_topmost: bool = True, flatten: bool = False, **kwargs
-    ) -> mkpage.ClassPage:
+    ) -> classpage.ClassPage:
         """Add a page showing information about a class.
 
         Arguments:
@@ -193,7 +193,7 @@ class ModuleDocumentation(nav.Nav):
             parts = klass.__module__.split(".")
         # parts = klass.__module__.split(".")
         path = pathlib.Path(f"{klass.__name__}.md")
-        page = mkpage.ClassPage(
+        page = classpage.ClassPage(
             klass=klass,
             module_path=tuple(parts),
             path=path,
