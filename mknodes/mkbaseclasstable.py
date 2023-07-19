@@ -48,11 +48,11 @@ class MkBaseClassTable(mktable.MkTable):
 
     @staticmethod
     def examples():
-        from mknodes import nav
+        from mknodes import mknav
 
-        yield dict(klasses=[mktable.MkTable, MkBaseClassTable, nav.Nav])
+        yield dict(klasses=[mktable.MkTable, MkBaseClassTable, mknav.MkNav])
         yield dict(
-            klasses=[mktable.MkTable, MkBaseClassTable, nav.Nav], layout="extended"
+            klasses=[mktable.MkTable, MkBaseClassTable, mknav.MkNav], layout="extended"
         )
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:

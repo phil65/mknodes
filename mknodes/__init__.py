@@ -26,14 +26,14 @@ from .mkpage import MkPage
 from .mkclasspage import MkClassPage
 from .mkmodulepage import MkModulePage
 
-from .nav import Nav
-from .documentation import Documentation
+from .mknav import MkNav
+from .mkdoc import MkDoc
 
 
 __all__ = [
     "MkNode",
     "MkContainer",
-    "Nav",
+    "MkNav",
     "MkDocStrings",
     "MkText",
     "MkCode",
@@ -51,7 +51,7 @@ __all__ = [
     "MkClassPage",
     "MkModulePage",
     "MkModuleTable",
-    "Documentation",
+    "MkDoc",
     "MkTabBlock",
     "MkTabbed",
     "MkSourceAndResult",

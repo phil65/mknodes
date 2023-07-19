@@ -12,7 +12,7 @@ from mknodes import utils
 logger = logging.getLogger(__name__)
 
 
-class BaseNode:
+class Node:
     """A Node class that can be used to build trees."""
 
     # __slots__ = ("parent_item", "children")
@@ -168,11 +168,11 @@ class BaseNode:
 
 
 def preorder_iter(
-    tree: BaseNode,
-    filter_condition: Callable[[BaseNode], bool] | None = None,
-    stop_condition: Callable[[BaseNode], bool] | None = None,
+    tree: Node,
+    filter_condition: Callable[[Node], bool] | None = None,
+    stop_condition: Callable[[Node], bool] | None = None,
     max_depth: int = 0,
-) -> Iterable[BaseNode]:
+) -> Iterable[Node]:
     """Iterate through all children of a tree.
 
     Pre-Order Iteration Algorithm, NLR
@@ -228,8 +228,8 @@ def preorder_iter(
 
 
 if __name__ == "__main__":
-    node = BaseNode()
-    sub = BaseNode(parent=node)
-    subsub = BaseNode(parent=sub)
+    node = Node()
+    sub = Node(parent=node)
+    subsub = Node(parent=sub)
     node.children = [sub, subsub]
     node.pprint()

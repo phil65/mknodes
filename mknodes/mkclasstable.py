@@ -46,10 +46,10 @@ class MkClassTable(mkbaseclasstable.MkBaseClassTable):
 
     @staticmethod
     def examples():
-        from mknodes import nav
+        from mknodes import mknav
 
-        yield dict(klass=nav.Nav)
-        yield dict(klass=nav.Nav, mode="parent_classes")
+        yield dict(klass=mknav.MkNav)
+        yield dict(klass=mknav.MkNav, mode="parent_classes")
 
 
 if __name__ == "__main__":

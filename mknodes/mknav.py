@@ -9,16 +9,16 @@ from typing import TYPE_CHECKING
 
 import mkdocs_gen_files
 
-from mknodes import mknode, mkpage, nav, utils
+from mknodes import mknav, mknode, mkpage, utils
 
 
 if TYPE_CHECKING:
-    from mknodes import documentation
+    from mknodes import mkdoc
 
 logger = logging.getLogger(__name__)
 
 
-class Nav(mknode.MkNode):
+class MkNav(mknode.MkNode):
     """Nav section, representing a nestable menu.
 
     A nav has a section name (exception can be the root), an associated virtual file
@@ -44,7 +44,7 @@ class Nav(mknode.MkNode):
             if section
             else pathlib.Path(self.filename)
         ).as_posix()
-        self.nav: dict[tuple | str | None, nav.Nav | mkpage.MkPage] = {}
+        self.nav: dict[tuple | str | None, mknav.MkNav | mkpage.MkPage] = {}
         # self._mapping = {}
         # self._editor = mkdocs_gen_files.editor.FilesEditor.current()
         # self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
@@ -57,17 +57,17 @@ class Nav(mknode.MkNode):
             filename=self.filename,
         )
 
-    def __setitem__(self, item: tuple | str, node: mkpage.MkPage | Nav):
+    def __setitem__(self, item: tuple | str, node: mkpage.MkPage | MkNav):
         if isinstance(item, str):
             item = tuple(item.split("."))
         self.nav[item] = node
 
-    def __getitem__(self, index: tuple) -> mkpage.MkPage | Nav:
+    def __getitem__(self, index: tuple) -> mkpage.MkPage | MkNav:
         return self.nav[index]
 
     @property
     def navs(self):
-        return [node for node in self.nav.values() if isinstance(node, Nav)]
+        return [node for node in self.nav.values() if isinstance(node, MkNav)]
 
     @property
     def pages(self):
@@ -81,13 +81,13 @@ class Nav(mknode.MkNode):
     def children(self, items):
         self.nav = dict(items)
 
-    def add_nav(self, section: str | os.PathLike) -> nav.Nav:
+    def add_nav(self, section: str | os.PathLike) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.
 
         Arguments:
             section: Name of the new nav.
         """
-        navi = nav.Nav(section=section, parent=self)
+        navi = mknav.MkNav(section=section, parent=self)
         self.nav[(section,)] = navi
         return navi
 
@@ -121,7 +121,7 @@ class Nav(mknode.MkNode):
             match item:
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()
-                case Nav():
+                case MkNav():
                     nav[path] = f"{item.section}/"
                 case _:
                     raise TypeError(item)
@@ -154,7 +154,7 @@ class Nav(mknode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
-    ) -> documentation.Documentation:
+    ) -> mkdoc.MkDoc:
         """Add a module documentation to the Nav.
 
         Arguments:
@@ -162,9 +162,9 @@ class Nav(mknode.MkNode):
             filter_by___all__: Whether the documentation
             section_name: Override the name for the menu (default: module name)
         """
-        from mknodes import documentation
+        from mknodes import mkdoc
 
-        nav = documentation.Documentation(
+        nav = mkdoc.MkDoc(
             module=module,
             filter_by___all__=filter_by___all__,
             parent=self,
@@ -175,7 +175,7 @@ class Nav(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docs = Nav()
+    docs = MkNav()
     subnav = docs.add_nav("subnav")
     page = subnav.add_page("My first page!")
     page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")

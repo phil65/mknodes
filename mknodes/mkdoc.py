@@ -11,13 +11,13 @@ import types
 
 from typing import Any
 
-from mknodes import classhelpers, mkclasspage, mkmodulepage, nav, utils
+from mknodes import classhelpers, mkclasspage, mkmodulepage, mknav, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Documentation(nav.Nav):
+class MkDoc(mknav.MkNav):
     """Nav for showing a module documenation.
 
     Arguments:
@@ -251,6 +251,6 @@ class Documentation(nav.Nav):
 
 
 if __name__ == "__main__":
-    doc = Documentation(module="mkdocs")
-    page = doc.add_class_page(Documentation)
+    doc = MkDoc(module="mkdocs")
+    page = doc.add_class_page(MkDoc)
     print(page)

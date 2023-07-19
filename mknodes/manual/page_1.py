@@ -15,7 +15,7 @@ the MkClassDiagram Node.
 """
 
 
-def create_page_1(root_nav: mknodes.Nav):
+def create_page_1(root_nav: mknodes.MkNav):
     # Basic structure: Theres one root nav, navs can contain pages and other navs,
     # pages contain more atomic markup nodes, like text, tables, and diagrams.
     # These markup nodes in some cases can contain other Markup nodes.
@@ -45,14 +45,14 @@ def create_page_1(root_nav: mknodes.Nav):
         # get_subclasses just calls __subclasses__ recursively.
         subpage = nodes_nav.add_page(kls.__name__)
         if hasattr(kls, "examples"):
-            subpage += mknodes.Code.for_object(kls.examples, header="Our combinations")
+            subpage += mknodes.MkCode.for_object(kls.examples, header="Signatures:")
             for i, sig in enumerate(kls.examples(), start=1):
-                subpage.add_header(f"Example {i} for class {kls.__name__!r}", level=2)
+                subpage.add_header(f"Trying signature {i}", level=2)
                 sig_txt = utils.format_kwargs(sig)
                 text = f"node = mknodes.{kls.__name__}({sig_txt})\nstr(node)"
                 subpage.add_code(code=text, title=f"example_{i}.py")
                 node = kls(**sig)
-                code = mknodes.Code(language="md", code=node, title=f"result_{i}.md")
+                code = mknodes.MkCode(language="md", code=node, title=f"result_{i}.md")
                 subpage.add_tabs({"Preview": str(node), "Generated markdown": str(code)})
                 subpage.add_newlines(3)
         subpage.add_mkdocstrings(kls)

@@ -34,11 +34,13 @@ class MkCritic(mktext.MkText):
                 left, right = ("==", "==")
             case "comment":
                 left, right = (">>", "<<")
+            case _:
+                raise TypeError(self.mark)
         return f"{{{left}\n\n{self.text}\n\n{right}}}"
 
     @staticmethod
     def examples():
-        for typ in ["addition", "deletion", "substitution", "comment", "highlight"]:
+        for typ in ["addition", "deletion", "comment", "highlight"]:
             yield dict(mark=typ, text=f"This is type {typ}")
 
 

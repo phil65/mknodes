@@ -18,7 +18,7 @@ Now check out what we have created!
 # this Nav object is basically the root of everything. It corresponds tou your root
 # SUMMARY.md.
 
-root_nav = mknodes.Nav()
+root_nav = mknodes.MkNav()
 
 # Let's begin with the start page. This is your index.md file.
 page = root_nav.add_index_page(hide_toc=True, hide_nav=True)

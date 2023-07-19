@@ -13,9 +13,9 @@ from mknodes import (
     mkcontainer,
     mkdocstrings,
     mklink,
+    mknav,
     mknode,
     mktabs,
-    nav,
     utils,
 )
 
@@ -39,7 +39,7 @@ class MkPage(mkcontainer.MkContainer):
         hide_toc: bool = False,
         hide_nav: bool = False,
         hide_path: bool = False,
-        parent: nav.Nav | None = None,
+        parent: mknav.MkNav | None = None,
         **kwargs: Any,
     ):
         super().__init__(parent=parent, **kwargs)

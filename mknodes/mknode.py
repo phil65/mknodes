@@ -23,10 +23,10 @@ class NodeConnectionBuilder(connectionbuilder.ConnectionBuilder):
         return f"{type(item).__name__}"
 
 
-class MkNode(node.BaseNode):
+class MkNode(node.Node):
     """Base class for everything which can be expressed as Markup.
 
-    The class inherits from BaseNode. The idea is that starting from the
+    The class inherits from Node. The idea is that starting from the
     root nav (aka Docs) down to nested Markup blocks, the whole project can be represented
     by one tree.
 
@@ -61,12 +61,12 @@ class MkNode(node.BaseNode):
     @property
     def resolved_parts(self) -> tuple[str, ...]:
         """Returns a tuple containing all section names."""
-        from mknodes import nav
+        from mknodes import mknav
 
         parent = self
-        parts = [self.section] if isinstance(self, nav.Nav) and self.section else []
+        parts = [self.section] if isinstance(self, mknav.MkNav) and self.section else []
         while parent := parent.parent_item:
-            if isinstance(parent, nav.Nav) and parent.section:
+            if isinstance(parent, mknav.MkNav) and parent.section:
                 parts.append(parent.section)
         return tuple(reversed(parts))
 
@@ -91,11 +91,11 @@ class MkNode(node.BaseNode):
 
         The resulting filepath is determined based on the tree hierarchy.
         """
-        from mknodes import nav
+        from mknodes import mknav
 
         dct: dict[str, str | bytes] = {}
         for des in self.descendants:
-            sections = [i.section for i in des.ancestors if isinstance(i, nav.Nav)]
+            sections = [i.section for i in des.ancestors if isinstance(i, mknav.MkNav)]
             section = "/".join(i for i in reversed(sections) if i is not None)
             if section:
                 section += "/"
