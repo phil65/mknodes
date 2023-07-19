@@ -76,12 +76,12 @@ def slugify(text: str) -> str:
     return text
 
 
-def groupby(data, keyfunc: Callable | None = None):
+def groupby(data, keyfunc: Callable | None = None) -> dict[str, list]:
     data = sorted(data, key=keyfunc or (lambda x: x))
     return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
 
 
-def groupby_first_letter(data, keyfunc: Callable | None = None):
+def groupby_first_letter(data, keyfunc: Callable | None = None) -> dict[str, list]:
     data = sorted(data, key=keyfunc or (lambda x: x))
 
     def first_letter(x):
@@ -164,7 +164,7 @@ def label_for_class(klass: type) -> str:
 
 def to_html_list(
     ls: list[str], shorten_after: int | None = None, make_link: bool = False
-):
+) -> str:
     if not ls:
         return ""
     item_str = "".join(
