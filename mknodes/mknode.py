@@ -84,7 +84,7 @@ class MkNode(node.Node):
         """
         return {}
 
-    def all_virtual_files(self) -> dict[str, str | bytes]:
+    def all_virtual_files(self, only_children: bool = False) -> dict[str, str | bytes]:
         """Return a dictionary containing all virtual files of itself and all children.
 
         Dict key contains the filename, dict value contains the file content.
@@ -101,12 +101,14 @@ class MkNode(node.Node):
                 section += "/"
             files_for_item = {f"{section}{k}": v for k, v in des.virtual_files().items()}
             dct |= files_for_item
-        return dct | self.virtual_files()
+        if not only_children:
+            dct |= self.virtual_files()
+        return dct
 
-    def write(self):
+    def write(self, only_children: bool = False):
         # path = pathlib.Path(self.path)
         # path.parent.mkdir(parents=True, exist_ok=True)
-        for k, v in self.all_virtual_files().items():
+        for k, v in self.all_virtual_files(only_children=only_children).items():
             logger.info(f"Written file to {k}")
             mode = "w" if isinstance(v, str) else "wb"
             with mkdocs_gen_files.open(k, mode) as file:
