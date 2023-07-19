@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 import os
 
-from mknodes import markdownnode, utils
+from mknodes import mknode, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Snippet(markdownnode.MkNode):
+class MkSnippet(mknode.MkNode):
     """Snippet to include markdown from another file.
 
     [More info](https://facelessuser.github.io/pymdown-extensions/extensions/snippets/)
@@ -32,5 +32,5 @@ class Snippet(markdownnode.MkNode):
 
 
 if __name__ == "__main__":
-    section = Snippet("test.md", header="test")
+    section = MkSnippet("test.md", header="test")
     print(section.to_markdown())

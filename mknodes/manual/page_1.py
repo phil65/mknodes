@@ -35,7 +35,7 @@ def create_page_1(root_nav: mknodes.Nav):
     # Lets take a look at the relations of the included nodes.
     # It`s easy to show different diagrams for classes.
     subcls_page = home_nav.add_page("Subclass tree", hide_toc=True)
-    subcls_page += mknodes.ClassDiagram(
+    subcls_page += mknodes.MkClassDiagram(
         mknodes.MkNode, mode="subclass_tree", orientation="LR"
     )
     # let`s take a look at some of the mentioned Markup nodes.

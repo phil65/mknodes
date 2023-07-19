@@ -4,5 +4,5 @@ import mknodes
 
 
 def test_text():
-    nav = mknodes.Text()
+    nav = mknodes.MkText()
     assert not str(nav)

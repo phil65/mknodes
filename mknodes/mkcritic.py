@@ -4,7 +4,7 @@ import logging
 
 from typing import Literal
 
-from mknodes import markdownnode
+from mknodes import mktext
 
 
 logger = logging.getLogger(__name__)
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 CriticMarkStr = Literal["addition", "deletion", "substitution", "comment", "highlight"]
 
 
-class MkCritic(markdownnode.Text):
+class MkCritic(mktext.MkText):
     """MkCritic block."""
 
     def __init__(

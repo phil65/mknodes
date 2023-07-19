@@ -8,13 +8,14 @@ import types
 from typing import Any, Literal
 
 from mknodes import (
-    admonition,
-    code as codeblock,
-    docstrings,
-    link,
-    markdownnode,
+    mkadmonition,
+    mkcode,
+    mkcontainer,
+    mkdocstrings,
+    mklink,
+    mknode,
+    mktabs,
     nav,
-    tabs,
     utils,
 )
 
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 HEADER = "---\n{options}\n---\n\n"
 
 
-class MkPage(markdownnode.MkContainer):
+class MkPage(mkcontainer.MkContainer):
     """A node container representing a Markdown page.
 
     A page contains a list of other Markdown nodes, has a virtual Markdown file
@@ -88,14 +89,14 @@ class MkPage(markdownnode.MkContainer):
         self,
         url: str,
         title: str = "",
-    ) -> link.Link:
+    ) -> mklink.MkLink:
         """Add a Link to the page.
 
         Arguments:
             url: URL to link to.
             title: Text to display for the link
         """
-        item = link.Link(url)
+        item = mklink.MkLink(url)
         self.append(item)
         return item
 
@@ -112,11 +113,11 @@ class MkPage(markdownnode.MkContainer):
     def add_admonition(
         self,
         text: str,
-        typ: admonition.AdmonitionTypeStr = "info",
+        typ: mkadmonition.AdmonitionTypeStr = "info",
         *,
         title: str | None = None,
         collapsible: bool = False,
-    ) -> admonition.Admonition:
+    ) -> mkadmonition.MkAdmonition:
         """Add a Admonition info box to the page.
 
         Arguments:
@@ -125,7 +126,7 @@ class MkPage(markdownnode.MkContainer):
             title: The title of the box
             collapsible: whether the box should be collapsible by the user.
         """
-        item = admonition.Admonition(
+        item = mkadmonition.MkAdmonition(
             text=text,
             typ=typ,
             title=title,
@@ -167,7 +168,7 @@ class MkPage(markdownnode.MkContainer):
         show_signature_annotations: bool | None = None,
         signature_crossrefs: bool | None = None,
         separate_signature: bool | None = None,
-    ) -> docstrings.DocStrings:
+    ) -> mkdocstrings.MkDocStrings:
         """Add a DocStrings section to the page.
 
         Arguments:
@@ -223,7 +224,7 @@ class MkPage(markdownnode.MkContainer):
                                 block below the heading. If Black is installed,
                                 the signature is also formatted using it.
         """
-        item = docstrings.DocStrings(
+        item = mkdocstrings.MkDocStrings(
             obj=obj,
             header=header,
             for_topmost=for_topmost,
@@ -260,14 +261,14 @@ class MkPage(markdownnode.MkContainer):
 
     def add_code(
         self,
-        code: str | markdownnode.MkNode,
+        code: str | mknode.MkNode,
         language: str = "py",
         *,
         title: str = "",
         header: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
-    ):
+    ) -> mkcode.MkCode:
         """Add code block to the page.
 
         Arguments:
@@ -278,7 +279,7 @@ class MkPage(markdownnode.MkContainer):
             linenums: Optional start line number for the code block
             highlight_lines: Optional highlighting of a line range.
         """
-        item = codeblock.Code(
+        item = mkcode.MkCode(
             code=code,
             language=language,
             title=title,
@@ -292,7 +293,7 @@ class MkPage(markdownnode.MkContainer):
 
     def add_tabs(
         self,
-        data: Mapping[str, str | markdownnode.MkNode],
+        data: Mapping[str, str | mknode.MkNode],
         style: Literal["tabbed", "tabblock"] = "tabbed",
         **kwargs: Any,
     ):
@@ -304,9 +305,9 @@ class MkPage(markdownnode.MkContainer):
             kwargs: Keyword arguments passed to Tabs
         """
         if style == "tabbed":
-            tabblock = tabs.Tabbed(data, parent=self, **kwargs)
+            tabblock = mktabs.MkTabbed(data, parent=self, **kwargs)
         else:
-            tabblock = tabs.TabBlock(data, parent=self, **kwargs)
+            tabblock = mktabs.MkTabBlock(data, parent=self, **kwargs)
         self.append(tabblock)
         return tabblock
 

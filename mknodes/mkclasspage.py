@@ -7,10 +7,10 @@ import pathlib
 from typing import Any
 
 from mknodes import (
-    classdiagram,
     classhelpers,
-    classtable,
-    docstrings,
+    mkclassdiagram,
+    mkclasstable,
+    mkdocstrings,
     mkpage,
     utils,
 )
@@ -19,7 +19,7 @@ from mknodes import (
 logger = logging.getLogger(__name__)
 
 
-class ClassPage(mkpage.MkPage):
+class MkClassPage(mkpage.MkPage):
     """Page showing information about a class.
 
     Arguments:
@@ -64,26 +64,26 @@ class ClassPage(mkpage.MkPage):
 
     @staticmethod
     def examples():
-        yield dict(klass=ClassPage)
+        yield dict(klass=MkClassPage)
 
-    def add_class_diagram(self, mode: classdiagram.DiagramModeStr = "parent_tree"):
-        diagram = classdiagram.ClassDiagram(self.klass, mode=mode)
+    def add_class_diagram(self, mode: mkclassdiagram.DiagramModeStr = "parent_tree"):
+        diagram = mkclassdiagram.MkClassDiagram(self.klass, mode=mode)
         self.append(diagram)
         return diagram
 
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
         path = f"{module_path}.{self.klass.__name__}"
-        item = docstrings.DocStrings(path, header="DocStrings")
+        item = mkdocstrings.MkDocStrings(path, header="DocStrings")
         self.append(item)
-        if tbl := classtable.ClassTable(self.klass):
+        if tbl := mkclasstable.MkClassTable(self.klass):
             self.append(tbl)
-        item = classdiagram.ClassDiagram(self.klass, header="Inheritance diagram")
+        item = mkclassdiagram.MkClassDiagram(self.klass, header="Inheritance diagram")
         self.append(item)
 
 
 if __name__ == "__main__":
-    doc = ClassPage(ClassPage)
+    doc = MkClassPage(MkClassPage)
     doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
     # print(doc.children)

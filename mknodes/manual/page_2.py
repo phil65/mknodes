@@ -14,7 +14,7 @@ def create_page_2(root_nav: mknodes.Nav):
     doc_section = root_nav.add_nav("Documentation")
 
     overview = doc_section.add_page("Overview", hide_toc=True)
-    overview += mknodes.Text(INTRO_TEXT)
+    overview += mknodes.MkText(INTRO_TEXT)
 
     # we are here right now.
     overview.add_code(inspect.getsource(create_page_2))
@@ -31,7 +31,7 @@ def create_page_2(root_nav: mknodes.Nav):
     # / classes of a module. We can also pass a predicate to filter specific subclasses,
     # or do other fancy stuff to generate a customized, automated documentation.
     for klass in mknodes_docs.iter_classes(recursive=True):
-        # now we add some pre-defined pages ("ClassPages") to our docs.
+        # now we add some pre-defined pages ("MkClassPages") to our docs.
         # they contain MkDocStrings, a table for eventual subclasses and an
         # inheritance graph. It`s also possible to build custom pages of course.
         mknodes_docs.add_class_page(klass=klass)

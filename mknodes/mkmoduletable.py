@@ -5,13 +5,13 @@ import inspect
 import logging
 import types
 
-from mknodes import classhelpers, table, utils
+from mknodes import classhelpers, mktable, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class ModuleTable(table.Table):
+class MkModuleTable(mktable.MkTable):
     """Class representing a formatted table containing information a module."""
 
     def __init__(
@@ -54,5 +54,5 @@ class ModuleTable(table.Table):
 
 
 if __name__ == "__main__":
-    table = ModuleTable(module=utils)
+    table = MkModuleTable(module=utils)
     print(table)

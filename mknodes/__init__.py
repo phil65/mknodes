@@ -1,54 +1,62 @@
 from __future__ import annotations
 
-from .admonition import Admonition
-from .markdownnode import MkNode, MkContainer, Text
-from .code import Code
-from .docstrings import DocStrings
-from .image import Image
-from .binaryimage import BinaryImage
-from .list import List
-from .diagram import Diagram
-from .classdiagram import ClassDiagram
+from .mkadmonition import MkAdmonition
+from .mknode import MkNode
+from .mktext import MkText
+from .mkcontainer import MkContainer
+from .mkcode import MkCode
+from .mkdocstrings import MkDocStrings
+from .mkimage import MkImage
+from .mkbinaryimage import MkBinaryImage
+from .mklist import MkList
+from .mkdiagram import MkDiagram
+from .mktable import MkTable
+from .mktabs import MkTabBlock, MkTabbed
+from .mksnippet import MkSnippet
+from .mkcritic import MkCritic
+from .mksourceandresult import MkSourceAndResult
+
+from .mkclassdiagram import MkClassDiagram
+
+from .mkbaseclasstable import MkBaseClassTable
+from .mkclasstable import MkClassTable
+from .mkmoduletable import MkModuleTable
+
 from .mkpage import MkPage
-from .classpage import ClassPage
-from .modulepage import ModulePage
-from .moduledocumentation import Documentation
+from .mkclasspage import MkClassPage
+from .mkmodulepage import MkModulePage
+
 from .nav import Nav
-from .table import Table
-from .baseclasstable import BaseClassTable
-from .classtable import ClassTable
-from .moduletable import ModuleTable
-from .tabs import TabBlock, Tabbed
-from .sourceandresult import SourceAndResult
-from .snippet import Snippet
+from .documentation import Documentation
 
 
 __all__ = [
     "MkNode",
     "MkContainer",
     "Nav",
-    "DocStrings",
-    "Text",
-    "Code",
-    "Image",
-    "BinaryImage",
+    "MkDocStrings",
+    "MkText",
+    "MkCode",
+    "MkImage",
+    "MkBinaryImage",
     "MkPage",
-    "Admonition",
-    "Diagram",
-    "ClassDiagram",
+    "MkAdmonition",
+    "MkDiagram",
+    "MkClassDiagram",
     "ConnectionBuilder",
-    "Table",
-    "BaseClassTable",
-    "ClassTable",
-    "List",
-    "ClassPage",
-    "ModulePage",
-    "ModuleTable",
+    "MkTable",
+    "MkBaseClassTable",
+    "MkClassTable",
+    "MkList",
+    "MkClassPage",
+    "MkModulePage",
+    "MkModuleTable",
     "Documentation",
-    "TabBlock",
-    "Tabbed",
-    "SourceAndResult",
-    "Snippet",
+    "MkTabBlock",
+    "MkTabbed",
+    "MkSourceAndResult",
+    "MkSnippet",
+    "MkCritic",
 ]
 
 __version__ = "0.1.0"

@@ -10,13 +10,13 @@ from typing import Any
 
 from typing_extensions import Self
 
-from mknodes import markdownnode, utils
+from mknodes import mknode, mktext, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Code(markdownnode.Text):
+class MkCode(mktext.MkText):
     """Class representing a Code block."""
 
     REQUIRED_EXTENSIONS = [
@@ -28,7 +28,7 @@ class Code(markdownnode.Text):
 
     def __init__(
         self,
-        code: str | markdownnode.MkNode = "",
+        code: str | mknode.MkNode = "",
         language: str = "py",
         *,
         title: str = "",
@@ -37,7 +37,7 @@ class Code(markdownnode.Text):
         highlight_lines: list[int] | None = None,
         parent=None,
     ):
-        if isinstance(code, Code):
+        if isinstance(code, MkCode):
             code = textwrap.indent(str(code), "    ")
         super().__init__(code, header=header, parent=parent)
         self.language = language
@@ -81,5 +81,5 @@ class Code(markdownnode.Text):
 
 
 if __name__ == "__main__":
-    code = Code.for_object(Code, extract_body=True)
+    code = MkCode.for_object(MkCode, extract_body=True)
     print(code)

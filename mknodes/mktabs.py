@@ -4,13 +4,13 @@ from collections.abc import Mapping
 import logging
 import textwrap
 
-from mknodes import markdownnode, utils
+from mknodes import mkcontainer, mknode, mktext, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class Tab(markdownnode.MkContainer):
+class MkTab(mkcontainer.MkContainer):
     def __init__(
         self,
         title: str,
@@ -30,10 +30,10 @@ class Tab(markdownnode.MkContainer):
         yield from ()
 
 
-class BaseTabWidget(markdownnode.MkContainer):
+class MkBaseTabWidget(mkcontainer.MkContainer):
     def __init__(
         self,
-        tabs: Mapping[str, str | markdownnode.MkNode] | list[Tab],
+        tabs: Mapping[str, str | mknode.MkNode] | list[MkTab],
         header: str = "",
         **kwargs,
     ):
@@ -41,9 +41,9 @@ class BaseTabWidget(markdownnode.MkContainer):
             items = tabs
         else:
             items = [
-                Tab(
+                MkTab(
                     k,
-                    items=[markdownnode.Text(v) if isinstance(v, str) else v],
+                    items=[mktext.MkText(v) if isinstance(v, str) else v],
                 )
                 for k, v in tabs.items()
             ]
@@ -62,7 +62,7 @@ class BaseTabWidget(markdownnode.MkContainer):
         yield dict(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
 
 
-class Tabbed(BaseTabWidget):
+class MkTabbed(MkBaseTabWidget):
     """pymdownx-based Tab block."""
 
     REQUIRED_EXTENSIONS = "pymdownx.tabbed"
@@ -75,7 +75,7 @@ class Tabbed(BaseTabWidget):
         return "\n".join(lines) + "\n"
 
 
-class TabBlock(BaseTabWidget):
+class MkTabBlock(MkBaseTabWidget):
     """pymdownx-based Tab block."""
 
     REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
@@ -90,5 +90,5 @@ class TabBlock(BaseTabWidget):
 
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = Tabbed(tabs)
+    tabblock = MkTabbed(tabs)
     print(tabblock)

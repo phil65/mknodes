@@ -7,13 +7,13 @@ import types
 
 from typing import Any, Literal
 
-from mknodes import classhelpers, markdownnode, utils
+from mknodes import classhelpers, mktext, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class DocStrings(markdownnode.Text):
+class MkDocStrings(mktext.MkText):
     """Docstring section (powered by mkdocstrings)."""
 
     REQUIRED_PLUGINS = "mkdocstrings"
@@ -180,5 +180,5 @@ class DocStrings(markdownnode.Text):
 
 
 if __name__ == "__main__":
-    docstrings = DocStrings("a.b", show_submodules=True)
+    docstrings = MkDocStrings("a.b", show_submodules=True)
     print(docstrings)

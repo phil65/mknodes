@@ -11,7 +11,7 @@ import types
 
 from typing import Any
 
-from mknodes import classhelpers, classpage, modulepage, nav, utils
+from mknodes import classhelpers, mkclasspage, mkmodulepage, nav, utils
 
 
 logger = logging.getLogger(__name__)
@@ -155,7 +155,7 @@ class Documentation(nav.Nav):
         find_topmost: bool = True,
         flatten: bool = False,
         **kwargs: Any,
-    ) -> classpage.ClassPage:
+    ) -> mkclasspage.MkClassPage:
         """Add a page showing information about a class.
 
         Arguments:
@@ -170,7 +170,7 @@ class Documentation(nav.Nav):
             parts = klass.__module__.split(".")
         # parts = klass.__module__.split(".")
         path = pathlib.Path(f"{klass.__name__}.md")
-        page = classpage.ClassPage(
+        page = mkclasspage.MkClassPage(
             klass=klass,
             module_path=tuple(parts),
             path=path,
@@ -194,17 +194,17 @@ class Documentation(nav.Nav):
         self,
         title: str | None = None,
         **kwargs: Any,
-    ) -> modulepage.ModulePage:
+    ) -> mkmodulepage.MkModulePage:
         """Add a page showing all submodules.
 
         Arguments:
             title: Override title for the section.
-            kwargs: kwargs passed to ModulePage.
+            kwargs: kwargs passed to MkModulePage.
         """
         # TODO: slugify?
         path = pathlib.Path("index.md" if title is None else f"{title}.md")
         # parts = path.parts[:-1]
-        page = modulepage.ModulePage(
+        page = mkmodulepage.MkModulePage(
             hide_toc=True,
             module=self.module,  # type: ignore
             path=path,

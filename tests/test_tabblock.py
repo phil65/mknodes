@@ -16,5 +16,5 @@ Another text
 
 def test_tabblock():
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = mknodes.TabBlock(tabs)
+    tabblock = mknodes.MkTabBlock(tabs)
     assert str(tabblock) == EXPECTED

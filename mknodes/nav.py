@@ -9,16 +9,16 @@ from typing import TYPE_CHECKING
 
 import mkdocs_gen_files
 
-from mknodes import markdownnode, mkpage, nav, utils
+from mknodes import mknode, mkpage, nav, utils
 
 
 if TYPE_CHECKING:
-    from mknodes import moduledocumentation
+    from mknodes import documentation
 
 logger = logging.getLogger(__name__)
 
 
-class Nav(markdownnode.MkNode):
+class Nav(mknode.MkNode):
     """Nav section, representing a nestable menu.
 
     A nav has a section name (exception can be the root), an associated virtual file
@@ -154,7 +154,7 @@ class Nav(markdownnode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
-    ) -> moduledocumentation.Documentation:
+    ) -> documentation.Documentation:
         """Add a module documentation to the Nav.
 
         Arguments:
@@ -162,9 +162,9 @@ class Nav(markdownnode.MkNode):
             filter_by___all__: Whether the documentation
             section_name: Override the name for the menu (default: module name)
         """
-        from mknodes import moduledocumentation
+        from mknodes import documentation
 
-        nav = moduledocumentation.Documentation(
+        nav = documentation.Documentation(
             module=module,
             filter_by___all__=filter_by___all__,
             parent=self,

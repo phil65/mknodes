@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import logging
 
-from mknodes import image
+from mknodes import mkimage
 
 
 logger = logging.getLogger(__name__)
 
 
-class BinaryImage(image.Image):
+class MkBinaryImage(mkimage.MkImage):
     """Binary data of an image which will become a file when the tree is written."""
 
     def __init__(

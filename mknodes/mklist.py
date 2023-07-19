@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import logging
 
-from mknodes import markdownnode, utils
+from mknodes import mkcontainer, mknode, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class List(markdownnode.MkContainer):
+class MkList(mkcontainer.MkContainer):
     """Class to show a formatted list."""
 
     def __init__(
         self,
-        items: list[str | markdownnode.MkNode] | None = None,
+        items: list[str | mknode.MkNode] | None = None,
         *,
         shorten_after: int | None = None,
         as_links: bool = False,
@@ -47,7 +47,7 @@ class List(markdownnode.MkContainer):
     def _prep(self, item):
         return utils.linked(item) if self.as_links else str(item)
 
-    def _to_markdown(self):
+    def _to_markdown(self) -> str:
         if not self.items:
             return ""
         lines = [f"  - {self._prep(i)}" for i in self.items[: self.shorten_after]]
@@ -55,7 +55,7 @@ class List(markdownnode.MkContainer):
             lines.append("  - ...")
         return "\n".join(lines) + "\n"
 
-    def to_html(self):
+    def to_html(self) -> str:
         """Formats list in html as one single line.
 
         Can be useful for including in Tables.
@@ -70,5 +70,5 @@ class List(markdownnode.MkContainer):
 
 
 if __name__ == "__main__":
-    section = List(["a", "b"], header="test")
+    section = MkList(["a", "b"], header="test")
     print(section.to_html())

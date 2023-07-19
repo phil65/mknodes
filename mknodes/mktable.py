@@ -3,13 +3,13 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 import logging
 
-from mknodes import markdownnode
+from mknodes import mknode
 
 
 logger = logging.getLogger(__name__)
 
 
-class Table(markdownnode.MkNode):
+class MkTable(mknode.MkNode):
     """Class representing a formatted table."""
 
     REQUIRED_EXTENSIONS = "tables"
@@ -88,5 +88,5 @@ class Table(markdownnode.MkNode):
 
 
 if __name__ == "__main__":
-    table = Table(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
+    table = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
     print(table)

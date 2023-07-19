@@ -11,5 +11,5 @@ EXPECTED = """<figure markdown>
 
 
 def test_image():
-    image = mknodes.Image(path="something.png", caption="Caption")
+    image = mknodes.MkImage(path="something.png", caption="Caption")
     assert str(image) == EXPECTED

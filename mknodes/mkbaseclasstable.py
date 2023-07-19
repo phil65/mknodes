@@ -5,13 +5,13 @@ import logging
 
 from typing import Literal
 
-from mknodes import table, utils
+from mknodes import mktable, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class BaseClassTable(table.Table):
+class MkBaseClassTable(mktable.MkTable):
     """Table showing info for a list of classes."""
 
     def __init__(
@@ -48,10 +48,12 @@ class BaseClassTable(table.Table):
 
     @staticmethod
     def examples():
-        from mknodes import nav, table
+        from mknodes import nav
 
-        yield dict(klasses=[table.Table, BaseClassTable, nav.Nav])
-        yield dict(klasses=[table.Table, BaseClassTable, nav.Nav], layout="extended")
+        yield dict(klasses=[mktable.MkTable, MkBaseClassTable, nav.Nav])
+        yield dict(
+            klasses=[mktable.MkTable, MkBaseClassTable, nav.Nav], layout="extended"
+        )
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:
         return dict(
@@ -88,5 +90,5 @@ class BaseClassTable(table.Table):
 
 
 if __name__ == "__main__":
-    table = BaseClassTable(klasses=[table.Table], layout="extended")
+    table = MkBaseClassTable(klasses=[mktable.MkTable], layout="extended")
     print(table)

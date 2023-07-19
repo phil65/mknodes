@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 import pathlib
 
-from mknodes import markdownnode
+from mknodes import mknode
 
 
 logger = logging.getLogger(__name__)
 
 
-class Image(markdownnode.MkNode):
+class MkImage(mknode.MkNode):
     """Image including optional caption."""
 
     def __init__(
@@ -32,3 +32,7 @@ class Image(markdownnode.MkNode):
             lines.append(f"  <figcaption>{self.caption}</figcaption>")
         lines.append("</figure>")
         return "\n".join(lines) + "\n"
+
+
+if __name__ == "__main__":
+    img = MkImage("Some path")

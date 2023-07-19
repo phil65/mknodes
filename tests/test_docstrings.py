@@ -4,5 +4,5 @@ import mknodes
 
 
 def test_docstrings():
-    docstrings = mknodes.DocStrings(obj=mknodes)
+    docstrings = mknodes.MkDocStrings(obj=mknodes)
     assert str(docstrings) == "::: mknodes\n"

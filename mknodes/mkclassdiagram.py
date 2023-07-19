@@ -4,7 +4,7 @@ import itertools
 
 from typing import Literal
 
-from mknodes import connectionbuilder, diagram, utils
+from mknodes import connectionbuilder, mkdiagram, utils
 
 
 DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]
@@ -60,7 +60,7 @@ class MroConnectionBuilder(BaseClassConnectionBuilder):
         self.connections = itertools.pairwise(mro)
 
 
-class ClassDiagram(diagram.Diagram):
+class MkClassDiagram(mkdiagram.MkDiagram):
     """Class diagram with several modes."""
 
     def __init__(
@@ -83,7 +83,7 @@ class ClassDiagram(diagram.Diagram):
 
     @staticmethod
     def examples():
-        yield dict(klass=ClassDiagram)
+        yield dict(klass=MkClassDiagram)
 
     def _to_markdown(self) -> str:
         match self.mode:
@@ -103,5 +103,5 @@ class ClassDiagram(diagram.Diagram):
 
 
 if __name__ == "__main__":
-    diagram = ClassDiagram(ClassDiagram, mode="mro")
+    diagram = MkClassDiagram(MkClassDiagram, mode="mro")
     print(diagram)

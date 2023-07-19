@@ -4,13 +4,13 @@ import textwrap
 
 from typing import Literal
 
-from mknodes import markdownnode, utils
+from mknodes import mknode, utils
 
 
 GraphTypeStr = Literal["flow"]  # TODO
 
 
-class Diagram(markdownnode.MkNode):
+class MkDiagram(mknode.MkNode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     TYPE_MAP = dict(
@@ -61,5 +61,5 @@ class Diagram(markdownnode.MkNode):
 
 
 if __name__ == "__main__":
-    diagram = Diagram(graph_type="flow")
+    diagram = MkDiagram(graph_type="flow")
     print(diagram)

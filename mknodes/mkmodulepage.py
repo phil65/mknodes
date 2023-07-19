@@ -5,13 +5,13 @@ import os
 import pathlib
 import types
 
-from mknodes import baseclasstable, classhelpers, docstrings, mkpage, utils
+from mknodes import classhelpers, mkbaseclasstable, mkdocstrings, mkpage, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class ModulePage(mkpage.MkPage):
+class MkModulePage(mkpage.MkPage):
     """Page showing information about a module.
 
     Arguments:
@@ -51,18 +51,18 @@ class ModulePage(mkpage.MkPage):
         if doc := self.module.__doc__:
             self.append(doc)
         if self.docstrings:
-            item = docstrings.DocStrings(f'{".".join(self.parts)}')
+            item = mkdocstrings.MkDocStrings(f'{".".join(self.parts)}')
             self.append(item)
         if self.show_class_table:
             klasses = list(
                 classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0])
             )
-            table = baseclasstable.BaseClassTable(klasses)
+            table = mkbaseclasstable.MkBaseClassTable(klasses)
             self.append(table)
 
 
 if __name__ == "__main__":
-    doc = ModulePage(mkpage)
+    doc = MkModulePage(mkpage)
     doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
     # print(doc.children)

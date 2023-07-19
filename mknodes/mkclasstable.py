@@ -5,13 +5,13 @@ import logging
 
 from typing import Literal
 
-from mknodes import baseclasstable, utils
+from mknodes import mkbaseclasstable, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class ClassTable(baseclasstable.BaseClassTable):
+class MkClassTable(mkbaseclasstable.MkBaseClassTable):
     """Table to show information about a specific class."""
 
     def __init__(
@@ -53,5 +53,5 @@ class ClassTable(baseclasstable.BaseClassTable):
 
 
 if __name__ == "__main__":
-    table = ClassTable(klass=ClassTable, layout="extended")
+    table = MkClassTable(klass=MkClassTable, layout="extended")
     print(table)

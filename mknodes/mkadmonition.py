@@ -5,7 +5,7 @@ import textwrap
 
 from typing import Literal
 
-from mknodes import markdownnode
+from mknodes import mktext
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ AdmonitionTypeStr = Literal[
 ]
 
 
-class Admonition(markdownnode.Text):
+class MkAdmonition(mktext.MkText):
     """Admonition info box."""
 
     def __init__(
@@ -70,5 +70,5 @@ class Admonition(markdownnode.Text):
 
 
 if __name__ == "__main__":
-    admonition = Admonition("hello")
+    admonition = MkAdmonition("hello")
     print(admonition)

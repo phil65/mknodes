@@ -11,10 +11,10 @@ EXPECTED = """## test
 
 
 def test_list():
-    ls = mknodes.List()
+    ls = mknodes.MkList()
     assert not str(ls)
 
 
 def test_markdown():
-    ls = mknodes.List(["a", "b"], header="test")
+    ls = mknodes.MkList(["a", "b"], header="test")
     assert str(ls) == EXPECTED

@@ -3,13 +3,13 @@ from __future__ import annotations
 from collections.abc import Callable
 import logging
 
-from mknodes import code, markdownnode, utils
+from mknodes import mkcode, mknode, utils
 
 
 logger = logging.getLogger(__name__)
 
 
-class SourceAndResult(markdownnode.MkNode):
+class MkSourceAndResult(mknode.MkNode):
     """Class to show the source of a Callable combined with its stringified result."""
 
     def __init__(
@@ -23,7 +23,7 @@ class SourceAndResult(markdownnode.MkNode):
     @staticmethod
     def examples():
         def test():
-            return code.Code(code="a = 2 + 4")
+            return mkcode.MkCode(code="a = 2 + 4")
 
         yield dict(fn=test)
 
@@ -34,12 +34,12 @@ class SourceAndResult(markdownnode.MkNode):
         return utils.get_repr(self, fn=self.fn)
 
     def _to_markdown(self) -> str:
-        code_block = code.Code.for_object(self.fn, extract_body=True)
+        code_block = mkcode.MkCode.for_object(self.fn, extract_body=True)
         markdown = str(self.fn())
         return f"{code_block}\nresults in:\n\n{markdown}"
 
 
 if __name__ == "__main__":
-    test = code.Code(language="test")
-    section = SourceAndResult(test.to_markdown, header="test")
+    test = mkcode.MkCode(language="test")
+    section = MkSourceAndResult(test.to_markdown, header="test")
     print(section.to_markdown())
