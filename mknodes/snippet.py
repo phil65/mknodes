@@ -27,7 +27,7 @@ class Snippet(markdownnode.MkNode):
     def __repr__(self):
         return utils.get_repr(self, path=str(self.path))
 
-    def _to_markdown(self):
+    def _to_markdown(self) -> str:
         return f"--8<--\n{self.path}\n--8<--\n"
 
 

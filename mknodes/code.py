@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import inspect
 import logging
 import textwrap
 import types
+
+from typing import Any
 
 from typing_extensions import Self
 
@@ -60,7 +63,8 @@ class Code(markdownnode.Text):
         | types.FunctionType
         | types.TracebackType
         | types.FrameType
-        | types.CodeType,
+        | types.CodeType
+        | Callable[..., Any],
         *,
         dedent: bool = True,
         extract_body: bool = False,

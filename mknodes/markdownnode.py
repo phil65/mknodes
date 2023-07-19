@@ -49,7 +49,7 @@ class MkNode(node.BaseNode):
     # def examples():
     #     yield from ()
 
-    def _to_markdown(self):
+    def _to_markdown(self) -> str:
         return NotImplemented
 
     def to_markdown(self) -> str:

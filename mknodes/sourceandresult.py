@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 class SourceAndResult(markdownnode.MkNode):
     """Class to show the source of a Callable combined with its stringified result."""
 
-    def __init__(self, fn: Callable, header: str = ""):
+    def __init__(
+        self,
+        fn: Callable,
+        header: str = "",
+    ):
         super().__init__(header)
         self.fn = fn
 
@@ -29,7 +33,7 @@ class SourceAndResult(markdownnode.MkNode):
     def __repr__(self):
         return utils.get_repr(self, fn=self.fn)
 
-    def _to_markdown(self):
+    def _to_markdown(self) -> str:
         code_block = code.Code.for_object(self.fn, extract_body=True)
         markdown = str(self.fn())
         return f"{code_block}\nresults in:\n\n{markdown}"
