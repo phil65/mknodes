@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 import logging
-import os
 import pathlib
 import types
 
@@ -31,13 +31,13 @@ class MkNav(mknode.MkNode):
 
     def __init__(
         self,
-        section: str | os.PathLike | None = None,
+        section: str | None = None,
         *,
         filename: str = "SUMMARY.md",
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.section = str(section) if section else None
+        self.section = utils.slugify(section) if section else None
         self.filename = filename
         self.path = (
             pathlib.Path(section) / self.filename
@@ -81,7 +81,7 @@ class MkNav(mknode.MkNode):
     def children(self, items):
         self.nav = dict(items)
 
-    def add_nav(self, section: str | os.PathLike) -> MkNav:
+    def add_nav(self, section: str) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.
 
         Arguments:
@@ -101,10 +101,6 @@ class MkNav(mknode.MkNode):
         )
         self.nav[None] = page
         return page
-
-    def write_navs(self):
-        for navi in self.navs:
-            navi.write()
 
     def virtual_files(self) -> dict[str, str]:
         return {str(self.path): self.to_markdown()}
@@ -150,7 +146,7 @@ class MkNav(mknode.MkNode):
 
     def add_documentation(
         self,
-        module: types.ModuleType | str,
+        module: types.ModuleType | Sequence[str] | str,
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,

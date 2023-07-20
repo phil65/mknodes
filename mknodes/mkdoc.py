@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Sequence
 
 # import contextlib
 # import importlib
@@ -29,7 +29,7 @@ class MkDoc(mknav.MkNav):
 
     def __init__(
         self,
-        module: types.ModuleType | str,
+        module: types.ModuleType | Sequence[str] | str,
         *,
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,

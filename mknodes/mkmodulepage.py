@@ -33,7 +33,7 @@ class MkModulePage(mkpage.MkPage):
         path = pathlib.Path(path)
         super().__init__(path=path, **kwargs)
         self.parts = classhelpers.to_module_parts(module)
-        self.module = classhelpers.to_module(self.parts)
+        self.module = classhelpers.to_module(module)
         self.docstrings = docstrings
         self.show_class_table = show_class_table
         self._build()
