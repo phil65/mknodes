@@ -57,7 +57,9 @@ class MroConnectionBuilder(BaseClassConnectionBuilder):
     def _connect(self, objects):
         mro = list(objects[0].mro())
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
-        self.connections = itertools.pairwise(mro)
+        self.connections = [
+            (self.get_id(i), self.get_id(j)) for i, j in itertools.pairwise(mro)
+        ]
 
 
 class MkClassDiagram(mkdiagram.MkDiagram):
