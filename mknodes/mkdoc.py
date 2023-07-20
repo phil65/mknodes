@@ -34,9 +34,11 @@ class MkDoc(mknav.MkNav):
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
+        class_page=mkclasspage.MkClassPage,
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)
+        self.ClassPage = class_page
         if self.module is None:
             raise RuntimeError(f"Couldnt load module {module!r}")
         self.is_package = hasattr(self.module, "__path__")
@@ -169,7 +171,7 @@ class MkDoc(mknav.MkNav):
             parts = klass.__module__.split(".")
         # parts = klass.__module__.split(".")
         path = pathlib.Path(f"{klass.__name__}.md")
-        page = mkclasspage.MkClassPage(
+        page = self.ClassPage(
             klass=klass,
             module_path=tuple(parts),
             path=path,
