@@ -34,11 +34,11 @@ class MkDoc(mknav.MkNav):
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
-        class_page=mkclasspage.MkClassPage,
+        class_page=None,
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)
-        self.ClassPage = class_page
+        self.ClassPage = class_page or mkclasspage.MkClassPage
         if self.module is None:
             raise RuntimeError(f"Couldnt load module {module!r}")
         self.is_package = hasattr(self.module, "__path__")

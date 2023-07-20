@@ -150,6 +150,7 @@ class MkNav(mknode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
+        class_page=None,
     ) -> mkdoc.MkDoc:
         """Add a module documentation to the Nav.
 
@@ -157,6 +158,8 @@ class MkNav(mknode.MkNode):
             module: The module to create a documentation section for.
             filter_by___all__: Whether the documentation
             section_name: Override the name for the menu (default: module name)
+            class_page: Override for the default ClassPage
+                        (default: [MkClassPage](MkClassPage.md))
         """
         from mknodes import mkdoc
 
@@ -165,6 +168,7 @@ class MkNav(mknode.MkNode):
             filter_by___all__=filter_by___all__,
             parent=self,
             section_name=section_name,
+            class_page=class_page,
         )
         self.nav[(nav.section,)] = nav
         return nav
