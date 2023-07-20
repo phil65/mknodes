@@ -137,7 +137,6 @@ class MkDoc(mknav.MkNav):
             not_filtered_by_pred = predicate(submod) if predicate else True
             # if self.module_name in mod.__name__.split(".")
             if not filtered_by_all and not_filtered_by_pred:
-                print(submod_name, flush=True)
                 yield submod
             if recursive and submod not in seen:
                 seen.add(submod)
