@@ -5,8 +5,8 @@ import mknodes
 
 EXPECTED = """## test
 
-  - a
-  - b
+  * a
+  * b
 """
 
 

@@ -15,6 +15,7 @@ class MkList(mkcontainer.MkContainer):
         self,
         items: list[str | mknode.MkNode] | None = None,
         *,
+        ordered: bool = False,
         shorten_after: int | None = None,
         as_links: bool = False,
         header: str = "",
@@ -22,6 +23,7 @@ class MkList(mkcontainer.MkContainer):
         # if as_links:
         #     items = [link.Link(i) for i in items]
         super().__init__(items=items, header=header)
+        self.ordered = ordered
         self.shorten_after = shorten_after
         self.as_links = as_links
 
@@ -50,9 +52,10 @@ class MkList(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         if not self.items:
             return ""
-        lines = [f"  - {self._prep(i)}" for i in self.items[: self.shorten_after]]
+        prefix = "1." if self.ordered else "*"
+        lines = [f"  {prefix} {self._prep(i)}" for i in self.items[: self.shorten_after]]
         if self.shorten_after and len(self.items) > self.shorten_after:
-            lines.append("  - ...")
+            lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
 
     def to_html(self) -> str:
@@ -62,11 +65,12 @@ class MkList(mkcontainer.MkContainer):
         """
         if not self.items:
             return ""
+        tag_name = "ol" if self.ordered else "ul"
         items = [f"<li>{self._prep(i)}</li>" for i in self.items[: self.shorten_after]]
         item_str = "".join(items)
         if self.shorten_after and len(self.items) > self.shorten_after:
             item_str += "<li>...</li>"
-        return f"<ul>{item_str}</ul>"
+        return f"<{tag_name}>{item_str}</{tag_name}>"
 
 
 if __name__ == "__main__":
