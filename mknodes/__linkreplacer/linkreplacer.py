@@ -38,11 +38,11 @@ class AutoLinkReplacerPlugin:
         if filename not in self.mapping:
             return f"`{match.group(3).replace('.md', '')}`"
         filenames = self.mapping[filename]
-        if len(filenames) > 1:
-            logger.warning(
-                f"{self.page_url}: {match.group(3)} has multiple targets: {filenames}"
-            )
-        abs_link_url = (self.base_docs_url / self.mapping[filename][0]).parent
+        # if len(filenames) > 1:
+        #     logger.warning(
+        #         f"{self.page_url}: {match.group(3)} has multiple targets: {filenames}"
+        #     )
+        abs_link_url = (self.base_docs_url / filenames[0]).parent
         # need os.replath here bc pathlib.relative_to throws an exception
         # when linking across drives
         rel_path = os.path.relpath(abs_link_url, self.linker_url)
