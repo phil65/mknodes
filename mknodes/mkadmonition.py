@@ -44,10 +44,12 @@ class MkAdmonition(mktext.MkText):
         self.collapsible = collapsible
 
     def _to_markdown(self) -> str:
+        if not self.text:
+            return ""
         block_start = "???" if self.collapsible else "!!!"
-        title = f'"{self.title}"' if self.title else ""
+        title = f'" {self.title}"' if self.title else ""
         text = textwrap.indent(str(self.text), "    ")
-        return f"{block_start} {self.typ} {title}\n{text}\n\n"
+        return f"{block_start} {self.typ}{title}\n{text}\n"
 
     @staticmethod
     def examples():
@@ -70,5 +72,5 @@ class MkAdmonition(mktext.MkText):
 
 
 if __name__ == "__main__":
-    admonition = MkAdmonition("hello")
+    admonition = MkAdmonition("")
     print(admonition)
