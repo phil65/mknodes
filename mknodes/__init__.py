@@ -15,6 +15,8 @@ from .mktabs import MkTabBlock, MkTabbed
 from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
 from .mksourceandresult import MkSourceAndResult
+from .mkshields import MkShields
+from .mkpageinclude import MkPageInclude
 
 from .mkclassdiagram import MkClassDiagram
 
@@ -56,6 +58,8 @@ __all__ = [
     "MkTabbed",
     "MkSourceAndResult",
     "MkSnippet",
+    "MkShields",
+    "MkPageInclude",
     "MkCritic",
 ]
 
