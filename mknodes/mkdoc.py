@@ -72,6 +72,17 @@ class MkDoc(mknav.MkNav):
             ):
                 yield path.relative_to(self.root_path)
 
+    def collect_classes(
+        self,
+        recursive: bool = False,
+        predicate: Callable | None = None,
+        submodule: types.ModuleType | str | tuple | list | None = None,
+    ):
+        for klass in self.iter_classes(
+            recursive=recursive, predicate=predicate, submodule=submodule
+        ):
+            self.add_class_page(klass=klass)
+
     def iter_classes(
         self,
         submodule: types.ModuleType | str | tuple | list | None = None,
