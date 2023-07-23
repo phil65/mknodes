@@ -15,6 +15,7 @@ from mknodes.utils import helpers
 
 if TYPE_CHECKING:
     from mknodes import mkdoc
+    from mknodes.classnodes import mkclasspage
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +77,7 @@ class MkNav(mknode.MkNode):
 
     @property
     def children(self):
-        return self.nav.values()
+        return list(self.nav.values())
 
     @children.setter
     def children(self, items):
@@ -151,7 +152,7 @@ class MkNav(mknode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
-        class_page=None,
+        class_page: type[mkclasspage.MkClassPage] | None = None,
     ) -> mkdoc.MkDoc:
         """Add a module documentation to the Nav.
 

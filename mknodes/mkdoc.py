@@ -37,7 +37,7 @@ class MkDoc(mknav.MkNav):
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
-        class_page=None,
+        class_page: type[mkclasspage.MkClassPage] | None = None,
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)

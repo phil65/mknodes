@@ -16,6 +16,7 @@ from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
 from .mksourceandresult import MkSourceAndResult
 from .mkshields import MkShields
+from .mkpage import MkPage
 from .mkpageinclude import MkPageInclude
 
 from .classnodes.mkclassdiagram import MkClassDiagram
@@ -26,7 +27,6 @@ from .classnodes.mkclasspage import MkClassPage
 from .modulenodes.mkmoduletable import MkModuleTable
 from .modulenodes.mkmodulepage import MkModulePage
 
-from .mkpage import MkPage
 
 from .mknav import MkNav
 from .mkdoc import MkDoc
