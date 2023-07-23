@@ -30,9 +30,15 @@ def create_page_3(root_nav: mknodes.MkNav):
 
     # Each tree item can carry virtual files. Lets dispay all files which are currently
     # attached to the tree:
-    files_page = internals_nav.add_page("File map", hide_toc=True, hide_nav=True)
+    files_page = internals_nav.add_page("File map", hide_toc=True)
     files_page.add_header("These are the 'virtual' files attached to the tree:", level=3)
     virtual_files = root_nav.all_virtual_files()
     file_txt = pprint.pformat(list(virtual_files.keys()))
     files_page += mknodes.MkCode(file_txt)
     # print(nodes_nav.to_tree_graph())
+
+
+if __name__ == "__main__":
+    nav = mknodes.MkNav()
+    create_page_3(nav)
+    print(nav.children[0])

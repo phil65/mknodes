@@ -46,3 +46,9 @@ def create_page_2(root_nav: mknodes.MkNav):
             docs.add_class_page(klass=klass)
 
     overview.add_admonition(text="That was easy, right?")
+
+
+if __name__ == "__main__":
+    nav = mknodes.MkNav()
+    create_page_2(nav)
+    print(nav.children[0])

@@ -56,3 +56,9 @@ def create_page_1(root_nav: mknodes.MkNav):
                 subpage.add_tabs({"Preview": str(node), "Generated markdown": str(code)})
                 subpage.add_newlines(3)
         subpage.add_mkdocstrings(kls)
+
+
+if __name__ == "__main__":
+    nav = mknodes.MkNav()
+    create_page_1(nav)
+    print(nav.children[0])

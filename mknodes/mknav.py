@@ -39,7 +39,8 @@ class MkNav(mknode.MkNode):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.section = helpers.slugify(section) if section else None
+        # self.section = helpers.slugify(section) if section else None
+        self.section = section
         self.filename = filename
         self.path = (
             pathlib.Path(section) / self.filename
@@ -90,7 +91,7 @@ class MkNav(mknode.MkNode):
             section: Name of the new nav.
         """
         navi = mknav.MkNav(section=section, parent=self)
-        self.nav[(section,)] = navi
+        self.nav[(navi.section,)] = navi
         return navi
 
     def add_index_page(
@@ -135,15 +136,14 @@ class MkNav(mknode.MkNode):
         filename: str | None = None,
     ) -> mkpage.MkPage:
         """Add a page to the Nav."""
-        filename = filename or helpers.slugify(f"{title}.md")
         page = mkpage.MkPage(
-            path=filename,
+            path=filename or f"{title}.md",
             parent=self,
             hide_toc=hide_toc,
             hide_nav=hide_nav,
             hide_path=hide_path,
         )
-        self.nav[title] = page
+        self.nav[page.path.rstrip(".md")] = page
         return page
 
     def add_documentation(

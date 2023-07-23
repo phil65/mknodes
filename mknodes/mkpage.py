@@ -43,7 +43,7 @@ class MkPage(mkcontainer.MkContainer):
         **kwargs: Any,
     ):
         super().__init__(parent=parent, **kwargs)
-        self.path = path
+        self.path = str(path)
         self.header_options: dict[str, Any] = {}
         if hide_toc:
             self.header_options.setdefault("hide", []).append("toc")
