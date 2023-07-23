@@ -19,41 +19,25 @@ define PRINT_HELP_PYSCRIPT
 import re, sys
 
 for line in sys.stdin:
-    match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-    if match:
-        target, help = match.groups()
-        print("%-20s %s" % (target, help))
+	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
+	if match:
+		target, help = match.groups()
+		print("%-20s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
 
 clean: ## remove all build, test, coverage and Python artifacts
-    git clean -dfX
+	git clean -dfX
 
-test_pyside6: ## run tests with pyside
-    export QT_API=pyside6; poetry run pytest # --mypy
-
-test_pyqt6: ## run tests with pyside
-    export QT_API=pyqt6; poetry run pytest # --mypy
-
-test: test_pyqt6 test_pyside6 ## run tests with all frameworks
+test:  ## run tests
+	hatch run test
 
 mypy: ## run mypy type checking
-    poetry run mypy prettyqt
+	poetry run mypy mknodes
 
 docs: ## builds the documentation
-    poetry run mkdocs build
-    $(BROWSER) site/index.html
+	hatch run mkdocs-build
+	$(BROWSER) site/index.html
 
 serve: ## run html server watching file changes in realtime
-    poetry run mkdocs serve --dirtyreload
-
-# install: clean ## install the package to the active Python's site-packages
-#   python setup.py install
-
-changelog: ## create changelog
-    python -c "$$BUMP_SCRIPT"
-    mv CHANGELOG.md docs/changelog.md
-
-bump: ## version bump
-    poetry run cz bump --no-verify
-#   cp CHANGELOG.md docs/changelog.md
+	hatch run mkdocs-serve
