@@ -90,16 +90,6 @@ def groupby_first_letter(data, keyfunc: Callable | None = None) -> dict[str, lis
     return {k: list(g) for k, g in itertools.groupby(data, first_letter)}
 
 
-# import pathlib
-# from mkdocstrings import inventory
-
-# path = pathlib.Path(__file__, "../qt6.inv")
-# with path.open("rb") as file:
-#     inv = inventory.Inventory.parse_sphinx(file)
-
-#     logger.warning(inv.values())
-
-
 def linked(identifier: str, title: str | None = None) -> str:
     suffix = (
         ""
