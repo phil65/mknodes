@@ -31,10 +31,13 @@ class MkTab(mkcontainer.MkContainer):
 
 
 class MkBaseTabWidget(mkcontainer.MkContainer):
+    items: list[MkTab]
+
     def __init__(
         self,
         tabs: Mapping[str, str | mknode.MkNode] | list[MkTab],
         header: str = "",
+        select_tab: int | str | None = None,
         **kwargs,
     ):
         if isinstance(tabs, list):
@@ -49,7 +52,53 @@ class MkBaseTabWidget(mkcontainer.MkContainer):
             ]
         for tab in items:
             tab.parent_item = self
-        super().__init__(items=items, header=header)
+        match select_tab:
+            case int():
+                items[select_tab].select = True
+            case str():
+                pos = self._get_tab_pos(select_tab)
+                items[pos].select = True
+        super().__init__(items=items, header=header, **kwargs)
+
+    def __getitem__(self, item: int | str):
+        match item:
+            case int():
+                return self.items[item]
+            case str():
+                for tab in self.items:
+                    if tab.title == item:
+                        return tab
+                raise IndexError(item)
+            case _:
+                raise TypeError(item)
+
+    def __contains__(self, tab: str | MkTab) -> bool:
+        match tab:
+            case MkTab():
+                return tab in self.items
+            case str():
+                return any(i.title == tab for i in self.items)
+            case _:
+                raise TypeError(tab)
+
+    def _get_tab_pos(self, tab_title: str) -> int:
+        item = next(i for i in self.items if i.title == tab_title)
+        return self.items.index(item)
+
+    def __setitem__(self, index: str, value: MkTab | str):
+        match value:
+            case str():
+                item = mktext.MkText(value)
+                tab = MkTab(index, items=[item])
+            case MkTab():
+                tab = value
+            case mknode.MkNode():
+                tab = MkTab(index, items=[value])
+        if index in self:
+            pos = self._get_tab_pos(index)
+            self.items[pos] = tab
+        else:
+            self.items.append(tab)
 
     def __repr__(self):
         return utils.get_repr(self, items=self.items)
@@ -71,7 +120,8 @@ class MkTabbed(MkBaseTabWidget):
         lines: list[str] = []
         for tab in self.items:
             indented_text = textwrap.indent(str(tab).rstrip("\n"), prefix="    ")
-            lines.extend((f'=== "{tab.title}"', indented_text))
+            selected = "+" if tab.select else ""
+            lines.extend((f'==={selected} "{tab.title}"', indented_text))
         return "\n".join(lines) + "\n"
 
 
@@ -82,9 +132,15 @@ class MkTabBlock(MkBaseTabWidget):
 
     def _to_markdown(self) -> str:
         lines: list[str] = []
-        for tab in self.items:
-            # TODO: perhaps always add "new: true" to first tab?
-            lines.extend((f"/// tab | {tab.title}", str(tab).rstrip("\n"), "///\n"))
+        for i, tab in enumerate(self.items):
+            begin = f"/// tab | {tab.title}"
+            if i == 0:
+                begin += "\n    new: True"
+            if tab.select:
+                begin += "\n    select: True"
+            content = str(tab).rstrip("\n")
+            end = "///\n"
+            lines.extend((begin, content, end))
         return "\n".join(lines) + "\n"
 
 

@@ -4,6 +4,7 @@ import mknodes
 
 
 EXPECTED = """/// tab | Tab1
+    new: True
 Some text
 ///
 
