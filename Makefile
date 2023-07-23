@@ -36,8 +36,8 @@ mypy: ## run mypy type checking
 	poetry run mypy mknodes
 
 docs: ## builds the documentation
-	hatch run mkdocs-build
+	hatch run docs-build
 	$(BROWSER) site/index.html
 
 serve: ## run html server watching file changes in realtime
-	hatch run mkdocs-serve
+	hatch run docs-serve
