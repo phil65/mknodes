@@ -6,7 +6,7 @@ import logging
 from typing import Literal
 
 from mknodes.classnodes import mkbaseclasstable
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ class MkClassTable(mkbaseclasstable.MkBaseClassTable):
         super().__init__(klasses=klasses, layout=layout, filter_fn=filter_fn, **kwargs)
 
     def __repr__(self):
-        return utils.get_repr(
+        return helpers.get_repr(
             self,
             klass=self.klass,
             mode=self.mode,

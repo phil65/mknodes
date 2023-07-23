@@ -7,7 +7,7 @@ import types
 
 from mknodes import mkdocstrings, mkpage
 from mknodes.classnodes import mkbaseclasstable
-from mknodes.utils import classhelpers, utils
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ class MkModulePage(mkpage.MkPage):
         self._build()
 
     def __repr__(self):
-        return utils.get_repr(self, module=self.module, path=str(self.path))
+        return helpers.get_repr(self, module=self.module, path=str(self.path))
 
     @staticmethod
     def examples():

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes import mkcontainer, mknode
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class MkList(mkcontainer.MkContainer):
         return len(self.items)
 
     def __repr__(self):
-        return utils.get_repr(
+        return helpers.get_repr(
             self,
             items=self.items,
             shorten_after=self.shorten_after,
@@ -48,7 +48,7 @@ class MkList(mkcontainer.MkContainer):
         yield dict(items=["Item"] * 6, shorten_after=3)
 
     def _prep(self, item):
-        return utils.linked(item) if self.as_links else str(item)
+        return helpers.linked(item) if self.as_links else str(item)
 
     def _to_markdown(self) -> str:
         if not self.items:

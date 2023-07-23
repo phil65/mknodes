@@ -5,7 +5,7 @@ import textwrap
 from typing import Literal
 
 from mknodes import mknode
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 GraphTypeStr = Literal["flow"]  # TODO
@@ -50,7 +50,7 @@ class MkDiagram(mknode.MkNode):
         self.attributes = attributes or {}
 
     def __repr__(self):
-        return utils.get_repr(
+        return helpers.get_repr(
             self, graph_type=self.graph_type, orientation=self.orientation
         )
 

@@ -5,7 +5,7 @@ import logging
 import textwrap
 
 from mknodes import mkcontainer, mknode, mktabs, mktext
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             self.items.append(tab)
 
     def __repr__(self):
-        return utils.get_repr(self, items=self.items)
+        return helpers.get_repr(self, items=self.items)
 
     def to_dict(self):
         return {tab.title: str(tab) for tab in self.items}

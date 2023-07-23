@@ -8,7 +8,7 @@ from typing import Any
 
 from mknodes import mkdocstrings, mkpage
 from mknodes.classnodes import mkclassdiagram, mkclasstable
-from mknodes.utils import classhelpers, utils
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ class MkClassPage(mkpage.MkPage):
         self._build()
 
     def __repr__(self):
-        return utils.get_repr(self, klass=self.klass, path=str(self.path))
+        return helpers.get_repr(self, klass=self.klass, path=str(self.path))
 
     @staticmethod
     def examples():

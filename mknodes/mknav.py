@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 import mkdocs_gen_files
 
 from mknodes import mknav, mknode, mkpage
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 if TYPE_CHECKING:
@@ -38,7 +38,7 @@ class MkNav(mknode.MkNode):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.section = utils.slugify(section) if section else None
+        self.section = helpers.slugify(section) if section else None
         self.filename = filename
         self.path = (
             pathlib.Path(section) / self.filename
@@ -52,7 +52,7 @@ class MkNav(mknode.MkNode):
         # self.files = self._editor.files
 
     def __repr__(self):
-        return utils.get_repr(
+        return helpers.get_repr(
             self,
             section=self.section or "<root>",
             filename=self.filename,
@@ -134,7 +134,7 @@ class MkNav(mknode.MkNode):
         filename: str | None = None,
     ) -> mkpage.MkPage:
         """Add a page to the Nav."""
-        filename = filename or utils.slugify(f"{title}.md")
+        filename = filename or helpers.slugify(f"{title}.md")
         page = mkpage.MkPage(
             path=filename,
             parent=self,

@@ -4,7 +4,7 @@ from collections.abc import Iterator
 import logging
 
 from mknodes import mknode, mktext
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class MkContainer(mknode.MkNode):
         return iter(self.items)
 
     def __repr__(self):
-        return utils.get_repr(self, items=self.items)
+        return helpers.get_repr(self, items=self.items)
 
     @staticmethod
     def examples():

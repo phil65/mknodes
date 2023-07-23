@@ -4,7 +4,7 @@ from collections.abc import Callable
 import logging
 
 from mknodes import mkcode, mknode
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class MkSourceAndResult(mknode.MkNode):
         return self.to_markdown()
 
     def __repr__(self):
-        return utils.get_repr(self, fn=self.fn)
+        return helpers.get_repr(self, fn=self.fn)
 
     def _to_markdown(self) -> str:
         code_block = mkcode.MkCode.for_object(self.fn, extract_body=True)

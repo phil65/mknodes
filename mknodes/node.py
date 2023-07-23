@@ -6,7 +6,7 @@ import logging
 
 from typing_extensions import Self
 
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class Node:
         self.children: list[Self] = []
 
     def __repr__(self):
-        return utils.get_repr(self)
+        return helpers.get_repr(self)
 
     def __iter__(self) -> Iterator[Self]:
         yield from self.children

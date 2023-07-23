@@ -5,7 +5,7 @@ import itertools
 from typing import Literal
 
 from mknodes import mkdiagram
-from mknodes.utils import connectionbuilder, utils
+from mknodes.utils import connectionbuilder, helpers
 
 
 DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]
@@ -27,7 +27,7 @@ class BaseClassConnectionBuilder(connectionbuilder.ConnectionBuilder):
 
     def get_title(self, item: type) -> str:
         return (
-            utils.label_for_class(item)
+            helpers.label_for_class(item)
             if self.title_style == "package.classname"
             else item.__qualname__
         )
@@ -77,7 +77,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         super().__init__(graph_type="flow", **kwargs)
 
     def __repr__(self):
-        return utils.get_repr(
+        return helpers.get_repr(
             self,
             klass=self.klass,
             mode=self.mode,

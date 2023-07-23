@@ -4,7 +4,7 @@ import inspect
 
 import mknodes
 
-from mknodes.utils import classhelpers, utils
+from mknodes.utils import classhelpers, helpers
 
 
 INTRO_TEXT = """
@@ -48,7 +48,7 @@ def create_page_1(root_nav: mknodes.MkNav):
             subpage += mknodes.MkCode.for_object(kls.examples, header="Signatures:")
             for i, sig in enumerate(kls.examples(), start=1):
                 subpage.add_header(f"Trying signature {i}", level=2)
-                sig_txt = utils.format_kwargs(sig)
+                sig_txt = helpers.format_kwargs(sig)
                 text = f"node = mknodes.{kls.__name__}({sig_txt})\nstr(node)"
                 subpage.add_code(code=text, title=f"example_{i}.py")
                 node = kls(**sig)

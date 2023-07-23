@@ -17,7 +17,7 @@ from mknodes import (
     mknode,
     mktabcontainer,
 )
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ class MkPage(mkcontainer.MkContainer):
             self.header_options.setdefault("hide", []).append("path")
 
     def __repr__(self):
-        return utils.get_repr(self, path=str(self.path))
+        return helpers.get_repr(self, path=str(self.path))
 
     def __str__(self):
         return self.to_markdown()

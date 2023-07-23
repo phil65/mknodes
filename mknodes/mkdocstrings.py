@@ -8,7 +8,7 @@ import types
 from typing import Any, Literal
 
 from mknodes import mktext
-from mknodes.utils import classhelpers, utils
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -170,7 +170,7 @@ class MkDocStrings(mktext.MkText):
         self.options = {k: v for k, v in self.options.items() if v is not None}
 
     def __repr__(self):
-        return utils.get_repr(self, obj=self.obj)
+        return helpers.get_repr(self, obj=self.obj)
 
     def _to_markdown(self) -> str:
         md = f"::: {self.obj_path}\n"

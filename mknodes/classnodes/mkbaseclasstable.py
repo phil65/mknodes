@@ -6,7 +6,7 @@ import logging
 from typing import Literal
 
 from mknodes import mktable
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class MkBaseClassTable(mktable.MkTable):
         super().__init__(data=data, **kwargs)
 
     def __repr__(self):
-        return utils.get_repr(self, klasses=self.klasses)
+        return helpers.get_repr(self, klasses=self.klasses)
 
     @staticmethod
     def examples():
@@ -58,9 +58,9 @@ class MkBaseClassTable(mktable.MkTable):
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:
         return dict(
-            Class=utils.link_for_class(kls),
+            Class=helpers.link_for_class(kls),
             Module=kls.__module__,
-            Description=utils.get_first_doc_line(kls),
+            Description=helpers.get_first_doc_line(kls),
         )
 
     def extended_row_for_klass(
@@ -71,16 +71,16 @@ class MkBaseClassTable(mktable.MkTable):
         Includes columns for child and parent classes including links.
         """
         subclasses = [subkls for subkls in kls.__subclasses__() if self.filter_fn(subkls)]
-        subclass_links = [utils.link_for_class(sub) for sub in subclasses]
-        subclass_str = utils.to_html_list(
+        subclass_links = [helpers.link_for_class(sub) for sub in subclasses]
+        subclass_str = helpers.to_html_list(
             subclass_links, shorten_after=shorten_lists_after
         )
         parents = kls.__bases__
-        parent_links = [utils.link_for_class(parent) for parent in parents]
-        parent_str = utils.to_html_list(parent_links, shorten_after=shorten_lists_after)
-        desc = utils.get_first_doc_line(kls, escape=True)
-        name = utils.link_for_class(kls, size=4, bold=True)
-        module = utils.styled(kls.__module__, size=1, recursive=True)
+        parent_links = [helpers.link_for_class(parent) for parent in parents]
+        parent_str = helpers.to_html_list(parent_links, shorten_after=shorten_lists_after)
+        desc = helpers.get_first_doc_line(kls, escape=True)
+        name = helpers.link_for_class(kls, size=4, bold=True)
+        module = helpers.styled(kls.__module__, size=1, recursive=True)
         return dict(
             Name=f"{name}<br>{module}<br>{desc}",
             # Module=kls.__module__,

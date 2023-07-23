@@ -4,7 +4,7 @@ import logging
 import os
 
 from mknodes import mknode
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class MkSnippet(mknode.MkNode):
         return self.to_markdown()
 
     def __repr__(self):
-        return utils.get_repr(self, path=str(self.path))
+        return helpers.get_repr(self, path=str(self.path))
 
     def _to_markdown(self) -> str:
         return f"--8<--\n{self.path}\n--8<--\n"

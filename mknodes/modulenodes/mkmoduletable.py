@@ -6,7 +6,7 @@ import logging
 import types
 
 from mknodes import mktable
-from mknodes.utils import classhelpers, utils
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -33,19 +33,19 @@ class MkModuleTable(mktable.MkTable):
     def get_row_for_module(self, module: types.ModuleType) -> dict[str, str]:
         return dict(
             Name=module.__name__,
-            # utils.link_for_class(submod, size=4, bold=True),
-            Information=utils.get_first_doc_line(
+            # helpers.link_for_class(submod, size=4, bold=True),
+            Information=helpers.get_first_doc_line(
                 module, fallback="*No docstrings defined.*"
             ),
             Members=(
-                utils.to_html_list(module.__all__, make_link=True)
+                helpers.to_html_list(module.__all__, make_link=True)
                 if hasattr(module, "__all__")
                 else ""
             ),
         )
 
     # def __repr__(self):
-    #     return utils.get_repr(self, module=self.module)
+    #     return helpers.get_repr(self, module=self.module)
 
     @staticmethod
     def examples():
@@ -55,5 +55,5 @@ class MkModuleTable(mktable.MkTable):
 
 
 if __name__ == "__main__":
-    table = MkModuleTable(module=utils)
+    table = MkModuleTable(module=helpers)
     print(table)

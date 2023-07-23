@@ -14,7 +14,7 @@ from typing import Any
 from mknodes import mknav
 from mknodes.classnodes import mkclasspage
 from mknodes.modulenodes import mkmodulepage
-from mknodes.utils import classhelpers, utils
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class MkDoc(mknav.MkNav):
         self.root_path = pathlib.Path(f"./{self.module_name}")
 
     def __repr__(self):
-        return utils.get_repr(
+        return helpers.get_repr(
             self,
             module=self.module_name,
             section=self.section or "<root>",

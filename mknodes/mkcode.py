@@ -11,7 +11,7 @@ from typing import Any
 from typing_extensions import Self
 
 from mknodes import mknode, mktext
-from mknodes.utils import utils
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class MkCode(mktext.MkText):
         header: str = "",
     ) -> Self:
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
-            code = utils.get_function_body(obj)
+            code = helpers.get_function_body(obj)
         elif extract_body:
             raise TypeError("Can only extract body from Functions, Methods and classes")
         else:
