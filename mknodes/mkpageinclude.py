@@ -27,10 +27,12 @@ class MkPageInclude(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         match self.page:
+            # case os.PathLike() | str():
+            #     left, right = "{%", "%}"
+            #     text = pathlib.Path(self.page).read_text()
+            #     return f"{left}\n\n{text}\n\n{right}"
             case os.PathLike() | str():
-                left, right = "{%", "%}"
-                text = pathlib.Path(self.page).read_text()
-                return f"{{{left}\n\n{text}\n\n{right}}}"
+                return pathlib.Path(self.page).read_text()
             case mkpage.MkPage():
                 return str(self.page)
             case _:
@@ -42,5 +44,6 @@ class MkPageInclude(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    mkcritic = MkPageInclude(page=mkpage.MkPage(items=["test"]))
-    print(mkcritic)
+    page = mkpage.MkPage(items=["test"])
+    include = MkPageInclude(page=__file__)
+    print(include)
