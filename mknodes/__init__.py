@@ -11,7 +11,7 @@ from .mkbinaryimage import MkBinaryImage
 from .mklist import MkList
 from .mkdiagram import MkDiagram
 from .mktable import MkTable
-from .mktabs import MkTabBlock, MkTabbed
+from .mktabcontainer import MkTabBlock, MkTabbed
 from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
 from .mksourceandresult import MkSourceAndResult

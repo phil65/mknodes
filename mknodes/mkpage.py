@@ -15,7 +15,7 @@ from mknodes import (
     mklink,
     mknav,
     mknode,
-    mktabs,
+    mktabcontainer,
     utils,
 )
 
@@ -305,9 +305,9 @@ class MkPage(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to Tabs
         """
         if style == "tabbed":
-            tabblock = mktabs.MkTabbed(data, parent=self, **kwargs)
+            tabblock = mktabcontainer.MkTabbed(data, parent=self, **kwargs)
         else:
-            tabblock = mktabs.MkTabBlock(data, parent=self, **kwargs)
+            tabblock = mktabcontainer.MkTabBlock(data, parent=self, **kwargs)
         self.append(tabblock)
         return tabblock
 
