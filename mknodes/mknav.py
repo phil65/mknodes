@@ -9,7 +9,8 @@ from typing import TYPE_CHECKING
 
 import mkdocs_gen_files
 
-from mknodes import mknav, mknode, mkpage, utils
+from mknodes import mknav, mknode, mkpage
+from mknodes.utils import utils
 
 
 if TYPE_CHECKING:

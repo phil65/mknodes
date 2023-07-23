@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 import os
 
-from mknodes import mknode, utils
+from mknodes import mknode
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

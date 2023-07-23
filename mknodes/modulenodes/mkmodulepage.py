@@ -5,7 +5,9 @@ import os
 import pathlib
 import types
 
-from mknodes import classhelpers, mkbaseclasstable, mkdocstrings, mkpage, utils
+from mknodes import mkdocstrings, mkpage
+from mknodes.classnodes import mkbaseclasstable
+from mknodes.utils import classhelpers, utils
 
 
 logger = logging.getLogger(__name__)

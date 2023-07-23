@@ -5,7 +5,8 @@ import logging
 
 from typing import Literal
 
-from mknodes import mkbaseclasstable, utils
+from mknodes.classnodes import mkbaseclasstable
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

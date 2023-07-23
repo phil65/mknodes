@@ -11,7 +11,10 @@ import types
 
 from typing import Any
 
-from mknodes import classhelpers, mkclasspage, mkmodulepage, mknav, utils
+from mknodes import mknav
+from mknodes.classnodes import mkclasspage
+from mknodes.modulenodes import mkmodulepage
+from mknodes.utils import classhelpers, utils
 
 
 logger = logging.getLogger(__name__)

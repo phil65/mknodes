@@ -4,7 +4,8 @@ from collections.abc import Mapping
 import logging
 import textwrap
 
-from mknodes import mkcontainer, mknode, mktabs, mktext, utils
+from mknodes import mkcontainer, mknode, mktabs, mktext
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

@@ -5,7 +5,8 @@ import inspect
 import logging
 import types
 
-from mknodes import classhelpers, mktable, utils
+from mknodes import mktable
+from mknodes.utils import classhelpers, utils
 
 
 logger = logging.getLogger(__name__)

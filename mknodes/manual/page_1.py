@@ -4,7 +4,7 @@ import inspect
 
 import mknodes
 
-from mknodes import classhelpers, utils
+from mknodes.utils import classhelpers, utils
 
 
 INTRO_TEXT = """

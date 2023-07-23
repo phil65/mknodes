@@ -16,8 +16,8 @@ from mknodes import (
     mknav,
     mknode,
     mktabcontainer,
-    utils,
 )
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

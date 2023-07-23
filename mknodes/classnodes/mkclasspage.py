@@ -6,14 +6,9 @@ import pathlib
 
 from typing import Any
 
-from mknodes import (
-    classhelpers,
-    mkclassdiagram,
-    mkclasstable,
-    mkdocstrings,
-    mkpage,
-    utils,
-)
+from mknodes import mkdocstrings, mkpage
+from mknodes.classnodes import mkclassdiagram, mkclasstable
+from mknodes.utils import classhelpers, utils
 
 
 logger = logging.getLogger(__name__)

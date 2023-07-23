@@ -4,7 +4,8 @@ import textwrap
 
 from typing import Literal
 
-from mknodes import mknode, utils
+from mknodes import mknode
+from mknodes.utils import utils
 
 
 GraphTypeStr = Literal["flow"]  # TODO

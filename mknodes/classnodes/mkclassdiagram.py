@@ -4,7 +4,8 @@ import itertools
 
 from typing import Literal
 
-from mknodes import connectionbuilder, mkdiagram, utils
+from mknodes import mkdiagram
+from mknodes.utils import connectionbuilder, utils
 
 
 DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]

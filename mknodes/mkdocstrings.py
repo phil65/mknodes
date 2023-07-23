@@ -7,7 +7,8 @@ import types
 
 from typing import Any, Literal
 
-from mknodes import classhelpers, mktext, utils
+from mknodes import mktext
+from mknodes.utils import classhelpers, utils
 
 
 logger = logging.getLogger(__name__)

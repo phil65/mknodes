@@ -5,7 +5,8 @@ import textwrap
 
 import mkdocs_gen_files
 
-from mknodes import connectionbuilder, node
+from mknodes import node
+from mknodes.utils import connectionbuilder
 
 
 logger = logging.getLogger(__name__)

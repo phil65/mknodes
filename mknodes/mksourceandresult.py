@@ -3,7 +3,8 @@ from __future__ import annotations
 from collections.abc import Callable
 import logging
 
-from mknodes import mkcode, mknode, utils
+from mknodes import mkcode, mknode
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

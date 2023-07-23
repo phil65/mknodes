@@ -10,7 +10,8 @@ from typing import Any
 
 from typing_extensions import Self
 
-from mknodes import mknode, mktext, utils
+from mknodes import mknode, mktext
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

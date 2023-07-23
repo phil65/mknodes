@@ -6,7 +6,7 @@ import logging
 
 from typing_extensions import Self
 
-from mknodes import utils
+from mknodes.utils import utils
 
 
 logger = logging.getLogger(__name__)

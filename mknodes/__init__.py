@@ -18,15 +18,15 @@ from .mksourceandresult import MkSourceAndResult
 from .mkshields import MkShields
 from .mkpageinclude import MkPageInclude
 
-from .mkclassdiagram import MkClassDiagram
+from .classnodes.mkclassdiagram import MkClassDiagram
+from .classnodes.mkbaseclasstable import MkBaseClassTable
+from .classnodes.mkclasstable import MkClassTable
+from .classnodes.mkclasspage import MkClassPage
 
-from .mkbaseclasstable import MkBaseClassTable
-from .mkclasstable import MkClassTable
-from .mkmoduletable import MkModuleTable
+from .modulenodes.mkmoduletable import MkModuleTable
+from .modulenodes.mkmodulepage import MkModulePage
 
 from .mkpage import MkPage
-from .mkclasspage import MkClassPage
-from .mkmodulepage import MkModulePage
 
 from .mknav import MkNav
 from .mkdoc import MkDoc
