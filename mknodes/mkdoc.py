@@ -41,17 +41,20 @@ class MkDoc(mknav.MkNav):
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)
-        self.ClassPage = class_page or mkclasspage.MkClassPage
         if self.module is None:
             raise RuntimeError(f"Couldnt load module {module!r}")
         self.is_package = hasattr(self.module, "__path__")
-        self.filter_by___all__ = filter_by___all__
         self.module_name = self.module.__name__.split(".")[-1]
         self.module_path = self.module.__name__
         self.file_path = self.module.__file__
-        super().__init__(section=section_name or self.module_name, **kwargs)
+
+        self.ClassPage = class_page or mkclasspage.MkClassPage
+        self.klasses: set[type] = set()
+        self.submodules: set[types.ModuleType] = set()
+        self.filter_by___all__ = filter_by___all__
         self._exclude = exclude_modules or []
         self.root_path = pathlib.Path(f"./{self.module_name}")
+        super().__init__(section=section_name or self.module_name, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(
@@ -60,6 +63,11 @@ class MkDoc(mknav.MkNav):
             section=self.section or "<root>",
             filename=self.filename,
         )
+
+    def to_markdown(self) -> str:
+        for klass in self.klasses:
+            self.add_class_page(klass=klass)
+        return super().to_markdown()
 
     def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:
         """Iter through files based on glob.
@@ -84,7 +92,7 @@ class MkDoc(mknav.MkNav):
         for klass in self.iter_classes(
             recursive=recursive, predicate=predicate, submodule=submodule
         ):
-            self.add_class_page(klass=klass)
+            self.klasses.add(klass)
 
     def iter_classes(
         self,
@@ -126,6 +134,17 @@ class MkDoc(mknav.MkNav):
             # if klass.__module__.startswith(self.module_name):
             if self.module_name in klass.__module__.split("."):
                 yield klass
+
+    def collect_modules(
+        self,
+        recursive: bool = False,
+        predicate: Callable | None = None,
+        submodule: types.ModuleType | str | tuple | list | None = None,
+    ):
+        for module in self.iter_modules(
+            recursive=recursive, predicate=predicate, submodule=submodule
+        ):
+            self.submodules.add(module)
 
     def iter_modules(
         self,
