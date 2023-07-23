@@ -53,7 +53,7 @@ class MkDoc(mknav.MkNav):
         self.submodules: set[types.ModuleType] = set()
         self.filter_by___all__ = filter_by___all__
         self._exclude = exclude_modules or []
-        self.root_path = pathlib.Path(f"./{self.module_name}")
+        # self.root_path = pathlib.Path(f"./{self.module_name}")
         super().__init__(section=section_name or self.module_name, **kwargs)
 
     def __repr__(self):
@@ -68,20 +68,6 @@ class MkDoc(mknav.MkNav):
         for klass in self.klasses:
             self.add_class_page(klass=klass)
         return super().to_markdown()
-
-    def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:
-        """Iter through files based on glob.
-
-        Arguments:
-            glob: glob to use for filtering
-        """
-        for path in sorted(self.root_path.rglob(glob)):
-            if (
-                all(i not in path.parts for i in self._exclude)
-                and not any(i.startswith("__") for i in path.parent.parts)
-                and not path.is_dir()
-            ):
-                yield path.relative_to(self.root_path)
 
     def collect_classes(
         self,
@@ -247,6 +233,20 @@ class MkDoc(mknav.MkNav):
         )
         self.nav[title or self.module_name] = page
         return page
+
+    # def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:
+    #     """Iter through files based on glob.
+
+    #     Arguments:
+    #         glob: glob to use for filtering
+    #     """
+    #     for path in sorted(self.root_path.rglob(glob)):
+    #         if (
+    #             all(i not in path.parts for i in self._exclude)
+    #             and not any(i.startswith("__") for i in path.parent.parts)
+    #             and not path.is_dir()
+    #         ):
+    #             yield path.relative_to(self.root_path)
 
     # def iter_modules_for_glob(self, glob="*/*.py"):
     #     for path in self.iter_files(glob):
