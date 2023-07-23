@@ -85,6 +85,16 @@ class MkNode(node.Node):
         """
         return {}
 
+    @property
+    def resolved_virtual_files(self):
+        from mknodes import mknav
+
+        sections = [i.section for i in self.ancestors if isinstance(i, mknav.MkNav)]
+        section = "/".join(i for i in reversed(sections) if i is not None)
+        if section:
+            section += "/"
+        return {f"{section}{k}": v for k, v in self.virtual_files().items()}
+
     def all_virtual_files(self, only_children: bool = False) -> dict[str, str | bytes]:
         """Return a dictionary containing all virtual files of itself and all children.
 
@@ -92,19 +102,12 @@ class MkNode(node.Node):
 
         The resulting filepath is determined based on the tree hierarchy.
         """
-        from mknodes import mknav
-
-        dct: dict[str, str | bytes] = {}
+        all_files: dict[str, str | bytes] = {}
         for des in self.descendants:
-            sections = [i.section for i in des.ancestors if isinstance(i, mknav.MkNav)]
-            section = "/".join(i for i in reversed(sections) if i is not None)
-            if section:
-                section += "/"
-            files_for_item = {f"{section}{k}": v for k, v in des.virtual_files().items()}
-            dct |= files_for_item
+            all_files |= des.resolved_virtual_files
         if not only_children:
-            dct |= self.virtual_files()
-        return dct
+            all_files |= self.resolved_virtual_files
+        return all_files
 
     def write(self, only_children: bool = False):
         # path = pathlib.Path(self.path)
