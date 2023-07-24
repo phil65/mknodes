@@ -8,9 +8,6 @@ source = "regex_commit"
 commit_extra_args = ["-e"]
 path = "mknodes/__init__.py"
 
-[project.entry-points."mkdocs.plugins"]
-linkreplacer = "mknodes.__linkreplacer:LinkReplacerPlugin"
-
 [tool.hatch.envs.default]
 python = "3.10"
 dependencies = [
@@ -63,14 +60,38 @@ description = "Generate docs with ease."
 readme = "README.md"
 dynamic = ["version"]
 classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Documentation",
+    "Topic :: Internet",
+    "Topic :: Text Processing :: Markup :: Markdown",
 ]
+keywords = [
+    "framework",
+    "docs",
+    "docstrings",
+    "documentation",
+    "internet",
+    "markdown",
+]
+
 requires-python = ">=3.10"
 dependencies = [
     "typing_extensions",
     "mkdocs-gen-files",
     "mkdocs",
 ]
+license = "MIT"
+
+
+[project.entry-points."mkdocs.plugins"]
+linkreplacer = "mknodes.__linkreplacer:LinkReplacerPlugin"
 
 [project.urls]
 Documentation = "https://phil65.github.io/mknodes/"
