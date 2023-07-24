@@ -58,7 +58,7 @@ class MkPage(mkcontainer.MkContainer):
     def __str__(self):
         return self.to_markdown()
 
-    def virtual_files(self):
+    def virtual_files(self) -> dict[str, str]:
         return {self.path: self.to_markdown()}
 
     def to_markdown(self) -> str:
@@ -294,6 +294,7 @@ class MkPage(mkcontainer.MkContainer):
     def add_tabs(
         self,
         data: Mapping[str, str | mknode.MkNode],
+        *,
         style: Literal["tabbed", "tabblock"] = "tabbed",
         **kwargs: Any,
     ):

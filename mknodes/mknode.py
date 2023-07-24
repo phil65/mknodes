@@ -86,7 +86,7 @@ class MkNode(node.Node):
         return {}
 
     @property
-    def resolved_virtual_files(self):
+    def resolved_virtual_files(self) -> dict[str, str | bytes]:
         from mknodes import mknav
 
         sections = [i.section for i in self.ancestors if isinstance(i, mknav.MkNav)]

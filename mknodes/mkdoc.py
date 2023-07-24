@@ -75,6 +75,7 @@ class MkDoc(mknav.MkNav):
 
     def collect_classes(
         self,
+        *,
         recursive: bool = False,
         predicate: Callable | None = None,
         submodule: types.ModuleType | str | tuple | list | None = None,
@@ -127,6 +128,7 @@ class MkDoc(mknav.MkNav):
 
     def collect_modules(
         self,
+        *,
         recursive: bool = False,
         predicate: Callable | None = None,
         submodule: types.ModuleType | str | tuple | list | None = None,
