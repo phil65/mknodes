@@ -9,8 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class MkBlockTab(mkblock.MkBlock):
-    TYPE = "tab"
-
     def __init__(
         self,
         content: str,
@@ -19,6 +17,7 @@ class MkBlockTab(mkblock.MkBlock):
         select: bool | None = None,
     ):
         super().__init__(
+            "tab",
             content=content,
             title=title,
         )
