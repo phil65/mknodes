@@ -47,7 +47,7 @@ class MkList(mkcontainer.MkContainer):
         yield dict(items=["Item 1", "Item 2", "Item 2"])
         yield dict(items=["Item"] * 6, shorten_after=3)
 
-    def _prep(self, item):
+    def _prep(self, item) -> str:
         return helpers.linked(item) if self.as_links else str(item)
 
     def _to_markdown(self) -> str:

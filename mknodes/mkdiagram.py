@@ -32,7 +32,7 @@ class MkDiagram(mknode.MkNode):
         graph_type: GraphTypeStr,
         items=None,
         connections=None,
-        orientation: str = "TD",
+        orientation: Literal["TD", "DT", "LR", "RL"] = "TD",
         attributes: dict[str, str] | None = None,
         header: str = "",
     ):

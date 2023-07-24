@@ -70,11 +70,16 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         self,
         klass: type,
         mode: DiagramModeStr = "parent_tree",
-        **kwargs,
+        orientation: Literal["TD", "DT", "LR", "RL"] = "TD",
+        header: str = "",
     ):
         self.klass = klass
         self.mode = mode
-        super().__init__(graph_type="flow", **kwargs)
+        super().__init__(
+            graph_type="flow",
+            orientation=orientation,
+            header=header,
+        )
 
     def __repr__(self):
         return helpers.get_repr(
