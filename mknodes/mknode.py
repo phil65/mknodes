@@ -75,8 +75,7 @@ class MkNode(node.Node):
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
         filename = str(self.path) if hasattr(self, "path") else ""
-        path = "/".join(self.resolved_parts) + "/" + filename
-        return path
+        return "/".join(self.resolved_parts) + "/" + filename
 
     def virtual_files(self):
         """Returns a dict containing the virtual files attached to this tree element.
@@ -113,7 +112,7 @@ class MkNode(node.Node):
         # path = pathlib.Path(self.path)
         # path.parent.mkdir(parents=True, exist_ok=True)
         for k, v in self.all_virtual_files(only_children=only_children).items():
-            logger.info(f"Written file to {k}")
+            logger.info("Written file to %s", k)
             mode = "w" if isinstance(v, str) else "wb"
             with mkdocs_gen_files.open(k, mode) as file:
                 file.write(v)

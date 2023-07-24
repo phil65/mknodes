@@ -35,7 +35,8 @@ class MkModuleTable(mktable.MkTable):
             Name=module.__name__,
             # helpers.link_for_class(submod, size=4, bold=True),
             Information=helpers.get_first_doc_line(
-                module, fallback="*No docstrings defined.*"
+                module,
+                fallback="*No docstrings defined.*",
             ),
             Members=(
                 helpers.to_html_list(module.__all__, make_link=True)

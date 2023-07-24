@@ -92,7 +92,14 @@ SHIELDS = [
 ]
 
 ShieldTypeStr = Literal[
-    "build", "version", "status", "codecov", "black", "pyup", "code_triage", "license"
+    "build",
+    "version",
+    "status",
+    "codecov",
+    "black",
+    "pyup",
+    "code_triage",
+    "license",
 ]
 
 
@@ -122,7 +129,9 @@ class MkShields(mktext.MkText):
     @staticmethod
     def examples():
         yield dict(
-            user="phil65", project="mknodes", shields=["version", "status", "codecov"]
+            user="phil65",
+            project="mknodes",
+            shields=["version", "status", "codecov"],
         )
 
 

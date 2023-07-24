@@ -31,6 +31,16 @@ def get_subclasses(klass: type, include_abstract: bool = False) -> typing.Iterat
             yield i
 
 
+@typing.overload
+def to_module(module, return_none: typing.Literal[False] = ...) -> types.ModuleType:
+    ...
+
+
+@typing.overload
+def to_module(module, return_none: typing.Literal[True] = ...) -> types.ModuleType | None:
+    ...
+
+
 def to_module(
     module: str | Sequence[str] | types.ModuleType,
     return_none: bool = True,
@@ -48,7 +58,7 @@ def to_module(
             try:
                 return importlib.import_module(module_path)
             except (ImportError, AttributeError) as e:
-                logger.warning(f"Could not import {module_path!r}")
+                logger.warning("Could not import %s", module_path)
                 if return_none:
                     return None
                 raise ImportError from e

@@ -229,13 +229,10 @@ class BaseResolver:
                 parent = self.get_parent(node)
                 if parent is None:
                     raise RootResolverError(node)
-                else:
-                    nodes += self._glob(parent, remainder)
+                nodes += self._glob(parent, remainder)
             elif name in ("", "."):
                 nodes += self._glob(node, remainder)
-            elif matches := self._find(node, name, remainder):
-                nodes += matches
-            elif self.is_wildcard(name):
+            elif (matches := self._find(node, name, remainder)) or self.is_wildcard(name):
                 nodes += matches
             else:
                 names = [repr(self.get_attribute(c)) for c in self.get_children(node)]
@@ -313,7 +310,9 @@ class ChildResolverError(ResolverError):
     def __init__(self, node, child, names):
         """Child Resolve Error at `node` handling `child`."""
         msg = "{!r} has no child {}. Children are: {}.".format(
-            node, child, ", ".join(names)
+            node,
+            child,
+            ", ".join(names),
         )
         super().__init__(node, child, msg)
 

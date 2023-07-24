@@ -31,6 +31,7 @@ class InventoryManager:
         for inv_file in self.inv_files:
             if path in inv_file:
                 return inv_file[path]
+        return None
 
 
 if __name__ == "__main__":

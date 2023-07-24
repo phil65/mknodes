@@ -145,14 +145,13 @@ class Node:
     def max_depth(self) -> int:
         """Get maximum depth from root to leaf node."""
         return max(
-            [self.root.depth] + [node.depth for node in list(self.root.descendants)]
+            [self.root.depth] + [node.depth for node in list(self.root.descendants)],
         )
 
-    def row(self) -> int:
+    def row(self) -> int:  # sourcery skip: assign-if-exp
         if self.parent_item:
             return self.parent_item.children.index(self)  # type: ignore
-        else:
-            return 0
+        return 0
 
     def pprint(self, indent: int = 0, max_depth: int | None = None):
         for _indent, child_item in self.iter_nodes(indent, max_depth):

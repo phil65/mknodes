@@ -53,7 +53,8 @@ class MkBaseClassTable(mktable.MkTable):
 
         yield dict(klasses=[mktable.MkTable, MkBaseClassTable, mknav.MkNav])
         yield dict(
-            klasses=[mktable.MkTable, MkBaseClassTable, mknav.MkNav], layout="extended"
+            klasses=[mktable.MkTable, MkBaseClassTable, mknav.MkNav],
+            layout="extended",
         )
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:
@@ -64,7 +65,9 @@ class MkBaseClassTable(mktable.MkTable):
         )
 
     def extended_row_for_klass(
-        self, kls: type, shorten_lists_after: int = 10
+        self,
+        kls: type,
+        shorten_lists_after: int = 10,
     ) -> dict[str, str]:
         """Return a table row for given class.
 
@@ -73,7 +76,8 @@ class MkBaseClassTable(mktable.MkTable):
         subclasses = [subkls for subkls in kls.__subclasses__() if self.filter_fn(subkls)]
         subclass_links = [helpers.link_for_class(sub) for sub in subclasses]
         subclass_str = helpers.to_html_list(
-            subclass_links, shorten_after=shorten_lists_after
+            subclass_links,
+            shorten_after=shorten_lists_after,
         )
         parents = kls.__bases__
         parent_links = [helpers.link_for_class(parent) for parent in parents]

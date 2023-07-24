@@ -72,8 +72,7 @@ def escaped(text: str, entity_type: str | None = None) -> str:
 def slugify(text: str) -> str:
     text = text.lower()
     text = re.sub("[^0-9a-zA-Z_.]", "_", text)
-    text = re.sub("^[^a-zA-Z_#]+", "", text)
-    return text
+    return re.sub("^[^a-zA-Z_#]+", "", text)
 
 
 def groupby(data, keyfunc: Callable | None = None) -> dict[str, list]:
@@ -153,7 +152,9 @@ def label_for_class(klass: type) -> str:
 
 
 def to_html_list(
-    ls: list[str], shorten_after: int | None = None, make_link: bool = False
+    ls: list[str],
+    shorten_after: int | None = None,
+    make_link: bool = False,
 ) -> str:
     if not ls:
         return ""
@@ -186,7 +187,7 @@ def get_function_body(func: types.MethodType | types.FunctionType | type) -> str
     line = next(source_lines).strip()  # type: ignore
     if not line.startswith(("def ", "class ")):
         return line.rsplit(":")[-1].strip()
-    elif not line.endswith(":"):
+    if not line.endswith(":"):
         for line in source_lines:
             line = line.strip()
             if line.endswith(":"):

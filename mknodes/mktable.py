@@ -45,11 +45,11 @@ class MkTable(mknode.MkNode):
             self.data[k] = [v(i) for i in self.data[k]]
 
     def _to_markdown(self) -> str:
-        if not any(self.data[k] for k in self.data.keys()):
+        if not any(self.data[k] for k in self.data):
             return ""
-        formatters = [f"{{:<{self.width_for_column(c)}}}" for c in self.data.keys()]
+        formatters = [f"{{:<{self.width_for_column(c)}}}" for c in self.data]
         headers = [formatters[i].format(k) for i, k in enumerate(self.data.keys())]
-        divider = [self.width_for_column(c) * "-" for c in self.data.keys()]
+        divider = [self.width_for_column(c) * "-" for c in self.data]
         data = [
             [formatters[i].format(k) for i, k in enumerate(row)]
             for row in self._iter_rows()
@@ -68,7 +68,7 @@ class MkTable(mknode.MkNode):
     def _iter_rows(self):
         length = min(len(i) for i in self.data.values())
         for j, _ in enumerate(range(length)):
-            yield [self.data[k][j] or "" for k in self.data.keys()]
+            yield [self.data[k][j] or "" for k in self.data]
 
     def width_for_column(self, column: str | int):
         """Returns the minimum width needed for given column.

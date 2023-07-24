@@ -104,7 +104,10 @@ class MkNav(mknode.MkNode):
         hide_nav: bool = False,
     ) -> mkpage.MkPage:
         page = mkpage.MkPage(
-            path="index.md", hide_toc=hide_toc, hide_nav=hide_nav, parent=self
+            path="index.md",
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            parent=self,
         )
         self.nav[None] = page
         return page

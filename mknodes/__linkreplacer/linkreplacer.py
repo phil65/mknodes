@@ -55,7 +55,10 @@ class AutoLinkReplacerPlugin:
         )
         new_text = new_text.replace("\\", "/")
         logger.debug(
-            f"LinkReplacer: {self.page_url}: {match.group(3)=} -> {rel_link_url=}"
+            "LinkReplacer: %s: %s -> %s",
+            self.page_url,
+            match.group(3),
+            rel_link_url,
         )
         return new_text
 
@@ -69,5 +72,4 @@ class LinkReplacerPlugin(BasePlugin):
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             mapping[filename].append(file_.url)
         plugin = AutoLinkReplacerPlugin(base_docs_url, page_url, mapping)
-        markdown = re.sub(AUTOLINK_RE, plugin, markdown)
-        return markdown
+        return re.sub(AUTOLINK_RE, plugin, markdown)

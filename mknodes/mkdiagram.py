@@ -51,7 +51,9 @@ class MkDiagram(mknode.MkNode):
 
     def __repr__(self):
         return helpers.get_repr(
-            self, graph_type=self.graph_type, orientation=self.orientation
+            self,
+            graph_type=self.graph_type,
+            orientation=self.orientation,
         )
 
     def _to_markdown(self) -> str:

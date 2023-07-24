@@ -104,21 +104,21 @@ disable_error_code = ["assignment", "misc", "attr-defined", "import", "misc", "a
 [tool.ruff]
 line-length = 90
 select = [
-    # "A",    # Flake8-builtins
+    "A",    # Flake8-builtins
     # "ANN",  # Flake8-Annotations
     # "ASYNC",  # Flake8-Async
     # "ARG",  # # Flake8-Unused-Arguments
     "B",    # flake8-bugbear
-    # "BLE",  # Flake8-blind-except
+    "BLE",  # Flake8-blind-except
     "C",
     "C4",   # flake8-comprehensions
     # "C90",  # MCCabe
-    # "COM",  #  Flake8-commas
+    "COM",  #  Flake8-commas
     "CPY",  #  Copyright-related rules
     "D",    # PyDocStyle
     # "DTZ",  # Flake8- Datetimez
     "E",    # PyCodeStyle Error
-    # "EM",   # flake8-errmsg
+    "EM",   # flake8-errmsg
     # "ERA",  #  Eradicate
     "EXE",  # flake8-executable
     "F",    # PyFlakes
@@ -126,13 +126,13 @@ select = [
     # "FBT",  # flake8-boolean-trap
     # "FIX",  # flake8-fixme
     "FLY",  # flynt
-    # "G",    #  flake8-logging-format
+    "G",    #  flake8-logging-format
     "I",    # ISort
     "ICN",  # Flake8-import-conventions
     "INP",  # flake8-no-pep420
     "INT",  # flake8-gettext
     "ISC",  # flake8-implicit-str-concat
-    # "N",    # pep8-naming
+    "N",    # pep8-naming
     # "NPY",  # numpy-specific rules
     # "PD",   # pandas-vet
     "PERF", # perflint
@@ -141,16 +141,16 @@ select = [
     "PLE",  # PyLint Error
     "PLC",  # PyLint convention
     # "PLW",  # PyLint Warning
-    # "PLR",  # PyLint refactor
-    # "PT",   # flake8-pytest-style
+    "PLR",  # PyLint refactor
+    "PT",   # flake8-pytest-style
     "PTH",  # flake8-use-pathlib
     "PYI",  # flake8-pyi
-    # "Q",    # flake8-quotes
-    # "RET",  # flake8-return
+    "Q",    # flake8-quotes
+    "RET",  # flake8-return
     "RSE",  # flake8-raise
     "RUF",  # ruff-specific rules
     # "S",    # flake8-bandit
-    # "SIM",  # flake8-simplify
+    "SIM",  # flake8-simplify
     "SLF",  # flake8-self
     "SLOT",  # flake8-slots
     # "T",
@@ -189,6 +189,7 @@ ignore = [
     "D408",  # Section underline should be in the line following the section's name ("{name}")
     "D409",  # Section underline should match the length of its name ("{name}")
     "D413",  # Missing blank line after last section ("{name}")
+    "PLR0913",# Too many arguments to function call
     "SLF001",# Private member accessed
     "RUF012", # Mutable class attributes should be annotated
     "RUF013", # PEP 484 prohibits implicit `Optional`

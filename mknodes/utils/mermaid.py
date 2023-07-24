@@ -72,7 +72,7 @@ class Node:
                     f'subgraph {self.id} ["{self.content}"]',
                     "\n".join([str(node) for node in self.sub_nodes]),
                     "end",
-                ]
+                ],
             )
             if len(self.sub_nodes)
             else "".join([self.id, self.shape.start, f'"{self.content}"', self.shape.end])

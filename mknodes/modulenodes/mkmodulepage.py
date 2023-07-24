@@ -57,7 +57,7 @@ class MkModulePage(mkpage.MkPage):
             self.append(item)
         if self.show_class_table:
             klasses = list(
-                classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0])
+                classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0]),
             )
             table = mkbaseclasstable.MkBaseClassTable(klasses)
             self.append(table)

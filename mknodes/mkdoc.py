@@ -41,9 +41,7 @@ class MkDoc(mknav.MkNav):
         flatten_nav: bool = False,
         **kwargs,
     ):
-        self.module = classhelpers.to_module(module)
-        if self.module is None:
-            raise RuntimeError(f"Couldnt load module {module!r}")
+        self.module = classhelpers.to_module(module, return_none=False)
         self.is_package = hasattr(self.module, "__path__")
         self.module_name = self.module.__name__.split(".")[-1]
         self.module_path = self.module.__name__
@@ -81,7 +79,9 @@ class MkDoc(mknav.MkNav):
         submodule: types.ModuleType | str | tuple | list | None = None,
     ):
         for klass in self.iter_classes(
-            recursive=recursive, predicate=predicate, submodule=submodule
+            recursive=recursive,
+            predicate=predicate,
+            submodule=submodule,
         ):
             self.klasses.add(klass)
 
@@ -134,7 +134,9 @@ class MkDoc(mknav.MkNav):
         submodule: types.ModuleType | str | tuple | list | None = None,
     ):
         for module in self.iter_modules(
-            recursive=recursive, predicate=predicate, submodule=submodule
+            recursive=recursive,
+            predicate=predicate,
+            submodule=submodule,
         ):
             self.submodules.add(module)
 
@@ -231,7 +233,7 @@ class MkDoc(mknav.MkNav):
         # parts = path.parts[:-1]
         page = mkmodulepage.MkModulePage(
             hide_toc=True,
-            module=self.module,  # type: ignore
+            module=self.module,
             path=path,
             parent=self,
             **kwargs,

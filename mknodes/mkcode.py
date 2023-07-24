@@ -74,7 +74,8 @@ class MkCode(mktext.MkText):
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
             code = helpers.get_function_body(obj)
         elif extract_body:
-            raise TypeError("Can only extract body from Functions, Methods and classes")
+            msg = "Can only extract body from Functions, Methods and classes"
+            raise TypeError(msg)
         else:
             code = inspect.getsource(obj)
         code = textwrap.dedent(code) if dedent else code

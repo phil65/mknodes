@@ -26,10 +26,10 @@ class MkBlock(mknode.MkNode):
         self.content = content
 
     def _to_markdown(self) -> str:
-        BLOCK_LIMITER = "///"
-        lines = [f"{BLOCK_LIMITER} {self.typ} | {self.title}"]
+        block_limiter = "///"
+        lines = [f"{block_limiter} {self.typ} | {self.title}"]
         lines.extend(f"    {k}: {v}" for k, v in self.attributes.items())
-        lines.extend((str(self.content).rstrip("\n"), BLOCK_LIMITER))
+        lines.extend((str(self.content).rstrip("\n"), block_limiter))
         return "\n".join(lines) + "\n"
 
 
