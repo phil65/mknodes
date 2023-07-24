@@ -159,7 +159,7 @@ select = [
     # "T20",  # flake8-print
     # "TCH",  # flake8-type-checking
     "TID",  # flake8-tidy-imports
-    # "TRY",  # tryceratops
+    "TRY",  # tryceratops
     "UP",   # PyUpgrade
     "W",    # PyCodeStyle warning
     "YTT",  # flake8-2020
@@ -192,6 +192,7 @@ ignore = [
     "SLF001",# Private member accessed
     "RUF012", # Mutable class attributes should be annotated
     "RUF013", # PEP 484 prohibits implicit `Optional`
+    "TRY003", # Avoid specifying long messages outside the exception class
 ]
 extend-exclude = [
     'docs',

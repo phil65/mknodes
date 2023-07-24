@@ -254,9 +254,9 @@ class BaseResolver:
                         matches += self._glob(child, remainder)
                     else:
                         matches.append(child)
-            except ResolverError as exc:  # noqa: PERF203
+            except ResolverError:  # noqa: PERF203
                 if not self.is_wildcard(pat):
-                    raise exc
+                    raise
         return matches
 
     @staticmethod
