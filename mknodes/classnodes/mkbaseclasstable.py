@@ -17,7 +17,7 @@ class MkBaseClassTable(mktable.MkTable):
 
     def __init__(
         self,
-        klasses: list[type],
+        klasses: list[type] | set[type],
         *,
         layout: Literal["compact", "extended"] = "extended",
         filter_fn: Callable | None = None,
