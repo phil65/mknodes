@@ -30,11 +30,10 @@ def create_page_2(root_nav: mknodes.MkNav):
     # the Documentation Nav hast some helper methods to iterate through the submodules
     # / classes of a module. We can also pass a predicate to filter specific subclasses,
     # or do other fancy stuff to generate a customized, automated documentation.
-    for klass in mknodes_docs.iter_classes(recursive=True):
-        # now we add some pre-defined pages ("MkClassPages") to our docs.
-        # they contain MkDocStrings, a table for eventual subclasses and an
-        # inheritance graph. It`s also possible to build custom pages of course.
-        mknodes_docs.add_class_page(klass=klass)
+    # now we add some pre-defined pages ("MkClassPages") to our docs.
+    # they contain MkDocStrings, a table for eventual subclasses and an
+    # inheritance graph. It`s also possible to build custom pages of course.
+    mknodes_docs.collect_classes(recursive=True)
 
     # Not enough documentation for your taste? Let`s document random stuff.
     # What about the std library?

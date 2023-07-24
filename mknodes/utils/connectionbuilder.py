@@ -36,7 +36,7 @@ class ConnectionBuilder:
     def titles(self):
         return list(self.item_dict.values())
 
-    def get_children(self, item):
+    def get_children(self, item) -> list | tuple:
         """This should return a list of children for the tree node."""
         return NotImplemented
 

@@ -189,11 +189,10 @@ class MkDoc(mknav.MkNav):
         else:
             parts = klass.__module__.split(".")
         # parts = klass.__module__.split(".")
-        path = pathlib.Path(f"{klass.__name__}.md")
         page = self.ClassPage(
             klass=klass,
             module_path=tuple(parts),
-            path=path,
+            path=pathlib.Path(f"{klass.__name__}.md"),
             parent=self,
             **kwargs,
         )
