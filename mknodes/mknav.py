@@ -229,7 +229,7 @@ class MkNav(mknode.MkNode):
         nav = cls(folder.name, parent=parent)
         for path in folder.iterdir():
             if path.is_dir():
-                subnav = cls.from_folder(path.parts[-1], parent=nav)
+                subnav = cls.from_folder(folder / path.parts[-1], parent=nav)
                 nav._register(subnav)
             elif path.suffix == ".md":
                 page = mkpage.MkPage(path)
