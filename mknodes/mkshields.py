@@ -26,15 +26,22 @@ class Shield:
 
 build_shield = Shield(
     identifier="build",
-    title="PyPI Latest Release",
+    title="Github Build",
     image_url="https://github.com/{user}/{project}/workflows/Build/badge.svg",
     url="https://github.com/{user}/{project}/actions/",
 )
 
-latest_release_shield = Shield(
-    identifier="latest",
-    title="PyPI Latest Release",
+latest_version_shield = Shield(
+    identifier="version",
+    title="PyPI Latest Version",
     image_url="https://img.shields.io/pypi/v/{project}.svg",
+    url="https://pypi.org/project/{project}/",
+)
+
+license_shield = Shield(
+    identifier="license",
+    title="PyPI License",
+    image_url="https://img.shields.io/pypi/l/{project}.svg",
     url="https://pypi.org/project/{project}/",
 )
 
@@ -75,16 +82,17 @@ codetriage_shield = Shield(
 
 SHIELDS = [
     build_shield,
-    latest_release_shield,
+    latest_version_shield,
     package_status_shield,
     code_cov_shield,
     black_shield,
     pyup_shield,
     codetriage_shield,
+    license_shield,
 ]
 
 ShieldTypeStr = Literal[
-    "build", "latest", "status", "codecov", "black", "pyup", "code_triage"
+    "build", "version", "status", "codecov", "black", "pyup", "code_triage", "license"
 ]
 
 
@@ -114,10 +122,10 @@ class MkShields(mktext.MkText):
     @staticmethod
     def examples():
         yield dict(
-            user="phil65", project="mknodes", shields=["latest", "status", "codecov"]
+            user="phil65", project="mknodes", shields=["version", "status", "codecov"]
         )
 
 
 if __name__ == "__main__":
-    mkcritic = MkShields("phil65", "prettyqt", shields=["latest", "status", "codecov"])
+    mkcritic = MkShields("phil65", "prettyqt", shields=["version", "status", "codecov"])
     print(mkcritic)
