@@ -18,8 +18,8 @@ class Shield:
     image_url: str
     url: str
 
-    def to_url(self, user: str, project: str):
-        image_url = self.image_url.format(user=user, project=project)
+    def to_url(self, user: str, project: str, branch: str = "main"):
+        image_url = self.image_url.format(user=user, project=project, branch=branch)
         url = self.url.format(user=user, project=project)
         return f"[![{self.title}]({image_url})]({url})"
 
@@ -55,7 +55,7 @@ package_status_shield = Shield(
 code_cov_shield = Shield(
     identifier="codecov",
     title="Package status",
-    image_url="https://codecov.io/gh/{user}/{project}/branch/master/graph/badge.svg",
+    image_url="https://codecov.io/gh/{user}/{project}/branch/{branch}/graph/badge.svg",
     url="https://codecov.io/gh/{user}/{project}/",
 )
 
@@ -108,19 +108,21 @@ class MkShields(mktext.MkText):
 
     def __init__(
         self,
+        shields: list[ShieldTypeStr],
         user: str,
         project: str,
-        shields: list[ShieldTypeStr],
+        branch: str = "main",
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.user = user
         self.project = project
+        self.branch = branch
         self.shields = shields
 
     def _to_markdown(self) -> str:
         shield_strs = [
-            s.to_url(user=self.user, project=self.project)
+            s.to_url(user=self.user, project=self.project, branch=self.branch)
             for s in SHIELDS
             if s.identifier in self.shields
         ]
@@ -129,12 +131,16 @@ class MkShields(mktext.MkText):
     @staticmethod
     def examples():
         yield dict(
+            shields=["version", "status", "codecov"],
             user="phil65",
             project="mknodes",
-            shields=["version", "status", "codecov"],
         )
 
 
 if __name__ == "__main__":
-    mkcritic = MkShields("phil65", "prettyqt", shields=["version", "status", "codecov"])
+    mkcritic = MkShields(
+        shields=["version", "status", "codecov"],
+        user="phil65",
+        project="prettyqt",
+    )
     print(mkcritic)
