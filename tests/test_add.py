@@ -23,6 +23,6 @@ def test_resolved_path(a: int, b: int, result: int):
 def test_creating_module_document():
     nav = mknodes.MkNav()
     subnav = nav.add_nav("subsection")
-    module_docs = subnav.add_documentation(pytest)
+    module_docs = subnav.add_doc(pytest)
     klasses = list(module_docs.iter_classes())
     assert klasses

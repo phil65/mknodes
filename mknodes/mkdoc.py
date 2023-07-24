@@ -38,6 +38,7 @@ class MkDoc(mknav.MkNav):
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
         class_page: type[mkclasspage.MkClassPage] | None = None,
+        flatten_nav: bool = False,
         **kwargs,
     ):
         self.module = classhelpers.to_module(module)
@@ -49,6 +50,7 @@ class MkDoc(mknav.MkNav):
         self.file_path = self.module.__file__
 
         self.ClassPage = class_page or mkclasspage.MkClassPage
+        self.flatten_nav = flatten_nav
         self.klasses: set[type] = set()
         self.submodules: set[types.ModuleType] = set()
         self.filter_by___all__ = filter_by___all__
@@ -66,7 +68,9 @@ class MkDoc(mknav.MkNav):
 
     def to_markdown(self) -> str:
         for klass in self.klasses:
-            self.add_class_page(klass=klass)
+            self.add_class_page(klass=klass, flatten=self.flatten_nav)
+        for submod in self.submodules:
+            self.add_doc(submod, class_page=self.ClassPage, flatten_nav=self.flatten_nav)
         return super().to_markdown()
 
     def collect_classes(
