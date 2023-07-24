@@ -86,6 +86,7 @@ class MkNode(node.Node):
 
     @property
     def resolved_virtual_files(self) -> dict[str, str | bytes]:
+        """Return a dict containing all virtual files with resolved file paths."""
         from mknodes import mknav
 
         sections = [i.section for i in self.ancestors if isinstance(i, mknav.MkNav)]
@@ -109,6 +110,11 @@ class MkNode(node.Node):
         return all_files
 
     def write(self, only_children: bool = False):
+        """Write files to virtual folder.
+
+        Arguments:
+            only_children: Whether to exclude self for data.
+        """
         # path = pathlib.Path(self.path)
         # path.parent.mkdir(parents=True, exist_ok=True)
         for k, v in self.all_virtual_files(only_children=only_children).items():
