@@ -28,6 +28,9 @@ class MkDoc(mknav.MkNav):
         filter_by___all__: Whether to filter stuff according to "__all__"
         exclude_modules: List of modules to exclude
         section_name: Optional section name override
+        class_page: Override for the default ClassPage
+                    (default: [MkClassPage](MkClassPage.md))
+        flatten_nav: Whether classes should be put into top-level of the nav
     """
 
     def __init__(

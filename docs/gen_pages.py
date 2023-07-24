@@ -15,7 +15,7 @@ and without having to care about file paths at at all.
 Now check out what we have created!
 """
 
-# this Nav object is basically the root of everything. It corresponds tou your root
+# this Nav object is basically the root of everything. It corresponds to your root
 # SUMMARY.md.
 
 root_nav = mknodes.MkNav()
