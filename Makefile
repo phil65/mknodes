@@ -29,11 +29,11 @@ export PRINT_HELP_PYSCRIPT
 clean: ## remove all build, test, coverage and Python artifacts
 	git clean -dfX
 
-test:  ## run tests
+test: ## run tests
 	hatch run test
 
 mypy: ## run mypy type checking
-	poetry run mypy mknodes
+	hatch run lint-check
 
 docs: ## builds the documentation
 	hatch run docs-build
