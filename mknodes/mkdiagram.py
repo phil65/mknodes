@@ -8,7 +8,7 @@ from mknodes import mknode
 from mknodes.utils import helpers
 
 
-GraphTypeStr = Literal["flow"]  # TODO
+GraphTypeStr = Literal["flow", "sequence", "state"]
 
 
 class MkDiagram(mknode.MkNode):
