@@ -66,6 +66,13 @@ pyup_shield = Shield(
     url="https://pyup.io/repos/github/{user}/{project}/",
 )
 
+codetriage_shield = Shield(
+    identifier="code_triage",
+    title="Open Source Helpers",
+    image_url="https://www.codetriage.com/{user}/{project}/users.svg",
+    url="https://www.codetriage.com/{user}/{project}/",
+)
+
 SHIELDS = [
     build_shield,
     latest_release_shield,
@@ -73,9 +80,12 @@ SHIELDS = [
     code_cov_shield,
     black_shield,
     pyup_shield,
+    codetriage_shield,
 ]
 
-ShieldTypeStr = Literal["build", "latest", "status", "codecov", "black", "pyup"]
+ShieldTypeStr = Literal[
+    "build", "latest", "status", "codecov", "black", "pyup", "code_triage"
+]
 
 
 class MkShields(mktext.MkText):
