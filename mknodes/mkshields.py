@@ -5,7 +5,7 @@ import logging
 
 from typing import Literal
 
-from mknodes import mktext
+from mknodes import mknode
 
 
 logger = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ ShieldTypeStr = Literal[
 ]
 
 
-class MkShields(mktext.MkText):
+class MkShields(mknode.MkNode):
     """MkCritic block."""
 
     def __init__(
