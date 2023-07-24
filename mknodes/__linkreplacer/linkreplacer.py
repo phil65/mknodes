@@ -5,11 +5,18 @@ import logging
 import os
 import pathlib
 import re
+
+from typing import TYPE_CHECKING
 import urllib.parse
 
 from mkdocs.plugins import BasePlugin
 import mkdocs.utils
 
+
+if TYPE_CHECKING:
+    from mkdocs.config.defaults import MkDocsConfig
+    from mkdocs.structure.files import Files
+    from mkdocs.structure.pages import Page
 
 logger = logging.getLogger(f"mkdocs.plugins.{__name__}")
 logger.addFilter(mkdocs.utils.warning_filter)
@@ -64,12 +71,21 @@ class AutoLinkReplacerPlugin:
 
 
 class LinkReplacerPlugin(BasePlugin):
-    def on_page_markdown(self, markdown, page, config, files, **kwargs):
+    def on_page_markdown(
+        self,
+        markdown: str,
+        *,
+        page: Page,
+        config: MkDocsConfig,
+        files: Files,
+    ) -> str | None:
         base_docs_url = config["docs_dir"]
         page_url = page.file.src_path
         mapping = collections.defaultdict(list)
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             mapping[filename].append(file_.url)
+        #     print(file_.url, file_.dest_uri)
+        # raise ValueError
         plugin = AutoLinkReplacerPlugin(base_docs_url, page_url, mapping)
         return re.sub(AUTOLINK_RE, plugin, markdown)
