@@ -184,7 +184,7 @@ class MkNav(mknode.MkNode):
             case MkNav():
                 self.nav[(node.section,)] = node
             case mkpage.MkPage():
-                self.nav[node.path.rstrip(".md")] = node
+                self.nav[node.path.removesuffix(".md")] = node
 
     @classmethod
     def from_file(cls, path: str | os.PathLike, section: str | None):
