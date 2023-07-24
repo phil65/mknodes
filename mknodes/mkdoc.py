@@ -68,6 +68,7 @@ class MkDoc(mknav.MkNav):
         )
 
     def to_markdown(self) -> str:
+        self.add_module_overview()
         for klass in self.klasses:
             self.add_class_page(klass=klass, flatten=self.flatten_nav)
         for submod in self.submodules:
@@ -237,6 +238,7 @@ class MkDoc(mknav.MkNav):
         page = mkmodulepage.MkModulePage(
             hide_toc=True,
             module=self.module,
+            klasses=self.klasses,
             path=path,
             parent=self,
             **kwargs,

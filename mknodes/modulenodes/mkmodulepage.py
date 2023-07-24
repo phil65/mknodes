@@ -27,6 +27,7 @@ class MkModulePage(mkpage.MkPage):
         self,
         module: tuple[str, ...] | str | types.ModuleType,
         *,
+        klasses: list[type] | set[type] = None,
         path: str | os.PathLike = "index.md",
         docstrings: bool = False,
         show_class_table: bool = True,
@@ -37,6 +38,9 @@ class MkModulePage(mkpage.MkPage):
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
         self.docstrings = docstrings
+        self.klasses = klasses or list(
+            classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0]),
+        )
         self.show_class_table = show_class_table
         self._build()
 
@@ -56,10 +60,7 @@ class MkModulePage(mkpage.MkPage):
             item = mkdocstrings.MkDocStrings(f'{".".join(self.parts)}')
             self.append(item)
         if self.show_class_table:
-            klasses = list(
-                classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0]),
-            )
-            table = mkbaseclasstable.MkBaseClassTable(klasses)
+            table = mkbaseclasstable.MkBaseClassTable(self.klasses)
             self.append(table)
 
 

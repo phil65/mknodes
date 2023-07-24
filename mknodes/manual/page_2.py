@@ -23,9 +23,6 @@ def create_page_2(root_nav: mknodes.MkNav):
     # Each Documentation section can have global filters for what it should include.
     # In this case, we only want to document stuff which is listed in "__all__".
     mknodes_docs = doc_section.add_doc(module=mknodes, filter_by___all__=True)
-    # we start by adding a nice overview page. This might gain some kwargs for different
-    # styles in the future.
-    mknodes_docs.add_module_overview()
 
     # the Documentation Nav hast some helper methods to iterate through the submodules
     # / classes of a module. We can also pass a predicate to filter specific subclasses,
@@ -41,7 +38,6 @@ def create_page_2(root_nav: mknodes.MkNav):
     for stdlib_mod in ["pathlib", "inspect", "logging"]:
         docs = std_lib_nav.add_doc(module=stdlib_mod)
         docs.collect_classes(recursive=True)
-        docs.add_module_overview()
 
     overview.add_admonition(text="That was easy, right?")
 

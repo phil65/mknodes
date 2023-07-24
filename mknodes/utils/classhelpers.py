@@ -107,7 +107,7 @@ def to_module_parts(  # type: ignore
 
 
 def iter_classes(
-    module: types.ModuleType | str | tuple[str],
+    module: types.ModuleType | str | tuple[str, ...],
     *,
     type_filter: type | None | types.UnionType = None,
     module_filter: str | None = None,
