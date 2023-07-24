@@ -39,7 +39,13 @@ class MkContainer(mknode.MkNode):
         return "\n\n".join(i.to_markdown() for i in self.items)
 
     def append(self, other: str | mknode.MkNode):
-        other = mktext.MkText(other, parent=self) if isinstance(other, str) else other
+        match other:
+            case str():
+                other = mktext.MkText(other, parent=self)
+            case mknode.MkNode():
+                other.parent_item = self
+            case _:
+                raise TypeError(other)
         self.items.append(other)
 
     @property  # type: ignore
