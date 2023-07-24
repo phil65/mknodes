@@ -36,7 +36,9 @@ def create_page_1(root_nav: mknodes.MkNav):
     # It`s easy to show different diagrams for classes.
     subcls_page = home_nav.add_page("Subclass tree", hide_toc=True)
     subcls_page += mknodes.MkClassDiagram(
-        mknodes.MkNode, mode="subclass_tree", orientation="LR"
+        mknodes.MkNode,
+        mode="subclass_tree",
+        orientation="LR",
     )
     # let`s take a look at some of the mentioned Markup nodes.
     # Some of them have a `examples` classmethod which yields some example signatures
@@ -45,15 +47,22 @@ def create_page_1(root_nav: mknodes.MkNav):
         # get_subclasses just calls __subclasses__ recursively.
         subpage = nodes_nav.add_page(kls.__name__)
         if hasattr(kls, "examples"):
-            subpage += mknodes.MkCode.for_object(kls.examples, header="Signatures:")
+            subpage += mknodes.MkCode.for_object(
+                kls.examples,
+                header="Example signatures",
+            )
             for i, sig in enumerate(kls.examples(), start=1):
-                subpage.add_header(f"Signature {i}", level=2)
+                subpage.add_header(f"Example {i}", level=2)
                 sig_txt = helpers.format_kwargs(sig)
                 text = f"node = mknodes.{kls.__name__}({sig_txt})\nstr(node)"
                 subpage.add_code(code=text, title=f"example_{i}.py")
                 node = kls(**sig)
-                code = mknodes.MkCode(language="md", code=node, title=f"result_{i}.md")
-                subpage.add_tabs({"Preview": str(node), "Generated markdown": str(code)})
+                subpage += mknodes.MkText(str(node), header="Preview")
+                subpage += mknodes.MkCode(
+                    language="md",
+                    code=node,
+                    title="Resulting markdown",
+                )
                 subpage.add_newlines(3)
         subpage.add_mkdocstrings(kls)
 
