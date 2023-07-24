@@ -47,7 +47,7 @@ class MkAdmonition(mktext.MkText):
         if not self.text:
             return ""
         block_start = "???" if self.collapsible else "!!!"
-        title = f'" {self.title}"' if self.title else ""
+        title = f' "{self.title}"' if self.title else ""
         text = textwrap.indent(str(self.text), "    ")
         return f"{block_start} {self.typ}{title}\n{text}\n"
 
