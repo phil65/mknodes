@@ -2,14 +2,18 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 import logging
+import os
 import pathlib
+import re
 import types
 
 from typing import TYPE_CHECKING
 
 import mkdocs_gen_files
 
-from mknodes import mknav, mknode, mkpage
+from typing_extensions import Self
+
+from mknodes import mknav, mknode, mkpage, mktext
 from mknodes.utils import helpers
 
 
@@ -91,7 +95,7 @@ class MkNav(mknode.MkNode):
             section: Name of the new nav.
         """
         navi = mknav.MkNav(section=section, parent=self)
-        self.nav[(navi.section,)] = navi
+        self._register(navi)
         return navi
 
     def add_index_page(
@@ -143,7 +147,7 @@ class MkNav(mknode.MkNode):
             hide_nav=hide_nav,
             hide_path=hide_path,
         )
-        self.nav[page.path.rstrip(".md")] = page
+        self._register(page)
         return page
 
     def add_documentation(
@@ -172,18 +176,78 @@ class MkNav(mknode.MkNode):
             section_name=section_name,
             class_page=class_page,
         )
-        self.nav[(nav.section,)] = nav
+        self._register(nav)
+        return nav
+
+    def _register(self, node):
+        match node:
+            case MkNav():
+                self.nav[(node.section,)] = node
+            case mkpage.MkPage():
+                self.nav[node.path.rstrip(".md")] = node
+
+    @classmethod
+    def from_file(cls, path: str | os.PathLike, section: str | None):
+        content = pathlib.Path(path).read_text()
+        return cls.from_text(content, section)
+        # max_indent = max(len(line) - len(line.lstrip()) for line in content.split("\n"))
+        # content = [line.lstrip() for line in content.split("\n")]
+
+    @classmethod
+    def from_text(cls, text: str, section: str | None):
+        nav = cls(section)
+        lines = text.split("\n")
+        for i, line in enumerate(lines):
+            if match := re.match(r"\* \[(.*)\]\((.*\.md)\)", line):
+                title = match[1]
+                file_path = pathlib.Path(match[2])
+                text = file_path.read_text()
+                node = mktext.MkText(text)
+                nav[title] = mkpage.MkPage(items=[node], path=file_path.name)
+            elif match := re.match(r"\* \[(.*)\]\((.*)\/\)", line):
+                subnav = MkNav(match[1])
+                title = match[1]
+                nav[title] = subnav
+            elif match := re.match(r"\* (.*)", line):
+                subnav_lines = []
+                for subline in lines[i + 1 :]:
+                    if subline.startswith("    "):
+                        subnav_lines.append(subline[4:])
+                    else:
+                        break
+                subnav = MkNav.from_text("\n".join(subnav_lines), section=match[1])
+                title = match[1]
+                nav[title] = subnav
+        return nav
+
+    @classmethod
+    def from_folder(cls, folder: str | os.PathLike, parent=None) -> Self:
+        folder = pathlib.Path(folder)
+        nav = cls(folder.name, parent=parent)
+        for path in folder.iterdir():
+            if path.is_dir():
+                subnav = cls.from_folder(path.parts[-1], parent=nav)
+                nav._register(subnav)
+            elif path.suffix == ".md":
+                page = mkpage.MkPage(path)
+                nav._register(page)
         return nav
 
 
 if __name__ == "__main__":
     docs = MkNav()
-    subnav = docs.add_nav("subnav")
-    page = subnav.add_page("My first page!")
-    page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
-    page2 = subnav.add_page("And a second one")
-    subsubnav = subnav.add_nav("SubSubNav")
-    subsubnav = subsubnav.add_page("SubSubPage")
-    from pprint import pprint
+    nav_file = pathlib.Path(__file__).parent / "SUMMARY.md"
+    # print(pathlib.Path(nav_file).read_text())
+    nav = MkNav.from_file(pathlib.Path(__file__).parent / "SUMMARY.md", None)
+    lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
+    print("\n".join(lines))
+    # print(nav_file.read_text())
+    # subnav = docs.add_nav("subnav")
+    # page = subnav.add_page("My first page!")
+    # page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
+    # page2 = subnav.add_page("And a second one")
+    # subsubnav = subnav.add_nav("SubSubNav")
+    # subsubnav = subsubnav.add_page("SubSubPage")
+    # from pprint import pprint
 
-    pprint(docs.all_virtual_files())
+    # pprint(docs.all_virtual_files())
