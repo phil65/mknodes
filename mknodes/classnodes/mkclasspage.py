@@ -71,8 +71,17 @@ class MkClassPage(mkpage.MkPage):
         path = f"{module_path}.{self.klass.__name__}"
         item = mkdocstrings.MkDocStrings(path, header="⁇ DocStrings")
         self.append(item)
-        if tbl := mkclasstable.MkClassTable(list(self.klass.__bases__)):
-            self.append(tbl)
+        if len(self.klass.mro()) > 2:  # noqa: PLR2004
+            bases = list(self.klass.__bases__)
+            table = mkclasstable.MkClassTable(bases, header="Parent classes")
+            self.append(table)
+        if len(subklasses := self.klass.__subclasses__()) > 0:
+            table = mkclasstable.MkClassTable(
+                subklasses,
+                header="Subclasses",
+                layout="compact",
+            )
+            self.append(table)
         item = mkclassdiagram.MkClassDiagram(self.klass, header="⋔ Inheritance diagram")
         self.append(item)
 
