@@ -13,12 +13,12 @@ logger = logging.getLogger(__name__)
 
 class InventoryManager:
     def __init__(self):
-        self.inv_files: set[inventory.Inventory] = set()
+        self.inv_files: list[inventory.Inventory] = list()
 
     def add_inv_file(self, path: str | os.PathLike):
         with pathlib.Path(path).open("rb") as file:
             inv = inventory.Inventory.parse_sphinx(file)
-        self.inv_files.add(inv)
+        self.inv_files.append(inv)
 
     def __getitem__(self, name: str | type | types.FunctionType | types.MethodType):
         match name:
@@ -36,3 +36,6 @@ class InventoryManager:
 
 if __name__ == "__main__":
     inv_manager = InventoryManager()
+    inv_manager.add_inv_file("mknodes/utils/objects.inv")
+    file = inv_manager.inv_files[0]
+    print(file.keys())
