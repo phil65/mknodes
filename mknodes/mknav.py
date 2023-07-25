@@ -213,7 +213,7 @@ class MkNav(mknode.MkNode):
                 node = mktext.MkText(text)
                 nav[title] = mkpage.MkPage(items=[node], path=file_path.name)
             elif match := re.match(r"\* \[(.*)\]\((.*)\/\)", line):
-                subnav = MkNav(match[1])
+                subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
                 title = match[1]
                 nav[title] = subnav
             elif match := re.match(r"\* (.*)", line):
@@ -231,21 +231,29 @@ class MkNav(mknode.MkNode):
     @classmethod
     def from_folder(cls, folder: str | os.PathLike, parent=None) -> Self:
         folder = pathlib.Path(folder)
-        nav = cls(folder.name, parent=parent)
+        nav = cls(folder.name if parent else None, parent=parent)
         for path in folder.iterdir():
             if path.is_dir():
                 subnav = cls.from_folder(folder / path.parts[-1], parent=nav)
                 nav._register(subnav)
-            elif path.suffix == ".md":
-                page = mkpage.MkPage(path)
+            elif path.suffix == ".md" and path.name != "SUMMARY.md":
+                page = mkpage.MkPage(path.relative_to(folder))
+                text = path.read_text()
+                page += text
                 nav._register(page)
         return nav
 
 
 if __name__ == "__main__":
     docs = MkNav()
-    nav_file = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/SUMMARY.md"
+    nav_tree_path = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/"
+    nav_file = nav_tree_path / "SUMMARY.md"
     # print(pathlib.Path(nav_file).read_text())
+    nav = MkNav.from_folder(nav_tree_path, None)
+    lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
+    print("\n".join(lines))
+
+    # print(nav.all_virtual_files())
     nav = MkNav.from_file(nav_file, None)
     lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
     print("\n".join(lines))
