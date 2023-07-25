@@ -21,7 +21,6 @@ from .mkpage import MkPage
 from .mkpageinclude import MkPageInclude
 
 from .classnodes.mkclassdiagram import MkClassDiagram
-from .classnodes.mkbaseclasstable import MkBaseClassTable
 from .classnodes.mkclasstable import MkClassTable
 from .classnodes.mkclasspage import MkClassPage
 
@@ -49,7 +48,6 @@ __all__ = [
     "MkClassDiagram",
     "ConnectionBuilder",
     "MkTable",
-    "MkBaseClassTable",
     "MkClassTable",
     "MkList",
     "MkClassPage",

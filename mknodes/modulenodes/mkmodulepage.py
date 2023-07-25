@@ -6,7 +6,7 @@ import pathlib
 import types
 
 from mknodes import mkdocstrings, mkpage
-from mknodes.classnodes import mkbaseclasstable
+from mknodes.classnodes import mkclasstable
 from mknodes.utils import classhelpers, helpers
 
 
@@ -60,7 +60,7 @@ class MkModulePage(mkpage.MkPage):
             item = mkdocstrings.MkDocStrings(f'{".".join(self.parts)}')
             self.append(item)
         if self.show_class_table:
-            table = mkbaseclasstable.MkBaseClassTable(self.klasses)
+            table = mkclasstable.MkClassTable(self.klasses)
             self.append(table)
 
 

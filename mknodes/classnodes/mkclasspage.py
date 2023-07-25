@@ -71,7 +71,7 @@ class MkClassPage(mkpage.MkPage):
         path = f"{module_path}.{self.klass.__name__}"
         item = mkdocstrings.MkDocStrings(path, header="DocStrings")
         self.append(item)
-        if tbl := mkclasstable.MkClassTable(self.klass):
+        if tbl := mkclasstable.MkClassTable(list(self.klass.__bases__)):
             self.append(tbl)
         item = mkclassdiagram.MkClassDiagram(self.klass, header="Inheritance diagram")
         self.append(item)
