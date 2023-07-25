@@ -69,11 +69,11 @@ class MkClassPage(mkpage.MkPage):
     def _build(self):
         module_path = ".".join(self.parts).rstrip(".")
         path = f"{module_path}.{self.klass.__name__}"
-        item = mkdocstrings.MkDocStrings(path, header="DocStrings")
+        item = mkdocstrings.MkDocStrings(path, header="⁇ DocStrings")
         self.append(item)
         if tbl := mkclasstable.MkClassTable(list(self.klass.__bases__)):
             self.append(tbl)
-        item = mkclassdiagram.MkClassDiagram(self.klass, header="Inheritance diagram")
+        item = mkclassdiagram.MkClassDiagram(self.klass, header="⋔ Inheritance diagram")
         self.append(item)
 
 

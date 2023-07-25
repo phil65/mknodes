@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class InventoryManager:
     def __init__(self):
-        self.inv_files: list[inventory.Inventory] = list()
+        self.inv_files: list[inventory.Inventory] = []
 
     def add_inv_file(self, path: str | os.PathLike):
         with pathlib.Path(path).open("rb") as file:
