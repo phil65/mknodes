@@ -7,14 +7,14 @@ import types
 
 from typing import Any, Literal
 
-from mknodes import mktext
+from mknodes import mknode
 from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkDocStrings(mktext.MkText):
+class MkDocStrings(mknode.MkNode):
     """Docstring section (powered by mkdocstrings)."""
 
     REQUIRED_PLUGINS = "mkdocstrings"
