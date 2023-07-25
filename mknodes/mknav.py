@@ -238,8 +238,7 @@ class MkNav(mknode.MkNode):
                 nav._register(subnav)
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
                 page = mkpage.MkPage(path.relative_to(folder))
-                text = path.read_text()
-                page += text
+                page += path.read_text()
                 nav._register(page)
         return nav
 
