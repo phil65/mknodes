@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import contextlib
+
 from importlib import metadata
 import inspect
 import itertools
 import logging
+import os
 import re
 import reprlib
 import sys
 import types
-
 from typing import Any
 
 
@@ -26,6 +28,14 @@ class LengthLimitRepr(reprlib.Repr):
 limit_repr = LengthLimitRepr()
 limit_repr.maxlist = 10
 limit_repr.maxstring = 80
+
+
+@contextlib.contextmanager
+def new_cd(x):
+    d = os.getcwd()  # noqa: PTH109
+    os.chdir(x)
+    yield
+    os.chdir(d)
 
 
 def get_repr(_obj: Any, *args: Any, _shorten: bool = True, **kwargs: Any) -> str:

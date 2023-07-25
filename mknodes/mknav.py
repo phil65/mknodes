@@ -194,8 +194,10 @@ class MkNav(mknode.MkNode):
 
     @classmethod
     def from_file(cls, path: str | os.PathLike, section: str | None):
-        content = pathlib.Path(path).read_text()
-        return cls.from_text(content, section)
+        path = pathlib.Path(path)
+        content = path.read_text()
+        with helpers.new_cd(path.parent):
+            return cls.from_text(content, section)
         # max_indent = max(len(line) - len(line.lstrip()) for line in content.split("\n"))
         # content = [line.lstrip() for line in content.split("\n")]
 
@@ -242,9 +244,9 @@ class MkNav(mknode.MkNode):
 
 if __name__ == "__main__":
     docs = MkNav()
-    nav_file = pathlib.Path(__file__).parent / "SUMMARY.md"
+    nav_file = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/SUMMARY.md"
     # print(pathlib.Path(nav_file).read_text())
-    nav = MkNav.from_file(pathlib.Path(__file__).parent / "SUMMARY.md", None)
+    nav = MkNav.from_file(nav_file, None)
     lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
     print("\n".join(lines))
     # print(nav_file.read_text())
