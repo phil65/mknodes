@@ -28,6 +28,7 @@ dependencies = [
     "mkdocs-gen-files",
     # "mkdocs-macros-plugin",
     "markdown-exec[ansi]",
+    "mkdocs-coverage",
     "pygments",
     "typing_extensions",
 ]
