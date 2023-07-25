@@ -27,7 +27,7 @@ class MkModulePage(mkpage.MkPage):
         self,
         module: tuple[str, ...] | str | types.ModuleType,
         *,
-        klasses: list[type] | set[type] = None,
+        klasses: list[type] | set[type] | None = None,
         path: str | os.PathLike = "index.md",
         docstrings: bool = False,
         show_class_table: bool = True,
