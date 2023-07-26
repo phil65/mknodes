@@ -36,3 +36,16 @@ def test_empty():
 def test_markdown():
     annotation = mknodes.MkAnnotations(["abcde\nfghi"] * 10, header="Header")
     assert str(annotation) == EXPECTED
+
+
+def test_constructors():
+    annotation_1 = mknodes.MkAnnotations(["abc", "def"])
+    anns = {1: "abc", 2: "def"}
+    annotation_2 = mknodes.MkAnnotations(anns)
+    assert str(annotation_1) == str(annotation_2)
+
+
+def test_mapping_interface():
+    ann = mknodes.MkAnnotations()
+    ann[1] = "test"
+    assert str(ann[1]) == "1.  test\n"
