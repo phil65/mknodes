@@ -15,6 +15,7 @@ from .mktable import MkTable
 from .mktabcontainer import MkTabBlock, MkTabbed
 from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
+from .mkannotations import MkAnnotations
 from .mksourceandresult import MkSourceAndResult
 from .mkshields import MkShields
 from .mkpage import MkPage
@@ -54,6 +55,7 @@ __all__ = [
     "MkClassPage",
     "MkModulePage",
     "MkModuleTable",
+    "MkAnnotations",
     "MkDoc",
     "MkTabBlock",
     "MkTabbed",
