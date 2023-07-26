@@ -13,7 +13,7 @@ class MkBinaryImage(mkimage.MkImage):
 
     def __init__(
         self,
-        data: bytes,
+        data: bytes | str,
         path: str,
         *,
         caption: str = "",
