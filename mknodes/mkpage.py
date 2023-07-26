@@ -16,6 +16,7 @@ from mknodes import (
     mknav,
     mknode,
     mktabcontainer,
+    mktext,
 )
 from mknodes.utils import helpers
 
@@ -100,7 +101,7 @@ class MkPage(mkcontainer.MkContainer):
         self.append(item)
         return item
 
-    def add_header(self, text: str, level: int = 2):
+    def add_header(self, text: str, level: int = 2) -> mktext.MkText:
         """Add line separators to the page.
 
         Arguments:
@@ -108,7 +109,9 @@ class MkPage(mkcontainer.MkContainer):
             level: header level
         """
         prefix = "#" * level
-        self.append(f"{prefix} {text}")
+        node = mktext.MkText(f"{prefix} {text}")
+        self.append(node)
+        return node
 
     def add_admonition(
         self,
