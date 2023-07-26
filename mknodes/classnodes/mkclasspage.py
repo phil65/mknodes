@@ -61,8 +61,12 @@ class MkClassPage(mkpage.MkPage):
     def examples():
         yield dict(klass=MkClassPage)
 
-    def add_class_diagram(self, mode: mkclassdiagram.DiagramModeStr = "parent_tree"):
-        diagram = mkclassdiagram.MkClassDiagram(self.klass, mode=mode)
+    def add_class_diagram(
+        self,
+        mode: mkclassdiagram.DiagramModeStr = "parent_tree",
+        header: str = "",
+    ):
+        diagram = mkclassdiagram.MkClassDiagram(self.klass, mode=mode, header=header)
         self.append(diagram)
         return diagram
 
