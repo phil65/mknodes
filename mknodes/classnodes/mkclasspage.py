@@ -6,7 +6,7 @@ import pathlib
 
 from typing import Any
 
-from mknodes import mkdocstrings, mkpage
+from mknodes import mkpage
 from mknodes.classnodes import mkclassdiagram, mkclasstable
 from mknodes.utils import classhelpers, helpers
 
@@ -71,13 +71,9 @@ class MkClassPage(mkpage.MkPage):
         return diagram
 
     def _build(self):
-        module_path = ".".join(self.parts).rstrip(".")
-        path = f"{module_path}.{self.klass.__name__}"
-        item = mkdocstrings.MkDocStrings(path, header="⁇ DocStrings")
-        self.append(item)
         if len(self.klass.mro()) > 2:  # noqa: PLR2004
             bases = list(self.klass.__bases__)
-            table = mkclasstable.MkClassTable(bases, header="Parent classes")
+            table = mkclasstable.MkClassTable(bases, header="Base classes")
             self.append(table)
         if len(subklasses := self.klass.__subclasses__()) > 0:
             table = mkclasstable.MkClassTable(
@@ -86,8 +82,10 @@ class MkClassPage(mkpage.MkPage):
                 layout="compact",
             )
             self.append(table)
-        item = mkclassdiagram.MkClassDiagram(self.klass, header="⋔ Inheritance diagram")
-        self.append(item)
+        self.add_class_diagram(header="⋔ Inheritance diagram")
+        module_path = ".".join(self.parts).rstrip(".")
+        path = f"{module_path}.{self.klass.__name__}"
+        self.add_mkdocstrings(path, header="🛈 DocStrings", show_root_toc_entry=False)
 
 
 if __name__ == "__main__":
