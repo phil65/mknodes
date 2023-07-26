@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkList(mkcontainer.MkContainer):
-    """Class to show a formatted list."""
+    """Node for showing a formatted list."""
 
     def __init__(
         self,

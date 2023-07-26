@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkSourceAndResult(mknode.MkNode):
-    """Class to show the source of a Callable combined with its stringified result."""
+    """Node for showing the source of a Callable combined with its stringified result."""
 
     def __init__(
         self,

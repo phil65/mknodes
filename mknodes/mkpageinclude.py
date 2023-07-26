@@ -15,7 +15,7 @@ CriticMarkStr = Literal["addition", "deletion", "substitution", "comment", "high
 
 
 class MkPageInclude(mknode.MkNode):
-    """MkCritic block."""
+    """Node to include other MkPages / Md files."""
 
     def __init__(
         self,
