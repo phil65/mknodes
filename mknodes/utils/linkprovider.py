@@ -29,9 +29,10 @@ class LinkProvider:
             url = BUILTIN_URL.format(mod=mod, name=f"{mod}.{kls.__name__}")
             return helpers.linked(url, title=kls.__name__)
         module = kls.__module__.split(".")[0]
+        qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
         if url := self.homepage_for_distro(module):
-            return helpers.linked(url, title=kls.__qualname__)
-        return helpers.linked(kls.__qualname__)
+            return helpers.linked(url, title=qual_name)
+        return helpers.linked(qual_name)
 
     def homepage_for_distro(self, dist_name: str):
         try:

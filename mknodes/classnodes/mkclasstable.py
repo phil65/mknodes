@@ -73,7 +73,12 @@ class MkClassTable(mktable.MkTable):
 
         Includes columns for child and parent classes including links.
         """
-        subclasses = [subkls for subkls in kls.__subclasses__() if self.filter_fn(subkls)]
+        subclasses = [
+            subkls
+            for subkls in kls.__subclasses__()
+            if self.filter_fn(subkls)
+            and not subkls.__qualname__.endswith("]")  # filter generic subclasses
+        ]
         subclass_links = [helpers.link_for_class(sub) for sub in subclasses]
         subclass_str = helpers.to_html_list(
             subclass_links,

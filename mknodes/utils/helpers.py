@@ -143,10 +143,11 @@ def link_for_class(kls: type, **kwargs) -> str:
         link = linked(kls.__qualname__)
     else:
         module = kls.__module__.split(".")[0]
+        qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
         if url := homepage_for_distro(module):
-            link = linked(url, title=kls.__qualname__)
+            link = linked(url, title=qual_name)
         else:
-            link = linked(kls.__qualname__)
+            link = linked(qual_name)
     return styled(link, **kwargs)
 
 
