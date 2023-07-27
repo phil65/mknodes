@@ -29,4 +29,6 @@ def serve_script(script_file: str | os.PathLike):
 
 
 if __name__ == "__main__":
-    serve_script("docs\\gen_qt.py")
+    import sys
+
+    serve_script(sys.argv[1])

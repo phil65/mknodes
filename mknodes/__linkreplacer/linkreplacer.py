@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 import urllib.parse
 
 from mkdocs.plugins import BasePlugin
-import mkdocs.utils
 
 
 if TYPE_CHECKING:
@@ -19,7 +18,6 @@ if TYPE_CHECKING:
     from mkdocs.structure.pages import Page
 
 logger = logging.getLogger(f"mkdocs.plugins.{__name__}")
-logger.addFilter(mkdocs.utils.warning_filter)
 
 # For Regex, match groups are:
 #       0: Whole markdown link e.g. [Alt-text](url)

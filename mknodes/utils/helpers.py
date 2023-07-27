@@ -142,16 +142,21 @@ def link_for_class(kls: type, **kwargs) -> str:
     elif kls.__module__.startswith("prettyqt"):
         link = linked(kls.__qualname__)
     else:
-        try:
-            dist = metadata.distribution(kls.__module__.split(".")[0])
-        except metadata.PackageNotFoundError:
-            link = linked(kls.__qualname__)
+        module = kls.__module__.split(".")[0]
+        if url := homepage_for_distro(module):
+            link = linked(url, title=kls.__qualname__)
         else:
-            if url := dist.metadata["Home-Page"]:
-                link = linked(url, title=kls.__qualname__)
-            else:
-                link = linked(kls.__qualname__)
+            link = linked(kls.__qualname__)
     return styled(link, **kwargs)
+
+
+def homepage_for_distro(dist_name: str):
+    try:
+        dist = metadata.distribution(dist_name)
+    except metadata.PackageNotFoundError:
+        return None
+    else:
+        return dist.metadata["Home-Page"]
 
 
 def label_for_class(klass: type) -> str:

@@ -28,14 +28,18 @@ class LinkProvider:
             mod = kls.__module__
             url = BUILTIN_URL.format(mod=mod, name=f"{mod}.{kls.__name__}")
             return helpers.linked(url, title=kls.__name__)
+        module = kls.__module__.split(".")[0]
+        if url := self.homepage_for_distro(module):
+            return helpers.linked(url, title=kls.__qualname__)
+        return helpers.linked(kls.__qualname__)
+
+    def homepage_for_distro(self, dist_name: str):
         try:
-            dist = metadata.distribution(kls.__module__.split(".")[0])
+            dist = metadata.distribution(dist_name)
         except metadata.PackageNotFoundError:
-            return helpers.linked(kls.__qualname__)
+            return None
         else:
-            if url := dist.metadata["Home-Page"]:
-                return helpers.linked(url, title=kls.__qualname__)
-            return helpers.linked(kls.__qualname__)
+            return dist.metadata["Home-Page"]
 
 
 if __name__ == "__main__":
