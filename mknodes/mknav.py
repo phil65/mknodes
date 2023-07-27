@@ -101,15 +101,12 @@ class MkNav(mknode.MkNode):
     def add_index_page(
         self,
         title: str | None = None,
-        *,
-        hide_toc: bool = False,
-        hide_nav: bool = False,
+        **kwargs,
     ) -> mkpage.MkPage:
         page = mkpage.MkPage(
             path="index.md",
-            hide_toc=hide_toc,
-            hide_nav=hide_nav,
             parent=self,
+            **kwargs,
         )
         self.nav[title] = page
         return page
