@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import abc
+
+from collections.abc import Mapping
+import itertools
 import logging
 import os
 import pathlib
@@ -11,7 +15,7 @@ from mkdocstrings import inventory
 logger = logging.getLogger(__name__)
 
 
-class InventoryManager:
+class InventoryManager(Mapping, metaclass=abc.ABCMeta):
     def __init__(self):
         self.inv_files: list[inventory.Inventory] = []
 
@@ -31,11 +35,17 @@ class InventoryManager:
         for inv_file in self.inv_files:
             if path in inv_file:
                 return inv_file[path]
-        return None
+        raise KeyError(name)
+
+    def __iter__(self):
+        return itertools.chain(*[inv_file.keys() for inv_file in self.inv_files])
+
+    def __len__(self):
+        return sum(len(i) for i in self.inv_files)
 
 
 if __name__ == "__main__":
     inv_manager = InventoryManager()
     inv_manager.add_inv_file("mknodes/utils/objects.inv")
     file = inv_manager.inv_files[0]
-    print(file.keys())
+    print(len(inv_manager))
