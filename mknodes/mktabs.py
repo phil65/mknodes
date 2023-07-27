@@ -13,6 +13,7 @@ class MkBlockTab(mkblock.MkBlock):
         self,
         content: str,
         title: str,
+        *,
         new: bool | None = None,
         select: bool | None = None,
     ):

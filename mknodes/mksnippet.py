@@ -18,7 +18,12 @@ class MkSnippet(mknode.MkNode):
 
     REQUIRED_EXTENSIONS = "pymdownx.snippets"
 
-    def __init__(self, path: str | os.PathLike, header: str = ""):
+    def __init__(
+        self,
+        path: str | os.PathLike,
+        *,
+        header: str = "",
+    ):
         super().__init__(header)
         self.path = path
 

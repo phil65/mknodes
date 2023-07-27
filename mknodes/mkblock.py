@@ -15,6 +15,7 @@ class MkBlock(mknode.MkNode):
         self,
         typ: str,
         content: str | mknode.MkNode = "",
+        *,
         title: str = "",
         attributes: dict[str, str | bool] | None = None,
         **kwargs,

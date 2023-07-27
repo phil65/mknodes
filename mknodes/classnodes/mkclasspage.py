@@ -55,6 +55,7 @@ class MkClassPage(mkpage.MkPage):
     def add_class_diagram(
         self,
         mode: mkclassdiagram.DiagramModeStr = "parent_tree",
+        *,
         header: str = "",
     ):
         diagram = mkclassdiagram.MkClassDiagram(self.klass, mode=mode, header=header)

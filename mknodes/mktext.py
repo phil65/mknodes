@@ -15,7 +15,13 @@ class MkText(mknode.MkNode):
     All classes inheriting from MkNode can get converted to this Type.
     """
 
-    def __init__(self, text: str | mknode.MkNode = "", header: str = "", parent=None):
+    def __init__(
+        self,
+        text: str | mknode.MkNode = "",
+        *,
+        header: str = "",
+        parent=None,
+    ):
         super().__init__(header=header, parent=parent)
         self.text = text
 

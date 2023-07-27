@@ -17,6 +17,7 @@ class MkTabContainer(mkcontainer.MkContainer):
     def __init__(
         self,
         tabs: Mapping[str, str | mknode.MkNode] | list[mktabs.MkTab],
+        *,
         header: str = "",
         select_tab: int | str | None = None,
         **kwargs,
