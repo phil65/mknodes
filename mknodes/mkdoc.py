@@ -68,7 +68,7 @@ class MkDoc(mknav.MkNav):
         )
 
     def to_markdown(self) -> str:
-        self.add_module_overview()
+        self._add_module_overview()
         for klass in self.klasses:
             self.add_class_page(klass=klass, flatten=self.flatten_nav)
         for submod in self.submodules:
@@ -221,7 +221,7 @@ class MkDoc(mknav.MkNav):
     #     page += mknodes.ModuleTable(self.module_name, predicate=predicate)
     #     return page
 
-    def add_module_overview(
+    def _add_module_overview(
         self,
         title: str | None = None,
         **kwargs: Any,
@@ -232,18 +232,16 @@ class MkDoc(mknav.MkNav):
             title: Override title for the section.
             kwargs: kwargs passed to MkModulePage.
         """
-        # TODO: slugify?
-        path = pathlib.Path("index.md" if title is None else f"{title}.md")
-        # parts = path.parts[:-1]
         page = mkmodulepage.MkModulePage(
             hide_toc=True,
             module=self.module,
             klasses=self.klasses,
-            path=path,
+            path="index.md" if title is None else f"{title}.md",
             parent=self,
             **kwargs,
         )
-        self.nav[title or self.module_name] = page
+        self.index_title = title or self.module_name
+        self.index_page = page
         return page
 
     # def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:

@@ -52,6 +52,8 @@ class MkNav(mknode.MkNode):
             else pathlib.Path(self.filename)
         ).as_posix()
         self.nav: dict[tuple | str | None, mknav.MkNav | mkpage.MkPage] = {}
+        self.index_page: mkpage.MkPage | None = None
+        self.index_title: str | None = None
         # self._mapping = {}
         # self._editor = mkdocs_gen_files.editor.FilesEditor.current()
         # self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
@@ -82,7 +84,10 @@ class MkNav(mknode.MkNode):
 
     @property
     def children(self):
-        return list(self.nav.values())
+        navs = list(self.nav.values())
+        if self.index_page:
+            navs.append(self.index_page)
+        return navs
 
     @children.setter
     def children(self, items):
@@ -100,7 +105,7 @@ class MkNav(mknode.MkNode):
 
     def add_index_page(
         self,
-        title: str | None = None,
+        title: str,
         **kwargs,
     ) -> mkpage.MkPage:
         page = mkpage.MkPage(
@@ -108,7 +113,8 @@ class MkNav(mknode.MkNode):
             parent=self,
             **kwargs,
         )
-        self.nav[title] = page
+        self.index_page = page
+        self.index_title = title
         return page
 
     def virtual_files(self) -> dict[str, str]:
@@ -116,13 +122,11 @@ class MkNav(mknode.MkNode):
 
     def to_markdown(self) -> str:
         nav = mkdocs_gen_files.Nav()
+        # In a nav, the first inserted item becomes the index page in case
+        # the section-index plugin is used, so we add it first.
+        if self.index_page and self.index_title:
+            nav[self.index_title] = pathlib.Path(self.index_page.path).as_posix()
         for path, item in self.nav.items():
-            # current approach: index pages have path = None, they dont become part
-            # of the literate nav.
-            # Not sure what`s best here, lot of combinations possible with
-            # section-index etc.
-            if path is None:
-                continue
             match item:
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()

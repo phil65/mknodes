@@ -22,7 +22,7 @@ def create_page_1(root_nav: mknodes.MkNav):
     # It`s all one big tree.
 
     home_nav = root_nav.add_nav("User guide")
-    overview = home_nav.add_page("Overview", hide_toc=True)
+    overview = home_nav.add_index_page("Overview", hide_toc=True)
 
     # this here is what you are reading right now.
     overview.add_code(inspect.getsource(create_page_1))

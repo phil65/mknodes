@@ -23,7 +23,7 @@ annotations[1] = "We will use annotations to explain things a bit."  # (1)
 root_nav = mknodes.MkNav()
 
 # Let's begin with the start page. This is your index.md file.
-page = root_nav.add_index_page(hide_toc=True, hide_nav=True)
+page = root_nav.add_index_page("Overview", hide_toc=True, hide_nav=True)
 
 # The next 6 lines are generating the page you are looking at right now.
 page.add_header(HEADER, level=3)
