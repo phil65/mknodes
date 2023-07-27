@@ -36,6 +36,7 @@ dependencies = [
 [tool.hatch.envs.default.scripts]
 test = "pytest"
 test-cov-xml = "pytest --cov-report=xml"
+test-cov-html = "pytest --cov-report=html"
 lint = [
   "black .",
   "ruff --fix .",
