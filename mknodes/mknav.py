@@ -7,7 +7,7 @@ import pathlib
 import re
 import types
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import mkdocs_gen_files
 
@@ -137,20 +137,34 @@ class MkNav(mknode.MkNode):
 
     def add_page(
         self,
-        title: str,
+        name: str,
         *,
-        hide_toc: bool = False,
-        hide_nav: bool = False,
-        hide_path: bool = False,
         filename: str | None = None,
+        hide_toc: bool | None = None,
+        hide_nav: bool | None = None,
+        hide_path: bool | None = None,
+        search_boost: float | None = None,
+        exclude_from_search: bool | None = None,
+        icon: str | None = None,
+        status: Literal["new", "deprecated"] | None = None,
+        title: str | None = None,
+        subtitle: str | None = None,
+        description: str | None = None,
     ) -> mkpage.MkPage:
         """Add a page to the Nav."""
         page = mkpage.MkPage(
-            path=filename or f"{title}.md",
+            path=filename or f"{name}.md",
             parent=self,
             hide_toc=hide_toc,
             hide_nav=hide_nav,
             hide_path=hide_path,
+            search_boost=search_boost,
+            exclude_from_search=exclude_from_search,
+            icon=icon,
+            status=status,
+            title=title,
+            subtitle=subtitle,
+            description=description,
         )
         self._register(page)
         return page

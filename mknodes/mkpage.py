@@ -7,6 +7,8 @@ import types
 
 from typing import Any, Literal
 
+import yaml
+
 from mknodes import (
     mkadmonition,
     mkcode,
@@ -23,7 +25,7 @@ from mknodes.utils import helpers
 
 logger = logging.getLogger(__name__)
 
-HEADER = "---\n{options}\n---\n\n"
+HEADER = "---\n{options}---\n\n"
 
 
 class MkPage(mkcontainer.MkContainer):
@@ -37,21 +39,42 @@ class MkPage(mkcontainer.MkContainer):
         self,
         path: str | os.PathLike = "",
         *,
-        hide_toc: bool = False,
-        hide_nav: bool = False,
-        hide_path: bool = False,
+        hide_toc: bool | None = None,
+        hide_nav: bool | None = None,
+        hide_path: bool | None = None,
+        search_boost: float | None = None,
+        exclude_from_search: bool | None = None,
+        icon: str | None = None,
+        status: Literal["new", "deprecated"] | None = None,
+        title: str | None = None,
+        subtitle: str | None = None,
+        description: str | None = None,
         parent: mknav.MkNav | None = None,
         **kwargs: Any,
     ):
         super().__init__(parent=parent, **kwargs)
         self.path = str(path)
-        self.header_options: dict[str, Any] = {}
-        if hide_toc:
-            self.header_options.setdefault("hide", []).append("toc")
-        if hide_nav:
-            self.header_options.setdefault("hide", []).append("navigation")
-        if hide_path:
-            self.header_options.setdefault("hide", []).append("path")
+        self.metadata: dict[str, Any] = {}
+        if hide_toc is not None:
+            self.metadata.setdefault("hide", []).append("toc")
+        if hide_nav is not None:
+            self.metadata.setdefault("hide", []).append("navigation")
+        if hide_path is not None:
+            self.metadata.setdefault("hide", []).append("path")
+        if search_boost is not None:
+            self.metadata.setdefault("search", {})["boost"] = search_boost
+        if exclude_from_search is not None:
+            self.metadata.setdefault("search", {})["exclude"] = exclude_from_search
+        if icon is not None:
+            self.metadata["icon"] = icon
+        if status is not None:
+            self.metadata["status"] = status
+        if subtitle is not None:
+            self.metadata["subtitle"] = subtitle
+        if title is not None:
+            self.metadata["title"] = title
+        if description is not None:
+            self.metadata["description"] = description
 
     def __repr__(self):
         return helpers.get_repr(self, path=str(self.path))
@@ -69,14 +92,10 @@ class MkPage(mkcontainer.MkContainer):
 
     def formatted_header(self) -> str:
         """Return the formatted header (containing metadata) for the page."""
-        lines = []
-        keys = self.header_options.keys()
-        if not keys:
+        if not self.metadata:
             return ""
-        for option in keys:
-            lines.append(f"{option}:")
-            lines.extend(f"  - {area}" for area in self.header_options[option])
-        return HEADER.format(options="\n".join(lines))
+        options = yaml.dump(self.metadata, Dumper=yaml.Dumper, indent=2)
+        return HEADER.format(options=options)
 
     def add_newlines(self, num: int):
         """Add line separators to the page.
@@ -317,7 +336,7 @@ class MkPage(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    doc = MkPage()
+    doc = MkPage(hide_toc=True, search_boost=2)
     doc.add_link("test")
     doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
