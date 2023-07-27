@@ -100,6 +100,8 @@ class MkNav(mknode.MkNode):
 
     def add_index_page(
         self,
+        title: str | None = None,
+        *,
         hide_toc: bool = False,
         hide_nav: bool = False,
     ) -> mkpage.MkPage:
@@ -109,7 +111,7 @@ class MkNav(mknode.MkNode):
             hide_nav=hide_nav,
             parent=self,
         )
-        self.nav[None] = page
+        self.nav[title] = page
         return page
 
     def virtual_files(self) -> dict[str, str]:
