@@ -116,7 +116,7 @@ class MkPage(mkcontainer.MkContainer):
             url: URL to link to.
             title: Text to display for the link
         """
-        item = mklink.MkLink(url)
+        item = mklink.MkLink(url, title)
         self.append(item)
         return item
 
