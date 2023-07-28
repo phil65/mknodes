@@ -20,7 +20,7 @@ class MkBlockTab(mkblock.MkBlock):
         super().__init__(
             "tab",
             content=content,
-            title=title,
+            argument=title,
         )
         if new is not None:
             self.new = new

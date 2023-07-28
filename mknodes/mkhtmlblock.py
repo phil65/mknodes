@@ -19,11 +19,11 @@ class MkHtmlBlock(mkblock.MkBlock):
         attributes: dict[str, str | bool] | None = None,
         **kwargs,
     ):
-        super().__init__(typ="html", title="div", content=content)
+        super().__init__(name="html", argument="div", content=content)
 
     def _to_markdown(self) -> str:
         block_limiter = "///"
-        lines = [f"{block_limiter} {self.typ} | {self.title}"]
+        lines = [f"{block_limiter} {self.name} | {self.argument}"]
         lines.extend(f"    {k}: {v}" for k, v in self.attributes.items())
         lines.append("")
         lines.extend(
