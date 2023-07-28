@@ -45,10 +45,6 @@ class MkNode(node.Node):
     def __str__(self):
         return self.to_markdown()
 
-    # @staticmethod
-    # def examples():
-    #     yield from ()
-
     def _to_markdown(self) -> str:
         return NotImplemented
 

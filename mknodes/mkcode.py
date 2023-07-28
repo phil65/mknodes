@@ -53,9 +53,13 @@ class MkCode(mktext.MkText):
         return f"``` {self.language}{title}\n{self.text}\n```"
 
     @staticmethod
-    def examples():
-        yield dict(language="python", code="a = 1 + 2")
-        yield dict(language="js", code="var z = x + y;", title="JavaScript")
+    def create_example_page(page):
+        page += "A MkCode node can be used to display a code section"
+        page += MkCode(language="python", code="a = 1 + 2")
+        page += "You can also apply syntax highlighting for different languages"
+        page += MkCode(language="js", code="var z = x + y;", title="JavaScript")
+        page += "Highlighting lines is also possible"
+        page += MkCode(code="1\n2\n3\n4", highlight_lines=[1, 3])
 
     @classmethod
     def for_object(

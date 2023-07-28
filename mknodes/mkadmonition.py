@@ -60,7 +60,13 @@ class MkAdmonition(mktext.MkText):
         return f"{block_start} {self.typ}{title}\n{text}\n"
 
     @staticmethod
-    def examples():
+    def create_example_page(page):
+        import mknodes
+
+        node = mknodes.MkAdmonition("The MkAdmonition node is used to show Admonitions.")
+        page += node
+        page += "This is the resulting code:"
+        page += mknodes.MkCode(str(node))
         for typ in [
             "node",
             "abstract",
@@ -75,8 +81,18 @@ class MkAdmonition(mktext.MkText):
             "example",
             "quote",
         ]:
-            yield dict(typ=typ, text=f"This is type {typ}", title=typ)
-        yield dict(typ="info", text="This is a collapsible menu", collapsible=True)
+            page += mknodes.MkAdmonition(typ=typ, text=f"This is type {typ}", title=typ)
+        page += mknodes.MkAdmonition(
+            text="Admonitions can also be collapsible",
+            collapsible=True,
+            title="Expand me!",
+        )
+        page += mknodes.MkAdmonition(
+            text="The initial state can also changed for collapsible admonitions.",
+            collapsible=True,
+            expanded=True,
+            title="Collapse me!",
+        )
 
 
 if __name__ == "__main__":

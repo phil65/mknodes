@@ -181,6 +181,20 @@ class MkDocStrings(mknode.MkNode):
             md = f"{md}    options:\n{options}\n"
         return md
 
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        page += "The MkDocStrings node shows DocStrings from mkdocstrings addon."
+        node = MkDocStrings(
+            "mknodes.MkDocStrings",
+            show_if_no_docstring=True,
+            header="DocStrings",
+            heading_level=3,
+        )
+        page += mknodes.MkCode(str(node), header="Markdown")
+        page += node
+
 
 if __name__ == "__main__":
     docstrings = MkDocStrings("a.b", show_submodules=True)

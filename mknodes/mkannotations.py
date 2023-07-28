@@ -20,10 +20,6 @@ class MkAnnotation(mkcontainer.MkContainer):
     def __repr__(self):
         return helpers.get_repr(self, num=self.num, item=self.items[0])
 
-    @staticmethod
-    def examples():
-        yield from ()
-
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
         lines = item_str.split("\n")
@@ -109,15 +105,29 @@ class MkAnnotations(mkcontainer.MkContainer):
             self.items.append(annotation)
 
     @staticmethod
-    def examples():  # (1)
-        yield dict(annotations=["Item 1"])
+    def create_example_page(page):
+        import mknodes
+
+        page += mknodes.MkCode.for_object(
+            MkAnnotations.create_example_page,
+            extract_body=True,
+        )
+        node = MkAnnotations()
+        page += "The MkAnnotations node aggregates annotations."
+        node[1] = r"Annotations are numbered and can be set via \__setitem__."  # (1)
+        node[2] = mknodes.MkAdmonition("They can also contain other Markdown.")  # (2)
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _to_markdown(self) -> str:
         return "".join(str(i) for i in self.items) if self.items else ""
 
 
 if __name__ == "__main__":
+    import mknodes
+
     # ann = MkAnnotation(1, "test")
     # print(ann)
-    section = MkAnnotations(["abcde\nfghi"] * 10, header="Header")
-    print(section.to_markdown())
+    page = mknodes.MkPage()
+    MkAnnotations.create_example_page(page)
+    print(page)

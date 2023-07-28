@@ -39,9 +39,11 @@ class MkCritic(mktext.MkText):
         return f"{{{left}\n\n{self.text}\n\n{right}}}"
 
     @staticmethod
-    def examples():
+    def create_example_page(page):
+        page += "The MkCritic node can be used to display text diffs."
         for typ in ["addition", "deletion", "comment", "highlight"]:
-            yield dict(mark=typ, text=f"This is type {typ}")
+            node = MkCritic(mark=typ, text=f"This is type {typ}")
+            page += node
 
 
 if __name__ == "__main__":

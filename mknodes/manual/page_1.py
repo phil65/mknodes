@@ -38,10 +38,12 @@ def create_nodes_section(root_nav: mknodes.MkNav):
         # iter_subclasses just calls __subclasses__ recursively.
         if "create_example_page" in kls.__dict__:
             subpage = nodes_nav.add_page(kls.__name__)
+            subpage += "## Code for this page"
             subpage += mknodes.MkCode.for_object(
                 kls.create_example_page,
                 extract_body=True,
             )
+            subpage += "## Output"
             kls.create_example_page(subpage)
 
 
