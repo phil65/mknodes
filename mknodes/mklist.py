@@ -43,9 +43,23 @@ class MkList(mkcontainer.MkContainer):
         )
 
     @staticmethod
-    def examples():
-        yield dict(items=["Item 1", "Item 2", "Item 2"])
-        yield dict(items=["Item"] * 6, shorten_after=3)
+    def create_example_page(page):
+        import mknodes
+
+        list_1 = MkList(items=["Item 1", "Item 2", "Item 3"], header="Regular")
+        # list can also have a max length. they will get shortened with a "..." entry.
+        list_2 = MkList(items=["Item"] * 6, shorten_after=3, header="Shortened")
+        # They can also be ordered.
+        list_3 = MkList(
+            items=["Item 1", "Item 2", "Item 3"],
+            ordered=True,
+            header="Ordered",
+        )
+        page += list_1
+        page += list_2
+        page += list_3
+        code = "\n".join(str(i) for i in [list_1, list_2, list_3])
+        page += mknodes.MkCode(code, language="markdown", header="Markdown")
 
     def _prep(self, item) -> str:
         return helpers.linked(item) if self.as_links else str(item)

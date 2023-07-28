@@ -31,8 +31,15 @@ class MkInstallGuide(mknode.MkNode):
         return TEXT.format(project=self.project)
 
     @staticmethod
-    def examples():
-        yield dict(project="mknodes")
+    def create_example_page(page):
+        import mknodes
+
+        # MkInstallGuide is just a text snippet for a short Install guide
+        # Currently it is only tailored towards PyPi.
+
+        node = MkInstallGuide(project="mknodes")
+        page += node
+        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 
 
 if __name__ == "__main__":

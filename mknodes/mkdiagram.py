@@ -63,12 +63,17 @@ class MkDiagram(mknode.MkNode):
         return f"```mermaid\n{text}\n```"
 
     @staticmethod
-    def examples():
-        yield dict(
+    def create_example_page(page):
+        import mknodes
+
+        page += "MkDiagrams can be used to create Mermaid diagrams."
+        diagram = MkDiagram(
             graph_type="flow",
             items=["1", "2", "3"],
             connections=[("1", "2"), ("2", "3")],
         )
+        page += diagram
+        page += mknodes.MkHtmlBlock(str(diagram), header="Markdown")
 
 
 if __name__ == "__main__":

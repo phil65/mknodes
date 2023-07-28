@@ -90,7 +90,7 @@ class MkTab(mkcontainer.MkContainer):
         page += tab_1
         page += tab_2
         code = str(tab_1) + "\n" + str(tab_2)
-        page += mknodes.MkCode(code, header="Markdown")
+        page += mknodes.MkCode(code, header="Markdown", language="markdown")
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)

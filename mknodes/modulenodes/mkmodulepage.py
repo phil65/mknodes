@@ -49,10 +49,14 @@ class MkModulePage(mkpage.MkPage):
         return helpers.get_repr(self, module=self.module, path=str(self.path))
 
     @staticmethod
-    def examples():
+    def create_example_page(page):
         import mknodes
 
-        yield dict(module=mknodes)
+        # MkModulePages are page templates to display
+        # documentation about a module.
+        node = MkModulePage(module=mknodes)
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _build(self):
         if doc := inspect.getdoc(self.module):

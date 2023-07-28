@@ -49,8 +49,14 @@ class MkClassPage(mkpage.MkPage):
         return helpers.get_repr(self, klass=self.klass, path=str(self.path))
 
     @staticmethod
-    def examples():
-        yield dict(klass=MkClassPage)
+    def create_example_page(page):
+        import mknodes
+
+        # MkClassPages are page templates to display
+        # documentation about a class.
+        node = MkClassPage(klass=MkClassPage)
+        page += str(node)
+        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 
     def add_class_diagram(
         self,

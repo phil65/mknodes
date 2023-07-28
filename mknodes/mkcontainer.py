@@ -30,10 +30,16 @@ class MkContainer(mknode.MkNode):
         return helpers.get_repr(self, items=self.items)
 
     @staticmethod
-    def examples():
-        from mknodes import mkcode
+    def create_example_page(page):
+        import mknodes
 
-        yield dict(items=[mkcode.MkCode(code="a = 1 + 2"), mktext.MkText("abc")])
+        page += "MkContainers are usually only used as a base class"
+        page += "It basically only carries other nodes and stringifies them sequentially."
+        item_1 = mknodes.MkCode(code="a = 1 + 2")
+        item_2 = mktext.MkText("abc")
+        node = MkContainer(items=[item_1, item_2])
+        node += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        page += node
 
     def _to_markdown(self) -> str:
         return "\n\n".join(i.to_markdown() for i in self.items)

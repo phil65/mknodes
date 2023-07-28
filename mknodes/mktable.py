@@ -57,13 +57,20 @@ class MkTable(mknode.MkNode):
         header_txt = "| " + " | ".join(headers) + " |"
         divider_text = "| " + " | ".join(divider) + " |"
         data_txt = ["| " + " | ".join(line) + " |" for line in data]
-        return "\n".join([header_txt, divider_text, *data_txt])
+        return "\n".join([header_txt, divider_text, *data_txt]) + "\n"
 
     @staticmethod
-    def examples():
-        yield dict(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
+    def create_example_page(page):
+        import mknodes
+
+        node_1 = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
+        # data can be given in different shapes.
         dicts = [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}]
-        yield dict(data=dicts)
+        node_2 = MkTable(data=dicts)
+
+        page += node_1
+        page += node_2
+        page += mknodes.MkCode(str(node_1) + "\n" + str(node_2))
 
     def _iter_rows(self):
         length = min(len(i) for i in self.data.values())
