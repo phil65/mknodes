@@ -14,7 +14,7 @@ The tree starts from the root nav down to the Markup elements.
 def create_page_3(root_nav: mknodes.MkNav):
     internals_nav = root_nav.add_nav("Internals")
 
-    overview = internals_nav.add_page("Overview", hide_toc=True)
+    overview = internals_nav.add_index_page("Overview", hide_toc=True)
     overview += INTRO_TEXT
 
     # we are here right now.
