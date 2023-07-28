@@ -76,7 +76,7 @@ plugins:
           # show_if_no_docstring: true
           inherited_members: false
           signature_crossrefs: true
-          # separate_signature: true
+          separate_signature: true
           line_length: 90
 markdown_extensions:
 - codehilite
