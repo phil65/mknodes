@@ -37,12 +37,14 @@ class MkAdmonition(mktext.MkText):
         *,
         title: str | None = None,
         collapsible: bool = False,
+        expanded: bool = False,
         **kwargs,
     ):
         super().__init__(text=text, **kwargs)
         self.typ = typ
         self.title = title
         self.collapsible = collapsible
+        self.expanded = expanded
 
     def __repr__(self):
         return helpers.get_repr(self, text=self.text, typ=self.typ, title=self.title)
@@ -51,6 +53,8 @@ class MkAdmonition(mktext.MkText):
         if not self.text:
             return ""
         block_start = "???" if self.collapsible else "!!!"
+        if self.collapsible and self.expanded:
+            block_start += "+"
         title = f' "{self.title}"' if self.title else ""
         text = textwrap.indent(str(self.text), "    ")
         return f"{block_start} {self.typ}{title}\n{text}\n"
