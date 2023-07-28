@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from .mkblock import MkBlock
+from .mkhtmlblock import MkHtmlBlock
 from .mkadmonition import MkAdmonition
 from .mknode import MkNode
 from .mktext import MkText
@@ -37,6 +38,7 @@ from .mkdoc import MkDoc
 __all__ = [
     "MkNode",
     "MkBlock",
+    "MkHtmlBlock",
     "MkContainer",
     "MkNav",
     "MkDocStrings",
