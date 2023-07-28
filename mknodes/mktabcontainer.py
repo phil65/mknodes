@@ -123,10 +123,10 @@ class MkTabBlock(MkTabContainer):
             content = str(tab).rstrip("\n")
             end = "///\n"
             lines.extend((begin, content, end))
-        return "\n".join(lines) + "\n"
+        return "\n".join(lines)
 
 
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = MkTabbed(tabs)
+    tabblock = MkTabBlock(tabs)
     print(tabblock)
