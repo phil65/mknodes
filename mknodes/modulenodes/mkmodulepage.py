@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import logging
 import os
 import pathlib
@@ -54,10 +55,10 @@ class MkModulePage(mkpage.MkPage):
         yield dict(module=mknodes)
 
     def _build(self):
-        if doc := self.module.__doc__:
+        if doc := inspect.getdoc(self.module):
             self.append(doc)
         if self.docstrings:
-            item = mkdocstrings.MkDocStrings(f'{".".join(self.parts)}')
+            item = mkdocstrings.MkDocStrings(self.module)
             self.append(item)
         if self.show_class_table:
             table = mkclasstable.MkClassTable(self.klasses)
