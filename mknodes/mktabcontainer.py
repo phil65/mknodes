@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import logging
-import textwrap
 
 from mknodes import mkcontainer, mknode, mktabs, mktext
 from mknodes.utils import helpers
@@ -12,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class MkTabContainer(mkcontainer.MkContainer):
-    items: list[mktabs.MkTab]
+    items: list[mktabs.MkTab | mktabs.MkBlockTab]
+    Tab: type
 
     def __init__(
         self,
@@ -26,9 +26,9 @@ class MkTabContainer(mkcontainer.MkContainer):
             items = tabs
         else:
             items = [
-                mktabs.MkTab(
-                    k,
-                    items=[mktext.MkText(v) if isinstance(v, str) else v],
+                self.Tab(
+                    title=k,
+                    content=mktext.MkText(v) if isinstance(v, str) else v,
                 )
                 for k, v in tabs.items()
             ]
@@ -54,9 +54,9 @@ class MkTabContainer(mkcontainer.MkContainer):
             case _:
                 raise TypeError(item)
 
-    def __contains__(self, tab: str | mktabs.MkTab) -> bool:
+    def __contains__(self, tab: str | mktabs.MkTab | mktabs.MkBlockTab) -> bool:
         match tab:
-            case mktabs.MkTab():
+            case mktabs.MkTab() | mktabs.MkBlockTab():
                 return tab in self.items
             case str():
                 return any(i.title == tab for i in self.items)
@@ -67,15 +67,15 @@ class MkTabContainer(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.title == tab_title)
         return self.items.index(item)
 
-    def __setitem__(self, index: str, value: mktabs.MkTab | str):
+    def __setitem__(self, index: str, value: mktabs.MkTab | mktabs.MkBlockTab | str):
         match value:
             case str():
                 item = mktext.MkText(value)
-                tab = mktabs.MkTab(index, items=[item])
-            case mktabs.MkTab():
+                tab = self.Tab(index, content=[item])
+            case mktabs.MkTab() | mktabs.MkBlockTab():
                 tab = value
             case mknode.MkNode():
-                tab = mktabs.MkTab(index, items=[value])
+                tab = self.Tab(index, content=[value])
         if index in self:
             pos = self._get_tab_pos(index)
             self.items[pos] = tab
@@ -92,38 +92,29 @@ class MkTabContainer(mkcontainer.MkContainer):
     def examples():
         yield dict(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
 
+    def _to_markdown(self) -> str:
+        return "\n".join(str(i) for i in self.items)
+
 
 class MkTabbed(MkTabContainer):
     """pymdownx-based Tab block."""
 
     REQUIRED_EXTENSIONS = "pymdownx.tabbed"
-
-    def _to_markdown(self) -> str:
-        lines: list[str] = []
-        for tab in self.items:
-            indented_text = textwrap.indent(str(tab).rstrip("\n"), prefix="    ")
-            selected = "+" if tab.select else ""
-            lines.extend((f'==={selected} "{tab.title}"', indented_text))
-        return "\n".join(lines) + "\n"
+    Tab = mktabs.MkTab
 
 
 class MkTabBlock(MkTabContainer):
     """New blocks-based Tab block."""
 
+    items: list[mktabs.MkBlockTab]
     REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
+    Tab = mktabs.MkBlockTab
 
     def _to_markdown(self) -> str:
-        lines: list[str] = []
-        for i, tab in enumerate(self.items):
-            begin = f"/// tab | {tab.title}"
-            if i == 0:
-                begin += "\n    new: True"
-            if tab.select:
-                begin += "\n    select: True"
-            content = str(tab).rstrip("\n")
-            end = "///\n"
-            lines.extend((begin, content, end))
-        return "\n".join(lines)
+        if not self.items:
+            return ""
+        self.items[0].new = True
+        return "\n".join(str(i) for i in self.items)
 
 
 if __name__ == "__main__":

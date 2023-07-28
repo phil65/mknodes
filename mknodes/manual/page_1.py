@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import mknodes
 
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers
 
 
 INTRO_TEXT = """
@@ -36,31 +36,13 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     #  to show the functionality.
     for kls in classhelpers.iter_subclasses(mknodes.MkNode):
         # iter_subclasses just calls __subclasses__ recursively.
-        create_page_for_class(nodes_nav, kls)
-
-
-def create_page_for_class(nav: mknodes.MkNav, kls: type):
-    subpage = nav.add_page(kls.__name__)
-    subpage += mknodes.MkCode.for_object(create_page_for_class)
-    if hasattr(kls, "examples"):
-        subpage += mknodes.MkCode.for_object(
-            kls.examples,
-            header="Example signatures",
-        )
-        for i, sig in enumerate(kls.examples(), start=1):
-            subpage.add_header(f"Example {i}", level=2)
-            sig_txt = helpers.format_kwargs(sig)
-            text = f"node = mknodes.{kls.__name__}({sig_txt})\nstr(node)"
-            subpage.add_code(code=text, title=f"example_{i}.py")
-            node = kls(**sig)
-            subpage += mknodes.MkText(str(node), header="Preview")
-            subpage += mknodes.MkCode(
-                language="md",
-                code=node,
-                title="Resulting markdown",
+        if "create_example_page" in kls.__dict__:
+            subpage = nodes_nav.add_page(kls.__name__)
+            subpage += mknodes.MkCode.for_object(
+                kls.create_example_page,
+                extract_body=True,
             )
-            subpage.add_newlines(3)
-    subpage.add_mkdocstrings(kls)
+            kls.create_example_page(subpage)
 
 
 def create_subclass_page(nav: mknodes.MkNav):
