@@ -127,6 +127,8 @@ class MkNav(mknode.MkNode):
         if self.index_page and self.index_title:
             nav[self.index_title] = pathlib.Path(self.index_page.path).as_posix()
         for path, item in self.nav.items():
+            if path is None:  # this check is just to make mypy happy
+                continue
             match item:
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()
