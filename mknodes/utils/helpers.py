@@ -198,7 +198,7 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
 
 def get_function_body(func: types.MethodType | types.FunctionType | type) -> str:
     # see https://stackoverflow.com/questions/38050649
-    source_lines = inspect.getsourcelines(func)[0]
+    source_lines, _ = inspect.getsourcelines(func)
     source_lines = itertools.dropwhile(lambda x: x.startswith("@"), source_lines)
     line = next(source_lines).strip()  # type: ignore
     if not line.startswith(("def ", "class ")):

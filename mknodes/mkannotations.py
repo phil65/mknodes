@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class MkAnnotation(mkcontainer.MkContainer):
+    """Represents a single annotation. It gets managed by an MkAnnotations node."""
+
     def __init__(self, num: int, item: str | mknode.MkNode, **kwargs):
         super().__init__(items=[item], **kwargs)
         self.num = num
@@ -32,7 +34,7 @@ class MkAnnotation(mkcontainer.MkContainer):
 
 
 class MkAnnotations(mkcontainer.MkContainer):
-    """Node containing a list of annotations."""
+    """Node containing a list of MkAnnotations."""
 
     items: list[MkAnnotation]
 

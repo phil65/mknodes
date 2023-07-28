@@ -16,6 +16,7 @@ class MkSourceAndResult(mknode.MkNode):
     def __init__(
         self,
         fn: Callable,
+        *,
         header: str = "",
     ):
         super().__init__(header)
