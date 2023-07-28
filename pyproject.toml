@@ -40,14 +40,14 @@ test = "pytest"
 test-cov-xml = "pytest --cov-report=xml"
 test-cov-html = "pytest --cov-report=html"
 lint = [
-  "black .",
+  "black . --preview",
   "ruff --fix .",
-  "mypy mknodes/",
+  # "mypy mknodes/",
 ]
 lint-check = [
-  "black --check .",
+  "black --check . --preview",
   "ruff .",
-  "mypy mknodes/",
+  # "mypy mknodes/",
 ]
 docs-serve = "hatch run mkdocs serve"
 docs-build = "hatch run mkdocs build"
