@@ -62,6 +62,14 @@ class MkDiagram(mknode.MkNode):
         text = f"{self.graph_type} {self.orientation}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
+    @staticmethod
+    def examples():
+        yield dict(
+            graph_type="flow",
+            items=["1", "2", "3"],
+            connections=[("1", "2"), ("2", "3")],
+        )
+
 
 if __name__ == "__main__":
     diagram = MkDiagram(graph_type="flow")
