@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class MkTabContainer(mkcontainer.MkContainer):
     items: list[mktabs.MkTab | mktabs.MkBlockTab]
-    Tab: type
+    Tab: type[mktabs.MkTab] | type[mktabs.MkBlockTab]
 
     def __init__(
         self,
@@ -71,11 +71,11 @@ class MkTabContainer(mkcontainer.MkContainer):
         match value:
             case str():
                 item = mktext.MkText(value)
-                tab = self.Tab(index, content=[item])
+                tab = self.Tab(index, content=item)
             case mktabs.MkTab() | mktabs.MkBlockTab():
                 tab = value
             case mknode.MkNode():
-                tab = self.Tab(index, content=[value])
+                tab = self.Tab(index, content=value)
         if index in self:
             pos = self._get_tab_pos(index)
             self.items[pos] = tab
@@ -83,7 +83,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             self.items.append(tab)
 
     def __repr__(self):
-        return helpers.get_repr(self, items=self.items)
+        return helpers.get_repr(self, tabs=self.items)
 
     def to_dict(self):
         return {tab.title: str(tab) for tab in self.items}

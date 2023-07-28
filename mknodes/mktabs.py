@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import textwrap
 
-from mknodes import mkblock, mkcontainer
+from mknodes import mkblock, mkcontainer, mknode, mktext
 
 
 logger = logging.getLogger(__name__)
@@ -13,14 +13,14 @@ class MkBlockTab(mkblock.MkBlock):
     def __init__(
         self,
         title: str,
-        content: str,
+        content: str | mknode.MkNode,
         *,
         new: bool | None = None,
         select: bool | None = None,
     ):
         super().__init__(
             "tab",
-            content=content,
+            content=str(content),
             argument=title,
         )
         if new is not None:
@@ -57,15 +57,24 @@ class MkTab(mkcontainer.MkContainer):
     def __init__(
         self,
         title: str,
-        content: list | None = None,
+        content: list | str | mknode.MkNode | None = None,
         *,
         select: bool = False,
         attrs: dict | None = None,
         **kwargs,
     ):
-        if not isinstance(content, list):
-            content = [content]
-        super().__init__(items=content, **kwargs)
+        match content:
+            case None:
+                items: list[mknode.MkNode] = []
+            case str():
+                items = [mktext.MkText(content)]
+            case mknode.MkNode():
+                items = [content]
+            case list():
+                items = content
+            case _:
+                raise TypeError(content)
+        super().__init__(items=items, **kwargs)
         self.title = title
         self.select = select
         self.attrs = attrs
