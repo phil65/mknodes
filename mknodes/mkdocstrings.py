@@ -24,6 +24,8 @@ class MkDocStrings(mknode.MkNode):
         self,
         obj: types.ModuleType
         | str
+        | tuple[str, ...]
+        | list[str]
         | os.PathLike
         | type
         | types.FunctionType
