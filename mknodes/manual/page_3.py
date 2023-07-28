@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 import pprint
 
 import mknodes
@@ -16,9 +15,7 @@ def create_internals_section(root_nav: mknodes.MkNav):
 
     overview = internals_nav.add_index_page("Overview", hide_toc=True)
     overview += INTRO_TEXT
-
-    # we are here right now.
-    overview.add_code(inspect.getsource(create_internals_section))
+    overview += mknodes.MkCode.for_object(create_internals_section)
 
     # the "Tree" section in the left sidebar shows what we have done up to now.
     # we create a new page and add a formatted represenation of our Tree.

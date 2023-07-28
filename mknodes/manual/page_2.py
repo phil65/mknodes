@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import inspect
-
 import mknodes
 
 
@@ -15,9 +13,7 @@ def create_documentation_section(root_nav: mknodes.MkNav):
 
     overview = doc_section.add_index_page("Overview", hide_toc=True)
     overview += mknodes.MkText(INTRO_TEXT)
-
-    # we are here right now.
-    overview.add_code(inspect.getsource(create_documentation_section))
+    overview += mknodes.MkCode.for_object(create_documentation_section)
 
     # lets create the complete documentation for our module.
     # Each Documentation section can have global filters for what it should include.

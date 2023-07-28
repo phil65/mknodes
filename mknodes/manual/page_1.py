@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import inspect
-
 import mknodes
 
 from mknodes.utils import classhelpers, helpers
@@ -25,7 +23,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     overview = home_nav.add_index_page("Overview", hide_toc=True)
 
     # this here is what you are reading right now.
-    overview.add_code(inspect.getsource(create_nodes_section))
+    overview += mknodes.MkCode.for_object(create_nodes_section)
     nodes_nav = home_nav.add_nav("Nodes")
 
     # for convenience, we can add strings directly to pages.
@@ -43,7 +41,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
 
 def create_page_for_class(nav: mknodes.MkNav, kls: type):
     subpage = nav.add_page(kls.__name__)
-    subpage.add_code(inspect.getsource(create_page_for_class))
+    subpage += mknodes.MkCode.for_object(create_page_for_class)
     if hasattr(kls, "examples"):
         subpage += mknodes.MkCode.for_object(
             kls.examples,
@@ -69,7 +67,7 @@ def create_subclass_page(nav: mknodes.MkNav):
     # Lets take a look at the relations of the included nodes.
     # It`s easy to show different diagrams for classes.
     subcls_page = nav.add_page("Subclass tree", hide_toc=True)
-    subcls_page.add_code(inspect.getsource(create_subclass_page))
+    subcls_page += mknodes.MkCode.for_object(create_subclass_page)
     subcls_page += mknodes.MkClassDiagram(
         mknodes.MkNode,
         mode="subclass_tree",
