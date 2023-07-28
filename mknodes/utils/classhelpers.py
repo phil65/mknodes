@@ -112,6 +112,20 @@ def to_module_parts(  # type: ignore
             raise TypeError(module)
 
 
+def to_dotted_path(obj: Sequence[str] | str | types.ModuleType | type) -> str:
+    match obj:
+        case (str(), *_):
+            return ".".join(obj)
+        case str():
+            return obj
+        case types.ModuleType():
+            return obj.__name__
+        case type():
+            return f"{obj.__module__}.{obj.__qualname__}"
+        case _:
+            raise TypeError(obj)
+
+
 def iter_classes(
     module: types.ModuleType | str | tuple[str, ...],
     *,
