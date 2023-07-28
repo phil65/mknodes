@@ -69,6 +69,7 @@ class MkCode(mktext.MkText):
         *,
         dedent: bool = True,
         extract_body: bool = False,
+        title: str | None = None,
         header: str = "",
     ) -> Self:
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
@@ -79,7 +80,13 @@ class MkCode(mktext.MkText):
         else:
             code = inspect.getsource(obj)
         code = textwrap.dedent(code) if dedent else code
-        return cls(code=code, header=header)
+        if title is not None:
+            code_title = title
+        elif isinstance(obj, types.TracebackType | types.FrameType | types.CodeType):
+            code_title = ""
+        else:
+            code_title = obj.__name__
+        return cls(code=code, header=header, title=code_title)
 
 
 if __name__ == "__main__":
