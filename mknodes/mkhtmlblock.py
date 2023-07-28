@@ -19,7 +19,7 @@ class MkHtmlBlock(mkblock.MkBlock):
         attributes: dict[str, str | bool] | None = None,
         **kwargs,
     ):
-        super().__init__(name="html", argument="div", content=content)
+        super().__init__(name="html", argument="div", content=content, **kwargs)
 
     def _to_markdown(self) -> str:
         block_limiter = "///"
