@@ -19,9 +19,13 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
     def __init__(self):
         self.inv_files: list[inventory.Inventory] = []
 
-    def add_inv_file(self, path: str | os.PathLike):
+    def add_inv_file(
+        self,
+        path: str | os.PathLike,
+        domains: list[str] | None = None,
+    ):
         with pathlib.Path(path).open("rb") as file:
-            inv = inventory.Inventory.parse_sphinx(file)
+            inv = inventory.Inventory.parse_sphinx(file, domain_filter=domains)
         self.inv_files.append(inv)
 
     def __getitem__(self, name: str | type | types.FunctionType | types.MethodType):
