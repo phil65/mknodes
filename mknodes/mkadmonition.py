@@ -6,6 +6,7 @@ import textwrap
 from typing import Literal
 
 from mknodes import mktext
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,9 @@ class MkAdmonition(mktext.MkText):
         self.typ = typ
         self.title = title
         self.collapsible = collapsible
+
+    def __repr__(self):
+        return helpers.get_repr(self, text=self.text, typ=self.typ, title=self.title)
 
     def _to_markdown(self) -> str:
         if not self.text:
