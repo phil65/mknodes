@@ -216,7 +216,8 @@ def get_deprecated_message(obj) -> str | None:
 
 
 def get_first_doc_line(obj, escape: bool = False, fallback: str = "") -> str:
-    doc = obj.__doc__.split("\n")[0] if isinstance(obj.__doc__, str) else fallback
+    docstrings = inspect.getdoc(obj)
+    doc = docstrings.split("\n")[0] if isinstance(docstrings, str) else fallback
     if escape:
         doc = escaped(doc)
     return doc
