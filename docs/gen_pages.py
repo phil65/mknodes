@@ -35,9 +35,7 @@ page.add_header(HEADER, level=3)
 admonition = mknodes.MkAdmonition(INFO, typ="info", title="Built with MkNodes")
 
 page += admonition  # (2)
-page += mknodes.MkCode(
-    pathlib.Path(__file__).read_text()
-)  # this is what youre lookin at.
+page += mknodes.MkCode(pathlib.Path(__file__).read_text())  # this is what you´re seeing.
 page += annotations
 page += FOOTER  # this is how the resulting Markup looks like: (3)
 
