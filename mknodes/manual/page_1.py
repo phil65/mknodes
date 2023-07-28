@@ -34,8 +34,8 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     # let`s take a look at some of the mentioned Markup nodes.
     # Some of them have a `examples` classmethod which yields some example signatures
     #  to show the functionality.
-    for kls in classhelpers.get_subclasses(mknodes.MkNode):
-        # get_subclasses just calls __subclasses__ recursively.
+    for kls in classhelpers.iter_subclasses(mknodes.MkNode):
+        # iter_subclasses just calls __subclasses__ recursively.
         create_page_for_class(nodes_nav, kls)
 
 
