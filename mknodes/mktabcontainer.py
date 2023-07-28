@@ -42,7 +42,7 @@ class MkTabContainer(mkcontainer.MkContainer):
                 items[pos].select = True
         super().__init__(items=items, header=header, **kwargs)
 
-    def __getitem__(self, item: int | str):
+    def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkBlockTab:
         match item:
             case int():
                 return self.items[item]
@@ -88,10 +88,6 @@ class MkTabContainer(mkcontainer.MkContainer):
     def to_dict(self):
         return {tab.title: str(tab) for tab in self.items}
 
-    @staticmethod
-    def examples():
-        yield dict(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-
     def _to_markdown(self) -> str:
         return "\n".join(str(i) for i in self.items)
 
@@ -99,16 +95,37 @@ class MkTabContainer(mkcontainer.MkContainer):
 class MkTabbed(MkTabContainer):
     """pymdownx-based Tab block."""
 
+    items: list[mktabs.MkTab]
     REQUIRED_EXTENSIONS = "pymdownx.tabbed"
     Tab = mktabs.MkTab
 
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
 
-class MkTabBlock(MkTabContainer):
+        # this node is basically a container and manager for MkTabs nodes.
+        node = MkTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+
+
+class MkBlockTabbed(MkTabContainer):
     """New blocks-based Tab block."""
 
     items: list[mktabs.MkBlockTab]
     REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
     Tab = mktabs.MkBlockTab
+
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        # this one is basically the same as MkTabbed,
+        # but based on new pymdownx block syntax.
+        # i think it is not supported by Material for MkDocs yet.
+        node = MkBlockTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _to_markdown(self) -> str:
         if not self.items:
@@ -119,5 +136,5 @@ class MkTabBlock(MkTabContainer):
 
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = MkTabBlock(tabs)
+    tabblock = MkBlockTabbed(tabs)
     print(tabblock)

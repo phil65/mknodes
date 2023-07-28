@@ -13,7 +13,7 @@ from .mkbinaryimage import MkBinaryImage
 from .mklist import MkList
 from .mkdiagram import MkDiagram
 from .mktable import MkTable
-from .mktabcontainer import MkTabBlock, MkTabbed
+from .mktabcontainer import MkBlockTabbed, MkTabbed
 from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
 from .mkannotations import MkAnnotations
@@ -59,7 +59,7 @@ __all__ = [
     "MkModuleTable",
     "MkAnnotations",
     "MkDoc",
-    "MkTabBlock",
+    "MkBlockTabbed",
     "MkTabbed",
     "MkSourceAndResult",
     "MkSnippet",
