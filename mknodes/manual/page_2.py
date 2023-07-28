@@ -28,12 +28,12 @@ def create_documentation_section(root_nav: mknodes.MkNav):
     # inheritance graph. It`s also possible to build custom pages of course.
     mknodes_docs.collect_classes(recursive=True)
 
-    # Not enough documentation for your taste? Let`s document random stuff.
-    # What about the std library?
-    std_lib_nav = doc_section.add_nav("std_library")
-    for stdlib_mod in ["pathlib", "inspect", "logging"]:
-        docs = std_lib_nav.add_doc(module=stdlib_mod)
-        docs.collect_classes(recursive=True)
+    # There is also an extension available for this module which offers tools and
+    # new nodes based on PySide6 / PyQt6. We can add its documentation easily:
+    from prettyqt import prettyqtmarkdown
+
+    addon_docs = doc_section.add_doc(module=prettyqtmarkdown, flatten_nav=True)
+    addon_docs.collect_classes(recursive=True)
 
     overview.add_admonition(text="That was easy, right?")
 

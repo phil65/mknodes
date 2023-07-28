@@ -31,6 +31,8 @@ dependencies = [
     "mkdocs-coverage",
     "pygments",
     "typing_extensions",
+    "prettyqt",
+    "PySide6",
 ]
 
 [tool.hatch.envs.default.scripts]
