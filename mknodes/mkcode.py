@@ -48,6 +48,8 @@ class MkCode(mktext.MkText):
 
     def _to_markdown(self) -> str:
         title = f" title={self.title!r}" if self.title else ""
+        if self.highlight_lines:
+            title += ' hl_lines="' + " ".join(str(i) for i in self.highlight_lines) + '"'
         return f"``` {self.language}{title}\n{self.text}\n```"
 
     @staticmethod
