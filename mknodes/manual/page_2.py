@@ -10,14 +10,14 @@ This code will show how to build a simple documentation section.
 """
 
 
-def create_page_2(root_nav: mknodes.MkNav):
+def create_documentation_section(root_nav: mknodes.MkNav):
     doc_section = root_nav.add_nav("Documentation")
 
     overview = doc_section.add_index_page("Overview", hide_toc=True)
     overview += mknodes.MkText(INTRO_TEXT)
 
     # we are here right now.
-    overview.add_code(inspect.getsource(create_page_2))
+    overview.add_code(inspect.getsource(create_documentation_section))
 
     # lets create the complete documentation for our module.
     # Each Documentation section can have global filters for what it should include.
@@ -44,5 +44,5 @@ def create_page_2(root_nav: mknodes.MkNav):
 
 if __name__ == "__main__":
     nav = mknodes.MkNav()
-    create_page_2(nav)
+    create_documentation_section(nav)
     print(nav.children[0])

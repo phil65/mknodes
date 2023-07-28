@@ -19,9 +19,9 @@ annotations[1] = "We will use annotations to explain things a bit."  # (1)
 root_nav = mknodes.MkNav()
 
 # now we will create the nav section and its pages one by one.
-manual.create_page_1(root_nav)
-manual.create_page_2(root_nav)
-manual.create_page_3(root_nav)
+manual.create_nodes_section(root_nav)
+manual.create_documentation_section(root_nav)
+manual.create_internals_section(root_nav)
 # Each function here adds another Menu item to the root nav. We will get there later.
 # This is the resulting root nav: (3)
 
