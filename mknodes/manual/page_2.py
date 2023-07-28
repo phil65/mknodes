@@ -30,10 +30,10 @@ def create_documentation_section(root_nav: mknodes.MkNav):
 
     # There is also an extension available for this module which offers tools and
     # new nodes based on PySide6 / PyQt6. We can add its documentation easily:
-    from prettyqt import prettyqtmarkdown
+    # from prettyqt import prettyqtmarkdown
 
-    addon_docs = doc_section.add_doc(module=prettyqtmarkdown, flatten_nav=True)
-    addon_docs.collect_classes(recursive=True)
+    # addon_docs = doc_section.add_doc(module=prettyqtmarkdown, flatten_nav=True)
+    # addon_docs.collect_classes(recursive=True)
 
     overview.add_admonition(text="That was easy, right?")
 

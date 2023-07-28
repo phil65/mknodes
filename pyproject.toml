@@ -31,8 +31,8 @@ dependencies = [
     "mkdocs-coverage",
     "pygments",
     "typing_extensions",
-    "prettyqt",
-    "PySide6",
+    # "prettyqt",
+    # "PySide6",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -42,12 +42,12 @@ test-cov-html = "pytest --cov-report=html"
 lint = [
   "black . --preview",
   "ruff --fix .",
-  # "mypy mknodes/",
+  "mypy mknodes/",
 ]
 lint-check = [
   "black --check . --preview",
   "ruff .",
-  # "mypy mknodes/",
+  "mypy mknodes/",
 ]
 docs-serve = "hatch run mkdocs serve"
 docs-build = "hatch run mkdocs build"
