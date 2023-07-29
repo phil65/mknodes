@@ -236,15 +236,19 @@ class MkNav(mknode.MkNode):
         lines = text.split("\n")
         for i, line in enumerate(lines):
             if match := re.match(SECTION_AND_FILE_REGEX, line):
-                nav[match[1]] = mkpage.MkPage.from_file(match[2])
+                page = mkpage.MkPage.from_file(match[2])
+                page.parent_item = nav
+                nav[match[1]] = page
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
+                subnav.parent_item = nav
                 nav[match[1]] = subnav
             elif match := re.match(SECTION_REGEX, line):
                 next_lines = lines[i + 1 :]
                 indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
                 unindented = (j[4:] for j in indented)
                 subnav = MkNav.from_text("\n".join(unindented), section=match[1])
+                subnav.parent_item = nav
                 nav[match[1]] = subnav
         return nav
 
@@ -257,7 +261,7 @@ class MkNav(mknode.MkNode):
                 subnav = cls.from_folder(folder / path.parts[-1], parent=nav)
                 nav._register(subnav)
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
-                page = mkpage.MkPage(path.relative_to(folder))
+                page = mkpage.MkPage(path.relative_to(folder), parent=nav)
                 page += path.read_text()
                 nav._register(page)
         return nav
