@@ -21,6 +21,7 @@ from .mkshields import MkShields
 from .mkpage import MkPage
 from .mkpageinclude import MkPageInclude
 from .mkinstallguide import MkInstallGuide
+from .mkchangelog import MkChangelog
 
 from .classnodes.mkclassdiagram import MkClassDiagram
 from .classnodes.mkclasstable import MkClassTable
@@ -65,6 +66,7 @@ __all__ = [
     "MkPageInclude",
     "MkCritic",
     "MkInstallGuide",
+    "MkChangelog",
 ]
 
 __version__ = "0.9.0"

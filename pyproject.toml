@@ -23,6 +23,7 @@ dependencies = [
     "mkdocs-literate-nav",
     # "mkdocs-include-markdown-plugin",
     # "mkdocs-autorefs",
+    "pyreadline3",
     "mkdocs-glightbox",
     "mkdocs-section-index",
     "mkdocs-gen-files",
@@ -90,6 +91,7 @@ requires-python = ">=3.10"
 dependencies = [
     "typing_extensions",
     "mkdocs-gen-files",
+    "git-changelog",
     "mkdocs",
     "PyYAML >=5.1",
 ]
