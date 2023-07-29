@@ -59,8 +59,8 @@ class MkModulePage(mkpage.MkPage):
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _build(self):
-        if doc := inspect.getdoc(self.module):
-            self.append(doc)
+        if doc := self.module.__doc__:
+            self.append(inspect.cleandoc(doc))
         if self.docstrings:
             item = mkdocstrings.MkDocStrings(self.module)
             self.append(item)

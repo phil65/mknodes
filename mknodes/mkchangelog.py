@@ -4,7 +4,6 @@ import contextlib
 import io
 import logging
 import os
-import subprocess
 
 from typing import Literal
 
@@ -35,14 +34,6 @@ class MkChangelog(mknode.MkNode):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        if repository is None:
-            cmd = ["git", "rev-parse", "--show-toplevel"]
-            repository = (
-                subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                .communicate()[0]
-                .rstrip()
-                .decode()
-            )
         self.repository = repository
         self.convention = convention
         self.template = template
@@ -53,7 +44,7 @@ class MkChangelog(mknode.MkNode):
     def _to_markdown(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):
             _changelog, text = cli.build_and_render(
-                repository=str(self.repository),
+                repository=str(self.repository) if self.repository else None,
                 template=self.template,
                 convention=self.convention,
                 parse_refs=self.parse_refs,
@@ -72,5 +63,5 @@ class MkChangelog(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    installguide = MkChangelog()
-    print(installguide)
+    changelog = MkChangelog()
+    print(changelog)
