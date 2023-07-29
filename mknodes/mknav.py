@@ -105,7 +105,7 @@ class MkNav(mknode.MkNode):
 
     def add_index_page(
         self,
-        title: str,
+        title: str | None = None,
         **kwargs,
     ) -> mkpage.MkPage:
         page = mkpage.MkPage(
@@ -114,7 +114,7 @@ class MkNav(mknode.MkNode):
             **kwargs,
         )
         self.index_page = page
-        self.index_title = title
+        self.index_title = title or self.section or "Overview"
         return page
 
     def virtual_files(self) -> dict[str, str]:
