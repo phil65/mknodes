@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+import itertools
 import logging
 import os
 import pathlib
@@ -22,6 +23,10 @@ if TYPE_CHECKING:
     from mknodes.classnodes import mkclasspage
 
 logger = logging.getLogger(__name__)
+
+SECTION_AND_FILE_REGEX = r"\* \[(.*)\]\((.*\.md)\)"
+SECTION_AND_FOLDER_REGEX = r"\* \[(.*)\]\((.*)\/\)"
+SECTION_REGEX = r"\* (.*)"
 
 
 class MkNav(mknode.MkNode):
@@ -230,21 +235,17 @@ class MkNav(mknode.MkNode):
         nav = cls(section)
         lines = text.split("\n")
         for i, line in enumerate(lines):
-            if match := re.match(r"\* \[(.*)\]\((.*\.md)\)", line):
+            if match := re.match(SECTION_AND_FILE_REGEX, line):
                 nav[match[1]] = mkpage.MkPage.from_file(match[2])
-            elif match := re.match(r"\* \[(.*)\]\((.*)\/\)", line):
+            elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
                 nav[match[1]] = subnav
-            elif match := re.match(r"\* (.*)", line):
-                subnav_lines = []
-                for subline in lines[i + 1 :]:
-                    if subline.startswith("    "):
-                        subnav_lines.append(subline[4:])
-                    else:
-                        break
-                subnav = MkNav.from_text("\n".join(subnav_lines), section=match[1])
-                title = match[1]
-                nav[title] = subnav
+            elif match := re.match(SECTION_REGEX, line):
+                next_lines = lines[i + 1 :]
+                indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
+                unindented = (j[4:] for j in indented)
+                subnav = MkNav.from_text("\n".join(unindented), section=match[1])
+                nav[match[1]] = subnav
         return nav
 
     @classmethod
