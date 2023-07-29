@@ -3,10 +3,12 @@ from __future__ import annotations
 from collections.abc import Mapping
 import logging
 import os
+import pathlib
 import types
 
 from typing import Any, Literal
 
+from typing_extensions import Self
 import yaml
 
 from mknodes import (
@@ -81,6 +83,13 @@ class MkPage(mkcontainer.MkContainer):
 
     def __str__(self):
         return self.to_markdown()
+
+    @classmethod
+    def from_file(cls, path: str | os.PathLike) -> Self:
+        path = pathlib.Path(path)
+        text = path.read_text()
+        node = mktext.MkText(text)
+        return cls(path=path.name, items=[node])
 
     def virtual_files(self) -> dict[str, str]:
         return {self.path: self.to_markdown()}
