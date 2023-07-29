@@ -17,7 +17,6 @@ from .mktabcontainer import MkBlockTabbed, MkTabbed
 from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
 from .mkannotations import MkAnnotations
-from .mksourceandresult import MkSourceAndResult
 from .mkshields import MkShields
 from .mkpage import MkPage
 from .mkpageinclude import MkPageInclude
@@ -61,7 +60,6 @@ __all__ = [
     "MkDoc",
     "MkBlockTabbed",
     "MkTabbed",
-    "MkSourceAndResult",
     "MkSnippet",
     "MkShields",
     "MkPageInclude",
