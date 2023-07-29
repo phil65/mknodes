@@ -13,7 +13,7 @@ import mkdocs_gen_files
 
 from typing_extensions import Self
 
-from mknodes import mknav, mknode, mkpage, mktext
+from mknodes import mknav, mknode, mkpage
 from mknodes.utils import helpers
 
 
@@ -231,15 +231,10 @@ class MkNav(mknode.MkNode):
         lines = text.split("\n")
         for i, line in enumerate(lines):
             if match := re.match(r"\* \[(.*)\]\((.*\.md)\)", line):
-                title = match[1]
-                file_path = pathlib.Path(match[2])
-                text = file_path.read_text()
-                node = mktext.MkText(text)
-                nav[title] = mkpage.MkPage(items=[node], path=file_path.name)
+                nav[match[1]] = mkpage.MkPage.from_file(match[2])
             elif match := re.match(r"\* \[(.*)\]\((.*)\/\)", line):
                 subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
-                title = match[1]
-                nav[title] = subnav
+                nav[match[1]] = subnav
             elif match := re.match(r"\* (.*)", line):
                 subnav_lines = []
                 for subline in lines[i + 1 :]:
