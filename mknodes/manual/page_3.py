@@ -13,7 +13,7 @@ The tree starts from the root nav down to the Markup elements.
 def create_internals_section(root_nav: mknodes.MkNav):
     internals_nav = root_nav.add_nav("Internals")
 
-    overview = internals_nav.add_index_page("Overview", hide_toc=True)
+    overview = internals_nav.add_index_page(hide_toc=True)
     overview += INTRO_TEXT
     overview += mknodes.MkCode.for_object(create_internals_section)
 

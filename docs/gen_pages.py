@@ -23,9 +23,9 @@ manual.create_internals_section(root_nav)
 # Each function here adds another Menu item to the root nav. We will get there later.
 # This is the resulting root nav: (3)
 
-# Let's begin with the start page. This is your root index.md file.
-# Index pages are meant to be section-index pages based on "mkdocs-section-index".
-page = root_nav.add_index_page("Overview", hide_toc=True, hide_nav=True)
+# Let's begin with the start page.
+# We will now create the root index.md file. That´s what youre lookin at right now.
+page = root_nav.add_index_page(hide_toc=True, hide_nav=True)
 
 # A page can contain MkNodes which represent Markdown text.
 # We can add them to the pages by using Page.add_xyz methods or by instanciating our
@@ -37,7 +37,13 @@ page += admonition  # (2)
 with open(__file__, "r") as file:
     page += mknodes.MkCode(file.read())  # this is what you are looking at right now.
 page += annotations
-page += FOOTER  # this is how the resulting Markup looks like: (3)
+page.add_admonition(text=FOOTER, typ="success")
+
+
+# Finally, a changelog cant hurt I think.
+changelog_page = root_nav.add_page("Changelog", hide_nav=True)
+changelog_page += mknodes.MkChangelog(repository=".")
+
 
 # nothing is written yet, so we can still modify the tree elements and set the
 # annotations here.

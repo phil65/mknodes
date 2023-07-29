@@ -11,7 +11,7 @@ This code will show how to build a simple documentation section.
 def create_documentation_section(root_nav: mknodes.MkNav):
     doc_section = root_nav.add_nav("Documentation")
 
-    overview = doc_section.add_index_page("Overview", hide_toc=True)
+    overview = doc_section.add_index_page(hide_toc=True)
     overview += mknodes.MkText(INTRO_TEXT)
     overview += mknodes.MkCode.for_object(create_documentation_section)
 
@@ -34,8 +34,6 @@ def create_documentation_section(root_nav: mknodes.MkNav):
 
     # addon_docs = doc_section.add_doc(module=prettyqtmarkdown, flatten_nav=True)
     # addon_docs.collect_classes(recursive=True)
-
-    overview.add_admonition(text="That was easy, right?")
 
 
 if __name__ == "__main__":

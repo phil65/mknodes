@@ -20,7 +20,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     # It`s all one big tree.
 
     home_nav = root_nav.add_nav("The nodes")
-    overview = home_nav.add_index_page("Overview", hide_toc=True)
+    overview = home_nav.add_index_page(hide_toc=True)
 
     # this here is what you are reading right now.
     overview += mknodes.MkCode.for_object(create_nodes_section)
