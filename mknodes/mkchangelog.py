@@ -4,6 +4,7 @@ import contextlib
 import io
 import logging
 import os
+import subprocess
 
 from typing import Literal
 
@@ -20,7 +21,7 @@ class MkChangelog(mknode.MkNode):
 
     def __init__(
         self,
-        repository: str | os.PathLike,
+        repository: str | os.PathLike | None = None,
         convention: Literal["angular", "atom"] = "angular",
         template: Literal["keepachangelog", "angular"] = "keepachangelog",
         parse_refs: bool = True,
@@ -29,6 +30,14 @@ class MkChangelog(mknode.MkNode):
         **kwargs,
     ):
         super().__init__(**kwargs)
+        if repository is None:
+            cmd = ["git", "rev-parse", "--show-toplevel"]
+            repository = (
+                subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                .communicate()[0]
+                .rstrip()
+                .decode()
+            )
         self.repository = repository
         self.convention = convention
         self.template = template
@@ -52,11 +61,11 @@ class MkChangelog(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        node = MkChangelog(repository=".")
+        node = MkChangelog()
         page += node
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 
 
 if __name__ == "__main__":
-    installguide = MkChangelog(repository=".")
+    installguide = MkChangelog()
     print(installguide)

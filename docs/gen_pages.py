@@ -42,7 +42,7 @@ page.add_admonition(text=FOOTER, typ="success")
 
 # Finally, a changelog cant hurt I think.
 changelog_page = root_nav.add_page("Changelog", hide_nav=True)
-changelog_page += mknodes.MkChangelog(repository=".")
+changelog_page += mknodes.MkChangelog()
 
 
 # nothing is written yet, so we can still modify the tree elements and set the
