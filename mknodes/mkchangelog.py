@@ -27,7 +27,7 @@ class MkChangelog(mknode.MkNode):
     def __init__(
         self,
         repository: str | os.PathLike | None = None,
-        convention: Literal["angular", "atom"] = "angular",
+        convention: Literal["basic", "angular", "atom", "conventional"] = "angular",
         template: Literal["keepachangelog", "angular"] = "keepachangelog",
         parse_refs: bool = True,
         parse_trailers: bool = True,
