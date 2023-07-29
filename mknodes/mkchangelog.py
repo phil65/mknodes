@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import logging
 import os
 
@@ -14,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkChangelog(mknode.MkNode):
-    """Git-based changelog (based on git-changelog)."""
+    """Git-based changelog (created by git-changelog)."""
 
     def __init__(
         self,
@@ -35,14 +37,15 @@ class MkChangelog(mknode.MkNode):
         self.sections = sections
 
     def _to_markdown(self) -> str:
-        _changelog, text = cli.build_and_render(
-            repository=self.repository,
-            template=self.template,
-            convention=self.convention,
-            parse_refs=self.parse_refs,
-            parse_trailers=self.parse_trailers,
-            sections=self.sections,
-        )
+        with contextlib.redirect_stdout(io.StringIO()):
+            _changelog, text = cli.build_and_render(
+                repository=self.repository,
+                template=self.template,
+                convention=self.convention,
+                parse_refs=self.parse_refs,
+                parse_trailers=self.parse_trailers,
+                sections=self.sections,
+            )
         return text
 
     @staticmethod
