@@ -17,7 +17,12 @@ logger = logging.getLogger(__name__)
 
 
 class MkChangelog(mknode.MkNode):
-    """Git-based changelog (created by git-changelog)."""
+    """Git-based changelog (created by git-changelog).
+
+    !!! note
+        For building a changelog with Github Actions, the actions/checkout@v3
+        action needs to have fetch-depth set to 0 (or some other value.)
+    """
 
     def __init__(
         self,
