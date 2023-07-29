@@ -38,7 +38,12 @@ def new_cd(x):
     os.chdir(d)
 
 
-def get_repr(_obj: Any, *args: Any, _shorten: bool = True, **kwargs: Any) -> str:
+def get_repr(
+    _obj: Any,
+    *args: Any,
+    _shorten: bool = True,
+    **kwargs: Any,
+) -> str:
     """Get a suitable __repr__ string for an object.
 
     Args:
@@ -62,7 +67,7 @@ def get_repr(_obj: Any, *args: Any, _shorten: bool = True, **kwargs: Any) -> str
 
 
 def escaped(text: str, entity_type: str | None = None) -> str:
-    """Helper function to escape telegram markup symbols.
+    """Helper function to escape markup.
 
     Args:
         text: The text.
@@ -111,6 +116,7 @@ def linked(identifier: str, title: str | None = None) -> str:
 
 def styled(
     text: str,
+    *,
     size: int | None = None,
     bold: bool = False,
     recursive: bool = False,
@@ -169,6 +175,7 @@ def label_for_class(klass: type) -> str:
 
 def to_html_list(
     ls: list[str],
+    *,
     shorten_after: int | None = None,
     make_link: bool = False,
 ) -> str:
@@ -215,8 +222,29 @@ def get_deprecated_message(obj) -> str | None:
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
-def get_first_doc_line(obj, escape: bool = False, fallback: str = "") -> str:
-    docstrings = inspect.getdoc(obj)
+def get_doc(
+    obj,
+    *,
+    escape: bool = False,
+    fallback: str = "",
+    from_base_classes: bool = False,
+) -> str:
+    if from_base_classes:
+        doc = inspect.getdoc(obj)
+    else:
+        doc = inspect.cleandoc(obj.__doc__) if obj.__doc__ else None
+    if not doc:
+        return fallback
+    return escaped(doc) if doc and escape else doc
+
+
+def get_first_doc_line(
+    obj,
+    *,
+    escape: bool = False,
+    fallback: str = "",
+) -> str:
+    docstrings = inspect.cleandoc(obj.__doc__) if obj.__doc__ else None
     doc = docstrings.split("\n")[0] if isinstance(docstrings, str) else fallback
     if escape:
         doc = escaped(doc)
