@@ -103,6 +103,11 @@ class MkNav(mknode.MkNode):
         self._register(navi)
         return navi
 
+    def __add__(self, other: MkNav | mkpage.MkPage):
+        other.parent_item = self
+        self._register(other)
+        return self
+
     def add_index_page(
         self,
         title: str | None = None,
