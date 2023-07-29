@@ -51,11 +51,6 @@ class MkNav(mknode.MkNode):
         # self.section = helpers.slugify(section) if section else None
         self.section = section
         self.filename = filename
-        self.path = (
-            pathlib.Path(section) / self.filename
-            if section
-            else pathlib.Path(self.filename)
-        ).as_posix()
         self.nav: dict[tuple | str | None, mknav.MkNav | mkpage.MkPage] = {}
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
@@ -78,6 +73,14 @@ class MkNav(mknode.MkNode):
 
     def __getitem__(self, index: tuple) -> mkpage.MkPage | MkNav:
         return self.nav[index]
+
+    @property
+    def path(self):
+        return (
+            pathlib.Path(self.section) / self.filename
+            if self.section
+            else pathlib.Path(self.filename)
+        ).as_posix()
 
     @property
     def navs(self):
