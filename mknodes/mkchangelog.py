@@ -39,7 +39,7 @@ class MkChangelog(mknode.MkNode):
     def _to_markdown(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):
             _changelog, text = cli.build_and_render(
-                repository=self.repository,
+                repository=str(self.repository),
                 template=self.template,
                 convention=self.convention,
                 parse_refs=self.parse_refs,
