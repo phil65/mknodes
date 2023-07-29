@@ -49,10 +49,14 @@ class MkModuleTable(mktable.MkTable):
     #     return helpers.get_repr(self, module=self.module)
 
     @staticmethod
-    def examples():
+    def create_example_page(page):
+        import mkdocstrings
+
         import mknodes
 
-        yield dict(module=mknodes)
+        node = MkModuleTable(module=mkdocstrings)
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
 
 if __name__ == "__main__":

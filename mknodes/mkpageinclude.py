@@ -38,10 +38,6 @@ class MkPageInclude(mknode.MkNode):
             case _:
                 raise TypeError(self.page)
 
-    @staticmethod
-    def examples():
-        yield dict(page=mkpage.MkPage(items=["test"]))
-
 
 if __name__ == "__main__":
     page = mkpage.MkPage(items=["test"])

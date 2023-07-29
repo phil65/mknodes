@@ -48,14 +48,23 @@ class MkClassTable(mktable.MkTable):
         return helpers.get_repr(self, klasses=self.klasses)
 
     @staticmethod
-    def examples():
-        from mknodes import mknav
+    def create_example_page(page):
+        import mknodes
 
-        yield dict(klasses=[mktable.MkTable, MkClassTable, mknav.MkNav])
-        yield dict(
-            klasses=[mktable.MkTable, MkClassTable, mknav.MkNav],
-            layout="extended",
+        node_1 = MkClassTable(
+            klasses=[mknodes.MkTable, MkClassTable, mknodes.MkNav],
+            layout="compact",
+            header="Compact layout",
         )
+        node_2 = MkClassTable(
+            klasses=[mknodes.MkTable, MkClassTable, mknodes.MkNav],
+            layout="extended",
+            header="Extended layout",
+        )
+        page += node_1
+        page += node_2
+        page += mknodes.MkCode(str(node_1), language="markdown", header="Markdown")
+        page += mknodes.MkCode(str(node_2), language="markdown")
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:
         return dict(

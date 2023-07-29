@@ -129,12 +129,16 @@ class MkShields(mknode.MkNode):
         return "".join(shield_strs)
 
     @staticmethod
-    def examples():
-        yield dict(
+    def create_example_page(page):
+        import mknodes
+
+        node = MkShields(
             shields=["version", "status", "codecov"],
             user="phil65",
             project="mknodes",
         )
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
 
 if __name__ == "__main__":
