@@ -33,8 +33,8 @@ class MkAdmonition(mkcontainer.MkContainer):
     def __init__(
         self,
         content: str | list | mknode.MkNode,
-        typ: AdmonitionTypeStr = "info",
         *,
+        typ: AdmonitionTypeStr = "info",
         title: str | None = None,
         collapsible: bool = False,
         expanded: bool = False,

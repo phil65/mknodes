@@ -144,8 +144,8 @@ class MkPage(mkcontainer.MkContainer):
     def add_admonition(
         self,
         text: str,
-        typ: mkadmonition.AdmonitionTypeStr = "info",
         *,
+        typ: mkadmonition.AdmonitionTypeStr = "info",
         title: str | None = None,
         collapsible: bool = False,
     ) -> mkadmonition.MkAdmonition:
