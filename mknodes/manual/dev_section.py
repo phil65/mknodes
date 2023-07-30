@@ -15,7 +15,7 @@ def create_development_section(root_nav: mknodes.MkNav):
     overview += mknodes.MkText(INTRO_TEXT)
     overview += mknodes.MkCode.for_object(create_development_section)
     changelog_page = dev_nav.add_page("Changelog")
-    changelog_page += mknodes.MkChangelog()
+    changelog_page += mknodes.MkChangelog()  # based on "git-changelog" package
     coc_page = dev_nav.add_page("Code of conduct")
     coc_page += mknodes.MkCodeOfConduct(contact_email="philipptemminghoff@gmail.com")
 
