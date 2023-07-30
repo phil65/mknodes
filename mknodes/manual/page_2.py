@@ -20,13 +20,14 @@ def create_documentation_section(root_nav: mknodes.MkNav):
     # In this case, we only want to document stuff which is listed in "__all__".
     mknodes_docs = doc_section.add_doc(module=mknodes, filter_by___all__=True)
 
-    # the Documentation Nav hast some helper methods to iterate through the submodules
-    # / classes of a module. We can also pass a predicate to filter specific subclasses,
-    # or do other fancy stuff to generate a customized, automated documentation.
-    # now we add some pre-defined pages ("MkClassPages") to our docs.
-    # they contain MkDocStrings, a table for eventual subclasses and an
-    # inheritance graph. It`s also possible to build custom pages of course.
+    # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)
+
+    # We could also filter specific subclasses,
+    # or do other fancy stuff to generate a customized, automated documentation
+    # like changing the default class page ("MkClassPage") of our docs,
+    # (The default contains MkDocStrings, a table for base classes,  eventual subclasses
+    # and an inheritance graph.)
 
     # There is also an extension available for this module which offers tools and
     # new nodes based on PySide6 / PyQt6. We can add its documentation easily:

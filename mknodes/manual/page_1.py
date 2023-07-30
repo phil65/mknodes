@@ -14,8 +14,8 @@ the MkClassDiagram Node.
 
 
 def create_nodes_section(root_nav: mknodes.MkNav):
-    # Basic structure: Theres one root nav, navs can contain pages and other navs,
-    # pages contain more atomic markup nodes, like text, tables, and diagrams.
+    # Basic structure: Theres one root MkNav, MkNavs can contain MkPages and other MkNavs,
+    # MkPages contain more atomic MkNodes, like MkText, MkTable, and MkDiagrams.
     # These markup nodes in some cases can contain other Markup nodes.
     # It`s all one big tree.
 
@@ -27,22 +27,24 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     nodes_nav = home_nav.add_nav("Nodes")
 
     # for convenience, we can add strings directly to pages.
-    # they will get converted to a mknodes.Text node.
+    # they will get converted to a MkText node automatically.
     overview += INTRO_TEXT
     create_subclass_page(home_nav)
 
     # let`s take a look at some of the mentioned Markup nodes.
-    # Some of them have a `examples` classmethod which yields some example signatures
-    #  to show the functionality.
+    # Some of them have a `create_example_page` classmethod
+    # to demonstate how they should be used.
     for kls in classhelpers.iter_subclasses(mknodes.MkNode):
         # iter_subclasses just calls __subclasses__ recursively.
         if "create_example_page" in kls.__dict__:
             subpage = nodes_nav.add_page(kls.__name__)
+            # Each example page will begin by displaying the code used to create the page.
             subpage += "## Code for this page"
             subpage += mknodes.MkCode.for_object(
                 kls.create_example_page,
                 extract_body=True,
             )
+            # and afterwards, we show what was added to the page.
             subpage += "## Output"
             kls.create_example_page(subpage)
 

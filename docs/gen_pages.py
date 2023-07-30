@@ -16,12 +16,14 @@ annotations[1] = "We will use annotations to explain things a bit."  # (1)
 # SUMMARY.md and is the root of the tree we are building.
 root_nav = mknodes.MkNav()
 
-# now we will create the nav section and its pages one by one.
+# now we will create the nav sections and its pages one by one.
+# For demonstration purposes, this process is split up into some functions.
 manual.create_nodes_section(root_nav)
 manual.create_documentation_section(root_nav)
 manual.create_internals_section(root_nav)
+manual.create_development_section(root_nav)
 # Each function here adds another Menu item to the root nav. We will get there later.
-# This is the resulting root nav: (3)
+annotations[2] = str(root_nav)  # This is the resulting root nav: (2)
 
 # Let's begin with the start page.
 # We will now create the root index.md file. That´s what youre lookin at right now.
@@ -33,24 +35,17 @@ page = root_nav.add_index_page(hide_toc=True, hide_nav=True)
 page.add_header(HEADER, level=3)
 admonition = mknodes.MkAdmonition(INFO, typ="info", title="Built with MkNodes")
 
-page += admonition  # (2)
-with open(__file__, "r") as file:
-    page += mknodes.MkCode(file.read())  # this is what you are looking at right now.
-page += annotations
-page.add_admonition(text=FOOTER, typ="success")
+page += admonition
+annotations[3] = admonition  # (3)
 
-
-# Finally, a changelog cant hurt I think.
-changelog_page = root_nav.add_page("Changelog", hide_nav=True)
-changelog_page += mknodes.MkChangelog()
-
+page += mknodes.MkCode.for_file(__file__)  # this is what you are looking at right now.
+page += annotations  # here we add the (invisible) annotations block to the page.
 
 # nothing is written yet, so we can still modify the tree elements and set the
 # annotations here.
+annotations[4] = mknodes.MkHtmlBlock(str(annotations))  # annotations in raw text: (4)
 
-annotations[2] = admonition
-annotations[3] = str(root_nav)
-annotations[4] = mknodes.MkHtmlBlock(str(annotations))  # in raw text: (4)
+page.add_admonition(text=FOOTER, typ="success")
 
 # This call will write everything we have done to a virtual folder
 # (powered by mkdocs-gen-files)
