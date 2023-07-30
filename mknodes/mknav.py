@@ -74,6 +74,9 @@ class MkNav(mknode.MkNode):
     def __getitem__(self, index: tuple) -> mkpage.MkPage | MkNav:
         return self.nav[index]
 
+    def __len__(self):
+        return len(self.nav) + (1 if self.index_page else 0)
+
     @property
     def path(self) -> str:
         return (
