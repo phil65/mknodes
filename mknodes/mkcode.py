@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Callable
 import inspect
 import logging
+import os
+import pathlib
 import textwrap
 import types
 
@@ -60,6 +62,11 @@ class MkCode(mktext.MkText):
         page += MkCode(language="js", code="var z = x + y;", title="JavaScript")
         page += "Highlighting lines is also possible"
         page += MkCode(code="1\n2\n3\n4", highlight_lines=[1, 3])
+
+    @classmethod
+    def for_file(cls, path: str | os.PathLike, language: str = "py"):
+        with pathlib.Path(path).open() as file:
+            return cls(file.read(), language=language)
 
     @classmethod
     def for_object(
