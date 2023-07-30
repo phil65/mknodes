@@ -25,12 +25,12 @@ class MkChangelog(mknode.MkNode):
 
     def __init__(
         self,
-        repository: str | os.PathLike | None = None,
         convention: Literal["basic", "angular", "atom", "conventional"] = "angular",
         template: Literal["keepachangelog", "angular"] = "keepachangelog",
         parse_refs: bool = True,
         parse_trailers: bool = True,
         sections: list[str] | None = None,
+        repository: str | os.PathLike = ".",
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -44,7 +44,7 @@ class MkChangelog(mknode.MkNode):
     def _to_markdown(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):
             _changelog, text = cli.build_and_render(
-                repository=str(self.repository) if self.repository else None,
+                repository=str(self.repository),
                 template=self.template,
                 convention=self.convention,
                 parse_refs=self.parse_refs,
