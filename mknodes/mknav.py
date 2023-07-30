@@ -225,7 +225,11 @@ class MkNav(mknode.MkNode):
                 self.nav[node.path.removesuffix(".md")] = node
 
     @classmethod
-    def from_file(cls, path: str | os.PathLike, section: str | None) -> Self:
+    def from_file(
+        cls,
+        path: str | os.PathLike,
+        section: str | None = None,
+    ) -> Self:
         path = pathlib.Path(path)
         content = path.read_text()
         with helpers.new_cd(path.parent):
@@ -234,7 +238,11 @@ class MkNav(mknode.MkNode):
         # content = [line.lstrip() for line in content.split("\n")]
 
     @classmethod
-    def from_text(cls, text: str, section: str | None) -> Self:
+    def from_text(
+        cls,
+        text: str,
+        section: str | None = None,
+    ) -> Self:
         nav = cls(section)
         lines = text.split("\n")
         for i, line in enumerate(lines):
@@ -256,7 +264,11 @@ class MkNav(mknode.MkNode):
         return nav
 
     @classmethod
-    def from_folder(cls, folder: str | os.PathLike, parent=None) -> Self:
+    def from_folder(
+        cls,
+        folder: str | os.PathLike,
+        parent: MkNav | None = None,
+    ) -> Self:
         folder = pathlib.Path(folder)
         nav = cls(folder.name if parent else None, parent=parent)
         for path in folder.iterdir():
