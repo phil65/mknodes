@@ -70,7 +70,7 @@ class MkClassTable(mktable.MkTable):
         return dict(
             Class=helpers.link_for_class(kls),
             Module=kls.__module__,
-            Description=helpers.get_first_doc_line(kls),
+            Description=helpers.get_doc(kls, only_summary=True),
         )
 
     def extended_row_for_klass(
@@ -96,7 +96,7 @@ class MkClassTable(mktable.MkTable):
         parents = kls.__bases__
         parent_links = [helpers.link_for_class(parent) for parent in parents]
         parent_str = helpers.to_html_list(parent_links, shorten_after=shorten_lists_after)
-        desc = helpers.get_first_doc_line(kls, escape=True)
+        desc = helpers.get_doc(kls, escape=True, only_summary=True)
         name = helpers.link_for_class(kls, size=4, bold=True)
         module = helpers.styled(kls.__module__, size=1, recursive=True)
         return dict(

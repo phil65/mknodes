@@ -228,6 +228,7 @@ def get_doc(
     escape: bool = False,
     fallback: str = "",
     from_base_classes: bool = False,
+    only_summary: bool = False,
 ) -> str:
     if from_base_classes:
         doc = inspect.getdoc(obj)
@@ -235,20 +236,9 @@ def get_doc(
         doc = inspect.cleandoc(obj.__doc__) if obj.__doc__ else None
     if not doc:
         return fallback
+    if only_summary:
+        doc = doc.split("\n")[0]
     return escaped(doc) if doc and escape else doc
-
-
-def get_first_doc_line(
-    obj,
-    *,
-    escape: bool = False,
-    fallback: str = "",
-) -> str:
-    docstrings = inspect.cleandoc(obj.__doc__) if obj.__doc__ else None
-    doc = docstrings.split("\n")[0] if isinstance(docstrings, str) else fallback
-    if escape:
-        doc = escaped(doc)
-    return doc
 
 
 if __name__ == "__main__":

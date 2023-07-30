@@ -34,9 +34,10 @@ class MkModuleTable(mktable.MkTable):
         return dict(
             Name=module.__name__,
             # helpers.link_for_class(submod, size=4, bold=True),
-            Information=helpers.get_first_doc_line(
+            Information=helpers.get_doc(
                 module,
                 fallback="*No docstrings defined.*",
+                only_summary=True,
             ),
             Members=(
                 helpers.to_html_list(module.__all__, make_link=True)
