@@ -22,7 +22,7 @@ from .mkpage import MkPage
 from .mkpageinclude import MkPageInclude
 from .mkinstallguide import MkInstallGuide
 from .mkchangelog import MkChangelog
-
+from .mkiframe import MkIFrame
 from .classnodes.mkclassdiagram import MkClassDiagram
 from .classnodes.mkclasstable import MkClassTable
 from .classnodes.mkclasspage import MkClassPage
@@ -67,6 +67,7 @@ __all__ = [
     "MkCritic",
     "MkInstallGuide",
     "MkChangelog",
+    "MkIFrame",
 ]
 
 __version__ = "0.11.1"
