@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import inspect
 import logging
 import os
-import pathlib
 import types
 
 from mknodes import mkdocstrings, mkpage
@@ -34,7 +32,6 @@ class MkModulePage(mkpage.MkPage):
         show_class_table: bool = True,
         **kwargs,
     ):
-        path = pathlib.Path(path)
         super().__init__(path=path, **kwargs)
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
@@ -59,8 +56,8 @@ class MkModulePage(mkpage.MkPage):
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _build(self):
-        if doc := self.module.__doc__:
-            self.append(inspect.cleandoc(doc))
+        if doc := helpers.get_doc(self.module):
+            self.append(doc)
         if self.docstrings:
             item = mkdocstrings.MkDocStrings(self.module)
             self.append(item)
