@@ -24,7 +24,7 @@ class MkBlock(mkcontainer.MkContainer):
             case None:
                 items: list[mknode.MkNode] = []
             case str():
-                items = [mktext.MkText(content)]
+                items = [mktext.MkText(content)] if content else []
             case mknode.MkNode():
                 items = [content]
             case list():
