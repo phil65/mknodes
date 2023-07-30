@@ -66,16 +66,28 @@ class MkNav(mknode.MkNode):
             filename=self.filename,
         )
 
-    def __setitem__(self, item: tuple | str, node: mkpage.MkPage | MkNav):
-        if isinstance(item, str):
-            item = tuple(item.split("."))
-        self.nav[item] = node
+    def __setitem__(self, index: tuple | str, node: mkpage.MkPage | MkNav):
+        if isinstance(index, str):
+            index = tuple(index.split("."))
+        self.nav[index] = node
 
-    def __getitem__(self, index: tuple) -> mkpage.MkPage | MkNav:
+    def __getitem__(self, index: tuple | str) -> mkpage.MkPage | MkNav:
+        if isinstance(index, str):
+            index = tuple(index.split("."))
         return self.nav[index]
+
+    def __delitem__(self, index: tuple | str):
+        if isinstance(index, str):
+            index = tuple(index.split("."))
+        del self.nav[index]
 
     def __len__(self):
         return len(self.nav) + (1 if self.index_page else 0)
+
+    def __iter__(self):
+        if self.index_page:
+            yield self.index_page
+        yield from self.nav.values()
 
     @property
     def path(self) -> str:
