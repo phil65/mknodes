@@ -75,7 +75,7 @@ class MkNav(mknode.MkNode):
         return self.nav[index]
 
     @property
-    def path(self):
+    def path(self) -> str:
         return (
             pathlib.Path(self.section) / self.filename
             if self.section
@@ -83,11 +83,11 @@ class MkNav(mknode.MkNode):
         ).as_posix()
 
     @property
-    def navs(self):
+    def navs(self) -> list[MkNav]:
         return [node for node in self.nav.values() if isinstance(node, MkNav)]
 
     @property
-    def pages(self):
+    def pages(self) -> list[mkpage.MkPage]:
         return [node for node in self.nav.values() if isinstance(node, mkpage.MkPage)]
 
     @property
@@ -217,7 +217,7 @@ class MkNav(mknode.MkNode):
         self._register(nav)
         return nav
 
-    def _register(self, node):
+    def _register(self, node: MkNav | mkpage.MkPage):
         match node:
             case MkNav():
                 self.nav[(node.section,)] = node
@@ -225,7 +225,7 @@ class MkNav(mknode.MkNode):
                 self.nav[node.path.removesuffix(".md")] = node
 
     @classmethod
-    def from_file(cls, path: str | os.PathLike, section: str | None):
+    def from_file(cls, path: str | os.PathLike, section: str | None) -> Self:
         path = pathlib.Path(path)
         content = path.read_text()
         with helpers.new_cd(path.parent):
@@ -234,7 +234,7 @@ class MkNav(mknode.MkNode):
         # content = [line.lstrip() for line in content.split("\n")]
 
     @classmethod
-    def from_text(cls, text: str, section: str | None):
+    def from_text(cls, text: str, section: str | None) -> Self:
         nav = cls(section)
         lines = text.split("\n")
         for i, line in enumerate(lines):
