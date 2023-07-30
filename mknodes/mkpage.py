@@ -158,7 +158,7 @@ class MkPage(mkcontainer.MkContainer):
             collapsible: whether the box should be collapsible by the user.
         """
         item = mkadmonition.MkAdmonition(
-            text=text,
+            content=text,
             typ=typ,
             title=title,
             collapsible=collapsible,

@@ -5,7 +5,7 @@ import textwrap
 
 from typing import Literal
 
-from mknodes import mktext
+from mknodes import mkcontainer, mknode, mktext
 from mknodes.utils import helpers
 
 
@@ -27,12 +27,12 @@ AdmonitionTypeStr = Literal[
 ]
 
 
-class MkAdmonition(mktext.MkText):
+class MkAdmonition(mkcontainer.MkContainer):
     """Admonition info box."""
 
     def __init__(
         self,
-        text: str,
+        content: str | list | mknode.MkNode,
         typ: AdmonitionTypeStr = "info",
         *,
         title: str | None = None,
@@ -40,23 +40,34 @@ class MkAdmonition(mktext.MkText):
         expanded: bool = False,
         **kwargs,
     ):
-        super().__init__(text=text, **kwargs)
+        match content:
+            case None:
+                items: list[mknode.MkNode] = []
+            case str():
+                items = [mktext.MkText(content)] if content else []
+            case mknode.MkNode():
+                items = [content]
+            case list():
+                items = content
+            case _:
+                raise TypeError(content)
+        super().__init__(items=items, **kwargs)
         self.typ = typ
         self.title = title
         self.collapsible = collapsible
         self.expanded = expanded
 
     def __repr__(self):
-        return helpers.get_repr(self, text=self.text, typ=self.typ, title=self.title)
+        return helpers.get_repr(self, content=self.items, typ=self.typ, title=self.title)
 
     def _to_markdown(self) -> str:
-        if not self.text:
+        if not self.items and not self.title:
             return ""
         block_start = "???" if self.collapsible else "!!!"
         if self.collapsible and self.expanded:
             block_start += "+"
         title = f' "{self.title}"' if self.title else ""
-        text = textwrap.indent(str(self.text), "    ")
+        text = textwrap.indent("\n".join(str(i) for i in self.items), "    ")
         return f"{block_start} {self.typ}{title}\n{text}\n"
 
     @staticmethod
@@ -81,14 +92,18 @@ class MkAdmonition(mktext.MkText):
             "example",
             "quote",
         ]:
-            page += mknodes.MkAdmonition(typ=typ, text=f"This is type {typ}", title=typ)
+            page += mknodes.MkAdmonition(
+                typ=typ,
+                content=f"This is type {typ}",
+                title=typ,
+            )
         page += mknodes.MkAdmonition(
-            text="Admonitions can also be collapsible",
+            content="Admonitions can also be collapsible",
             collapsible=True,
             title="Expand me!",
         )
         page += mknodes.MkAdmonition(
-            text="The initial state can also changed for collapsible admonitions.",
+            content="The initial state can also changed for collapsible admonitions.",
             collapsible=True,
             expanded=True,
             title="Collapse me!",
