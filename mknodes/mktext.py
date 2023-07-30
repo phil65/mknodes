@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
+
+import requests
 
 from typing_extensions import Self
 
@@ -10,6 +13,8 @@ from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
+
+RESPONSE_CODE_OK = 200
 
 
 class MkText(mknode.MkNode):
@@ -49,6 +54,20 @@ class MkText(mknode.MkNode):
     def _to_markdown(self) -> str:
         return self.text if isinstance(self.text, str) else self.text.to_markdown()
 
+    @classmethod
+    def from_external_url(cls, url: str) -> Self | None:
+        if token := os.getenv("GH_TOKEN"):
+            headers = {"Authorization": f"token {token}"}
+            response = requests.get(url, headers=headers)
+        else:
+            response = requests.get(url)
+        return None if response.status_code != RESPONSE_CODE_OK else cls(response.text)
+
 
 if __name__ == "__main__":
-    section = MkText(header="fff")
+    section = MkText.from_external_url(
+        "https://raw.githubusercontent.com/fire1ce/DDNS-Cloudflare-Bash/main/README.md",
+    )
+    if section:
+        license_section = section["License"]
+    print(section)

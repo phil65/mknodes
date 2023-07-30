@@ -92,6 +92,7 @@ dependencies = [
     "typing_extensions",
     "mkdocs-gen-files",
     "git-changelog",
+    "requests",
     "mkdocs",
     "PyYAML >=5.1",
 ]
