@@ -8,6 +8,7 @@ from .mkadmonition import MkAdmonition
 from .mknode import MkNode
 from .mklink import MkLink
 from .mktext import MkText
+from .mkkeys import MkKeys
 from .mkcontainer import MkContainer
 from .mkcode import MkCode
 from .mkdocstrings import MkDocStrings
@@ -52,6 +53,7 @@ __all__ = [
     "MkNav",
     "MkDocStrings",
     "MkText",
+    "MkKeys",
     "MkCode",
     "MkImage",
     "MkBinaryImage",
