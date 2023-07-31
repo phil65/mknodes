@@ -5,10 +5,12 @@ import mknodes
 
 EXPECTED = """/// tab | Tab1
     new: True
+
 Some text
 ///
 
 /// tab | Tab2
+
 Another text
 ///
 """

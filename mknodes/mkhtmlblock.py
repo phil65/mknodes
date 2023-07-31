@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 import logging
-import textwrap
 
-from typing import Any
+from typing import Any, Literal
 
 from mknodes import mkblock, mknode
 
 
 logger = logging.getLogger(__name__)
+
+
+MarkdownModeStr = Literal["block", "inline", "raw", "auto", "html"]
+
+RawBlockTags = Literal["pre", "canvas", "math", "option"]
+RawHtmlTags = Literal["script", "style"]
+BlockTypeStr = Literal["div", "span", "code"] | RawHtmlTags | RawBlockTags
 
 
 class MkHtmlBlock(mkblock.MkBlock):
@@ -18,27 +24,37 @@ class MkHtmlBlock(mkblock.MkBlock):
         self,
         content: str | mknode.MkNode = "",
         *,
-        attributes: dict[str, str | bool] | None = None,
+        block_type: BlockTypeStr = "div",
+        markdown_mode: MarkdownModeStr | None = None,
+        attributes: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             content: What should be contained in the block
+            block_type: Block type
+            markdown_mode: Markdown mode
             attributes: Block attrs
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(name="html", argument="div", content=content, **kwargs)
-
-    def _to_markdown(self) -> str:
-        block_limiter = "///"
-        lines = [f"{block_limiter} {self.name} | {self.argument}"]
-        lines.extend(f"    {k}: {v}" for k, v in self.attributes.items())
-        lines.append("")
-        lines.extend(
-            (textwrap.indent(str(self.content), "    ").rstrip("\n"), block_limiter),
+        super().__init__(
+            name="html",
+            argument=block_type,
+            content=content,
+            attributes=attributes,
+            **kwargs,
         )
-        return "\n".join(lines) + "\n"
+        self.markdown_mode = markdown_mode
+        self.indent = "    "
+
+    @property
+    def markdown_mode(self) -> MarkdownModeStr | None:
+        return self.attributes.get("markdown")
+
+    @markdown_mode.setter
+    def markdown_mode(self, value: MarkdownModeStr | None):
+        self.attributes["markdown"] = value
 
 
 if __name__ == "__main__":

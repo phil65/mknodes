@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import textwrap
 
 from typing import Any
 
@@ -19,7 +20,7 @@ class MkBlock(mkcontainer.MkContainer):
         content: list | str | mknode.MkNode = "",
         *,
         argument: str = "",
-        attributes: dict[str, str | bool] | None = None,
+        attributes: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -48,7 +49,13 @@ class MkBlock(mkcontainer.MkContainer):
             base += f" | {self.argument}"
         lines = [base]
         lines.extend(f"    {k}: {v}" for k, v in self.attributes.items())
-        lines.extend((super()._to_markdown().rstrip("\n"), block_limiter))
+        lines.append("")
+        lines.extend(
+            (
+                textwrap.indent(super()._to_markdown(), self.indent).rstrip("\n"),
+                block_limiter,
+            ),
+        )
         return "\n".join(lines) + "\n"
 
     @staticmethod

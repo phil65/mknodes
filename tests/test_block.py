@@ -5,17 +5,21 @@ import mknodes
 
 EXPECTED = """/// tab | abc
     new: True
+
 bcd
 ///
 """
 
 NESTED_EXPECTED = """/// outer
+
 //// inner_1
+
 inner_1 content
 ////
 
 
 //// inner_2
+
 inner_2 content
 ////
 ///
