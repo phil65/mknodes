@@ -96,24 +96,24 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         parent_diagram = MkClassDiagram(
             klass=MkClassDiagram,
             mode="parent_tree",
-            header="Parent class hiearchy for MkClassDiagram",
+            header="Parent class hierarchy: MkClassDiagram",
         )
         sub_diagram = MkClassDiagram(
             klass=mknodes.MkContainer,
             mode="subclass_tree",
-            header="Subclass hiearchy for MkContainer",
+            header="Subclass hierarchy: MkContainer",
             orientation="LR",
         )
         mro_diagram = MkClassDiagram(
             klass=mknodes.MkTable,
             mode="mro",
-            header="Mro for MkTable",
+            header="Method resolution order: MkTable",
         )
         page += parent_diagram
-        page += sub_diagram
-        page += mro_diagram
         page += mknodes.MkHtmlBlock(parent_diagram, header="Markdown")
+        page += sub_diagram
         page += mknodes.MkHtmlBlock(sub_diagram)
+        page += mro_diagram
         page += mknodes.MkHtmlBlock(mro_diagram)
 
     def _to_markdown(self) -> str:
