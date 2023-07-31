@@ -25,13 +25,13 @@ class MkText(mknode.MkNode):
 
     def __init__(
         self,
-        text: str | mknode.MkNode = "",
+        text: str | mknode.MkNode | None = "",
         *,
         header: str = "",
         parent=None,
     ):
         super().__init__(header=header, parent=parent)
-        self.text = text
+        self.text = str(text or "")
 
     def __repr__(self):
         return helpers.get_repr(self, text=self.text)
