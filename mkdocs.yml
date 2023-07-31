@@ -24,10 +24,13 @@ theme:
       icon: material/brightness-4
       name: Switch to light mode
   features:
+  - announce.dismiss
+  # - content.action.edit
   - content.code.copy
   - content.code.select
   - content.code.annotate
   # - content.tooltips  # for insiders..
+  # - content.tabs.link
   - navigation.instant # make things faster
   - navigation.tracking # update URL based on current item in TOC
   - navigation.path  # shows breadcrumbs
@@ -40,6 +43,9 @@ theme:
   # - toc.integrate  # integrates toc into left menu
   - navigation.top  # adds back-to-top button
   # - navigation.sections # top-level sections are rendered as groups
+  - search.highlight
+  - search.suggest
+  # - search.share
 plugins:
 - search
 # - social  # this one has dependency which is not on pypi for windows. (cairocffi)
@@ -116,6 +122,9 @@ markdown_extensions:
       format: !!python/name:pymdownx.superfences.fence_code_format
 - pymdownx.tabbed:
     alternate_style: true
+- pymdownx.emoji:
+    emoji_index: !!python/name:materialx.emoji.twemoji
+    emoji_generator: !!python/name:materialx.emoji.to_svg
 - md_in_html
 - toc:
     toc_depth: 2
