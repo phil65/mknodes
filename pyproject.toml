@@ -17,7 +17,7 @@ dependencies = [
     "pytest",
     "pytest-cov",
     "mkdocs",
-    "mkdocs-material",
+    "mkdocs-material>=9.2.dev0",
     "mkdocstrings[python]",
     "pymdown-extensions",
     "mkdocs-literate-nav",
