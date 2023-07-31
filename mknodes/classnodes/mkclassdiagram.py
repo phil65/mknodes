@@ -5,13 +5,13 @@ import itertools
 from typing import Literal
 
 from mknodes import mkdiagram
-from mknodes.utils import connectionbuilder, helpers
+from mknodes.utils import connector, helpers
 
 
 DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]
 
 
-class BaseClassConnector(connectionbuilder.Connector):
+class BaseClassConnector(connector.Connector):
     def __init__(
         self,
         objects,

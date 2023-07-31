@@ -6,13 +6,13 @@ import textwrap
 import mkdocs_gen_files
 
 from mknodes import node
-from mknodes.utils import connectionbuilder
+from mknodes.utils import connector
 
 
 logger = logging.getLogger(__name__)
 
 
-class NodeConnector(connectionbuilder.Connector):
+class NodeConnector(connector.Connector):
     def get_children(self, item):
         return item.children
 
