@@ -66,16 +66,15 @@ class MkAdmonitionBlock(mkblock.MkBlock):
     def create_example_page(page):
         import mknodes
 
-        node = mknodes.MkAdmonitionBlock("The MkAdmonitionBlock is based on MkBlock.")
-        page += node
-        page += "This is the resulting code:"
-        page += mknodes.MkCode(str(node), language="markdown")
+        page += "MkAdmonitionBlock is an admonition based on new pymdownx block syntax."
+        url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
+        page += mknodes.MkLink(url, "More info", as_button=True)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in AdmonitionTypeStr.__args__:
             node = mknodes.MkAdmonitionBlock(
                 typ=typ,
-                content=f"This is type {typ}",
-                title=typ,
+                content=f"This is type **{typ}**",
+                title=f"Block admonition with type {typ!r}",
                 header=f"Type '{typ}'",
             )
             page += node
