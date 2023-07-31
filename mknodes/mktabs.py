@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class MkBlockTab(mkblock.MkBlock):
+    """Node representing a single tab (new block style)."""
+
     def __init__(
         self,
         title: str,
@@ -62,6 +64,8 @@ class MkBlockTab(mkblock.MkBlock):
 
 
 class MkTab(mkcontainer.MkContainer):
+    """Node representing a single tab."""
+
     def __init__(
         self,
         title: str,
