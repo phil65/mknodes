@@ -4,7 +4,7 @@ import logging
 import os
 import pathlib
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes import mknode, mkpage
 
@@ -20,8 +20,14 @@ class MkPageInclude(mknode.MkNode):
     def __init__(
         self,
         page: str | os.PathLike | mkpage.MkPage,
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            page: page to include
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.page = page
 

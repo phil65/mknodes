@@ -8,7 +8,7 @@ import pathlib
 import re
 import types
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 import mkdocs_gen_files
 
@@ -34,10 +34,6 @@ class MkNav(mknode.MkNode):
 
     A nav has a section name (exception can be the root), an associated virtual file
     (in general a SUMMARY.md) and can contain other navs as well as pages.
-
-    Arguments:
-        section: Section name for the Nav
-        filename: FileName for the resulting nav
     """
 
     def __init__(
@@ -45,8 +41,15 @@ class MkNav(mknode.MkNode):
         section: str | None = None,
         *,
         filename: str = "SUMMARY.md",
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            section: Section name for the Nav
+            filename: FileName for the resulting nav
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.section = section  # helpers.slugify(section)
         self.filename = filename

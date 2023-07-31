@@ -32,7 +32,12 @@ class MkNode(node.Node):
     by one tree.
     """
 
-    def __init__(self, header: str = "", indent: str = "", parent: MkNode | None = None):
+    def __init__(
+        self,
+        header: str = "",
+        indent: str = "",
+        parent: MkNode | None = None,
+    ):
         """Constructor.
 
         Arguments:

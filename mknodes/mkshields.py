@@ -8,6 +8,8 @@ from typing import Any, Literal
 from mknodes import mknode
 
 
+# ![Static Badge](https://img.shields.io/badge/built_with-mknodes-yellow?link=www.pypa.org)
+
 logger = logging.getLogger(__name__)
 
 

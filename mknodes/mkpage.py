@@ -54,6 +54,23 @@ class MkPage(mkcontainer.MkContainer):
         parent: mknav.MkNav | None = None,
         **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            path: Page path
+            hide_toc: Whether TOC should be shown when this page is displayed.
+            hide_nav: Whether Nav should be shown when this page is displayed.
+            hide_path: Whether Breadcrumbs should be shown when this page is displayed.
+            search_boost: Factor to modify search ranking
+            exclude_from_search: Whether to exclude this page from search listings
+            icon: Optional page icon
+            status: Page status
+            title: Page title
+            subtitle: Page subtitle
+            description: Page description
+            parent: Node parent
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(parent=parent, **kwargs)
         self.path = str(path)
         self.metadata: dict[str, Any] = {}

@@ -42,6 +42,12 @@ class MkPullRequestGuidelines(mknode.MkNode):
         header: str = "Pull request guidelines",
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            header: Section header
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(header=header, **kwargs)
 
     def _to_markdown(self) -> str:
