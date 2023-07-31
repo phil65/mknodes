@@ -7,7 +7,7 @@ import textwrap
 logger = logging.getLogger(__name__)
 
 
-class ConnectionBuilder:
+class Connector:
     def __init__(self, objects):
         if not isinstance(objects, list | tuple):
             objects = [objects]
@@ -62,9 +62,9 @@ class ConnectionBuilder:
 
 if __name__ == "__main__":
 
-    class Test(ConnectionBuilder):
+    class Test(Connector):
         def get_children(self, item):
             return item.__bases__
 
-    test = Test(ConnectionBuilder).get_graph_connection_text()
+    test = Test(Connector).get_graph_connection_text()
     print(test)

@@ -55,7 +55,7 @@ __all__ = [
     "MkAdmonition",
     "MkDiagram",
     "MkClassDiagram",
-    "ConnectionBuilder",
+    "Connector",
     "MkTable",
     "MkClassTable",
     "MkList",

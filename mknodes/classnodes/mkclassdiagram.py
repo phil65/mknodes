@@ -11,7 +11,7 @@ from mknodes.utils import connectionbuilder, helpers
 DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]
 
 
-class BaseClassConnectionBuilder(connectionbuilder.ConnectionBuilder):
+class BaseClassConnector(connectionbuilder.Connector):
     def __init__(
         self,
         objects,
@@ -40,7 +40,7 @@ class BaseClassConnectionBuilder(connectionbuilder.ConnectionBuilder):
         return [i for i in dir(item) if not i.startswith("__")]
 
 
-class SubclassConnectionBuilder(BaseClassConnectionBuilder):
+class SubclassConnector(BaseClassConnector):
     def _connect(self, objects):
         super()._connect(objects)
         self.connections = [(i[1], i[0]) for i in self.connections]
@@ -49,12 +49,12 @@ class SubclassConnectionBuilder(BaseClassConnectionBuilder):
         return item.__subclasses__()
 
 
-class ParentClassConnectionBuilder(BaseClassConnectionBuilder):
+class ParentClassConnector(BaseClassConnector):
     def get_children(self, item: type) -> tuple[type, ...]:
         return item.__bases__
 
 
-class MroConnectionBuilder(BaseClassConnectionBuilder):
+class MroConnector(BaseClassConnector):
     def _connect(self, objects):
         mro = list(objects[0].mro())
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
@@ -119,13 +119,13 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     def _to_markdown(self) -> str:
         match self.mode:
             case "subclass_tree":
-                builder = SubclassConnectionBuilder(self.klass)
+                builder = SubclassConnector(self.klass)
                 item_str = builder.get_graph_connection_text()
             case "parent_tree":
-                builder = ParentClassConnectionBuilder(self.klass)
+                builder = ParentClassConnector(self.klass)
                 item_str = builder.get_graph_connection_text()
             case "mro":
-                builder = MroConnectionBuilder(self.klass)
+                builder = MroConnector(self.klass)
                 item_str = builder.get_graph_connection_text()
             case _:
                 raise ValueError(self.mode)

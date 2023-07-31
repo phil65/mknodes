@@ -12,7 +12,7 @@ from mknodes.utils import connectionbuilder
 logger = logging.getLogger(__name__)
 
 
-class NodeConnectionBuilder(connectionbuilder.ConnectionBuilder):
+class NodeConnector(connectionbuilder.Connector):
     def get_children(self, item):
         return item.children
 
@@ -62,7 +62,7 @@ class MkNode(node.Node):
             text = textwrap.indent(text, self.indent)
         if not self.header:
             return text
-        header = f"## {self.header}" if not self.header.startswith("#") else self.header
+        header = self.header if self.header.startswith("#") else f"## {self.header}"
         return f"{header}\n\n{text}"
 
     @property
@@ -142,7 +142,7 @@ class MkNode(node.Node):
         Arguments:
             orientation: Orientation of resulting graph
         """
-        item_str = NodeConnectionBuilder([self]).get_graph_connection_text()
+        item_str = NodeConnector([self]).get_graph_connection_text()
         text = f"graph {orientation}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
