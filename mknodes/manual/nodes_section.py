@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import mknodes
 
 from mknodes.utils import classhelpers
@@ -20,7 +18,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     # It`s all one big tree.
 
     home_nav = root_nav.add_nav("The nodes")
-    overview = home_nav.add_index_page(hide_toc=True, icon="material/file-tree-outline")
+    overview = home_nav.add_index_page(hide_toc=True, icon="material/graph")
 
     # this here is what you are reading right now.
     overview += mknodes.MkCode.for_object(create_nodes_section)
@@ -70,9 +68,3 @@ def create_subclass_page(nav: mknodes.MkNav):
         mode="subclass_tree",
         orientation="LR",
     )
-
-
-if __name__ == "__main__":
-    nav = mknodes.MkNav()
-    create_nodes_section(nav)
-    print(nav.children[0])

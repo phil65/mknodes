@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import mknodes
 
 
@@ -35,9 +33,3 @@ def create_documentation_section(root_nav: mknodes.MkNav):
 
     # addon_docs = doc_section.add_doc(module=prettyqtmarkdown, flatten_nav=True)
     # addon_docs.collect_classes(recursive=True)
-
-
-if __name__ == "__main__":
-    nav = mknodes.MkNav()
-    create_documentation_section(nav)
-    print(nav.children[0])
