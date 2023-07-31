@@ -23,6 +23,7 @@ class MkCodeOfConduct(mknode.MkNode):
         self,
         contact_email: str,
         version: str | tuple[int] = "2.1",
+        header="# Contributor Covenant Code of Conduct",
         **kwargs: Any,
     ):
         """Constructor.
@@ -30,9 +31,10 @@ class MkCodeOfConduct(mknode.MkNode):
         Arguments:
             contact_email: Email for contacting.
             version: Contributor covenant version
+            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__(header=header, **kwargs)
         self.version = (
             [str(v) for v in version]
             if isinstance(version, tuple)
@@ -47,7 +49,8 @@ class MkCodeOfConduct(mknode.MkNode):
             response = requests.get(url, headers=headers)
         else:
             response = requests.get(url)
-        return response.text.replace("[INSERT CONTACT METHOD]", self.email)
+        text = response.text
+        return "\n".join(text.split("\n")[3:])
 
     @staticmethod
     def create_example_page(page):
