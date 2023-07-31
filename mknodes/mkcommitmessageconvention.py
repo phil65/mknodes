@@ -5,6 +5,7 @@ import logging
 from typing import Literal
 
 from mknodes import mklist, mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -84,7 +85,7 @@ unless they are part of code blocks that must not be wrapped.
 
 
 class MkCommitMessageConvention(mknode.MkNode):
-    """Install guide text (currently PyPi only)."""
+    """Text node containing Commit message conventions."""
 
     def __init__(
         self,
@@ -93,13 +94,15 @@ class MkCommitMessageConvention(mknode.MkNode):
         **kwargs,
     ):
         super().__init__(header=header, **kwargs)
-        self.scopes = scopes
+        self.scopes = scopes or SCOPES.keys()
+
+    def __repr__(self):
+        return helpers.get_repr(self, scopes=self.scopes)
 
     def _to_markdown(self) -> str:
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
-        scopes = self.scopes or SCOPES.keys()
-        type_str = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in scopes])
-        return TEXT.format(styles=styles, scopes=type_str)
+        scope_str = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in self.scopes])
+        return TEXT.format(styles=styles, scopes=scope_str)
 
     @staticmethod
     def create_example_page(page):

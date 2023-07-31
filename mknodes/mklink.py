@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes import mknode, mkpage, project
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,9 @@ class MkLink(mknode.MkNode):
         super().__init__(**kwargs)
         self.target = target
         self.title = title
+
+    def __repr__(self):
+        return helpers.get_repr(self, target=self.target, title=self.title)
 
     def _to_markdown(self) -> str:
         match self.target:
