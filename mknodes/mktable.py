@@ -72,7 +72,10 @@ class MkTable(mknode.MkNode):
         item.parent_item = self
         return item
 
-    def add_row(self, row: Sequence[str | None] | dict[str, str | None]):
+    def add_row(
+        self,
+        row: Sequence[str | None | mknode.MkNode] | dict[str, str | None],
+    ):
         if len(row) != len(self.columns):
             msg = "Row to add doesnt have same length as header"
             raise ValueError(msg)
