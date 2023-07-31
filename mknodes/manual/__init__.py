@@ -1,6 +1,6 @@
-from .page_1 import create_nodes_section
-from .page_2 import create_documentation_section
-from .page_3 import create_internals_section
+from .nodes_section import create_nodes_section
+from .doc_section import create_documentation_section
+from .internals_section import create_internals_section
 from .dev_section import create_development_section
 
 

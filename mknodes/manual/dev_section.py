@@ -18,6 +18,9 @@ def create_development_section(root_nav: mknodes.MkNav):
     changelog_page += mknodes.MkChangelog()  # based on "git-changelog" package
     coc_page = dev_nav.add_page("Code of conduct")
     coc_page += mknodes.MkCodeOfConduct(contact_email="philipptemminghoff@gmail.com")
+    contribute_page = dev_nav.add_page("Contributing")
+    contribute_page += mknodes.MkCommitMessageConvention()
+    contribute_page += mknodes.MkPullRequestGuidelines()
 
 
 if __name__ == "__main__":
