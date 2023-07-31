@@ -16,19 +16,19 @@ def create_development_section(root_nav: mknodes.MkNav):
     create_contribute_page(dev_nav)
 
 
-def create_changelog_page(nav):
+def create_changelog_page(nav: mknodes.MkNav):
     page = nav.add_page("Changelog", icon="material/format-list-group")
     page += mknodes.MkCode.for_object(create_changelog_page)
     page += mknodes.MkChangelog()  # based on "git-changelog" package
 
 
-def create_code_of_conduct_page(nav):
+def create_code_of_conduct_page(nav: mknodes.MkNav):
     page = nav.add_page("Code of conduct", icon="octicons/code-of-conduct-24")
     page += mknodes.MkCode.for_object(create_code_of_conduct_page)
     page += mknodes.MkCodeOfConduct(contact_email="philipptemminghoff@gmail.com")
 
 
-def create_contribute_page(nav):
+def create_contribute_page(nav: mknodes.MkNav):
     page = nav.add_page("Contributing", icon="material/help")
     page += mknodes.MkCode.for_object(create_contribute_page)
     page += mknodes.MkCommitMessageConvention()

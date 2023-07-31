@@ -23,7 +23,7 @@ def create_internals_section(root_nav: mknodes.MkNav):
     create_code_page(internals_nav)
 
 
-def create_tree_page(nav):
+def create_tree_page(nav: mknodes.MkNav):
     # we create a new page and add a formatted represenation of our Tree.
 
     page = nav.add_page("Tree", hide_toc=True, icon="material/graph")
@@ -33,7 +33,7 @@ def create_tree_page(nav):
     page += mknodes.MkCode("\n".join(lines))
 
 
-def create_file_tree_page(nav):
+def create_file_tree_page(nav: mknodes.MkNav):
     page = nav.add_page("Files", hide_toc=True, icon="material/file-tree-outline")
     page += mknodes.MkCode.for_object(create_file_tree_page)
     page.add_header("These are the 'virtual' files attached to the tree:", level=3)
@@ -43,7 +43,7 @@ def create_file_tree_page(nav):
     page += mknodes.MkCode(file_txt)
 
 
-def create_code_page(nav):
+def create_code_page(nav: mknodes.MkNav):
     # we create a new page and add a formatted represenation of our Tree.
     from mknodes import manual
 
