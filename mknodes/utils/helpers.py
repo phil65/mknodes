@@ -233,7 +233,7 @@ def get_doc(
     if from_base_classes:
         doc = inspect.getdoc(obj)
     else:
-        doc = inspect.cleandoc(obj.__doc__) if obj.__doc__ else None
+        doc = inspect.cleandoc(obj.__doc__) if isinstance(obj.__doc__, str) else None
     if not doc:
         return fallback
     if only_summary:
