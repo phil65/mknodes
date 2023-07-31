@@ -13,14 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkModulePage(mkpage.MkPage):
-    """Page showing information about a module.
-
-    Arguments:
-        module: ModuleType or path to model to show info for.
-        path: Some path for the file. Default is index.md
-        docstrings: Whether to show docstrings for given module.
-        show_class_table: ModuleType or path to model to show info for.
-    """
+    """Page showing information about a module."""
 
     def __init__(
         self,
@@ -32,6 +25,16 @@ class MkModulePage(mkpage.MkPage):
         show_class_table: bool = True,
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            module: ModuleType or path to model to show info for.
+            path: Some path for the file. Default is index.md
+            klasses: klasses to use
+            docstrings: Whether to show docstrings for given module.
+            show_class_table: ModuleType or path to model to show info for.
+            **kwargs: further keyword arguments passed to parent
+        """
         super().__init__(path=path, **kwargs)
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)

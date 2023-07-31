@@ -15,16 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkClassPage(mkpage.MkPage):
-    """Page showing information about a class.
-
-    Arguments:
-        klass: class to show info for
-        module_path: If given, overrides module returned by class.__module__
-                     This can be useful if you want to link to an aliased class
-                     (for example a class imported to __init__.py)
-        path: some path for the file.
-        kwargs: keyword arguments passed to base class
-    """
+    """Page showing information about a class."""
 
     def __init__(
         self,
@@ -34,6 +25,16 @@ class MkClassPage(mkpage.MkPage):
         path: str | os.PathLike = "",
         **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            klass: class to show info for
+            module_path: If given, overrides module returned by class.__module__
+                         This can be useful if you want to link to an aliased class
+                         (for example a class imported to __init__.py)
+            path: some path for the file.
+            kwargs: keyword arguments passed to base class
+        """
         # TODO: should path be settable?
         path = pathlib.Path(f"{klass.__name__}.md")
         super().__init__(path=path, **kwargs)
