@@ -1,7 +1,7 @@
 site_name: MkNodes
 site_description: "Generate docs with ease."
 repo_url: "https://github.com/phil65/mknodes"
-site_url: https://phil65.github.io/MkNodes/
+site_url: https://phil65.github.io/mknodes/
 watch: [mkdocs.yml, README.md, mknodes/]
 copyright: Copyright &copy; 2023 Philipp Temminghoff
 
