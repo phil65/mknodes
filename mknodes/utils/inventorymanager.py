@@ -3,6 +3,7 @@ from __future__ import annotations
 import abc
 
 from collections.abc import Mapping
+import io
 import itertools
 import logging
 import os
@@ -11,6 +12,7 @@ import posixpath
 import types
 
 from mkdocstrings import inventory
+import requests
 
 
 logger = logging.getLogger(__name__)
@@ -23,16 +25,33 @@ class Inventory(inventory.Inventory):
     @classmethod
     def from_file(
         cls,
-        path: str | os.PathLike,
+        path: str | os.PathLike | io.BytesIO,
         base_url: str,
+        *,
         domains: list[str] | None = None,
     ):
         inv = cls(base_url)
         domains = domains or ["py"]
-        with pathlib.Path(path).open("rb") as file:
+        file = path if isinstance(path, io.BytesIO) else pathlib.Path(path).open("rb")
+        with file:
             inv_dict = inventory.Inventory.parse_sphinx(file, domain_filter=domains)
         inv.update(inv_dict)
         return inv
+
+    @classmethod
+    def from_url(
+        cls,
+        url: str,
+        *,
+        base_url: str | None = None,
+        domains: list[str] | None = None,
+    ):
+        response = requests.get(url)
+        data = response.content
+        buffer = io.BytesIO(data)
+        if base_url is None:
+            base_url = os.path.dirname(url)  # noqa: PTH120
+        return cls.from_file(buffer, base_url or "", domains=domains)
 
     def __getitem__(self, value):
         val = super().__getitem__(value)
@@ -48,10 +67,17 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
     def add_inv_file(
         self,
         path: str | os.PathLike,
-        base_url: str,
+        base_url: str | None = None,
         domains: list[str] | None = None,
     ):
-        inv = Inventory.from_file(path, domains=domains, base_url=base_url)
+        path = str(path)
+        if path.startswith(("http:", "https:", "www.")):
+            inv = Inventory.from_url(path, base_url=base_url, domains=domains)
+        elif base_url:
+            inv = Inventory.from_file(path, domains=domains, base_url=base_url)
+        else:
+            msg = "Base URL needed for loading from file."
+            raise ValueError(msg)
         self.inv_files.append(inv)
 
     def __getitem__(self, name: str | type | types.FunctionType | types.MethodType):
@@ -79,6 +105,8 @@ if __name__ == "__main__":
     inv_manager.add_inv_file("tests/data/objects.inv", base_url="http://test.de")
     file = inv_manager.inv_files[0]
     item = inv_manager["prettyqt.widgets.widget.WidgetMixin.set_style"]
-    print(item)
+    # print(item)
+    inv = Inventory.from_url("https://docs.python.org/3/objects.inv")
+    print(inv)
     # print(inv_manager["prettyqt.widgets.widget.WidgetMixin.set_style"])
     # print(file)
