@@ -40,6 +40,6 @@ class MkPageInclude(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    page = mkpage.MkPage(items=["test"])
+    page = mkpage.MkPage(content="test")
     include = MkPageInclude(page=__file__)
     print(include)

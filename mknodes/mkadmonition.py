@@ -5,7 +5,7 @@ import textwrap
 
 from typing import Literal
 
-from mknodes import mkcontainer, mknode, mktext
+from mknodes import mkcontainer, mknode
 from mknodes.utils import helpers
 
 
@@ -40,18 +40,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         expanded: bool = False,
         **kwargs,
     ):
-        match content:
-            case None:
-                items: list[mknode.MkNode] = []
-            case str():
-                items = [mktext.MkText(content)] if content else []
-            case mknode.MkNode():
-                items = [content]
-            case list():
-                items = content
-            case _:
-                raise TypeError(content)
-        super().__init__(items=items, **kwargs)
+        super().__init__(content=content, **kwargs)
         self.typ = typ
         self.title = title
         self.collapsible = collapsible

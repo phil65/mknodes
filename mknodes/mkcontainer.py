@@ -13,9 +13,20 @@ logger = logging.getLogger(__name__)
 class MkContainer(mknode.MkNode):
     """A base class for Nodes containing other MkNodes."""
 
-    def __init__(self, items: list | None = None, **kwargs):
+    def __init__(self, content: list | None | str | mknode.MkNode = None, **kwargs):
         super().__init__(**kwargs)
         self.items: list[mknode.MkNode] = []
+        match content:
+            case None:
+                items: list[mknode.MkNode] = []
+            case str():
+                items = [mktext.MkText(content)] if content else []
+            case mknode.MkNode():
+                items = [content]
+            case list():
+                items = [mktext.MkText(i) if isinstance(i, str) else i for i in content]
+            case _:
+                raise TypeError(content)
         for item in items or []:
             self.append(item)  # noqa: PERF402
 
@@ -27,7 +38,7 @@ class MkContainer(mknode.MkNode):
         return iter(self.items)
 
     def __repr__(self):
-        return helpers.get_repr(self, items=self.items)
+        return helpers.get_repr(self, content=self.items)
 
     @staticmethod
     def create_example_page(page):
@@ -37,7 +48,7 @@ class MkContainer(mknode.MkNode):
         page += "It basically only carries other nodes and stringifies them sequentially."
         item_1 = mknodes.MkCode(code="a = 1 + 2")
         item_2 = mktext.MkText("abc")
-        node = MkContainer(items=[item_1, item_2])
+        node = MkContainer(content=[item_1, item_2])
         node += mknodes.MkHtmlBlock(str(node), header="Markdown")
         page += node
 

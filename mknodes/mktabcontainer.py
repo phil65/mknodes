@@ -40,7 +40,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             case str():
                 pos = self._get_tab_pos(select_tab)
                 items[pos].select = True
-        super().__init__(items=items, header=header, **kwargs)
+        super().__init__(content=items, header=header, **kwargs)
 
     def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkBlockTab:
         match item:

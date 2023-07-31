@@ -23,7 +23,7 @@ class MkList(mkcontainer.MkContainer):
     ):
         # if as_links:
         #     items = [link.Link(i) for i in items]
-        super().__init__(items=items, header=header)
+        super().__init__(content=items, header=header)
         self.ordered = ordered
         self.shorten_after = shorten_after
         self.as_links = as_links

@@ -13,12 +13,12 @@ logger = logging.getLogger(__name__)
 class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
-    def __init__(self, num: int, item: str | mknode.MkNode, **kwargs):
-        super().__init__(items=[item], **kwargs)
+    def __init__(self, num: int, content: str | mknode.MkNode, **kwargs):
+        super().__init__(content=content, **kwargs)
         self.num = num
 
     def __repr__(self):
-        return helpers.get_repr(self, num=self.num, item=self.items[0])
+        return helpers.get_repr(self, num=self.num, content=self.items)
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
@@ -59,13 +59,13 @@ class MkAnnotations(mkcontainer.MkContainer):
                 items = [
                     MkAnnotation(
                         k,
-                        item=mktext.MkText(v) if isinstance(v, str) else v,
+                        content=mktext.MkText(v) if isinstance(v, str) else v,
                     )
                     for k, v in annotations.items()
                 ]
         for item in items:
             item.parent_item = self
-        super().__init__(items=items, header=header, **kwargs)
+        super().__init__(content=items, header=header, **kwargs)
 
     def __len__(self):
         return len(self.items)
@@ -93,11 +93,11 @@ class MkAnnotations(mkcontainer.MkContainer):
         match value:
             case str():
                 item = mktext.MkText(value)
-                annotation = MkAnnotation(index, item=item)
+                annotation = MkAnnotation(index, content=item)
             case MkAnnotation():
                 annotation = value
             case mknode.MkNode():
-                annotation = MkAnnotation(index, item=value)
+                annotation = MkAnnotation(index, content=value)
         if index in self:
             pos = self._get_annotation_pos(index)
             self.items[pos] = annotation

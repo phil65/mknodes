@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from mknodes import mkcontainer, mknode, mktext
+from mknodes import mkcontainer, mknode
 
 
 logger = logging.getLogger(__name__)
@@ -20,18 +20,7 @@ class MkBlock(mkcontainer.MkContainer):
         attributes: dict[str, str | bool] | None = None,
         **kwargs,
     ):
-        match content:
-            case None:
-                items: list[mknode.MkNode] = []
-            case str():
-                items = [mktext.MkText(content)] if content else []
-            case mknode.MkNode():
-                items = [content]
-            case list():
-                items = content
-            case _:
-                raise TypeError(content)
-        super().__init__(items=items, **kwargs)
+        super().__init__(content=content, **kwargs)
         self.name = name
         self.attributes = attributes or {}
         self.argument = argument

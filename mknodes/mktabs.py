@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import textwrap
 
-from mknodes import mkblock, mkcontainer, mknode, mktext
+from mknodes import mkblock, mkcontainer, mknode
 
 
 logger = logging.getLogger(__name__)
@@ -63,18 +63,7 @@ class MkTab(mkcontainer.MkContainer):
         attrs: dict | None = None,
         **kwargs,
     ):
-        match content:
-            case None:
-                items: list[mknode.MkNode] = []
-            case str():
-                items = [mktext.MkText(content)] if content else []
-            case mknode.MkNode():
-                items = [content]
-            case list():
-                items = content
-            case _:
-                raise TypeError(content)
-        super().__init__(items=items, **kwargs)
+        super().__init__(content=content, **kwargs)
         self.title = title
         self.select = select
         self.attrs = attrs

@@ -89,7 +89,7 @@ class MkPage(mkcontainer.MkContainer):
         path = pathlib.Path(path)
         text = path.read_text()
         node = mktext.MkText(text)
-        return cls(path=path.name, items=[node])
+        return cls(path=path.name, content=node)
 
     def virtual_files(self) -> dict[str, str]:
         return {self.path: self.to_markdown()}
