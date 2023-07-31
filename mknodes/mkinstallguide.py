@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from typing import Any
+
 from mknodes import mknode
 
 
@@ -57,7 +59,7 @@ class MkInstallGuide(mknode.MkNode):
         project: str,
         package_managers: list[str] | None = None,
         header_level: int | None = 2,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
@@ -89,7 +91,7 @@ class MkInstallGuide(mknode.MkNode):
         # MkInstallGuide is just a text snippet for a short Install guide
         # Currently it is only tailored towards PyPi.
 
-        node = MkInstallGuide(project="mknodes")
+        node = MkInstallGuide(project="mknodes", package_managers=["pip", "pipx"])
         page += node
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 

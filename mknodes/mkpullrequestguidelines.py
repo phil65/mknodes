@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from typing import Any
+
 from mknodes import mknode
 
 
@@ -40,7 +42,7 @@ class MkPullRequestGuidelines(mknode.MkNode):
     def __init__(
         self,
         header: str = "Pull request guidelines",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
