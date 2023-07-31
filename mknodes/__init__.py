@@ -24,6 +24,7 @@ from .mkpageinclude import MkPageInclude
 from .mkinstallguide import MkInstallGuide
 from .mkchangelog import MkChangelog
 from .mkcodeofconduct import MkCodeOfConduct
+from .mkcommitmessageconvention import MkCommitMessageConvention
 from .mkiframe import MkIFrame
 from .classnodes.mkclassdiagram import MkClassDiagram
 from .classnodes.mkclasstable import MkClassTable
@@ -71,6 +72,7 @@ __all__ = [
     "MkInstallGuide",
     "MkChangelog",
     "MkCodeOfConduct",
+    "MkCommitMessageConvention",
     "MkIFrame",
 ]
 
