@@ -48,7 +48,7 @@ class MkBlock(mkcontainer.MkContainer):
         if self.argument:
             base += f" | {self.argument}"
         lines = [base]
-        lines.extend(f"    {k}: {v}" for k, v in self.attributes.items())
+        lines.extend(f"    {k}: {v}" for k, v in self.attributes.items() if v is not None)
         lines.append("")
         lines.extend(
             (
