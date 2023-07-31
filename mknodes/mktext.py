@@ -28,7 +28,7 @@ class MkText(mknode.MkNode):
         text: str | mknode.MkNode | None = "",
         *,
         header: str = "",
-        parent=None,
+        parent: mknode.MkNode | None = None,
     ):
         """Constructor.
 

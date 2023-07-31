@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator, Mapping, Sequence
 import logging
 
+from typing import Any
+
 from mknodes import mknode, mktext
 
 
@@ -20,7 +22,7 @@ class MkTable(mknode.MkNode):
         columns: Sequence[str] | None = None,
         *,
         header: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 

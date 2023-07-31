@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from typing import Any
+
 from mknodes import mknav, mknode, mkpage, project
 from mknodes.utils import helpers
 
@@ -16,7 +18,7 @@ class MkLink(mknode.MkNode):
         self,
         target: str | mkpage.MkPage | mknav.MkNav,
         title: str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 

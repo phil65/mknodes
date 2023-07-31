@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes import mktext
 
@@ -20,7 +20,7 @@ class MkCritic(mktext.MkText):
         text: str,
         *,
         mark: CriticMarkStr = "addition",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 

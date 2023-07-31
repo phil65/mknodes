@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 import logging
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes import mknode
 
@@ -112,7 +112,7 @@ class MkShields(mknode.MkNode):
         user: str,
         project: str,
         branch: str = "main",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
