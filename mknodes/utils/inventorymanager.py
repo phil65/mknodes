@@ -29,10 +29,13 @@ class Inventory(inventory.Inventory):
         base_url: str,
         *,
         domains: list[str] | None = None,
-    ):
+    ):  # sourcery skip: assign-if-exp
         inv = cls(base_url)
         domains = domains or ["py"]
-        file = path if isinstance(path, io.BytesIO) else pathlib.Path(path).open("rb")
+        if isinstance(path, io.BytesIO):  # noqa: SIM108
+            file = path
+        else:
+            file = pathlib.Path(path).open("rb")  # noqa: SIM115
         with file:
             inv_dict = inventory.Inventory.parse_sphinx(file, domain_filter=domains)
         inv.update(inv_dict)
