@@ -89,10 +89,17 @@ class MkCommitMessageConvention(mknode.MkNode):
 
     def __init__(
         self,
-        header: str = "Commit message convention",
         scopes: list[ScopeStr] | None = None,
+        header: str = "Commit message convention",
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            scopes: Allowed commit scopes
+            header: Section header
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(header=header, **kwargs)
         self.scopes = scopes or SCOPES.keys()
 
