@@ -4,14 +4,12 @@ import logging
 import os
 import pathlib
 
-from typing import Any, Literal
+from typing import Any
 
 from mknodes import mknode, mkpage
 
 
 logger = logging.getLogger(__name__)
-
-CriticMarkStr = Literal["addition", "deletion", "substitution", "comment", "highlight"]
 
 
 class MkPageInclude(mknode.MkNode):
