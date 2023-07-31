@@ -13,7 +13,7 @@ from typing import Any
 from typing_extensions import Self
 
 from mknodes import mknode, mktext
-from mknodes.utils import helpers
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -93,12 +93,15 @@ class MkCode(mktext.MkText):
         else:
             code = inspect.getsource(obj)
         code = textwrap.dedent(code) if dedent else code
-        if title is not None:
-            code_title = title
-        elif isinstance(obj, types.TracebackType | types.FrameType | types.CodeType):
-            code_title = ""
-        else:
-            code_title = obj.__name__
+        match obj:
+            case _ if title is not None:
+                code_title = title
+            case types.TracebackType() | types.FrameType() | types.CodeType():
+                code_title = ""
+            case Callable():
+                code_title = classhelpers.to_dotted_path(obj)
+            case _:
+                code_title = obj.__name__
         return cls(code=code, header=header, title=code_title)
 
 
