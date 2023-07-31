@@ -76,7 +76,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         node = mknodes.MkAdmonition("The MkAdmonition node is used to show Admonitions.")
         page += node
         page += "This is the resulting code:"
-        page += mknodes.MkCode(str(node))
+        page += mknodes.MkCode(str(node), language="markdown")
         for typ in [
             "node",
             "abstract",
@@ -91,22 +91,29 @@ class MkAdmonition(mkcontainer.MkContainer):
             "example",
             "quote",
         ]:
-            page += mknodes.MkAdmonition(
+            admonition = mknodes.MkAdmonition(
                 typ=typ,
                 content=f"This is type {typ}",
                 title=typ,
             )
-        page += mknodes.MkAdmonition(
+            page += admonition
+            page += mknodes.MkCode(str(admonition), language="markdown")
+        admonition = mknodes.MkAdmonition(
             content="Admonitions can also be collapsible",
             collapsible=True,
             title="Expand me!",
         )
-        page += mknodes.MkAdmonition(
+        page += admonition
+        page += mknodes.MkCode(str(admonition), language="markdown")
+
+        admonition = mknodes.MkAdmonition(
             content="The initial state can also changed for collapsible admonitions.",
             collapsible=True,
             expanded=True,
             title="Collapse me!",
         )
+        page += admonition
+        page += mknodes.MkCode(str(admonition), language="markdown")
 
 
 if __name__ == "__main__":
