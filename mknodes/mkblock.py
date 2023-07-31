@@ -58,6 +58,8 @@ class MkBlock(mkcontainer.MkContainer):
         page += "An MkBlock is a base class for pymdownx-style blocks."
         block = MkBlock("html", content="Some text", argument="div")
         page += mknodes.MkCode(str(block), header="Markdown")
+        # We can also nest blocks, they will adjust their delimiters automatically.
+        page += mknodes.MkHtmlBlock(block, header="Nested")
 
 
 if __name__ == "__main__":

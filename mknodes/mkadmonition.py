@@ -84,50 +84,33 @@ class MkAdmonition(mkcontainer.MkContainer):
         page += node
         page += "This is the resulting code:"
         page += mknodes.MkCode(str(node), language="markdown")
-        for typ in [
-            "node",
-            "abstract",
-            "info",
-            "tip",
-            "success",
-            "question",
-            "warning",
-            "failure",
-            "danger",
-            "bug",
-            "example",
-            "quote",
-        ]:
-            admonition = mknodes.MkAdmonition(
+        # AdmonitionTypeStr is a Literal containing all Admonition types
+        for typ in AdmonitionTypeStr.__args__:
+            node = mknodes.MkAdmonition(
                 typ=typ,
                 content=f"This is type {typ}",
                 title=typ,
+                header=f"Type '{typ}'",
             )
-            page += admonition
-            page += mknodes.MkCode(str(admonition), language="markdown")
-        admonition = mknodes.MkAdmonition(
-            content="Admonitions can also be collapsible",
+            page += node
+            page += mknodes.MkCode(str(node), language="markdown")
+        node = mknodes.MkAdmonition(
+            content="Admonitions can also be collapsible.",
             collapsible=True,
             title="Expand me!",
+            expanded=True,  # this changes the initial state to expanded
+            header="Collapsible and expandable",
         )
-        page += admonition
-        page += mknodes.MkCode(str(admonition), language="markdown")
-
-        admonition = mknodes.MkAdmonition(
-            content="The initial state can also changed for collapsible admonitions.",
-            collapsible=True,
-            expanded=True,
-            title="Collapse me!",
-        )
-        page += admonition
-        page += mknodes.MkCode(str(admonition), language="markdown")
-        admonition = mknodes.MkAdmonition(
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown")
+        node = mknodes.MkAdmonition(
             content="Inlined.",
             inline="left",
             title="Inlined.",
+            header="Inlined",
         )
-        page += admonition
-        page += mknodes.MkCode(str(admonition), language="markdown")
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown")
 
 
 if __name__ == "__main__":

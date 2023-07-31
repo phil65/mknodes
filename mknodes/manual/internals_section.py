@@ -1,6 +1,9 @@
+import inspect
 import pprint
 
 import mknodes
+
+from mknodes.utils import classhelpers
 
 
 INTRO_TEXT = """Lets show some info about the tree we built.
@@ -44,19 +47,20 @@ def create_file_tree_page(nav: mknodes.MkNav):
 
 
 def create_code_page(nav: mknodes.MkNav):
-    # we create a new page and add a formatted represenation of our Tree.
+    # To show what was needed to create this page, we`ll create a section.
     from mknodes import manual
 
     code_nav = nav.add_nav("Complete code")
     index_page = code_nav.add_index_page(hide_toc=True, icon="octicons/code-24")
     index_page += mknodes.MkCode.for_object(create_code_page)
-    for module in [
-        manual.root,
-        manual.nodes_section,
-        manual.doc_section,
-        manual.internals_section,
-        manual.dev_section,
-    ]:
+    for _module_name, module in inspect.getmembers(manual, inspect.ismodule):
         filename = module.__name__.split(".")[-1] + ".py"
         page = code_nav.add_page(filename, hide_toc=True)
         page += mknodes.MkCode.for_object(module, title=filename)
+    example_page = code_nav.add_page("create_example_page methods")
+    for kls in classhelpers.iter_subclasses(mknodes.MkNode):
+        # iter_subclasses just calls __subclasses__ recursively.
+        if "create_example_page" not in kls.__dict__:
+            continue
+        header = kls.__name__
+        example_page += mknodes.MkCode.for_object(kls.create_example_page, header=header)
