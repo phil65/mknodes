@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from typing import Any
+
 from mknodes import mkcontainer, mknode
 
 
@@ -18,8 +20,17 @@ class MkBlock(mkcontainer.MkContainer):
         *,
         argument: str = "",
         attributes: dict[str, str | bool] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            name: Block name
+            content: Block content
+            argument: Block argument
+            attributes: Block attributes
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(content=content, **kwargs)
         self.name = name
         self.attributes = attributes or {}

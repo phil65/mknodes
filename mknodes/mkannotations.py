@@ -13,7 +13,19 @@ logger = logging.getLogger(__name__)
 class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
-    def __init__(self, num: int, content: str | mknode.MkNode, **kwargs):
+    def __init__(
+        self,
+        num: int,
+        content: str | mknode.MkNode,
+        **kwargs,
+    ):
+        """Constructor.
+
+        Arguments:
+            num: Annotation index number
+            content: Annotation content
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(content=content, **kwargs)
         self.num = num
 

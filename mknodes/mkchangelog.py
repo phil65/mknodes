@@ -5,7 +5,7 @@ import io
 import logging
 import os
 
-from typing import Literal
+from typing import Any, Literal
 
 from git_changelog import cli
 
@@ -31,8 +31,19 @@ class MkChangelog(mknode.MkNode):
         parse_trailers: bool = True,
         sections: list[str] | None = None,
         repository: str | os.PathLike = ".",
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            convention: Commit conventions to use
+            template: Changelog template
+            parse_refs: Whether to parse References
+            parse_trailers: Whether to parse Github Trailers
+            sections: Which sections to display
+            repository: git repo to use for changelog (defaults to current folder)
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.repository = repository
         self.convention = convention

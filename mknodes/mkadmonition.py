@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import textwrap
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes import mkcontainer, mknode
 from mknodes.utils import helpers
@@ -38,8 +38,18 @@ class MkAdmonition(mkcontainer.MkContainer):
         title: str | None = None,
         collapsible: bool = False,
         expanded: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            content: Admonition content
+            typ: Admonition type
+            title: Optional Admonition title
+            collapsible: Whether Admontion can get collapsed by user
+            expanded: Initial state if collapsible is set
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(content=content, **kwargs)
         self.typ = typ
         self.title = title

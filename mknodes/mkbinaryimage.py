@@ -25,6 +25,15 @@ class MkBinaryImage(mkimage.MkImage):
         title: str = "Image title",
         header: str = "",
     ):
+        """Constructor.
+
+        Arguments:
+            data: Image data
+            path: path for the image (including extension)
+            caption: Image caption
+            title: Image Title
+            header: Section header
+        """
         super().__init__(path=path, header=header, caption=caption, title=title)
         self.data = data
 

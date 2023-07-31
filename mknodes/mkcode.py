@@ -38,11 +38,22 @@ class MkCode(mktext.MkText):
         header: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
-        parent=None,
+        parent: mknode.MkNode | None = None,
     ):
+        """Constructor.
+
+        Arguments:
+            code: Code to show
+            language: language for syntax highlighting
+            title: Code block title
+            header: Section header
+            linenums: If set, use as start linenumber
+            highlight_lines: Optionally highlight lines
+            parent: Node parent
+        """
         if isinstance(code, MkCode):
             code = textwrap.indent(str(code), "    ")
-        super().__init__(code, header=header, parent=parent)
+        super().__init__(str(code), header=header, parent=parent)
         self.language = language
         self.title = title
         self.linenums = linenums

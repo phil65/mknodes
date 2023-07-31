@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 import os
 
+from typing import Any
+
 import requests
 
 from mknodes import mknode
@@ -21,8 +23,15 @@ class MkCodeOfConduct(mknode.MkNode):
         self,
         contact_email: str,
         version: str | tuple[int] = "2.1",
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            contact_email: Email for contacting.
+            version: Contributor covenant version
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.version = (
             [str(v) for v in version]
