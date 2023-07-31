@@ -20,14 +20,11 @@ dependencies = [
     "mkdocs-material>=9.2.dev0",
     "mkdocstrings[python]",
     "pymdown-extensions",
-    "mkdocs-literate-nav",
-    # "mkdocs-include-markdown-plugin",
     # "mkdocs-autorefs",
     "pyreadline3",
     "mkdocs-glightbox",
     "mkdocs-section-index",
     "mkdocs-gen-files",
-    # "mkdocs-macros-plugin",
     "markdown-exec[ansi]",
     "mkdocs-coverage",
     "pygments",
@@ -90,10 +87,11 @@ keywords = [
 requires-python = ">=3.10"
 dependencies = [
     "typing_extensions",
+    "mkdocs",
     "mkdocs-gen-files",
+    "mkdocs-literate-nav",
     "git-changelog",
     "requests",
-    "mkdocs",
     "PyYAML >=5.1",
 ]
 license = "MIT"
