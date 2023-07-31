@@ -76,8 +76,8 @@ class MkNav(mknode.MkNode):
             index = tuple(index.split("."))
         del self.nav[index]
 
-    def __len__(self):
-        return len(self.nav) + (1 if self.index_page else 0)
+    # def __len__(self):
+    #     return len(self.nav) + (1 if self.index_page else 0)
 
     def __iter__(self):
         if self.index_page:

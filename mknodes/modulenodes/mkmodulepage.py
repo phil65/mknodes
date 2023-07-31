@@ -33,7 +33,7 @@ class MkModulePage(mkpage.MkPage):
             klasses: klasses to use
             docstrings: Whether to show docstrings for given module.
             show_class_table: ModuleType or path to model to show info for.
-            **kwargs: further keyword arguments passed to parent
+            kwargs: further keyword arguments passed to parent
         """
         super().__init__(path=path, **kwargs)
         self.parts = classhelpers.to_module_parts(module)
