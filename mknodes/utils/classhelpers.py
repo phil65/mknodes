@@ -200,6 +200,13 @@ def get_topmost_module_path(obj: type | types.FunctionType | types.MethodType) -
     return path
 
 
+def get_submodules(
+    module: types.ModuleType | str | tuple[str, ...],
+) -> list[types.ModuleType]:
+    module = to_module(module)
+    return [mod for _, mod in inspect.getmembers(module, inspect.ismodule)]
+
+
 if __name__ == "__main__":
     from prettyqt import widgets
 

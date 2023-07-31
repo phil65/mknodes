@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Sequence
 import inspect
 import logging
 import types
@@ -17,24 +17,21 @@ class MkModuleTable(mktable.MkTable):
 
     def __init__(
         self,
-        module: types.ModuleType | str | tuple[str, ...],
-        *,
-        predicate: Callable | None = None,
+        modules: Sequence[types.ModuleType | str | tuple[str, ...]],
         **kwargs,
     ):
-        self.module = classhelpers.to_module(module, return_none=False)
-        dicts = [
-            self.get_row_for_module(submod)
-            for _, submod in inspect.getmembers(self.module, inspect.ismodule)
-            if (predicate is None or predicate(submod)) and "__" not in submod.__name__
-        ]
+        self.modules = [classhelpers.to_module(i, return_none=False) for i in modules]
+        dicts = [self.get_row_for_module(mod) for mod in self.modules]
         super().__init__(dicts, **kwargs)
+
+    def __repr__(self):
+        return helpers.get_repr(self, modules=self.modules)
 
     def get_row_for_module(self, module: types.ModuleType) -> dict[str, str]:
         return dict(
             Name=module.__name__,
             # helpers.link_for_class(submod, size=4, bold=True),
-            Information=helpers.get_doc(
+            DocStrings=helpers.get_doc(
                 module,
                 fallback="*No docstrings defined.*",
                 only_summary=True,
@@ -46,20 +43,18 @@ class MkModuleTable(mktable.MkTable):
             ),
         )
 
-    # def __repr__(self):
-    #     return helpers.get_repr(self, module=self.module)
-
     @staticmethod
     def create_example_page(page):
         import mkdocstrings
 
         import mknodes
 
-        node = MkModuleTable(module=mkdocstrings)
+        modules = [mod for _, mod in inspect.getmembers(mkdocstrings, inspect.ismodule)]
+        node = MkModuleTable(modules=modules)
         page += node
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
 
 if __name__ == "__main__":
-    table = MkModuleTable(module=helpers)
+    table = MkModuleTable(modules=[mktable, helpers, classhelpers])
     print(table)
