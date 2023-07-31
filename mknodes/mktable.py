@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 import logging
 
-from mknodes import mknode
+from mknodes import mknode, mktext
 
 
 logger = logging.getLogger(__name__)
@@ -19,30 +19,70 @@ class MkTable(mknode.MkNode):
         data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,
         columns: Sequence[str] | None = None,
         *,
-        column_modifiers: dict[str, Callable[[str], str]] | None = None,
         header: str = "",
         **kwargs,
     ):
         super().__init__(header=header, **kwargs)
-        column_modifiers = column_modifiers or {}
         match data:
-            case None:
-                self.data = {}
+            case () | None:
+                self.data: dict[str, mknode.MkNode] = {c: [] for c in columns or []}
             case Mapping():
-                self.data = {str(k): [str(i) for i in v] for k, v in data.items()}
+                self.data = {
+                    str(k): [self.to_item(i) for i in v] for k, v in data.items()
+                }
             case ((str(), *_), *_):
                 h = columns or [str(i) for i in range(len(data))]
                 self.data = {}
                 for i, col in enumerate(data):
-                    self.data[h[i]] = [str(j) for j in col]
+                    self.data[h[i]] = [self.to_item(j) for j in col]
             case (dict(), *_):
-                self.data = {k: [dic[k] for dic in data] for k in data[0]}  # type: ignore
-            case ():
+                self.data = {
+                    k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
+                    for k in data[0]
+                }
+            case _:
+                raise TypeError(data)
+
+    @property
+    def columns(self):
+        return list(self.data.keys())
+
+    @property
+    def children(self):
+        return [i for k in self.data for i in self.data[k]]
+
+    @children.setter
+    def children(self, data):
+        match data:
+            case Mapping():
+                self.data = {
+                    str(k): [self.to_item(i) for i in v] for k, v in data.items()
+                }
+            case (str(), *_):
+                self.data = {"": [self.to_item(i) for i in data]}
+            case (dict(), *_):
+                self.data = {k: [self.to_item(dic[k]) for dic in data] for k in data[0]}
+            case () | None:
                 self.data = {}
             case _:
                 raise TypeError(data)
-        for k, v in column_modifiers.items():
-            self.data[k] = [v(i) for i in self.data[k]]
+
+    def to_item(self, i):
+        item = mktext.MkText(i) if isinstance(i, str | None) else i
+        item.parent_item = self
+        return item
+
+    def add_row(self, row: Sequence[str | None] | dict[str, str | None]):
+        if len(row) != len(self.columns):
+            msg = "Row to add doesnt have same length as header"
+            raise ValueError(msg)
+        match row:
+            case dict():
+                for k, v in row.items():
+                    self.data[k].append(self.to_item(v))
+            case _:
+                for i, key in enumerate(self.data.keys()):
+                    self.data[key].append(self.to_item(row[i]))
 
     def _to_markdown(self) -> str:
         if not any(self.data[k] for k in self.data):
@@ -51,7 +91,10 @@ class MkTable(mknode.MkNode):
         headers = [formatters[i].format(k) for i, k in enumerate(self.data.keys())]
         divider = [self.width_for_column(c) * "-" for c in self.data]
         data = [
-            [formatters[i].format(k) for i, k in enumerate(row)]
+            [
+                formatters[i].format(str(k).replace("\n", "<br>"))
+                for i, k in enumerate(row)
+            ]
             for row in self._iter_rows()
         ]
         header_txt = "| " + " | ".join(headers) + " |"
