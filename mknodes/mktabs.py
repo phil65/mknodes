@@ -15,7 +15,7 @@ class MkBlockTab(mkblock.MkBlock):
     def __init__(
         self,
         title: str,
-        content: str | mknode.MkNode,
+        content: str | mknode.MkNode | list,
         *,
         new: bool | None = None,
         select: bool | None = None,
@@ -30,7 +30,7 @@ class MkBlockTab(mkblock.MkBlock):
         """
         super().__init__(
             "tab",
-            content=str(content),
+            content=content,
             argument=title,
         )
         if new is not None:
