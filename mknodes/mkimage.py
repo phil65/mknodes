@@ -20,6 +20,14 @@ class MkImage(mknode.MkNode):
         title: str = "Image title",
         header: str = "",
     ):
+        """Constructor.
+
+        Arguments:
+            path: path of the image
+            caption: Image caption
+            title: Image title
+            header: Section header
+        """
         super().__init__(header=header)
         self.title = title
         self.caption = caption

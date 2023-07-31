@@ -21,17 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkDoc(mknav.MkNav):
-    """Nav for showing a module documenation.
-
-    Arguments:
-        module: Module to document
-        filter_by___all__: Whether to filter stuff according to "__all__"
-        exclude_modules: List of modules to exclude
-        section_name: Optional section name override
-        class_page: Override for the default ClassPage
-                    (default: [MkClassPage](MkClassPage.md))
-        flatten_nav: Whether classes should be put into top-level of the nav
-    """
+    """Nav for showing a module documenation."""
 
     def __init__(
         self,
@@ -42,8 +32,20 @@ class MkDoc(mknav.MkNav):
         section_name: str | None = None,
         class_page: type[mkclasspage.MkClassPage] | None = None,
         flatten_nav: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            module: Module to document
+            filter_by___all__: Whether to filter stuff according to "__all__"
+            exclude_modules: List of modules to exclude
+            section_name: Optional section name override
+            class_page: Override for the default ClassPage
+                        (default: [MkClassPage](MkClassPage.md))
+            flatten_nav: Whether classes should be put into top-level of the nav
+            kwargs: Keyword arguments passed to parent
+        """
         self.module = classhelpers.to_module(module, return_none=False)
         self.is_package = hasattr(self.module, "__path__")
         self.module_name = self.module.__name__.split(".")[-1]

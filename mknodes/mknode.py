@@ -30,14 +30,16 @@ class MkNode(node.Node):
     The class inherits from Node. The idea is that starting from the
     root nav (aka Docs) down to nested Markup blocks, the whole project can be represented
     by one tree.
-
-    Arguments:
-        header: Optional header for contained Markup
-        indent: Indentation of given Markup (unused ATM)
-        parent: Parent for building the tree
     """
 
     def __init__(self, header: str = "", indent: str = "", parent: MkNode | None = None):
+        """Constructor.
+
+        Arguments:
+            header: Optional header for contained Markup
+            indent: Indentation of given Markup (unused ATM)
+            parent: Parent for building the tree
+        """
         super().__init__(parent=parent)
         self.header = header
         self.indent = indent

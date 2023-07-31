@@ -22,6 +22,14 @@ class MkIFrame(mknode.MkNode):
         height: int = 150,
         header: str = "",
     ):
+        """Constructor.
+
+        Arguments:
+            url: Url to display in a frame
+            width: width of frame in pixels
+            height: height of frame in pixels
+            header: Section header
+        """
         # if as_links:
         #     url = [link.Link(i) for i in url]
         super().__init__(header=header)

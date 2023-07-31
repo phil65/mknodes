@@ -18,9 +18,17 @@ class MkCritic(mktext.MkText):
     def __init__(
         self,
         text: str,
+        *,
         mark: CriticMarkStr = "addition",
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            text: Critic text
+            mark: type of Critic
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(text=text, **kwargs)
         self.mark = mark
 

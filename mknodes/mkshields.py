@@ -114,6 +114,15 @@ class MkShields(mknode.MkNode):
         branch: str = "main",
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            shields: Shields to include
+            user: Github username for shields
+            project: project name for shields
+            branch: branch name for shields
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.user = user
         self.project = project

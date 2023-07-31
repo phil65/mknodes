@@ -30,6 +30,13 @@ class MkText(mknode.MkNode):
         header: str = "",
         parent=None,
     ):
+        """Constructor.
+
+        Arguments:
+            text: Markup text
+            header: Section header
+            parent: Node parent
+        """
         super().__init__(header=header, parent=parent)
         self.text = str(text or "")
 

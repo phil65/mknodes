@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 import logging
 
+from typing import Any
+
 from mknodes import mknode, mktext
 from mknodes.utils import helpers
 
@@ -13,7 +15,17 @@ logger = logging.getLogger(__name__)
 class MkContainer(mknode.MkNode):
     """A base class for Nodes containing other MkNodes."""
 
-    def __init__(self, content: list | None | str | mknode.MkNode = None, **kwargs):
+    def __init__(
+        self,
+        content: list | None | str | mknode.MkNode = None,
+        **kwargs: Any,
+    ):
+        """Constructor.
+
+        Arguments:
+            content: Child Nodes of this container
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.items: list[mknode.MkNode] = []
         match content:

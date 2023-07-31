@@ -21,6 +21,15 @@ class MkList(mkcontainer.MkContainer):
         as_links: bool = False,
         header: str = "",
     ):
+        """Constructor.
+
+        Arguments:
+            items: Items to show as a list
+            ordered: whether the list should be numbered
+            shorten_after: will clip the list after n items and append a "..."
+            as_links: will convert the label to links which will get replaced by plugin
+            header: Section header
+        """
         # if as_links:
         #     items = [link.Link(i) for i in items]
         super().__init__(content=items, header=header)

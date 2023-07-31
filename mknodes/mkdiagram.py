@@ -30,12 +30,23 @@ class MkDiagram(mknode.MkNode):
     def __init__(
         self,
         graph_type: GraphTypeStr,
+        *,
         items=None,
         connections=None,
         orientation: Literal["TD", "DT", "LR", "RL"] = "TD",
         attributes: dict[str, str] | None = None,
         header: str = "",
     ):
+        """Constructor.
+
+        Arguments:
+            graph_type: Type of the graph
+            items: items which should be part of the diagram
+            connections: tuples indicating the connections of the items
+            orientation: diagram orientation
+            attributes: Optional attributes for the items
+            header: Section header
+        """
         super().__init__(header=header)
         self.graph_type = (
             graph_type if graph_type not in self.TYPE_MAP else self.TYPE_MAP[graph_type]

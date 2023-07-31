@@ -22,6 +22,14 @@ class MkTable(mknode.MkNode):
         header: str = "",
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            data: Data show for the table
+            columns: Column headers if not provided by data.
+            header: Section header
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(header=header, **kwargs)
         match data:
             case () | None:

@@ -18,6 +18,14 @@ class MkBlockTab(mkblock.MkBlock):
         new: bool | None = None,
         select: bool | None = None,
     ):
+        """Constructor.
+
+        Arguments:
+            title: Tab title
+            content: Tab content
+            new: Whether tab should have a new attribute
+            select: Whether tab should have a select attribute
+        """
         super().__init__(
             "tab",
             content=str(content),

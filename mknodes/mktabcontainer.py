@@ -22,6 +22,14 @@ class MkTabContainer(mkcontainer.MkContainer):
         select_tab: int | str | None = None,
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            tabs: Tab data
+            header: Section header
+            select_tab: Tab which should be selected initially
+            kwargs: Keyword arguments passed to parent
+        """
         if isinstance(tabs, list):
             items = tabs
         else:

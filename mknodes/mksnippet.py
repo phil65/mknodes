@@ -24,6 +24,12 @@ class MkSnippet(mknode.MkNode):
         *,
         header: str = "",
     ):
+        """Constructor.
+
+        Arguments:
+            path: Path to markdown file.
+            header: Section header
+        """
         super().__init__(header)
         self.path = path
 
