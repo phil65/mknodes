@@ -51,6 +51,7 @@ class MkPage(mkcontainer.MkContainer):
         title: str | None = None,
         subtitle: str | None = None,
         description: str | None = None,
+        template: str | None = None,
         parent: mknav.MkNav | None = None,
         **kwargs: Any,
     ):
@@ -68,6 +69,7 @@ class MkPage(mkcontainer.MkContainer):
             title: Page title
             subtitle: Page subtitle
             description: Page description
+            template: Page template (filename relative to `overrides` directory)
             parent: Node parent
             kwargs: Keyword arguments passed to parent
         """
@@ -94,6 +96,8 @@ class MkPage(mkcontainer.MkContainer):
             self.metadata["title"] = title
         if description is not None:
             self.metadata["description"] = description
+        if template is not None:
+            self.metadata["template"] = template
 
     def __repr__(self):
         return helpers.get_repr(self, path=str(self.path))
