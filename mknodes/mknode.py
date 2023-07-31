@@ -53,7 +53,10 @@ class MkNode(node.Node):
         text = self._to_markdown()
         if self.indent:
             text = textwrap.indent(text, self.indent)
-        return f"## {self.header}\n\n{text}" if self.header else text
+        if not self.header:
+            return text
+        header = f"## {self.header}" if not self.header.startswith("#") else self.header
+        return f"{header}\n\n{text}"
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:
