@@ -25,6 +25,7 @@ from .mkinstallguide import MkInstallGuide
 from .mkchangelog import MkChangelog
 from .mkcodeofconduct import MkCodeOfConduct
 from .mkcommitmessageconvention import MkCommitMessageConvention
+from .mkpullrequestguidelines import MkPullRequestGuidelines
 from .mkiframe import MkIFrame
 from .classnodes.mkclassdiagram import MkClassDiagram
 from .classnodes.mkclasstable import MkClassTable
@@ -73,6 +74,7 @@ __all__ = [
     "MkChangelog",
     "MkCodeOfConduct",
     "MkCommitMessageConvention",
+    "MkPullRequestGuidelines",
     "MkIFrame",
 ]
 
