@@ -38,6 +38,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         title: str | None = None,
         collapsible: bool = False,
         expanded: bool = False,
+        inline: Literal["left", "right"] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -48,12 +49,14 @@ class MkAdmonition(mkcontainer.MkContainer):
             title: Optional Admonition title
             collapsible: Whether Admontion can get collapsed by user
             expanded: Initial state if collapsible is set
+            inline: Whether admonition should rendered as inline block
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(content=content, **kwargs)
         self.typ = typ
         self.title = title
         self.collapsible = collapsible
+        self.inline = inline
         self.expanded = expanded
 
     def __repr__(self):
@@ -65,9 +68,13 @@ class MkAdmonition(mkcontainer.MkContainer):
         block_start = "???" if self.collapsible else "!!!"
         if self.collapsible and self.expanded:
             block_start += "+"
+        if self.inline:
+            inline_label = " inline" if self.inline == "left" else " inline end"
+        else:
+            inline_label = ""
         title = f' "{self.title}"' if self.title else ""
         text = textwrap.indent("\n".join(str(i) for i in self.items), "    ")
-        return f"{block_start} {self.typ}{title}\n{text}\n"
+        return f"{block_start} {self.typ}{inline_label}{title}\n{text}\n"
 
     @staticmethod
     def create_example_page(page):
@@ -111,6 +118,13 @@ class MkAdmonition(mkcontainer.MkContainer):
             collapsible=True,
             expanded=True,
             title="Collapse me!",
+        )
+        page += admonition
+        page += mknodes.MkCode(str(admonition), language="markdown")
+        admonition = mknodes.MkAdmonition(
+            content="Inlined.",
+            inline="left",
+            title="Inlined.",
         )
         page += admonition
         page += mknodes.MkCode(str(admonition), language="markdown")
