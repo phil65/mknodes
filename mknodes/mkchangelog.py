@@ -68,6 +68,7 @@ class MkChangelog(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
+        page.metadata["status"] = "new"
         node = MkChangelog()
         page += node
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")

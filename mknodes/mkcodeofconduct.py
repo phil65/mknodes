@@ -53,6 +53,7 @@ class MkCodeOfConduct(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
+        page.metadata["status"] = "new"
         node = MkCodeOfConduct("my@email.com", version="2.1")
         page += mknodes.MkAdmonition(node, collapsible=True, title="Output")
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")

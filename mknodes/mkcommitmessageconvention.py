@@ -115,6 +115,7 @@ class MkCommitMessageConvention(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
+        page.metadata["status"] = "new"
         node = MkCommitMessageConvention()
         page += node
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")

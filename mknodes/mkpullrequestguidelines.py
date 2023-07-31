@@ -61,6 +61,7 @@ class MkPullRequestGuidelines(mknode.MkNode):
 
         node = MkPullRequestGuidelines()
         page += node
+        page.metadata["status"] = "new"
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 
 
