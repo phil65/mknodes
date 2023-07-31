@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes import mklist, mknode
 from mknodes.utils import helpers
@@ -91,7 +91,7 @@ class MkCommitMessageConvention(mknode.MkNode):
         self,
         scopes: list[ScopeStr] | None = None,
         header: str = "Commit message convention",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
