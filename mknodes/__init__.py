@@ -4,6 +4,7 @@ from .mkblock import MkBlock
 from .mkhtmlblock import MkHtmlBlock
 from .mkadmonition import MkAdmonition
 from .mknode import MkNode
+from .mklink import MkLink
 from .mktext import MkText
 from .mkcontainer import MkContainer
 from .mkcode import MkCode
@@ -38,6 +39,7 @@ from .mkdoc import MkDoc
 
 __all__ = [
     "MkNode",
+    "MkLink",
     "MkBlock",
     "MkHtmlBlock",
     "MkContainer",
