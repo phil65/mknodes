@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Iterator, Sequence
+from collections.abc import Callable, Iterator, Sequence
 import contextlib
 import importlib
 import inspect
@@ -112,7 +112,9 @@ def to_module_parts(  # type: ignore
             raise TypeError(module)
 
 
-def to_dotted_path(obj: Sequence[str] | str | types.ModuleType | type) -> str:
+def to_dotted_path(
+    obj: Sequence[str] | str | types.ModuleType | types.MethodType | type,
+) -> str:
     match obj:
         case (str(), *_):
             return ".".join(obj)
@@ -120,7 +122,7 @@ def to_dotted_path(obj: Sequence[str] | str | types.ModuleType | type) -> str:
             return obj
         case types.ModuleType():
             return obj.__name__
-        case type():
+        case type() | Callable():
             return f"{obj.__module__}.{obj.__qualname__}"
         case _:
             raise TypeError(obj)
@@ -178,7 +180,6 @@ def get_topmost_module_path(obj: type | types.FunctionType | types.MethodType) -
     Arguments:
         obj: Klass to get the path for.
     """
-    path = obj.__module__
     match obj:
         case type():
             fn = inspect.isclass
@@ -186,6 +187,7 @@ def get_topmost_module_path(obj: type | types.FunctionType | types.MethodType) -
             fn = inspect.ismethod
         case types.FunctionType():
             fn = inspect.isfunction
+    path = obj.__module__
     parts = path.split(".")
     while parts:
         with contextlib.suppress(TypeError):
