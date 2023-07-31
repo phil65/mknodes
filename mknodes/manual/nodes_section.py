@@ -20,7 +20,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     # It`s all one big tree.
 
     home_nav = root_nav.add_nav("The nodes")
-    overview = home_nav.add_index_page(hide_toc=True)
+    overview = home_nav.add_index_page(hide_toc=True, icon="material/file-tree-outline")
 
     # this here is what you are reading right now.
     overview += mknodes.MkCode.for_object(create_nodes_section)
@@ -43,7 +43,8 @@ def create_nodes_subsection(nav):
         if "create_example_page" in kls.__dict__:
             page = nodes_nav.add_page(kls.__name__)
             create_class_page(kls, page)
-            table.add_row((mknodes.MkLink(page, kls.__name__), kls.__doc__))
+            link = mknodes.MkLink(page, kls.__name__)
+            table.add_row((link, kls.__doc__))
     page = nodes_nav.add_index_page()
     page += mknodes.MkCode.for_object(create_nodes_subsection)
     page += table

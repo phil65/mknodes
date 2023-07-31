@@ -27,7 +27,7 @@ annotations[2] = str(root_nav)  # This is the resulting root nav: (2)
 
 # Let's begin with the start page.
 # We will now create the root index.md file. That´s what youre lookin at right now.
-page = root_nav.add_index_page(hide_toc=True, hide_nav=True)
+page = root_nav.add_index_page(hide_toc=True, hide_nav=True, icon="octicons/home-24")
 
 # A page can contain MkNodes which represent Markdown text.
 # We can add them to the pages by using Page.add_xyz methods or by instanciating our

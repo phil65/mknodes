@@ -11,7 +11,7 @@ a Development section.
 def create_development_section(root_nav: mknodes.MkNav):
     dev_nav = root_nav.add_nav("Development")
 
-    overview = dev_nav.add_index_page(hide_toc=True)
+    overview = dev_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
     overview += mknodes.MkText(INTRO_TEXT)
     overview += mknodes.MkCode.for_object(create_development_section)
     changelog_page = dev_nav.add_page("Changelog")
