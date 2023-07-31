@@ -10,6 +10,9 @@ down to single markup elements. We can show the subclass tree by using
 the MkClassDiagram Node.
 """
 
+SECTION_CODE = "Code for this section"
+PAGE_CODE = "Code for this page"
+
 
 def create_nodes_section(root_nav: mknodes.MkNav):
     # Basic structure: Theres one root MkNav, MkNavs can contain MkPages and other MkNavs,
@@ -21,11 +24,8 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     overview = home_nav.add_index_page(hide_toc=True, icon="material/graph")
 
     # this here is what you are reading right now.
-    overview += mknodes.MkCode.for_object(create_nodes_section)
-
-    # for convenience, we can add strings directly to pages.
-    # they will get converted to a MkText node automatically.
-    overview += INTRO_TEXT
+    overview += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
+    overview += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
     create_nodes_subsection(home_nav)
     create_subclass_page(home_nav)
 
@@ -44,14 +44,17 @@ def create_nodes_subsection(nav):
             link = mknodes.MkLink(page, kls.__name__)
             table.add_row((link, kls.__doc__))
     page = nodes_nav.add_index_page()
-    page += mknodes.MkCode.for_object(create_nodes_subsection)
+    page += mknodes.MkCode.for_object(create_nodes_subsection, header=SECTION_CODE)
     page += table
 
 
 def create_class_page(kls, page):
     # Each example page will begin by displaying the code used to create the page.
-    page += "## Code for this page"
-    page += mknodes.MkCode.for_object(create_class_page, extract_body=True)
+    page += mknodes.MkCode.for_object(
+        create_class_page,
+        extract_body=True,
+        header=PAGE_CODE,
+    )
     page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
     # and afterwards, we show what was added to the page.
     page += "## Output"
@@ -62,7 +65,7 @@ def create_subclass_page(nav: mknodes.MkNav):
     # Lets take a look at the relations of the included nodes.
     # It`s easy to show different diagrams for classes.
     subcls_page = nav.add_page("Subclass tree", hide_toc=True)
-    subcls_page += mknodes.MkCode.for_object(create_subclass_page)
+    subcls_page += mknodes.MkCode.for_object(create_subclass_page, header=PAGE_CODE)
     subcls_page += mknodes.MkClassDiagram(
         mknodes.MkNode,
         mode="subclass_tree",

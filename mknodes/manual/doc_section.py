@@ -1,17 +1,22 @@
 import mknodes
 
 
-INTRO_TEXT = """now lets create the documentation.
+INTRO_TEXT = """Now lets create the documentation.
 This code will show how to build a simple documentation section.
 """
+
+SECTION_CODE = "Code for this section"
 
 
 def create_documentation_section(root_nav: mknodes.MkNav):
     doc_section = root_nav.add_nav("Documentation")
 
     overview = doc_section.add_index_page(hide_toc=True, icon="material/api")
-    overview += mknodes.MkText(INTRO_TEXT)
-    overview += mknodes.MkCode.for_object(create_documentation_section)
+    overview += mknodes.MkCode.for_object(
+        create_documentation_section,
+        header=SECTION_CODE,
+    )
+    overview += mknodes.MkAdmonition(INTRO_TEXT, typ="tip")
 
     # lets create the complete documentation for our module.
     # Each Documentation section can have global filters for what it should include.
