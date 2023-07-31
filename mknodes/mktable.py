@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 import logging
 
 from mknodes import mknode, mktext
@@ -25,7 +25,7 @@ class MkTable(mknode.MkNode):
         super().__init__(header=header, **kwargs)
         match data:
             case () | None:
-                self.data: dict[str, mknode.MkNode] = {c: [] for c in columns or []}
+                self.data: dict[str, list[mknode.MkNode]] = {c: [] for c in columns or []}
             case Mapping():
                 self.data = {
                     str(k): [self.to_item(i) for i in v] for k, v in data.items()
@@ -115,10 +115,10 @@ class MkTable(mknode.MkNode):
         page += node_2
         page += mknodes.MkCode(str(node_1) + "\n" + str(node_2))
 
-    def _iter_rows(self):
+    def _iter_rows(self) -> Iterator[list[mknode.MkNode]]:
         length = min(len(i) for i in self.data.values())
         for j, _ in enumerate(range(length)):
-            yield [self.data[k][j] or "" for k in self.data]
+            yield [self.data[k][j] for k in self.data]
 
     def width_for_column(self, column: str | int):
         """Returns the minimum width needed for given column.
@@ -128,7 +128,10 @@ class MkTable(mknode.MkNode):
         """
         if isinstance(column, int):
             column = list(self.data.keys())[column]
-        max_len = max((len(str(i)) for i in self.data[column]), default=0)
+        max_len = max(
+            (len(str(i).replace("\n", "<br>")) for i in self.data[column]),
+            default=0,
+        )
         return max(len(column), max_len)
 
     @classmethod

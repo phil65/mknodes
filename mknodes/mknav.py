@@ -48,16 +48,11 @@ class MkNav(mknode.MkNode):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # self.section = helpers.slugify(section) if section else None
-        self.section = section
+        self.section = section  # helpers.slugify(section)
         self.filename = filename
         self.nav: dict[tuple | str | None, mknav.MkNav | mkpage.MkPage] = {}
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
-        # self._mapping = {}
-        # self._editor = mkdocs_gen_files.editor.FilesEditor.current()
-        # self._docs_dir = pathlib.Path(self._editor.config["docs_dir"])
-        # self.files = self._editor.files
 
     def __repr__(self):
         return helpers.get_repr(
