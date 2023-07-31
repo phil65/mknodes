@@ -38,14 +38,14 @@ class MkLink(mknode.MkNode):
         match self.target:
             case mkpage.MkPage():
                 path = self.target.resolved_file_path.replace(".md", ".html")
-                url = project.Project().config.site_url + path
+                url = (project.Project().config.site_url or "") + path
             case mknav.MkNav():
                 if self.target.index_page:
                     path = self.target.index_page.resolved_file_path
                     path = path.replace(".md", ".html")
                 else:
                     path = self.target.resolved_file_path
-                url = project.Project().config.site_url + path
+                url = (project.Project().config.site_url or "") + path
             case str() if self.target.startswith(("http:", "https:", "www.")):
                 url = self.target
             case str():
