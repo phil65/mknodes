@@ -4,6 +4,8 @@ import logging
 import os
 import types
 
+from typing import Any
+
 from mknodes import mkdocstrings, mkpage
 from mknodes.classnodes import mkclasstable
 from mknodes.utils import classhelpers, helpers
@@ -23,7 +25,7 @@ class MkModulePage(mkpage.MkPage):
         path: str | os.PathLike = "index.md",
         docstrings: bool = False,
         show_class_table: bool = True,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
