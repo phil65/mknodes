@@ -251,7 +251,7 @@ class BaseResolver:
                         matches += self._glob(child, remainder)
                     else:
                         matches.append(child)
-            except ResolverError:  # noqa: PERF203
+            except ResolverError:
                 if not self.is_wildcard(pat):
                     raise
         return matches
@@ -288,7 +288,7 @@ class BaseResolver:
                 re_pat += "."
             else:
                 re_pat += re.escape(char)
-        return f"(?ms){re_pat}" + r"\Z"  # noqa: ISC003
+        return f"(?ms){re_pat}" + r"\Z"
 
 
 class ResolverError(RuntimeError):
