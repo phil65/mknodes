@@ -55,7 +55,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
         self.title = title
 
     @property
-    def typ(self) -> str:
+    def typ(self) -> AdmonitionTypeStr:
         return self.attributes["type"]
 
     @typ.setter
@@ -65,6 +65,8 @@ class MkAdmonitionBlock(mkblock.MkBlock):
     @staticmethod
     def create_example_page(page):
         import mknodes
+
+        page.metadata["status"] = "new"
 
         page += "MkAdmonitionBlock is an admonition based on new pymdownx block syntax."
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"

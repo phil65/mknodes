@@ -74,6 +74,7 @@ class MkDetailsBlock(mkblock.MkBlock):
     def create_example_page(page):
         import mknodes
 
+        page.metadata["status"] = "new"
         page += "MkDetailsBlock is a markdown extension based on pymdownx block syntax."
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
         page += mknodes.MkLink(url, "More info", as_button=True)
