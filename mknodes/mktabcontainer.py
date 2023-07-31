@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class MkTabContainer(mkcontainer.MkContainer):
-    items: list[mktabs.MkTab | mktabs.MkBlockTab]
-    Tab: type[mktabs.MkTab] | type[mktabs.MkBlockTab]
+    items: list[mktabs.MkTab | mktabs.MkTabBlock]
+    Tab: type[mktabs.MkTab] | type[mktabs.MkTabBlock]
 
     def __init__(
         self,
@@ -50,7 +50,7 @@ class MkTabContainer(mkcontainer.MkContainer):
                 items[pos].select = True
         super().__init__(content=items, header=header, **kwargs)
 
-    def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkBlockTab:
+    def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkTabBlock:
         match item:
             case int():
                 return self.items[item]
@@ -62,9 +62,9 @@ class MkTabContainer(mkcontainer.MkContainer):
             case _:
                 raise TypeError(item)
 
-    def __contains__(self, tab: str | mktabs.MkTab | mktabs.MkBlockTab) -> bool:
+    def __contains__(self, tab: str | mktabs.MkTab | mktabs.MkTabBlock) -> bool:
         match tab:
-            case mktabs.MkTab() | mktabs.MkBlockTab():
+            case mktabs.MkTab() | mktabs.MkTabBlock():
                 return tab in self.items
             case str():
                 return any(i.title == tab for i in self.items)
@@ -75,12 +75,12 @@ class MkTabContainer(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.title == tab_title)
         return self.items.index(item)
 
-    def __setitem__(self, index: str, value: mktabs.MkTab | mktabs.MkBlockTab | str):
+    def __setitem__(self, index: str, value: mktabs.MkTab | mktabs.MkTabBlock | str):
         match value:
             case str():
                 item = mktext.MkText(value)
                 tab = self.Tab(index, content=item)
-            case mktabs.MkTab() | mktabs.MkBlockTab():
+            case mktabs.MkTab() | mktabs.MkTabBlock():
                 tab = value
             case mknode.MkNode():
                 tab = self.Tab(index, content=value)
@@ -117,12 +117,12 @@ class MkTabbed(MkTabContainer):
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
 
-class MkBlockTabbed(MkTabContainer):
+class MkTabbedBlocks(MkTabContainer):
     """New blocks-based Tab block."""
 
-    items: list[mktabs.MkBlockTab]
+    items: list[mktabs.MkTabBlock]
     REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
-    Tab = mktabs.MkBlockTab
+    Tab = mktabs.MkTabBlock
 
     @staticmethod
     def create_example_page(page):
@@ -131,7 +131,7 @@ class MkBlockTabbed(MkTabContainer):
         # this one is basically the same as MkTabbed,
         # but based on new pymdownx block syntax.
         # i think it is not supported by Material for MkDocs yet.
-        node = MkBlockTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
+        node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
         page += node
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
@@ -144,5 +144,5 @@ class MkBlockTabbed(MkTabContainer):
 
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = MkBlockTabbed(tabs)
+    tabblock = MkTabbedBlocks(tabs)
     print(tabblock)

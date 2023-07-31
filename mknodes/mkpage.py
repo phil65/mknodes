@@ -360,7 +360,7 @@ class MkPage(mkcontainer.MkContainer):
         if style == "tabbed":
             tabblock = mktabcontainer.MkTabbed(data, parent=self, **kwargs)
         else:
-            tabblock = mktabcontainer.MkBlockTabbed(data, parent=self, **kwargs)
+            tabblock = mktabcontainer.MkTabbedBlocks(data, parent=self, **kwargs)
         self.append(tabblock)
         return tabblock
 

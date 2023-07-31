@@ -9,7 +9,7 @@ from mknodes import mkblock, mkcontainer, mknode
 logger = logging.getLogger(__name__)
 
 
-class MkBlockTab(mkblock.MkBlock):
+class MkTabBlock(mkblock.MkBlock):
     """Node representing a single tab (new block style)."""
 
     def __init__(
@@ -102,5 +102,5 @@ class MkTab(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    tab = MkBlockTab(content="test", title="test", new=True)
+    tab = MkTabBlock(content="test", title="test", new=True)
     print(tab)
