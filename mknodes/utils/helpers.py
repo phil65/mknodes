@@ -42,6 +42,7 @@ def get_repr(
     _obj: Any,
     *args: Any,
     _shorten: bool = True,
+    _filter_empty: bool = False,
     **kwargs: Any,
 ) -> str:
     """Get a suitable __repr__ string for an object.
@@ -57,6 +58,8 @@ def get_repr(
     parts = [my_repr(val) for val in args]
     kw_parts = []
     for k, v in kwargs.items():
+        if _filter_empty and (v is None or v == ""):
+            continue
         if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType):
             name = v.__name__
         else:
