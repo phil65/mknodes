@@ -20,7 +20,7 @@ class MkProgressBar(mknode.MkNode):
     def __init__(
         self,
         percentage: int,
-        title: str | None = "{percentage}%",
+        title: str | None | Literal[True] = True,
         style: Literal["thin", "candystripe", "candystripe_animated"] | None = None,
         **kwargs: Any,
     ):
@@ -33,7 +33,7 @@ class MkProgressBar(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.title = title or ""
+        self.title = title
         self.percentage = percentage
         self.style = style
 
@@ -46,7 +46,13 @@ class MkProgressBar(mknode.MkNode):
         )
 
     def _to_markdown(self) -> str:
-        formatted = self.title.format(percentage=self.percentage)
+        match self.title:
+            case None:
+                title = ""
+            case str():
+                title = self.title.format(percentage=self.percentage)
+            case True:
+                title = f"{self.percentage}%"
         match self.style:
             case "thin":
                 suffix = "{: .thin}"
@@ -56,7 +62,7 @@ class MkProgressBar(mknode.MkNode):
                 suffix = "{: .candystripe .candystripe-animate}"
             case _:
                 suffix = ""
-        return rf'[={self.percentage}% "{formatted}"]{suffix}'
+        return rf'[={self.percentage}% "{title}"]{suffix}'
 
     @staticmethod
     def create_example_page(page):
