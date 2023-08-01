@@ -18,23 +18,33 @@ logger = logging.getLogger(__name__)
 
 def iter_subclasses(
     klass: type,
-    include_abstract: bool = False,
+    *,
     recursive: bool = True,
+    filter_abstract: bool = False,
+    filter_generic: bool = True,
+    filter_locals: bool = True,
 ) -> typing.Iterator[type]:
     """Recursively iter all subclasses of given klass.
 
     Arguments:
         klass: class to get subclasses from
-        include_abstract: whether abstract base classes should be included.
+        filter_abstract: whether abstract base classes should be included.
+        filter_generic: whether generic base classes should be included.
+        filter_locals: whether local base classes should be included.
         recursive: whether to also get subclasses of subclasses.
     """
     if getattr(klass.__subclasses__, "__self__", None) is None:
         return
-    for i in klass.__subclasses__():
+    for kls in klass.__subclasses__():
         if recursive:
-            yield from iter_subclasses(i)
-        if include_abstract or not inspect.isabstract(i):
-            yield i
+            yield from iter_subclasses(kls)
+        if filter_abstract and inspect.isabstract(kls):
+            continue
+        if filter_generic and kls.__qualname__.endswith("]"):
+            continue
+        if filter_locals and "<locals>" in kls.__qualname__:
+            continue
+        yield kls
 
 
 @typing.overload
