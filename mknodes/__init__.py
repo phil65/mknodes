@@ -26,6 +26,7 @@ from .basenodes.mkannotations import MkAnnotations
 from .basenodes.mkfootnotes import MkFootNotes
 from .basenodes.mkpageinclude import MkPageInclude
 from .basenodes.mkiframe import MkIFrame
+from .basenodes.mkprogressbar import MkProgressBar
 
 from .mkpage import MkPage
 from .mknav import MkNav
@@ -87,6 +88,7 @@ __all__ = [
     "MkCommitMessageConvention",
     "MkPullRequestGuidelines",
     "MkIFrame",
+    "MkProgressBar",
 ]
 
 __version__ = "0.18.0"
