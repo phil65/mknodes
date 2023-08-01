@@ -103,14 +103,15 @@ class MkCommitMessageConvention(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        self.scopes = scopes or SCOPES.keys()
+        self.scopes = scopes
 
     def __repr__(self):
-        return helpers.get_repr(self, scopes=self.scopes)
+        return helpers.get_repr(self, scopes=self.scopes, _filter_empty=True)
 
     def _to_markdown(self) -> str:
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
-        scope_str = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in self.scopes])
+        scopes = self.scopes or list(SCOPES.keys())
+        scope_str = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in scopes])
         return TEXT.format(styles=styles, scopes=scope_str)
 
     @staticmethod

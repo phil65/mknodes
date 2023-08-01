@@ -5,6 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -74,17 +75,26 @@ class MkInstallGuide(mknode.MkNode):
         super().__init__(**kwargs)
         self.project = project
         self.header_level = header_level
-        self.package_managers = package_managers or ["pip"]
+        self.package_managers = package_managers
 
     def _to_markdown(self) -> str:
         blocks = []
+        managers = self.package_managers or ["pip"]
         for k, v in PROVIDERS.items():
-            if k in self.package_managers:
+            if k in managers:
                 if self.header_level:
                     prefix = self.header_level * "#"
                     blocks.append(f"{prefix} {k}\n")
                 blocks.append(v.format(project=self.project))
         return "\n\n".join(blocks)
+
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            project=self.project,
+            package_managers=self.package_managers,
+            header_level=self.header_level,
+        )
 
     @staticmethod
     def create_example_page(page):

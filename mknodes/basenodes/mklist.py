@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 import logging
 
 from mknodes.basenodes import mkcontainer, mknode
@@ -17,7 +18,7 @@ class MkList(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        items: list[str | mknode.MkNode] | None = None,
+        items: Sequence[str | mknode.MkNode] | None = None,
         *,
         ordered: bool = False,
         shorten_after: int | None = None,
@@ -35,7 +36,8 @@ class MkList(mkcontainer.MkContainer):
         """
         # if as_links:
         #     items = [link.Link(i) for i in items]
-        super().__init__(content=items, header=header)
+        items = items or []
+        super().__init__(content=list(items), header=header)
         self.ordered = ordered
         self.shorten_after = shorten_after
         self.as_links = as_links
@@ -47,11 +49,16 @@ class MkList(mkcontainer.MkContainer):
         return len(self.items)
 
     def __repr__(self):
+        from mknodes.basenodes import mktext
+
+        items = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
         return helpers.get_repr(
             self,
-            items=self.items,
+            items=items,
             shorten_after=self.shorten_after,
             as_links=self.as_links,
+            _filter_empty=True,
+            _filter_false=True,
         )
 
     @staticmethod

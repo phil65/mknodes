@@ -63,7 +63,15 @@ class MkAdmonition(mkcontainer.MkContainer):
         self.expanded = expanded
 
     def __repr__(self):
-        return helpers.get_repr(self, content=self.items, typ=self.typ, title=self.title)
+        from mknodes.basenodes import mktext
+
+        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
+            content = str(self.items[0])
+        elif len(self.items) == 1:
+            content = self.items[0]
+        else:
+            content = self.items
+        return helpers.get_repr(self, content=content, typ=self.typ, title=self.title)
 
     def _to_markdown(self) -> str:
         if not self.items and not self.title:
