@@ -61,10 +61,9 @@ class MkPullRequestGuidelines(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        node = MkPullRequestGuidelines()
-        page += node
         page.metadata["status"] = "new"
-        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        node = MkPullRequestGuidelines()
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

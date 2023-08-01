@@ -51,10 +51,12 @@ class MkCritic(mktext.MkText):
 
     @staticmethod
     def create_example_page(page):
+        import mknodes
+
         page += "The MkCritic node can be used to display text diffs."
         for typ in ["addition", "deletion", "comment", "highlight"]:
             node = MkCritic(mark=typ, text=f"This is type {typ}")
-            page += node
+            page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

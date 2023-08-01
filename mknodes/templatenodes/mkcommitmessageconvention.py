@@ -120,8 +120,7 @@ class MkCommitMessageConvention(mknode.MkNode):
 
         page.metadata["status"] = "new"
         node = MkCommitMessageConvention()
-        page += node
-        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        page += mknodes.MkNodeExample(node, indent=True)
 
 
 if __name__ == "__main__":

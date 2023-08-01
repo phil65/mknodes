@@ -68,12 +68,17 @@ class MkCode(mktext.MkText):
 
     @staticmethod
     def create_example_page(page):
+        import mknodes
+
         page += "A MkCode node can be used to display a code section"
-        page += MkCode(language="python", code="a = 1 + 2")
+        node_1 = MkCode(language="python", code="a = 1 + 2")
+        page += mknodes.MkNodeExample(node_1, indent=True)
         page += "You can also apply syntax highlighting for different languages"
-        page += MkCode(language="js", code="var z = x + y;", title="JavaScript")
+        node_2 = MkCode(language="js", code="var z = x + y;", title="syntax highlight")
+        page += mknodes.MkNodeExample(node_2, indent=True)
         page += "Highlighting lines is also possible"
-        page += MkCode(code="1\n2\n3\n4", highlight_lines=[1, 3])
+        node_3 = MkCode(code="1\n2\n3\n4", highlight_lines=[1, 3])
+        page += mknodes.MkNodeExample(node_3, indent=True)
 
     @classmethod
     def for_file(cls, path: str | os.PathLike, language: str = "py"):

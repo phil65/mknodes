@@ -77,8 +77,8 @@ class MkChangelog(mknode.MkNode):
 
         page.metadata["status"] = "new"
         node = MkChangelog()
-        page += node
-        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        page += mknodes.MkNodeExample(node)
+        # page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 
 
 if __name__ == "__main__":

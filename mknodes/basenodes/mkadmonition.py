@@ -92,9 +92,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         import mknodes
 
         node = mknodes.MkAdmonition("The MkAdmonition node is used to show Admonitions.")
-        page += node
-        page += "This is the resulting code:"
-        page += mknodes.MkCode(str(node), language="markdown")
+        page += mknodes.MkNodeExample(node)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in AdmonitionTypeStr.__args__:
             node = mknodes.MkAdmonition(
@@ -103,8 +101,7 @@ class MkAdmonition(mkcontainer.MkContainer):
                 title=typ,
                 header=f"Type '{typ}'",
             )
-            page += node
-            page += mknodes.MkCode(str(node), language="markdown")
+            page += mknodes.MkNodeExample(node)
         node = mknodes.MkAdmonition(
             content="Admonitions can also be collapsible.",
             collapsible=True,
@@ -112,16 +109,14 @@ class MkAdmonition(mkcontainer.MkContainer):
             expanded=True,  # this changes the initial state to expanded
             header="Collapsible and expandable",
         )
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown")
+        page += mknodes.MkNodeExample(node)
         node = mknodes.MkAdmonition(
             content="Inlined.",
             inline="left",
             title="Inlined.",
             header="Inlined",
         )
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown")
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

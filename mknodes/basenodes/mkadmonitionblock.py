@@ -82,8 +82,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
                 title=f"Block admonition with type {typ!r}",
                 header=f"Type '{typ}'",
             )
-            page += node
-            page += mknodes.MkCode(str(node), language="markdown")
+            page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

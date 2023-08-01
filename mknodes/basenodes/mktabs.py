@@ -116,11 +116,7 @@ class MkTab(mkcontainer.MkContainer):
         # We can add single tabs to a page by themselves.
         # It is recommended to use a Tab container though.
         tab_1 = MkTab("A Title", content="test")
-        tab_2 = MkTab("Another Title", content=mknodes.MkAdmonition("Yeah"))
-        page += tab_1
-        page += tab_2
-        code = str(tab_1) + "\n" + str(tab_2)
-        page += mknodes.MkCode(code, header="Markdown", language="markdown")
+        page += mknodes.MkNodeExample(tab_1)
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)

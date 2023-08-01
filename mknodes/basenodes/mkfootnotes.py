@@ -139,7 +139,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         node[2] = r"They can also get nested[^3]."
         node[3] = mknodes.MkAdmonition("And they can also contain other Markdown.")
         page += node
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
     def _to_markdown(self) -> str:
         return "".join(str(i) for i in self.items) if self.items else ""

@@ -68,8 +68,7 @@ class MkGrid(mkcontainer.MkContainer):
         item_1 = mknodes.MkList(items=["Item 1", "Item 2", "Item 3"])
         item_2 = mknodes.MkKeys(keys=["Ctrl+A"])
         grid = MkGrid(cards=[item_1, item_2])
-        page += grid
-        page += mknodes.MkCode(str(grid), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(grid)
 
 
 if __name__ == "__main__":

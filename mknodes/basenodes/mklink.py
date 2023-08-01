@@ -87,14 +87,11 @@ class MkLink(mknode.MkNode):
 
         url = "http://www.google.de"
         node = mknodes.MkLink(url, "This is a link.")
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown")
-        node = mknodes.MkLink(url, "This is a link.", as_button=True)
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown")
-        node = mknodes.MkLink(url, "This is a link.", as_button=True, primary_color=True)
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown")
+        page += mknodes.MkNodeExample(node)
+        node = mknodes.MkLink(url, "Disguised as button.", as_button=True)
+        page += mknodes.MkNodeExample(node)
+        node = mknodes.MkLink(url, "Colored.", as_button=True, primary_color=True)
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

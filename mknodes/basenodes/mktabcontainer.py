@@ -117,8 +117,7 @@ class MkTabbed(MkTabContainer):
 
         # this node is basically a container and manager for MkTabs nodes.
         node = MkTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
 
 class MkTabbedBlocks(MkTabContainer):
@@ -136,8 +135,7 @@ class MkTabbedBlocks(MkTabContainer):
         # but based on new pymdownx block syntax.
         # i think it is not supported by Material for MkDocs yet.
         node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

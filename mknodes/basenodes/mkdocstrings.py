@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class MkDocStrings(mknode.MkNode):
     """Docstring section (powered by mkdocstrings)."""
 
-    REQUIRED_PLUGINS = "mkdocstrings"
+    REQUIRED_PLUGINS = ["mkdocstrings"]
     OPTIONS_DEFAULT: dict[str, Any] = {}
     ICON = "material/api"
 
@@ -194,8 +194,7 @@ class MkDocStrings(mknode.MkNode):
             header="DocStrings",
             heading_level=3,
         )
-        page += mknodes.MkCode(str(node), header="Markdown")
-        page += node
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

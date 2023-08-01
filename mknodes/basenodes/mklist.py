@@ -74,11 +74,12 @@ class MkList(mkcontainer.MkContainer):
             ordered=True,
             header="Ordered",
         )
-        page += list_1
-        page += list_2
-        page += list_3
-        code = "\n".join(str(i) for i in [list_1, list_2, list_3])
-        page += mknodes.MkCode(code, language="markdown", header="Markdown")
+        # and can contain markdown.
+        list_4 = MkList(items=[mknodes.MkAdmonition("Markup")] * 3)
+        page += mknodes.MkNodeExample(list_1)
+        page += mknodes.MkNodeExample(list_2)
+        page += mknodes.MkNodeExample(list_3)
+        page += mknodes.MkNodeExample(list_4)
 
     def _prep(self, item) -> str:
         return helpers.linked(item) if self.as_links else str(item)

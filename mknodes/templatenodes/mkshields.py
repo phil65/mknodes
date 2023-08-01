@@ -161,8 +161,7 @@ class MkShields(mknode.MkNode):
             user="phil65",
             project="mknodes",
         )
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

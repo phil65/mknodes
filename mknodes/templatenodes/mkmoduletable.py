@@ -53,8 +53,7 @@ class MkModuleTable(mktable.MkTable):
 
         modules = [mod for _, mod in inspect.getmembers(mkdocstrings, inspect.ismodule)]
         node = MkModuleTable(modules=modules)
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":

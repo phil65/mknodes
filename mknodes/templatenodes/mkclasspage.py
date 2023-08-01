@@ -56,8 +56,7 @@ class MkClassPage(mkpage.MkPage):
         # MkClassPages are page templates to display
         # documentation about a class.
         node = MkClassPage(klass=MkClassPage)
-        page += str(node)
-        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
     def get_processors(self):
         return [

@@ -49,5 +49,4 @@ class MkBinaryImage(mkimage.MkImage):
         </svg>
         """
         node = MkBinaryImage(data, path="some_image.svg", caption="A simple cross")
-        page += node
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mknodes.MkNodeExample(node)

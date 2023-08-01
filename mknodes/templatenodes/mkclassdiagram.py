@@ -109,12 +109,9 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             mode="mro",
             header="Method resolution order: MkTable",
         )
-        page += parent_diagram
-        page += mknodes.MkHtmlBlock(parent_diagram, header="Markdown")
-        page += sub_diagram
-        page += mknodes.MkHtmlBlock(sub_diagram)
-        page += mro_diagram
-        page += mknodes.MkHtmlBlock(mro_diagram)
+        page += mknodes.MkNodeExample(parent_diagram, indent=True)
+        page += mknodes.MkNodeExample(sub_diagram, indent=True)
+        page += mknodes.MkNodeExample(mro_diagram, indent=True)
 
     def _to_markdown(self) -> str:
         match self.mode:
