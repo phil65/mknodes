@@ -18,25 +18,15 @@ class MkBinaryImage(mkimage.MkImage):
 
     ICON = "material/file-image"
 
-    def __init__(
-        self,
-        data: bytes | str,
-        path: str,
-        *,
-        caption: str = "",
-        title: str = "Image title",
-        header: str = "",
-    ):
+    def __init__(self, data: bytes | str, path: str, **kwargs):
         """Constructor.
 
         Arguments:
             data: Image data
             path: path for the image (including extension)
-            caption: Image caption
-            title: Image Title
-            header: Section header
+            kwargs: Keyword arguments passed to parent
         """
-        super().__init__(path=path, header=header, caption=caption, title=title)
+        super().__init__(path=path, **kwargs)
         self.data = data
 
     def virtual_files(self):
