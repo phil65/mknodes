@@ -30,10 +30,8 @@ class MkChangelog(mknode.MkNode):
         self,
         convention: Literal["basic", "angular", "atom", "conventional"] = "angular",
         template: Literal["keepachangelog", "angular"] = "keepachangelog",
-        parse_refs: bool = True,
-        parse_trailers: bool = True,
         sections: list[str] | None = None,
-        repository: str | os.PathLike = ".",
+        repository: str | os.PathLike | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -41,19 +39,15 @@ class MkChangelog(mknode.MkNode):
         Arguments:
             convention: Commit conventions to use
             template: Changelog template
-            parse_refs: Whether to parse References
-            parse_trailers: Whether to parse Github Trailers
             sections: Which sections to display
             repository: git repo to use for changelog (defaults to current folder)
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.repository = repository
         self.convention = convention
         self.template = template
-        self.parse_trailers = parse_trailers
-        self.parse_refs = parse_refs
         self.sections = sections
+        self.repository = repository
 
     def __repr__(self):
         return helpers.get_repr(
@@ -68,11 +62,11 @@ class MkChangelog(mknode.MkNode):
     def _to_markdown(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):
             _changelog, text = cli.build_and_render(
-                repository=str(self.repository),
+                repository=str(self.repository) if self.repository else ".",
                 template=self.template,
                 convention=self.convention,
-                parse_refs=self.parse_refs,
-                parse_trailers=self.parse_trailers,
+                parse_refs=True,
+                parse_trailers=True,
                 sections=self.sections,
             )
         return text
