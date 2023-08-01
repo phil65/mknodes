@@ -34,6 +34,7 @@ class MkNode(node.Node):
 
     ICON = ""  # should be set by subnodes for docs
     REQUIRED_EXTENSIONS: list[str] = []
+    REQUIRED_PLUGINS: list[str] = []
 
     def __init__(
         self,
@@ -137,6 +138,12 @@ class MkNode(node.Node):
         for desc in self.descendants:
             extensions.update(desc.REQUIRED_EXTENSIONS)
         return extensions
+
+    def all_plugins(self) -> set[str]:
+        plugins = set()
+        for desc in self.descendants:
+            plugins.update(desc.REQUIRED_PLUGINS)
+        return plugins
 
     def pretty_print(self, _indent: int = 0):
         """PrettyPrint node and its children."""
