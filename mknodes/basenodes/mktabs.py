@@ -13,7 +13,7 @@ class MkTabBlock(mkblock.MkBlock):
     """Node representing a single tab (new block style)."""
 
     ICON = "material/tab"
-    REQUIRED_EXTENSIONS = ["pymdownx.blocks.tabs"]
+    REQUIRED_EXTENSIONS = ["pymdownx.blocks.tab"]
 
     def __init__(
         self,
@@ -70,12 +70,14 @@ class MkTab(mkcontainer.MkContainer):
     """Node representing a single tab."""
 
     ICON = "material/tab"
+    REQUIRED_EXTENSIONS = ["pymdownx.tabbed"]
 
     def __init__(
         self,
         title: str,
         content: list | str | mknode.MkNode | None = None,
         *,
+        new: bool = False,
         select: bool = False,
         attrs: dict | None = None,
         **kwargs,
@@ -83,6 +85,7 @@ class MkTab(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.title = title
         self.select = select
+        self.new = new
         self.attrs = attrs
 
     @staticmethod
@@ -101,8 +104,13 @@ class MkTab(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
         indented_text = textwrap.indent(item_str.rstrip("\n"), prefix="    ")
-        selected = "+" if self.select else ""
-        lines = [f'==={selected} "{self.title}"', indented_text]
+        if self.new:
+            mark = "!"
+        elif self.select:
+            mark = "+"
+        else:
+            mark = ""
+        lines = [f'==={mark} "{self.title}"', indented_text]
         return "\n".join(lines) + "\n"
 
 

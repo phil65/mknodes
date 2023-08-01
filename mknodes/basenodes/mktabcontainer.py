@@ -98,6 +98,9 @@ class MkTabContainer(mkcontainer.MkContainer):
         return {tab.title: str(tab) for tab in self.items}
 
     def _to_markdown(self) -> str:
+        if not self.items:
+            return ""
+        self.items[0].new = True
         return "\n".join(str(i) for i in self.items)
 
 
@@ -135,12 +138,6 @@ class MkTabbedBlocks(MkTabContainer):
         node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
         page += node
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
-
-    def _to_markdown(self) -> str:
-        if not self.items:
-            return ""
-        self.items[0].new = True
-        return "\n".join(str(i) for i in self.items)
 
 
 if __name__ == "__main__":

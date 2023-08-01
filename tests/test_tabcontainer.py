@@ -3,7 +3,7 @@ from __future__ import annotations
 import mknodes
 
 
-EXPECTED_TABBED = """=== "Tab1"
+EXPECTED_TABBED = """===! "Tab1"
     Some text
 
 === "Tab2"
