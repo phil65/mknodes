@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 class MkCode(mktext.MkText):
     """Class representing a Code block."""
 
+    ICON = "material/code-json"
+
     REQUIRED_EXTENSIONS = [
         "pymdownx.highlight",
         "pymdownx.inlinehilite",

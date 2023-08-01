@@ -108,6 +108,8 @@ ShieldTypeStr = Literal[
 class MkShields(mknode.MkNode):
     """MkCritic block."""
 
+    ICON = "simple/shieldsdotio"
+
     def __init__(
         self,
         shields: list[ShieldTypeStr],

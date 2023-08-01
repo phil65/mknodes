@@ -23,6 +23,8 @@ class MkChangelog(mknode.MkNode):
         action needs to have fetch-depth set to 0 (or some other value.)
     """
 
+    ICON = "material/format-list-group"
+
     def __init__(
         self,
         convention: Literal["basic", "angular", "atom", "conventional"] = "angular",

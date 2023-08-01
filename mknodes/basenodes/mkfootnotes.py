@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 class MkFootNote(mkcontainer.MkContainer):
     """Represents a single footnote. It gets managed by an MkFootNotes node."""
 
+    ICON = "octicons/list-ordered-16"
+
     def __init__(
         self,
         num: int,

@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
+    ICON = "material/alert-box"
+
     def __init__(
         self,
         num: int,

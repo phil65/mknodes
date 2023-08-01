@@ -23,6 +23,8 @@ class MkText(mknode.MkNode):
     All classes inheriting from MkNode can get converted to this Type.
     """
 
+    ICON = "material/text"
+
     def __init__(
         self,
         text: str | mknode.MkNode | None = "",

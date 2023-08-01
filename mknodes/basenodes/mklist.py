@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 class MkList(mkcontainer.MkContainer):
     """Node for showing a formatted list."""
 
+    ICON = "octicons/list-unordered-24"
+
     def __init__(
         self,
         items: list[str | mknode.MkNode] | None = None,

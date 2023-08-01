@@ -15,6 +15,8 @@ CriticMarkStr = Literal["addition", "deletion", "substitution", "comment", "high
 class MkCritic(mktext.MkText):
     """MkCritic block."""
 
+    ICON = "material/format-text"
+
     def __init__(
         self,
         text: str,

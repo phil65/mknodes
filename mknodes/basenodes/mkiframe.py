@@ -14,6 +14,8 @@ HTML = '<iframe frameborder="0" width="{width}" height="{height}" src="{url}"></
 class MkIFrame(mknode.MkNode):
     """Node for showing a formatted list."""
 
+    ICON = "material/web-box"
+
     def __init__(
         self,
         url: str,

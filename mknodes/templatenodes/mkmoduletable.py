@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 class MkModuleTable(mktable.MkTable):
     """Class representing a formatted table containing information a module."""
 
+    ICON = "material/view-module-outline"
+
     def __init__(
         self,
         modules: Sequence[types.ModuleType | str | tuple[str, ...]],

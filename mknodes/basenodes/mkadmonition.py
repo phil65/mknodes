@@ -30,6 +30,8 @@ AdmonitionTypeStr = Literal[
 class MkAdmonition(mkcontainer.MkContainer):
     """Admonition info box."""
 
+    ICON = "octicons/info-16"
+
     def __init__(
         self,
         content: str | list | mknode.MkNode,

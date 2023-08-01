@@ -37,6 +37,8 @@ class MkNav(mknode.MkNode):
     (in general a SUMMARY.md) and can contain other navs as well as pages.
     """
 
+    ICON = "material/navigation-outline"
+
     def __init__(
         self,
         section: str | None = None,

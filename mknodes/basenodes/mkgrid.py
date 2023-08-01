@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 class MkGridCard(mkcontainer.MkContainer):
     """Node representing a single grid card."""
 
+    ICON = "material/square-medium"
+
     def __init__(
         self,
         content: list | str | mknode.MkNode | None = None,
@@ -28,6 +30,8 @@ class MkGridCard(mkcontainer.MkContainer):
 
 class MkGrid(mkcontainer.MkContainer):
     """Node for showing a grid."""
+
+    ICON = "material/view-grid"
 
     def __init__(
         self,

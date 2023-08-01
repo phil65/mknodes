@@ -16,6 +16,8 @@ class MkBinaryImage(mkimage.MkImage):
     It can hold either str or bytes as data.
     """
 
+    ICON = "material/file-image"
+
     def __init__(
         self,
         data: bytes | str,

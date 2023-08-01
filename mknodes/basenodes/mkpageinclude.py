@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 class MkPageInclude(mknode.MkNode):
     """Node to include other MkPages / Md files."""
 
+    ICON = "octicons/file-symlink-file-24"
+
     def __init__(
         self,
         page: str | os.PathLike | mkpage.MkPage,

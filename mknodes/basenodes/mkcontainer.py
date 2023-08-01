@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 class MkContainer(mknode.MkNode):
     """A base class for Nodes containing other MkNodes."""
 
+    ICON = "material/database"
+
     def __init__(
         self,
         content: list | None | str | mknode.MkNode = None,

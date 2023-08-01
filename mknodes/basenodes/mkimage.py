@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 class MkImage(mknode.MkNode):
     """Image including optional caption."""
 
+    ICON = "material/image"
+
     def __init__(
         self,
         path: str,

@@ -20,6 +20,8 @@ BlockTypeStr = Literal["div", "span", "code"] | RawHtmlTags | RawBlockTags
 class MkHtmlBlock(mkblock.MkBlock):
     """pymdownx-based Html block. Can be used to show raw content."""
 
+    ICON = "octicons/code-16"
+
     def __init__(
         self,
         content: str | mknode.MkNode = "",

@@ -19,6 +19,8 @@ URL_START = "https://www.contributor-covenant.org/version/"
 class MkCodeOfConduct(mknode.MkNode):
     """Contributor Covenant code of conduct."""
 
+    ICON = "octicons/code-of-conduct-24"
+
     def __init__(
         self,
         contact_email: str,

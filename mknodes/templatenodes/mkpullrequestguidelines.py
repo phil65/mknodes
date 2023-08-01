@@ -39,6 +39,8 @@ and we will squash them ourselves if needed, before merging.
 class MkPullRequestGuidelines(mknode.MkNode):
     """Pull request guide text."""
 
+    ICON = "octicons/git-pull-request-24"
+
     def __init__(
         self,
         header: str = "Pull request guidelines",

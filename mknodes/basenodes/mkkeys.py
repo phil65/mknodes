@@ -14,6 +14,7 @@ class MkKeys(mknode.MkNode):
     """Node to include other MkPages / Md files."""
 
     REQUIRED_EXTENSIONS = ["pymdownx.keys"]
+    ICON = "fontawesome/regular/keyboard"
 
     def __init__(
         self,

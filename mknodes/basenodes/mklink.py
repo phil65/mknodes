@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 class MkLink(mknode.MkNode):
     """A simple Link."""
 
+    ICON = "octicons/link-24"
+
     def __init__(
         self,
         target: str | mkpage.MkPage | mknav.MkNav,

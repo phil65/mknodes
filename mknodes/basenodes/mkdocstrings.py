@@ -19,6 +19,7 @@ class MkDocStrings(mknode.MkNode):
 
     REQUIRED_PLUGINS = "mkdocstrings"
     OPTIONS_DEFAULT: dict[str, Any] = {}
+    ICON = "material/api"
 
     def __init__(
         self,

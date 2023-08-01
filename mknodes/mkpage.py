@@ -37,6 +37,8 @@ class MkPage(mkcontainer.MkContainer):
     associated, and can have metadata (added as header)
     """
 
+    ICON = "fontawesome/solid/sheet-plastic"
+
     def __init__(
         self,
         path: str | os.PathLike = "",

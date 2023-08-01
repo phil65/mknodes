@@ -54,6 +54,8 @@ PROVIDERS = dict(
 class MkInstallGuide(mknode.MkNode):
     """Install guide text (currently PyPi only)."""
 
+    ICON = "material/help"
+
     def __init__(
         self,
         project: str,

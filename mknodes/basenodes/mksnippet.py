@@ -17,6 +17,7 @@ class MkSnippet(mknode.MkNode):
     """
 
     REQUIRED_EXTENSIONS = "pymdownx.snippets"
+    ICON = "material/paperclip"
 
     def __init__(
         self,

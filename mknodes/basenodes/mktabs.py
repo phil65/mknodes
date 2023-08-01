@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 class MkTabBlock(mkblock.MkBlock):
     """Node representing a single tab (new block style)."""
 
+    ICON = "material/tab"
+
     def __init__(
         self,
         title: str,
@@ -65,6 +67,8 @@ class MkTabBlock(mkblock.MkBlock):
 
 class MkTab(mkcontainer.MkContainer):
     """Node representing a single tab."""
+
+    ICON = "material/tab"
 
     def __init__(
         self,

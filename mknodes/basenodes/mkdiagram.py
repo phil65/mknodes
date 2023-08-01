@@ -14,6 +14,8 @@ GraphTypeStr = Literal["flow", "sequence", "state"]
 class MkDiagram(mknode.MkNode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
+    ICON = "material/graph-outline"
+
     TYPE_MAP = dict(
         flow="graph",
         sequence="sequenceDiagram",
