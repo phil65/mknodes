@@ -131,6 +131,9 @@ markdown_extensions:
     permalink: true
 use_directory_urls: false
 
+extra_css:
+  - css/progressbar.css
+
 extra:
   social:
   - icon: fontawesome/brands/github
