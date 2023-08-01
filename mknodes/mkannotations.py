@@ -83,21 +83,21 @@ class MkAnnotations(mkcontainer.MkContainer):
         return len(self.items)
 
     def __getitem__(self, item: int):
-        for annotation in self.items:
-            if annotation.num == item:
-                return annotation
+        for node in self.items:
+            if node.num == item:
+                return node
         raise IndexError(item)
 
-    def __contains__(self, annotation: int | MkAnnotation) -> bool:
-        match annotation:
+    def __contains__(self, item: int | MkAnnotation) -> bool:
+        match item:
             case MkAnnotation():
-                return annotation in self.items
+                return item in self.items
             case int():
-                return any(i.num == annotation for i in self.items)
+                return any(i.num == item for i in self.items)
             case _:
-                raise TypeError(annotation)
+                raise TypeError(item)
 
-    def _get_annotation_pos(self, num: int) -> int:
+    def _get_item_pos(self, num: int) -> int:
         item = next(i for i in self.items if i.num == num)
         return self.items.index(item)
 
@@ -105,16 +105,16 @@ class MkAnnotations(mkcontainer.MkContainer):
         match value:
             case str():
                 item = mktext.MkText(value)
-                annotation = MkAnnotation(index, content=item)
+                node = MkAnnotation(index, content=item)
             case MkAnnotation():
-                annotation = value
+                node = value
             case mknode.MkNode():
-                annotation = MkAnnotation(index, content=value)
+                node = MkAnnotation(index, content=value)
         if index in self:
-            pos = self._get_annotation_pos(index)
-            self.items[pos] = annotation
+            pos = self._get_item_pos(index)
+            self.items[pos] = node
         else:
-            self.items.append(annotation)
+            self.items.append(node)
 
     @staticmethod
     def create_example_page(page):

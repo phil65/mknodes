@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkGridCard(mkcontainer.MkContainer):
-    """Node representing a single tab."""
+    """Node representing a single grid card."""
 
     def __init__(
         self,
@@ -27,7 +27,7 @@ class MkGridCard(mkcontainer.MkContainer):
 
 
 class MkGrid(mkcontainer.MkContainer):
-    """Node for showing a formatted list."""
+    """Node for showing a grid."""
 
     def __init__(
         self,
