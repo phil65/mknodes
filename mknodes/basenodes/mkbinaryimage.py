@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from typing import Any
+
 from mknodes.basenodes import mkimage
 
 
@@ -18,7 +20,7 @@ class MkBinaryImage(mkimage.MkImage):
 
     ICON = "material/file-image"
 
-    def __init__(self, data: bytes | str, path: str, **kwargs):
+    def __init__(self, data: bytes | str, path: str, **kwargs: Any):
         """Constructor.
 
         Arguments:
