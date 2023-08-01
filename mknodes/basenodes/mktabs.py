@@ -4,6 +4,7 @@ import logging
 import textwrap
 
 from mknodes.basenodes import mkblock, mkcontainer, mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -87,6 +88,26 @@ class MkTab(mkcontainer.MkContainer):
         self.select = select
         self.new = new
         self.attrs = attrs
+
+    def __repr__(self):
+        from mknodes.basenodes import mktext
+
+        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
+            content = str(self.items[0])
+        elif len(self.items) == 1:
+            content = self.items[0]
+        else:
+            content = self.items
+        return helpers.get_repr(
+            self,
+            title=self.title,
+            content=content,
+            select=self.select,
+            new=self.new,
+            attrs=self.attrs,
+            _filter_empty=True,
+            _filter_false=True,
+        )
 
     @staticmethod
     def create_example_page(page):

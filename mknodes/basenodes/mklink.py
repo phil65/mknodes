@@ -42,7 +42,15 @@ class MkLink(mknode.MkNode):
         self.primary_color = primary_color
 
     def __repr__(self):
-        return helpers.get_repr(self, target=self.target, title=self.title)
+        return helpers.get_repr(
+            self,
+            target=self.target,
+            title=self.title,
+            as_button=self.as_button,
+            primary_color=self.primary_color,
+            _filter_empty=True,
+            _filter_false=True,
+        )
 
     def _to_markdown(self) -> str:
         match self.target:

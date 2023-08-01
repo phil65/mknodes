@@ -99,6 +99,17 @@ class MkAnnotations(mkcontainer.MkContainer):
             case _:
                 raise TypeError(item)
 
+    def __repr__(self):
+        notes = []
+        for item in self.items:
+            if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
+                notes.append(str(item.items[0]))
+            elif len(item.items) == 1:
+                notes.append(item.items[0])
+            else:
+                notes.append(item)
+        return helpers.get_repr(self, annotations=notes)
+
     def _get_item_pos(self, num: int) -> int:
         item = next(i for i in self.items if i.num == num)
         return self.items.index(item)

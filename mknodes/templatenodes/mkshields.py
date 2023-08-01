@@ -6,6 +6,7 @@ import logging
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 # ![Static Badge](https://img.shields.io/badge/built_with-mknodes-yellow?link=www.pypa.org)
@@ -132,6 +133,16 @@ class MkShields(mknode.MkNode):
         self.project = project
         self.branch = branch
         self.shields = shields
+
+    def __repr__(self):
+        kwargs = dict(
+            shields=self.shields,
+            user=self.user,
+            project=self.project,
+        )
+        if self.branch != "main":
+            kwargs["branch"] = self.branch
+        return helpers.get_repr(self, **kwargs)
 
     def _to_markdown(self) -> str:
         shield_strs = [

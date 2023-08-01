@@ -6,6 +6,7 @@ import pathlib
 from typing import Literal
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -50,6 +51,17 @@ class MkImage(mknode.MkNode):
         else:
             # TODO: linkreplacer doesnt work yet with full path
             self.path = pathlib.Path(path).name  # this should not be needed.
+
+    def __repr__(self):
+        kwargs = dict(
+            path=self.path,
+            caption=self.caption,
+            align=self.align,
+            width=self.width,
+        )
+        if self.lazy:
+            kwargs["lazy"] = True
+        return helpers.get_repr(self, _filter_empty=True, **kwargs)
 
     def _to_markdown(self) -> str:
         markdown_link = f"![{self.title}]({self.path})"

@@ -10,6 +10,7 @@ from typing import Any, Literal
 from git_changelog import cli
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -53,6 +54,16 @@ class MkChangelog(mknode.MkNode):
         self.parse_trailers = parse_trailers
         self.parse_refs = parse_refs
         self.sections = sections
+
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            convention=self.convention,
+            template=self.template,
+            sections=self.sections,
+            repository=self.repository,
+            _filter_empty=True,
+        )
 
     def _to_markdown(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):

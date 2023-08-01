@@ -80,6 +80,17 @@ class MkFootNotes(mkcontainer.MkContainer):
             item.parent_item = self
         super().__init__(content=items, header=header, **kwargs)
 
+    def __repr__(self):
+        notes = []
+        for item in self.items:
+            if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
+                notes.append(str(item.items[0]))
+            elif len(item.items) == 1:
+                notes.append(item.items[0])
+            else:
+                notes.append(item)
+        return helpers.get_repr(self, footnotes=notes)
+
     def __len__(self):
         return len(self.items)
 

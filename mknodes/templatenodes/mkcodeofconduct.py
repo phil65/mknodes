@@ -8,6 +8,7 @@ from typing import Any
 import requests
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -42,7 +43,14 @@ class MkCodeOfConduct(mknode.MkNode):
             if isinstance(version, tuple)
             else version.split(".")
         )
-        self.email = contact_email
+        self.contact_email = contact_email
+
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            contact_email=self.contact_email,
+            version=self.version,
+        )
 
     def _to_markdown(self) -> str:
         url = URL_START + "/".join(self.version) + URL_END

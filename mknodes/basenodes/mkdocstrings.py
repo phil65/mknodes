@@ -173,7 +173,8 @@ class MkDocStrings(mknode.MkNode):
         self.options = {k: v for k, v in self.options.items() if v is not None}
 
     def __repr__(self):
-        return helpers.get_repr(self, obj=self.obj)
+        option_kwargs = {k: v for k, v in self.options.items() if v is not None}
+        return helpers.get_repr(self, obj=self.obj, **option_kwargs)
 
     def _to_markdown(self) -> str:
         md = f"::: {self.obj_path}\n"

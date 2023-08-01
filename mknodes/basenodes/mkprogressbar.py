@@ -5,6 +5,7 @@ import logging
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,14 @@ class MkProgressBar(mknode.MkNode):
         self.title = title or ""
         self.percentage = percentage
         self.style = style
+
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            percentage=self.percentage,
+            title=self.title,
+            style=self.style,
+        )
 
     def _to_markdown(self) -> str:
         formatted = self.title.format(percentage=self.percentage)
