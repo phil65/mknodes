@@ -7,7 +7,7 @@ import pathlib
 from typing import Any
 
 from mknodes import mkpage
-from mknodes.templatenodes import mkclassdiagram, mkclasstable
+from mknodes.templatenodes.processors import classprocessors
 from mknodes.utils import classhelpers, helpers
 
 
@@ -59,32 +59,19 @@ class MkClassPage(mkpage.MkPage):
         page += str(node)
         page += mknodes.MkHtmlBlock(str(node), header="Markdown")
 
-    def add_class_diagram(
-        self,
-        mode: mkclassdiagram.DiagramModeStr = "parent_tree",
-        *,
-        header: str = "",
-    ):
-        diagram = mkclassdiagram.MkClassDiagram(self.klass, mode=mode, header=header)
-        self.append(diagram)
-        return diagram
+    def get_processors(self):
+        return [
+            classprocessors.BaseClassTablePageProcessor(self.klass),
+            classprocessors.SubClassTablePageProcessor(self.klass),
+            classprocessors.InheritanceDiagramPageProcessor(self.klass),
+            classprocessors.MkDocStringPageProcessor(self.klass, self.parts),
+        ]
 
     def _build(self):
-        if len(self.klass.mro()) > 2:  # noqa: PLR2004
-            bases = list(self.klass.__bases__)
-            table = mkclasstable.MkClassTable(bases, header="Base classes")
-            self.append(table)
-        if len(subklasses := self.klass.__subclasses__()) > 0:
-            table = mkclasstable.MkClassTable(
-                subklasses,
-                header="Subclasses",
-                layout="compact",
-            )
-            self.append(table)
-        self.add_class_diagram(header="⋔ Inheritance diagram")
-        module_path = ".".join(self.parts).rstrip(".")
-        path = f"{module_path}.{self.klass.__name__}"
-        self.add_mkdocstrings(path, header="🛈 DocStrings", show_root_toc_entry=False)
+        for processor in self.get_processors():
+            if processor.check_if_apply(self):
+                self.add_header(processor.get_header(self))
+                processor.append_section(self)
 
 
 if __name__ == "__main__":
