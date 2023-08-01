@@ -1,0 +1,141 @@
+from __future__ import annotations
+
+from collections.abc import Mapping
+import logging
+import textwrap
+
+from mknodes import mkcontainer, mknode, mktext
+from mknodes.utils import helpers
+
+
+logger = logging.getLogger(__name__)
+
+
+class MkFootNote(mkcontainer.MkContainer):
+    """Represents a single footnote. It gets managed by an MkFootNotes node."""
+
+    def __init__(
+        self,
+        num: int,
+        content: str | mknode.MkNode,
+        **kwargs,
+    ):
+        """Constructor.
+
+        Arguments:
+            num: Footnote index number
+            content: Footnote content
+            kwargs: Keyword arguments passed to parent
+        """
+        super().__init__(content=content, **kwargs)
+        self.num = num
+
+    def __repr__(self):
+        return helpers.get_repr(self, num=self.num, content=self.items)
+
+    def _to_markdown(self) -> str:
+        item_str = "\n".join(i.to_markdown() for i in self.items)
+        indented = textwrap.indent(item_str, "    ")
+        return f"[^{self.num}]:\n{indented}\n"
+
+
+class MkFootNotes(mkcontainer.MkContainer):
+    """Node containing a list of MkFootNotes."""
+
+    items: list[MkFootNote]
+
+    def __init__(
+        self,
+        footnotes: Mapping[int, str | mknode.MkNode]
+        | list[MkFootNote]
+        | list[str]
+        | None = None,
+        header: str = "",
+        **kwargs,
+    ):
+        match footnotes:
+            case None:
+                items = []
+            case list():
+                items = [
+                    (
+                        ann
+                        if isinstance(ann, MkFootNote)
+                        else MkFootNote(i, ann)  # type: ignore
+                    )
+                    for i, ann in enumerate(footnotes, start=1)
+                ]
+            case Mapping():
+                items = [
+                    MkFootNote(
+                        k,
+                        content=mktext.MkText(v) if isinstance(v, str) else v,
+                    )
+                    for k, v in footnotes.items()
+                ]
+        for item in items:
+            item.parent_item = self
+        super().__init__(content=items, header=header, **kwargs)
+
+    def __len__(self):
+        return len(self.items)
+
+    def __getitem__(self, index: int):
+        for node in self.items:
+            if node.num == index:
+                return node
+        raise IndexError(index)
+
+    def __contains__(self, item: int | MkFootNote) -> bool:
+        match item:
+            case MkFootNote():
+                return item in self.items
+            case int():
+                return any(i.num == item for i in self.items)
+            case _:
+                raise TypeError(item)
+
+    def _get_item_pos(self, num: int) -> int:
+        item = next(i for i in self.items if i.num == num)
+        return self.items.index(item)
+
+    def __setitem__(self, index: int, value: mknode.MkNode | str):
+        match value:
+            case str():
+                item = mktext.MkText(value)
+                node = MkFootNote(index, content=item)
+            case MkFootNote():
+                node = value
+            case mknode.MkNode():
+                node = MkFootNote(index, content=value)
+        if index in self:
+            pos = self._get_item_pos(index)
+            self.items[pos] = node
+        else:
+            self.items.append(node)
+
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        page.metadata["status"] = "new"
+        node = MkFootNotes()
+        page += "The MkFootNotes node aggregates footnotes[^1]."
+        node[1] = r"Footnotes are numbered, can be set via \__setitem__."
+        node[2] = r"They can also get nested[^3]."
+        node[3] = mknodes.MkAdmonition("And they can also contain other Markdown.")
+        page += node
+        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+
+    def _to_markdown(self) -> str:
+        return "".join(str(i) for i in self.items) if self.items else ""
+
+
+if __name__ == "__main__":
+    import mknodes
+
+    # ann = MkFootNote(1, "test")
+    # print(ann)
+    page = mknodes.MkPage()
+    MkFootNotes.create_example_page(page)
+    print(page)

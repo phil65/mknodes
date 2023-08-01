@@ -22,6 +22,7 @@ from .mktabcontainer import MkTabbedBlocks, MkTabbed
 from .mksnippet import MkSnippet
 from .mkcritic import MkCritic
 from .mkannotations import MkAnnotations
+from .mkfootnotes import MkFootNotes
 from .mkshields import MkShields
 from .mkpage import MkPage
 from .mkpageinclude import MkPageInclude
@@ -71,6 +72,7 @@ __all__ = [
     "MkModulePage",
     "MkModuleTable",
     "MkAnnotations",
+    "MkFootNotes",
     "MkDoc",
     "MkTabbedBlocks",
     "MkTabbed",
