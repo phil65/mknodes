@@ -12,8 +12,7 @@ import types
 from typing import Any
 
 from mknodes import mknav
-from mknodes.classnodes import mkclasspage
-from mknodes.modulenodes import mkmodulepage
+from mknodes.templatenodes import mkclasspage, mkmodulepage
 from mknodes.utils import classhelpers, helpers
 
 

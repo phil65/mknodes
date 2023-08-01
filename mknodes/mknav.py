@@ -14,13 +14,14 @@ import mkdocs_gen_files
 
 from typing_extensions import Self
 
-from mknodes import mknav, mknode, mkpage
+from mknodes import mknav, mkpage
+from mknodes.basenodes import mknode
 from mknodes.utils import helpers
 
 
 if TYPE_CHECKING:
     from mknodes import mkdoc
-    from mknodes.classnodes import mkclasspage
+    from mknodes.templatenodes import mkclasspage
 
 logger = logging.getLogger(__name__)
 

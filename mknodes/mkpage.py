@@ -11,13 +11,13 @@ from typing import Any, Literal
 from typing_extensions import Self
 import yaml
 
-from mknodes import (
+from mknodes import mknav
+from mknodes.basenodes import (
     mkadmonition,
     mkcode,
     mkcontainer,
     mkdocstrings,
     mklink,
-    mknav,
     mknode,
     mktabcontainer,
     mktext,

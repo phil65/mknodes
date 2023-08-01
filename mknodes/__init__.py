@@ -1,47 +1,48 @@
 from __future__ import annotations
 
-from .mkblock import MkBlock
-from .mkhtmlblock import MkHtmlBlock
-from .mkadmonitionblock import MkAdmonitionBlock
-from .mkdetailsblock import MkDetailsBlock
-from .mkadmonition import MkAdmonition
-from .mknode import MkNode
-from .mklink import MkLink
-from .mktext import MkText
-from .mkkeys import MkKeys
-from .mkgrid import MkGrid
-from .mkcontainer import MkContainer
-from .mkcode import MkCode
-from .mkdocstrings import MkDocStrings
-from .mkimage import MkImage
-from .mkbinaryimage import MkBinaryImage
-from .mklist import MkList
-from .mkdiagram import MkDiagram
-from .mktable import MkTable
-from .mktabcontainer import MkTabbedBlocks, MkTabbed
-from .mksnippet import MkSnippet
-from .mkcritic import MkCritic
-from .mkannotations import MkAnnotations
-from .mkfootnotes import MkFootNotes
-from .mkshields import MkShields
+
+from .basenodes.mkblock import MkBlock
+from .basenodes.mkhtmlblock import MkHtmlBlock
+from .basenodes.mkadmonitionblock import MkAdmonitionBlock
+from .basenodes.mkdetailsblock import MkDetailsBlock
+from .basenodes.mkadmonition import MkAdmonition
+from .basenodes.mknode import MkNode
+from .basenodes.mklink import MkLink
+from .basenodes.mktext import MkText
+from .basenodes.mkkeys import MkKeys
+from .basenodes.mkgrid import MkGrid
+from .basenodes.mkcontainer import MkContainer
+from .basenodes.mkcode import MkCode
+from .basenodes.mkdocstrings import MkDocStrings
+from .basenodes.mkimage import MkImage
+from .basenodes.mkbinaryimage import MkBinaryImage
+from .basenodes.mklist import MkList
+from .basenodes.mkdiagram import MkDiagram
+from .basenodes.mktable import MkTable
+from .basenodes.mktabcontainer import MkTabbedBlocks, MkTabbed
+from .basenodes.mksnippet import MkSnippet
+from .basenodes.mkcritic import MkCritic
+from .basenodes.mkannotations import MkAnnotations
+from .basenodes.mkfootnotes import MkFootNotes
+from .basenodes.mkpageinclude import MkPageInclude
+from .basenodes.mkiframe import MkIFrame
+
 from .mkpage import MkPage
-from .mkpageinclude import MkPageInclude
-from .mkinstallguide import MkInstallGuide
-from .mkchangelog import MkChangelog
-from .mkcodeofconduct import MkCodeOfConduct
-from .mkcommitmessageconvention import MkCommitMessageConvention
-from .mkpullrequestguidelines import MkPullRequestGuidelines
-from .mkiframe import MkIFrame
-from .classnodes.mkclassdiagram import MkClassDiagram
-from .classnodes.mkclasstable import MkClassTable
-from .classnodes.mkclasspage import MkClassPage
-
-from .modulenodes.mkmoduletable import MkModuleTable
-from .modulenodes.mkmodulepage import MkModulePage
-
-
 from .mknav import MkNav
 from .mkdoc import MkDoc
+
+from .templatenodes.mkshields import MkShields
+from .templatenodes.mkinstallguide import MkInstallGuide
+from .templatenodes.mkchangelog import MkChangelog
+from .templatenodes.mkcodeofconduct import MkCodeOfConduct
+from .templatenodes.mkcommitmessageconvention import MkCommitMessageConvention
+from .templatenodes.mkpullrequestguidelines import MkPullRequestGuidelines
+from .templatenodes.mkclassdiagram import MkClassDiagram
+from .templatenodes.mkclasstable import MkClassTable
+from .templatenodes.mkclasspage import MkClassPage
+
+from .templatenodes.mkmoduletable import MkModuleTable
+from .templatenodes.mkmodulepage import MkModulePage
 
 
 __all__ = [
