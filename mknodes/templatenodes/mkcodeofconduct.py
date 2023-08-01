@@ -59,7 +59,7 @@ class MkCodeOfConduct(mknode.MkNode):
             response = requests.get(url, headers=headers)
         else:
             response = requests.get(url)
-        text = response.text
+        text = response.text.replace("[INSERT CONTACT METHOD]", self.contact_email)
         return "\n".join(text.split("\n")[3:])
 
     @staticmethod
