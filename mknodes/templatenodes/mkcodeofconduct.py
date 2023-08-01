@@ -25,7 +25,7 @@ class MkCodeOfConduct(mknode.MkNode):
         self,
         contact_email: str,
         version: str | tuple[int] = "2.1",
-        header="# Contributor Covenant Code of Conduct",
+        header: str = "# Contributor Covenant Code of Conduct",
         **kwargs: Any,
     ):
         """Constructor.
