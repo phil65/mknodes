@@ -85,7 +85,7 @@ plugins:
           separate_signature: true
           line_length: 90
 markdown_extensions:
-- codehilite
+# - codehilite
 - admonition
 - def_list
 - attr_list
@@ -94,10 +94,11 @@ markdown_extensions:
 - tables
 - footnotes
 - pymdownx.critic
-- pymdownx.caret
+# - pymdownx.caret
 - pymdownx.keys
-- pymdownx.mark
-- pymdownx.tilde
+- pymdownx.progressbar
+# - pymdownx.mark
+# - pymdownx.tilde
 - pymdownx.magiclink # auto-convert links
 - pymdownx.blocks.tab # new-style tabs
 - pymdownx.blocks.admonition # new-style admonition
@@ -112,10 +113,10 @@ markdown_extensions:
     line_spans: __span
     pygments_lang_class: true
     # linenums: true
-- pymdownx.inlinehilite  # syntax highlighting inside line (`#!py mycode`)
-- pymdownx.snippets  # syntax highlighting
+# - pymdownx.inlinehilite  # syntax highlighting inside line (`#!py mycode`)
+- pymdownx.snippets
 - pymdownx.details
-- pymdownx.superfences:  # syntax highlighting
+- pymdownx.superfences:
     custom_fences:
     - name: mermaid
       class: mermaid
