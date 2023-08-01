@@ -47,6 +47,7 @@ class MkAnnotations(mkcontainer.MkContainer):
     """Node containing a list of MkAnnotations."""
 
     items: list[MkAnnotation]
+    REQUIRED_EXTENSIONS = ["attr_list", "md_in_html", "pymdownx.superfences"]
 
     def __init__(
         self,

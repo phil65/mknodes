@@ -105,7 +105,7 @@ class MkTabbed(MkTabContainer):
     """pymdownx-based Tab block."""
 
     items: list[mktabs.MkTab]
-    REQUIRED_EXTENSIONS = "pymdownx.tabbed"
+    REQUIRED_EXTENSIONS = ["pymdownx.tabbed", "pymdownx.superfences"]
     Tab = mktabs.MkTab
 
     @staticmethod
@@ -122,7 +122,7 @@ class MkTabbedBlocks(MkTabContainer):
     """New blocks-based Tab block."""
 
     items: list[mktabs.MkTabBlock]
-    REQUIRED_EXTENSIONS = "pymdownx.blocks.tab"
+    REQUIRED_EXTENSIONS = ["pymdownx.blocks.tab"]
     Tab = mktabs.MkTabBlock
 
     @staticmethod

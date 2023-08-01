@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class MkTable(mknode.MkNode):
     """Class representing a formatted table."""
 
-    REQUIRED_EXTENSIONS = "tables"
+    REQUIRED_EXTENSIONS = ["tables"]
     ICON = "octicons/table-24"
 
     def __init__(

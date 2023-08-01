@@ -32,6 +32,7 @@ class MkGrid(mkcontainer.MkContainer):
     """Node for showing a grid."""
 
     ICON = "material/view-grid"
+    REQUIRED_EXTENSIONS = ["attr_list", "md_in_html"]
 
     def __init__(
         self,

@@ -13,6 +13,7 @@ class MkTabBlock(mkblock.MkBlock):
     """Node representing a single tab (new block style)."""
 
     ICON = "material/tab"
+    REQUIRED_EXTENSIONS = ["pymdownx.blocks.tabs"]
 
     def __init__(
         self,

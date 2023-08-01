@@ -16,6 +16,7 @@ class MkLink(mknode.MkNode):
     """A simple Link."""
 
     ICON = "octicons/link-24"
+    REQUIRED_EXTENSIONS = ["attr_list"]  # for buttons
 
     def __init__(
         self,

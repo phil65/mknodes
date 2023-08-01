@@ -15,6 +15,7 @@ class MkDiagram(mknode.MkNode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     ICON = "material/graph-outline"
+    REQUIRED_EXTENSIONS = ["pymdownx.superfences"]
 
     TYPE_MAP = dict(
         flow="graph",

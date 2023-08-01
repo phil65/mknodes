@@ -29,6 +29,7 @@ class MkDetailsBlock(mkblock.MkBlock):
     """Admonition info box."""
 
     ICON = "octicons/info-16"
+    REQUIRED_EXTENSIONS = ["pymdownx.blocks.details"]
 
     def __init__(
         self,

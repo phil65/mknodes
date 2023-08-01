@@ -16,6 +16,7 @@ class MkCritic(mktext.MkText):
     """MkCritic block."""
 
     ICON = "material/format-text"
+    REQUIRED_EXTENSIONS = ["pymdownx.critic"]
 
     def __init__(
         self,

@@ -31,6 +31,7 @@ class MkAdmonition(mkcontainer.MkContainer):
     """Admonition info box."""
 
     ICON = "octicons/info-16"
+    REQUIRED_EXTENSIONS = ["admonition", "pymdownx.details", "pymdownx.superfences"]
 
     def __init__(
         self,
