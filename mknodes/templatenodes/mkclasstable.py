@@ -87,6 +87,7 @@ class MkClassTable(mktable.MkTable):
             for subkls in kls.__subclasses__()
             if self.filter_fn(subkls)
             and not subkls.__qualname__.endswith("]")  # filter generic subclasses
+            and "<locals>" not in subkls.__qualname__  # filter locally defined
         ]
         subclass_links = [helpers.link_for_class(sub) for sub in subclasses]
         subclass_str = helpers.to_html_list(
