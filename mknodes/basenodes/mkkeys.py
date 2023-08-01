@@ -5,6 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,9 @@ class MkKeys(mknode.MkNode):
                 self.keys = keys.lower().split("+")
             case list():
                 self.keys = [i.lower() for i in keys]
+
+    def __repr__(self):
+        return helpers.get_repr(self, keys=self.keys)
 
     def _to_markdown(self) -> str:
         key_str = "+".join(self.keys)
