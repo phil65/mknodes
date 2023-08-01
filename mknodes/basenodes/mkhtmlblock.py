@@ -21,7 +21,7 @@ class MkHtmlBlock(mkblock.MkBlock):
     """pymdownx-based Html block. Can be used to show raw content."""
 
     ICON = "octicons/code-16"
-    REQUIRED_EXTENSIONS = ["pymdownx.blocks.details"]
+    REQUIRED_EXTENSIONS = ["pymdownx.blocks.html"]
 
     def __init__(
         self,

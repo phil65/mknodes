@@ -26,7 +26,6 @@ class MkCode(mktext.MkText):
 
     REQUIRED_EXTENSIONS = [
         "pymdownx.highlight",
-        "pymdownx.inlinehilite",
         "pymdownx.snippets",
         "pymdownx.superfences",
     ]

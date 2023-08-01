@@ -13,8 +13,6 @@ logger = logging.getLogger(__name__)
 class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
-    ICON = "material/alert-box"
-
     def __init__(
         self,
         num: int,
@@ -48,6 +46,7 @@ class MkAnnotations(mkcontainer.MkContainer):
 
     items: list[MkAnnotation]
     REQUIRED_EXTENSIONS = ["attr_list", "md_in_html", "pymdownx.superfences"]
+    ICON = "material/alert-box"
 
     def __init__(
         self,

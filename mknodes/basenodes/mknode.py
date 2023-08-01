@@ -32,6 +32,9 @@ class MkNode(node.Node):
     by one tree.
     """
 
+    ICON = ""  # should be set by subnodes for docs
+    REQUIRED_EXTENSIONS: list[str] = []
+
     def __init__(
         self,
         header: str = "",
@@ -128,6 +131,12 @@ class MkNode(node.Node):
             mode = "w" if isinstance(v, str) else "wb"
             with mkdocs_gen_files.open(k, mode) as file:
                 file.write(v)
+
+    def all_markdown_extensions(self) -> set[str]:
+        extensions = set()
+        for desc in self.descendants:
+            extensions.update(desc.REQUIRED_EXTENSIONS)
+        return extensions
 
     def pretty_print(self, _indent: int = 0):
         """PrettyPrint node and its children."""
