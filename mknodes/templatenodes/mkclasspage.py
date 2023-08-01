@@ -7,7 +7,7 @@ import pathlib
 from typing import Any
 
 from mknodes import mkpage
-from mknodes.templatenodes.processors import classprocessors
+from mknodes.templatenodes import processors
 from mknodes.utils import classhelpers, helpers
 
 
@@ -61,10 +61,10 @@ class MkClassPage(mkpage.MkPage):
 
     def get_processors(self):
         return [
-            classprocessors.BaseClassTablePageProcessor(self.klass),
-            classprocessors.SubClassTablePageProcessor(self.klass),
-            classprocessors.InheritanceDiagramPageProcessor(self.klass),
-            classprocessors.MkDocStringPageProcessor(self.klass, self.parts),
+            processors.BaseClassTablePageProcessor(self.klass),
+            processors.SubClassTablePageProcessor(self.klass),
+            processors.InheritanceDiagramPageProcessor(self.klass),
+            processors.MkDocStringPageProcessor(self.klass),
         ]
 
     def _build(self):

@@ -7,8 +7,7 @@ import types
 from typing import Any
 
 from mknodes import mkpage
-from mknodes.basenodes import mkdocstrings
-from mknodes.templatenodes import mkclasstable
+from mknodes.templatenodes import mkclasstable, processors
 from mknodes.utils import classhelpers, helpers
 
 
@@ -61,12 +60,17 @@ class MkModulePage(mkpage.MkPage):
         page += node
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
-    def _build(self):
-        if doc := helpers.get_doc(self.module):
-            self.append(doc)
+    def get_processors(self) -> list:
+        procs: list[processors.PageProcessor] = [processors.DocPageProcessor(self.module)]
         if self.docstrings:
-            item = mkdocstrings.MkDocStrings(self.module)
-            self.append(item)
+            procs.append(processors.MkDocStringPageProcessor(self.module))
+        return procs
+
+    def _build(self):
+        for processor in self.get_processors():
+            if processor.check_if_apply(self):
+                self.add_header(processor.get_header(self))
+                processor.append_section(self)
         if self.show_class_table:
             table = mkclasstable.MkClassTable(self.klasses)
             self.append(table)
