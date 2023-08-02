@@ -88,8 +88,7 @@ class MkDiagram(mknode.MkNode):
             items=["1", "2", "3"],
             connections=[("1", "2"), ("2", "3")],
         )
-        page += diagram
-        page += mknodes.MkHtmlBlock(str(diagram), header="Markdown")
+        page += mknodes.MkNodeExample(diagram, indent=True)
 
 
 if __name__ == "__main__":

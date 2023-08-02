@@ -51,7 +51,7 @@ class MkIFrame(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        frame = MkIFrame(url="https://phil65.github.io/mknodes/", width=600)
+        frame = MkIFrame(url="https://phil65.github.io/mknodes/", width=600, height=600)
         page += mknodes.MkNodeExample(frame)
 
     def _to_markdown(self) -> str:
