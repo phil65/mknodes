@@ -6,8 +6,7 @@ import types
 
 from typing import Any
 
-from mknodes import mkpage
-from mknodes.templatenodes import processors
+from mknodes.pages import mkpage, processors
 from mknodes.utils import classhelpers, helpers
 
 

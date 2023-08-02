@@ -4,8 +4,9 @@ import logging
 
 from typing import Any
 
-from mknodes import mknav, mkpage, project
+from mknodes import mknav, project
 from mknodes.basenodes import mknode
+from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
 

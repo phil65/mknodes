@@ -1,6 +1,6 @@
 import mknodes
 
-from mknodes.templatenodes import processors
+from mknodes.pages import processors
 from mknodes.utils import classhelpers
 
 

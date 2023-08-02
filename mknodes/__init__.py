@@ -29,7 +29,10 @@ from .basenodes.mkpageinclude import MkPageInclude
 from .basenodes.mkiframe import MkIFrame
 from .basenodes.mkprogressbar import MkProgressBar
 
-from .mkpage import MkPage
+from .pages.mkpage import MkPage
+from .pages.mkclasspage import MkClassPage
+from .pages.mkmodulepage import MkModulePage
+
 from .mknav import MkNav
 from .mkdoc import MkDoc
 
@@ -41,11 +44,9 @@ from .templatenodes.mkcommitmessageconvention import MkCommitMessageConvention
 from .templatenodes.mkpullrequestguidelines import MkPullRequestGuidelines
 from .templatenodes.mkclassdiagram import MkClassDiagram
 from .templatenodes.mkclasstable import MkClassTable
-from .templatenodes.mkclasspage import MkClassPage
 from .templatenodes.mkreprrawrendered import MkReprRawRendered
 
 from .templatenodes.mkmoduletable import MkModuleTable
-from .templatenodes.mkmodulepage import MkModulePage
 
 TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests/data/"
 

@@ -6,8 +6,8 @@ import pathlib
 
 from typing import Any
 
-from mknodes import mkpage
 from mknodes.basenodes import mknode
+from mknodes.pages import mkpage
 
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from mknodes import mkpage
+from mknodes.pages import mkpage
 from mknodes.basenodes import mkdocstrings
 from mknodes.templatenodes import mkclassdiagram, mkclasstable
 from mknodes.utils import classhelpers, helpers
@@ -38,6 +38,14 @@ class PageProcessor:
 
     def get_default_header(self, page: mkpage.MkPage) -> str | None:
         """Re-implement this and return the default section header."""
+        return None
+
+
+class StaticBlockProcessor(PageProcessor):
+    def append_block(self, page: mkpage.MkPage):
+        page += self.item
+
+    def get_header(self, page):
         return None
 
 
