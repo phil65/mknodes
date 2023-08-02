@@ -3,10 +3,16 @@ from __future__ import annotations
 import logging
 import textwrap
 
+from typing import TYPE_CHECKING
+
 import mkdocs_gen_files
 
 from mknodes import node
 from mknodes.utils import connector
+
+
+if TYPE_CHECKING:
+    from mknodes.basenodes import mkannotations
 
 
 logger = logging.getLogger(__name__)
@@ -52,12 +58,15 @@ class MkNode(node.Node):
         super().__init__(parent=parent)
         self.header = header
         self.indent = indent
+        self._annotations = None
+
+    @property
+    def annotations(self) -> mkannotations.MkAnnotations:
         from mknodes.basenodes import mkannotations
 
-        if not isinstance(self, mkannotations.MkAnnotations):
-            self.annotations = mkannotations.MkAnnotations(parent=self)
-        else:
-            self.annotations = None
+        if self._annotations is None:
+            self._annotations = mkannotations.MkAnnotations(parent=self)
+        return self._annotations  # type: ignore
 
     def __str__(self):
         return self.to_markdown()
