@@ -40,6 +40,13 @@ class MkSnippet(mknode.MkNode):
     def __repr__(self):
         return helpers.get_repr(self, path=str(self.path))
 
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        node = MkSnippet(path="README.md")
+        page += mknodes.MkNodeExample(node)
+
     def _to_markdown(self) -> str:
         return f"--8<--\n{self.path}\n--8<--\n"
 

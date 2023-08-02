@@ -63,6 +63,13 @@ class MkText(mknode.MkNode):
     def _to_markdown(self) -> str:
         return self.text if isinstance(self.text, str) else self.text.to_markdown()
 
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        node = MkText("This is the most basic node. It contains `markdown` text")
+        page += mknodes.MkNodeExample(node)
+
     @classmethod
     def from_external_url(cls, url: str) -> Self | None:
         if token := os.getenv("GH_TOKEN"):
