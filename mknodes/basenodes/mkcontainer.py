@@ -44,6 +44,9 @@ class MkContainer(mknode.MkNode):
         for item in items or []:
             self.append(item)  # noqa: PERF402
 
+    def __bool__(self):
+        return bool(self.items)
+
     def __add__(self, other: str | mknode.MkNode):
         self.append(other)
         return self

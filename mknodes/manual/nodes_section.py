@@ -177,6 +177,8 @@ def create_adding_to_mkpages_page(nav: mknodes.MkNav):
     page += mknodes.MkAdmonition("You can add other MkNodes to a page sequentially.")
     page.add_header("MkPage also has some add_xyz methods", level=2)
     page += "Adding strings also works, they get converted to MkText nodes."
+    page += "Every MkPage has a MkFootNotes node built-in[^1]."
+    page.footnotes[1] = "Super cool, right?"
 
 
 def create_metadata_page(nav: mknodes.MkNav):

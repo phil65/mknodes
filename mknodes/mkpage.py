@@ -17,6 +17,7 @@ from mknodes.basenodes import (
     mkcode,
     mkcontainer,
     mkdocstrings,
+    mkfootnotes,
     mklink,
     mknode,
     mktabcontainer,
@@ -77,6 +78,7 @@ class MkPage(mkcontainer.MkContainer):
         """
         super().__init__(parent=parent, **kwargs)
         self.path = str(path)
+        self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.metadata: dict[str, Any] = {}
         if hide_toc is not None:
             self.metadata.setdefault("hide", []).append("toc")
@@ -121,6 +123,8 @@ class MkPage(mkcontainer.MkContainer):
     def to_markdown(self) -> str:
         header = self.formatted_header()
         content_str = self._to_markdown()
+        if self.footnotes:
+            content_str = f"{content_str}\n\n{self.footnotes}"
         return header + content_str if header else content_str
 
     def formatted_header(self) -> str:
