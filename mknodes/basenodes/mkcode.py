@@ -73,6 +73,8 @@ class MkCode(mktext.MkText):
 
     def _to_markdown(self) -> str:
         title = f" title={self.title!r}" if self.title else ""
+        if self.linenums is not None:
+            title += f' linenums="{self.linenums}"'
         if self.highlight_lines:
             title += ' hl_lines="' + " ".join(str(i) for i in self.highlight_lines) + '"'
         return f"``` {self.language}{title}\n{self.text}\n```"
@@ -90,6 +92,9 @@ class MkCode(mktext.MkText):
         page += "Highlighting lines is also possible"
         node_3 = MkCode(code="1\n2\n3\n4", highlight_lines=[1, 3])
         page += mknodes.MkReprRawRendered(node_3, indent=True)
+        page += "As well as numnbering the lines."
+        node_4 = MkCode(code="1\n2\n3\n4", linenums=10)
+        page += mknodes.MkReprRawRendered(node_4, indent=True)
 
     @classmethod
     def for_file(cls, path: str | os.PathLike, language: str = "py"):
