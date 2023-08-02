@@ -6,7 +6,7 @@ import logging
 from typing import Literal
 
 from mknodes.basenodes import mktable
-from mknodes.utils import helpers
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -80,19 +80,20 @@ class MkClassTable(mktable.MkTable):
 
         Includes columns for child and parent classes including links.
         """
-        subclasses = [
-            subkls
-            for subkls in kls.__subclasses__()
-            if self.filter_fn(subkls)
-            and not subkls.__qualname__.endswith("]")  # filter generic subclasses
-            and "<locals>" not in subkls.__qualname__  # filter locally defined
+        subclass_links = [
+            helpers.link_for_class(sub)
+            for sub in classhelpers.iter_subclasses(kls, recursive=False)
+            if self.filter_fn(sub)
         ]
-        subclass_links = [helpers.link_for_class(sub) for sub in subclasses]
         subclass_str = helpers.to_html_list(
             subclass_links,
             shorten_after=shorten_lists_after,
         )
-        parents = kls.__bases__
+        parents = [
+            base_kls
+            for base_kls in kls.__bases__
+            if "<locals>" not in base_kls.__qualname__  # filter locally defined
+        ]
         parent_links = [helpers.link_for_class(parent) for parent in parents]
         parent_str = helpers.to_html_list(parent_links, shorten_after=shorten_lists_after)
         desc = helpers.get_doc(kls, escape=True, only_summary=True)
