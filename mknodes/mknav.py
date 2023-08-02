@@ -246,11 +246,12 @@ class MkNav(mknode.MkNode):
         cls,
         path: str | os.PathLike,
         section: str | None = None,
+        parent: MkNav | None = None,
     ) -> Self:
         path = pathlib.Path(path)
         content = path.read_text()
         with helpers.new_cd(path.parent):
-            return cls.from_text(content, section)
+            return cls.from_text(content, section, parent=parent)
         # max_indent = max(len(line) - len(line.lstrip()) for line in content.split("\n"))
         # content = [line.lstrip() for line in content.split("\n")]
 
@@ -259,8 +260,10 @@ class MkNav(mknode.MkNode):
         cls,
         text: str,
         section: str | None = None,
+        parent: MkNav | None = None,
     ) -> Self:
         nav = cls(section)
+        nav.parent_item = parent
         lines = text.split("\n")
         for i, line in enumerate(lines):
             if match := re.match(SECTION_AND_FILE_REGEX, line):
@@ -275,8 +278,11 @@ class MkNav(mknode.MkNode):
                 next_lines = lines[i + 1 :]
                 indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
                 unindented = (j[4:] for j in indented)
-                subnav = MkNav.from_text("\n".join(unindented), section=match[1])
-                subnav.parent_item = nav
+                subnav = MkNav.from_text(
+                    "\n".join(unindented),
+                    section=match[1],
+                    parent=nav,
+                )
                 nav[match[1]] = subnav
         return nav
 
