@@ -150,7 +150,7 @@ class MkShields(mknode.MkNode):
             for s in SHIELDS
             if s.identifier in self.shields
         ]
-        return "".join(shield_strs)
+        return "\n".join(shield_strs)
 
     @staticmethod
     def create_example_page(page):
