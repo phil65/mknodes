@@ -128,6 +128,7 @@ class MkPage(mkcontainer.MkContainer):
         content_str = self._to_markdown()
         if self.footnotes:
             content_str = f"{content_str}\n\n{self.footnotes}"
+        content_str = self.attach_annotations(content_str)
         return header + content_str if header else content_str
 
     def formatted_header(self) -> str:

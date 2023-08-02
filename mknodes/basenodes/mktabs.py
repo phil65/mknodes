@@ -115,12 +115,20 @@ class MkTab(mkcontainer.MkContainer):
 
         # We can add single tabs to a page by themselves.
         # It is recommended to use a Tab container though.
-        tab_1 = MkTab("A Title", content="test")
-        page += mknodes.MkReprRawRendered(tab_1)
+        tab = MkTab("A Title", content="Tab content(1)")
+        tab.annotations[1] = "Tabs can carry annotations."
+        page += mknodes.MkReprRawRendered(tab)
+
+    def attach_annotations(self, text: str) -> str:
+        # we deal with attaching annotations ourselves.
+        return text
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
         indented_text = textwrap.indent(item_str.rstrip("\n"), prefix="    ")
+        if self.annotations:
+            annotates = textwrap.indent(str(self.annotations), prefix="    ")
+            indented_text = f"{indented_text}\n    {{ .annotate }}\n\n{annotates}"
         if self.new:
             mark = "!"
         elif self.select:

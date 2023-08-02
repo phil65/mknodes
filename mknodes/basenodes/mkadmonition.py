@@ -73,6 +73,10 @@ class MkAdmonition(mkcontainer.MkContainer):
             content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
         return helpers.get_repr(self, content=content, typ=self.typ, title=self.title)
 
+    def attach_annotations(self, text: str) -> str:
+        # we deal with attaching annotations ourselves.
+        return text
+
     def _to_markdown(self) -> str:
         if not self.items and not self.title:
             return ""
@@ -83,15 +87,23 @@ class MkAdmonition(mkcontainer.MkContainer):
             inline_label = " inline" if self.inline == "left" else " inline end"
         else:
             inline_label = ""
+        if self.annotations:
+            ann_marker = " annotate"
+            annotations = f"\n{self.annotations}\n"
+        else:
+            ann_marker = ""
+            annotations = ""
         title = f' "{self.title}"' if self.title is not None else ""
         text = textwrap.indent("\n".join(str(i) for i in self.items), "    ")
-        return f"{block_start} {self.typ}{inline_label}{title}\n{text}\n"
+        optional = ann_marker + inline_label
+        return f"{block_start} {self.typ}{optional}{title}\n{text}\n{annotations}"
 
     @staticmethod
     def create_example_page(page):
         import mknodes
 
-        node = mknodes.MkAdmonition("The MkAdmonition node is used to show Admonitions.")
+        node = mknodes.MkAdmonition("MkAdmonitions can carry annotations(1).")
+        node.annotations[1] = "Super handy!"
         page += mknodes.MkReprRawRendered(node)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in AdmonitionTypeStr.__args__:

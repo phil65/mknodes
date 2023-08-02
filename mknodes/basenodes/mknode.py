@@ -52,6 +52,12 @@ class MkNode(node.Node):
         super().__init__(parent=parent)
         self.header = header
         self.indent = indent
+        from mknodes.basenodes import mkannotations
+
+        if not isinstance(self, mkannotations.MkAnnotations):
+            self.annotations = mkannotations.MkAnnotations(parent=self)
+        else:
+            self.annotations = None
 
     def __str__(self):
         return self.to_markdown()
@@ -65,9 +71,15 @@ class MkNode(node.Node):
         if self.indent:
             text = textwrap.indent(text, self.indent)
         if not self.header:
-            return text
+            return self.attach_annotations(text)
         header = self.header if self.header.startswith("#") else f"## {self.header}"
-        return f"{header}\n\n{text}"
+        text = f"{header}\n\n{text}"
+        return self.attach_annotations(text)
+
+    def attach_annotations(self, text: str) -> str:
+        if not self.annotations:
+            return text
+        return f'<div class="annotate" markdown>\n{text}\n</div>\n\n{self.annotations}'
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:
