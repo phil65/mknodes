@@ -69,7 +69,6 @@ class MkClassPage(mkpage.MkPage):
     def _build(self):
         for processor in self.get_processors():
             if processor.check_if_apply(self):
-                self.add_header(processor.get_header(self))
                 processor.append_section(self)
 
 

@@ -68,7 +68,6 @@ class MkModulePage(mkpage.MkPage):
     def _build(self):
         for processor in self.get_processors():
             if processor.check_if_apply(self):
-                self.add_header(processor.get_header(self))
                 processor.append_section(self)
         if self.show_class_table:
             table = mkclasstable.MkClassTable(self.klasses)

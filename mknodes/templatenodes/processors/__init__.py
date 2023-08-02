@@ -25,16 +25,21 @@ class PageProcessor:
         return True
 
     def append_section(self, page: mkpage.MkPage):
-        return NotImplementedError
+        header = self.get_header(page)
+        page.add_header(header)
+        self.append_block(page)
 
-    def get_default_header(self, page: mkpage.MkPage):
-        return NotImplementedError
+    def append_block(self, page: mkpage.MkPage):
+        raise NotImplementedError
+
+    def get_default_header(self, page: mkpage.MkPage) -> str:
+        raise NotImplementedError
 
 
 class BaseClassTablePageProcessor(PageProcessor):
     ID = "baseclass_table"
 
-    def append_section(self, page: mkpage.MkPage):
+    def append_block(self, page: mkpage.MkPage):
         bases = list(self.item.__bases__)
         table = mkclasstable.MkClassTable(bases)
         page += table
@@ -49,12 +54,14 @@ class BaseClassTablePageProcessor(PageProcessor):
 class SubClassTablePageProcessor(PageProcessor):
     ID = "subclass_table"
 
-    def append_section(self, page):
-        table = mkclasstable.MkClassTable(self.item.__subclasses__(), layout="compact")
+    def append_block(self, page):
+        subclasses = list(classhelpers.iter_subclasses(self.item, recursive=False))
+        table = mkclasstable.MkClassTable(subclasses, layout="compact")
         page += table
 
     def check_if_apply(self, page: mkpage.MkPage):
-        return len(self.item.__subclasses__()) > 0
+        subclasses = list(classhelpers.iter_subclasses(self.item, recursive=False))
+        return len(subclasses) > 0
 
     def get_default_header(self, page: mkpage.MkPage):
         return "Subclasses"
@@ -63,7 +70,7 @@ class SubClassTablePageProcessor(PageProcessor):
 class InheritanceDiagramPageProcessor(PageProcessor):
     ID = "inheritance_diagram"
 
-    def append_section(self, page: mkpage.MkPage):
+    def append_block(self, page: mkpage.MkPage):
         diagram = mkclassdiagram.MkClassDiagram(self.item, mode="parent_tree")
         page += diagram
 
@@ -74,7 +81,7 @@ class InheritanceDiagramPageProcessor(PageProcessor):
 class MkDocStringPageProcessor(PageProcessor):
     ID = "docstrings"
 
-    def append_section(self, page: mkpage.MkPage):
+    def append_block(self, page: mkpage.MkPage):
         path = classhelpers.to_dotted_path(self.item)
         diagram = mkdocstrings.MkDocStrings(path, show_root_toc_entry=False)
         page += diagram
@@ -86,7 +93,7 @@ class MkDocStringPageProcessor(PageProcessor):
 class DocPageProcessor(PageProcessor):
     ID = "doc"
 
-    def append_section(self, page: mkpage.MkPage):
+    def append_block(self, page: mkpage.MkPage):
         page += helpers.get_doc(self.item)
 
     def get_default_header(self, page: mkpage.MkPage):
