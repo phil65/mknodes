@@ -230,7 +230,7 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # First, we write a custom processor which fetches the page-building code from the
     # existing processors, puts them into code blocks and adds them to the page.
 
-    class SourceCodeProcessor(processors.PageProcessor):
+    class ShowProcessorCodeProcessor(processors.PageProcessor):
         def __init__(
             self,
             *args,
@@ -241,14 +241,25 @@ def create_mknodes_section(nav: mknodes.MkNav):
             self.processors = processors or []
 
         def append_block(self, page: mknodes.MkPage):
+            code = mknodes.MkCode.for_object(self.append_block)
+            page += mknodes.MkAdmonition(
+                code,
+                collapsible=True,
+                title=self.__class__.__name__,
+            )
             for processor in self.processors:
                 # First, we check if the processor gets applied.
                 # If yes, we attach a code block.
                 if processor.check_if_apply(page):
-                    page += mknodes.MkCode.for_object(processor.append_block)
+                    code = mknodes.MkCode.for_object(processor.append_block)
+                    page += mknodes.MkAdmonition(
+                        code,
+                        collapsible=True,
+                        title=processor.__class__.__name__,
+                    )
 
         def get_header(self, page):
-            return "Code for this page"
+            return "Code for the processors"
 
     # .. and while we are at it, we will also write another processor to add
     # the required extensions to the page:
@@ -259,8 +270,8 @@ def create_mknodes_section(nav: mknodes.MkNav):
             page += mknodes.MkAdmonition(extensions, title="Required extensions")
 
         def check_if_apply(self, page: mknodes.MkPage):
-            attr = getattr(self.item, "REQUIRED_EXTENSIONS", False)
-            return bool(attr)
+            # only add this section for MkNodes which have required extensions
+            return issubclass(self.item, mknodes.MkNode) and self.item.REQUIRED_EXTENSIONS
 
     # Now, we write a custom page template which
     # overrides get_processors and includes our new processors.
@@ -268,7 +279,7 @@ def create_mknodes_section(nav: mknodes.MkNav):
     class CustomClassPage(mknodes.MkClassPage):
         def get_processors(self):
             processors = super().get_processors()
-            code_processor = SourceCodeProcessor(self.klass, processors=processors)
+            code_processor = ShowProcessorCodeProcessor(self.klass, processors=processors)
             extensions_processor = ExtensionInfoProcessor(self.klass)
             # we will add the code at the top and the Extension infobox at the end.
             return [code_processor, *processors, extensions_processor]
@@ -277,15 +288,33 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # we did earlier.
     # Since we are just demonstrating all functionality, we will skip that though.
 
+    # last step: a custom module page. Thats basically the index.md for a
+    # documentation section. We will also insert the source code there.
+
+    class CustomModulePage(mknodes.MkModulePage):
+        def get_processors(self):
+            procs = super().get_processors()
+            code_block = mknodes.MkCode.for_object(create_mknodes_section)
+            fn_processor = processors.StaticBlockProcessor(
+                code_block,
+                header="Code for this section",
+            )
+            proc_processor = ShowProcessorCodeProcessor(
+                self.module,
+                processors=procs,
+            )
+            return [fn_processor, proc_processor, *procs]
+
     # Now that we have our custom ClassPage, we can create the documentation.
     # In our case, we only want to document stuff which is listed in "__all__".
     mknodes_docs = nav.add_doc(
         module=mknodes,
         filter_by___all__=True,
         class_page=CustomClassPage,
+        module_page=CustomModulePage,
     )
 
     # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)
 
-    # We are done. Creating the files will be done when the tree is writtten in the end.
+    # We are done. Creating the files will be done when the tree is written in the end.
