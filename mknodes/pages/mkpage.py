@@ -6,7 +6,7 @@ import os
 import pathlib
 import types
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Literal
 
 from typing_extensions import Self
 import yaml
@@ -23,10 +23,6 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.utils import helpers
-
-
-if TYPE_CHECKING:
-    from mknodes import mknav
 
 
 logger = logging.getLogger(__name__)
@@ -58,7 +54,6 @@ class MkPage(mkcontainer.MkContainer):
         subtitle: str | None = None,
         description: str | None = None,
         template: str | None = None,
-        parent: mknav.MkNav | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -76,10 +71,9 @@ class MkPage(mkcontainer.MkContainer):
             subtitle: Page subtitle
             description: Page description
             template: Page template (filename relative to `overrides` directory)
-            parent: Node parent
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(parent=parent, **kwargs)
+        super().__init__(**kwargs)
         self.path = str(path)
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.metadata: dict[str, Any] = {}
