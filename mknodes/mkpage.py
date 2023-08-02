@@ -377,7 +377,5 @@ class MkPage(mkcontainer.MkContainer):
 
 if __name__ == "__main__":
     doc = MkPage(hide_toc=True, search_boost=2)
-    doc.add_link("test")
-    doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
     # print(doc.children)
