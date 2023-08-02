@@ -70,7 +70,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         elif len(self.items) == 1:
             content = self.items[0]
         else:
-            content = self.items
+            content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
         return helpers.get_repr(self, content=content, typ=self.typ, title=self.title)
 
     def _to_markdown(self) -> str:

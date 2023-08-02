@@ -52,7 +52,8 @@ class MkContainer(mknode.MkNode):
         return iter(self.items)
 
     def __repr__(self):
-        return helpers.get_repr(self, content=self.items)
+        content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
+        return helpers.get_repr(self, content=content)
 
     @staticmethod
     def create_example_page(page):

@@ -92,7 +92,15 @@ class MkTabContainer(mkcontainer.MkContainer):
             self.items.append(tab)
 
     def __repr__(self):
-        return helpers.get_repr(self, tabs=self.items)
+        from mknodes.basenodes import mktext
+
+        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
+            content = str(self.items[0])
+        elif len(self.items) == 1:
+            content = self.items[0]
+        else:
+            content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
+        return helpers.get_repr(self, tabs=content)
 
     def to_dict(self):
         return {tab.title: str(tab) for tab in self.items}

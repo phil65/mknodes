@@ -5,6 +5,7 @@ import logging
 from typing import Any, Literal
 
 from mknodes.basenodes import mkblock, mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -50,6 +51,24 @@ class MkHtmlBlock(mkblock.MkBlock):
         )
         self.markdown_mode = markdown_mode
         self.indent = "    "
+
+    def __repr__(self):
+        from mknodes.basenodes import mktext
+
+        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
+            content = str(self.items[0])
+        elif len(self.items) == 1:
+            content = self.items[0]
+        else:
+            content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
+        return helpers.get_repr(
+            self,
+            content=content,
+            block_type=self.argument,
+            markdown_mode=self.markdown_mode,
+            attributes=self.attributes,
+            _filter_empty=True,
+        )
 
     @property
     def markdown_mode(self) -> MarkdownModeStr | None:

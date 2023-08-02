@@ -67,6 +67,8 @@ class MkDiagram(mknode.MkNode):
         return helpers.get_repr(
             self,
             graph_type=self.graph_type,
+            items=self.items,
+            connections=self.connections,
             orientation=self.orientation,
         )
 

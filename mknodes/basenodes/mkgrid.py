@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes.basenodes import mkcontainer, mknode
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ class MkGrid(mkcontainer.MkContainer):
 
     ICON = "material/view-grid"
     REQUIRED_EXTENSIONS = ["attr_list", "md_in_html"]
+    items: list[MkGridCard]
 
     def __init__(
         self,
@@ -52,6 +54,19 @@ class MkGrid(mkcontainer.MkContainer):
         for item in items:
             item.parent_item = self
         super().__init__(content=items, header=header, **kwargs)
+
+    def __repr__(self):
+        from mknodes.basenodes import mktext
+
+        cards = []
+        for item in self.items:
+            if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
+                cards.append(str(item.items[0]))
+            elif len(item.items) == 1:
+                cards.append(item.items[0])
+            else:
+                cards.append(item)
+        return helpers.get_repr(self, cards=cards)
 
     def _to_markdown(self) -> str:
         begin = '<div class="grid cards" markdown>'

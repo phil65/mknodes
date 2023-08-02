@@ -6,6 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mknode, mktext
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -53,6 +54,13 @@ class MkTable(mknode.MkNode):
                 }
             case _:
                 raise TypeError(data)
+
+    def __repr__(self):
+        kwarg_data = {
+            k: [str(i) if isinstance(i, mktext.MkText) else i for i in v]
+            for k, v in self.data.items()
+        }
+        return helpers.get_repr(self, data=kwarg_data)
 
     @property
     def columns(self):
