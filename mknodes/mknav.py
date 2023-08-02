@@ -21,7 +21,7 @@ from mknodes.utils import helpers
 
 if TYPE_CHECKING:
     from mknodes import mkdoc
-    from mknodes.templatenodes import mkclasspage
+    from mknodes.templatenodes import mkclasspage, mkmodulepage
 
 logger = logging.getLogger(__name__)
 
@@ -209,6 +209,7 @@ class MkNav(mknode.MkNode):
         filter_by___all__: bool = False,
         section_name: str | None = None,
         class_page: type[mkclasspage.MkClassPage] | None = None,
+        module_page: type[mkmodulepage.MkModulePage] | None = None,
         flatten_nav: bool = False,
     ) -> mkdoc.MkDoc:
         """Add a module documentation to the Nav.
@@ -219,6 +220,8 @@ class MkNav(mknode.MkNode):
             section_name: Override the name for the menu (default: module name)
             class_page: Override for the default ClassPage
                         (default: [MkClassPage](MkClassPage.md))
+            module_page: Override for the default ModulePage
+                        (default: [MkModulePage](MkModulePage.md))
             flatten_nav: Whether classes should be put into top-level of the nav
         """
         from mknodes import mkdoc
@@ -229,6 +232,7 @@ class MkNav(mknode.MkNode):
             parent=self,
             section_name=section_name,
             class_page=class_page,
+            module_page=module_page,
             flatten_nav=flatten_nav,
         )
         self._register(nav)

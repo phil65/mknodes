@@ -30,6 +30,7 @@ class MkDoc(mknav.MkNav):
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
         class_page: type[mkclasspage.MkClassPage] | None = None,
+        module_page: type[mkmodulepage.MkModulePage] | None = None,
         flatten_nav: bool = False,
         **kwargs: Any,
     ):
@@ -42,6 +43,8 @@ class MkDoc(mknav.MkNav):
             section_name: Optional section name override
             class_page: Override for the default ClassPage
                         (default: [MkClassPage](MkClassPage.md))
+            module_page: Override for the default ModulePage
+                        (default: [MkModulePage](MkModulePage.md))
             flatten_nav: Whether classes should be put into top-level of the nav
             kwargs: Keyword arguments passed to parent
         """
@@ -52,6 +55,7 @@ class MkDoc(mknav.MkNav):
         self.file_path = self.module.__file__
 
         self.ClassPage = class_page or mkclasspage.MkClassPage
+        self.ModulePage = module_page or mkmodulepage.MkModulePage
         self.flatten_nav = flatten_nav
         self.klasses: set[type] = set()
         self.submodules: set[types.ModuleType] = set()
@@ -233,7 +237,7 @@ class MkDoc(mknav.MkNav):
             title: Override title for the section.
             kwargs: kwargs passed to MkModulePage.
         """
-        page = mkmodulepage.MkModulePage(
+        page = self.ModulePage(
             hide_toc=True,
             module=self.module,
             klasses=self.klasses,
