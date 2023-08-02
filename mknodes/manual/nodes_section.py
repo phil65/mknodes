@@ -51,7 +51,7 @@ def create_base_nodes_section(nav: mknodes.MkNav):
     all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
     klasses = [kls for kls in all_classes if ".basenodes." in kls.__module__]
     base_nodes_nav = nav.add_nav("Base nodes")
-    page = nav.add_index_page(hide_toc=True)
+    page = base_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkCode.for_object(create_base_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(base_nodes_nav, klasses)
@@ -62,7 +62,7 @@ def create_template_nodes_section(nav: mknodes.MkNav):
     all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
     klasses = [kls for kls in all_classes if ".templatenodes." in kls.__module__]
     template_nodes_nav = nav.add_nav("Template nodes")
-    page = nav.add_index_page(hide_toc=True)
+    page = template_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkCode.for_object(create_template_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(template_nodes_nav, klasses)
