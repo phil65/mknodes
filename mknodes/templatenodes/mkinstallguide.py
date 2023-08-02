@@ -61,7 +61,7 @@ class MkInstallGuide(mknode.MkNode):
         self,
         project: str,
         package_managers: list[str] | None = None,
-        header_level: int | None = 2,
+        header_level: int | None = 3,
         **kwargs: Any,
     ):
         """Constructor.
