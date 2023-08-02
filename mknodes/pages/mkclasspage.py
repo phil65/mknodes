@@ -6,14 +6,14 @@ import pathlib
 
 from typing import Any
 
-from mknodes.pages import mkpage, processors
+from mknodes.pages import mktemplatepage, processors
 from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkClassPage(mkpage.MkPage):
+class MkClassPage(mktemplatepage.MkTemplatePage):
     """Page showing information about a class."""
 
     def __init__(
@@ -36,14 +36,13 @@ class MkClassPage(mkpage.MkPage):
         """
         # TODO: should path be settable?
         path = pathlib.Path(f"{klass.__name__}.md")
-        super().__init__(path=path, **kwargs)
         self.klass = klass
         match module_path:
             case None:
                 self.parts = klass.__module__.split(".")
             case _:
                 self.parts = classhelpers.to_module_parts(module_path)
-        self._build()
+        super().__init__(path=path, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, klass=self.klass, path=str(self.path))
@@ -64,11 +63,6 @@ class MkClassPage(mkpage.MkPage):
             processors.InheritanceDiagramPageProcessor(self.klass),
             processors.MkDocStringPageProcessor(self.klass),
         ]
-
-    def _build(self):
-        for processor in self.get_processors():
-            if processor.check_if_apply(self):
-                processor.append_section(self)
 
 
 if __name__ == "__main__":

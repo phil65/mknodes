@@ -6,14 +6,14 @@ import types
 
 from typing import Any
 
-from mknodes.pages import mkpage, processors
+from mknodes.pages import mktemplatepage, processors
 from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkModulePage(mkpage.MkPage):
+class MkModulePage(mktemplatepage.MkTemplatePage):
     """Page showing information about a module."""
 
     def __init__(
@@ -36,7 +36,6 @@ class MkModulePage(mkpage.MkPage):
             show_class_table: ModuleType or path to model to show info for.
             kwargs: further keyword arguments passed to parent
         """
-        super().__init__(path=path, **kwargs)
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
         self.docstrings = docstrings
@@ -44,7 +43,7 @@ class MkModulePage(mkpage.MkPage):
             classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0]),
         )
         self.show_class_table = show_class_table
-        self._build()
+        super().__init__(path=path, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, module=self.module, path=str(self.path))
@@ -68,14 +67,9 @@ class MkModulePage(mkpage.MkPage):
             procs.append(proc)
         return procs
 
-    def _build(self):
-        for processor in self.get_processors():
-            if processor.check_if_apply(self):
-                processor.append_section(self)
-
 
 if __name__ == "__main__":
-    doc = MkModulePage(mkpage)
+    doc = MkModulePage(mktemplatepage)
     doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
     # print(doc.children)
