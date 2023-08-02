@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 
 from .basenodes.mkblock import MkBlock
 from .basenodes.mkhtmlblock import MkHtmlBlock
@@ -46,6 +47,7 @@ from .templatenodes.mkreprrawrendered import MkReprRawRendered
 from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkmodulepage import MkModulePage
 
+TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests/data/"
 
 __all__ = [
     "MkNode",
