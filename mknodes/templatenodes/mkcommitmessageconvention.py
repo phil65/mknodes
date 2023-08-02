@@ -120,7 +120,7 @@ class MkCommitMessageConvention(mknode.MkNode):
 
         page.metadata["status"] = "new"
         node = MkCommitMessageConvention()
-        page += mknodes.MkNodeExample(node, indent=True)
+        page += mknodes.MkReprRawRendered(node, indent=True)
 
 
 if __name__ == "__main__":

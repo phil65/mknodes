@@ -109,9 +109,9 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             mode="mro",
             header="Method resolution order: MkTable",
         )
-        page += mknodes.MkNodeExample(parent_diagram, indent=True)
-        page += mknodes.MkNodeExample(sub_diagram, indent=True)
-        page += mknodes.MkNodeExample(mro_diagram, indent=True)
+        page += mknodes.MkReprRawRendered(parent_diagram, indent=True)
+        page += mknodes.MkReprRawRendered(sub_diagram, indent=True)
+        page += mknodes.MkReprRawRendered(mro_diagram, indent=True)
 
     def _to_markdown(self) -> str:
         match self.mode:

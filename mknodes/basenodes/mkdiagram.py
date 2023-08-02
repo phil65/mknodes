@@ -88,7 +88,7 @@ class MkDiagram(mknode.MkNode):
             items=["1", "2", "3"],
             connections=[("1", "2"), ("2", "3")],
         )
-        page += mknodes.MkNodeExample(diagram, indent=True)
+        page += mknodes.MkReprRawRendered(diagram, indent=True)
 
 
 if __name__ == "__main__":

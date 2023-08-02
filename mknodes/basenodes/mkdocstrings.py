@@ -194,7 +194,7 @@ class MkDocStrings(mknode.MkNode):
             header="DocStrings",
             heading_level=3,
         )
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

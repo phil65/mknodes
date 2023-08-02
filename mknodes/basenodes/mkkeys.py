@@ -49,7 +49,7 @@ class MkKeys(mknode.MkNode):
         page.metadata["status"] = "new"
         page += mknodes.MkAdmonition("MkKeys can be used to show Key combinations.")
         node = MkKeys("Ctrl+A")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

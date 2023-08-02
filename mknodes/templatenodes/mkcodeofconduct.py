@@ -68,7 +68,7 @@ class MkCodeOfConduct(mknode.MkNode):
 
         page.metadata["status"] = "new"
         node = MkCodeOfConduct("my@email.com", version="2.1")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

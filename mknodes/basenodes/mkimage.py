@@ -85,13 +85,13 @@ class MkImage(mknode.MkNode):
         page += "A simple MkNode to display an image. Target can be local or remote."
 
         node = MkImage(path="https://picsum.photos/200", caption="Dummy image")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
         node = MkImage(path="https://picsum.photos/200", align="right")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
         node = MkImage(path="https://picsum.photos/200", width=500)
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

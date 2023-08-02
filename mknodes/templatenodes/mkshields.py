@@ -161,7 +161,7 @@ class MkShields(mknode.MkNode):
             user="phil65",
             project="mknodes",
         )
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

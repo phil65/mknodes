@@ -61,8 +61,8 @@ class MkClassTable(mktable.MkTable):
             layout="extended",
             header="Extended layout",
         )
-        page += mknodes.MkNodeExample(node_1)
-        page += mknodes.MkNodeExample(node_2)
+        page += mknodes.MkReprRawRendered(node_1)
+        page += mknodes.MkReprRawRendered(node_2)
 
     def default_row_for_klass(self, kls: type) -> dict[str, str]:
         return dict(

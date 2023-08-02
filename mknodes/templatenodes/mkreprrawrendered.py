@@ -12,10 +12,10 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
-class MkNodeExample(mktabcontainer.MkTabbed):
+class MkReprRawRendered(mktabcontainer.MkTabbed):
     """MkCritic block."""
 
-    ICON = "simple/shieldsdotio"
+    ICON = "material/presentation"
 
     def __init__(
         self,
@@ -48,14 +48,14 @@ class MkNodeExample(mktabcontainer.MkTabbed):
 
         page.metadata["status"] = "new"
         example_node = mknodes.MkAdmonition("Some text")
-        node = MkNodeExample(node=example_node)
+        node = MkReprRawRendered(node=example_node)
         page += node
-        page += MkNodeExample(node)
+        page += MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
     import mknodes
 
     example_node = mknodes.MkAdmonition("Some text")
-    node = MkNodeExample(node=example_node)
+    node = MkReprRawRendered(node=example_node)
     print(node)

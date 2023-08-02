@@ -93,11 +93,11 @@ class MkLink(mknode.MkNode):
 
         url = "http://www.google.de"
         node = mknodes.MkLink(url, "This is a link.")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
         node = mknodes.MkLink(url, "Disguised as button.", as_button=True)
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
         node = mknodes.MkLink(url, "Colored.", as_button=True, primary_color=True)
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

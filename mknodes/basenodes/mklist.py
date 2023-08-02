@@ -76,10 +76,10 @@ class MkList(mkcontainer.MkContainer):
         )
         # and can contain markdown.
         list_4 = MkList(items=[mknodes.MkAdmonition("Markup")] * 3)
-        page += mknodes.MkNodeExample(list_1)
-        page += mknodes.MkNodeExample(list_2)
-        page += mknodes.MkNodeExample(list_3)
-        page += mknodes.MkNodeExample(list_4)
+        page += mknodes.MkReprRawRendered(list_1)
+        page += mknodes.MkReprRawRendered(list_2)
+        page += mknodes.MkReprRawRendered(list_3)
+        page += mknodes.MkReprRawRendered(list_4)
 
     def _prep(self, item) -> str:
         return helpers.linked(item) if self.as_links else str(item)

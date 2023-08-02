@@ -52,7 +52,7 @@ class MkIFrame(mknode.MkNode):
         import mknodes
 
         frame = MkIFrame(url="https://phil65.github.io/mknodes/", width=600, height=600)
-        page += mknodes.MkNodeExample(frame)
+        page += mknodes.MkReprRawRendered(frame)
 
     def _to_markdown(self) -> str:
         if not self.url:

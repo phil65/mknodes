@@ -108,7 +108,7 @@ class MkDetailsBlock(mkblock.MkBlock):
                 title=f"Details block with type {typ!r}",
                 header=f"Type '{typ}'",
             )
-            page += mknodes.MkNodeExample(node)
+            page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

@@ -130,10 +130,10 @@ class MkTable(mknode.MkNode):
 
         node_1 = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
         # data can be given in different shapes.
-        page += mknodes.MkNodeExample(node_1)
+        page += mknodes.MkReprRawRendered(node_1)
         dicts = [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}]
         node_2 = MkTable(data=dicts)
-        page += mknodes.MkNodeExample(node_2)
+        page += mknodes.MkReprRawRendered(node_2)
 
     def _iter_rows(self) -> Iterator[list[mknode.MkNode]]:
         length = min(len(i) for i in self.data.values())

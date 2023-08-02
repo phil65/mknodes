@@ -104,7 +104,7 @@ class MkInstallGuide(mknode.MkNode):
         # Currently it is only tailored towards PyPi.
 
         node = MkInstallGuide(project="mknodes", package_managers=["pip", "pipx"])
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

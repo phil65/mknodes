@@ -45,7 +45,7 @@ class MkSnippet(mknode.MkNode):
         import mknodes
 
         node = MkSnippet(path="README.md")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
         return f"--8<--\n{self.path}\n--8<--\n"

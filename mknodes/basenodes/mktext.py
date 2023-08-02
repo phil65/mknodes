@@ -68,7 +68,7 @@ class MkText(mknode.MkNode):
         import mknodes
 
         node = MkText("This is the most basic node. It contains `markdown` text")
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
     @classmethod
     def from_external_url(cls, url: str) -> Self | None:

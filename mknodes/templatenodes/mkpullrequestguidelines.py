@@ -63,7 +63,7 @@ class MkPullRequestGuidelines(mknode.MkNode):
 
         page.metadata["status"] = "new"
         node = MkPullRequestGuidelines()
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

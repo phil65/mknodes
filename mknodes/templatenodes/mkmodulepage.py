@@ -57,7 +57,7 @@ class MkModulePage(mkpage.MkPage):
         # MkModulePages are page templates to display
         # documentation about a module.
         node = MkModulePage(module=mknodes)
-        page += mknodes.MkNodeExample(node)
+        page += mknodes.MkReprRawRendered(node)
 
     def get_processors(self) -> list:
         procs: list[processors.PageProcessor] = [processors.DocPageProcessor(self.module)]

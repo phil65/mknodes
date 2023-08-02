@@ -41,7 +41,7 @@ from .templatenodes.mkpullrequestguidelines import MkPullRequestGuidelines
 from .templatenodes.mkclassdiagram import MkClassDiagram
 from .templatenodes.mkclasstable import MkClassTable
 from .templatenodes.mkclasspage import MkClassPage
-from .templatenodes.mknodeexample import MkNodeExample
+from .templatenodes.mkreprrawrendered import MkReprRawRendered
 
 from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkmodulepage import MkModulePage
@@ -90,7 +90,7 @@ __all__ = [
     "MkPullRequestGuidelines",
     "MkIFrame",
     "MkProgressBar",
-    "MkNodeExample",
+    "MkReprRawRendered",
 ]
 
 __version__ = "0.18.0"
