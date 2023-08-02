@@ -131,6 +131,7 @@ def create_mknav_section(nav: mknodes.MkNav):
 
 
 def create_from_file_section(nav: mknodes.MkNav):
+    """Load an existing SUMMARY.md and attach it to given MkNav."""
     file = mknodes.TEST_RESOURCES / "nav_tree/SUMMARY.md"
     file_nav = mknodes.MkNav.from_file(file, section="From file", parent=nav)
     nav["From file"] = file_nav
@@ -153,8 +154,8 @@ def create_from_folder_section(nav: mknodes.MkNav):
 
 
 def create_mkpage_section(nav: mknodes.MkNav):
+    """Create "MkPage" sub-MkNav and attach it to given MkNav."""
     page_section = nav.add_nav("MkPage")
-
     overview = page_section.add_index_page(hide_toc=True, icon=mknodes.MkPage.ICON)
     overview += mknodes.MkCode.for_object(
         create_mkpage_section,
@@ -166,6 +167,7 @@ def create_mkpage_section(nav: mknodes.MkNav):
 
 
 def create_adding_to_mkpages_page(nav: mknodes.MkNav):
+    """Create the "Adding to MkPages" MkPage and attach it to given MkNav."""
     page = nav.add_page(
         "Adding to MkPages",
         hide_toc=True,  # you can set all kinds of metadata for your pages
@@ -182,6 +184,7 @@ def create_adding_to_mkpages_page(nav: mknodes.MkNav):
 
 
 def create_metadata_page(nav: mknodes.MkNav):
+    """Create the "Metadata" MkPage and attach it to given nav."""
     page = nav.add_page(
         "Metadata",
         icon="simple/yaml",
@@ -198,6 +201,7 @@ def create_metadata_page(nav: mknodes.MkNav):
 
 
 def create_mkdoc_section(nav: mknodes.MkNav):
+    """Create the "Metadata" sub-MkNav and attach it to given nav."""
     doc_section = nav.add_nav("MkDoc")
 
     overview = doc_section.add_index_page(hide_toc=True, icon="material/api")
