@@ -263,14 +263,32 @@ def create_mknodes_section(nav: mknodes.MkNav):
         def get_header(self, page):
             return "Code for this page"
 
+    # .. and while we are at it, we will also write another processor to add
+    # the required extensions to the page:
+
+    class ExtensionInfoProcessor(processors.PageProcessor):
+        def append_block(self, page: mknodes.MkPage):
+            extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
+            page += mknodes.MkAdmonition(extensions, title="Required extensions")
+
+        def check_if_apply(self, page: mknodes.MkPage):
+            attr = getattr(self.item, "REQUIRED_EXTENSIONS", False)
+            return bool(attr)
+
     # Now, we write a custom page template which
-    # overrides get_processors and includes our new processor at the beginning.
+    # overrides get_processors and includes our new processors.
 
     class CustomClassPage(mknodes.MkClassPage):
         def get_processors(self):
             processors = super().get_processors()
             code_processor = SourceCodeProcessor(self.klass, processors=processors)
-            return [code_processor, *processors]
+            extensions_processor = ExtensionInfoProcessor(self.klass)
+            # we will add the code at the top and the Extension infobox at the end.
+            return [code_processor, *processors, extensions_processor]
+
+    # Of course it would also be possible to write a processor for the Examples section
+    # we did earlier.
+    # Since we are just demonstrating all functionality, we will skip that though.
 
     # Now that we have our custom ClassPage, we can create the documentation.
     # In our case, we only want to document stuff which is listed in "__all__".
@@ -282,3 +300,5 @@ def create_mknodes_section(nav: mknodes.MkNav):
 
     # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)
+
+    # We are done. Creating the files will be done when the tree is writtten in the end.
