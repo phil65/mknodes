@@ -46,6 +46,7 @@ class MkFootNotes(mkcontainer.MkContainer):
 
     items: list[MkFootNote]
     ICON = "octicons/list-ordered-16"
+    REQUIRED_EXTENSIONS = ["footnotes"]
 
     def __init__(
         self,
