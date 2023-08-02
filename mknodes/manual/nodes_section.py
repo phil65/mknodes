@@ -8,7 +8,6 @@ DOC_TEXT = """Now lets create the documentation.
 This code will show how to build a simple documentation section.
 """
 
-
 INTRO_TEXT = """
 Basically everything interesting in this library inherits from MkNode.
 It`s the base class for all tree nodes we are building. The tree goes from the root nav
@@ -34,6 +33,12 @@ def create_nodes_section(root_nav: mknodes.MkNav):
 
     # this here is what you are reading right now.
     overview += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
+    overview += mknodes.MkClassDiagram(
+        mknodes.MkNode,
+        mode="subclass_tree",
+        orientation="LR",
+        header="All the nodes",
+    )
     overview += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
     # let`s take a look at some of the mentioned Markup nodes.
     # we will now iter all node classes, create a small page (which is part of the menu)
@@ -43,7 +48,6 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     create_base_nodes_section(the_nodes_nav)
     create_template_nodes_section(the_nodes_nav)
     create_mkdoc_section(the_nodes_nav)
-    create_subclass_page(the_nodes_nav)
 
 
 def create_base_nodes_section(nav: mknodes.MkNav):
@@ -97,23 +101,6 @@ def create_class_page(kls: type, page: mknodes.MkPage):
     # and afterwards, we show what was added to the page.
     page += "## Output"
     kls.create_example_page(page)
-
-
-def create_subclass_page(nav: mknodes.MkNav):
-    """Add a MkPage containing a inheritance tree diagram to given MkNav."""
-    # Lets take a look at the relations of the included nodes.
-    # It`s easy to show different diagrams for classes.
-    subcls_page = nav.add_page(
-        "Inheritance tree",
-        hide_toc=True,
-        icon="octicons/git-merge-16",
-    )
-    subcls_page += mknodes.MkCode.for_object(create_subclass_page, header=PAGE_CODE)
-    subcls_page += mknodes.MkClassDiagram(
-        mknodes.MkNode,
-        mode="subclass_tree",
-        orientation="LR",
-    )
 
 
 def create_mknav_section(nav: mknodes.MkNav):
