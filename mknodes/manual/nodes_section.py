@@ -35,16 +35,30 @@ def create_nodes_subsection(nav: mknodes.MkNav):
     # let`s take a look at some of the mentioned Markup nodes.
     # we will now iter all node classes, create a small page (which is part of the menu)
     # and put that page as a link into a table, combined with docstrings.
+
+    all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
+    base_nodes = [kls for kls in all_classes if ".basenodes." in kls.__module__]
+    base_nodes_nav = nodes_nav.add_nav("Base nodes")
+    template_nodes = [kls for kls in all_classes if ".templatenodes." in kls.__module__]
+    template_nodes_nav = nodes_nav.add_nav("Template nodes")
+    create_section_for_nodes(base_nodes_nav, base_nodes)
+    create_section_for_nodes(template_nodes_nav, template_nodes)
+
+    page = nodes_nav.add_index_page(hide_toc=True)
+    page += mknodes.MkCode.for_object(create_nodes_subsection)
+
+
+def create_section_for_nodes(nav: mknodes.MkNav, klasses: list[type]):
     table = mknodes.MkTable(columns=["Node", "Docstrings"])
-    for kls in classhelpers.iter_subclasses(mknodes.MkNode):
+    for kls in klasses:
         # iter_subclasses just calls __subclasses__ recursively.
         if "create_example_page" in kls.__dict__:
-            page = nodes_nav.add_page(kls.__name__)
+            page = nav.add_page(kls.__name__, icon=kls.ICON)
             create_class_page(kls, page)
-            link = mknodes.MkLink(page, kls.__name__)
+            link = mknodes.MkLink(page, kls.__name__, icon=kls.ICON)
             table.add_row((link, kls.__doc__))
-    page = nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkCode.for_object(create_nodes_subsection, header=SECTION_CODE)
+    page = nav.add_index_page(hide_toc=True)
+    page += mknodes.MkCode.for_object(create_section_for_nodes, header=SECTION_CODE)
     page += table
 
 
