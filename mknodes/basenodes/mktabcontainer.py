@@ -43,12 +43,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             ]
         for tab in items:
             tab.parent_item = self
-        match select_tab:
-            case int():
-                items[select_tab].select = True
-            case str():
-                pos = self._get_tab_pos(select_tab)
-                items[pos].select = True
+        self.select_tab = select_tab
         super().__init__(content=items, header=header, **kwargs)
 
     def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkTabBlock:
@@ -76,6 +71,11 @@ class MkTabContainer(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.title == tab_title)
         return self.items.index(item)
 
+    def set_selected(self, index: int | str):
+        self.select_tab = self._get_tab_pos(index) if isinstance(index, str) else index
+        for i, item in enumerate(self.items):
+            item.select = i == self.select_tab
+
     def __setitem__(self, index: str, value: mktabs.MkTab | mktabs.MkTabBlock | str):
         match value:
             case str():
@@ -92,22 +92,21 @@ class MkTabContainer(mkcontainer.MkContainer):
             self.items.append(tab)
 
     def __repr__(self):
-        from mknodes.basenodes import mktext
-
-        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
-            content = str(self.items[0])
-        elif len(self.items) == 1:
-            content = self.items[0]
-        else:
-            content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
-        return helpers.get_repr(self, tabs=content)
+        return helpers.get_repr(
+            self,
+            tabs=self.to_dict(),
+            select_tab=self.select_tab,
+            _filter_empty=True,
+        )
 
     def to_dict(self):
-        return {tab.title: str(tab) for tab in self.items}
+        return {tab.title: "\n\n".join(str(i) for i in tab.items) for tab in self.items}
 
     def _to_markdown(self) -> str:
         if not self.items:
             return ""
+        if self.select_tab is not None:
+            self.set_selected(self.select_tab)
         self.items[0].new = True
         return "\n".join(str(i) for i in self.items)
 
