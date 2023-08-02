@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 import logging
 
+from typing import Any
+
 from mknodes.basenodes import mkcontainer, mknode, mktext
 from mknodes.utils import helpers
 
@@ -55,8 +57,15 @@ class MkAnnotations(mkcontainer.MkContainer):
         | list[str]
         | None = None,
         header: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            annotations: Annotations data (Can be given in different shapes)
+            header: Section header
+            kwargs: Keyword arguments passed to parent
+        """
         match annotations:
             case None:
                 items = []

@@ -4,6 +4,8 @@ from collections.abc import Mapping
 import logging
 import textwrap
 
+from typing import Any
+
 from mknodes.basenodes import mkcontainer, mknode, mktext
 from mknodes.utils import helpers
 
@@ -55,8 +57,15 @@ class MkFootNotes(mkcontainer.MkContainer):
         | list[str]
         | None = None,
         header: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            footnotes: Footnotes data (Can be given in different shapes)
+            header: Section header
+            kwargs: Keyword arguments passed to parent
+        """
         match footnotes:
             case None:
                 items = []
