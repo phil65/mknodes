@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from importlib import metadata
+import pathlib
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
@@ -80,7 +81,11 @@ class PackageInfo:
     def get_extras(self):
         return {extra for dep in self.requirements for extra in dep.extras}
 
+    def get_license_file_path(self) -> pathlib.Path | None:
+        file = self.metadata.get("License-File")
+        return pathlib.Path(file) if file else None
+
 
 if __name__ == "__main__":
     info = PackageInfo("mknodes")
-    print(info.classifiers)
+    print(info.get_license_file_path())
