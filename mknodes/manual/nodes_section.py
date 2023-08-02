@@ -51,7 +51,7 @@ def create_base_nodes_section(nav: mknodes.MkNav):
     all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
     klasses = [kls for kls in all_classes if ".basenodes." in kls.__module__]
     base_nodes_nav = nav.add_nav("Base nodes")
-    page = base_nodes_nav.add_index_page(hide_toc=True)
+    page = base_nodes_nav.add_index_page(hide_toc=True, icon="material/puzzle-outline")
     page += mknodes.MkCode.for_object(create_base_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(base_nodes_nav, klasses)
@@ -62,7 +62,8 @@ def create_template_nodes_section(nav: mknodes.MkNav):
     all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
     klasses = [kls for kls in all_classes if ".templatenodes." in kls.__module__]
     template_nodes_nav = nav.add_nav("Template nodes")
-    page = template_nodes_nav.add_index_page(hide_toc=True)
+    icon = "fontawesome/solid/puzzle-piece"
+    page = template_nodes_nav.add_index_page(hide_toc=True, icon=icon)
     page += mknodes.MkCode.for_object(create_template_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(template_nodes_nav, klasses)
@@ -70,14 +71,17 @@ def create_template_nodes_section(nav: mknodes.MkNav):
 
 def create_section_for_nodes(nav: mknodes.MkNav, klasses: list[type]) -> mknodes.MkTable:
     """Add a MkPage to the MkNav for each class, create a index MkTable and return it."""
-    table = mknodes.MkTable(columns=["Node", "Docstrings"])
+    table = mknodes.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
         # iter_subclasses just calls __subclasses__ recursively.
         if "create_example_page" in kls.__dict__:
+            # All MkNode classes carry some metadata, like ICON or REQUIRED_EXTENSIONS.
+            # We can use that for building the docs.
             page = nav.add_page(kls.__name__, icon=kls.ICON)
             create_class_page(kls, page)
             link = mknodes.MkLink(page, kls.__name__, icon=kls.ICON)
-            table.add_row((link, kls.__doc__))
+            extensions = ", ".join(f"`{i}`" for i in kls.REQUIRED_EXTENSIONS)
+            table.add_row((link, kls.__doc__, extensions))
     return table
 
 
@@ -99,7 +103,11 @@ def create_subclass_page(nav: mknodes.MkNav):
     """Add a MkPage containing a inheritance tree diagram to given MkNav."""
     # Lets take a look at the relations of the included nodes.
     # It`s easy to show different diagrams for classes.
-    subcls_page = nav.add_page("Subclass tree", hide_toc=True)
+    subcls_page = nav.add_page(
+        "Inheritance tree",
+        hide_toc=True,
+        icon="octicons/git-merge-16",
+    )
     subcls_page += mknodes.MkCode.for_object(create_subclass_page, header=PAGE_CODE)
     subcls_page += mknodes.MkClassDiagram(
         mknodes.MkNode,
@@ -117,7 +125,6 @@ def create_mknav_section(nav: mknodes.MkNav):
     create_from_file_section(nav_section)
     # 2) Load all .md files from a directory tree and create the Navs based on these.
     create_from_folder_section(nav_section)
-
     # Every MkNav can have an index page (which corresponds to your index.md))
     # Index pages get inserted first into the menu, so that the mkdocs-section-index
     # plugin can be utizilized.
