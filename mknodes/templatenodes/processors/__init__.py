@@ -24,8 +24,8 @@ class PageProcessor:
 
     def append_section(self, page: mkpage.MkPage):
         """Adds the block together with a header to the page."""
-        header = self.get_header(page)
-        page.add_header(header)
+        if header := self.get_header(page):
+            page.add_header(header)
         self.append_block(page)
 
     def check_if_apply(self, page: mkpage.MkPage):
@@ -36,9 +36,9 @@ class PageProcessor:
         """Re-implement this and attach your stuff to given page."""
         raise NotImplementedError
 
-    def get_default_header(self, page: mkpage.MkPage) -> str:
+    def get_default_header(self, page: mkpage.MkPage) -> str | None:
         """Re-implement this and return the default section header."""
-        raise NotImplementedError
+        return None
 
 
 class BaseClassTablePageProcessor(PageProcessor):
