@@ -83,7 +83,7 @@ class MkAdmonition(mkcontainer.MkContainer):
             inline_label = " inline" if self.inline == "left" else " inline end"
         else:
             inline_label = ""
-        title = f' "{self.title}"' if self.title else ""
+        title = f' "{self.title}"' if self.title is not None else ""
         text = textwrap.indent("\n".join(str(i) for i in self.items), "    ")
         return f"{block_start} {self.typ}{inline_label}{title}\n{text}\n"
 
