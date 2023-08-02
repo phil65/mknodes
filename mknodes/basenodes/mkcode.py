@@ -60,6 +60,17 @@ class MkCode(mktext.MkText):
         self.linenums = linenums
         self.highlight_lines = highlight_lines
 
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            code=self.text,
+            language=self.language,
+            title=self.title,
+            linenums=self.linenums,
+            highlight_lines=self.highlight_lines,
+            _filter_empty=True,
+        )
+
     def _to_markdown(self) -> str:
         title = f" title={self.title!r}" if self.title else ""
         if self.highlight_lines:
