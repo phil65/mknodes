@@ -98,7 +98,7 @@ license = "MIT"
 
 
 [project.entry-points."mkdocs.plugins"]
-linkreplacer = "mknodes.__linkreplacer:LinkReplacerPlugin"
+linkreplacer = "mknodes.linkreplacerplugin:LinkReplacerPlugin"
 
 [project.urls]
 Documentation = "https://phil65.github.io/mknodes/"
