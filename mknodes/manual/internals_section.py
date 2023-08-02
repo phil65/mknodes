@@ -26,6 +26,7 @@ def create_internals_section(root_nav: mknodes.MkNav):
     # Each tree item can carry virtual files.
     # Lets dispay all files which are currently attached to the tree:
     create_file_tree_page(internals_nav)
+    create_required_page(internals_nav)
     create_code_page(internals_nav)
 
 
@@ -47,6 +48,19 @@ def create_file_tree_page(nav: mknodes.MkNav):
     virtual_files = nav.root.all_virtual_files()
     file_txt = pprint.pformat(list(virtual_files.keys()))
     page += mknodes.MkCode(file_txt)
+
+
+def create_required_page(nav: mknodes.MkNav):
+    page = nav.add_page("Required extensions", hide_toc=True, icon="material/puzzle-edit")
+    page += mknodes.MkCode.for_object(create_required_page, header=PAGE_CODE)
+    page += "The tree requires these Markdown extensions to be available:"
+    # Based on which items we used, we can get info about the required extensions:
+    extensions = nav.root.all_markdown_extensions()
+    page += mknodes.MkCode(pprint.pformat(extensions))
+    # we can do the same for plugins
+    page += "The tree requires these MkDocs plugins to be available:"
+    plugins = nav.root.all_plugins()
+    page += mknodes.MkCode(pprint.pformat(plugins))
 
 
 def create_code_page(nav: mknodes.MkNav):
