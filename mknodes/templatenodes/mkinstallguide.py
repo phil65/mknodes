@@ -94,8 +94,7 @@ class MkInstallGuide(mknode.MkNode):
         # Currently it is only tailored towards PyPi.
 
         node = MkInstallGuide(project="mknodes", package_managers=["pip", "pipx"])
-        page += node
-        page += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        page += mknodes.MkNodeExample(node)
 
 
 if __name__ == "__main__":
