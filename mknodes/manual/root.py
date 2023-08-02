@@ -22,7 +22,6 @@ def create_page():
     # now we will create the nav sections and its pages one by one.
     # For demonstration purposes, this process is split up into some functions.
     manual.create_nodes_section(root_nav)
-    manual.create_documentation_section(root_nav)
     manual.create_internals_section(root_nav)
     manual.create_development_section(root_nav)
     # Each function here adds another Menu item to the root nav. We will get there later.
