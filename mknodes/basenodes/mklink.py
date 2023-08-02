@@ -22,6 +22,7 @@ class MkLink(mknode.MkNode):
         self,
         target: str | mkpage.MkPage | mknav.MkNav,
         title: str | None = None,
+        icon: str | None = None,
         as_button: bool = False,
         primary_color: bool = False,
         **kwargs: Any,
@@ -31,6 +32,7 @@ class MkLink(mknode.MkNode):
         Arguments:
             target: Link target
             title: Title used for link
+            icon: Optional icon to be displayed in front of title
             as_button: Whether link should be rendered as button
             primary_color: If rendered as button, use primary color as background.
             kwargs: keyword arguments passed to parent
@@ -40,12 +42,15 @@ class MkLink(mknode.MkNode):
         self.title = title
         self.as_button = as_button
         self.primary_color = primary_color
+        icon = icon or ""
+        self.icon = icon if icon.startswith(":") else f':{icon.replace("/", "-")}:'
 
     def __repr__(self):
         return helpers.get_repr(
             self,
             target=self.target,
             title=self.title,
+            icon=self.icon,
             as_button=self.as_button,
             primary_color=self.primary_color,
             _filter_empty=True,
@@ -79,7 +84,8 @@ class MkLink(mknode.MkNode):
             )
         else:
             button_suffix = ""
-        return f"[{title}]({url}){button_suffix}"
+        prefix = f"{self.icon} " if self.icon else ""
+        return f"[{prefix}{title}]({url}){button_suffix}"
 
     @staticmethod
     def create_example_page(page):
