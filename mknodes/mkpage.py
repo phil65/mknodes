@@ -102,7 +102,8 @@ class MkPage(mkcontainer.MkContainer):
             self.metadata["template"] = template
 
     def __repr__(self):
-        return helpers.get_repr(self, path=str(self.path))
+        meta_kwargs = {k: v for k, v in self.metadata.items() if v is not None}
+        return helpers.get_repr(self, path=str(self.path), **meta_kwargs)
 
     def __str__(self):
         return self.to_markdown()

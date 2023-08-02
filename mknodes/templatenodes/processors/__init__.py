@@ -19,20 +19,25 @@ class PageProcessor:
         self.header = header
 
     def get_header(self, page: mkpage.MkPage):
+        """Returns either default header or an override."""
         return self.header if self.header is not None else self.get_default_header(page)
 
-    def check_if_apply(self, page: mkpage.MkPage):
-        return True
-
     def append_section(self, page: mkpage.MkPage):
+        """Adds the block together with a header to the page."""
         header = self.get_header(page)
         page.add_header(header)
         self.append_block(page)
 
+    def check_if_apply(self, page: mkpage.MkPage):
+        """Re-implement this if the section should only conditionally be added."""
+        return True
+
     def append_block(self, page: mkpage.MkPage):
+        """Re-implement this and attach your stuff to given page."""
         raise NotImplementedError
 
     def get_default_header(self, page: mkpage.MkPage) -> str:
+        """Re-implement this and return the default section header."""
         raise NotImplementedError
 
 
