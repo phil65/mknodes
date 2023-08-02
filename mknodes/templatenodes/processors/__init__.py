@@ -41,6 +41,17 @@ class PageProcessor:
         return None
 
 
+class ClassTablePageProcessor(PageProcessor):
+    ID = "baseclass_table"
+
+    def append_block(self, page: mkpage.MkPage):
+        table = mkclasstable.MkClassTable(self.item)
+        page += table
+
+    def get_default_header(self, page: mkpage.MkPage):
+        return "Classes"
+
+
 class BaseClassTablePageProcessor(PageProcessor):
     ID = "baseclass_table"
 
