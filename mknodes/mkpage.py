@@ -6,12 +6,11 @@ import os
 import pathlib
 import types
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from typing_extensions import Self
 import yaml
 
-from mknodes import mknav
 from mknodes.basenodes import (
     mkadmonition,
     mkcode,
@@ -24,6 +23,10 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.utils import helpers
+
+
+if TYPE_CHECKING:
+    from mknodes import mknav
 
 
 logger = logging.getLogger(__name__)
