@@ -102,27 +102,27 @@ class MkCode(mktext.MkText):
         path: str | os.PathLike,
         *,
         linenums: bool = True,
-        highlight_self: bool = True,
-        **kwargs,
+        highlight_caller: bool = True,
+        **kwargs: Any,
     ):
         """Create a MkCode node based on a code file.
 
-        Line numbers will be shown by default. If highlight_self is True,
+        Line numbers will be shown by default. If highlight_caller is True,
         it will try to detect whether the calling method is inside the code block are
         creating and if yes, it will highlight that line.
 
         Arguments:
             path: Path to the code file
             linenums: Whether to show line numbers
-            highlight_self: Whether we want to try to highlight the line which called
-                            this method.
+            highlight_caller: Whether we want to try to highlight the line which called
+                              this method.
             kwargs: Keyword arguments passed to MkCode ctor
         """
         path = pathlib.Path(path)
         with path.open() as file:
             content = file.read()
         hl_lines = None
-        if highlight_self and (frame := inspect.currentframe()) and frame.f_back:
+        if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
             call_file = frame.f_back.f_code.co_filename
             if call_file == str(path.absolute()):
                 line_count = content.count("\n")
@@ -148,13 +148,13 @@ class MkCode(mktext.MkText):
         extract_body: bool = False,
         title: str | None = None,
         linenums: bool = True,
-        highlight_self: bool = True,
+        highlight_caller: bool = True,
         **kwargs,
     ) -> Self:
         """Create a MkCode node based on a python object.
 
         Fetches code by using the inspect module.
-        Line numbers will be shown by default. If highlight_self is True,
+        Line numbers will be shown by default. If highlight_caller is True,
         it will try to detect whether the calling method is inside the code block are
         displaying and if yes, it will highlight that line.
 
@@ -164,8 +164,8 @@ class MkCode(mktext.MkText):
             extract_body: if True, Function / Class signatures are stripped from the code
             title: Title to use for code block. If None, it will use the object path.
             linenums: Whether to show line numbers
-            highlight_self: Whether we want to try to highlight the line which called
-                            this method.
+            highlight_caller: Whether we want to try to highlight the line which called
+                              this method.
             kwargs: Keyword arguments passed to MkCode ctor
         """
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
@@ -188,7 +188,7 @@ class MkCode(mktext.MkText):
         hl_lines = None
         if linenums:
             lines, start_line = inspect.getsourcelines(obj)
-            if highlight_self and (frame := inspect.currentframe()) and frame.f_back:
+            if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
                 call_file = frame.f_back.f_code.co_filename
                 obj_file = inspect.getfile(obj)
                 if call_file == obj_file:
