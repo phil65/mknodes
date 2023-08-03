@@ -46,7 +46,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     def create_example_page(page):
         import mknodes
 
-        page.metadata["status"] = "new"
+        page.status = "new"  # for the small icon in the left menu
         example_node = mknodes.MkAdmonition("Some text")
         node = MkReprRawRendered(node=example_node)
         page += node

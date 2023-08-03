@@ -68,7 +68,7 @@ class MkProgressBar(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        page.metadata["status"] = "new"
+        page.status = "new"  # for the small icon in the left menu
         page += mknodes.MkAdmonition("MkProgressBar can be used to show a progress bar.")
         page += mknodes.MkDetailsBlock("This Node requires additional css.")
         node = MkProgressBar(60)

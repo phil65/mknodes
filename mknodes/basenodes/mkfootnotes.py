@@ -142,7 +142,7 @@ class MkFootNotes(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        page.metadata["status"] = "new"
+        page.status = "new"  # for the small icon in the left menu
         node = MkFootNotes()
         page += "The MkFootNotes node aggregates footnotes[^1]."
         node[1] = r"Footnotes are numbered, can be set via \__setitem__."

@@ -75,7 +75,7 @@ class MkChangelog(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        page.metadata["status"] = "new"
+        page.status = "new"  # for the small icon in the left menu
         node = MkChangelog()
         page += mknodes.MkReprRawRendered(node)
         # page += mknodes.MkHtmlBlock(str(node), header="Markdown")

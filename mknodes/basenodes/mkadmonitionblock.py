@@ -81,7 +81,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
     def create_example_page(page):
         import mknodes
 
-        page.metadata["status"] = "new"
+        page.status = "new"  # for the small icon in the left menu
 
         page += "MkAdmonitionBlock is an admonition based on new pymdownx block syntax."
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
