@@ -116,6 +116,7 @@ class MkCode(mktext.MkText):
         dedent: bool = True,
         extract_body: bool = False,
         title: str | None = None,
+        linenums: bool = True,
         header: str = "",
     ) -> Self:
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
@@ -135,7 +136,12 @@ class MkCode(mktext.MkText):
                 code_title = classhelpers.to_dotted_path(obj)
             case _:
                 code_title = obj.__name__
-        return cls(code=code, header=header, title=code_title)
+        if linenums:
+            _, start_line = inspect.getsourcelines(obj)
+        else:
+            start_line = None
+
+        return cls(code=code, header=header, title=code_title, linenums=start_line)
 
 
 if __name__ == "__main__":
