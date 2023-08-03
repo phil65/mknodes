@@ -120,10 +120,10 @@ class BaseResolver:
                     raise RootResolverError(node)
                 node = parent
             elif part not in ("", "."):
-                node = self.__get(node, part)
+                node = self._get(node, part)
         return node
 
-    def __get(self, node, name):
+    def _get(self, node, name):
         for child in self.get_children(node):
             if self.__cmp(self.get_attribute(child), str(name)):
                 return child
@@ -341,5 +341,28 @@ class NodeResolver(BaseResolver):
         return getattr(node, self.path_attr)
 
 
+class MkNodeResolver(NodeResolver):
+    def __init__(self, ignore_case: bool = False):
+        super().__init__(path_attr="", ignore_case=ignore_case)
+
+    def get_attribute(self, node):
+        import mknodes
+
+        match node:
+            case mknodes.MkNav():
+                return node.section
+            case mknodes.MkPage():
+                return node.path
+            case _:
+                return type(node).__name__
+
+
 if __name__ == "__main__":
-    resolver = NodeResolver()
+    from mknodes import manual
+
+    root = manual.create_page()
+    resolver = MkNodeResolver()
+    result = resolver.glob("*/*/MkAdm*", root)
+    import pprint
+
+    pprint.pprint(result)

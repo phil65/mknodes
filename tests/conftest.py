@@ -4,6 +4,8 @@ import pathlib
 
 import pytest
 
+from mknodes import manual
+
 
 @pytest.fixture(scope="session")
 def test_data_dir():
@@ -13,3 +15,8 @@ def test_data_dir():
 @pytest.fixture(scope="session")
 def resources_dir():
     return pathlib.Path(__file__).parent.parent / "mknodes/resources/"
+
+
+@pytest.fixture(scope="session")
+def full_tree():
+    return manual.create_page()
