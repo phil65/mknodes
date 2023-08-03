@@ -137,7 +137,8 @@ def create_from_file_section(nav: mknodes.MkNav):
     nav["From file"] = file_nav
     page = file_nav.add_index_page(hide_toc=True, icon="material/file")
     page += mknodes.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
-    page += "Content of SUMMARY.md"
+    page += mknodes.MkDirectoryTree(mknodes.TEST_RESOURCES / "nav_tree/")
+    page += "Content of root SUMMARY.md"
     page += mknodes.MkCode(file.read_text().replace("](", "] ("))  # quick hack to prevent
     # link replacer plugin from modifying the code
 
@@ -151,6 +152,7 @@ def create_from_folder_section(nav: mknodes.MkNav):
     # in this case.
     page = folder_nav.add_index_page(hide_toc=True, icon="material/folder")
     page += mknodes.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
+    page += mknodes.MkDirectoryTree(folder)
 
 
 def create_mkpage_section(nav: mknodes.MkNav):
