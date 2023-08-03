@@ -47,15 +47,6 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     def __repr__(self):
         return helpers.get_repr(self, klass=self.klass, path=str(self.path))
 
-    @staticmethod
-    def create_example_page(page):
-        import mknodes
-
-        # MkClassPages are page templates to display
-        # documentation about a class.
-        node = MkClassPage(klass=mknodes.MkText)
-        page += mknodes.MkReprRawRendered(node)
-
     def get_processors(self):
         return [
             processors.BaseClassTablePageProcessor(self.klass),

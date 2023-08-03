@@ -48,15 +48,6 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     def __repr__(self):
         return helpers.get_repr(self, module=self.module, path=str(self.path))
 
-    @staticmethod
-    def create_example_page(page):
-        import mknodes
-
-        # MkModulePages are page templates to display
-        # documentation about a module.
-        node = MkModulePage(module=mknodes)
-        page += mknodes.MkReprRawRendered(node)
-
     def get_processors(self) -> list:
         procs: list[processors.PageProcessor] = [processors.DocPageProcessor(self.module)]
         if self.show_class_table:
