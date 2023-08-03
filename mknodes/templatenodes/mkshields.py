@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 import dataclasses
 import logging
 
@@ -113,7 +114,7 @@ class MkShields(mknode.MkNode):
 
     def __init__(
         self,
-        shields: list[ShieldTypeStr],
+        shields: Sequence[ShieldTypeStr],
         user: str,
         project: str,
         branch: str = "main",
