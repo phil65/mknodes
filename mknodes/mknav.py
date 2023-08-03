@@ -120,7 +120,7 @@ class MkNav(mknode.MkNode):
         self.nav = dict(items)
 
     def route(self, *path: str) -> Callable[[Callable], Callable]:
-        def decorator(fn: Callable, path=path) -> Callable:
+        def decorator(fn: Callable[..., mkpage.MkPage | MkNav], path=path) -> Callable:
             node = fn()
             node.parent_item = self
             self.nav[path] = node

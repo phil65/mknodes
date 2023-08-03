@@ -6,7 +6,7 @@ from collections.abc import ItemsView, KeysView, ValuesView
 import logging
 import pprint
 from types import MappingProxyType, SimpleNamespace
-from typing import ClassVar, Protocol, runtime_checkable
+from typing import Any, ClassVar, Protocol, runtime_checkable
 
 from mknodes.basenodes import mkcode
 from mknodes.utils import helpers
@@ -54,7 +54,7 @@ class MkPrettyPrint(mkcode.MkCode):
         sort_dicts: bool = False,
         underscore_numbers: bool = False,
         header: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
