@@ -244,6 +244,8 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # existing processors, puts them into code blocks and adds them to the page.
 
     class ShowProcessorCodeProcessor(processors.PageProcessor):
+        ID = "show_processor_code"
+
         def __init__(
             self,
             *args,
@@ -278,6 +280,8 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # the required extensions to the page:
 
     class ExtensionInfoProcessor(processors.PageProcessor):
+        ID = "extension_info"
+
         def append_block(self, page: mknodes.MkPage):
             extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
             page += mknodes.MkAdmonition(extensions, title="Required extensions")
