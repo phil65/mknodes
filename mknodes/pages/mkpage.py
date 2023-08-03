@@ -107,6 +107,14 @@ class MkPage(mkcontainer.MkContainer):
     def __str__(self):
         return self.to_markdown()
 
+    @property
+    def status(self):
+        return self.metadata.get("status")
+
+    @status.setter
+    def status(self, value: Literal["new", "deprecated"]):
+        self.metadata["status"] = value
+
     @classmethod
     def from_file(cls, path: str | os.PathLike) -> Self:
         path = pathlib.Path(path)
