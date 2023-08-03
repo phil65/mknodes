@@ -1,5 +1,6 @@
 import mknodes
 
+from mknodes.manual import routing
 from mknodes.pages import processors
 from mknodes.utils import classhelpers
 
@@ -112,6 +113,11 @@ def create_mknav_section(nav: mknodes.MkNav):
     create_from_file_section(nav_section)
     # 2) Load all .md files from a directory tree and create the Navs based on these.
     create_from_folder_section(nav_section)
+
+    # Another approach to set up navs is by using decorators. That will be explained
+    # by this function:
+    routing.create_routing_section(nav_section)
+
     # Every MkNav can have an index page (which corresponds to your index.md))
     # Index pages get inserted first into the menu, so that the mkdocs-section-index
     # plugin can be utizilized.

@@ -1,7 +1,18 @@
 import mknodes
 
 
-route_nav = mknodes.MkNav("Routed section")
+TITLE = "Setting up Navs via decorators"
+TEXT = """MkNodes also supports setting up Navs via decorators. The
+decorated functions need to return either an MkPage or another MkNav."""
+
+route_nav = mknodes.MkNav("Using decorators")
+
+
+def create_routing_section(nav: mknodes.MkNav):
+    nav += route_nav
+    page = route_nav.add_index_page(icon="material/call-split")
+    page += mknodes.MkAdmonition(TEXT, title=TITLE)
+    page += mknodes.MkCode.for_file(__file__)
 
 
 @route_nav.route("Routed page")
