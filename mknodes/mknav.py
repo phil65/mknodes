@@ -151,7 +151,7 @@ class MkNav(mknode.MkNode):
     def add_index_page(
         self,
         title: str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> mkpage.MkPage:
         """Register and return a index page with given title.
 
