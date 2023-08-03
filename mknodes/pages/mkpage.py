@@ -75,6 +75,8 @@ class MkPage(mkcontainer.MkContainer):
         """
         super().__init__(**kwargs)
         self.path = str(path)
+        if not self.path.endswith(".md"):
+            self.path += ".md"
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.metadata: dict[str, Any] = {}
         if hide_toc is not None:
