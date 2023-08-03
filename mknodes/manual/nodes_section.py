@@ -21,6 +21,9 @@ MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
 
+HACK_TEXT = """The replace() is a small hack to prevent links from getting processed
+by plugins. Ignore it."""
+
 
 def create_nodes_section(root_nav: mknodes.MkNav):
     """Add the complete "The Nodes" section to given MkNav."""
@@ -30,25 +33,25 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     # It`s all one big tree.
 
     the_nodes_nav = root_nav.add_nav("The nodes")
-    overview = the_nodes_nav.add_index_page(hide_toc=True, icon="material/graph")
+    # first we create the menu on the left:
 
-    # this here is what you are reading right now.
+    create_mknav_section(the_nodes_nav)
+    create_mkpage_section(the_nodes_nav)
+    create_base_nodes_section(the_nodes_nav)
+    create_template_nodes_section(the_nodes_nav)
+    create_mkdoc_section(the_nodes_nav)
+
+    # and then we create the index page (the page you are lookin at right now)
+
+    overview = the_nodes_nav.add_index_page(hide_toc=True, icon="material/graph")
     overview += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
+    overview += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
     overview += mknodes.MkClassDiagram(
         mknodes.MkNode,
         mode="subclass_tree",
         orientation="LR",
         header="All the nodes",
     )
-    overview += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
-    # let`s take a look at some of the mentioned Markup nodes.
-    # we will now iter all node classes, create a small page (which is part of the menu)
-    # and put that page as a link into a table, combined with docstrings.
-    create_mknav_section(the_nodes_nav)
-    create_mkpage_section(the_nodes_nav)
-    create_base_nodes_section(the_nodes_nav)
-    create_template_nodes_section(the_nodes_nav)
-    create_mkdoc_section(the_nodes_nav)
 
 
 def create_base_nodes_section(nav: mknodes.MkNav):
@@ -107,52 +110,86 @@ def create_class_page(kls: type, page: mknodes.MkPage):
 def create_mknav_section(nav: mknodes.MkNav):
     """Add the sub-MkNav "MkNav" to given MkNav."""
     nav_section = nav.add_nav("MkNav")
+
     # MkNavs can either be populated manually with MkPages and MkNavs, or we can load
     # existing folders containing markup files. There are two ways for this:
+
     # 1) Load an existing SUMMARY.md and create a nav based on given file content.
     create_from_file_section(nav_section)
+
     # 2) Load all .md files from a directory tree and create the Navs based on these.
     create_from_folder_section(nav_section)
 
-    # Another approach to set up navs is by using decorators. That will be explained
-    # by this function:
+    # Another approach to set up navs is by using decorators. We will explain that here:
     routing.create_routing_section(nav_section)
 
-    # Every MkNav can have an index page (which corresponds to your index.md))
+    # Every MkNav can have an index page (which corresponds to your index.md)
     # Index pages get inserted first into the menu, so that the mkdocs-section-index
     # plugin can be utizilized.
-    nav_page = nav_section.add_index_page(icon=nav.ICON, hide_toc=True)
-    nav_page += mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
+    page = nav_section.add_index_page(icon=nav.ICON, hide_toc=True)
+    page += mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
     # A nav section corresponds to a SUMMARY.md. You can see that when stringifying it.
-    nav_page += mknodes.MkCode(
-        str(nav_section).replace("](", "] ("),
-        header="File content",
-    )
+    text = str(nav_section).replace("](", "] (")  # (1)
+    page.annotations[1] = HACK_TEXT
+    page += mknodes.MkCode(text, header="The resulting MkNav")
 
 
 def create_from_file_section(nav: mknodes.MkNav):
     """Load an existing SUMMARY.md and attach it to given MkNav."""
-    file = mknodes.TEST_RESOURCES / "nav_tree/SUMMARY.md"
-    file_nav = mknodes.MkNav.from_file(file, section="From file", parent=nav)
-    nav["From file"] = file_nav
-    page = file_nav.add_index_page(hide_toc=True, icon="material/file")
-    page += mknodes.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
-    page += mknodes.MkDirectoryTree(mknodes.TEST_RESOURCES / "nav_tree/")
-    page += "Content of root SUMMARY.md"
-    page += mknodes.MkCode(file.read_text().replace("](", "] ("))  # quick hack to prevent
-    # link replacer plugin from modifying the code
+    # We will now demonstate loading an existing Nav tree.
+
+    # This path contains Markdown files/ folders and a pre-populated SUMMARY.md.
+    folder = mknodes.TEST_RESOURCES / "nav_tree/"  # Folder content: # (1)
+    summary_file = folder / "SUMMARY.md"  # File content: # (2)
+
+    # We will load it as an MkNav...
+    from_file_nav = mknodes.MkNav.from_file(summary_file, section="From file", parent=nav)
+
+    # ... and attach that sub-tree to our main tree.
+    nav["From file"] = from_file_nav
+
+    # Finally, the page you are seeing right now.
+    page = from_file_nav.add_index_page(hide_toc=True, icon="material/file")
+    code = mknodes.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
+    page += code
+
+    text = summary_file.read_text().replace("](", "] (")  # (3)
+    # we are wrapping some annotations with Admonitions, that seems to help
+    # with nesting / escaping issues in some cases (and it looks nice!).
+    tree_node = mknodes.MkDirectoryTree(mknodes.TEST_RESOURCES / "nav_tree/")
+    code.annotations[1] = mknodes.MkAdmonition(tree_node)
+    file_content_node = mknodes.MkCode(text)
+    code.annotations[2] = mknodes.MkAdmonition(file_content_node)
+    code.annotations[3] = HACK_TEXT
+
+    # we could also add the annotiation nodes to the page of course:
+    page += tree_node
+    page += file_content_node
 
 
 def create_from_folder_section(nav: mknodes.MkNav):
+    """Create a MkNav based on a folder tree containing markup files."""
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = mknodes.TEST_RESOURCES / "nav_tree/test_folder/"
-    folder_nav = mknodes.MkNav.from_folder(folder, parent=nav)
-    nav["From folder"] = folder_nav
-    # As you can see in the menu, the menu entries are labelled using the filenames
-    # in this case.
-    page = folder_nav.add_index_page(hide_toc=True, icon="material/folder")
-    page += mknodes.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
-    page += mknodes.MkDirectoryTree(folder)
+
+    # First, we create the MkNav based on folder content...
+    from_folder_nav = mknodes.MkNav.from_folder(folder, parent=nav)  # DocStrings: (1)
+
+    # ... and then attach that sub-tree to our main tree.
+    nav["From folder"] = from_folder_nav
+
+    # As you can see in the menu to the left,
+    # the menu entries are labelled using the filenames in this case.
+
+    # Finally, create the index page.
+    code = mknodes.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
+    page = from_folder_nav.add_index_page(hide_toc=True, icon="material/folder")
+    page += code
+    page += mknodes.MkDirectoryTree(folder)  # DocStrings: (2)
+    folder_docs = mknodes.MkDocStrings(mknodes.MkNav.from_folder, section_style="list")
+    node_docs = mknodes.MkDocStrings(mknodes.MkDirectoryTree, section_style="list")
+    code.annotations[1] = folder_docs
+    code.annotations[2] = node_docs
 
 
 def create_mkpage_section(nav: mknodes.MkNav):

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import importlib
 import logging
 import os
@@ -29,8 +30,7 @@ class MkDocStrings(mknode.MkNode):
         | list[str]
         | os.PathLike
         | type
-        | types.FunctionType
-        | types.MethodType,
+        | Callable,
         for_topmost: bool = False,
         allow_inspection: bool | None = None,
         show_bases: bool | None = None,
@@ -51,7 +51,7 @@ class MkDocStrings(mknode.MkNode):
         filters: list[str] | None = None,
         group_by_category: bool | None = None,
         show_submodules: bool | None = None,
-        docstring_section_style: Literal["table", "list", "spacy"] | None = None,
+        section_style: Literal["table", "list", "spacy"] | None = None,
         merge_init_into_class: bool | None = None,
         show_if_no_docstring: bool | None = None,
         annotations_path: Literal["brief", "source"] | None = None,
@@ -104,7 +104,7 @@ class MkDocStrings(mknode.MkNode):
             group_by_category: Group the object's children by categories:
                                attributes, classes, functions, and modules.
             show_submodules: When rendering a module, show its submodules recursively.
-            docstring_section_style: The style used to render docstring sections.
+            section_style: The style used to render docstring sections.
             merge_init_into_class: Whether to merge the __init__ method into
                                    the class' signature and docstring.
             show_if_no_docstring: Show the object heading even if it has no
@@ -161,7 +161,7 @@ class MkDocStrings(mknode.MkNode):
         self.options["filters"] = filters
         self.options["group_by_category"] = group_by_category
         self.options["show_submodules"] = show_submodules
-        self.options["docstring_section_style"] = docstring_section_style
+        self.options["docstring_section_style"] = section_style
         self.options["merge_init_into_class"] = merge_init_into_class
         self.options["show_if_no_docstring"] = show_if_no_docstring
         self.options["annotations_path"] = annotations_path
