@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import collections
 
-from collections.abc import ItemsView, ValuesView
+from collections.abc import ItemsView, KeysView, ValuesView
 import logging
 import pprint
 from types import MappingProxyType, SimpleNamespace
@@ -37,6 +37,7 @@ class MkPrettyPrint(mkcode.MkCode):
         | MappingProxyType
         | SimpleNamespace
         | ValuesView
+        | KeysView
         | collections.Counter
         | collections.ChainMap
         | collections.deque

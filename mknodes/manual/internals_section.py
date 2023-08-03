@@ -1,5 +1,4 @@
 import inspect
-import pprint
 
 import mknodes
 
@@ -47,8 +46,7 @@ def create_files_page(nav: mknodes.MkNav):
     page.add_header("These are the 'virtual' files attached to the tree:", level=3)
     # we want to see all files, so we have to go through the root nav:
     virtual_files = nav.root.all_virtual_files()
-    file_txt = pprint.pformat(list(virtual_files.keys()))
-    page += mknodes.MkCode(file_txt)
+    page += mknodes.MkPrettyPrint(list(virtual_files.keys()))
 
 
 def create_required_extensions_page(nav: mknodes.MkNav):
@@ -58,11 +56,11 @@ def create_required_extensions_page(nav: mknodes.MkNav):
     page += "The tree requires these Markdown extensions to be available:"
     # Based on which items we used, we can get info about the required extensions:
     extensions = nav.root.all_markdown_extensions()
-    page += mknodes.MkCode(pprint.pformat(extensions))
+    page += mknodes.MkPrettyPrint(extensions)
     # we can do the same for plugins
     page += "The tree requires these MkDocs plugins to be available:"
     plugins = nav.root.all_plugins()
-    page += mknodes.MkCode(pprint.pformat(plugins))
+    page += mknodes.MkPrettyPrint(plugins)
 
 
 def create_complete_code_section(nav: mknodes.MkNav):
