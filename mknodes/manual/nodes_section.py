@@ -151,13 +151,26 @@ def create_mkpage_section(nav: mknodes.MkNav):
     """Create "MkPage" sub-MkNav and attach it to given MkNav."""
     page_section = nav.add_nav("MkPage")
     overview = page_section.add_index_page(hide_toc=True, icon=mknodes.MkPage.ICON)
-    overview += mknodes.MkCode.for_object(
-        create_mkpage_section,
-        header=SECTION_CODE,
-    )
+    overview += mknodes.MkCode.for_object(create_mkpage_section, header=SECTION_CODE)
     overview += mknodes.MkAdmonition(MKPAGE_TIP, typ="tip")
     create_adding_to_mkpages_page(page_section)
     create_metadata_page(page_section)
+    create_mkclasspage_page(page_section)
+    create_mkmodulepage_page(page_section)
+
+
+def create_mkclasspage_page(nav: mknodes.MkNav):
+    page = nav.add_page("MkClassPage")
+    page += mknodes.MkCode.for_object(create_mkclasspage_page, header=PAGE_CODE)
+    class_page = mknodes.MkClassPage(mknodes.MkCode)
+    page += mknodes.MkReprRawRendered(class_page)
+
+
+def create_mkmodulepage_page(nav: mknodes.MkNav):
+    page = nav.add_page("MkModulePage")
+    page += mknodes.MkCode.for_object(create_mkmodulepage_page, header=PAGE_CODE)
+    class_page = mknodes.MkModulePage(mknodes)
+    page += mknodes.MkReprRawRendered(class_page)
 
 
 def create_adding_to_mkpages_page(nav: mknodes.MkNav):
