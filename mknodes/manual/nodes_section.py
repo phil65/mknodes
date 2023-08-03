@@ -160,14 +160,14 @@ def create_mkpage_section(nav: mknodes.MkNav):
 
 
 def create_mkclasspage_page(nav: mknodes.MkNav):
-    page = nav.add_page("MkClassPage")
+    page = nav.add_page("MkClassPage", icon=mknodes.MkClassPage.ICON)
     page += mknodes.MkCode.for_object(create_mkclasspage_page, header=PAGE_CODE)
     class_page = mknodes.MkClassPage(mknodes.MkCode)
     page += mknodes.MkReprRawRendered(class_page)
 
 
 def create_mkmodulepage_page(nav: mknodes.MkNav):
-    page = nav.add_page("MkModulePage")
+    page = nav.add_page("MkModulePage", icon=mknodes.MkModulePage.ICON)
     page += mknodes.MkCode.for_object(create_mkmodulepage_page, header=PAGE_CODE)
     class_page = mknodes.MkModulePage(mknodes)
     page += mknodes.MkReprRawRendered(class_page)
