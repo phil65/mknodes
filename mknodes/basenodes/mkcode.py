@@ -97,9 +97,27 @@ class MkCode(mktext.MkText):
         page += mknodes.MkReprRawRendered(node_4, indent=True)
 
     @classmethod
-    def for_file(cls, path: str | os.PathLike, language: str = "py"):
-        with pathlib.Path(path).open() as file:
-            return cls(file.read(), language=language)
+    def for_file(
+        cls,
+        path: str | os.PathLike,
+        *,
+        linenums: bool = True,
+        highlight_self: bool = True,
+        **kwargs,
+    ):
+        path = pathlib.Path(path)
+        with path.open() as file:
+            content = file.read()
+        hl_lines = None
+        if highlight_self and (frame := inspect.currentframe()) and frame.f_back:
+            call_file = frame.f_back.f_code.co_filename
+            if call_file == str(path.absolute()):
+                line_count = content.count("\n")
+                line = frame.f_back.f_lineno
+                hl_lines = [line] if 0 <= line <= line_count else None
+        start_line = 1 if linenums else None
+
+        return cls(content, linenums=start_line, highlight_lines=hl_lines, **kwargs)
 
     @classmethod
     def for_object(
@@ -118,7 +136,7 @@ class MkCode(mktext.MkText):
         title: str | None = None,
         linenums: bool = True,
         highlight_self: bool = True,
-        header: str = "",
+        **kwargs,
     ) -> Self:
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
             code = helpers.get_function_body(obj)
@@ -151,10 +169,10 @@ class MkCode(mktext.MkText):
             start_line = None
         return cls(
             code=code,
-            header=header,
             title=code_title,
             linenums=start_line,
             highlight_lines=hl_lines,
+            **kwargs,
         )
 
 
