@@ -105,6 +105,19 @@ class MkCode(mktext.MkText):
         highlight_self: bool = True,
         **kwargs,
     ):
+        """Create a MkCode node based on a code file.
+
+        Line numbers will be shown by default. If highlight_self is True,
+        it will try to detect whether the calling method is inside the code block are
+        creating and if yes, it will highlight that line.
+
+        Arguments:
+            path: Path to the code file
+            linenums: Whether to show line numbers
+            highlight_self: Whether we want to try to highlight the line which called
+                            this method.
+            kwargs: Keyword arguments passed to MkCode ctor
+        """
         path = pathlib.Path(path)
         with path.open() as file:
             content = file.read()
@@ -138,6 +151,23 @@ class MkCode(mktext.MkText):
         highlight_self: bool = True,
         **kwargs,
     ) -> Self:
+        """Create a MkCode node based on a python object.
+
+        Fetches code by using the inspect module.
+        Line numbers will be shown by default. If highlight_self is True,
+        it will try to detect whether the calling method is inside the code block are
+        displaying and if yes, it will highlight that line.
+
+        Arguments:
+            obj: Python object to show code from
+            dedent: Whether to dedent the code
+            extract_body: if True, Function / Class signatures are stripped from the code
+            title: Title to use for code block. If None, it will use the object path.
+            linenums: Whether to show line numbers
+            highlight_self: Whether we want to try to highlight the line which called
+                            this method.
+            kwargs: Keyword arguments passed to MkCode ctor
+        """
         if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
             code = helpers.get_function_body(obj)
         elif extract_body:
