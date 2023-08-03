@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 import itertools
 import logging
 import os
@@ -118,6 +118,14 @@ class MkNav(mknode.MkNode):
     @children.setter
     def children(self, items):
         self.nav = dict(items)
+
+    def route(self, _path: str) -> Callable[[Callable], Callable]:
+        def decorator(fn: Callable) -> Callable:
+            nav_or_page = fn()
+            self.__add__(nav_or_page)
+            return fn
+
+        return decorator
 
     def add_nav(self, section: str) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.
@@ -245,6 +253,8 @@ class MkNav(mknode.MkNode):
                 self.nav[(node.section,)] = node
             case mkpage.MkPage():
                 self.nav[node.path.removesuffix(".md")] = node
+            case _:
+                raise TypeError(node)
 
     @classmethod
     def from_file(
