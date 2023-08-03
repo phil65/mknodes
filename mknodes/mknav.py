@@ -94,6 +94,7 @@ class MkNav(mknode.MkNode):
 
     @property
     def path(self) -> str:
+        """Get current path based on section / filename (usually section/SUMMARY.md)."""
         return (
             pathlib.Path(self.section) / self.filename
             if self.section
@@ -102,10 +103,12 @@ class MkNav(mknode.MkNode):
 
     @property
     def navs(self) -> list[MkNav]:
+        """Return all registered navs."""
         return [node for node in self.nav.values() if isinstance(node, MkNav)]
 
     @property
     def pages(self) -> list[mkpage.MkPage]:
+        """Return all registered pages."""
         return [node for node in self.nav.values() if isinstance(node, mkpage.MkPage)]
 
     @property
@@ -120,6 +123,8 @@ class MkNav(mknode.MkNode):
         self.nav = dict(items)
 
     def route(self, *path: str) -> Callable[[Callable], Callable]:
+        """Decorator method to use for routing."""
+
         def decorator(fn: Callable[..., mkpage.MkPage | MkNav], path=path) -> Callable:
             node = fn()
             node.parent_item = self
@@ -148,6 +153,12 @@ class MkNav(mknode.MkNode):
         title: str | None = None,
         **kwargs,
     ) -> mkpage.MkPage:
+        """Register and return a index page with given title.
+
+        Arguments:
+            title: Title of the index page
+            kwargs: Keyword arguments passed to parent
+        """
         page = mkpage.MkPage(
             path="index.md",
             parent=self,
@@ -158,6 +169,7 @@ class MkNav(mknode.MkNode):
         return page
 
     def virtual_files(self) -> dict[str, str]:
+        """Override for MkNode.virtual_files."""
         return {str(self.path): self.to_markdown()}
 
     def to_markdown(self) -> str:
@@ -194,7 +206,22 @@ class MkNav(mknode.MkNode):
         subtitle: str | None = None,
         description: str | None = None,
     ) -> mkpage.MkPage:
-        """Add a page to the Nav."""
+        """Add a page to the Nav.
+
+        Arguments:
+            name: Page name
+            filename: optional filename override
+            hide_toc: Hide table of contents
+            hide_nav: Hide navigation menu
+            hide_path: Hide breadcrumbs path
+            search_boost: multiplier for search ranking
+            exclude_from_search: Exclude page from search index
+            icon: optional page icon
+            status: Page status
+            title: Page title
+            subtitle: Page subtitle
+            description: Page description
+        """
         page = mkpage.MkPage(
             path=filename or f"{name}.md",
             parent=self,
@@ -264,6 +291,14 @@ class MkNav(mknode.MkNode):
         section: str | None = None,
         parent: MkNav | None = None,
     ) -> Self:
+        """Load an existing SUMMARY.md style file.
+
+        Arguments:
+            path: Path to the file
+            section: Section name of new nav
+            parent: Optional parent item if the SUMMARY.md shouldnt be used as root nav.
+
+        """
         path = pathlib.Path(path)
         content = path.read_text()
         with helpers.new_cd(path.parent):
@@ -278,18 +313,28 @@ class MkNav(mknode.MkNode):
         section: str | None = None,
         parent: MkNav | None = None,
     ) -> Self:
+        """Create a nav based on a SUMMARY.md-style list, given as text.
+
+        Arguments:
+            text: Text to parse
+            section: Section name for the nav
+            parent: Optional parent-nav in case the new nav shouldnt become the root nav.
+        """
         nav = cls(section)
         nav.parent_item = parent
         lines = text.split("\n")
         for i, line in enumerate(lines):
+            # * [Example](example_folder/sub_1.md)
             if match := re.match(SECTION_AND_FILE_REGEX, line):
                 page = mkpage.MkPage.from_file(match[2])
                 page.parent_item = nav
                 nav[match[1]] = page
+            # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
                 subnav.parent_item = nav
                 nav[match[1]] = subnav
+            # * Example
             elif match := re.match(SECTION_REGEX, line):
                 next_lines = lines[i + 1 :]
                 indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
@@ -306,12 +351,21 @@ class MkNav(mknode.MkNode):
     def from_folder(
         cls,
         folder: str | os.PathLike,
+        *,
+        recursive: bool = True,
         parent: MkNav | None = None,
     ) -> Self:
+        """Load a MkNav tree from Folder.
+
+        Arguments:
+            folder: Folder to load .md files from
+            recursive: Whether all .md files should be included recursively.
+            parent: Optional parent-nav in case the new nav shouldnt become the root nav.
+        """
         folder = pathlib.Path(folder)
         nav = cls(folder.name if parent else None, parent=parent)
         for path in folder.iterdir():
-            if path.is_dir():
+            if path.is_dir() and recursive:
                 subnav = cls.from_folder(folder / path.parts[-1], parent=nav)
                 nav._register(subnav)
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
@@ -326,12 +380,12 @@ if __name__ == "__main__":
     nav_tree_path = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/"
     nav_file = nav_tree_path / "SUMMARY.md"
     # print(pathlib.Path(nav_file).read_text())
-    nav = MkNav.from_folder(nav_tree_path, None)
+    nav = MkNav.from_folder(nav_tree_path)
     lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
     print("\n".join(lines))
 
     # print(nav.all_virtual_files())
-    nav = MkNav.from_file(nav_file, None)
+    nav = MkNav.from_file(nav_file)
     lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
     print("\n".join(lines))
     # print(nav_file.read_text())
