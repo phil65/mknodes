@@ -87,7 +87,7 @@ unless they are part of code blocks that must not be wrapped.
 class MkCommitMessageConvention(mknode.MkNode):
     """Text node containing Commit message conventions."""
 
-    ICON = "material/help"
+    ICON = "simple/conventionalcommits"
 
     def __init__(
         self,

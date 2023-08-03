@@ -22,7 +22,7 @@ class MkDirectoryTree(mkcode.MkCode):
 
     """
 
-    ICON = "material/printer"
+    ICON = "material/file-tree-outline"
 
     def __init__(
         self,
