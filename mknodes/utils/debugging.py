@@ -19,9 +19,9 @@ def serve_script(script_file: str | os.PathLike):
     output = yaml.dump(config_file, Dumper=yaml.Dumper)
     stream = io.StringIO(output)
     serve.serve(
-        config_file=stream,
+        config_file=stream,  # type: ignore
         dev_addr=None,
-        livereload="livereload",
+        livereload="livereload",  # type: ignore
         build_type=None,
         watch_theme=False,
         watch=[],
