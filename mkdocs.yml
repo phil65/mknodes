@@ -134,6 +134,7 @@ use_directory_urls: false
 
 extra_css:
   - css/progressbar.css
+  - css/tooltip.css
 
 extra:
   social:
