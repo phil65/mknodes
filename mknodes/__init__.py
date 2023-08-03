@@ -46,6 +46,7 @@ from .templatenodes.mkclassdiagram import MkClassDiagram
 from .templatenodes.mkclasstable import MkClassTable
 from .templatenodes.mkreprrawrendered import MkReprRawRendered
 from .templatenodes.mkprettyprint import MkPrettyPrint
+from .templatenodes.mkcallable import MkCallable
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
@@ -96,6 +97,7 @@ __all__ = [
     "MkProgressBar",
     "MkReprRawRendered",
     "MkPrettyPrint",
+    "MkCallable",
 ]
 
 __version__ = "0.20.0"
