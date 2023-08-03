@@ -48,6 +48,7 @@ from .templatenodes.mkreprrawrendered import MkReprRawRendered
 from .templatenodes.mkprettyprint import MkPrettyPrint
 from .templatenodes.mkcallable import MkCallable
 from .templatenodes.mkdirectorytree import MkDirectoryTree
+from .templatenodes.mklog import MkLog
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
@@ -100,6 +101,7 @@ __all__ = [
     "MkPrettyPrint",
     "MkCallable",
     "MkDirectoryTree",
+    "MkLog",
 ]
 
 __version__ = "0.21.0"
