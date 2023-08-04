@@ -71,6 +71,9 @@ class MkNode(node.Node):
     def __str__(self):
         return self.to_markdown()
 
+    def __hash__(self):
+        return hash(self.to_markdown())
+
     def _to_markdown(self) -> str:
         return NotImplemented
 
