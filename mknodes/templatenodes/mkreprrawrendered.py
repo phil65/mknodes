@@ -32,6 +32,11 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
             indent: Whether the markdown tab should be indented (for escaping)
         """
         repr_node = mkcode.MkCode(repr(node))
+        if len(node.children) > 0:
+            lines = [f"{level * '    '} {node!r}" for level, node in node.iter_nodes()]
+            tree = mkcode.MkCode("\n".join(lines))
+        else:
+            tree = None
         if indent:
             markdown_node = mkcode.MkCode(textwrap.indent(str(node), prefix="    "))
         else:
@@ -44,6 +49,8 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
             node = mktext.MkText(node)
         self.node = node
         tabs = dict(Repr=repr_node, Markdown=markdown_node, Rendered=node)
+        if tree:
+            tabs["Repr tree"] = tree
         super().__init__(tabs=tabs, select_tab=2, **kwargs)
 
     def __repr__(self):
