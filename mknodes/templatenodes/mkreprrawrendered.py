@@ -5,7 +5,8 @@ import textwrap
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mknode, mktabcontainer
+from mknodes.basenodes import mkcode, mkcontainer, mknode, mktabcontainer
+from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
 
@@ -35,6 +36,11 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
             markdown_node = mkcode.MkCode(textwrap.indent(str(node), prefix="    "))
         else:
             markdown_node = mkcode.MkCode(str(node))
+        # TODO: hack: this basically un-parents mkpages so they dont become part of tree.
+        if isinstance(node, mkpage.MkPage):
+            container = mkcontainer.MkContainer()
+            container.items = [node]
+            node = container
         self.node = node
         tabs = dict(Repr=repr_node, Markdown=markdown_node, Rendered=node)
         super().__init__(tabs=tabs, select_tab=2, **kwargs)
