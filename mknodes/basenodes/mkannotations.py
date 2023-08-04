@@ -28,8 +28,8 @@ class MkAnnotation(mkcontainer.MkContainer):
             content: Annotation content
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(content=content, **kwargs)
         self.num = num
+        super().__init__(content=content, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, num=self.num, content=self.items)

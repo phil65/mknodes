@@ -37,10 +37,10 @@ class MkList(mkcontainer.MkContainer):
         # if as_links:
         #     items = [link.Link(i) for i in items]
         items = items or []
-        super().__init__(content=list(items), header=header)
         self.ordered = ordered
         self.shorten_after = shorten_after
         self.as_links = as_links
+        super().__init__(content=list(items), header=header)
 
     def __str__(self):
         return self.to_markdown()

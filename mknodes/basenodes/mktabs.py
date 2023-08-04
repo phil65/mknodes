@@ -83,11 +83,11 @@ class MkTab(mkcontainer.MkContainer):
         attrs: dict | None = None,
         **kwargs,
     ):
-        super().__init__(content=content, **kwargs)
         self.title = title
         self.select = select
         self.new = new
         self.attrs = attrs
+        super().__init__(content=content, **kwargs)
 
     def __repr__(self):
         from mknodes.basenodes import mktext
