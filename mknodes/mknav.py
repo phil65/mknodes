@@ -26,9 +26,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-SECTION_AND_FILE_REGEX = r"\* \[(.*)\]\((.*\.md)\)"
-SECTION_AND_FOLDER_REGEX = r"\* \[(.*)\]\((.*)\/\)"
-SECTION_REGEX = r"\* (.*)"
+SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*\.md)\)"
+SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"
+SECTION_REGEX = r"^\* (.*)"
 
 
 class MkNav(mknode.MkNode):
@@ -113,9 +113,8 @@ class MkNav(mknode.MkNode):
 
     @property
     def children(self):
-        navs = list(self.nav.values())
-        if self.index_page:
-            navs.append(self.index_page)
+        navs = [self.index_page] if self.index_page else []
+        navs += list(self.nav.values())
         return navs
 
     @children.setter
@@ -324,11 +323,27 @@ class MkNav(mknode.MkNode):
         nav.parent_item = parent
         lines = text.split("\n")
         for i, line in enumerate(lines):
+            # for first case we need to check whether following lines are indented.
+            # If yes, then the path describes an index page.
             # * [Example](example_folder/sub_1.md)
             if match := re.match(SECTION_AND_FILE_REGEX, line):
-                page = mkpage.MkPage.from_file(match[2])
-                page.parent_item = nav
-                nav[match[1]] = page
+                next_lines = lines[i + 1 :]
+                if indented := list(
+                    itertools.takewhile(lambda x: x.startswith("    "), next_lines),
+                ):
+                    unindented = (j[4:] for j in indented)
+                    subnav = MkNav.from_text(
+                        "\n".join(unindented),
+                        section=match[1],
+                        parent=nav,
+                    )
+                    page = subnav.add_index_page()
+                    page += pathlib.Path(match[2]).read_text()
+                    nav += subnav
+                else:
+                    page = mkpage.MkPage.from_file(match[2])
+                    page.parent_item = nav
+                    nav[match[1]] = page
             # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
@@ -380,14 +395,17 @@ if __name__ == "__main__":
     nav_tree_path = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/"
     nav_file = nav_tree_path / "SUMMARY.md"
     # print(pathlib.Path(nav_file).read_text())
-    nav = MkNav.from_folder(nav_tree_path)
-    lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
-    print("\n".join(lines))
+    # nav = MkNav.from_folder(nav_tree_path)
+    # lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
+    # print("\n".join(lines))
+    # import pprint
+    # pprint.pprint(nav.as_dict())
 
-    # print(nav.all_virtual_files())
+    # # print(nav.all_virtual_files())
     nav = MkNav.from_file(nav_file)
     lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
     print("\n".join(lines))
+    # print(str(nav))
     # print(nav_file.read_text())
     # subnav = docs.add_nav("subnav")
     # page = subnav.add_page("My first page!")
