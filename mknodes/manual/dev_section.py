@@ -12,9 +12,9 @@ PAGE_CODE = "Code for this page"
 def create_development_section(root_nav: mknodes.MkNav):
     """Create the "Development" sub-MkNav and attach it to given MkNav."""
     dev_nav = root_nav.add_nav("Development")
-    overview = dev_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
-    overview += mknodes.MkCode.for_object(create_development_section, header=SECTION_CODE)
-    overview += mknodes.MkAdmonitionBlock(INTRO_TEXT)
+    page = dev_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
+    page += mknodes.MkCode.for_object(create_development_section, header=SECTION_CODE)
+    page += mknodes.MkAdmonitionBlock(INTRO_TEXT)
     create_changelog_page(dev_nav)
     create_coc_page(dev_nav)
     create_contribute_page(dev_nav)

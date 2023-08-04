@@ -17,9 +17,9 @@ def create_internals_section(root_nav: mknodes.MkNav):
     """Create the "Internals" Sub-MkNav and attach it to given MkNav."""
     internals_nav = root_nav.add_nav("Internals")
 
-    overview = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
-    overview += mknodes.MkCode.for_object(create_internals_section, header=SECTION_CODE)
-    overview += mknodes.MkDetailsBlock(INTRO_TEXT)
+    page = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
+    page += mknodes.MkCode.for_object(create_internals_section, header=SECTION_CODE)
+    page += mknodes.MkDetailsBlock(INTRO_TEXT)
 
     # the "Tree" section in the left sidebar shows what we have done up to now.
     create_tree_page(internals_nav)
