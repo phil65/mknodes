@@ -78,7 +78,7 @@ class LinkReplacerPlugin(BasePlugin):
         files: Files,
     ) -> str | None:
         base_docs_url = config["docs_dir"]
-        page_url = page.file.src_path
+        page_url = page.file.src_uri
         mapping = collections.defaultdict(list)
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119

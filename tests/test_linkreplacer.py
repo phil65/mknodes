@@ -4,7 +4,7 @@ from mknodes import linkreplacerplugin
 
 
 class File:
-    src_path = "test"
+    src_uri = "test"
 
 
 class Page:
