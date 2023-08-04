@@ -51,8 +51,6 @@ class MkGrid(mkcontainer.MkContainer):
                     (card if isinstance(card, MkGridCard) else MkGridCard(card))
                     for card in cards
                 ]
-        for item in items:
-            item.parent_item = self
         super().__init__(content=items, header=header, **kwargs)
 
     def __repr__(self):

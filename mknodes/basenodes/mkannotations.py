@@ -86,8 +86,6 @@ class MkAnnotations(mkcontainer.MkContainer):
                     )
                     for k, v in annotations.items()
                 ]
-        for item in items:
-            item.parent_item = self
         super().__init__(content=items, header=header, **kwargs)
 
     def __len__(self):

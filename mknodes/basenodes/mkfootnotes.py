@@ -86,8 +86,6 @@ class MkFootNotes(mkcontainer.MkContainer):
                     )
                     for k, v in footnotes.items()
                 ]
-        for item in items:
-            item.parent_item = self
         super().__init__(content=items, header=header, **kwargs)
 
     def __repr__(self):

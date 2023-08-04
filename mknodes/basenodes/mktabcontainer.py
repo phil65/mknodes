@@ -41,8 +41,6 @@ class MkTabContainer(mkcontainer.MkContainer):
                 )
                 for k, v in tabs.items()
             ]
-        for tab in items:
-            tab.parent_item = self
         self.select_tab = select_tab
         super().__init__(content=items, header=header, **kwargs)
 
