@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Hashable
 import logging
 import textwrap
 
@@ -8,22 +9,25 @@ logger = logging.getLogger(__name__)
 
 
 class Connector:
-    def __init__(self, objects):
+    def __init__(self, objects, max_depth: int | None = None):
         if not isinstance(objects, list | tuple):
             objects = [objects]
-        self.item_dict = {}
-        self.connections = []
+        self.item_dict: dict[Hashable, str] = {}
+        self.connections: list[tuple[Hashable, Hashable]] = []
+        self.max_depth = max_depth
         self._connect(objects)
 
     def _connect(self, objects):
-        def add_connections(item):
+        def add_connections(item, depth: int = 0):
             identifier = self.get_id(item)
+            if self.max_depth and self.max_depth < depth:
+                return
             if identifier not in self.item_dict:
                 # if item.__module__.startswith(base_module):
                 self.item_dict[identifier] = self.get_title(item)
                 for base in self.get_children(item):
                     self.connections.append((self.get_id(base), identifier))
-                    add_connections(base)
+                    add_connections(base, depth + 1)
 
         for obj in objects:
             add_connections(obj)
@@ -47,9 +51,9 @@ class Connector:
     def get_attributes(self, item):
         return None
 
-    def get_title(self, item):
+    def get_title(self, item) -> str:
         """This can be overridden for a nicer label."""
-        return self.get_id(item)
+        return str(self.get_id(item))
 
     def get_graph_connection_text(self):
         lines = [

@@ -17,10 +17,11 @@ class BaseClassConnector(connector.Connector):
         objects,
         *,
         title_style: Literal["package.classname", "qualname"] = "package.classname",
+        max_depth: int | None = None,
     ):
         self.title_style = title_style
         # self.object = objects[0]
-        super().__init__(objects)
+        super().__init__(objects, max_depth=max_depth)
 
     def get_id(self, item: type) -> int:
         return id(item)
@@ -56,7 +57,7 @@ class ParentClassConnector(BaseClassConnector):
 
 class MroConnector(BaseClassConnector):
     def _connect(self, objects):
-        mro = list(objects[0].mro())
+        mro = list(objects[0].mro())[: self.max_depth]
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
         self.connections = [
             (self.get_id(i), self.get_id(j)) for i, j in itertools.pairwise(mro)
@@ -71,10 +72,12 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         klass: type,
         mode: DiagramModeStr = "parent_tree",
         orientation: Literal["TD", "DT", "LR", "RL"] = "TD",
+        max_depth: int | None = None,
         header: str = "",
     ):
         self.klass = klass
         self.mode = mode
+        self._max_depth = max_depth
         super().__init__(
             graph_type="flow",
             orientation=orientation,
@@ -116,13 +119,13 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     def _to_markdown(self) -> str:
         match self.mode:
             case "subclass_tree":
-                builder = SubclassConnector(self.klass)
+                builder = SubclassConnector(self.klass, max_depth=self._max_depth)
                 item_str = builder.get_graph_connection_text()
             case "parent_tree":
-                builder = ParentClassConnector(self.klass)
+                builder = ParentClassConnector(self.klass, max_depth=self._max_depth)
                 item_str = builder.get_graph_connection_text()
             case "mro":
-                builder = MroConnector(self.klass)
+                builder = MroConnector(self.klass, max_depth=self._max_depth)
                 item_str = builder.get_graph_connection_text()
             case _:
                 raise ValueError(self.mode)
@@ -131,5 +134,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 
 
 if __name__ == "__main__":
-    diagram = MkClassDiagram(MkClassDiagram, mode="mro")
+    from mknodes.basenodes import mknode
+
+    diagram = MkClassDiagram(mknode.MkNode, mode="subclass_tree", max_depth=3)
     print(diagram)
