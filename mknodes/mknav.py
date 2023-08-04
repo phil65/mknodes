@@ -34,8 +34,9 @@ SECTION_REGEX = r"^\* (.*)"
 class MkNav(mknode.MkNode):
     """Nav section, representing a nestable menu.
 
-    A nav has a section name (exception can be the root), an associated virtual file
-    (in general a SUMMARY.md) and can contain other navs as well as pages.
+    A nav is named (exception is the root nav, which has section name = None),
+    has an associated virtual file (in general a SUMMARY.md),
+    an optional index page and can contain other navs as well as pages.
     """
 
     ICON = "material/navigation-outline"

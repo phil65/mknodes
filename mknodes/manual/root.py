@@ -21,7 +21,7 @@ It will be a quite inception-ish experience.
 """
 
 
-def create_page():
+def create_root() -> mknodes.MkNav:
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
     annotations[1] = mknodes.MkDocStrings(mknodes.MkAnnotations, section_style="list")
@@ -61,7 +61,7 @@ def create_page():
     # Now we add the MkNode you are looking at right now.
     # We will use MkCode.for_object quite a lot in the next sections.
     # DocStrings for for_object: (6)
-    page += mknodes.MkCode.for_object(create_page)
+    page += mknodes.MkCode.for_object(create_root)
     page += annotations  # here we add the (invisible) annotations block to the page.
 
     # We can still add more annotations, things only get written at the very end:

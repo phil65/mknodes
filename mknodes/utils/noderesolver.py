@@ -360,7 +360,7 @@ class MkNodeResolver(NodeResolver):
 if __name__ == "__main__":
     from mknodes import manual
 
-    root = manual.create_page()
+    root = manual.create_root()
     resolver = MkNodeResolver()
     result = resolver.glob("*/*/MkAdm*", root)
     import pprint

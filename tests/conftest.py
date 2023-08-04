@@ -19,4 +19,4 @@ def resources_dir():
 
 @pytest.fixture(scope="session")
 def full_tree():
-    return manual.create_page()
+    return manual.create_root()
