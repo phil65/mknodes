@@ -41,12 +41,12 @@ repos:
       additional_dependencies: [types-typed-ast]
 
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.281
+  rev: v0.0.282
   hooks:
     - id: ruff
 
 - repo: https://github.com/commitizen-tools/commitizen
-  rev: 3.5.4
+  rev: 3.6.0
   hooks:
     - id: commitizen
       stages: [commit-msg]
