@@ -158,11 +158,7 @@ class MkNav(mknode.MkNode):
             title: Title of the index page
             kwargs: Keyword arguments passed to parent
         """
-        page = mkpage.MkPage(
-            path="index.md",
-            parent=self,
-            **kwargs,
-        )
+        page = mkpage.MkPage(path="index.md", parent=self, **kwargs)
         self.index_page = page
         self.index_title = title or self.section or "Overview"
         return page
@@ -383,6 +379,12 @@ class MkNav(mknode.MkNode):
             if path.is_dir() and recursive:
                 subnav = cls.from_folder(folder / path.parts[-1], parent=nav)
                 nav._register(subnav)
+            elif path.name == "index.md":
+                page = mkpage.MkPage(path.name, parent=nav)
+                page += path.read_text()
+                page.parent_item = nav
+                nav.index_page = page
+                nav.index_title = nav.section or "Overview"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
                 page = mkpage.MkPage(path.relative_to(folder), parent=nav)
                 page += path.read_text()
