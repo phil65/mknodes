@@ -20,11 +20,11 @@ class Connector:
     def _connect(self, objects):
         def add_connections(item, depth: int = 0):
             identifier = self.get_id(item)
-            if self.max_depth and self.max_depth < depth:
-                return
             if identifier not in self.item_dict:
                 # if item.__module__.startswith(base_module):
                 self.item_dict[identifier] = self.get_title(item)
+                if self.max_depth and self.max_depth <= depth:
+                    return
                 for base in self.get_children(item):
                     self.connections.append((self.get_id(base), identifier))
                     add_connections(base, depth + 1)
