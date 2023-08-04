@@ -67,7 +67,7 @@ def create_page():
     # We can still add more annotations, things only get written at the very end:
     annotations[5] = admonition
     annotations[6] = mknodes.MkDocStrings(mknodes.MkCode.for_object, section_style="list")
-    admonition = mknodes.MkAdmonition(mknodes.MkCode(annotations))
+    admonition = mknodes.MkAdmonition(mknodes.MkCode(str(annotations)))
     annotations[7] = admonition  # annotations in raw text: (7)
 
     page.add_admonition(text=FOOTER, typ="success")

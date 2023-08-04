@@ -12,14 +12,14 @@ from typing import Any
 
 from typing_extensions import Self
 
-from mknodes.basenodes import mknode, mktext
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkCode(mktext.MkText):
+class MkCode(mkcontainer.MkContainer):
     """Class representing a Code block."""
 
     ICON = "material/code-json"
@@ -32,14 +32,14 @@ class MkCode(mktext.MkText):
 
     def __init__(
         self,
-        code: str | mknode.MkNode = "",
+        code: str | mknode.MkNode | list = "",
         language: str = "py",
         *,
         title: str = "",
-        header: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
-        parent: mknode.MkNode | None = None,
+        header: str = "",
+        **kwargs,
     ):
         """Constructor.
 
@@ -47,14 +47,12 @@ class MkCode(mktext.MkText):
             code: Code to show
             language: language for syntax highlighting
             title: Code block title
-            header: Section header
             linenums: If set, use as start linenumber
             highlight_lines: Optionally highlight lines
-            parent: Node parent
+            header: Section header
+            kwargs: Keyword arguments passed to parent
         """
-        if isinstance(code, MkCode):
-            code = textwrap.indent(str(code), "    ")
-        super().__init__(str(code), header=header, parent=parent)
+        super().__init__(content=code, header=header, **kwargs)
         self.language = language
         self.title = title
         self.linenums = linenums
@@ -63,13 +61,17 @@ class MkCode(mktext.MkText):
     def __repr__(self):
         return helpers.get_repr(
             self,
-            code=self.text,
+            code=self.items,
             language=self.language,
             title=self.title,
             linenums=self.linenums,
             highlight_lines=self.highlight_lines,
             _filter_empty=True,
         )
+
+    @property
+    def text(self):
+        return "\n".join(str(i) for i in self.items)
 
     def _to_markdown(self) -> str:
         block_level = sum(isinstance(i, MkCode) for i in self.ancestors)
@@ -210,4 +212,5 @@ class MkCode(mktext.MkText):
 
 if __name__ == "__main__":
     code = MkCode.for_object(MkCode, extract_body=True)
-    print(code)
+    code2 = MkCode(code)
+    print(code2)

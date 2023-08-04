@@ -152,7 +152,7 @@ class MkAnnotations(mkcontainer.MkContainer):
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _to_markdown(self) -> str:
-        return "".join(str(i) for i in self.items) if self.items else ""
+        return "".join(i.to_markdown() for i in self.items) if self.items else ""
 
 
 if __name__ == "__main__":
