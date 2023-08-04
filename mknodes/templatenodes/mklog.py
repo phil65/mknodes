@@ -68,7 +68,7 @@ class MkLog(mkcode.MkCode):
         return helpers.get_repr(
             self,
             log_level=self.log_level,
-            log_format=self.log_format,
+            log_format=self._log_format,
             time_format=self.time_format,
             _filter_empty=True,
         )
@@ -84,7 +84,7 @@ class MkLog(mkcode.MkCode):
         node = MkLog(logger=logger)
         logger.info("Info log")
         logger.warning("Debug log")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, indent=True)
 
 
 if __name__ == "__main__":
