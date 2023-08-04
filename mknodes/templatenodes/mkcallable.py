@@ -48,7 +48,7 @@ class MkCallable(mknode.MkNode):
 
     def __call__(self):
         node = self.fn(*self.args, **self.kw_args)
-        node.parent_item = self.parent_item
+        node.parent = self.parent
         return node
 
     def __repr__(self):

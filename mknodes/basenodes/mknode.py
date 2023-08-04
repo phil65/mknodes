@@ -100,7 +100,7 @@ class MkNode(node.Node):
 
         parent = self
         parts = [self.section] if isinstance(self, mknav.MkNav) and self.section else []
-        while parent := parent.parent_item:
+        while parent := parent.parent:
             if isinstance(parent, mknav.MkNav) and parent.section:
                 parts.append(parent.section)
         return tuple(reversed(parts))

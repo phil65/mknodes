@@ -127,7 +127,7 @@ class MkNav(mknode.MkNode):
 
         def decorator(fn: Callable[..., mkpage.MkPage | MkNav], path=path) -> Callable:
             node = fn()
-            node.parent_item = self
+            node.parent = self
             self.nav[path] = node
             return fn
 
@@ -144,7 +144,7 @@ class MkNav(mknode.MkNode):
         return navi
 
     def __add__(self, other: MkNav | mkpage.MkPage):
-        other.parent_item = self
+        other.parent = self
         self._register(other)
         return self
 
@@ -317,7 +317,7 @@ class MkNav(mknode.MkNode):
             parent: Optional parent-nav in case the new nav shouldnt become the root nav.
         """
         nav = cls(section)
-        nav.parent_item = parent
+        nav.parent = parent
         lines = text.split("\n")
         for i, line in enumerate(lines):
             # for first case we need to check whether following lines are indented.
@@ -339,12 +339,12 @@ class MkNav(mknode.MkNode):
                     nav += subnav
                 else:
                     page = mkpage.MkPage.from_file(match[2])
-                    page.parent_item = nav
+                    page.parent = nav
                     nav[match[1]] = page
             # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 subnav = MkNav.from_file(f"{match[2]}/SUMMARY.md", section=match[1])
-                subnav.parent_item = nav
+                subnav.parent = nav
                 nav[match[1]] = subnav
             # * Example
             elif match := re.match(SECTION_REGEX, line):
@@ -383,7 +383,7 @@ class MkNav(mknode.MkNode):
             elif path.name == "index.md":
                 page = mkpage.MkPage(path.name, parent=nav)
                 page += path.read_text()
-                page.parent_item = nav
+                page.parent = nav
                 nav.index_page = page
                 nav.index_title = nav.section or "Overview"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":

@@ -91,7 +91,7 @@ class MkBaseTable(mknode.MkNode):
 
     def to_item(self, i):
         item = mktext.MkText(i) if isinstance(i, str | None) else i
-        item.parent_item = self
+        item.parent = self
         return item
 
     def add_row(

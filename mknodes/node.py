@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 class Node:
     """A Node class that can be used to build trees."""
 
-    # __slots__ = ("parent_item", "children")
+    # __slots__ = ("parent", "children")
 
     def __init__(self, parent: Self | None = None):
-        self._parent_item = parent
+        self._parent = parent
         self.children: list[Self] = []
 
     def __repr__(self):
@@ -33,7 +33,7 @@ class Node:
         Args:
             other (Self): other node, children
         """
-        other.parent_item = self
+        other.parent = self
 
     def __lshift__(self, other: Self):
         """Set parent using << bitshift operator for self << other.
@@ -41,18 +41,18 @@ class Node:
         Args:
             other (Self): other node, parent
         """
-        self._parent_item = other
+        self._parent = other
 
     @property
-    def parent_item(self):
-        return self._parent_item
+    def parent(self):
+        return self._parent
 
-    @parent_item.setter
-    def parent_item(self, value):
-        if self._parent_item is not None:
-            msg = f"{self!r}: parent {self._parent_item!r} replaced with {value!r}"
+    @parent.setter
+    def parent(self, value):
+        if self._parent is not None:
+            msg = f"{self!r}: parent {self._parent!r} replaced with {value!r}"
             logger.debug(msg)
-        self._parent_item = value
+        self._parent = value
 
     def __copy__(self) -> Self:
         """Shallow copy self."""
@@ -69,22 +69,19 @@ class Node:
         return result
 
     def append_child(self, item: Self):
-        item.parent_item = self
+        item.parent = self
         self.children.append(item)
 
     def insert_children(self, idx: int, items: Sequence[Self]):
         self.children[idx:idx] = items
         for item in items:
-            item.parent_item = self
-
-    def parent(self) -> Self | None:
-        return self._parent_item
+            item.parent = self
 
     @property
     def ancestors(self) -> Iterable[Self]:
         """Get iterator to yield all ancestors of self, does not include self."""
         node = self
-        while (node := node.parent_item) is not None:
+        while (node := node.parent) is not None:
             yield node
 
     @property
@@ -100,42 +97,42 @@ class Node:
     @property
     def siblings(self) -> Iterable[Self]:
         """Get siblings of self."""
-        if self._parent_item is None:
+        if self._parent is None:
             return ()
-        return tuple(child for child in self._parent_item.children if child is not self)
+        return tuple(child for child in self._parent.children if child is not self)
 
     @property
     def left_sibling(self) -> Self | None:
         """Get sibling left of self."""
-        if not self._parent_item:
+        if not self._parent:
             return None
-        children = self._parent_item.children
+        children = self._parent.children
         if child_idx := children.index(self):
-            return self._parent_item.children[child_idx - 1]
+            return self._parent.children[child_idx - 1]
         return None
 
     @property
     def right_sibling(self) -> Self | None:
         """Get sibling right of self."""
-        if not self._parent_item:
+        if not self._parent:
             return None
-        children = self._parent_item.children
+        children = self._parent.children
         child_idx = children.index(self)
         if child_idx + 1 < len(children):
-            return self._parent_item.children[child_idx + 1]
+            return self._parent.children[child_idx + 1]
         return None
 
     @property
     def node_path(self) -> Iterable[Self]:
         """Get tuple of nodes starting from root."""
-        if self._parent_item is None:
+        if self._parent is None:
             return [self]
-        return (*list(self._parent_item.node_path), self)
+        return (*list(self._parent.node_path), self)
 
     @property
     def is_root(self) -> bool:
         """Get indicator if self is root node."""
-        return self._parent_item is None
+        return self._parent is None
 
     @property
     def is_leaf(self) -> bool:
@@ -145,12 +142,12 @@ class Node:
     @property
     def root(self) -> Self:
         """Get root node of tree."""
-        return self if self._parent_item is None else self._parent_item.root
+        return self if self._parent is None else self._parent.root
 
     @property
     def depth(self) -> int:
         """Get depth of self, indexing starts from 1."""
-        return 1 if self._parent_item is None else self._parent_item.depth + 1
+        return 1 if self._parent is None else self._parent.depth + 1
 
     @property
     def max_depth(self) -> int:
@@ -160,8 +157,8 @@ class Node:
         )
 
     def row(self) -> int:  # sourcery skip: assign-if-exp
-        if self._parent_item:
-            return self._parent_item.children.index(self)  # type: ignore
+        if self._parent:
+            return self._parent.children.index(self)  # type: ignore
         return 0
 
     def pprint(self, indent: int = 0, max_depth: int | None = None):

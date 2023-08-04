@@ -77,7 +77,7 @@ class MkContainer(mknode.MkNode):
             case str():
                 other = mktext.MkText(other, parent=self)
             case mknode.MkNode():
-                other.parent_item = self
+                other.parent = self
             case _:
                 raise TypeError(other)
         self.items.append(other)
