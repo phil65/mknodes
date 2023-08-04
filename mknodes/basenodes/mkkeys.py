@@ -48,8 +48,8 @@ class MkKeys(mknode.MkNode):
 
         page.status = "new"  # for the small icon in the left menu
         page += mknodes.MkAdmonition("MkKeys can be used to show Key combinations.")
-        node = MkKeys("Ctrl+A")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(MkKeys("M+k+K+e+y+s"))
+        page += mknodes.MkReprRawRendered(MkKeys("Ctrl+A"))
 
 
 if __name__ == "__main__":
