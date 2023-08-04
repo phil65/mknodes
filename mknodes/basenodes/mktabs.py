@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 import textwrap
 
+from typing import Any
+
 from mknodes.basenodes import mkblock, mkcontainer, mknode
 from mknodes.utils import helpers
 
@@ -23,19 +25,22 @@ class MkTabBlock(mkblock.MkBlock):
         *,
         new: bool | None = None,
         select: bool | None = None,
+        **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             title: Tab title
             content: Tab content
-            new: Whether tab should have a new attribute
-            select: Whether tab should have a select attribute
+            new: Whether tab should start a new tab bloock
+            select: Whether tab should be initially selected
+            kwargs: Keyword arguments passed to parent
         """
         super().__init__(
             "tab",
             content=content,
             argument=title,
+            **kwargs,
         )
         if new is not None:
             self.new = new
@@ -81,8 +86,18 @@ class MkTab(mkcontainer.MkContainer):
         new: bool = False,
         select: bool = False,
         attrs: dict | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
+        """Constructor.
+
+        Arguments:
+            title: Tab title
+            content: Tab content
+            new: Whether tab should start a new tab bloock
+            select: Whether tab should be initially selected
+            attrs: Additional attributes for the tab
+            kwargs: Keyword arguments passed to parent
+        """
         self.title = title
         self.select = select
         self.new = new
