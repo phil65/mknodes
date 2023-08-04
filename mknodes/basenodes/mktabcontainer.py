@@ -110,7 +110,7 @@ class MkTabContainer(mkcontainer.MkContainer):
 
 
 class MkTabbed(MkTabContainer):
-    """pymdownx-based Tab block."""
+    """PyMdown-based Tab."""
 
     items: list[mktabs.MkTab]
     REQUIRED_EXTENSIONS = ["pymdownx.tabbed", "pymdownx.superfences"]
@@ -126,7 +126,7 @@ class MkTabbed(MkTabContainer):
 
 
 class MkTabbedBlocks(MkTabContainer):
-    """New blocks-based Tab block."""
+    """PyMdown Block Extension Tab."""
 
     items: list[mktabs.MkTabBlock]
     REQUIRED_EXTENSIONS = ["pymdownx.blocks.tab"]

@@ -27,7 +27,7 @@ AdmonitionTypeStr = Literal[
 
 
 class MkDetailsBlock(mkblock.MkBlock):
-    """Admonition info box."""
+    """Pymdownx-based details box."""
 
     ICON = "octicons/info-16"
     REQUIRED_EXTENSIONS = ["pymdownx.blocks.details"]

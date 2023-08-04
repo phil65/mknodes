@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkBlock(mkcontainer.MkContainer):
-    """pymdownx-based block."""
+    """PyMdown-based block."""
 
     ICON = "material/cube"
 
