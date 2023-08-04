@@ -102,12 +102,10 @@ class MkDetailsBlock(mkblock.MkBlock):
         page += mknodes.MkLink(url, "More info", as_button=True)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in AdmonitionTypeStr.__args__:
-            node = mknodes.MkDetailsBlock(
-                typ=typ,
-                content=f"This is type **{typ}**",
-                title=f"Details block with type {typ!r}",
-                header=f"Type '{typ}'",
-            )
+            page.add_header(f"Type '{typ}'", level=3)
+            title = f"Details block with type {typ!r}"
+            content = f"This is type **{typ}**"
+            node = mknodes.MkDetailsBlock(typ=typ, content=content, title=title)
             page += mknodes.MkReprRawRendered(node)
 
 

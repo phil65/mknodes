@@ -94,7 +94,7 @@ class MkAdmonition(mkcontainer.MkContainer):
             ann_marker = ""
             annotations = ""
         title = f' "{self.title}"' if self.title is not None else ""
-        text = textwrap.indent("\n".join(str(i) for i in self.items), "    ")
+        text = textwrap.indent("\n".join(i._to_markdown() for i in self.items), "    ")
         optional = ann_marker + inline_label
         return f"{block_start} {self.typ}{optional}{title}\n{text}\n{annotations}"
 
@@ -107,27 +107,20 @@ class MkAdmonition(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in AdmonitionTypeStr.__args__:
-            node = mknodes.MkAdmonition(
-                typ=typ,
-                content=f"This is type {typ}",
-                title=typ,
-                header=f"Type '{typ}'",
-            )
+            page.add_header(f"Type '{typ}'", level=3)
+            content = f"This is type **{typ}**"
+            node = mknodes.MkAdmonition(typ=typ, content=content)
             page += mknodes.MkReprRawRendered(node)
+        page.add_header("Collapsible and expandable", level=3)
         node = mknodes.MkAdmonition(
             content="Admonitions can also be collapsible.",
             collapsible=True,
             title="Expand me!",
             expanded=True,  # this changes the initial state to expanded
-            header="Collapsible and expandable",
         )
         page += mknodes.MkReprRawRendered(node)
-        node = mknodes.MkAdmonition(
-            content="Inlined.",
-            inline="left",
-            title="Inlined.",
-            header="Inlined",
-        )
+        page.add_header("Inlined", level=3)
+        node = mknodes.MkAdmonition(content="Inlined.", inline="left", title="Inlined.")
         page += mknodes.MkReprRawRendered(node)
 
 

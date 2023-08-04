@@ -72,12 +72,14 @@ class MkCode(mktext.MkText):
         )
 
     def _to_markdown(self) -> str:
+        block_level = sum(isinstance(i, MkCode) for i in self.ancestors)
+        block_limiter = "`" * (block_level + 3)
         title = f" title={self.title!r}" if self.title else ""
         if self.linenums is not None:
             title += f' linenums="{self.linenums}"'
         if self.highlight_lines:
             title += ' hl_lines="' + " ".join(str(i) for i in self.highlight_lines) + '"'
-        return f"``` {self.language}{title}\n{self.text}\n```"
+        return f"{block_limiter} {self.language}{title}\n{self.text}\n{block_limiter}"
 
     @staticmethod
     def create_example_page(page):
