@@ -27,6 +27,7 @@ from .basenodes.mkannotations import MkAnnotations
 from .basenodes.mkfootnotes import MkFootNotes
 from .basenodes.mkiframe import MkIFrame
 from .basenodes.mkprogressbar import MkProgressBar
+from .basenodes.mkdefinitionlist import MkDefinitionList
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -97,6 +98,7 @@ __all__ = [
     "MkPullRequestGuidelines",
     "MkIFrame",
     "MkProgressBar",
+    "MkDefinitionList",
     "MkReprRawRendered",
     "MkPrettyPrint",
     "MkCallable",
