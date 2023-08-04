@@ -51,7 +51,12 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     page += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
     page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
     page.add_header("All the nodes")
-    page += mknodes.MkClassDiagram(mknodes.MkNode, mode="subclass_tree", orientation="LR")
+    page += mknodes.MkClassDiagram(
+        mknodes.MkNode,
+        mode="subclass_tree",
+        orientation="LR",
+        max_depth=3,
+    )
 
 
 def create_base_nodes_section(nav: mknodes.MkNav):
