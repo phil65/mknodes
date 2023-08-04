@@ -39,7 +39,7 @@ class MkCode(mkcontainer.MkContainer):
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
         header: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
