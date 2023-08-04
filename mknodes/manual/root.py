@@ -64,10 +64,9 @@ def create_page():
     page += mknodes.MkCode.for_object(create_page)
     page += annotations  # here we add the (invisible) annotations block to the page.
 
-    # Finally, we add some annotations we used:
-    docs = mknodes.MkDocStrings(mknodes.MkCode.for_object, section_style="list")
+    # We can still add more annotations, things only get written at the very end:
     annotations[5] = admonition
-    annotations[6] = docs
+    annotations[6] = mknodes.MkDocStrings(mknodes.MkCode.for_object, section_style="list")
     annotations[7] = mknodes.MkHtmlBlock(str(annotations))  # annotations in raw text: (7)
 
     page.add_admonition(text=FOOTER, typ="success")
