@@ -22,7 +22,14 @@ BUILTIN_URL = "https://docs.python.org/3/library/{mod}.html#{name}"
 
 
 class LengthLimitRepr(reprlib.Repr):
-    pass
+    def repr_type(self, obj, level):
+        return obj.__name__
+
+    def repr_module(self, obj, level):
+        return obj.__name__
+
+    def repr_function(self, obj, level):
+        return obj.__name__
 
 
 limit_repr = LengthLimitRepr()
@@ -63,10 +70,7 @@ def get_repr(
             continue
         if _filter_false and v is False:
             continue
-        if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType):
-            name = v.__name__
-        else:
-            name = my_repr(v)
+        name = my_repr(v)
         kw_parts.append(f"{k}={name}")
     sig = ", ".join(parts + kw_parts)
     return f"{classname}({sig})"
