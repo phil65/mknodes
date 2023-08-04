@@ -15,6 +15,7 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 RESPONSE_CODE_OK = 200
+EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
 
 
 class MkText(mknode.MkNode):
@@ -69,9 +70,11 @@ class MkText(mknode.MkNode):
 
         node = MkText("This is the most basic node. It contains `markdown` text")
         page += mknodes.MkReprRawRendered(node)
+        if from_url := MkText.from_url(EXAMPLE_URL):
+            page += mknodes.MkReprRawRendered(from_url)
 
     @classmethod
-    def from_external_url(cls, url: str) -> Self | None:
+    def from_url(cls, url: str) -> Self | None:
         if token := os.getenv("GH_TOKEN"):
             headers = {"Authorization": f"token {token}"}
             response = requests.get(url, headers=headers)
@@ -81,9 +84,7 @@ class MkText(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    section = MkText.from_external_url(
-        "https://raw.githubusercontent.com/fire1ce/DDNS-Cloudflare-Bash/main/README.md",
-    )
+    section = MkText.from_url(EXAMPLE_URL)
     if section:
         license_section = section["License"]
     print(section)

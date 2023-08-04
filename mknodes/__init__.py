@@ -25,7 +25,6 @@ from .basenodes.mksnippet import MkSnippet
 from .basenodes.mkcritic import MkCritic
 from .basenodes.mkannotations import MkAnnotations
 from .basenodes.mkfootnotes import MkFootNotes
-from .basenodes.mkpageinclude import MkPageInclude
 from .basenodes.mkiframe import MkIFrame
 from .basenodes.mkprogressbar import MkProgressBar
 
@@ -36,6 +35,7 @@ from .pages.mkmodulepage import MkModulePage
 from .mknav import MkNav
 from .mkdoc import MkDoc
 
+from .templatenodes.mkinclude import MkInclude
 from .templatenodes.mkshields import MkShields
 from .templatenodes.mkinstallguide import MkInstallGuide
 from .templatenodes.mkchangelog import MkChangelog
@@ -88,7 +88,7 @@ __all__ = [
     "MkTabbed",
     "MkSnippet",
     "MkShields",
-    "MkPageInclude",
+    "MkInclude",
     "MkCritic",
     "MkInstallGuide",
     "MkChangelog",
