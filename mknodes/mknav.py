@@ -151,15 +151,46 @@ class MkNav(mknode.MkNode):
     def add_index_page(
         self,
         title: str | None = None,
-        **kwargs: Any,
+        *,
+        hide_toc: bool | None = None,
+        hide_nav: bool | None = None,
+        hide_path: bool | None = None,
+        search_boost: float | None = None,
+        exclude_from_search: bool | None = None,
+        icon: str | None = None,
+        status: Literal["new", "deprecated"] | None = None,
+        subtitle: str | None = None,
+        description: str | None = None,
     ) -> mkpage.MkPage:
         """Register and return a index page with given title.
 
         Arguments:
             title: Title of the index page
-            kwargs: Keyword arguments passed to parent
+            hide_toc: Hide table of contents
+            hide_nav: Hide navigation menu
+            hide_path: Hide breadcrumbs path
+            search_boost: multiplier for search ranking
+            exclude_from_search: Exclude page from search index
+            icon: optional page icon
+            status: Page status
+            title: Page title
+            subtitle: Page subtitle
+            description: Page description
         """
-        page = mkpage.MkPage(path="index.md", parent=self, **kwargs)
+        page = mkpage.MkPage(
+            path="index.md",
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            hide_path=hide_path,
+            search_boost=search_boost,
+            exclude_from_search=exclude_from_search,
+            icon=icon,
+            status=status,
+            title=title,
+            subtitle=subtitle,
+            description=description,
+            parent=self,
+        )
         self.index_page = page
         self.index_title = title or self.section or "Overview"
         return page
