@@ -10,7 +10,7 @@ route_nav = mknodes.MkNav("Using decorators")
 
 def create_routing_section(nav: mknodes.MkNav):
     nav += route_nav
-    page = route_nav.add_index_page(icon="material/call-split")
+    page = route_nav.add_index_page(icon="material/call-split", hide_toc=True)
     page += mknodes.MkAdmonition(TEXT, title=TITLE)
     page += mknodes.MkCode.for_file(__file__)
 
