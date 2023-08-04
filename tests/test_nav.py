@@ -19,12 +19,12 @@ def test_nav():
     nav.add_nav("sub")
 
 
-def test_from_file(test_data_dir):
+def test_from_folder(test_data_dir):
     nav = mknodes.MkNav.from_folder(test_data_dir / "nav_tree")
     assert len(list(nav.descendants)) == TREE_TOTAL - 1
 
 
-def test_from_folder(test_data_dir):
+def test_from_file(test_data_dir):
     nav_file = test_data_dir / "nav_tree/SUMMARY.md"
     # print(pathlib.Path(nav_file).read_text())
     nav = mknodes.MkNav.from_file(nav_file, None)
