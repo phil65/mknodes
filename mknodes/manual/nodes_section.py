@@ -24,6 +24,10 @@ PAGE_CODE = "Code for this page"
 HACK_TEXT = """The replace() is a small hack to prevent links from getting processed
 by plugins. Ignore it."""
 
+ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
+(We could also have used the annotations from MKPage, but since this source code
+is displayed by the MkCode node, we use that one.)"""
+
 
 def create_nodes_section(root_nav: mknodes.MkNav):
     """Add the complete "The Nodes" section to given MkNav."""
@@ -43,15 +47,11 @@ def create_nodes_section(root_nav: mknodes.MkNav):
 
     # and then we create the index page (the page you are lookin at right now)
 
-    overview = the_nodes_nav.add_index_page(hide_toc=True, icon="material/graph")
-    overview += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
-    overview += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
-    overview += mknodes.MkClassDiagram(
-        mknodes.MkNode,
-        mode="subclass_tree",
-        orientation="LR",
-        header="All the nodes",
-    )
+    page = the_nodes_nav.add_index_page(hide_toc=True, icon="material/graph")
+    page += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
+    page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
+    page.add_header("All the nodes")
+    page += mknodes.MkClassDiagram(mknodes.MkNode, mode="subclass_tree", orientation="LR")
 
 
 def create_base_nodes_section(nav: mknodes.MkNav):
@@ -161,6 +161,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     file_content_node = mknodes.MkCode(text)
     code.annotations[2] = mknodes.MkAdmonition(file_content_node)
     code.annotations[3] = HACK_TEXT
+    code.annotations[4] = ANNOTATIONS_INFO  # (4)
 
     # we could also add the annotiation nodes to the page of course:
     page += tree_node
@@ -194,14 +195,14 @@ def create_from_folder_section(nav: mknodes.MkNav):
 
 def create_mkpage_section(nav: mknodes.MkNav):
     """Create "MkPage" sub-MkNav and attach it to given MkNav."""
-    page_section = nav.add_nav("MkPage")
-    overview = page_section.add_index_page(hide_toc=True, icon=mknodes.MkPage.ICON)
-    overview += mknodes.MkCode.for_object(create_mkpage_section, header=SECTION_CODE)
-    overview += mknodes.MkAdmonition(MKPAGE_TIP, typ="tip")
-    create_adding_to_mkpages_page(page_section)
-    create_metadata_page(page_section)
-    create_mkclasspage_page(page_section)
-    create_mkmodulepage_page(page_section)
+    mkpage_nav = nav.add_nav("MkPage")
+    page = mkpage_nav.add_index_page(hide_toc=True, icon=mknodes.MkPage.ICON)
+    page += mknodes.MkCode.for_object(create_mkpage_section, header=SECTION_CODE)
+    page += mknodes.MkAdmonition(MKPAGE_TIP, typ="tip")
+    create_adding_to_mkpages_page(mkpage_nav)
+    create_metadata_page(mkpage_nav)
+    create_mkclasspage_page(mkpage_nav)
+    create_mkmodulepage_page(mkpage_nav)
 
 
 def create_mkclasspage_page(nav: mknodes.MkNav):
@@ -214,8 +215,8 @@ def create_mkclasspage_page(nav: mknodes.MkNav):
 def create_mkmodulepage_page(nav: mknodes.MkNav):
     page = nav.add_page("MkModulePage", icon=mknodes.MkModulePage.ICON)
     page += mknodes.MkCode.for_object(create_mkmodulepage_page, header=PAGE_CODE)
-    class_page = mknodes.MkModulePage(mknodes)
-    page += mknodes.MkReprRawRendered(class_page)
+    module_page = mknodes.MkModulePage(mknodes)
+    page += mknodes.MkReprRawRendered(module_page)
 
 
 def create_adding_to_mkpages_page(nav: mknodes.MkNav):
@@ -254,15 +255,15 @@ def create_metadata_page(nav: mknodes.MkNav):
 
 def create_mkdoc_section(nav: mknodes.MkNav):
     """Create the "Metadata" sub-MkNav and attach it to given nav."""
-    doc_section = nav.add_nav("MkDoc")
+    mkdoc_nav = nav.add_nav("MkDoc")
 
-    overview = doc_section.add_index_page(hide_toc=True, icon="material/api")
-    overview += mknodes.MkCode.for_object(
+    page = mkdoc_nav.add_index_page(hide_toc=True, icon="material/api")
+    page += mknodes.MkCode.for_object(
         create_mkdoc_section,
         header=SECTION_CODE,
     )
-    overview += mknodes.MkAdmonition(DOC_TEXT, typ="tip")
-    create_mknodes_section(doc_section)
+    page += mknodes.MkAdmonition(DOC_TEXT, typ="tip")
+    create_mknodes_section(mkdoc_nav)
 
     # We could also filter specific subclasses,
     # or do other fancy stuff to generate a customized, automated documentation
