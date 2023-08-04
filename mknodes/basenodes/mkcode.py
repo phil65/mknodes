@@ -107,6 +107,7 @@ class MkCode(mkcontainer.MkContainer):
         *,
         linenums: bool = True,
         highlight_caller: bool = True,
+        title: str | None = None,
         **kwargs: Any,
     ):
         """Create a MkCode node based on a code file.
@@ -120,6 +121,7 @@ class MkCode(mkcontainer.MkContainer):
             linenums: Whether to show line numbers
             highlight_caller: Whether we want to try to highlight the line which called
                               this method.
+            title: title to use for the code box. If None is set, filename will be used.
             kwargs: Keyword arguments passed to MkCode ctor
         """
         path = pathlib.Path(path)
@@ -133,8 +135,14 @@ class MkCode(mkcontainer.MkContainer):
                 line = frame.f_back.f_lineno
                 hl_lines = [line] if 0 <= line <= line_count else None
         start_line = 1 if linenums else None
-
-        return cls(content, linenums=start_line, highlight_lines=hl_lines, **kwargs)
+        title = path.name if title is None else title
+        return cls(
+            content,
+            linenums=start_line,
+            title=title,
+            highlight_lines=hl_lines,
+            **kwargs,
+        )
 
     @classmethod
     def for_object(
