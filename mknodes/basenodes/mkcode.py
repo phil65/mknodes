@@ -149,7 +149,7 @@ class MkCode(mktext.MkText):
         title: str | None = None,
         linenums: bool = True,
         highlight_caller: bool = True,
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Create a MkCode node based on a python object.
 
