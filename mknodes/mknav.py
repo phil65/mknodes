@@ -120,9 +120,9 @@ class MkNav(mknode.MkNode):
 
     @property
     def children(self):
-        navs = [self.index_page] if self.index_page else []
-        navs += list(self.nav.values())
-        return navs
+        nodes = [self.index_page] if self.index_page else []
+        nodes += list(self.nav.values())
+        return nodes
 
     @children.setter
     def children(self, items):
@@ -198,7 +198,7 @@ class MkNav(mknode.MkNode):
             parent=self,
         )
         self.index_page = page
-        self.index_title = title or self.section or "Overview"
+        self.index_title = title or self.section or "Home"
         return page
 
     def virtual_files(self) -> dict[str, str]:
@@ -227,6 +227,7 @@ class MkNav(mknode.MkNode):
         self,
         name: str,
         *,
+        as_index: bool = False,
         filename: str | None = None,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
@@ -243,6 +244,7 @@ class MkNav(mknode.MkNode):
 
         Arguments:
             name: Page name
+            as_index: Whether the page should become the index page.
             filename: optional filename override
             hide_toc: Hide table of contents
             hide_nav: Hide navigation menu
@@ -255,8 +257,9 @@ class MkNav(mknode.MkNode):
             subtitle: Page subtitle
             description: Page description
         """
+        path = "index.md" if as_index else (filename or f"{name}.md")
         page = mkpage.MkPage(
-            path=filename or f"{name}.md",
+            path=path,
             parent=self,
             hide_toc=hide_toc,
             hide_nav=hide_nav,
@@ -269,7 +272,11 @@ class MkNav(mknode.MkNode):
             subtitle=subtitle,
             description=description,
         )
-        self._register(page)
+        if as_index:
+            self.index_page = page
+            self.index_title = title or self.section or "Home"
+        else:
+            self._register(page)
         return page
 
     def add_doc(
@@ -493,7 +500,7 @@ class MkNav(mknode.MkNode):
                 )
                 page += path.read_text()
                 nav.index_page = page
-                nav.index_title = nav.section or "Overview"
+                nav.index_title = nav.section or "Home"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
                 page = mkpage.MkPage(
                     path.relative_to(folder),
