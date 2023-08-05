@@ -4,6 +4,8 @@ import logging
 import os
 import re
 
+from typing import Any
+
 import requests
 
 from typing_extensions import Self
@@ -31,7 +33,7 @@ class MkText(mknode.MkNode):
         text: str | mknode.MkNode | None = "",
         *,
         header: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 

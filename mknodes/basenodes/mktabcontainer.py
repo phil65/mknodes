@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 import logging
 
+from typing import Any
+
 from mknodes.basenodes import mkcontainer, mknode, mktabs, mktext
 from mknodes.utils import helpers
 
@@ -21,7 +23,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         *,
         header: str = "",
         select_tab: int | str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
