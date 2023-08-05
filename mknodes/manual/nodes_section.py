@@ -199,8 +199,14 @@ def create_from_folder_section(nav: mknodes.MkNav):
     page = from_folder_nav.add_index_page(hide_toc=True, icon="material/folder")
     page += code
     page += mknodes.MkDirectoryTree(folder)  # DocStrings: (2)
-    folder_docs = mknodes.MkDocStrings(mknodes.MkNav.from_folder, section_style="list")
-    node_docs = mknodes.MkDocStrings(mknodes.MkDirectoryTree, section_style="list")
+    folder_docs = mknodes.MkDocStrings(
+        mknodes.MkNav.from_folder,
+        docstring_section_style="list",
+    )
+    node_docs = mknodes.MkDocStrings(
+        mknodes.MkDirectoryTree,
+        docstring_section_style="list",
+    )
     code.annotations[1] = folder_docs
     code.annotations[2] = node_docs
 
