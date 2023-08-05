@@ -1,3 +1,5 @@
+import typing
+
 import mknodes
 
 from mknodes.basenodes import mkadmonition
@@ -16,10 +18,6 @@ def create_index_page(nav: mknodes.MkNav):
     )
     fn_code = mknodes.MkCode.for_object(create_index_page)
     node = mknodes.MkAdmonition(content=fn_code, title="")
-    page_markdown = mknodes.MkCode(str(page))
-    md_node = mknodes.MkAdmonition(content=page_markdown, title=INNER_TEXT)
-    for i in mkadmonition.AdmonitionTypeStr.__args__:
+    for i in typing.get_args(mkadmonition.AdmonitionTypeStr):
         node = mknodes.MkAdmonition(content=node, typ=i, title="")
-        md_node = mknodes.MkAdmonition(md_node, typ=i, collapsible=True, title=OPEN_TEXT)
     page += node
-    page += md_node

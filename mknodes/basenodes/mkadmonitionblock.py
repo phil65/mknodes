@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkblock, mknode
 from mknodes.utils import helpers
@@ -87,7 +87,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
         page += mknodes.MkLink(url, "More info", as_button=True)
         # AdmonitionTypeStr is a Literal containing all Admonition types
-        for typ in AdmonitionTypeStr.__args__:
+        for typ in get_args(AdmonitionTypeStr):
             page += mknodes.MkHeader(f"Type '{typ}'", level=3)
             title = f"Block admonition with type {typ!r}"
             content = f"This is type **{typ}**"

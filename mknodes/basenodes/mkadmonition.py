@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import textwrap
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import helpers
@@ -106,7 +106,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         node.annotations[1] = "Super handy!"
         page += mknodes.MkReprRawRendered(node)
         # AdmonitionTypeStr is a Literal containing all Admonition types
-        for typ in AdmonitionTypeStr.__args__:
+        for typ in get_args(AdmonitionTypeStr):
             page += mknodes.MkHeader(f"Type '{typ}'", level=3)
             content = f"This is type **{typ}**"
             node = mknodes.MkAdmonition(typ=typ, content=content)
