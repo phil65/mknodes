@@ -1,4 +1,4 @@
-from __future__ import annotations
+from __future__ import annotations as _annotations
 
 from collections.abc import Mapping
 import logging
@@ -84,6 +84,8 @@ class MkAnnotations(mkcontainer.MkContainer):
                     )
                     for k, v in annotations.items()
                 ]
+            case _:
+                raise TypeError(annotations)
         super().__init__(content=items, **kwargs)
 
     def __len__(self):

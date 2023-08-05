@@ -84,6 +84,8 @@ class MkFootNotes(mkcontainer.MkContainer):
                     )
                     for k, v in footnotes.items()
                 ]
+            case _:
+                raise TypeError(footnotes)
         super().__init__(content=items, **kwargs)
 
     def __repr__(self):
