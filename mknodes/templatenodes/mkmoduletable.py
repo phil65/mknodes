@@ -6,7 +6,7 @@ import logging
 import types
 
 from mknodes.basenodes import mktable
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, helpers, layouts
 
 
 logger = logging.getLogger(__name__)
@@ -23,27 +23,12 @@ class MkModuleTable(mktable.MkTable):
         **kwargs,
     ):
         self.modules = [classhelpers.to_module(i, return_none=False) for i in modules]
-        dicts = [self.get_row_for_module(mod) for mod in self.modules]
+        layout = layouts.ModuleLayout()
+        dicts = [layout.get_row_for(mod) for mod in self.modules]
         super().__init__(dicts, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, modules=self.modules)
-
-    def get_row_for_module(self, module: types.ModuleType) -> dict[str, str]:
-        return dict(
-            Name=module.__name__,
-            # helpers.link_for_class(submod, size=4, bold=True),
-            DocStrings=helpers.get_doc(
-                module,
-                fallback="*No docstrings defined.*",
-                only_summary=True,
-            ),
-            Members=(
-                helpers.to_html_list(module.__all__, make_link=True)
-                if hasattr(module, "__all__")
-                else ""
-            ),
-        )
 
     @staticmethod
     def create_example_page(page):
