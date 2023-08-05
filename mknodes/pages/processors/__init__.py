@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes.pages import mkpage
-from mknodes.basenodes import mkdocstrings
+from mknodes.basenodes import mkdocstrings, mkheader
 from mknodes.templatenodes import mkclassdiagram, mkclasstable
 from mknodes.utils import classhelpers, helpers
 
@@ -25,7 +25,7 @@ class PageProcessor:
     def append_section(self, page: mkpage.MkPage):
         """Adds the block together with a header to the page."""
         if header := self.get_header(page):
-            page.add_header(header)
+            page += mkheader.MkHeader(header)
         self.append_block(page)
 
     def check_if_apply(self, page: mkpage.MkPage):

@@ -11,7 +11,7 @@ QT_MODULE_ATTR = "QT_MODULE"
 
 root_nav = mknodes.MkNav()
 page = root_nav.add_index_page("Overview", hide_toc=True, hide_nav=True)
-page.add_header("Test script: Build the PrettyQt documentation", level=1)
+page += mknodes.MkHeader("Test script: Build the PrettyQt documentation", level=1)
 
 qt_docs = root_nav.add_doc(prettyqt, section_name="Qt modules")
 extra_docs = root_nav.add_doc(prettyqt, section_name="Additional modules")

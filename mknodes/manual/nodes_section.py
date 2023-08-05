@@ -50,7 +50,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     page = the_nodes_nav.add_index_page(hide_toc=True, icon="material/graph")
     page += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
     page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
-    page.add_header("All the nodes")
+    page += mknodes.MkHeader("All the nodes")
     page += mknodes.MkClassDiagram(
         mknodes.MkNode,
         mode="subclass_tree",
@@ -234,9 +234,9 @@ def create_adding_to_mkpages_page(nav: mknodes.MkNav):
         status="new",
     )
     page += mknodes.MkCode.for_object(create_adding_to_mkpages_page, header=PAGE_CODE)
-    page += mknodes.MkAdmonition("You can add other MkNodes to a page sequentially.")
-    page.add_header("MkPage also has some add_xyz methods", level=2)
+    page += mknodes.MkText("You can add other MkNodes to a page sequentially.")
     page += "Adding strings also works, they get converted to MkText nodes."
+    page += "...and text starting with # will become a MkHeader."
     page += "Every MkPage has a MkFootNotes node built-in[^1]."
     page.footnotes[1] = "Super cool, right?"
 

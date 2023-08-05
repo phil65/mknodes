@@ -34,7 +34,7 @@ def create_tree_page(nav: mknodes.MkNav):
     """Create the "Tree" MkPage and attach it to given MkNav."""
     page = nav.add_page("Tree", hide_toc=True, icon="material/graph")
     page += mknodes.MkCode.for_object(create_tree_page, header=PAGE_CODE)
-    page.add_header("This is the tree we built up to now.", level=3)
+    page += mknodes.MkHeader("This is the tree we built up to now.", level=3)
     lines = [f"{level * '    '} {node!r}" for level, node in nav.root.iter_nodes()]
     page += mknodes.MkCode("\n".join(lines))
 
@@ -43,7 +43,7 @@ def create_files_page(nav: mknodes.MkNav):
     """Create the "Files" MkPage and attach it to given MkNav."""
     page = nav.add_page("Files", hide_toc=True, icon="material/file-tree-outline")
     page += mknodes.MkCode.for_object(create_files_page, header=PAGE_CODE)
-    page.add_header("These are the 'virtual' files attached to the tree:", level=3)
+    page += mknodes.MkHeader("'Virtual' files attached to the tree:", level=3)
     # we want to see all files, so we have to go through the root nav:
     virtual_files = nav.root.all_virtual_files()
     page += mknodes.MkPrettyPrint(list(virtual_files.keys()))

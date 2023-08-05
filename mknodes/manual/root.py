@@ -52,9 +52,7 @@ def create_root() -> mknodes.MkNav:
     page = root_nav.add_index_page(hide_toc=True, hide_nav=True, icon="octicons/home-24")
 
     # A MkPage can contain MkNodes which represent Markdown text.
-    # We can add them to the page by using Page.add_xyz methods or by instanciating our
-    # nodes and adding them to the page.
-    page.add_header(HEADER, level=3)
+    page += mknodes.MkHeader(HEADER, level=3)
     admonition = mknodes.MkAdmonition(INFO, typ="info", title="Built with MkNodes")
     page += admonition  # This adds (5) to the page.
 
@@ -70,5 +68,5 @@ def create_root() -> mknodes.MkNav:
     admonition = mknodes.MkAdmonition(mknodes.MkCode(str(annotations)))
     annotations[7] = admonition  # annotations in raw text: (7)
 
-    page.add_admonition(text=FOOTER, typ="success")
+    page += mknodes.MkAdmonition(FOOTER, typ="success")
     return root_nav

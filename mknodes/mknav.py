@@ -443,7 +443,7 @@ if __name__ == "__main__":
     # print(nav_file.read_text())
     # subnav = docs.add_nav("subnav")
     # page = subnav.add_page("My first page!")
-    # page.add_admonition("Warning This is still beta", typ="danger", title="Warning!")
+    # page += mknodes.MkAdmonition("Warning This is still beta", typ="danger")
     # page2 = subnav.add_page("And a second one")
     # subsubnav = subnav.add_nav("SubSubNav")
     # subsubnav = subsubnav.add_page("SubSubPage")

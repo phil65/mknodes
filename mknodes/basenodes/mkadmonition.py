@@ -107,11 +107,11 @@ class MkAdmonition(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in AdmonitionTypeStr.__args__:
-            page.add_header(f"Type '{typ}'", level=3)
+            page += mknodes.MkHeader(f"Type '{typ}'", level=3)
             content = f"This is type **{typ}**"
             node = mknodes.MkAdmonition(typ=typ, content=content)
             page += mknodes.MkReprRawRendered(node)
-        page.add_header("Collapsible and expandable", level=3)
+        page += mknodes.MkHeader("Collapsible and expandable", level=3)
         node = mknodes.MkAdmonition(
             content="Admonitions can also be collapsible.",
             collapsible=True,
@@ -119,7 +119,7 @@ class MkAdmonition(mkcontainer.MkContainer):
             expanded=True,  # this changes the initial state to expanded
         )
         page += mknodes.MkReprRawRendered(node)
-        page.add_header("Inlined", level=3)
+        page += mknodes.MkHeader("Inlined", level=3)
         node = mknodes.MkAdmonition(content="Inlined.", inline="left", title="Inlined.")
         page += mknodes.MkReprRawRendered(node)
 

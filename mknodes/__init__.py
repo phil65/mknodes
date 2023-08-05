@@ -10,6 +10,7 @@ from .basenodes.mkadmonition import MkAdmonition
 from .basenodes.mknode import MkNode
 from .basenodes.mklink import MkLink
 from .basenodes.mktext import MkText
+from .basenodes.mkheader import MkHeader
 from .basenodes.mkkeys import MkKeys
 from .basenodes.mkgrid import MkGrid
 from .basenodes.mkcontainer import MkContainer
@@ -70,6 +71,7 @@ __all__ = [
     "MkGrid",
     "MkCode",
     "MkImage",
+    "MkHeader",
     "MkBinaryImage",
     "MkPage",
     "MkAdmonition",
