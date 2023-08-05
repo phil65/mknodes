@@ -41,6 +41,7 @@ class MkNode(node.Node):
     ICON = ""  # should be set by subnodes for docs
     REQUIRED_EXTENSIONS: list[str] = []
     REQUIRED_PLUGINS: list[str] = []
+    children: list[MkNode]
 
     def __init__(
         self,
@@ -178,7 +179,7 @@ class MkNode(node.Node):
         """Returns markdown to display a tree graph of this node and all subnodes.
 
         Arguments:
-            direction: Orientation of resulting graph
+            direction: Direction of resulting graph
         """
         item_str = NodeConnector([self]).get_graph_connection_text()
         text = f"graph {direction}\n{item_str}"
