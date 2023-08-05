@@ -56,14 +56,12 @@ class MkAnnotations(mkcontainer.MkContainer):
         | list[MkAnnotation]
         | list[str]
         | None = None,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             annotations: Annotations data (Can be given in different shapes)
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
         match annotations:
@@ -86,7 +84,7 @@ class MkAnnotations(mkcontainer.MkContainer):
                     )
                     for k, v in annotations.items()
                 ]
-        super().__init__(content=items, header=header, **kwargs)
+        super().__init__(content=items, **kwargs)
 
     def __len__(self):
         return len(self.items)

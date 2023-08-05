@@ -56,14 +56,12 @@ class MkFootNotes(mkcontainer.MkContainer):
         | list[MkFootNote]
         | list[str]
         | None = None,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             footnotes: Footnotes data (Can be given in different shapes)
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
         match footnotes:
@@ -86,7 +84,7 @@ class MkFootNotes(mkcontainer.MkContainer):
                     )
                     for k, v in footnotes.items()
                 ]
-        super().__init__(content=items, header=header, **kwargs)
+        super().__init__(content=items, **kwargs)
 
     def __repr__(self):
         notes = []
