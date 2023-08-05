@@ -54,12 +54,15 @@ class MkCodeOfConduct(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         url = URL_START + "/".join(self.version) + URL_END
-        if token := os.getenv("GH_TOKEN"):
-            headers = {"Authorization": f"token {token}"}
-            response = requests.get(url, headers=headers)
-        else:
-            response = requests.get(url)
-        text = response.text.replace("[INSERT CONTACT METHOD]", self.contact_email)
+        try:
+            if token := os.getenv("GH_TOKEN"):
+                headers = {"Authorization": f"token {token}"}
+                response = requests.get(url, headers=headers).text
+            else:
+                response = requests.get(url).text
+        except requests.exceptions.ConnectionError:
+            response = "**Download failed**"
+        text = response.replace("[INSERT CONTACT METHOD]", self.contact_email)
         return "\n".join(text.split("\n")[3:])
 
     @staticmethod
