@@ -2,12 +2,15 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 import logging
+import re
 
 from typing import Any
 
-from mknodes.basenodes import mknode, mktext
+from mknodes.basenodes import mkheader, mknode, mktext
 from mknodes.utils import helpers
 
+
+HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 
 logger = logging.getLogger(__name__)
 
@@ -74,13 +77,15 @@ class MkContainer(mknode.MkNode):
 
     def append(self, other: str | mknode.MkNode):
         match other:
+            case str() if (match := HEADER_REGEX.match(other)):
+                other = mkheader.MkHeader(match[2], level=len(match[1]), parent=self)
             case str():
                 other = mktext.MkText(other, parent=self)
             case mknode.MkNode():
                 other.parent = self
             case _:
                 raise TypeError(other)
-        self.items.append(other)
+        self.items.append(other)  # type: ignore[arg-type]
 
     @property  # type: ignore
     def children(self) -> list[mknode.MkNode]:
