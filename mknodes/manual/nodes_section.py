@@ -132,10 +132,11 @@ def create_mknav_section(nav: mknodes.MkNav):
     # Index pages get inserted first into the menu, so that the mkdocs-section-index
     # plugin can be utizilized.
     page = nav_section.add_index_page(icon=nav.ICON, hide_toc=True)
-    page += mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
+    code = mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
+    page += code
     # A nav section corresponds to a SUMMARY.md. You can see that when stringifying it.
     text = str(nav_section).replace("](", "] (")  # (1)
-    page.annotations[1] = HACK_TEXT
+    code.annotations[1] = HACK_TEXT
     page += mknodes.MkCode(text, header="The resulting MkNav")
 
 
