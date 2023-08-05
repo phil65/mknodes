@@ -9,7 +9,7 @@ from typing import Any, Literal
 from typing_extensions import Self
 import yaml
 
-from mknodes.basenodes import mkcontainer, mkfootnotes
+from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock
 from mknodes.utils import helpers
 
 
@@ -42,6 +42,7 @@ class MkPage(mkcontainer.MkContainer):
         subtitle: str | None = None,
         description: str | None = None,
         template: str | None = None,
+        append_markdown: bool | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -59,6 +60,9 @@ class MkPage(mkcontainer.MkContainer):
             subtitle: Page subtitle
             description: Page description
             template: Page template (filename relative to `overrides` directory)
+            append_markdown: Whether pages should contain a collapsible admonition
+                             containing the markup at the bottom. Setting is
+                             inherited from the parent navs if not set.
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
@@ -66,6 +70,7 @@ class MkPage(mkcontainer.MkContainer):
         if not self.path.endswith(".md"):
             self.path += ".md"
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
+        self.append_markdown = append_markdown
         self.metadata: dict[str, Any] = {}
         if hide_toc is not None:
             self.metadata.setdefault("hide", []).append("toc")
@@ -126,12 +131,28 @@ class MkPage(mkcontainer.MkContainer):
         return {self.path: self.to_markdown()}
 
     def to_markdown(self) -> str:
+        from mknodes import mknav
+
         header = self.formatted_header()
         content_str = self._to_markdown()
         if self.footnotes:
             content_str = f"{content_str}\n\n{self.footnotes}"
         content_str = self.attach_annotations(content_str)
-        return header + content_str if header else content_str
+        text = header + content_str if header else content_str
+        if self.append_markdown is False:
+            return text
+        for node in self.ancestors:
+            if isinstance(node, mknav.MkNav) and node.append_markdown_to_pages:
+                code = mkhtmlblock.MkHtmlBlock(text)
+                admonition = mkadmonition.MkAdmonition(
+                    code,
+                    collapsible=True,
+                    title="Markdown",
+                )
+                text += "\n"
+                text += str(admonition)
+                break
+        return text
 
     def formatted_header(self) -> str:
         """Return the formatted header (containing metadata) for the page."""

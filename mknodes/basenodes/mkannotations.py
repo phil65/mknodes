@@ -146,8 +146,10 @@ class MkAnnotations(mkcontainer.MkContainer):
         )
         node = MkAnnotations()
         page += "The MkAnnotations node aggregates annotations."
-        node[1] = r"Annotations are numbered and can be set via \__setitem__."  # (1)
-        node[2] = mknodes.MkAdmonition("They can also contain other Markdown.")  # (2)
+        info = r"Annotations are numbered and can be set via \__setitem__."
+        node[1] = info  # (1)
+        admonition = mknodes.MkAdmonition("They can also contain other Markdown.")
+        node[2] = admonition  # (2)
         page += node
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 

@@ -47,6 +47,7 @@ class MkNav(mknode.MkNode):
         section: str | None = None,
         *,
         filename: str = "SUMMARY.md",
+        append_markdown_to_pages: bool | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -54,14 +55,19 @@ class MkNav(mknode.MkNode):
         Arguments:
             section: Section name for the Nav
             filename: FileName for the resulting nav
+            append_markdown_to_pages: Whether pages should contain a collapsible
+                                      admonition containing the markup at the bottom.
+                                      The setting will be used by all children
+                                      and can be overridden by sub-navs or pages.
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
         self.section = section  # helpers.slugify(section)
         self.filename = filename
         self.nav: dict[tuple | str | None, mknav.MkNav | mkpage.MkPage] = {}
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
+        self.append_markdown_to_pages = append_markdown_to_pages
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return helpers.get_repr(
