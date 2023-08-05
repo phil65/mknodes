@@ -74,3 +74,31 @@ def create_root() -> mknodes.MkNav:
 
     page += mknodes.MkAdmonition(FOOTER, typ="success")
     return root_nav
+
+
+def create_github_index_md():
+    page = mknodes.MkPage("Github index")
+    page += mknodes.MkCode.for_object(create_github_index_md)
+    page += mknodes.MkHeader("MkNodes", level=1)
+    page += mknodes.MkHeader("Don't write docs. Code them.", level=4)
+    page += mknodes.MkShields(
+        ["build", "version", "status", "black"],
+        user="phil65",
+        project="mknodes",
+    )
+    page += mknodes.MkLink(
+        "https://phil65.github.io/mknodes/",
+        "Read the completely coded documentation!",
+    )
+    page += mknodes.MkInstallGuide("mknodes", header="How to install")
+    page += mknodes.MkClassDiagram(
+        mknodes.MkNode,
+        mode="subclass_tree",
+        max_depth=1,
+        direction="LR",
+        header="All the nodes!",
+    )
+    return page
+
+
+print(create_github_index_md())
