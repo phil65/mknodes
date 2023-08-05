@@ -63,6 +63,7 @@ def create_base_nodes_section(nav: mknodes.MkNav):
     """Add a sub-MkNav containing all base node pages to given MkNav."""
     all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
     klasses = [kls for kls in all_classes if ".basenodes." in kls.__module__]
+    klasses.insert(0, mknodes.MkNode)
     base_nodes_nav = nav.add_nav("Base nodes")
     page = base_nodes_nav.add_index_page(hide_toc=True, icon="material/puzzle-outline")
     page += mknodes.MkCode.for_object(create_base_nodes_section, header=SECTION_CODE)

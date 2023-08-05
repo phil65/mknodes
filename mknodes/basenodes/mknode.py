@@ -51,11 +51,19 @@ class MkNode(node.Node):
     The class inherits from Node. The idea is that starting from the
     root nav (aka Docs) down to nested Markup blocks, the whole project can be represented
     by one tree.
+
+    MkNode is the base class for all nodes. We dont instanciate it directly.
+    All subclasses carry an MkAnnotations node (except the MkAnnotations node itself)
+    They can also pass an `indent` as well as a `shift_header_levels` keyword argument
+    in order to modify the resulting markdown.
     """
 
-    ICON = ""  # should be set by subnodes for docs
+    # METADATA (should be set by subclasses)
+
+    ICON = "material/puzzle-outline"
     REQUIRED_EXTENSIONS: list[str] = []
     REQUIRED_PLUGINS: list[str] = []
+
     children: list[MkNode]
 
     def __init__(
@@ -204,6 +212,21 @@ class MkNode(node.Node):
         item_str = NodeConnector([self]).get_graph_connection_text()
         text = f"graph {direction}\n{item_str}"
         return f"```mermaid\n{text}\n```"
+
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        # We dont instanciate MkNode directly, so we take a subclass
+        # to show some base class functionality
+
+        node = mknodes.MkText("Intro\n# A header\nOutro")
+        node.shift_header_levels = 2
+        page += mknodes.MkReprRawRendered(node, header="### Shift header levels")
+
+        node = mknodes.MkText("Every node can also append annotations (1)")
+        node.annotations[1] = "Nice!"
+        page += mknodes.MkReprRawRendered(node, header="### Append annotations")
 
 
 if __name__ == "__main__":
