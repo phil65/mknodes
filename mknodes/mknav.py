@@ -129,7 +129,14 @@ class MkNav(mknode.MkNode):
         self.nav = dict(items)
 
     def route(self, *path: str) -> Callable[[Callable], Callable]:
-        """Decorator method to use for routing."""
+        """Decorator method to use for routing.
+
+        The decorated functions need to return either a MkPage or an MkNav.
+        They will get registered to the router-MkNav then.
+
+        Arguments:
+            path: The section path for the returned MkNav / MkPage
+        """
 
         def decorator(fn: Callable[..., mkpage.MkPage | MkNav], path=path) -> Callable:
             node = fn()

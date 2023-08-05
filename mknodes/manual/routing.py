@@ -1,10 +1,11 @@
+"""MkNodes routing example.
+
+MkNodes also supports setting up Navs via decorators. The
+decorated functions need to return either an MkPage or another MkNav.
+"""
+
 import mknodes
 
-
-TITLE = "Setting up Navs via decorators"
-
-TEXT = """MkNodes also supports setting up Navs via decorators. The
-decorated functions need to return either an MkPage or another MkNav."""
 
 NAV_TEXT = """You can also use decorators to attach MkNavs. These navs then can continue
 to build the tree without using decorators (by adding sub-navs).
@@ -18,8 +19,8 @@ def create_routing_section(nav: mknodes.MkNav):
     """Attaches the router nav to given nav."""
     nav += route_nav
     page = route_nav.add_index_page(icon="material/call-split", hide_toc=True)
-    page += mknodes.MkAdmonition(TEXT, title=TITLE)
-    page += mknodes.MkCode.for_file(__file__)
+    page += mknodes.MkCode.for_file(__file__, header="Code for this section")
+    page += mknodes.MkDocStrings(mknodes.MkNav.route, header="MkNav.route Docstrings")
 
 
 @route_nav.route("Routed page")
