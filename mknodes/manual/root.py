@@ -76,7 +76,7 @@ def create_root() -> mknodes.MkNav:
     return root_nav
 
 
-def create_github_index_md():
+def create_github_index_md() -> mknodes.MkPage:
     page = mknodes.MkPage("Github index")
     page += mknodes.MkCode.for_object(create_github_index_md)
     page += mknodes.MkHeader("MkNodes", level=1)
