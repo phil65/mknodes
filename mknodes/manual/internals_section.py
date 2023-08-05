@@ -5,9 +5,8 @@ import mknodes
 from mknodes.utils import classhelpers
 
 
-INTRO_TEXT = """Lets show some info about the tree we built.
-The tree starts from the root nav down to the Markup elements.
-"""
+INTRO_TEXT = """In this section you will find some information about the tree of nodes
+ we built during the process."""
 
 SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
@@ -19,7 +18,7 @@ def create_internals_section(root_nav: mknodes.MkNav):
 
     page = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
     page += mknodes.MkCode.for_object(create_internals_section, header=SECTION_CODE)
-    page += mknodes.MkDetailsBlock(INTRO_TEXT)
+    page += mknodes.MkAdmonition(INTRO_TEXT)
 
     # the "Tree" section in the left sidebar shows what we have done up to now.
     create_tree_page(internals_nav)

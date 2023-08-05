@@ -36,7 +36,11 @@ def create_root() -> mknodes.MkNav:
     # Let us start with building the page.
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
-    root_nav = mknodes.MkNav()
+    root_nav = mknodes.MkNav(append_markdown_to_pages=True)
+
+    # By using append_markdown_to_pages, every page will have a expandable Admonition
+    # attached at the bottom. You can see the generated Markdown there for every page.
+    annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)
 
     # now we will create the nav sections and its pages one by one.
     # For demonstration purposes, this process is split up into several functions.
@@ -45,7 +49,7 @@ def create_root() -> mknodes.MkNav:
     manual.create_nodes_section(root_nav)
     manual.create_internals_section(root_nav)
     manual.create_development_section(root_nav)
-    annotations[4] = str(root_nav)  # This is the root nav after it was modified: (4)
+    annotations[5] = str(root_nav)  # This is the root nav after it was modified: (5)
 
     # Lets begin with the start page (aka the root index.md).
     # This is the page you are lookin at right now.)
@@ -54,19 +58,19 @@ def create_root() -> mknodes.MkNav:
     # A MkPage can contain MkNodes which represent Markdown text.
     page += mknodes.MkHeader(HEADER, level=3)
     admonition = mknodes.MkAdmonition(INFO, typ="info", title="Built with MkNodes")
-    page += admonition  # This adds (5) to the page.
+    page += admonition  # This adds (6) to the page.
 
     # Now we add the MkNode you are looking at right now.
     # We will use MkCode.for_object quite a lot in the next sections.
-    # DocStrings for for_object: (6)
+    # DocStrings for for_object: (7)
     page += mknodes.MkCode.for_object(create_root)
     page += annotations  # here we add the (invisible) annotations block to the page.
 
     # We can still add more annotations, things only get written at the very end:
-    annotations[5] = admonition
-    annotations[6] = mknodes.MkDocStrings(mknodes.MkCode.for_object, section_style="list")
+    annotations[6] = admonition
+    annotations[7] = mknodes.MkDocStrings(mknodes.MkCode.for_object, section_style="list")
     admonition = mknodes.MkAdmonition(mknodes.MkCode(str(annotations)))
-    annotations[7] = admonition  # annotations in raw text: (7)
+    annotations[8] = admonition  # annotations in raw text: (8)
 
     page += mknodes.MkAdmonition(FOOTER, typ="success")
     return root_nav
