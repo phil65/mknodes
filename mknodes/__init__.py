@@ -8,6 +8,7 @@ from .basenodes.mkadmonitionblock import MkAdmonitionBlock
 from .basenodes.mkdetailsblock import MkDetailsBlock
 from .basenodes.mkadmonition import MkAdmonition
 from .basenodes.mknode import MkNode
+from .basenodes.mkblockquote import MkBlockQuote
 from .basenodes.mklink import MkLink
 from .basenodes.mktext import MkText
 from .basenodes.mkheader import MkHeader
@@ -58,6 +59,7 @@ TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests/data/"
 
 __all__ = [
     "MkNode",
+    "MkBlockQuote",
     "MkLink",
     "MkBlock",
     "MkHtmlBlock",
