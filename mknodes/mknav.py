@@ -329,6 +329,10 @@ class MkNav(mknode.MkNode):
     ) -> Self:
         """Load an existing SUMMARY.md style file.
 
+        For each indentation level in SUMMARY.md, a new sub-nav is created.
+
+        Should support all SUMMARY.md options except wildcards.
+
         Arguments:
             path: Path to the file
             section: Section name of new nav
@@ -363,6 +367,10 @@ class MkNav(mknode.MkNode):
         parent: MkNav | None = None,
     ) -> Self:
         """Create a nav based on a SUMMARY.md-style list, given as text.
+
+        For each indentation level, a new sub-nav is created.
+
+        Should support all SUMMARY.md options except wildcards.
 
         Arguments:
             text: Text to parse
@@ -448,6 +456,12 @@ class MkNav(mknode.MkNode):
         parent: MkNav | None = None,
     ) -> Self:
         """Load a MkNav tree from Folder.
+
+        SUMMARY.mds are ignored.
+        index.md files become index pages.
+
+        To override the default behavior of using filenames as menu titles,
+        the pages can set a title by using page metadata.
 
         Arguments:
             folder: Folder to load .md files from
