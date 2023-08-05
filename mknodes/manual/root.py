@@ -24,18 +24,12 @@ It will be a quite inception-ish experience.
 def create_root() -> mknodes.MkNav:
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
-    annotations[1] = mknodes.MkDocStrings(
-        mknodes.MkAnnotations,
-        docstring_section_style="list",
-    )
+    annotations[1] = mknodes.MkDocStrings(mknodes.MkAnnotations)
 
     # MkDocStrings is based on "mkdocstrings" and, well... it can display docstrings.
     # Who would have guessed that? Here are the docstrings for MkDocStrings:
 
-    doc_node = mknodes.MkDocStrings(
-        mknodes.MkDocStrings,
-        docstring_section_style="list",
-    )  # (2)
+    doc_node = mknodes.MkDocStrings(mknodes.MkDocStrings)  # (2)
     annotations[2] = doc_node
     annotations[3] = mknodes.MkAdmonition(DOCSTRING_INFO)  # (3)
 
@@ -74,10 +68,7 @@ def create_root() -> mknodes.MkNav:
 
     # We can still add more annotations, things only get written at the very end:
     annotations[6] = admonition
-    annotations[7] = mknodes.MkDocStrings(
-        mknodes.MkCode.for_object,
-        docstring_section_style="list",
-    )
+    annotations[7] = mknodes.MkDocStrings(mknodes.MkCode.for_object)
     admonition = mknodes.MkAdmonition(mknodes.MkCode(str(annotations)))
     annotations[8] = admonition  # annotations in raw text: (8)
 

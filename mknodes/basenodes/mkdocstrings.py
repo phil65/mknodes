@@ -141,40 +141,54 @@ class MkDocStrings(mknode.MkNode):
                 self.obj_path = mod.__name__
             case _:
                 raise TypeError(obj)
-        self.options = self.OPTIONS_DEFAULT.copy()
-        self.options["allow_inspection"] = allow_inspection
-        self.options["show_bases"] = show_bases
-        self.options["show_source"] = show_source
-        self.options["preload_modules"] = preload_modules
-        self.options["heading_level"] = heading_level
-        self.options["show_root_heading"] = show_root_heading
-        self.options["show_root_toc_entry"] = show_root_toc_entry
-        self.options["show_root_full_path"] = show_root_full_path
-        self.options["show_root_members_full_path"] = show_root_members_full_path
-        self.options["show_object_full_path"] = show_object_full_path
-        self.options["show_category_heading"] = show_category_heading
-        self.options["show_symbol_type_heading"] = show_symbol_type_heading
-        self.options["show_symbol_type_toc"] = show_symbol_type_toc
-        self.options["inherited_members"] = inherited_members
-        self.options["members"] = members
-        self.options["members_order"] = members_order
-        self.options["filters"] = filters
-        self.options["group_by_category"] = group_by_category
-        self.options["show_submodules"] = show_submodules
-        self.options["docstring_section_style"] = docstring_section_style
-        self.options["merge_init_into_class"] = merge_init_into_class
-        self.options["show_if_no_docstring"] = show_if_no_docstring
-        self.options["annotations_path"] = annotations_path
-        self.options["line_length"] = line_length
-        self.options["show_signature"] = show_signature
-        self.options["show_signature_annotations"] = show_signature_annotations
-        self.options["signature_crossrefs"] = signature_crossrefs
-        self.options["separate_signature"] = separate_signature
-        self.options = {k: v for k, v in self.options.items() if v is not None}
+        self._options = self.OPTIONS_DEFAULT.copy()
+        self._options["allow_inspection"] = allow_inspection
+        self._options["show_bases"] = show_bases
+        self._options["show_source"] = show_source
+        self._options["preload_modules"] = preload_modules
+        self._options["heading_level"] = heading_level
+        self._options["show_root_heading"] = show_root_heading
+        self._options["show_root_toc_entry"] = show_root_toc_entry
+        self._options["show_root_full_path"] = show_root_full_path
+        self._options["show_root_members_full_path"] = show_root_members_full_path
+        self._options["show_object_full_path"] = show_object_full_path
+        self._options["show_category_heading"] = show_category_heading
+        self._options["show_symbol_type_heading"] = show_symbol_type_heading
+        self._options["show_symbol_type_toc"] = show_symbol_type_toc
+        self._options["inherited_members"] = inherited_members
+        self._options["members"] = members
+        self._options["members_order"] = members_order
+        self._options["filters"] = filters
+        self._options["group_by_category"] = group_by_category
+        self._options["show_submodules"] = show_submodules
+        self._options["docstring_section_style"] = docstring_section_style
+        self._options["merge_init_into_class"] = merge_init_into_class
+        self._options["show_if_no_docstring"] = show_if_no_docstring
+        self._options["annotations_path"] = annotations_path
+        self._options["line_length"] = line_length
+        self._options["show_signature"] = show_signature
+        self._options["show_signature_annotations"] = show_signature_annotations
+        self._options["signature_crossrefs"] = signature_crossrefs
+        self._options["separate_signature"] = separate_signature
+        self._options = {k: v for k, v in self._options.items() if v is not None}
 
     def __repr__(self):
         option_kwargs = {k: v for k, v in self.options.items() if v is not None}
         return helpers.get_repr(self, obj=self.obj, **option_kwargs)
+
+    @property
+    def options(self):
+        import mknodes
+
+        # The default section style does not work well inside Annotations,
+        # so we switch to "list" when any parent is an MkAnnotation
+        opts = self._options.copy()
+        style = opts.get("docstring_section_style")
+        if not style and any(
+            isinstance(i, mknodes.MkAnnotations) for i in self.ancestors
+        ):
+            opts["docstring_section_style"] = "list"
+        return opts
 
     def _to_markdown(self) -> str:
         md = f"::: {self.obj_path}\n"
