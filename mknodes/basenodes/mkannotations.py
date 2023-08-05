@@ -125,11 +125,11 @@ class MkAnnotations(mkcontainer.MkContainer):
         match value:
             case str():
                 item = mktext.MkText(value)
-                node = MkAnnotation(index, content=item)
+                node = MkAnnotation(index, content=item, parent=self)
             case MkAnnotation():
                 node = value
             case mknode.MkNode():
-                node = MkAnnotation(index, content=value)
+                node = MkAnnotation(index, content=value, parent=self)
         if index in self:
             pos = self._get_item_pos(index)
             self.items[pos] = node

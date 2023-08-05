@@ -125,11 +125,11 @@ class MkFootNotes(mkcontainer.MkContainer):
         match value:
             case str():
                 item = mktext.MkText(value)
-                node = MkFootNote(index, content=item)
+                node = MkFootNote(index, content=item, parent=self)
             case MkFootNote():
                 node = value
             case mknode.MkNode():
-                node = MkFootNote(index, content=value)
+                node = MkFootNote(index, content=value, parent=self)
         if index in self:
             pos = self._get_item_pos(index)
             self.items[pos] = node
