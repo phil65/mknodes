@@ -44,7 +44,7 @@ class MkLink(mknode.MkNode):
         self.as_button = as_button
         self.primary_color = primary_color
         icon = icon or ""
-        self.icon = icon if icon.startswith(":") else f':{icon.replace("/", "-")}:'
+        self.icon = icon
 
     def __repr__(self):
         return helpers.get_repr(
@@ -85,7 +85,12 @@ class MkLink(mknode.MkNode):
             )
         else:
             button_suffix = ""
-        prefix = f"{self.icon} " if self.icon else ""
+        icon = (
+            self.icon
+            if not self.icon or self.icon.startswith(":")
+            else f':{self.icon.replace("/", "-")}:'
+        )
+        prefix = f"{icon} " if self.icon else ""
         return f"[{prefix}{title}]({url}){button_suffix}"
 
     @staticmethod
@@ -98,6 +103,7 @@ class MkLink(mknode.MkNode):
         node = mknodes.MkLink(url, "Disguised as button.", as_button=True)
         page += mknodes.MkReprRawRendered(node)
         node = mknodes.MkLink(url, "Colored.", as_button=True, primary_color=True)
+        node = mknodes.MkLink(url, "With icon.", icon="octicons/link-24")
         page += mknodes.MkReprRawRendered(node)
 
 
