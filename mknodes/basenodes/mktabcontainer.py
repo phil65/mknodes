@@ -122,7 +122,10 @@ class MkTabbed(MkTabContainer):
 
         # this node is basically a container and manager for MkTabs nodes.
         node = MkTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Regular")
+        admonition = mknodes.MkAdmonition("Nested admonition")
+        nested_node = MkTabbed(tabs={"Tabs": node, "Admonition": admonition})
+        page += mknodes.MkReprRawRendered(nested_node, header="### Nested")
 
 
 class MkTabbedBlocks(MkTabContainer):
@@ -140,7 +143,7 @@ class MkTabbedBlocks(MkTabContainer):
         # but based on new pymdownx block syntax.
         # i think it is not supported by Material for MkDocs yet.
         node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Regular")
 
 
 if __name__ == "__main__":

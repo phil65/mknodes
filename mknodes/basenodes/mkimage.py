@@ -73,25 +73,26 @@ class MkImage(mknode.MkNode):
             markdown_link += "{ loading=lazy }"
         if not self.caption:
             return markdown_link
-        lines = ["<figure markdown>", f"  {markdown_link}"]
-        lines.append(f"  <figcaption>{self.caption}</figcaption>")
-        lines.append("</figure>")
+        lines = [
+            "<figure markdown>",
+            f"  {markdown_link}",
+            f"  <figcaption>{self.caption}</figcaption>",
+            "</figure>",
+        ]
         return "\n".join(lines) + "\n"
 
     @staticmethod
     def create_example_page(page):
         import mknodes
 
-        page += "A simple MkNode to display an image. Target can be local or remote."
-
         node = MkImage(path="https://picsum.photos/200", caption="Dummy image")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### With caption")
 
         node = MkImage(path="https://picsum.photos/200", align="right")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Aligned")
 
         node = MkImage(path="https://picsum.photos/200", width=500)
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Fixed width")
 
 
 if __name__ == "__main__":

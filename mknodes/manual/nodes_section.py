@@ -54,7 +54,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     page += mknodes.MkClassDiagram(
         mknodes.MkNode,
         mode="subclass_tree",
-        orientation="LR",
+        direction="LR",
         max_depth=3,
     )
 
@@ -108,7 +108,7 @@ def create_class_page(kls: type, page: mknodes.MkPage):
     )
     page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
     # and afterwards, we show what was added to the page.
-    page += "## Output"
+    page += "## Examples"
     kls.create_example_page(page)
 
 

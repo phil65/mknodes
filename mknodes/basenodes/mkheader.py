@@ -45,8 +45,9 @@ class MkHeader(mknode.MkNode):
         import mknodes
 
         page.status = "new"
-        node = MkHeader("MkHeader, the header node!", level=1)
-        page += mknodes.MkReprRawRendered(node)
+        for i in range(1, 7):
+            node = MkHeader(f"Level {i}", level=i)
+            page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

@@ -71,7 +71,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         self,
         klass: type,
         mode: DiagramModeStr = "parent_tree",
-        orientation: Literal["TD", "DT", "LR", "RL"] = "TD",
+        direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,
         header: str = "",
     ):
@@ -80,7 +80,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         self._max_depth = max_depth
         super().__init__(
             graph_type="flow",
-            orientation=orientation,
+            direction=direction,
             header=header,
         )
 
@@ -89,7 +89,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             self,
             klass=self.klass,
             mode=self.mode,
-            orientation=self.orientation,
+            direction=self.direction,
         )
 
     @staticmethod
@@ -105,7 +105,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             klass=mknodes.MkContainer,
             mode="subclass_tree",
             header="Subclass hierarchy: MkContainer",
-            orientation="LR",
+            direction="LR",
         )
         mro_diagram = MkClassDiagram(
             klass=mknodes.MkTable,
@@ -129,7 +129,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
                 item_str = builder.get_graph_connection_text()
             case _:
                 raise ValueError(self.mode)
-        text = f"{self.graph_type} {self.orientation}\n{item_str}"
+        text = f"{self.graph_type} {self.direction}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
 

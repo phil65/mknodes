@@ -34,10 +34,10 @@ class MkBlockQuote(mkcontainer.MkContainer):
         page.status = "new"
         page += "An MkBlockQuote can display > Blockquotes."
         block = MkBlockQuote(content="Some text")
-        page += mknodes.MkReprRawRendered(block, header="Regular")
+        page += mknodes.MkReprRawRendered(block, header="### Regular")
         # We can also nest blocks, they will adjust their delimiters automatically.
         nested_quote = MkBlockQuote(block)
-        page += mknodes.MkReprRawRendered(nested_quote, header="Nested")
+        page += mknodes.MkReprRawRendered(nested_quote, header="### Nested")
 
 
 if __name__ == "__main__":

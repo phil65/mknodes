@@ -32,11 +32,11 @@ class MkDiagram(mknode.MkNode):
 
     def __init__(
         self,
-        graph_type: GraphTypeStr,
+        graph_type: GraphTypeStr = "flow",
         *,
         items: list | None = None,
         connections: list[tuple] | None = None,
-        orientation: Literal["TD", "DT", "LR", "RL"] = "TD",
+        direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         attributes: dict[str, str] | None = None,
         header: str = "",
     ):
@@ -46,7 +46,7 @@ class MkDiagram(mknode.MkNode):
             graph_type: Type of the graph
             items: items which should be part of the diagram
             connections: tuples indicating the connections of the items
-            orientation: diagram orientation
+            direction: diagram direction
             attributes: Optional attributes for the items
             header: Section header
         """
@@ -54,10 +54,10 @@ class MkDiagram(mknode.MkNode):
         self.graph_type = (
             graph_type if graph_type not in self.TYPE_MAP else self.TYPE_MAP[graph_type]
         )
-        self.orientation = (
-            orientation
-            if orientation not in self.ORIENTATION
-            else self.ORIENTATION[orientation]
+        self.direction = (
+            direction
+            if direction not in self.ORIENTATION
+            else self.ORIENTATION[direction]
         )
         self.items = set(items or [])
         self.connections = set(connections or [])
@@ -69,13 +69,13 @@ class MkDiagram(mknode.MkNode):
             graph_type=self.graph_type,
             items=self.items,
             connections=self.connections,
-            orientation=self.orientation,
+            direction=self.direction,
         )
 
     def _to_markdown(self) -> str:
         items = list(self.items) + [f"{a} --> {b}" for a, b in self.connections]
         item_str = textwrap.indent("\n".join(items), "  ")
-        text = f"{self.graph_type} {self.orientation}\n{item_str}"
+        text = f"{self.graph_type} {self.direction}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
     @staticmethod
@@ -83,12 +83,14 @@ class MkDiagram(mknode.MkNode):
         import mknodes
 
         page += "MkDiagrams can be used to create Mermaid diagrams."
+        diagram = MkDiagram(items=["1", "2", "3"], connections=[("1", "2"), ("2", "3")])
+        page += mknodes.MkReprRawRendered(diagram, indent=True, header="### Regular")
         diagram = MkDiagram(
-            graph_type="flow",
             items=["1", "2", "3"],
             connections=[("1", "2"), ("2", "3")],
+            direction="LR",
         )
-        page += mknodes.MkReprRawRendered(diagram, indent=True)
+        page += mknodes.MkReprRawRendered(diagram, indent=True, header="### Direction")
 
 
 if __name__ == "__main__":

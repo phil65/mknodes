@@ -65,21 +65,18 @@ class MkList(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        list_1 = MkList(items=["Item 1", "Item 2", "Item 3"], header="Regular")
+        list_1 = MkList(items=["Item 1", "Item 2", "Item 3"])
         # list can also have a max length. they will get shortened with a "..." entry.
-        list_2 = MkList(items=["Item"] * 6, shorten_after=3, header="Shortened")
+        list_2 = MkList(items=["Item"] * 6, shorten_after=3)
         # They can also be ordered.
-        list_3 = MkList(
-            items=["Item 1", "Item 2", "Item 3"],
-            ordered=True,
-            header="Ordered",
-        )
+        list_3 = MkList(items=["Item 1", "Item 2", "Item 3"], ordered=True)
         # and can contain markdown.
         list_4 = MkList(items=[mknodes.MkAdmonition("Markup")] * 3)
-        page += mknodes.MkReprRawRendered(list_1)
-        page += mknodes.MkReprRawRendered(list_2)
-        page += mknodes.MkReprRawRendered(list_3)
-        page += mknodes.MkReprRawRendered(list_4)
+
+        page += mknodes.MkReprRawRendered(list_1, header="### Regular")
+        page += mknodes.MkReprRawRendered(list_2, header="### Shortened")
+        page += mknodes.MkReprRawRendered(list_3, header="### Ordered")
+        page += mknodes.MkReprRawRendered(list_4, header="### Containing markdown")
 
     def _prep(self, item) -> str:
         return helpers.linked(item) if self.as_links else str(item)

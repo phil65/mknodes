@@ -174,14 +174,14 @@ class MkNode(node.Node):
         for child_item in self.children:
             child_item.pretty_print(_indent + 1)
 
-    def to_tree_graph(self, orientation: str = "TD") -> str:
+    def to_tree_graph(self, direction: str = "TD") -> str:
         """Returns markdown to display a tree graph of this node and all subnodes.
 
         Arguments:
-            orientation: Orientation of resulting graph
+            direction: Orientation of resulting graph
         """
         item_str = NodeConnector([self]).get_graph_connection_text()
-        text = f"graph {orientation}\n{item_str}"
+        text = f"graph {direction}\n{item_str}"
         return f"```mermaid\n{text}\n```"
 
 

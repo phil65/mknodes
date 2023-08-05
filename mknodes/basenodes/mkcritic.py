@@ -60,6 +60,7 @@ class MkCritic(mktext.MkText):
         page += "The MkCritic node can be used to display text diffs."
         for typ in ["addition", "deletion", "comment", "highlight"]:
             node = MkCritic(mark=typ, text=f"This is type {typ}")
+            page += mknodes.MkHeader(f"Type {typ!r}", level=3)
             page += mknodes.MkReprRawRendered(node)
 
 
