@@ -72,13 +72,13 @@ class MkProgressBar(mknode.MkNode):
         page += mknodes.MkAdmonition("MkProgressBar can be used to show a progress bar.")
         page += mknodes.MkDetailsBlock("This Node requires additional css.")
         node = MkProgressBar(60)
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Regular")
         node = MkProgressBar(60, style="thin")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Thin")
         node = MkProgressBar(70, style="candystripe", title="We reached {percentage}!")
-        page += mknodes.MkReprRawRendered(node)
-        node = MkProgressBar(80, style="candystripe_animated", title=None)
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Candystripe")
+        node = MkProgressBar(80, style="candystripe_animated")
+        page += mknodes.MkReprRawRendered(node, header="### Animated")
 
 
 if __name__ == "__main__":
