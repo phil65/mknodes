@@ -7,9 +7,9 @@ import pathlib
 from typing import Any, Literal
 
 from typing_extensions import Self
-import yaml
 
 from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock
+from mknodes.pages import metadata
 from mknodes.utils import helpers
 
 
@@ -71,32 +71,22 @@ class MkPage(mkcontainer.MkContainer):
             self.path += ".md"
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.append_markdown = append_markdown
-        self.metadata: dict[str, Any] = {}
-        if hide_toc is not None:
-            self.metadata.setdefault("hide", []).append("toc")
-        if hide_nav is not None:
-            self.metadata.setdefault("hide", []).append("navigation")
-        if hide_path is not None:
-            self.metadata.setdefault("hide", []).append("path")
-        if search_boost is not None:
-            self.metadata.setdefault("search", {})["boost"] = search_boost
-        if exclude_from_search is not None:
-            self.metadata.setdefault("search", {})["exclude"] = exclude_from_search
-        if icon is not None:
-            self.metadata["icon"] = icon
-        if status is not None:
-            self.metadata["status"] = status
-        if subtitle is not None:
-            self.metadata["subtitle"] = subtitle
-        if title is not None:
-            self.metadata["title"] = title
-        if description is not None:
-            self.metadata["description"] = description
-        if template is not None:
-            self.metadata["template"] = template
+        self.metadata = metadata.Metadata(
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            hide_path=hide_path,
+            search_boost=search_boost,
+            exclude_from_search=exclude_from_search,
+            icon=icon,
+            status=status,
+            subtitle=subtitle,
+            title=title,
+            description=description,
+            template=template,
+        )
 
     def __repr__(self):
-        meta_kwargs = {k: v for k, v in self.metadata.items() if v is not None}
+        meta_kwargs = self.metadata.as_dict()
         return helpers.get_repr(self, path=str(self.path), **meta_kwargs)
 
     def __str__(self):
@@ -104,11 +94,11 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def status(self):
-        return self.metadata.get("status")
+        return self.metadata.status
 
     @status.setter
     def status(self, value: Literal["new", "deprecated"]):
-        self.metadata["status"] = value
+        self.metadata.status = value
 
     @classmethod
     def from_file(
@@ -158,7 +148,7 @@ class MkPage(mkcontainer.MkContainer):
         """Return the formatted header (containing metadata) for the page."""
         if not self.metadata:
             return ""
-        options = yaml.dump(self.metadata, Dumper=yaml.Dumper, indent=2)
+        options = str(self.metadata)
         return HEADER.format(options=options)
 
     def add_newlines(self, num: int):

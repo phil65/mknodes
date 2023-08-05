@@ -12,7 +12,6 @@ EXPECTED = """---
 description: Some description
 hide:
 - toc
-- navigation
 - path
 icon: material/emoticon-happy
 search:
