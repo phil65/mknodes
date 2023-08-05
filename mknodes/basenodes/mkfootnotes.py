@@ -150,7 +150,10 @@ class MkFootNotes(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
-        return "".join(str(i) for i in self.items) if self.items else ""
+        if not self.items:
+            return ""
+        items = sorted(self.items, key=lambda x: x.num)
+        return "".join(i.to_markdown() for i in items)
 
 
 if __name__ == "__main__":

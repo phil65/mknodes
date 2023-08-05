@@ -154,7 +154,10 @@ class MkAnnotations(mkcontainer.MkContainer):
         page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
 
     def _to_markdown(self) -> str:
-        return "".join(i.to_markdown() for i in self.items) if self.items else ""
+        if not self.items:
+            return ""
+        items = sorted(self.items, key=lambda x: x.num)
+        return "".join(i.to_markdown() for i in items)
 
     def annotate_text(self, markdown: str) -> str:
         if not self.items:
