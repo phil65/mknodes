@@ -106,9 +106,21 @@ class MkPage(mkcontainer.MkContainer):
         self.metadata["status"] = value
 
     @classmethod
-    def from_file(cls, path: str | os.PathLike) -> Self:
+    def from_file(
+        cls,
+        path: str | os.PathLike,
+        hide_toc: bool | None = None,
+        hide_nav: bool | None = None,
+        hide_path: bool | None = None,
+    ) -> Self:
         path = pathlib.Path(path)
-        return cls(path.name, content=path.read_text())
+        return cls(
+            path.name,
+            content=path.read_text(),
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            hide_path=hide_path,
+        )
 
     def virtual_files(self) -> dict[str, str]:
         return {self.path: self.to_markdown()}
