@@ -17,7 +17,13 @@ if TYPE_CHECKING:
     from mkdocs.structure.files import Files
     from mkdocs.structure.pages import Page
 
-logger = logging.getLogger(f"mkdocs.plugins.{__name__}")
+try:
+    from mkdocs.plugins import get_plugin_logger
+
+    logger = get_plugin_logger(__name__)
+except ImportError:
+    # TODO: remove once support for MkDocs <1.5 is dropped
+    logger = logging.getLogger(f"mkdocs.plugins.{__name__}")  # type: ignore[assignment]
 
 # For Regex, match groups are:
 #       0: Whole markdown link e.g. [Alt-text](url)
