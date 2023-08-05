@@ -2,16 +2,20 @@ import mknodes
 
 
 TITLE = "Setting up Navs via decorators"
+
 TEXT = """MkNodes also supports setting up Navs via decorators. The
 decorated functions need to return either an MkPage or another MkNav."""
 
+NAV_TEXT = """You can also use decorators to attach MkNavs. These navs then can continue
+to build the tree without using decorators (by adding sub-navs).
+"""
 
 # this is the nav we will populate via decorators.
 route_nav = mknodes.MkNav("Using decorators")
 
 
 def create_routing_section(nav: mknodes.MkNav):
-    # Add the populated nav to the parent nav
+    """Attaches the router nav to given nav."""
     nav += route_nav
     page = route_nav.add_index_page(icon="material/call-split", hide_toc=True)
     page += mknodes.MkAdmonition(TEXT, title=TITLE)
@@ -19,24 +23,27 @@ def create_routing_section(nav: mknodes.MkNav):
 
 
 @route_nav.route("Routed page")
-def routed_page():
-    page = mknodes.MkPage("Routed page")
+def routed_page() -> mknodes.MkPage:
+    """Builds a MkPage and attaches it to the router MkNav."""
+    page = mknodes.MkPage("Routing to pages")
     page += mknodes.MkAdmonition("Routed page content!")
     return page
 
 
 @route_nav.route("Routed", "Deeply", "Nested", "Page")
-def routed_nested_page():
-    page = mknodes.MkPage("Nested page")
+def routed_nested_page() -> mknodes.MkPage:
+    """Builds a nested MkPage and attaches it to the router MkNav."""
+    page = mknodes.MkPage("Routing to nested pages")
     page += mknodes.MkAdmonition("Nested Routed page content!")
     return page
 
 
 @route_nav.route("Routed", "Deeply", "Nested", "Nav")
-def routed_section():
-    section = mknodes.MkNav("Routed section")
+def routed_section() -> mknodes.MkNav:
+    """Builds a nested MkNav and attaches it to the router MkNav."""
+    section = mknodes.MkNav("Routing to navs")
     index_page = section.add_index_page()
-    index_page += mknodes.MkAdmonition("Routed index page content!")
+    index_page += mknodes.MkAdmonition(NAV_TEXT)
     page = section.add_page("Routed section page")
     page += mknodes.MkAdmonition("Routed section page content")
     return section
