@@ -148,7 +148,12 @@ def create_from_file_section(nav: mknodes.MkNav):
     summary_file = folder / "SUMMARY.md"  # File content: # (2)
 
     # We will load it as an MkNav...
-    from_file_nav = mknodes.MkNav.from_file(summary_file, section="From file", parent=nav)
+    from_file_nav = mknodes.MkNav.from_file(
+        summary_file,
+        section="From file",
+        hide_toc=True,
+        parent=nav,
+    )
 
     # ... and attach that sub-tree to our main tree.
     nav["From file"] = from_file_nav
@@ -178,8 +183,8 @@ def create_from_folder_section(nav: mknodes.MkNav):
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = mknodes.TEST_RESOURCES / "nav_tree/test_folder/"
 
-    # First, we create the MkNav based on folder content...
-    from_folder_nav = mknodes.MkNav.from_folder(folder, parent=nav)  # DocStrings: (1)
+    # First, we create the MkNav based on folder content (DocStrings for from_folder: (1))
+    from_folder_nav = mknodes.MkNav.from_folder(folder, parent=nav, hide_toc=True)
 
     # ... and then attach that sub-tree to our main tree.
     nav["From folder"] = from_folder_nav
