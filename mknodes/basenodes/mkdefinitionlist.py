@@ -20,7 +20,7 @@ class MkDefinitionList(mknode.MkNode):
 
     def __init__(
         self,
-        data: dict[str | mknode.MkNode, str | mknode.MkNode] | None = None,
+        data: Mapping[str | mknode.MkNode, str | mknode.MkNode] | None = None,
         *,
         header: str = "",
         **kwargs: Any,
@@ -87,7 +87,11 @@ class MkDefinitionList(mknode.MkNode):
         page.status = "new"
         definitions = dict(something="A definition", somethingelse="Another\ndefinition")
         node = MkDefinitionList(data=definitions)
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Regular")
+
+        definitions = dict(admonition=mknodes.MkAdmonition("Nested markup"))
+        node = MkDefinitionList(data=definitions)
+        page += mknodes.MkReprRawRendered(node, header="### Nested markup")
 
 
 if __name__ == "__main__":

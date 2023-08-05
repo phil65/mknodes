@@ -31,16 +31,16 @@ class MkText(mknode.MkNode):
         text: str | mknode.MkNode | None = "",
         *,
         header: str = "",
-        parent: mknode.MkNode | None = None,
+        **kwargs,
     ):
         """Constructor.
 
         Arguments:
             text: Markup text
             header: Section header
-            parent: Node parent
+            kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, parent=parent)
+        super().__init__(header=header, **kwargs)
         self.text = str(text or "")
 
     def __repr__(self):
