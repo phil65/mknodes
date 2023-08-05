@@ -52,11 +52,11 @@ class MkCode(mkcontainer.MkContainer):
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(content=code, header=header, **kwargs)
         self.language = language
         self.title = title
         self.linenums = linenums
         self.highlight_lines = highlight_lines
+        super().__init__(content=code, header=header, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(

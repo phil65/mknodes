@@ -462,17 +462,16 @@ class MkNav(mknode.MkNode):
                     hide_path=hide_path,
                     parent=nav,
                 )
-                nav._register(subnav)
+                nav += subnav
             elif path.name == "index.md":
                 page = mkpage.MkPage(
                     path.name,
-                    parent=nav,
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
+                    parent=nav,
                 )
                 page += path.read_text()
-                page.parent = nav
                 nav.index_page = page
                 nav.index_title = nav.section or "Overview"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
@@ -484,7 +483,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                 )
                 page += path.read_text()
-                nav._register(page)
+                nav += page
         return nav
 
 

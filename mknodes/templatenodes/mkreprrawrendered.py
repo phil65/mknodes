@@ -37,10 +37,8 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
             tree = mkcode.MkCode("\n".join(lines))
         else:
             tree = None
-        if indent:
-            markdown_node = mkcode.MkCode(textwrap.indent(str(node), prefix="    "))
-        else:
-            markdown_node = mkcode.MkCode(str(node))
+        text = textwrap.indent(str(node), prefix="    ") if indent else str(node)
+        markdown_node = mkcode.MkCode(text)
         # TODO: hack: without doing this, we get issues because the page becomes
         # part of the tree. Perhaps add a setting for MkPages to be only-virtual?
         # Needs a general concept in regards to re-parenting. (should base nodes
