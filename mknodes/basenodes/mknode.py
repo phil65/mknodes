@@ -89,9 +89,7 @@ class MkNode(node.Node):
         return self.attach_annotations(text)
 
     def attach_annotations(self, text: str) -> str:
-        if not self.annotations:
-            return text
-        return f'<div class="annotate" markdown>\n{text}\n</div>\n\n{self.annotations}'
+        return self.annotations.annotate_text(text) if self.annotations else text
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:

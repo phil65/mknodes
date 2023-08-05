@@ -154,6 +154,11 @@ class MkAnnotations(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         return "".join(i.to_markdown() for i in self.items) if self.items else ""
 
+    def annotate_text(self, markdown: str) -> str:
+        if not self.items:
+            return markdown
+        return f'<div class="annotate" markdown>\n{markdown}\n</div>\n\n{self}'
+
 
 if __name__ == "__main__":
     import mknodes
