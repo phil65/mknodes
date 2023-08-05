@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 import textwrap
 
 from typing import TYPE_CHECKING
@@ -13,6 +14,20 @@ from mknodes.utils import connector
 
 if TYPE_CHECKING:
     from mknodes.basenodes import mkannotations
+
+HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
+
+
+def shift_header_levels(text: str, levels: int) -> str:
+    def mod_header(match: re.Match, levels: int) -> str:
+        header_str = match[1]
+        if levels > 0:
+            header_str += levels * "#"
+        else:
+            header_str = header_str[:levels]
+        return f"{header_str} {match[2]}"
+
+    return re.sub(HEADER_REGEX, lambda x: mod_header(x, levels), text)
 
 
 logger = logging.getLogger(__name__)
@@ -47,6 +62,7 @@ class MkNode(node.Node):
         self,
         header: str = "",
         indent: str = "",
+        shift_header_levels: int = 0,
         parent: MkNode | None = None,
     ):
         """Constructor.
@@ -54,12 +70,14 @@ class MkNode(node.Node):
         Arguments:
             header: Optional header for contained Markup
             indent: Indentation of given Markup (unused ATM)
+            shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
             parent: Parent for building the tree
         """
         super().__init__(parent=parent)
         self.header = header
         self.indent = indent
         self._annotations = None
+        self.shift_header_levels = shift_header_levels
 
     @property
     def annotations(self) -> mkannotations.MkAnnotations:
@@ -81,6 +99,8 @@ class MkNode(node.Node):
     def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
         text = self._to_markdown()
+        if self.shift_header_levels:
+            text = shift_header_levels(text, self.shift_header_levels)
         if self.indent:
             text = textwrap.indent(text, self.indent)
         if not self.header:
@@ -187,4 +207,7 @@ class MkNode(node.Node):
 
 
 if __name__ == "__main__":
-    section = MkNode(header="fff")
+    import mknodes
+
+    section = mknodes.MkText("hello\n# Header\nfdsfds", shift_header_levels=2)
+    print(section)
