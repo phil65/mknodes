@@ -15,17 +15,8 @@ class MkBlockQuote(mkcontainer.MkContainer):
     ICON = "material/format-quote-open"
 
     def _to_markdown(self) -> str:
-        if any(isinstance(x, MkBlockQuote) for x in self.descendants):
-            block_limiter = ""
-        else:
-            block_level = sum(isinstance(i, MkBlockQuote) for i in self.ancestors)
-            block_limiter = ">" * (block_level + 1) + " "
-        lines = [
-            textwrap.indent(super()._to_markdown(), block_limiter).rstrip(
-                "\n",
-            ),
-        ]
-        return "\n".join(lines) + "\n"
+        text = super()._to_markdown()
+        return textwrap.indent(text, "> ").rstrip("\n") + "\n"
 
     @staticmethod
     def create_example_page(page):
@@ -43,6 +34,5 @@ class MkBlockQuote(mkcontainer.MkContainer):
 if __name__ == "__main__":
     inner_1 = MkBlockQuote("inner_1\nmultiline")
     inner_2 = MkBlockQuote("inner_2")
-    print(inner_1)
-    outer = MkBlockQuote(content=[inner_1, inner_2])
+    outer = MkBlockQuote(content=[inner_1, inner_2, "Not nested"])
     print(outer)
