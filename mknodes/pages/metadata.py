@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import re
 
 from typing import Literal
 
@@ -8,6 +9,8 @@ import yaml
 
 
 HEADER = "---\n{options}---\n"
+
+HEADER_RE = re.compile(r"\A-{3}\n([\S\s]*)^-{3}(\n|$)", re.MULTILINE)
 
 
 @dataclasses.dataclass
@@ -23,6 +26,22 @@ class Metadata:
     subtitle: str | None = None
     description: str | None = None
     template: str | None = None
+
+    @classmethod
+    def parse(cls, text: str):
+        dct = {}
+        if match := HEADER_RE.match(text):
+            content = match[1]
+            dct = yaml.safe_load(content)
+            if hide := dct.pop("hide", None):
+                dct["hide_toc"] = "toc" in hide
+                dct["hide_nav"] = "navigation" in hide
+                dct["hide_path"] = "path" in hide
+            if search := dct.pop("search", None):
+                dct["search_boost"] = search.get("boost")
+                dct["exclude_from_search"] = search.get("exclude")
+            text = text[match.endpos :]
+        return cls(**dct), text
 
     def __getitem__(self, index: str):
         return dataclasses.asdict(self)[index]
@@ -76,4 +95,5 @@ class Metadata:
 
 if __name__ == "__main__":
     metadata = Metadata(hide_toc=True, search_boost=2)
-    print(metadata)
+    parsed, rest = Metadata.parse(str(metadata))
+    print(parsed, f"*{rest}*")
