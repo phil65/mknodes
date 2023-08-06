@@ -94,7 +94,6 @@ def create_github_index_md() -> mknodes.MkPage:
     page += mknodes.MkClassDiagram(
         mknodes.MkNode,
         mode="subclass_tree",
-        max_depth=1,
         direction="LR",
         header="All the nodes!",
     )
