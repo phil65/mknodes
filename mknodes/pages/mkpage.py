@@ -116,20 +116,23 @@ class MkPage(mkcontainer.MkContainer):
     ) -> Self:
         """Reads file content and creates an MkPage.
 
+        Parses and reads header metadata.
+
         Arguments:
             path: Path to load file from
-            hide_toc: Hide Toc. Overrides metadata if set.
-            hide_nav: Hide Navigation. Overrides metadata if set.
-            hide_path: Hide Path. Overrides metadata if set.
+            hide_toc: Hide Toc. Overrides parsed metadata if set.
+            hide_nav: Hide Navigation. Overrides parsed metadata if set.
+            hide_path: Hide Path. Overrides parsed metadata if set.
         """
         path = pathlib.Path(path)
-        return cls(
-            path.name,
-            content=path.read_text(),
-            hide_toc=hide_toc,
-            hide_nav=hide_nav,
-            hide_path=hide_path,
-        )
+        file_content = path.read_text()
+        data, text = metadata.Metadata.parse(file_content)
+        data.hide_toc = hide_toc
+        data.hide_nav = hide_nav
+        data.hide_path = hide_path
+        page = cls(path.name, content=text)
+        page.metadata = data
+        return page
 
     def virtual_files(self) -> dict[str, str]:
         return {self.path: self.to_markdown()}
