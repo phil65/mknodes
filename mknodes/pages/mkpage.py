@@ -114,6 +114,14 @@ class MkPage(mkcontainer.MkContainer):
         hide_nav: bool | None = None,
         hide_path: bool | None = None,
     ) -> Self:
+        """Reads file content and creates an MkPage.
+
+        Arguments:
+            path: Path to load file from
+            hide_toc: Hide Toc. Overrides metadata if set.
+            hide_nav: Hide Navigation. Overrides metadata if set.
+            hide_path: Hide Path. Overrides metadata if set.
+        """
         path = pathlib.Path(path)
         return cls(
             path.name,
