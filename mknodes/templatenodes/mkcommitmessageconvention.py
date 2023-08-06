@@ -119,8 +119,10 @@ class MkCommitMessageConvention(mknode.MkNode):
         import mknodes
 
         page.status = "new"  # for the small icon in the left menu
-        node = MkCommitMessageConvention()
-        page += mknodes.MkReprRawRendered(node, indent=True)
+        node = MkCommitMessageConvention(header="")
+        page += mknodes.MkReprRawRendered(node, indent=True, header="### All scopes")
+        node = MkCommitMessageConvention(scopes=["fix", "feat", "refactor"], header="")
+        page += mknodes.MkReprRawRendered(node, indent=True, header="### Selected scopes")
 
 
 if __name__ == "__main__":
