@@ -71,12 +71,13 @@ class MkCallable(mknode.MkNode):
         page.status = "new"
 
         def make_page():
-            page = mknodes.MkPage(hide_toc=True)
+            page = mknodes.MkPage("MkCallable Page")
+            page += "Content!"
             page += MkCallable(lambda: mknodes.MkAdmonition("Nested!"))
             return page
 
         node = MkCallable(fn=make_page)
-        page += mknodes.MkCode(str(node()))
+        page += mknodes.MkReprRawRendered(node)
 
     def to_markdown(self) -> str:
         node = self.__call__()

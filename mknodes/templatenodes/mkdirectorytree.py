@@ -4,7 +4,7 @@ import logging
 import os
 import pathlib
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 import seedir
 
@@ -13,6 +13,9 @@ from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
+
+
+DirectoryTreeStyleStr = Literal["lines", "dash", "arrow", "spaces", "plus"]
 
 
 class MkDirectoryTree(mkcode.MkCode):
@@ -28,7 +31,7 @@ class MkDirectoryTree(mkcode.MkCode):
         self,
         directory: str | os.PathLike,
         *,
-        style: Literal["lines", "dash", "arrow", "spaces", "plus", "emoji"] | None = None,
+        style: DirectoryTreeStyleStr | None = None,
         indent: int = 4,
         depth_limit: int | None = None,
         item_limit: int | None = None,
@@ -89,7 +92,6 @@ class MkDirectoryTree(mkcode.MkCode):
             self,
             path=str(self.directory),
             style=self.style,
-            printout=False,
             indent=self.print_indent,
             depth_limit=self.depth_limit,
             item_limit=self.item_limit,
@@ -106,8 +108,9 @@ class MkDirectoryTree(mkcode.MkCode):
         import mknodes
 
         page.status = "new"
-        node = MkDirectoryTree("mknodes")
-        page += mknodes.MkReprRawRendered(node)
+        for style in get_args(DirectoryTreeStyleStr):
+            node = MkDirectoryTree("mknodes/manual", style=style)
+            page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
 
 
 if __name__ == "__main__":

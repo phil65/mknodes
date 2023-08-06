@@ -132,7 +132,7 @@ class MkTab(mkcontainer.MkContainer):
         # It is recommended to use a Tab container though.
         tab = MkTab("A Title", content="Tab content(1)")
         tab.annotations[1] = "Tabs can carry annotations."
-        page += mknodes.MkReprRawRendered(tab)
+        page += mknodes.MkReprRawRendered(tab, header="### With annotations")
 
     def attach_annotations(self, text: str) -> str:
         # we deal with attaching annotations ourselves.
