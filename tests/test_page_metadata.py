@@ -36,6 +36,11 @@ def test_metadata():
     assert str(example_metadata) == EXPECTED
 
 
+def test_no_string_if_empty():
+    data = metadata.Metadata()
+    assert not str(data)
+
+
 def test_parsing_metadata():
     parsed, _rest = metadata.Metadata.parse(EXPECTED)
     assert str(parsed) == EXPECTED
