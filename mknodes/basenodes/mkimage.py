@@ -22,27 +22,30 @@ class MkImage(mknode.MkNode):
         self,
         path: str,
         *,
+        link: str | None = None,
         caption: str = "",
+        title: str = "",
         align: Literal["left", "right"] | None = None,
         width: int | None = None,
         lazy: bool = False,
-        title: str = "Image title",
-        header: str = "",
+        **kwargs,
     ):
         """Constructor.
 
         Arguments:
             path: path of the image
+            link: Optional url the image should link to
             caption: Image caption
             title: Image title
             align: Image alignment
             width: Image width in pixels
             lazy: Whether to lazy-load image
-            header: Section header
+            kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header)
+        super().__init__(**kwargs)
         self.title = title
         self.caption = caption
+        self.link = link
         self.align = align
         self.width = width
         self.lazy = lazy
@@ -56,12 +59,13 @@ class MkImage(mknode.MkNode):
         kwargs = dict(
             path=self.path,
             caption=self.caption,
+            link=self.link,
             align=self.align,
             width=self.width,
         )
         if self.lazy:
             kwargs["lazy"] = True
-        return helpers.get_repr(self, _filter_empty=True, **kwargs)
+        return helpers.get_repr(self, _filter_empty=True, _filter_false=True, **kwargs)
 
     def _to_markdown(self) -> str:
         markdown_link = f"![{self.title}]({self.path})"
@@ -71,6 +75,9 @@ class MkImage(mknode.MkNode):
             markdown_link += f'{{ width="{self.width}" }}'
         if self.lazy:
             markdown_link += "{ loading=lazy }"
+        if self.link:
+            markdown_link = f"[{markdown_link}]({self.link})"
+
         if not self.caption:
             return markdown_link
         lines = [
@@ -94,6 +101,10 @@ class MkImage(mknode.MkNode):
         node = MkImage(path="https://picsum.photos/200", width=500)
         page += mknodes.MkReprRawRendered(node, header="### Fixed width")
 
+        node = MkImage(path="https://picsum.photos/200", link="https://www.google.com")
+        page += mknodes.MkReprRawRendered(node, header="### Linked")
+
 
 if __name__ == "__main__":
-    img = MkImage("Some path")
+    img = MkImage("Some path", link="http://www.google.de", title="test")
+    print(img)

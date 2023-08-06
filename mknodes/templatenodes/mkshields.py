@@ -6,7 +6,7 @@ import logging
 
 from typing import Any, Literal
 
-from mknodes.basenodes import mkcontainer, mkimagelink, mknode
+from mknodes.basenodes import mkcontainer, mkimage, mknode
 from mknodes.utils import helpers
 
 
@@ -150,9 +150,9 @@ class MkShields(mkcontainer.MkContainer):
     @property
     def items(self) -> list[mknode.MkNode]:
         return [
-            mkimagelink.MkImageLink(
-                s.get_url(user=self.user, project=self.project),
+            mkimage.MkImage(
                 s.get_image_url(user=self.user, project=self.project, branch=self.branch),
+                link=s.get_url(user=self.user, project=self.project),
                 title=s.title,
                 parent=self,
             )
