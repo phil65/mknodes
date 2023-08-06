@@ -84,7 +84,7 @@ class MkPage(mkcontainer.MkContainer):
         )
 
     def __repr__(self):
-        meta_kwargs = self.metadata.as_dict()
+        meta_kwargs = self.metadata.repr_kwargs()
         return helpers.get_repr(self, path=str(self.path), **meta_kwargs)
 
     def __str__(self):

@@ -5,6 +5,7 @@ import re
 
 from typing import Literal
 
+from typing_extensions import Self
 import yaml
 
 
@@ -28,7 +29,7 @@ class Metadata:
     template: str | None = None
 
     @classmethod
-    def parse(cls, text: str):
+    def parse(cls, text: str) -> tuple[Self, str]:
         dct = {}
         if match := HEADER_RE.match(text):
             content = match[1]
@@ -41,6 +42,7 @@ class Metadata:
                 dct["search_boost"] = search.get("boost")
                 dct["exclude_from_search"] = search.get("exclude")
             text = text[match.endpos :]
+        # TODO: right now, additional metadata would lead to an exception
         return cls(**dct), text
 
     def __getitem__(self, index: str):
@@ -92,8 +94,12 @@ class Metadata:
         )
         return {k: v for k, v in data.items() if v is not None}
 
+    def repr_kwargs(self) -> dict:
+        data = dataclasses.asdict(self)
+        return {k: v for k, v in data.items() if v is not None}
+
 
 if __name__ == "__main__":
     metadata = Metadata(hide_toc=True, search_boost=2)
-    parsed, rest = Metadata.parse(str(metadata))
-    print(parsed, f"*{rest}*")
+    print(metadata.as_dict())
+    print(metadata.repr_kwargs())
