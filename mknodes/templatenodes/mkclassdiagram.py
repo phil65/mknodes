@@ -119,21 +119,20 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             header="### Method resolution order: MkTable",
         )
 
-    def _to_markdown(self) -> str:
+    @property
+    def text(self) -> str:
         match self.mode:
             case "subclass_tree":
                 builder = SubclassConnector(self.klass, max_depth=self._max_depth)
-                item_str = builder.get_graph_connection_text()
+                return builder.get_graph_connection_text()
             case "parent_tree":
                 builder = ParentClassConnector(self.klass, max_depth=self._max_depth)
-                item_str = builder.get_graph_connection_text()
+                return builder.get_graph_connection_text()
             case "mro":
                 builder = MroConnector(self.klass, max_depth=self._max_depth)
-                item_str = builder.get_graph_connection_text()
+                return builder.get_graph_connection_text()
             case _:
                 raise ValueError(self.mode)
-        text = f"{self.graph_type} {self.direction}\n{item_str}"
-        return f"```mermaid\n{text}\n```"
 
 
 if __name__ == "__main__":

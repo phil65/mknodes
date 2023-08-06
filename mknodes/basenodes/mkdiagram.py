@@ -4,14 +4,14 @@ import textwrap
 
 from typing import Literal
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mkcode
 from mknodes.utils import helpers
 
 
 GraphTypeStr = Literal["flow", "sequence", "state"]
 
 
-class MkDiagram(mknode.MkNode):
+class MkDiagram(mkcode.MkCode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     ICON = "material/graph-outline"
@@ -50,7 +50,7 @@ class MkDiagram(mknode.MkNode):
             attributes: Optional attributes for the items
             header: Section header
         """
-        super().__init__(header=header)
+        super().__init__(language="mermaid", header=header)
         self.graph_type = (
             graph_type if graph_type not in self.TYPE_MAP else self.TYPE_MAP[graph_type]
         )
@@ -59,7 +59,7 @@ class MkDiagram(mknode.MkNode):
             if direction not in self.ORIENTATION
             else self.ORIENTATION[direction]
         )
-        self.items = set(items or [])
+        self.names = set(items or [])
         self.connections = set(connections or [])
         self.attributes = attributes or {}
 
@@ -67,16 +67,19 @@ class MkDiagram(mknode.MkNode):
         return helpers.get_repr(
             self,
             graph_type=self.graph_type,
-            items=self.items,
+            items=self.names,
             connections=self.connections,
             direction=self.direction,
         )
 
-    def _to_markdown(self) -> str:
-        items = list(self.items) + [f"{a} --> {b}" for a, b in self.connections]
-        item_str = textwrap.indent("\n".join(items), "  ")
-        text = f"{self.graph_type} {self.direction}\n{item_str}"
-        return f"```mermaid\n{text}\n```"
+    @property
+    def text(self):
+        items = list(self.names) + [f"{a} --> {b}" for a, b in self.connections]
+        return textwrap.indent("\n".join(items), "  ")
+
+    @property
+    def fence_title(self):
+        return f"{self.graph_type} {self.direction}"
 
     @staticmethod
     def create_example_page(page):
