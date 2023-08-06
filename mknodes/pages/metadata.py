@@ -7,6 +7,9 @@ from typing import Literal
 import yaml
 
 
+HEADER = "---\n{options}---\n"
+
+
 @dataclasses.dataclass
 class Metadata:
     hide_toc: bool | None = None
@@ -29,7 +32,10 @@ class Metadata:
 
     def __str__(self):
         data = self.as_dict()
-        return yaml.dump(data, Dumper=yaml.Dumper, indent=2) if data else ""
+        if not data:
+            return ""
+        text = yaml.dump(data, Dumper=yaml.Dumper, indent=2)
+        return HEADER.format(options=text)
 
     def __bool__(self):
         return bool(self.as_dict())

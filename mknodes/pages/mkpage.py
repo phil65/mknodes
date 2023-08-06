@@ -15,8 +15,6 @@ from mknodes.utils import helpers
 
 logger = logging.getLogger(__name__)
 
-HEADER = "---\n{options}---\n\n"
-
 
 class MkPage(mkcontainer.MkContainer):
     """A node container representing a Markdown page.
@@ -131,7 +129,9 @@ class MkPage(mkcontainer.MkContainer):
     def to_markdown(self) -> str:
         from mknodes import mknav
 
-        header = self.formatted_header()
+        header = str(self.metadata)
+        if header:
+            header += "\n"
         content_str = self._to_markdown()
         if self.footnotes:
             content_str = f"{content_str}\n\n{self.footnotes}"
@@ -151,13 +151,6 @@ class MkPage(mkcontainer.MkContainer):
                 text += str(admonition)
                 break
         return text
-
-    def formatted_header(self) -> str:
-        """Return the formatted header (containing metadata) for the page."""
-        if not self.metadata:
-            return ""
-        options = str(self.metadata)
-        return HEADER.format(options=options)
 
     def add_newlines(self, num: int):
         """Add line separators to the page.
