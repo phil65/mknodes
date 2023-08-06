@@ -93,7 +93,7 @@ class MkPage(mkcontainer.MkContainer):
         return self.to_markdown()
 
     @property
-    def status(self):
+    def status(self) -> Literal["new", "deprecated"] | None:
         return self.metadata.status
 
     @status.setter
