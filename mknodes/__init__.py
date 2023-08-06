@@ -10,6 +10,7 @@ from .basenodes.mkadmonition import MkAdmonition
 from .basenodes.mknode import MkNode
 from .basenodes.mkblockquote import MkBlockQuote
 from .basenodes.mklink import MkLink
+from .basenodes.mkimagelink import MkImageLink
 from .basenodes.mktext import MkText
 from .basenodes.mkheader import MkHeader
 from .basenodes.mkkeys import MkKeys
@@ -61,6 +62,7 @@ __all__ = [
     "MkNode",
     "MkBlockQuote",
     "MkLink",
+    "MkImageLink",
     "MkBlock",
     "MkHtmlBlock",
     "MkAdmonitionBlock",

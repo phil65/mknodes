@@ -251,6 +251,30 @@ def get_doc(
     return escaped(doc) if doc and escape else doc
 
 
+def get_url_for(obj) -> str:  # type: ignore[return]
+    import mknodes
+
+    from mknodes import project
+
+    match obj:
+        case mknodes.MkPage():
+            path = obj.resolved_file_path.replace(".md", ".html")
+            return (project.Project().config.site_url or "") + path
+        case mknodes.MkNav():
+            if obj.index_page:
+                path = obj.index_page.resolved_file_path
+                path = path.replace(".md", ".html")
+            else:
+                path = obj.resolved_file_path
+            return (project.Project().config.site_url or "") + path
+        case str() if obj.startswith(("http:", "https:", "www.")):
+            return obj
+        case str():
+            return f"{obj}.md"
+        case _:
+            raise TypeError(obj)
+
+
 if __name__ == "__main__":
     strings = groupby_first_letter([str(i) for i in range(1000)])
     print(limit_repr.repr(strings))

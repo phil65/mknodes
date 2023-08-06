@@ -4,7 +4,7 @@ import logging
 
 from typing import Any
 
-from mknodes import mknav, project
+from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
@@ -59,23 +59,7 @@ class MkLink(mknode.MkNode):
         )
 
     def _to_markdown(self) -> str:
-        match self.target:
-            case mkpage.MkPage():
-                path = self.target.resolved_file_path.replace(".md", ".html")
-                url = (project.Project().config.site_url or "") + path
-            case mknav.MkNav():
-                if self.target.index_page:
-                    path = self.target.index_page.resolved_file_path
-                    path = path.replace(".md", ".html")
-                else:
-                    path = self.target.resolved_file_path
-                url = (project.Project().config.site_url or "") + path
-            case str() if self.target.startswith(("http:", "https:", "www.")):
-                url = self.target
-            case str():
-                url = f"{self.target}.md"
-            case _:
-                raise TypeError(self.target)
+        url = helpers.get_url_for(self.target)
         title = self.target if self.title is None else self.title
         if self.as_button:
             button_suffix = (
