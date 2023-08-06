@@ -102,11 +102,13 @@ def create_section_for_nodes(nav: mknodes.MkNav, klasses: list[type]) -> mknodes
 def create_class_page(kls: type, page: mknodes.MkPage):
     """Create a MkPage with example code for given klass."""
     # Each example page will begin by displaying the code used to create the page.
-    page += mknodes.MkCode.for_object(
+    code = mknodes.MkCode.for_object(
         create_class_page,
         extract_body=True,
         header=PAGE_CODE,
     )
+    admonition = mknodes.MkAdmonition(code, collapsible=True, title=code.title)
+    page += admonition
     page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
     # and afterwards, we show what was added to the page.
     page += "## Examples"
