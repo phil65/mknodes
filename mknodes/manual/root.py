@@ -98,6 +98,3 @@ def create_github_index_md() -> mknodes.MkPage:
         header="All the nodes!",
     )
     return page
-
-
-print(create_github_index_md())
