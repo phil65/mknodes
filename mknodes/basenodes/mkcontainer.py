@@ -33,6 +33,7 @@ class MkContainer(mknode.MkNode):
         """
         super().__init__(**kwargs)
         self.items: list[mknode.MkNode] = []
+        self.block_separator = "\n\n"
         match content:
             case None:
                 items: list[mknode.MkNode] = []
@@ -73,7 +74,7 @@ class MkContainer(mknode.MkNode):
         page += mknodes.MkReprRawRendered(node, indent=True)
 
     def _to_markdown(self) -> str:
-        return "\n\n".join(i.to_markdown() for i in self.items)
+        return self.block_separator.join(i.to_markdown() for i in self.items)
 
     def append(self, other: str | mknode.MkNode):
         match other:
