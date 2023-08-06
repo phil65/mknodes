@@ -4,14 +4,14 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mkcontainer, mknode, mktext
+from mknodes.basenodes import mkcode, mkcontainer, mkheader, mknode, mktext
 from mknodes.utils import helpers, installmethods
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkInstallGuide(mknode.MkNode):
+class MkInstallGuide(mkcontainer.MkContainer):
     """Install guide text (currently PyPi only)."""
 
     ICON = "material/help"
@@ -20,7 +20,7 @@ class MkInstallGuide(mknode.MkNode):
         self,
         project: str,
         package_managers: list[str] | None = None,
-        header_level: int | None = 3,
+        header_level: int = 3,
         **kwargs: Any,
     ):
         """Constructor.
@@ -36,30 +36,26 @@ class MkInstallGuide(mknode.MkNode):
         self.header_level = header_level
         self.package_managers = package_managers
 
-    def get_nodes(self, install_method):
+    @property
+    def items(self) -> list[mknode.MkNode]:
+        managers = self.package_managers or ["pip"]
+        klasses = [installmethods.InstallMethod.by_id(i) for i in managers]
+        methods = [i(self.project) for i in klasses]
+        return [self.get_section_for(method) for method in methods]
+
+    @items.setter
+    def items(self, value):
+        pass
+
+    def get_section_for(self, method: installmethods.InstallMethod):
         return mkcontainer.MkContainer(
             [
-                mktext.MkText(install_method.info_text(), parent=self),
-                mkcode.MkCode(install_method.install_instructions(), parent=self),
+                mkheader.MkHeader(method.ID, level=self.header_level),
+                mktext.MkText(method.info_text()),
+                mkcode.MkCode(method.install_instructions()),
             ],
+            parent=self,
         )
-
-    def _to_markdown(self) -> str:
-        blocks = []
-        providers = dict(
-            pip=self.get_nodes(installmethods.PipInstall(self.project)),
-            pipx=self.get_nodes(installmethods.PipXInstall(self.project)),
-            Homebrew=self.get_nodes(installmethods.HomebrewInstall(self.project)),
-            Conda=self.get_nodes(installmethods.CondaForgeInstall(self.project)),
-        )
-        managers = self.package_managers or ["pip"]
-        for k, v in providers.items():
-            if k in managers:
-                if self.header_level:
-                    prefix = self.header_level * "#"
-                    blocks.append(f"{prefix} {k}\n")
-                blocks.append(str(v).format(project=self.project))
-        return "\n\n".join(blocks)
 
     def __repr__(self):
         return helpers.get_repr(
@@ -81,5 +77,7 @@ class MkInstallGuide(mknode.MkNode):
 
 
 if __name__ == "__main__":
+    import mknodes
+
     installguide = MkInstallGuide(project="mknodes")
-    print(installguide)
+    print(mknodes.MkReprRawRendered(installguide))

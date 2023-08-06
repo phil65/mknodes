@@ -20,6 +20,14 @@ class InstallMethod:
     def install_instructions(self) -> str:
         raise NotImplementedError
 
+    @classmethod
+    def get_installmethods(cls):
+        return {i.ID: i for i in cls.__subclasses__()}
+
+    @classmethod
+    def by_id(cls, identifier: str):
+        return cls.get_installmethods()[identifier]
+
 
 class PipInstall(InstallMethod):
     ID = "pip"
