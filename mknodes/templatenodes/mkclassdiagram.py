@@ -96,25 +96,28 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     def create_example_page(page):
         import mknodes
 
-        parent_diagram = MkClassDiagram(
-            klass=MkClassDiagram,
-            mode="parent_tree",
-            header="Parent class hierarchy: MkClassDiagram",
-        )
+        parent_diagram = MkClassDiagram(klass=MkClassDiagram, mode="parent_tree")
         sub_diagram = MkClassDiagram(
             klass=mknodes.MkContainer,
             mode="subclass_tree",
-            header="Subclass hierarchy: MkContainer",
             direction="LR",
         )
-        mro_diagram = MkClassDiagram(
-            klass=mknodes.MkTable,
-            mode="mro",
-            header="Method resolution order: MkTable",
+        mro_diagram = MkClassDiagram(klass=mknodes.MkTable, mode="mro")
+        page += mknodes.MkReprRawRendered(
+            parent_diagram,
+            indent=True,
+            header="### Parent class hierarchy: MkClassDiagram",
         )
-        page += mknodes.MkReprRawRendered(parent_diagram, indent=True)
-        page += mknodes.MkReprRawRendered(sub_diagram, indent=True)
-        page += mknodes.MkReprRawRendered(mro_diagram, indent=True)
+        page += mknodes.MkReprRawRendered(
+            sub_diagram,
+            indent=True,
+            header="### Subclass hierarchy: MkContainer",
+        )
+        page += mknodes.MkReprRawRendered(
+            mro_diagram,
+            indent=True,
+            header="### Method resolution order: MkTable",
+        )
 
     def _to_markdown(self) -> str:
         match self.mode:

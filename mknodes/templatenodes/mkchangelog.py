@@ -28,7 +28,7 @@ class MkChangelog(mknode.MkNode):
 
     def __init__(
         self,
-        convention: Literal["basic", "angular", "atom", "conventional"] = "angular",
+        convention: Literal["basic", "angular", "atom", "conventional"] = "conventional",
         template: Literal["keepachangelog", "angular"] = "keepachangelog",
         sections: list[str] | None = None,
         repository: str | os.PathLike | None = None,
@@ -76,9 +76,12 @@ class MkChangelog(mknode.MkNode):
         import mknodes
 
         page.status = "new"  # for the small icon in the left menu
-        node = MkChangelog()
-        page += mknodes.MkReprRawRendered(node)
-        # page += mknodes.MkHtmlBlock(str(node), header="Markdown")
+        node = MkChangelog(template="keepachangelog", shift_header_levels=3)
+        page += mknodes.MkReprRawRendered(node, header="### keepachangelog template")
+        node = MkChangelog(template="angular", shift_header_levels=3)
+        page += mknodes.MkReprRawRendered(node, header="### angular template")
+        node = MkChangelog(convention="basic", shift_header_levels=3)
+        page += mknodes.MkReprRawRendered(node, header="### basic convention")
 
 
 if __name__ == "__main__":

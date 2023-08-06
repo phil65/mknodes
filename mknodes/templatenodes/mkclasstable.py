@@ -47,15 +47,13 @@ class MkClassTable(mktable.MkTable):
         node_1 = MkClassTable(
             klasses=[mknodes.MkTable, MkClassTable, mknodes.MkNav],
             layout="compact",
-            header="Compact layout",
         )
         node_2 = MkClassTable(
             klasses=[mknodes.MkTable, MkClassTable, mknodes.MkNav],
             layout="extended",
-            header="Extended layout",
         )
-        page += mknodes.MkReprRawRendered(node_1)
-        page += mknodes.MkReprRawRendered(node_2)
+        page += mknodes.MkReprRawRendered(node_1, header="### Compact layout")
+        page += mknodes.MkReprRawRendered(node_2, header="### Extended layout")
 
 
 if __name__ == "__main__":
