@@ -100,6 +100,14 @@ class MkPage(mkcontainer.MkContainer):
     def status(self, value: Literal["new", "deprecated"]):
         self.metadata.status = value
 
+    @property
+    def title(self) -> str | None:
+        return self.metadata.title
+
+    @title.setter
+    def title(self, value: str):
+        self.metadata.title = value
+
     @classmethod
     def from_file(
         cls,
