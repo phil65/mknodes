@@ -4,52 +4,11 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.basenodes import mkcode, mkcontainer, mknode, mktext
+from mknodes.utils import helpers, installmethods
 
 
 logger = logging.getLogger(__name__)
-
-PIP_TEXT = """The latest released version is available at the [Python
-package index](https://pypi.org/project/{project}).
-
-```sh
-pip install {project}
-```
-"""
-# !!! warning
-#     This method modifies the Python environment in which you choose to install.
-# Consider instead using [pipx](#pipx) to avoid dependency conflicts.
-
-PIPX_TEXT = """[pipx](https://github.com/pypa/pipx)
-allows for the global installation of Python applications in isolated environments.
-
-```
-pipx install {project}
-```
-"""
-HOMEBREW_TEXT = """See the [formula](https://formulae.brew.sh/formula/{project})
-for more details.
-
-```
-brew install {project}
-```
-"""
-
-CONDA_TEXT = """See the [feedstock](https://github.com/conda-forge/{project}-feedstock)
-for more details.
-
-```
-conda install -c conda-forge {project}
-```
-"""
-
-PROVIDERS = dict(
-    pip=PIP_TEXT,
-    pipx=PIPX_TEXT,
-    Homebrew=HOMEBREW_TEXT,
-    Conda=CONDA_TEXT,
-)
 
 
 class MkInstallGuide(mknode.MkNode):
@@ -77,15 +36,29 @@ class MkInstallGuide(mknode.MkNode):
         self.header_level = header_level
         self.package_managers = package_managers
 
+    def get_nodes(self, install_method):
+        return mkcontainer.MkContainer(
+            [
+                mktext.MkText(install_method.info_text(), parent=self),
+                mkcode.MkCode(install_method.install_instructions(), parent=self),
+            ],
+        )
+
     def _to_markdown(self) -> str:
         blocks = []
+        providers = dict(
+            pip=self.get_nodes(installmethods.PipInstall(self.project)),
+            pipx=self.get_nodes(installmethods.PipXInstall(self.project)),
+            Homebrew=self.get_nodes(installmethods.HomebrewInstall(self.project)),
+            Conda=self.get_nodes(installmethods.CondaForgeInstall(self.project)),
+        )
         managers = self.package_managers or ["pip"]
-        for k, v in PROVIDERS.items():
+        for k, v in providers.items():
             if k in managers:
                 if self.header_level:
                     prefix = self.header_level * "#"
                     blocks.append(f"{prefix} {k}\n")
-                blocks.append(v.format(project=self.project))
+                blocks.append(str(v).format(project=self.project))
         return "\n\n".join(blocks)
 
     def __repr__(self):
@@ -104,7 +77,7 @@ class MkInstallGuide(mknode.MkNode):
         # Currently it is only tailored towards PyPi.
 
         node = MkInstallGuide(project="mknodes", package_managers=["pip", "pipx"])
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, indent=True, header="Pip / Pipx")
 
 
 if __name__ == "__main__":
