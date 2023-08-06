@@ -70,18 +70,29 @@ class MkCode(mkcontainer.MkContainer):
         )
 
     @property
-    def text(self):
+    def text(self) -> str:
+        """Text content."""
         return "\n".join(str(i) for i in self.items)
 
-    def _to_markdown(self) -> str:
+    @property
+    def fence_boundary(self) -> str:
+        """Fence boundary."""
         block_level = sum(isinstance(i, MkCode) for i in self.ancestors)
-        block_limiter = "`" * (block_level + 3)
+        return "`" * (block_level + 3)
+
+    @property
+    def fence_title(self) -> str:
+        """Title in first line."""
         title = f" title={self.title!r}" if self.title else ""
         if self.linenums is not None:
             title += f' linenums="{self.linenums}"'
         if self.highlight_lines:
             title += ' hl_lines="' + " ".join(str(i) for i in self.highlight_lines) + '"'
-        return f"{block_limiter} {self.language}{title}\n{self.text}\n{block_limiter}"
+        return f"{self.language}{title}"
+
+    def _to_markdown(self) -> str:
+        first_line = f"{self.fence_boundary} {self.fence_title}"
+        return f"{first_line}\n{self.text}\n{self.fence_boundary}"
 
     @staticmethod
     def create_example_page(page):

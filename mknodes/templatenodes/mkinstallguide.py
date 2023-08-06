@@ -47,7 +47,10 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def items(self, value):
         pass
 
-    def get_section_for(self, method: installmethods.InstallMethod):
+    def get_section_for(
+        self,
+        method: installmethods.InstallMethod,
+    ) -> mkcontainer.MkContainer:
         return mkcontainer.MkContainer(
             [
                 mkheader.MkHeader(method.ID, level=self.header_level),
