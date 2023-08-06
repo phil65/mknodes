@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import logging
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
-from mknodes.basenodes import mktext
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
 
-CriticMarkStr = Literal["addition", "deletion", "substitution", "comment", "highlight"]
+CriticMarkStr = Literal["addition", "deletion", "comment", "highlight"]
 
 
-class MkCritic(mktext.MkText):
+class MkCritic(mkcontainer.MkContainer):
     """MkCritic block."""
 
     ICON = "material/format-text"
@@ -21,23 +21,23 @@ class MkCritic(mktext.MkText):
 
     def __init__(
         self,
-        text: str,
+        content: str | mknode.MkNode | list,
         *,
-        mark: CriticMarkStr = "addition",
+        mark: CriticMarkStr = "highlight",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
-            text: Critic text
-            mark: type of Critic
+            content: Content to mark
+            mark: type of mark
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(text=text, **kwargs)
+        super().__init__(content=content, **kwargs)
         self.mark = mark
 
     def __repr__(self):
-        return helpers.get_repr(self, text=self.text, mark=self.mark)
+        return helpers.get_repr(self, content=self.items, mark=self.mark)
 
     def _to_markdown(self) -> str:
         match self.mark:
@@ -51,15 +51,15 @@ class MkCritic(mktext.MkText):
                 left, right = (">>", "<<")
             case _:
                 raise TypeError(self.mark)
-        return f"{{{left}\n\n{self.text}\n\n{right}}}"
+        return f"{{{left}\n\n{super()._to_markdown()}\n\n{right}}}"
 
     @staticmethod
     def create_example_page(page):
         import mknodes
 
         page += "The MkCritic node can be used to display text diffs."
-        for typ in ["addition", "deletion", "comment", "highlight"]:
-            node = MkCritic(mark=typ, text=f"This is type {typ}")
+        for typ in get_args(CriticMarkStr):
+            node = MkCritic(f"This is type {typ}", mark=typ)
             page += mknodes.MkHeader(f"Type {typ!r}", level=3)
             page += mknodes.MkReprRawRendered(node)
 
