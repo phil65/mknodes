@@ -6,7 +6,7 @@ import logging
 
 from typing import Any, Literal
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mkcontainer, mkimagelink, mknode
 from mknodes.utils import helpers
 
 
@@ -22,10 +22,11 @@ class Shield:
     image_url: str
     url: str
 
-    def to_url(self, user: str, project: str, branch: str = "main"):
-        image_url = self.image_url.format(user=user, project=project, branch=branch)
-        url = self.url.format(user=user, project=project)
-        return f"[![{self.title}]({image_url})]({url})"
+    def get_image_url(self, user, project, branch):
+        return self.image_url.format(user=user, project=project, branch=branch)
+
+    def get_url(self, user, project):
+        return self.url.format(user=user, project=project)
 
 
 build_shield = Shield(
@@ -107,7 +108,7 @@ ShieldTypeStr = Literal[
 ]
 
 
-class MkShields(mknode.MkNode):
+class MkShields(mkcontainer.MkContainer):
     """MkCritic block."""
 
     ICON = "simple/shieldsdotio"
@@ -130,6 +131,7 @@ class MkShields(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
+        self.block_separator = "\n"
         self.user = user
         self.project = project
         self.branch = branch
@@ -145,13 +147,22 @@ class MkShields(mknode.MkNode):
             kwargs["branch"] = self.branch
         return helpers.get_repr(self, **kwargs)
 
-    def _to_markdown(self) -> str:
-        shield_strs = [
-            s.to_url(user=self.user, project=self.project, branch=self.branch)
+    @property
+    def items(self) -> list[mknode.MkNode]:
+        return [
+            mkimagelink.MkImageLink(
+                s.get_url(user=self.user, project=self.project),
+                s.get_image_url(user=self.user, project=self.project, branch=self.branch),
+                title=s.title,
+                parent=self,
+            )
             for s in SHIELDS
             if s.identifier in self.shields
         ]
-        return "\n".join(shield_strs)
+
+    @items.setter
+    def items(self, value):
+        pass
 
     @staticmethod
     def create_example_page(page):
