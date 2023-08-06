@@ -4,7 +4,7 @@ import logging
 
 from typing import Any, Literal
 
-from mknodes.basenodes import mklist, mknode
+from mknodes.basenodes import mkcode, mkcontainer, mklist, mktext
 from mknodes.utils import helpers
 
 
@@ -43,15 +43,12 @@ STYLES = {
     "Karma convention": "https://karma-runner.github.io/4.0/dev/git-commit-msg.html",
 }
 
-TEXT = """Commit messages must follow our convention based on {styles}:
 
-```
-<type>[(scope)]: Subject
+START_TEXT = """"Commit messages must follow our convention based on {styles}:"""
 
-[Body]
-```
+COMMIT_TEXT = "<type>[(scope)]: Subject\n\n[Body]"
 
-**Subject and body must be valid Markdown.**
+MID_TEXT = """**Subject and body must be valid Markdown.**
 Subject must have proper casing (uppercase for first letter
 if it makes sense), but no dot at the end, and no punctuation
 in general.
@@ -63,14 +60,16 @@ Scope and body are optional. Type can be:
 If you write a body, please add trailers at the end
 (for example issues and PR references, or co-authors),
 without relying on GitHub's flavored Markdown:
+"""
 
-```
+BODY_TEXT = """
 Body.
 
 Issue #10: https://github.com/namespace/project/issues/10
 Related to PR namespace/other-project#2: https://github.com/namespace/other-project/pull/2
-```
+"""
 
+END_TEXT = """
 These "trailers" must appear at the end of the body,
 without any blank lines between them. The trailer title
 can contain any character except colons `:`.
@@ -84,7 +83,7 @@ unless they are part of code blocks that must not be wrapped.
 """
 
 
-class MkCommitMessageConvention(mknode.MkNode):
+class MkCommitMessageConvention(mkcontainer.MkContainer):
     """Text node containing Commit message conventions."""
 
     ICON = "simple/conventionalcommits"
@@ -108,11 +107,22 @@ class MkCommitMessageConvention(mknode.MkNode):
     def __repr__(self):
         return helpers.get_repr(self, scopes=self.scopes, _filter_empty=True)
 
-    def _to_markdown(self) -> str:
+    @property
+    def items(self):
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
         scopes = self.scopes or list(SCOPES.keys())
-        scope_str = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in scopes])
-        return TEXT.format(styles=styles, scopes=scope_str)
+        scope = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in scopes])
+        return [
+            mktext.MkText(START_TEXT.format(styles=styles), parent=self),
+            mkcode.MkCode(COMMIT_TEXT, parent=self),
+            mktext.MkText(MID_TEXT.format(scopes=scope), parent=self),
+            mkcode.MkCode(BODY_TEXT, parent=self),
+            mktext.MkText(END_TEXT, parent=self),
+        ]
+
+    @items.setter
+    def items(self, value):
+        pass
 
     @staticmethod
     def create_example_page(page):
