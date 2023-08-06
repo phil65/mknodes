@@ -74,12 +74,16 @@ class MkDiagram(mkcode.MkCode):
 
     @property
     def text(self):
+        return f"{self.graph_type} {self.direction}\n{self.mermaid_code}"
+
+    @property
+    def mermaid_code(self):
         items = list(self.names) + [f"{a} --> {b}" for a, b in self.connections]
         return textwrap.indent("\n".join(items), "  ")
 
     @property
     def fence_title(self):
-        return f"{self.graph_type} {self.direction}"
+        return "mermaid"
 
     @staticmethod
     def create_example_page(page):

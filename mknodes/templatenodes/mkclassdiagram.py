@@ -120,7 +120,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         )
 
     @property
-    def text(self) -> str:
+    def mermaid_code(self) -> str:
         match self.mode:
             case "subclass_tree":
                 builder = SubclassConnector(self.klass, max_depth=self._max_depth)
