@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+import dataclasses
 import logging
+
+from typing import ClassVar
 
 
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
 class InstallMethod:
-    def __init__(self, project: str):
-        self.project = project
+    ID: ClassVar
+    project: str
 
     def info_text(self) -> str:
         raise NotImplementedError
@@ -18,6 +22,8 @@ class InstallMethod:
 
 
 class PipInstall(InstallMethod):
+    ID = "pip"
+
     def info_text(self):
         return (
             "The latest released version is available at the [Python "
@@ -29,6 +35,8 @@ class PipInstall(InstallMethod):
 
 
 class PipXInstall(InstallMethod):
+    ID = "pipx"
+
     def info_text(self):
         return (
             "[pipx](https://github.com/pypa/pipx) allows for the "
@@ -40,6 +48,8 @@ class PipXInstall(InstallMethod):
 
 
 class CondaForgeInstall(InstallMethod):
+    ID = "conda_forge"
+
     def info_text(self):
         return (
             "See the "
@@ -52,6 +62,8 @@ class CondaForgeInstall(InstallMethod):
 
 
 class HomebrewInstall(InstallMethod):
+    ID = "homebrew"
+
     def info_text(self):
         return (
             f"See the [formula](https://formulae.brew.sh/formula/{self.project}) "
@@ -64,4 +76,4 @@ class HomebrewInstall(InstallMethod):
 
 if __name__ == "__main__":
     instructions = PipInstall("mknodes")
-    print(instructions.info_text())
+    print(instructions)
