@@ -20,7 +20,7 @@ class LinkProvider:
     def add_inv_file(self, path: str | os.PathLike):
         self.inv_manager.add_inv_file(path)
 
-    def link_for_klass(self, kls: type):
+    def link_for_klass(self, kls: type) -> str:
         if kls.__module__ == "builtins":
             url = BUILTIN_URL.format(mod="functions", name=kls.__name__)
             return helpers.linked(url, title=kls.__name__)
@@ -34,7 +34,7 @@ class LinkProvider:
             return helpers.linked(url, title=qual_name)
         return helpers.linked(qual_name)
 
-    def homepage_for_distro(self, dist_name: str):
+    def homepage_for_distro(self, dist_name: str) -> str | None:
         try:
             dist = metadata.distribution(dist_name)
         except metadata.PackageNotFoundError:
