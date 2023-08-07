@@ -269,6 +269,9 @@ def get_url_for(obj) -> str:  # type: ignore[return]
             return (project.Project().config.site_url or "") + path
         case str() if obj.startswith(("http:", "https:", "www.")):
             return obj
+        case str() if obj.startswith("/"):
+            base_url = project.Project().config.site_url or ""
+            return base_url.rstrip("/") + obj
         case str():
             return f"{obj}.md"
         case _:

@@ -14,14 +14,16 @@ import mkdocs_gen_files
 
 from typing_extensions import Self
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mklink, mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
 
 if TYPE_CHECKING:
-    from mknodes import mkdoc
+    from mknodes import mkdoc, mknav
     from mknodes.pages import mkclasspage, mkmodulepage
+
+    NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +64,7 @@ class MkNav(mknode.MkNode):
         """
         self.section = section  # helpers.slugify(section)
         self.filename = filename
-        self.nav: dict[tuple | str | None, MkNav | mkpage.MkPage] = {}
+        self.nav: dict[tuple | str | None, NavSubType] = {}
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
         self.append_markdown_to_pages = append_markdown_to_pages
@@ -75,12 +77,16 @@ class MkNav(mknode.MkNode):
             filename=self.filename,
         )
 
-    def __setitem__(self, index: tuple | str, node: mkpage.MkPage | MkNav):
+    def __setitem__(
+        self,
+        index: tuple | str,
+        node: NavSubType,
+    ):
         if isinstance(index, str):
             index = tuple(index.split("."))
         self.nav[index] = node
 
-    def __getitem__(self, index: tuple | str) -> mkpage.MkPage | MkNav:
+    def __getitem__(self, index: tuple | str) -> NavSubType:
         if isinstance(index, str):
             index = tuple(index.split("."))
         return self.nav[index]
@@ -118,6 +124,11 @@ class MkNav(mknode.MkNode):
         return [node for node in self.nav.values() if isinstance(node, mkpage.MkPage)]
 
     @property
+    def links(self) -> list[mklink.MkLink]:
+        """Return all registered links."""
+        return [node for node in self.nav.values() if isinstance(node, mklink.MkLink)]
+
+    @property
     def children(self):
         nodes = [self.index_page] if self.index_page else []
         nodes += list(self.nav.values())
@@ -137,7 +148,7 @@ class MkNav(mknode.MkNode):
             path: The section path for the returned MkNav / MkPage
         """
 
-        def decorator(fn: Callable[..., mkpage.MkPage | MkNav], path=path) -> Callable:
+        def decorator(fn: Callable[..., NavSubType], path=path) -> Callable:
             node = fn()
             node.parent = self
             self.nav[path] = node
@@ -155,7 +166,7 @@ class MkNav(mknode.MkNode):
         self._register(navi)
         return navi
 
-    def __add__(self, other: MkNav | mkpage.MkPage):
+    def __add__(self, other: NavSubType):
         other.parent = self
         self._register(other)
         return self
@@ -225,6 +236,8 @@ class MkNav(mknode.MkNode):
                     nav[path] = pathlib.Path(item.path).as_posix()
                 case MkNav():
                     nav[path] = f"{item.section}/"
+                case mklink.MkLink():
+                    nav[path] = str(item.target)
                 case _:
                     raise TypeError(item)
         return "".join(nav.build_literate_nav())
@@ -321,12 +334,14 @@ class MkNav(mknode.MkNode):
         self._register(nav)
         return nav
 
-    def _register(self, node: MkNav | mkpage.MkPage):
+    def _register(self, node: NavSubType):
         match node:
             case MkNav():
                 self.nav[(node.section,)] = node
             case mkpage.MkPage():
                 self.nav[node.path.removesuffix(".md")] = node
+            case mklink.MkLink():
+                self.nav[node.title] = node
             case _:
                 raise TypeError(node)
 
