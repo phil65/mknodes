@@ -170,7 +170,7 @@ class MkPage(mkcontainer.MkContainer):
                     code,
                     collapsible=True,
                     typ="quote",
-                    title=f"Generated Markdown for {self.resolved_file_path!r}",
+                    title=f"Generated Markdown for *{self.resolved_file_path}*",
                 )
                 text += "\n"
                 text += str(admonition)

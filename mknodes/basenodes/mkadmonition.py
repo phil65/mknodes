@@ -55,12 +55,12 @@ class MkAdmonition(mkcontainer.MkContainer):
             inline: Whether admonition should rendered as inline block
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(content=content, **kwargs)
         self.typ = typ
         self.title = title
         self.collapsible = collapsible
         self.inline = inline
         self.expanded = expanded
+        super().__init__(content=content, **kwargs)
 
     def __repr__(self):
         from mknodes.basenodes import mktext

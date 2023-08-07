@@ -250,7 +250,7 @@ def create_adding_to_mkpages_page(nav: mknodes.MkNav):
     page += mknodes.MkCode.for_object(create_adding_to_mkpages_page, header=PAGE_CODE)
     page += mknodes.MkText("You can add other MkNodes to a page sequentially.")
     page += "Adding strings also works, they get converted to MkText nodes."
-    page += "...and text starting with # will become a MkHeader."
+    page += "### ...and text starting with # will become a MkHeader."
     page += "Every MkPage has a MkFootNotes node built-in[^1]."
     page.footnotes[1] = "Super cool, right?"
 
@@ -321,23 +321,32 @@ def create_mknodes_section(nav: mknodes.MkNav):
 
         def append_block(self, page: mknodes.MkPage):
             code = mknodes.MkCode.for_object(self.append_block)
-            page += mknodes.MkAdmonition(
+            nodes: list[mknodes.MkAdmonition] = []
+            admonition = mknodes.MkAdmonition(
                 code,
                 collapsible=True,
                 typ="quote",
                 title=self.__class__.__name__,
             )
+            nodes.append(admonition)
             for processor in self.processors:
                 # First, we check if the processor gets applied.
                 # If yes, we attach a code block.
                 if processor.check_if_apply(page):
                     code = mknodes.MkCode.for_object(processor.append_block)
-                    page += mknodes.MkAdmonition(
+                    admonition = mknodes.MkAdmonition(
                         code,
                         collapsible=True,
                         typ="quote",
                         title=processor.__class__.__name__,
                     )
+                    nodes.append(admonition)
+            page += mknodes.MkAdmonition(
+                nodes,
+                typ="quote",
+                collapsible=True,
+                title=f"Source code for *{page.resolved_file_path}*",
+            )
 
         def get_header(self, page):
             return "Code for the processors"
