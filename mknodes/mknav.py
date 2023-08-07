@@ -14,7 +14,6 @@ import mkdocs_gen_files
 
 from typing_extensions import Self
 
-from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
@@ -63,7 +62,7 @@ class MkNav(mknode.MkNode):
         """
         self.section = section  # helpers.slugify(section)
         self.filename = filename
-        self.nav: dict[tuple | str | None, mknav.MkNav | mkpage.MkPage] = {}
+        self.nav: dict[tuple | str | None, MkNav | mkpage.MkPage] = {}
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
         self.append_markdown_to_pages = append_markdown_to_pages
@@ -152,7 +151,7 @@ class MkNav(mknode.MkNode):
         Arguments:
             section: Name of the new nav.
         """
-        navi = mknav.MkNav(section=section, parent=self)
+        navi = MkNav(section=section, parent=self)
         self._register(navi)
         return navi
 
