@@ -5,14 +5,14 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import mknode, mktext
+from mknodes.basenodes import mkcontainer, mknode, mktext
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkBaseTable(mknode.MkNode):
+class MkBaseTable(mkcontainer.MkContainer):
     """Base Class for MkTables. Only deals with managing the data.
 
     Subclasses can use other mechanisms for the rendering, like external libraries.
@@ -70,11 +70,11 @@ class MkBaseTable(mknode.MkNode):
         return list(self.data.keys())
 
     @property
-    def children(self):
+    def items(self):
         return [i for k in self.data for i in self.data[k]]
 
-    @children.setter
-    def children(self, data):
+    @items.setter
+    def items(self, data):
         match data:
             case Mapping():
                 self.data = {
@@ -84,7 +84,9 @@ class MkBaseTable(mknode.MkNode):
                 self.data = {"": [self.to_item(i) for i in data]}
             case (dict(), *_):
                 self.data = {k: [self.to_item(dic[k]) for dic in data] for k in data[0]}
-            case () | None:
+            case ():
+                self.data = {"": [self.to_item(k) for k in data]}
+            case None:
                 self.data = {}
             case _:
                 raise TypeError(data)
