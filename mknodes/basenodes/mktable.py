@@ -12,11 +12,13 @@ class MkTable(mkbasetable.MkBaseTable):
     """Class representing a formatted table."""
 
     def _to_markdown(self) -> str:
-        if not any(self.data[k] for k in self.data):
+        table_data = self.data  # property
+        if not any(table_data[k] for k in table_data):
             return ""
-        formatters = [f"{{:<{self.width_for_column(c)}}}" for c in self.data]
-        headers = [formatters[i].format(k) for i, k in enumerate(self.data.keys())]
-        divider = [self.width_for_column(c) * "-" for c in self.data]
+        widths = [self.width_for_column(c) for c in table_data]
+        formatters = [f"{{:<{width}}}" for width in widths]
+        headers = [formatters[i].format(k) for i, k in enumerate(table_data.keys())]
+        divider = [width * "-" for width in widths]
         data = [
             [
                 formatters[i].format(str(k).replace("\n", "<br>"))

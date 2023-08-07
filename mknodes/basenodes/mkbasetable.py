@@ -71,7 +71,8 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     @property
     def items(self):
-        return [i for k in self.data for i in self.data[k]]
+        data = self.data  # property
+        return [i for k in data for i in data[k]]
 
     @items.setter
     def items(self, data):
@@ -112,9 +113,10 @@ class MkBaseTable(mkcontainer.MkContainer):
                     self.data[key].append(self.to_item(row[i]))
 
     def iter_rows(self) -> Iterator[list[mknode.MkNode]]:
-        length = min(len(i) for i in self.data.values())
+        data = self.data  # property
+        length = min(len(i) for i in data.values())
         for j, _ in enumerate(range(length)):
-            yield [self.data[k][j] for k in self.data]
+            yield [data[k][j] for k in data]
 
     @classmethod
     def for_items(cls, items, columns: dict[str, Callable]):
@@ -127,10 +129,11 @@ class MkBaseTable(mkcontainer.MkContainer):
         Arguments:
             column: Name or index of the column
         """
+        data = self.data  # property
         if isinstance(column, int):
-            column = list(self.data.keys())[column]
+            column = list(data.keys())[column]
         max_len = max(
-            (len(str(i).replace("\n", "<br>")) for i in self.data[column]),
+            (len(str(i).replace("\n", "<br>")) for i in data[column]),
             default=0,
         )
         return max(len(column), max_len)
