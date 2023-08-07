@@ -1,0 +1,107 @@
+from __future__ import annotations
+
+import dataclasses
+import logging
+
+from typing import Literal
+
+
+logger = logging.getLogger(__name__)
+
+ConventionTypeStr = Literal["conventional_commits", "basic"]
+
+ScopeStr = Literal[
+    "build",
+    "chore",
+    "ci",
+    "deps",
+    "doc",
+    "docs",
+    "feat",
+    "fix",
+    "ref",
+    "revert",
+    "change",
+    "remove",
+    "merge",
+    "perf",
+    "refactor",
+    "style",
+    "test",
+    "tests",
+]
+
+ALL_SCOPES: dict[ScopeStr, str] = {
+    "build": "About packaging, building wheels, etc.",
+    "chore": "About packaging or repo/files management.",
+    "ci": "About Continuous Integration.",
+    "deps": "Dependencies update.",
+    "doc": "About documentation.",
+    "docs": "About documentation.",
+    "feat": "New feature.",
+    "fix": "Bug fix.",
+    "ref": "Code refactoring.",
+    "revert": "Code revert.",
+    "change": "Code change.",
+    "remove": "Code removal.",
+    "merge": "Code merge.",
+    "perf": "About performance.",
+    "refactor": "Changes that are not features or bug fixes.",
+    "style": "A change in code style/format.",
+    "test": "About tests.",
+    "tests": "About tests.",
+}
+
+
+@dataclasses.dataclass
+class CommitConvention:
+    name: str
+    types: set[str]
+
+
+basic = CommitConvention(
+    name="basic",
+    types={"add", "fix", "change", "remove", "merge", "doc"},
+)
+
+angular = CommitConvention(
+    name="angular",
+    types={
+        "build",
+        "chore",
+        "ci",
+        "deps",
+        "doc",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "ref",
+        "refactor",
+        "revert",
+        "style",
+        "test",
+        "tests",
+    },
+)
+
+conventional_commits = CommitConvention(
+    name="conventional_commmits",
+    types={
+        "build",
+        "chore",
+        "ci",
+        "deps",
+        "doc",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "ref",
+        "refactor",
+        "revert",
+        "style",
+        "test",
+        "tests",
+    },
+)

@@ -2,41 +2,14 @@ from __future__ import annotations
 
 import logging
 
-from typing import Any, Literal
+from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mklist, mktext
-from mknodes.utils import helpers
+from mknodes.utils import commitconventions, helpers
 
 
 logger = logging.getLogger(__name__)
 
-ScopeStr = Literal[
-    "build",
-    "chore",
-    "ci",
-    "deps",
-    "docs",
-    "feat",
-    "fix",
-    "perf",
-    "refactor",
-    "style",
-    "tests",
-]
-
-SCOPES: dict[ScopeStr, str] = {
-    "build": "About packaging, building wheels, etc.",
-    "chore": "About packaging or repo/files management.",
-    "ci": "About Continuous Integration.",
-    "deps": "Dependencies update.",
-    "docs": "About documentation.",
-    "feat": "New feature.",
-    "fix": "Bug fix.",
-    "perf": "About performance.",
-    "refactor": "Changes that are not features or bug fixes.",
-    "style": "A change in code style/format.",
-    "tests": "About tests.",
-}
 
 STYLES = {
     "Angular Style": "https://gist.github.com/stephenparish/9941e89d80e2bc58a153",
@@ -90,14 +63,17 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        scopes: list[ScopeStr] | None = None,
+        scopes: list[commitconventions.ScopeStr]
+        | commitconventions.ConventionTypeStr
+        | None = None,
         header: str = "Commit message convention",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
-            scopes: Allowed commit scopes
+            scopes: Allowed commit scopes. Can be "basic", "conventional_commits"
+                    or a list of scopes
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -109,13 +85,21 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
 
     @property
     def items(self):
+        match self.scopes:
+            case "basic":
+                scopes = commitconventions.basic.types
+            case "convententional_commits" | "angular" | None:
+                scopes = commitconventions.conventional_commits.types
+            case list():
+                scopes = self.scopes
+            case _:
+                raise TypeError(self.scopes)
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
-        scopes = self.scopes or list(SCOPES.keys())
-        scope = mklist.MkList([f"`{k}`: {SCOPES[k]}" for k in scopes])
+        ls = mklist.MkList([f"`{k}`: {commitconventions.ALL_SCOPES[k]}" for k in scopes])
         return [
             mktext.MkText(START_TEXT.format(styles=styles), parent=self),
             mkcode.MkCode(COMMIT_TEXT, parent=self),
-            mktext.MkText(MID_TEXT.format(scopes=scope), parent=self),
+            mktext.MkText(MID_TEXT.format(scopes=ls), parent=self),
             mkcode.MkCode(BODY_TEXT, parent=self),
             mktext.MkText(END_TEXT, parent=self),
         ]
