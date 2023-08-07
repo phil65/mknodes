@@ -188,6 +188,7 @@ class MkDocStrings(mknode.MkNode):
             isinstance(i, mknodes.MkAnnotations) for i in self.ancestors
         ):
             opts["docstring_section_style"] = "list"
+            opts["show_root_heading"] = True
         return opts
 
     def _to_markdown(self) -> str:
