@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import pathlib
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes.basenodes import mknode
 from mknodes.utils import helpers
@@ -28,7 +28,7 @@ class MkImage(mknode.MkNode):
         align: Literal["left", "right"] | None = None,
         width: int | None = None,
         lazy: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
