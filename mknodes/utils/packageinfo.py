@@ -6,6 +6,8 @@ import pathlib
 from packaging.markers import Marker
 from packaging.requirements import Requirement
 
+from mknodes.utils import helpers
+
 
 CLASSIFIERS = [
     "Development Status",
@@ -46,6 +48,7 @@ class Dependency:
 
 class PackageInfo:
     def __init__(self, pkg_name: str):
+        self.package_name = pkg_name
         self.distribution = metadata.distribution(pkg_name)
         self.metadata = self.distribution.metadata
         self.urls = {
@@ -59,6 +62,9 @@ class PackageInfo:
         self.version = self.metadata["Version"]
         self.metadata_version = self.metadata["Metadata-Version"]
         self.name = self.metadata["Name"]
+
+    def __repr__(self):
+        return helpers.get_repr(self, pkg_name=self.package_name)
 
     def get_license(self) -> str:
         if license_name := self.metadata.get("License-Expression", "").strip():
