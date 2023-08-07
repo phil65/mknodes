@@ -24,6 +24,9 @@ class CompactClassLayout(Layout):
     def __init__(self):
         super().__init__()
 
+    def get_columns(self):
+        return ["Class", "Module", "Description"]
+
     def get_row_for(self, kls: type) -> dict[str, str]:
         return dict(
             Class=helpers.link_for_class(kls),
@@ -82,6 +85,9 @@ class ExtendedClassLayout(Layout):
             # Description=desc,
         )
 
+    def get_columns(self):
+        return ["Name", "Children", "Inherits"]
+
 
 class ModuleLayout(Layout):
     def get_row_for(self, module: types.ModuleType) -> dict[str, str]:
@@ -99,6 +105,9 @@ class ModuleLayout(Layout):
                 else ""
             ),
         )
+
+    def get_columns(self):
+        return ["Name", "DocStrings", "Members"]
 
 
 if __name__ == "__main__":
