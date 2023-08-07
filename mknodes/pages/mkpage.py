@@ -92,6 +92,10 @@ class MkPage(mkcontainer.MkContainer):
             return self._path if self._path.endswith(".md") else f"{self._path}.md"
         return f"{self.title}.md"
 
+    @path.setter
+    def path(self, value):
+        self._path = value
+
     @property
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
