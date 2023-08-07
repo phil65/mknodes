@@ -58,8 +58,34 @@ class MkLink(mknode.MkNode):
             _filter_false=True,
         )
 
+    def get_url(self) -> str:  # type: ignore[return]
+        import mknodes
+
+        from mknodes import project
+
+        site_url = project.Project().config.site_url or ""
+        match self.target:
+            case mknodes.MkPage():
+                path = self.target.resolved_file_path.replace(".md", ".html")
+                return site_url + path
+            case mknodes.MkNav():
+                if self.target.index_page:
+                    path = self.target.index_page.resolved_file_path
+                    path = path.replace(".md", ".html")
+                else:
+                    path = self.target.resolved_file_path
+                return site_url + path
+            case str() if self.target.startswith("/"):
+                return site_url.rstrip("/") + self.target
+            case str() if self.target.startswith(("http:", "https:", "www.")):
+                return self.target
+            case str():
+                return f"{self.target}.md"
+            case _:
+                raise TypeError(self.target)
+
     def _to_markdown(self) -> str:
-        url = helpers.get_url_for(self.target)
+        url = self.get_url()
         title = self.target if self.title is None else self.title
         if self.as_button:
             button_suffix = (
