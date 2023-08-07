@@ -411,8 +411,7 @@ class MkNav(mknode.MkNode):
             hide_path: Hide breadcrumbs path for all pages
             parent: Optional parent-nav in case the new nav shouldnt become the root nav.
         """
-        nav = cls(section)
-        nav.parent = parent
+        nav = cls(section, parent=parent)
         lines = text.split("\n")
         for i, line in enumerate(lines):
             # for first case we need to check whether following lines are indented.
@@ -423,9 +422,9 @@ class MkNav(mknode.MkNode):
                 if indented := list(
                     itertools.takewhile(lambda x: x.startswith("    "), next_lines),
                 ):
-                    unindented = (j[4:] for j in indented)
+                    unindented = "\n".join(j[4:] for j in indented)
                     subnav = MkNav.from_text(
-                        "\n".join(unindented),
+                        unindented,
                         section=match[1],
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
@@ -445,8 +444,8 @@ class MkNav(mknode.MkNode):
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
                         hide_path=hide_path,
+                        parent=nav,
                     )
-                    page.parent = nav
                     nav[match[1]] = page
             # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
@@ -463,9 +462,9 @@ class MkNav(mknode.MkNode):
             elif match := re.match(SECTION_REGEX, line):
                 next_lines = lines[i + 1 :]
                 indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
-                unindented = (j[4:] for j in indented)
+                unindented = "\n".join(j[4:] for j in indented)
                 subnav = MkNav.from_text(
-                    "\n".join(unindented),
+                    unindented,
                     section=match[1],
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
