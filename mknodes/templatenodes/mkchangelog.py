@@ -76,11 +76,11 @@ class MkChangelog(mknode.MkNode):
         import mknodes
 
         page.status = "new"  # for the small icon in the left menu
-        node = MkChangelog(template="keepachangelog", shift_header_levels=3)
+        node = MkChangelog(template="keepachangelog", shift_header_levels=2)
         page += mknodes.MkReprRawRendered(node, header="### keepachangelog template")
-        node = MkChangelog(template="angular", shift_header_levels=3)
+        node = MkChangelog(template="angular", shift_header_levels=2)
         page += mknodes.MkReprRawRendered(node, header="### angular template")
-        node = MkChangelog(convention="basic", shift_header_levels=3)
+        node = MkChangelog(convention="basic", shift_header_levels=2)
         page += mknodes.MkReprRawRendered(node, header="### basic convention")
 
 
