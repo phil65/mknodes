@@ -169,7 +169,8 @@ class MkPage(mkcontainer.MkContainer):
                 admonition = mkadmonition.MkAdmonition(
                     code,
                     collapsible=True,
-                    title="Markdown",
+                    typ="quote",
+                    title=f"Generated Markdown for {self.resolved_file_path!r}",
                 )
                 text += "\n"
                 text += str(admonition)

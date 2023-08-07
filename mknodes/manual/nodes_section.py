@@ -107,7 +107,12 @@ def create_class_page(kls: type, page: mknodes.MkPage):
         extract_body=True,
         header=PAGE_CODE,
     )
-    admonition = mknodes.MkAdmonition(code, collapsible=True, title=code.title)
+    admonition = mknodes.MkAdmonition(
+        code,
+        collapsible=True,
+        typ="quote",
+        title=code.title,
+    )
     page += admonition
     page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
     # and afterwards, we show what was added to the page.
@@ -319,6 +324,7 @@ def create_mknodes_section(nav: mknodes.MkNav):
             page += mknodes.MkAdmonition(
                 code,
                 collapsible=True,
+                typ="quote",
                 title=self.__class__.__name__,
             )
             for processor in self.processors:
@@ -329,6 +335,7 @@ def create_mknodes_section(nav: mknodes.MkNav):
                     page += mknodes.MkAdmonition(
                         code,
                         collapsible=True,
+                        typ="quote",
                         title=processor.__class__.__name__,
                     )
 
