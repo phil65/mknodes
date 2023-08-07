@@ -40,6 +40,8 @@ class MkClassTable(mktable.MkTable):
 
     @property
     def data(self):
+        if not self.klasses:
+            return {}
         data = [self.layouter.get_row_for(kls) for kls in self.klasses]
         return {
             k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
