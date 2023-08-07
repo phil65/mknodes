@@ -202,19 +202,6 @@ def to_html_list(
     return f"<ul>{item_str}</ul>"
 
 
-def format_kwargs(kwargs: dict[str, Any]) -> str:
-    if not kwargs:
-        return ""
-    kw_parts = []
-    for k, v in kwargs.items():
-        if isinstance(v, type | types.ModuleType | types.MethodType | types.FunctionType):
-            name = v.__name__
-        else:
-            name = repr(v)
-        kw_parts.append(f"{k}={name}")
-    return ", ".join(kw_parts)
-
-
 @functools.cache
 def get_function_body(func: types.MethodType | types.FunctionType | type) -> str:
     # see https://stackoverflow.com/questions/38050649
