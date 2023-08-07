@@ -5,14 +5,14 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import mknode, mktext
+from mknodes.basenodes import mkcontainer, mknode, mktext
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkDefinitionList(mknode.MkNode):
+class MkDefinitionList(mkcontainer.MkContainer):
     """Node for definition lists."""
 
     REQUIRED_EXTENSIONS = ["def_list"]
@@ -33,16 +33,8 @@ class MkDefinitionList(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        match data:
-            case Mapping():
-                self.data = {
-                    k: mktext.MkText(v) if isinstance(v, str) else v
-                    for k, v in data.items()
-                }
-            case None:
-                self.data = {}
-            case _:
-                raise TypeError(data)
+        self.data: dict[str, str | mknode.MkNode] = {}
+        self.items = data
 
     def __repr__(self):
         kwarg_data = {
@@ -51,16 +43,16 @@ class MkDefinitionList(mknode.MkNode):
         return helpers.get_repr(self, data=kwarg_data)
 
     @property
-    def children(self):
+    def items(self):
         return list(self.data.values())
 
-    @children.setter
-    def children(self, data):
+    @items.setter
+    def items(self, data):
         match data:
             case Mapping():
-                self.data = data
+                self.data = {k: self.to_item(v) for k, v in data.items()}
             case list():
-                self.data = {self.to_item(i): False for i in data}
+                self.data = {i: self.to_item(item) for i, item in enumerate(data)}
             case None:
                 self.data = {}
             case _:
