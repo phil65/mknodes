@@ -8,9 +8,7 @@ import pathlib
 import textwrap
 import types
 
-from typing import Any
-
-from typing_extensions import Self
+from typing import Any, Self
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import classhelpers, helpers

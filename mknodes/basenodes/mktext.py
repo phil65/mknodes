@@ -4,11 +4,9 @@ import logging
 import os
 import re
 
-from typing import Any
+from typing import Any, Self
 
 import requests
-
-from typing_extensions import Self
 
 from mknodes.basenodes import mknode
 from mknodes.utils import helpers

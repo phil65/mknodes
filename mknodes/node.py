@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterable, Iterator, Sequence
 import copy
 import logging
 
-from typing_extensions import Self
+from typing import Self
 
 from mknodes.utils import helpers
 

@@ -4,9 +4,7 @@ import logging
 import os
 import pathlib
 
-from typing import Any, Literal
-
-from typing_extensions import Self
+from typing import Any, Literal, Self
 
 from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock
 from mknodes.pages import metadata

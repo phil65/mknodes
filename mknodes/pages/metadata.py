@@ -3,9 +3,8 @@ from __future__ import annotations
 import dataclasses
 import re
 
-from typing import Literal
+from typing import Literal, Self
 
-from typing_extensions import Self
 import yaml
 
 

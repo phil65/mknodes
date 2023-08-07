@@ -8,11 +8,9 @@ import pathlib
 import re
 import types
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, Self
 
 import mkdocs_gen_files
-
-from typing_extensions import Self
 
 from mknodes.basenodes import mklink, mknode
 from mknodes.pages import mkpage

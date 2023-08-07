@@ -28,7 +28,7 @@ dependencies = [
     "markdown-exec[ansi]",
     "mkdocs-coverage",
     "pygments",
-    "typing_extensions",
+    # "typing_extensions",
     # "prettyqt",
     # "PySide6",
 ]
@@ -86,7 +86,7 @@ keywords = [
 
 requires-python = ">=3.11"
 dependencies = [
-    "typing_extensions",
+    # "typing_extensions",
     "mkdocs",
     "mkdocs-gen-files",
     "mkdocs-literate-nav",

@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import prettyqt
+
 import mknodes
+
 
 prettyqt.import_all()
 
