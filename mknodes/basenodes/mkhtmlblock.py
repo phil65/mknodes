@@ -72,6 +72,7 @@ class MkHtmlBlock(mkblock.MkBlock):
 
     @property
     def markdown_mode(self) -> MarkdownModeStr | None:
+        """The markdown mode attribute."""
         return self.attributes.get("markdown")
 
     @markdown_mode.setter

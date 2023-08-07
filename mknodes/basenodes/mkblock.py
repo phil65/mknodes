@@ -41,15 +41,21 @@ class MkBlock(mkcontainer.MkContainer):
 
     @property
     def fence_boundary(self) -> str:
+        """Return the fence boundary ("///") based on nesting depth."""
         block_level = sum(isinstance(i, MkBlock) for i in self.ancestors)
         return "/" * (block_level + 3)
 
     @property
     def content_block(self) -> str:
+        """Returns the block content. Can be reimplemented by subclasses."""
         return textwrap.indent(super()._to_markdown(), self.indent).rstrip("\n") + "\n"
 
     @property
     def attributes_block(self) -> str:
+        """The text block for attributes.
+
+        For subclasses, implement a property for self.attributes.
+        """
         if not self.attributes:
             return ""
         lines = [f"    {k}: {v}" for k, v in self.attributes.items() if v is not None]
