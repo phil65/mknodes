@@ -28,17 +28,27 @@ class MkClassTable(mktable.MkTable):
         # docs = [re.sub(STRIP_CODE, '', k.__module__, 0, re.DOTALL) for k in klasses]
         match layout:
             case "compact":
-                layouter = layouts.CompactClassLayout()
+                self.layouter = layouts.CompactClassLayout()
             case "extended":
-                layouter = layouts.ExtendedClassLayout(subclass_predicate=filter_fn)
+                self.layouter = layouts.ExtendedClassLayout(subclass_predicate=filter_fn)
             case _:
                 raise ValueError(layout)
-
-        data = [layouter.get_row_for(kls) for kls in klasses]
-        super().__init__(data=data, **kwargs)
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, klasses=self.klasses)
+
+    @property
+    def data(self):
+        data = [self.layouter.get_row_for(kls) for kls in self.klasses]
+        return {
+            k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
+            for k in data[0]
+        }
+
+    @data.setter
+    def data(self, value):
+        pass
 
     @staticmethod
     def create_example_page(page):

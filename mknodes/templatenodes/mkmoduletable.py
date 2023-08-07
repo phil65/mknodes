@@ -23,12 +23,23 @@ class MkModuleTable(mktable.MkTable):
         **kwargs,
     ):
         self.modules = [classhelpers.to_module(i, return_none=False) for i in modules]
-        layout = layouts.ModuleLayout()
-        dicts = [layout.get_row_for(mod) for mod in self.modules]
-        super().__init__(dicts, **kwargs)
+        self.layouter = layouts.ModuleLayout()
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, modules=self.modules)
+
+    @property
+    def data(self):
+        data = [self.layouter.get_row_for(mod) for mod in self.modules]
+        return {
+            k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
+            for k in data[0]
+        }
+
+    @data.setter
+    def data(self, value):
+        pass
 
     @staticmethod
     def create_example_page(page):
