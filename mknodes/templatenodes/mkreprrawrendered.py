@@ -5,7 +5,7 @@ import textwrap
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mknode, mktabcontainer, mktext
+from mknodes.basenodes import mkcode, mknode, mktabcontainer
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
@@ -43,8 +43,14 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
         # part of the tree. Perhaps add a setting for MkPages to be only-virtual?
         # Needs a general concept in regards to re-parenting. (should base nodes
         # be allowed to have pages as children?)
-        self.node = mktext.MkText(node) if isinstance(node, mkpage.MkPage) else node
-        tabs = dict(Repr=repr_node, Markdown=markdown_node, Rendered=node)
+        self.node = node
+        if isinstance(node, mkpage.MkPage):
+            node = str(node)
+        tabs: dict[str, str | mknode.MkNode] = dict(
+            Repr=repr_node,
+            Markdown=markdown_node,
+            Rendered=node,
+        )
         if tree:
             tabs["Repr tree"] = tree
         super().__init__(tabs=tabs, select_tab=2, **kwargs)
