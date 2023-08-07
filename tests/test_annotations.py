@@ -60,3 +60,20 @@ def test_mapping_interface():
     ann = mknodes.MkAnnotations()
     ann[1] = "test"
     assert str(ann[1]) == "1.  test\n"
+
+
+def test_code_annotations_inside_admonition():
+    expected = """!!! info
+    <div class="annotate" markdown>
+    ``` python
+    test # (1)
+    ```
+    </div>
+
+    1.  Some annotation
+
+"""
+    code = mknodes.MkCode("test # (1)", language="python")
+    code.annotations[1] = "Some annotation"
+    admonition = mknodes.MkAdmonition(code)
+    assert str(admonition) == expected
