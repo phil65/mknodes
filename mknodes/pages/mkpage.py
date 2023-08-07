@@ -6,7 +6,7 @@ import pathlib
 
 from typing import Any, Literal, Self
 
-from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock
+from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock, mknode
 from mknodes.pages import metadata
 from mknodes.utils import helpers
 
@@ -116,6 +116,7 @@ class MkPage(mkcontainer.MkContainer):
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
         hide_path: bool | None = None,
+        parent: mknode.MkNode | None = None,
     ) -> Self:
         """Reads file content and creates an MkPage.
 
@@ -126,6 +127,7 @@ class MkPage(mkcontainer.MkContainer):
             hide_toc: Hide Toc. Overrides parsed metadata if set.
             hide_nav: Hide Navigation. Overrides parsed metadata if set.
             hide_path: Hide Path. Overrides parsed metadata if set.
+            parent: Optional parent for new page
         """
         path = pathlib.Path(path)
         file_content = path.read_text()
@@ -133,7 +135,7 @@ class MkPage(mkcontainer.MkContainer):
         data.hide_toc = hide_toc
         data.hide_nav = hide_nav
         data.hide_path = hide_path
-        page = cls(path.name, content=text)
+        page = cls(path.name, content=text, parent=parent)
         page.metadata = data
         return page
 
