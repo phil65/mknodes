@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import contextlib
+import functools
 
 from importlib import metadata
 import inspect
@@ -167,6 +168,7 @@ def link_for_class(kls: type, **kwargs) -> str:
     return styled(link, **kwargs)
 
 
+@functools.cache
 def homepage_for_distro(dist_name: str):
     try:
         dist = metadata.distribution(dist_name)
@@ -213,9 +215,10 @@ def format_kwargs(kwargs: dict[str, Any]) -> str:
     return ", ".join(kw_parts)
 
 
+@functools.cache
 def get_function_body(func: types.MethodType | types.FunctionType | type) -> str:
     # see https://stackoverflow.com/questions/38050649
-    source_lines, _ = inspect.getsourcelines(func)
+    source_lines, _ = get_source_lines(func)
     source_lines = itertools.dropwhile(lambda x: x.strip().startswith("@"), source_lines)
     line = next(source_lines).strip()  # type: ignore
     if not line.startswith(("def ", "class ")):
@@ -232,6 +235,7 @@ def get_deprecated_message(obj) -> str | None:
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
+@functools.cache
 def get_doc(
     obj,
     *,
@@ -249,6 +253,23 @@ def get_doc(
     if only_summary:
         doc = doc.split("\n")[0]
     return escaped(doc) if doc and escape else doc
+
+
+@functools.cache
+def get_source(obj):
+    return inspect.getsource(obj)
+
+
+@functools.cache
+def get_source_lines(obj):
+    return inspect.getsourcelines(obj)
+
+
+@functools.cache
+def get_file(klass: type) -> str | None:
+    with contextlib.suppress(TypeError):
+        return inspect.getfile(klass)
+    return None
 
 
 def get_url_for(obj) -> str:  # type: ignore[return]

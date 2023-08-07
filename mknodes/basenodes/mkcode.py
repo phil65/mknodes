@@ -200,7 +200,7 @@ class MkCode(mkcontainer.MkContainer):
             msg = "Can only extract body from Functions, Methods and classes"
             raise TypeError(msg)
         else:
-            code = inspect.getsource(obj)
+            code = helpers.get_source(obj)
         code = textwrap.dedent(code) if dedent else code
         match obj:
             case _ if title is not None:
@@ -213,7 +213,7 @@ class MkCode(mkcontainer.MkContainer):
                 code_title = obj.__name__
         hl_lines = None
         if linenums:
-            lines, start_line = inspect.getsourcelines(obj)
+            lines, start_line = helpers.get_source_lines(obj)
             if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
                 call_file = frame.f_back.f_code.co_filename
                 obj_file = inspect.getfile(obj)

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import functools
+
 from importlib import metadata
 import logging
 import os
@@ -11,6 +13,16 @@ from mknodes.utils import helpers, inventorymanager
 logger = logging.getLogger(__name__)
 
 BUILTIN_URL = "https://docs.python.org/3/library/{mod}.html#{name}"
+
+
+@functools.cache
+def homepage_for_distro(dist_name: str) -> str | None:
+    try:
+        dist = metadata.distribution(dist_name)
+    except metadata.PackageNotFoundError:
+        return None
+    else:
+        return dist.metadata["Home-Page"]
 
 
 class LinkProvider:
@@ -30,17 +42,9 @@ class LinkProvider:
             return helpers.linked(url, title=kls.__name__)
         module = kls.__module__.split(".")[0]
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
-        if url := self.homepage_for_distro(module):
+        if url := homepage_for_distro(module):
             return helpers.linked(url, title=qual_name)
         return helpers.linked(qual_name)
-
-    def homepage_for_distro(self, dist_name: str) -> str | None:
-        try:
-            dist = metadata.distribution(dist_name)
-        except metadata.PackageNotFoundError:
-            return None
-        else:
-            return dist.metadata["Home-Page"]
 
 
 if __name__ == "__main__":
