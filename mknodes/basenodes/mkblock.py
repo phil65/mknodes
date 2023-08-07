@@ -40,25 +40,27 @@ class MkBlock(mkcontainer.MkContainer):
         self.argument = argument
 
     @property
-    def content(self):
-        return self.items[0]
+    def fence_boundary(self) -> str:
+        block_level = sum(isinstance(i, MkBlock) for i in self.ancestors)
+        return "/" * (block_level + 3)
+
+    @property
+    def content_block(self) -> str:
+        return textwrap.indent(super()._to_markdown(), self.indent).rstrip("\n") + "\n"
+
+    @property
+    def attributes_block(self) -> str:
+        if not self.attributes:
+            return ""
+        lines = [f"    {k}: {v}" for k, v in self.attributes.items() if v is not None]
+        return "\n".join(lines) + "\n"
 
     def _to_markdown(self) -> str:
-        block_level = sum(isinstance(i, MkBlock) for i in self.ancestors)
-        block_limiter = "/" * (block_level + 3)
-        base = f"{block_limiter} {self.name}"
+        boundary = self.fence_boundary
+        base = f"{boundary} {self.name}"
         if self.argument:
             base += f" | {self.argument}"
-        lines = [base]
-        lines.extend(f"    {k}: {v}" for k, v in self.attributes.items() if v is not None)
-        lines.append("")
-        lines.extend(
-            (
-                textwrap.indent(super()._to_markdown(), self.indent).rstrip("\n"),
-                block_limiter,
-            ),
-        )
-        return "\n".join(lines) + "\n"
+        return f"{base}\n{self.attributes_block}\n{self.content_block}{boundary}\n"
 
     @staticmethod
     def create_example_page(page):
