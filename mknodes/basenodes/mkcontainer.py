@@ -71,7 +71,7 @@ class MkContainer(mknode.MkNode):
         item_1 = mknodes.MkCode(code="a = 1 + 2")
         item_2 = mktext.MkText("abc")
         node = MkContainer(content=[item_1, item_2])
-        page += mknodes.MkReprRawRendered(node, indent=True)
+        page += mknodes.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
         return self.block_separator.join(i.to_markdown() for i in self.items)

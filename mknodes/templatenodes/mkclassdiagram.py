@@ -105,17 +105,14 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         mro_diagram = MkClassDiagram(klass=mknodes.MkTable, mode="mro")
         page += mknodes.MkReprRawRendered(
             parent_diagram,
-            indent=True,
             header="### Parent class hierarchy: MkClassDiagram",
         )
         page += mknodes.MkReprRawRendered(
             sub_diagram,
-            indent=True,
             header="### Subclass hierarchy: MkContainer",
         )
         page += mknodes.MkReprRawRendered(
             mro_diagram,
-            indent=True,
             header="### Method resolution order: MkTable",
         )
 

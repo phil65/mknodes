@@ -76,7 +76,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         # Currently it is only tailored towards PyPi.
 
         node = MkInstallGuide(project="mknodes", package_managers=["pip", "pipx"])
-        page += mknodes.MkReprRawRendered(node, indent=True, header="Pip / Pipx")
+        page += mknodes.MkReprRawRendered(node, header="Pip / Pipx")
 
 
 if __name__ == "__main__":

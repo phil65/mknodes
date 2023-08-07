@@ -84,7 +84,7 @@ class MkLog(mkcode.MkCode):
         node = MkLog(logger=logger)
         logger.info("Info log")
         logger.warning("Debug log")
-        page += mknodes.MkReprRawRendered(node, indent=True)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

@@ -98,9 +98,9 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
         ls = mklist.MkList([f"`{k}`: {commitconventions.ALL_SCOPES[k]}" for k in scopes])
         return [
             mktext.MkText(START_TEXT.format(styles=styles), parent=self),
-            mkcode.MkCode(COMMIT_TEXT, parent=self),
+            mkcode.MkCode(COMMIT_TEXT, language="md", parent=self),
             mktext.MkText(MID_TEXT.format(scopes=ls), parent=self),
-            mkcode.MkCode(BODY_TEXT, parent=self),
+            mkcode.MkCode(BODY_TEXT, language="md", parent=self),
             mktext.MkText(END_TEXT, parent=self),
         ]
 
@@ -114,9 +114,9 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
 
         page.status = "new"  # for the small icon in the left menu
         node = MkCommitMessageConvention(header="")
-        page += mknodes.MkReprRawRendered(node, indent=True, header="### All scopes")
+        page += mknodes.MkReprRawRendered(node, header="### All scopes")
         node = MkCommitMessageConvention(scopes=["fix", "feat", "refactor"], header="")
-        page += mknodes.MkReprRawRendered(node, indent=True, header="### Selected scopes")
+        page += mknodes.MkReprRawRendered(node, header="### Selected scopes")
 
 
 if __name__ == "__main__":

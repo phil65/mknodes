@@ -98,19 +98,19 @@ class MkCode(mkcontainer.MkContainer):
 
         page += mknodes.MkHeader("Regular", level=3)
         node_1 = MkCode(language="python", code="a = 1 + 2")
-        page += mknodes.MkReprRawRendered(node_1, indent=True)
+        page += mknodes.MkReprRawRendered(node_1)
 
         page += mknodes.MkHeader("Syntax highlighting", level=3)
         node_2 = MkCode(language="js", code="var z = x + y;", title="syntax highlight")
-        page += mknodes.MkReprRawRendered(node_2, indent=True)
+        page += mknodes.MkReprRawRendered(node_2)
 
         page += mknodes.MkHeader("Highlighting lines", level=3)
         node_3 = MkCode(code="1\n2\n3\n4", highlight_lines=[1, 3])
-        page += mknodes.MkReprRawRendered(node_3, indent=True)
+        page += mknodes.MkReprRawRendered(node_3)
 
         page += mknodes.MkHeader("Numbered lines", level=3)
         node_4 = MkCode(code="1\n2\n3\n4", linenums=10)
-        page += mknodes.MkReprRawRendered(node_4, indent=True)
+        page += mknodes.MkReprRawRendered(node_4)
 
     @classmethod
     def for_file(

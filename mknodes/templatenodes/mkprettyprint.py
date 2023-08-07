@@ -114,7 +114,7 @@ class MkPrettyPrint(mkcode.MkCode):
 
         page.status = "new"
         node = MkPrettyPrint(obj=[dict(a="test " * 5)] * 5)
-        page += mknodes.MkReprRawRendered(node, indent=True)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
