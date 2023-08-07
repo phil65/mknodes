@@ -116,6 +116,8 @@ class MkLink(mknode.MkNode):
         page += mknodes.MkReprRawRendered(node, header="### Colored")
         node = mknodes.MkLink(url, "With icon.", icon="octicons/link-24")
         page += mknodes.MkReprRawRendered(node, header="### With icon")
+        node = mknodes.MkLink(page.parent.index_page, "To page.")
+        page += mknodes.MkReprRawRendered(node, header="###To page")
 
 
 if __name__ == "__main__":

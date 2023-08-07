@@ -125,18 +125,12 @@ class MkNode(node.Node):
         """Returns a tuple containing all section names."""
         from mknodes import mknav
 
-        parent = self
+        node = self
         parts = [self.section] if isinstance(self, mknav.MkNav) and self.section else []
-        while parent := parent.parent:
-            if isinstance(parent, mknav.MkNav) and parent.section:
-                parts.append(parent.section)
+        while node := node.parent:
+            if isinstance(node, mknav.MkNav) and node.section:
+                parts.append(node.section)
         return tuple(reversed(parts))
-
-    @property
-    def resolved_file_path(self) -> str:
-        """Returns the resulting section/subsection/../filename.xyz path."""
-        filename = str(self.path) if hasattr(self, "path") else ""
-        return "/".join(self.resolved_parts) + "/" + filename
 
     def virtual_files(self):
         """Returns a dict containing the virtual files attached to this tree element.

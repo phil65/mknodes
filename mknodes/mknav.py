@@ -112,6 +112,11 @@ class MkNav(mknode.MkNode):
         ).as_posix()
 
     @property
+    def resolved_file_path(self) -> str:
+        """Returns the resulting section/subsection/../filename.xyz path."""
+        return "/".join(self.resolved_parts) + "/" + self.filename
+
+    @property
     def navs(self) -> list[MkNav]:
         """Return all registered navs."""
         return [node for node in self.nav.values() if isinstance(node, MkNav)]
