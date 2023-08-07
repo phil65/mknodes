@@ -25,7 +25,7 @@ class MkPage(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        path: str | os.PathLike = "",
+        title: str | None = None,
         *,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
@@ -33,8 +33,8 @@ class MkPage(mkcontainer.MkContainer):
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
+        path: str | os.PathLike | None = None,
         status: Literal["new", "deprecated"] | None = None,
-        title: str | None = None,
         subtitle: str | None = None,
         description: str | None = None,
         template: str | None = None,
@@ -62,9 +62,7 @@ class MkPage(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.path = str(path)
-        if not self.path.endswith(".md"):
-            self.path += ".md"
+        self._path = str(path) if path else None
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.append_markdown = append_markdown
         self.metadata = metadata.Metadata(
@@ -87,6 +85,12 @@ class MkPage(mkcontainer.MkContainer):
 
     def __str__(self):
         return self.to_markdown()
+
+    @property
+    def path(self):
+        if self._path:
+            return self._path if self._path.endswith(".md") else f"{self._path}.md"
+        return f"{self.title}.md"
 
     @property
     def resolved_file_path(self) -> str:

@@ -253,11 +253,10 @@ def create_adding_to_mkpages_page(nav: mknodes.MkNav):
 def create_metadata_page(nav: mknodes.MkNav):
     """Create the "Metadata" MkPage and attach it to given nav."""
     page = nav.add_page(
-        "Metadata",
+        title="Metadata",
         icon="simple/yaml",
         status="deprecated",
         search_boost=2.0,
-        title="Some title",
         subtitle="Subtitle",
         description="Description",
     )

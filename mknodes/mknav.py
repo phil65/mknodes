@@ -247,10 +247,10 @@ class MkNav(mknode.MkNode):
 
     def add_page(
         self,
-        name: str,
+        title: str | None = None,
         *,
         as_index: bool = False,
-        filename: str | None = None,
+        path: str | None = None,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
         hide_path: bool | None = None,
@@ -258,16 +258,15 @@ class MkNav(mknode.MkNode):
         exclude_from_search: bool | None = None,
         icon: str | None = None,
         status: Literal["new", "deprecated"] | None = None,
-        title: str | None = None,
         subtitle: str | None = None,
         description: str | None = None,
     ) -> mkpage.MkPage:
         """Add a page to the Nav.
 
         Arguments:
-            name: Page name
+            title: Page title
             as_index: Whether the page should become the index page.
-            filename: optional filename override
+            path: optional path override
             hide_toc: Hide table of contents
             hide_nav: Hide navigation menu
             hide_path: Hide breadcrumbs path
@@ -275,12 +274,12 @@ class MkNav(mknode.MkNode):
             exclude_from_search: Exclude page from search index
             icon: optional page icon
             status: Page status
-            title: Page title
             subtitle: Page subtitle
             description: Page description
         """
-        path = "index.md" if as_index else (filename or f"{name}.md")
+        path = "index.md" if as_index else (path or f"{title}.md")
         page = mkpage.MkPage(
+            title=title,
             path=path,
             parent=self,
             hide_toc=hide_toc,
@@ -290,7 +289,6 @@ class MkNav(mknode.MkNode):
             exclude_from_search=exclude_from_search,
             icon=icon,
             status=status,
-            title=title,
             subtitle=subtitle,
             description=description,
         )
@@ -515,7 +513,7 @@ class MkNav(mknode.MkNode):
                 nav += subnav
             elif path.name == "index.md":
                 page = mkpage.MkPage(
-                    path.name,
+                    path=path.name,
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
@@ -526,7 +524,7 @@ class MkNav(mknode.MkNode):
                 nav.index_title = nav.section or "Home"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
                 page = mkpage.MkPage(
-                    path.relative_to(folder),
+                    path=path.relative_to(folder),
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
