@@ -124,7 +124,7 @@ def get_tree_repr(
             style=style,
         )
     ]
-    return "\n".join(lines)
+    return repr(tree) + "\n" + "\n".join(lines[1:])
 
 
 def yield_tree(
@@ -227,9 +227,9 @@ def yield_tree(
         style = "custom"
     else:
         custom_style = []
-    tree = tree.__copy__()
-    if not tree.is_root:
-        tree.parent = None
+    # tree = tree.__copy__()
+    # if not tree.is_root:
+    #     tree.parent = None
     if style == "custom":
         style_stem, style_branch, style_stem_final = custom_style
     else:

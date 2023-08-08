@@ -72,17 +72,20 @@ class MkDirectoryTree(mkcode.MkCode):
                 )
                 return treelib.get_tree_repr(
                     node,
-                    style=self.style,
+                    style=self.style or "rounded",
                     max_depth=self.maximum_depth or 0,
                 )
             case mknode.MkNode():
-                lines = [
-                    f"{level * '    '} {node!r}" for level, node in self.tree.iter_nodes()
-                ]
-                return "\n".join(lines)
-
-            case _:
-                raise TypeError(self.tree)
+                # lines = [
+                #     f"{level * '    '} {node!r}" for level, node in
+                # self.tree.iter_nodes()
+                # ]
+                # return "\n".join(lines)
+                return treelib.get_tree_repr(
+                    self.tree,
+                    style=self.style or "rounded",
+                    max_depth=self.maximum_depth or 0,
+                )
 
     @text.setter
     def text(self, text):
@@ -92,7 +95,7 @@ class MkDirectoryTree(mkcode.MkCode):
         return helpers.get_repr(
             self,
             path=str(self.tree),
-            style=self.style,
+            style=self.style or "rounded",
             maximum_depth=self.maximum_depth,
         )
 
