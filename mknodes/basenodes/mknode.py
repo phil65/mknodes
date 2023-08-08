@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 import mkdocs_gen_files
 
-from mknodes import node
+from mknodes.treelib import node
 from mknodes.utils import connector
 
 

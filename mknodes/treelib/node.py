@@ -178,7 +178,7 @@ def preorder_iter(
     tree: Node,
     filter_condition: Callable[[Node], bool] | None = None,
     stop_condition: Callable[[Node], bool] | None = None,
-    max_depth: int = 0,
+    max_depth: int | None = None,
 ) -> Iterable[Node]:
     """Iterate through all children of a tree.
 

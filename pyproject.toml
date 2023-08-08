@@ -92,7 +92,6 @@ dependencies = [
     "mkdocs-literate-nav",
     "git-changelog",
     "requests",
-    "seedir",
     "PyYAML >=5.1",
 ]
 license = "MIT"

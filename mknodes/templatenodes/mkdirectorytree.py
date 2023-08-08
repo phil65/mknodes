@@ -6,16 +6,22 @@ import pathlib
 
 from typing import Any, Literal, get_args
 
-import seedir
-
 from mknodes.basenodes import mkcode
+from mknodes.treelib import filetreenode
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-DirectoryTreeStyleStr = Literal["lines", "dash", "arrow", "spaces", "plus"]
+DirectoryTreeStyleStr = Literal[
+    "ansi",
+    "ascii",
+    "const",
+    "const_bold",
+    "rounded",
+    "double",
+]
 
 
 class MkDirectoryTree(mkcode.MkCode):
@@ -31,14 +37,8 @@ class MkDirectoryTree(mkcode.MkCode):
         self,
         directory: str | os.PathLike,
         *,
-        style: DirectoryTreeStyleStr | None = None,
-        indent: int = 4,
-        depth_limit: int | None = None,
-        item_limit: int | None = None,
-        beyond: Literal["ellipsis", "content"] = "ellipsis",
-        first: Literal["files", "folders"] | None = None,
-        sort: bool = False,
-        exclude_folders: list[str] | str | None = None,
+        style: DirectoryTreeStyleStr | tuple[str, str, str] | None = None,
+        maximum_depth: int | None = None,
         header: str = "",
         **kwargs: Any,
     ):
@@ -46,41 +46,23 @@ class MkDirectoryTree(mkcode.MkCode):
 
         Arguments:
             directory: Folder path to prettyprint content from
-            style: Print style
-            indent: Specifies the amount of indentation added for each nesting level
-            depth_limit: Maximum nesting depth to print
-            item_limit: Maximum amount of items to print
-            beyond: String to indicate directory contents beyond the limits.
-            first: What to print first
-            sort: Whether to sort the output
-            exclude_folders: Folders to exclude from listing
+            style: Print style. If tuple, parts are used for stems
+            maximum_depth: Maximum nesting depth to print
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, **kwargs)
         self.directory = pathlib.Path(directory)
-        self.style = style or "lines"
-        self.print_indent = indent
-        self.depth_limit = depth_limit
-        self.item_limit = item_limit
-        self.beyond = beyond
-        self.first = first
-        self.sort = sort
-        self.exclude_folders = exclude_folders
+        self.style = style
+        self.maximum_depth = maximum_depth
 
     @property
     def text(self):
-        return seedir.seedir(
-            self.directory,
+        node = filetreenode.FileTreeNode.from_folder(self.directory)
+        return filetreenode.get_tree_repr(
+            node,
             style=self.style,
-            printout=False,
-            indent=self.print_indent,
-            depthlimit=self.depth_limit,
-            itemlimit=self.item_limit,
-            beyond=self.beyond,
-            first=self.first,
-            sort=self.sort,
-            exclude_folders=self.exclude_folders,
+            max_depth=self.maximum_depth,
         )
 
     @text.setter
@@ -92,15 +74,7 @@ class MkDirectoryTree(mkcode.MkCode):
             self,
             path=str(self.directory),
             style=self.style,
-            indent=self.print_indent,
-            depth_limit=self.depth_limit,
-            item_limit=self.item_limit,
-            beyond=self.beyond,
-            first=self.first,
-            sort=self.sort,
-            exclude_folders=self.exclude_folders,
-            _filter_empty=True,
-            _filter_false=True,
+            maximum_depth=self.maximum_depth,
         )
 
     @staticmethod
@@ -114,5 +88,5 @@ class MkDirectoryTree(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    node = MkDirectoryTree(".", header="test", style="dash")
+    node = MkDirectoryTree(".", header="test", style="ascii")
     print(node.to_markdown())
