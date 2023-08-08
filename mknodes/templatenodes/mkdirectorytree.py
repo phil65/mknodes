@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import logging
 import os
 
@@ -25,11 +26,7 @@ DirectoryTreeStyleStr = Literal[
 
 
 class MkDirectoryTree(mkcode.MkCode):
-    """Node to display directory content as a tree.
-
-    Based on "seedir" package
-
-    """
+    """Node to display directory content as a tree."""
 
     ICON = "material/file-tree-outline"
 
@@ -39,6 +36,7 @@ class MkDirectoryTree(mkcode.MkCode):
         *,
         style: DirectoryTreeStyleStr | tuple[str, str, str] | None = None,
         maximum_depth: int | None = None,
+        predicate: Callable | None = None,
         header: str = "",
         **kwargs: Any,
     ):
@@ -48,19 +46,24 @@ class MkDirectoryTree(mkcode.MkCode):
             directory: Folder path to prettyprint content from
             style: Print style. If tuple, parts are used for stems
             maximum_depth: Maximum nesting depth to print
+            predicate: Predicate to filter results
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, **kwargs)
         self.directory = directory
         self.style = style
+        self.predicate = predicate
         self.maximum_depth = maximum_depth
 
     @property
     def text(self):
         match self.directory:
             case str() | os.PathLike():
-                node = treelib.FileTreeNode.from_folder(self.directory)
+                node = treelib.FileTreeNode.from_folder(
+                    self.directory,
+                    predicate=self.predicate,
+                )
             case mknode.MkNode():
                 node = self.directory
             case _:
@@ -68,7 +71,7 @@ class MkDirectoryTree(mkcode.MkCode):
         return treelib.get_tree_repr(
             node,
             style=self.style,
-            max_depth=self.maximum_depth,
+            max_depth=self.maximum_depth or 0,
         )
 
     @text.setter

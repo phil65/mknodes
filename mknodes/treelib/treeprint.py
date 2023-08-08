@@ -24,7 +24,7 @@ AVAILABLE_STYLES = {
 
 def get_tree_repr(
     tree: node.Node,
-    max_depth: int = 0,
+    max_depth: int | None = None,
     style: str | tuple | None = None,
     attr_list: list[str] | None = None,
     attr_bracket: list[str] | None = None,
@@ -111,7 +111,7 @@ def get_tree_repr(
         attr_bracket: open and close bracket for `all_attrs` or `attr_list`
     """
     if style is None:
-        style = "const"
+        style = "ascii"
     if attr_list is None:
         attr_list = []
     if attr_bracket is None:
@@ -129,7 +129,7 @@ def get_tree_repr(
 
 def yield_tree(
     tree: node.Node,
-    max_depth: int = 0,
+    max_depth: int | None = None,
     style: str | tuple = "const",
 ) -> Iterable[tuple[str, str, node.Node]]:
     """Generator method for customizing printing of tree, starting from `tree`.

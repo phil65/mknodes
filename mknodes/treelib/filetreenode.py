@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import logging
+import os
 import pathlib
 
 from typing import TypeVar
@@ -25,11 +27,31 @@ class FileTreeNode(node.Node):
         return f"{self.path.name}/" if self.path.is_dir() else self.path.name
 
     @classmethod
-    def from_folder(cls, folder):
+    def from_folder(
+        cls,
+        folder: str | os.PathLike,
+        predicate: Callable | None = None,
+        parent: FileTreeNode | None = None,
+    ):
         folder = pathlib.Path(folder)
-        node = cls(folder)
-        for path in folder.iterdir():
-            child = cls(path) if path.is_file() else FileTreeNode.from_folder(path)
+        if predicate:
+            pred_fn = predicate
+        else:
+
+            def pred_fn(x):
+                return True
+
+        node = cls(folder, parent=parent)
+        children = sorted(
+            [path for path in folder.iterdir() if pred_fn(path)],
+            key=lambda s: str(s).lower(),
+        )
+        for path in children:
+            child = (
+                cls(path, parent=node)
+                if path.is_file()
+                else FileTreeNode.from_folder(path, parent=node)
+            )
             node.append_child(child)
         return node
 
@@ -38,4 +60,7 @@ T = TypeVar("T", bound=FileTreeNode)
 
 
 if __name__ == "__main__":
+    from mknodes.treelib import get_tree_repr
+
     folder = FileTreeNode.from_folder(".")
+    print(get_tree_repr(folder))
