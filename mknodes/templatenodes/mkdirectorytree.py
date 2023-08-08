@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import logging
 import os
-import pathlib
 
 from typing import Any, Literal, get_args
 
-from mknodes.basenodes import mkcode
-from mknodes.treelib import filetreenode
+from mknodes import treelib
+from mknodes.basenodes import mkcode, mknode
 from mknodes.utils import helpers
 
 
@@ -21,6 +20,7 @@ DirectoryTreeStyleStr = Literal[
     "const_bold",
     "rounded",
     "double",
+    "spaces",
 ]
 
 
@@ -35,7 +35,7 @@ class MkDirectoryTree(mkcode.MkCode):
 
     def __init__(
         self,
-        directory: str | os.PathLike,
+        directory: str | os.PathLike | treelib.Node,
         *,
         style: DirectoryTreeStyleStr | tuple[str, str, str] | None = None,
         maximum_depth: int | None = None,
@@ -52,14 +52,20 @@ class MkDirectoryTree(mkcode.MkCode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, **kwargs)
-        self.directory = pathlib.Path(directory)
+        self.directory = directory
         self.style = style
         self.maximum_depth = maximum_depth
 
     @property
     def text(self):
-        node = filetreenode.FileTreeNode.from_folder(self.directory)
-        return filetreenode.get_tree_repr(
+        match self.directory:
+            case str() | os.PathLike():
+                node = treelib.FileTreeNode.from_folder(self.directory)
+            case mknode.MkNode():
+                node = self.directory
+            case _:
+                raise TypeError(self.directory)
+        return treelib.get_tree_repr(
             node,
             style=self.style,
             max_depth=self.maximum_depth,
@@ -90,3 +96,4 @@ class MkDirectoryTree(mkcode.MkCode):
 if __name__ == "__main__":
     node = MkDirectoryTree(".", header="test", style="ascii")
     print(node.to_markdown())
+    print(MkDirectoryTree(node, style="ascii"))

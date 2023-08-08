@@ -36,7 +36,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
         # part of the tree. Perhaps add a setting for MkPages to be only-virtual?
         # Needs a general concept in regards to re-parenting. (should base nodes
         # be allowed to have pages as children?)
-        tabs: dict[str, str | mknode.MkNode] = dict(
+        tabs: dict[str, str | mknode.MkNode] = dict(  # type: ignore[annotation-unchecked]
             Repr=mkcode.MkCode(repr(self.node)),
             Markdown=mkcode.MkCode(self.prep(self.node), language="markdown"),
             Rendered=str(self.node),

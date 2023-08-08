@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 import mkdocs_gen_files
 
 from mknodes.treelib import node
-from mknodes.utils import connector
 
 
 if TYPE_CHECKING:
@@ -31,18 +30,6 @@ def shift_header_levels(text: str, levels: int) -> str:
 
 
 logger = logging.getLogger(__name__)
-
-
-class NodeConnector(connector.Connector):
-    def get_children(self, item):
-        return item.children
-
-    def get_id(self, item):
-        # id() would be enough, but name is sometimes useful for debugging.
-        return f"{type(item).__name__}_{id(item)}"
-
-    def get_title(self, item) -> str:
-        return f"{type(item).__name__}"
 
 
 class MkNode(node.Node):
@@ -189,23 +176,6 @@ class MkNode(node.Node):
         for desc in self.descendants:
             plugins.update(desc.REQUIRED_PLUGINS)
         return plugins
-
-    def pretty_print(self, _indent: int = 0):
-        """PrettyPrint node and its children."""
-        text = _indent * "    " + repr(self) + "->" + self.resolved_file_path
-        logger.info(text)
-        for child_item in self.children:
-            child_item.pretty_print(_indent + 1)
-
-    def to_tree_graph(self, direction: str = "TD") -> str:
-        """Returns markdown to display a tree graph of this node and all subnodes.
-
-        Arguments:
-            direction: Direction of resulting graph
-        """
-        item_str = NodeConnector([self]).get_graph_connection_text()
-        text = f"graph {direction}\n{item_str}"
-        return f"```mermaid\n{text}\n```"
 
     @staticmethod
     def create_example_page(page):
