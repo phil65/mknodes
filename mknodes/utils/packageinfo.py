@@ -5,6 +5,7 @@ import pathlib
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
+import toml
 
 from mknodes.utils import helpers
 
@@ -47,7 +48,7 @@ class Dependency:
 
 
 class PackageInfo:
-    def __init__(self, pkg_name: str):
+    def __init__(self, pkg_name: str, pyproject_path: str | None = None):
         self.package_name = pkg_name
         self.distribution = metadata.distribution(pkg_name)
         self.metadata = self.distribution.metadata
@@ -62,6 +63,35 @@ class PackageInfo:
         self.version = self.metadata["Version"]
         self.metadata_version = self.metadata["Metadata-Version"]
         self.name = self.metadata["Name"]
+        if not pyproject_path and (path := pathlib.Path() / "pyproject.toml").exists():
+            self.pyproject = toml.load(path)
+        elif pyproject_path:
+            if pyproject_path.startswith(("http:", "https:")):
+                content = helpers.download(pyproject_path)
+                self.pyproject = toml.loads(content)
+            else:
+                self.pyproject = toml.load(pyproject_path)
+
+    def configured_build_systems(self) -> list[str]:
+        build_systems = ["poetry", "hatch", "pdm", "flit"]
+        return [b for b in build_systems if b in self.pyproject["tool"]]
+
+    def build_system(self) -> str:
+        back_end = self.pyproject["build-system"]["build-backend"]
+        match back_end:
+            case "hatchling.build":
+                return "hatch"
+            case "poetry.core.masonry.api":
+                return "poetry"
+            case "setuptools.build_meta":
+                return "setuptools"
+            case "flit_core.buildapi":
+                return "flit"
+            case "pdm.backend":
+                return "pdm"
+            case _:
+                msg = "No known build backend"
+                raise RuntimeError(msg)
 
     def __repr__(self):
         return helpers.get_repr(self, pkg_name=self.package_name)
@@ -98,5 +128,11 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = PackageInfo("mknodes")
-    print(info.get_license_file_path())
+    info = PackageInfo(
+        "mkdocs",
+        pyproject_path=(
+            "https://raw.githubusercontent.com/mkdocs/mkdocs/master/pyproject.toml"
+        ),
+    )
+    print(info.configured_build_systems())
+    # print(info.get_github_url())
