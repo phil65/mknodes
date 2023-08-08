@@ -61,7 +61,7 @@ plugins:
 - gen-files: # https://github.com/oprypin/mkdocs-gen-files
     scripts:
       - docs/gen_pages.py  # or any other name or path
-- coverage
+# - coverage
 - mkdocstrings:
     default_handler: python
     handlers:
