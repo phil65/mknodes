@@ -89,19 +89,12 @@ class FileTreeNode(node.Node):
         parent: FileTreeNode | None = None,
     ):
         folder = pathlib.Path(folder)
-        if predicate:
-            pred_fn = predicate
-        else:
-
-            def pred_fn(x):
-                return True
-
         node = cls(folder, parent=parent)
         children = list(folder.iterdir())
         if sort:
             children = sorted(children, key=lambda s: str(s).lower())
         for path in children:
-            if not pred_fn(path):
+            if predicate and not predicate(path):
                 continue
             if exclude_folders and path.name in exclude_folders and path.is_dir():
                 continue
@@ -134,13 +127,13 @@ class FileTreeNode(node.Node):
     def displayable(self, style: str = "something"):
         style = ascii_style
         if self.parent is None:
-            return self.path_name
+            return repr(self)
         _filename_prefix = (
             style.filename_prefix_last
             if not bool(self.right_sibling)
             else style.filename_prefix_middle
         )
-        parts = [f"{_filename_prefix!s} {self.path_name!s}"]
+        parts = [f"{_filename_prefix!s} {self!r}"]
         parent = self.parent
         while parent and parent.parent is not None:
             parts.append(
