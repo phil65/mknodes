@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import dataclasses
 import logging
 import os
 import pathlib
@@ -13,11 +14,61 @@ from mknodes.treelib import node
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
+class TreeStyle:
+    identifier: str
+    filename_prefix_middle: str
+    filename_prefix_last: str
+    parent_prefix_middle: str
+    parent_prefix_last: str
+
+
+default_style = TreeStyle("default", "├──", "└──", "    ", "│   ")
+ansi_style = TreeStyle("ansi", "|-- ", "`-- ", "    ", "|   ")
+ascii_style = TreeStyle("ascii", "|-- ", "+-- ", "    ", "|   ")
+const_style = TreeStyle(
+    "const",
+    "\u251c\u2500\u2500 ",
+    "\u2514\u2500\u2500 ",
+    "    ",
+    "\u2502   ",
+)
+const_bold_style = TreeStyle(
+    "const_bold",
+    "\u2523\u2501\u2501 ",
+    "\u2517\u2501\u2501 ",
+    "    ",
+    "\u2503   ",
+)
+rounded_style = TreeStyle(
+    "rounded",
+    "\u251c\u2500\u2500 ",
+    "\u2570\u2500\u2500 ",
+    "    ",
+    "\u2502   ",
+)
+double_style = TreeStyle(
+    "double",
+    "\u2560\u2550\u2550 ",
+    "\u255a\u2550\u2550 ",
+    "    ",
+    "\u2551   ",
+)
+spaces_style = TreeStyle("spaces", "    ", "    ", "    ", "    ")
+
+
 class FileTreeNode(node.Node):
-    def __init__(self, path, **kwargs):
+    def __init__(self, path, is_last: bool = False, **kwargs):
         self.path = pathlib.Path(path)
+        self.is_last = is_last
         self.sep = "/"
         super().__init__(**kwargs)
+
+    def get_folder_count(self):
+        return sum(i.path.is_dir() for i in self.descendants)
+
+    def get_file_count(self):
+        return sum(i.path.is_file() for i in self.descendants)
 
     @property
     def path_name(self):
@@ -66,17 +117,43 @@ class FileTreeNode(node.Node):
             node.append_child(child)
         return node
 
+    def get_tree_repr(self, style: str = "something"):
+        nodes = [self, *list(self.descendants)]
+        return "\n".join(i.displayable(style) for i in nodes)
+
+    def displayable(self, style: str = "something"):
+        style = ascii_style
+        if self.parent is None:
+            return self.path_name
+
+        _filename_prefix = (
+            style.filename_prefix_last if self.is_last else style.filename_prefix_middle
+        )
+        parts = [f"{_filename_prefix!s} {self.path_name!s}"]
+        parent = self.parent
+        while parent and parent.parent is not None:
+            parts.append(
+                (
+                    style.parent_prefix_middle
+                    if parent.is_last
+                    else style.parent_prefix_last
+                ),
+            )
+            parent = parent.parent
+
+        return "".join(reversed(parts))
+
 
 T = TypeVar("T", bound=FileTreeNode)
 
 
 if __name__ == "__main__":
-    from mknodes.treelib import get_tree_repr
-
     folder = FileTreeNode.from_folder(
         ".",
-        predicate=lambda x: x.is_dir(),
-        exclude_folders=["__pycache__"],
+        exclude_folders=["__pycache__", ".git", ".mypy_cache"],
         sort=False,
     )
-    print(get_tree_repr(folder))
+    logger.warning(folder.get_tree_repr())
+    # for node in folder.descendants:
+    #     logger.warning(node.displayable())
+    # print(get_tree_repr(folder))
