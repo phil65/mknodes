@@ -263,6 +263,7 @@ def get_file(klass: type) -> str | None:
     return None
 
 
+@functools.cache
 def download(url: str):
     if token := os.getenv("GH_TOKEN"):
         headers = {"Authorization": f"token {token}"}
