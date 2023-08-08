@@ -5,7 +5,6 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcode, mknode, mktabcontainer, mktabs
-from mknodes.pages import mkpage
 from mknodes.templatenodes import mkdirectorytree
 from mknodes.utils import helpers
 
@@ -39,7 +38,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
         # be allowed to have pages as children?)
         tabs: dict[str, str | mknode.MkNode] = dict(  # type: ignore[annotation-unchecked]
             Repr=mkcode.MkCode(repr(self.node)),
-            Markdown=mkcode.MkCode(self.prep(self.node), language="markdown"),
+            Markdown=mkcode.MkCode(self.node, language="markdown"),
             Rendered=str(self.node),
         )
         if len(self.node.children) > 0:
@@ -51,14 +50,6 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     @items.setter
     def items(self, value):
         pass
-
-    def prep(self, node):
-        # node.parent = self
-        if isinstance(node, mkpage.MkPage):
-            node = node.__copy__()
-            node.parent = None
-            node.path = f"__{node.path}"
-        return node
 
     @staticmethod
     def create_example_page(page):

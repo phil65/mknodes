@@ -39,6 +39,7 @@ class MkPage(mkcontainer.MkContainer):
         description: str | None = None,
         template: str | None = None,
         append_markdown: bool | None = None,
+        virtual: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
@@ -59,12 +60,14 @@ class MkPage(mkcontainer.MkContainer):
             append_markdown: Whether pages should contain a collapsible admonition
                              containing the markup at the bottom. Setting is
                              inherited from the parent navs if not set.
+            virtual: Whether the Page should result in a file. Mainly for testing purposes
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self._path = str(path) if path else None
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.append_markdown = append_markdown
+        self.virtual = virtual
         self.metadata = metadata.Metadata(
             hide_toc=hide_toc,
             hide_nav=hide_nav,
@@ -148,7 +151,7 @@ class MkPage(mkcontainer.MkContainer):
         return page
 
     def virtual_files(self) -> dict[str, str]:
-        return {self.path: self.to_markdown()}
+        return {} if self.virtual else {self.path: self.to_markdown()}
 
     def to_markdown(self) -> str:
         from mknodes import mknav
