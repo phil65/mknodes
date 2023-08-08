@@ -51,28 +51,32 @@ class MkDirectoryTree(mkcode.MkCode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, **kwargs)
-        self.directory = directory
+        self.tree = directory
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
 
     @property
     def text(self):
-        match self.directory:
+        match self.tree:
             case str() | os.PathLike():
                 node = treelib.FileTreeNode.from_folder(
-                    self.directory,
+                    self.tree,
                     predicate=self.predicate,
                 )
+                return treelib.get_tree_repr(
+                    node,
+                    style=self.style,
+                    max_depth=self.maximum_depth or 0,
+                )
             case mknode.MkNode():
-                node = self.directory
+                lines = [
+                    f"{level * '    '} {node!r}" for level, node in self.tree.iter_nodes()
+                ]
+                return "\n".join(lines)
+
             case _:
-                raise TypeError(self.directory)
-        return treelib.get_tree_repr(
-            node,
-            style=self.style,
-            max_depth=self.maximum_depth or 0,
-        )
+                raise TypeError(self.tree)
 
     @text.setter
     def text(self, text):
@@ -81,7 +85,7 @@ class MkDirectoryTree(mkcode.MkCode):
     def __repr__(self):
         return helpers.get_repr(
             self,
-            path=str(self.directory),
+            path=str(self.tree),
             style=self.style,
             maximum_depth=self.maximum_depth,
         )

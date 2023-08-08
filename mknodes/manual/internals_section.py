@@ -34,8 +34,7 @@ def create_tree_page(nav: mknodes.MkNav):
     page = nav.add_page("Tree", hide_toc=True, icon="material/graph")
     page += mknodes.MkCode.for_object(create_tree_page, header=PAGE_CODE)
     page += mknodes.MkHeader("This is the tree we built up to now.", level=3)
-    lines = [f"{level * '    '} {node!r}" for level, node in nav.root.iter_nodes()]
-    page += mknodes.MkCode("\n".join(lines))
+    page += mknodes.MkDirectoryTree(nav.root)
 
 
 def create_files_page(nav: mknodes.MkNav):

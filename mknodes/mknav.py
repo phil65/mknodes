@@ -541,15 +541,12 @@ if __name__ == "__main__":
     nav_file = nav_tree_path / "SUMMARY.md"
     # print(pathlib.Path(nav_file).read_text())
     # nav = MkNav.from_folder(nav_tree_path)
-    # lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
     # print("\n".join(lines))
     # import pprint
     # pprint.pprint(nav.as_dict())
 
     # # print(nav.all_virtual_files())
     nav = MkNav.from_file(nav_file)
-    lines = [f"{level * '    '} {node!r}" for level, node in nav.iter_nodes()]
-    print("\n".join(lines))
     # print(str(nav))
     # print(nav_file.read_text())
     # subnav = docs.add_nav("subnav")
