@@ -58,9 +58,8 @@ spaces_style = TreeStyle("spaces", "    ", "    ", "    ", "    ")
 
 
 class FileTreeNode(node.Node):
-    def __init__(self, path, is_last: bool = False, **kwargs):
+    def __init__(self, path, **kwargs):
         self.path = pathlib.Path(path)
-        self.is_last = is_last
         self.sep = "/"
         super().__init__(**kwargs)
 
@@ -98,7 +97,7 @@ class FileTreeNode(node.Node):
                 return True
 
         node = cls(folder, parent=parent)
-        children = folder.iterdir()
+        children = list(folder.iterdir())
         if sort:
             children = sorted(children, key=lambda s: str(s).lower())
         for path in children:
@@ -136,9 +135,10 @@ class FileTreeNode(node.Node):
         style = ascii_style
         if self.parent is None:
             return self.path_name
-
         _filename_prefix = (
-            style.filename_prefix_last if self.is_last else style.filename_prefix_middle
+            style.filename_prefix_last
+            if not bool(self.right_sibling)
+            else style.filename_prefix_middle
         )
         parts = [f"{_filename_prefix!s} {self.path_name!s}"]
         parent = self.parent
@@ -146,7 +146,7 @@ class FileTreeNode(node.Node):
             parts.append(
                 (
                     style.parent_prefix_middle
-                    if parent.is_last
+                    if not bool(parent.right_sibling)
                     else style.parent_prefix_last
                 ),
             )
