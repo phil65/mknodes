@@ -88,6 +88,13 @@ class MkNode(node.Node):
     def __hash__(self):
         return hash(self.to_markdown())
 
+    def __eq__(self, other):
+        if not type(other) == type(self):
+            return False
+        dct_1 = self.__dict__.copy().pop("_parent")
+        dct_2 = other.__dict__.copy().pop("_parent")
+        return dct_1 == dct_2
+
     def _to_markdown(self) -> str:
         return NotImplemented
 
