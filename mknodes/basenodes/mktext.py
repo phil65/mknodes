@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 import logging
-import os
 import re
 
 from typing import Any, Self
-
-import requests
 
 from mknodes.basenodes import mknode
 from mknodes.utils import helpers
@@ -80,12 +77,8 @@ class MkText(mknode.MkNode):
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:
-        if token := os.getenv("GH_TOKEN"):
-            headers = {"Authorization": f"token {token}"}
-            response = requests.get(url, headers=headers)
-        else:
-            response = requests.get(url)
-        return None if response.status_code != RESPONSE_CODE_OK else cls(response.text)
+        text = helpers.download(url)
+        return cls(text) if text is not None else None
 
 
 if __name__ == "__main__":

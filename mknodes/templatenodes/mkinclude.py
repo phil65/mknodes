@@ -6,14 +6,11 @@ import pathlib
 
 from typing import Any
 
-import requests
-
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
 
-RESPONSE_CODE_OK = 200
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
 
 
@@ -50,12 +47,7 @@ class MkInclude(mknode.MkNode):
     def _to_markdown(self) -> str:  # type: ignore[return]
         match self.target:
             case str() if self.target.startswith(("http:", "https", "www.")):
-                if token := os.getenv("GH_TOKEN"):
-                    headers = {"Authorization": f"token {token}"}
-                    response = requests.get(self.target, headers=headers)
-                else:
-                    response = requests.get(self.target)
-                return "" if response.status_code != RESPONSE_CODE_OK else response.text
+                return helpers.download(self.target)
             case os.PathLike() | str():
                 return pathlib.Path(self.target).read_text()
             case mknode.MkNode():

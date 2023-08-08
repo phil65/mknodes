@@ -15,6 +15,10 @@ import sys
 import types
 from typing import Any
 
+import requests
+
+
+RESPONSE_CODE_OK = 200
 
 logger = logging.getLogger(__name__)
 
@@ -257,6 +261,15 @@ def get_file(klass: type) -> str | None:
     with contextlib.suppress(TypeError):
         return inspect.getfile(klass)
     return None
+
+
+def download(url: str):
+    if token := os.getenv("GH_TOKEN"):
+        headers = {"Authorization": f"token {token}"}
+        response = requests.get(url, headers=headers)
+    else:
+        response = requests.get(url)
+    return "" if response.status_code != RESPONSE_CODE_OK else response.text
 
 
 if __name__ == "__main__":
