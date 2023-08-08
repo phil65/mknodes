@@ -22,6 +22,7 @@ It will be a quite inception-ish experience.
 
 
 def create_root() -> mknodes.MkNav:
+    project = mknodes.Project(mknodes)
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
     annotations[1] = mknodes.MkDocStrings(mknodes.MkAnnotations)
@@ -36,7 +37,7 @@ def create_root() -> mknodes.MkNav:
     # Let us start with building the page.
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
-    root_nav = mknodes.MkNav(append_markdown_to_pages=True)
+    root_nav = project.get_root(append_markdown_to_pages=True)
 
     # By using append_markdown_to_pages, every page will have a expandable Admonition
     # attached at the bottom. You can see the generated Markdown there for every page.

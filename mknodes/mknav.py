@@ -18,7 +18,7 @@ from mknodes.utils import helpers
 
 
 if TYPE_CHECKING:
-    from mknodes import mkdoc, mknav
+    from mknodes import mkdoc, mknav, project
     from mknodes.pages import mkclasspage, mkmodulepage
 
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
@@ -47,6 +47,7 @@ class MkNav(mknode.MkNode):
         *,
         filename: str = "SUMMARY.md",
         append_markdown_to_pages: bool | None = None,
+        project: project.Project | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -58,6 +59,7 @@ class MkNav(mknode.MkNode):
                                       admonition containing the markup at the bottom.
                                       The setting will be used by all children
                                       and can be overridden by sub-navs or pages.
+            project: Project this Nav is connected to.
             kwargs: Keyword arguments passed to parent
         """
         self.section = section  # helpers.slugify(section)
@@ -66,6 +68,7 @@ class MkNav(mknode.MkNode):
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
         self.append_markdown_to_pages = append_markdown_to_pages
+        self._associated_project = project
         super().__init__(**kwargs)
 
     def __repr__(self):

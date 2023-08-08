@@ -55,6 +55,8 @@ from .templatenodes.mklog import MkLog
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
+from .project import Project
+
 TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests/data/"
 
 __all__ = [
@@ -108,6 +110,7 @@ __all__ = [
     "MkCallable",
     "MkDirectoryTree",
     "MkLog",
+    "Project",
 ]
 
 __version__ = "0.24.2"

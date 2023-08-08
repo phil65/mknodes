@@ -38,7 +38,10 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
     @property
     def items(self) -> list[mknode.MkNode]:
-        managers = self.package_managers or ["pip"]
+        if self.associated_project:
+            managers = self.associated_project.package_managers
+        else:
+            managers = ["pip"]
         klasses = [installmethods.InstallMethod.by_id(i) for i in managers]
         methods = [i(self.project) for i in klasses]
         return [self.get_section_for(method) for method in methods]

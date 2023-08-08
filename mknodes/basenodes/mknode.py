@@ -199,6 +199,14 @@ class MkNode(node.Node):
         node.annotations[1] = "Nice!"
         page += mknodes.MkReprRawRendered(node, header="### Append annotations")
 
+    @property
+    def associated_project(self):
+        from mknodes import mknav
+
+        if isinstance(self.root, mknav.MkNav) and self.root._associated_project:
+            return self.root._associated_project
+        return None
+
 
 if __name__ == "__main__":
     import mknodes
