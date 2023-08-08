@@ -42,9 +42,7 @@ class MkDoc(mknav.MkNav):
             exclude_modules: List of modules to exclude
             section_name: Optional section name override
             class_page: Override for the default ClassPage
-                        (default: [MkClassPage](MkClassPage.md))
             module_page: Override for the default ModulePage
-                        (default: [MkModulePage](MkModulePage.md))
             flatten_nav: Whether classes should be put into top-level of the nav
             kwargs: Keyword arguments passed to parent
         """

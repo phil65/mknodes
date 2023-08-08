@@ -316,9 +316,7 @@ class MkNav(mknode.MkNode):
             filter_by___all__: Whether the documentation
             section_name: Override the name for the menu (default: module name)
             class_page: Override for the default ClassPage
-                        (default: [MkClassPage](MkClassPage.md))
             module_page: Override for the default ModulePage
-                        (default: [MkModulePage](MkModulePage.md))
             flatten_nav: Whether classes should be put into top-level of the nav
         """
         from mknodes import mkdoc
