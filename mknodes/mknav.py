@@ -433,6 +433,11 @@ class MkNav(mknode.MkNode):
                         hide_path=hide_path,
                     )
                     page += pathlib.Path(match[2]).read_text()
+                    logger.info(
+                        "Created subsection %s and loaded index page %s",
+                        match[1],
+                        match[2],
+                    )
                     nav += subnav
                 else:
                     page = mkpage.MkPage.from_file(
@@ -443,10 +448,12 @@ class MkNav(mknode.MkNode):
                         parent=nav,
                     )
                     nav[match[1]] = page
+                    logger.info("Created page %s from %s", match[1], match[2])
             # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
+                file_path = f"{match[2]}/SUMMARY.md"
                 subnav = MkNav.from_file(
-                    f"{match[2]}/SUMMARY.md",
+                    file_path,
                     section=match[1],
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
@@ -454,6 +461,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                 )
                 nav[match[1]] = subnav
+                logger.info("Created subsection %s from %s", match[1], file_path)
             # * Example
             elif match := re.match(SECTION_REGEX, line):
                 next_lines = lines[i + 1 :]
@@ -467,6 +475,7 @@ class MkNav(mknode.MkNode):
                     hide_path=hide_path,
                     parent=nav,
                 )
+                logger.info("Created subsection %s from text", match[1])
                 nav[match[1]] = subnav
         return nav
 
@@ -501,14 +510,16 @@ class MkNav(mknode.MkNode):
         nav = cls(folder.name if parent else None, parent=parent)
         for path in folder.iterdir():
             if path.is_dir() and recursive:
+                path = folder / path.parts[-1]
                 subnav = cls.from_folder(
-                    folder / path.parts[-1],
+                    folder=path,
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
                     parent=nav,
                 )
                 nav += subnav
+                logger.info("Loaded subnav from from %s", path)
             elif path.name == "index.md":
                 page = mkpage.MkPage(
                     path=path.name,
@@ -518,6 +529,7 @@ class MkNav(mknode.MkNode):
                     hide_path=hide_path,
                     parent=nav,
                 )
+                logger.info("Loaded index page from %s", path)
                 nav.index_page = page
                 nav.index_title = nav.section or "Home"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
@@ -530,6 +542,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                 )
                 nav += page
+                logger.info("Loaded page from from %s", path)
         return nav
 
 
