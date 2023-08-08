@@ -30,7 +30,10 @@ class FileTreeNode(node.Node):
     def from_folder(
         cls,
         folder: str | os.PathLike,
+        *,
         predicate: Callable | None = None,
+        exclude_folders: list[str] | None = None,
+        sort: bool = True,
         parent: FileTreeNode | None = None,
     ):
         folder = pathlib.Path(folder)
@@ -42,15 +45,23 @@ class FileTreeNode(node.Node):
                 return True
 
         node = cls(folder, parent=parent)
-        children = sorted(
-            [path for path in folder.iterdir() if pred_fn(path)],
-            key=lambda s: str(s).lower(),
-        )
+        children = folder.iterdir()
+        if sort:
+            children = sorted(children, key=lambda s: str(s).lower())
         for path in children:
+            if not pred_fn(path):
+                continue
+            if exclude_folders and path.name in exclude_folders and path.is_dir():
+                continue
             child = (
                 cls(path, parent=node)
                 if path.is_file()
-                else FileTreeNode.from_folder(path, parent=node)
+                else FileTreeNode.from_folder(
+                    path,
+                    parent=node,
+                    predicate=predicate,
+                    exclude_folders=exclude_folders,
+                )
             )
             node.append_child(child)
         return node
@@ -62,5 +73,10 @@ T = TypeVar("T", bound=FileTreeNode)
 if __name__ == "__main__":
     from mknodes.treelib import get_tree_repr
 
-    folder = FileTreeNode.from_folder(".")
+    folder = FileTreeNode.from_folder(
+        ".",
+        predicate=lambda x: x.is_dir(),
+        exclude_folders=["__pycache__"],
+        sort=False,
+    )
     print(get_tree_repr(folder))

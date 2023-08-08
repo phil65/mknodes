@@ -37,6 +37,7 @@ class MkDirectoryTree(mkcode.MkCode):
         style: DirectoryTreeStyleStr | tuple[str, str, str] | None = None,
         maximum_depth: int | None = None,
         predicate: Callable | None = None,
+        exclude_folders: list[str] | str | None = None,
         header: str = "",
         **kwargs: Any,
     ):
@@ -47,6 +48,7 @@ class MkDirectoryTree(mkcode.MkCode):
             style: Print style. If tuple, parts are used for stems
             maximum_depth: Maximum nesting depth to print
             predicate: Predicate to filter results
+            exclude_folders: Folders to exclude from listing
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -55,6 +57,9 @@ class MkDirectoryTree(mkcode.MkCode):
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
+        self.exclude_folders = (
+            [exclude_folders] if isinstance(exclude_folders, str) else exclude_folders
+        )
 
     @property
     def text(self):
@@ -63,6 +68,7 @@ class MkDirectoryTree(mkcode.MkCode):
                 node = treelib.FileTreeNode.from_folder(
                     self.tree,
                     predicate=self.predicate,
+                    exclude_folders=self.exclude_folders,
                 )
                 return treelib.get_tree_repr(
                     node,
