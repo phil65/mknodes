@@ -23,7 +23,7 @@ CLASSIFIERS = [
 ]
 
 
-def get_extras(markers):
+def get_extras(markers: list) -> list[str]:
     extras = []
     for marker in markers:
         match marker:
@@ -36,7 +36,7 @@ def get_extras(markers):
 
 
 class Dependency:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.req = Requirement(name)
         self.name = self.req.name
         self.marker = Marker(name.split(";", maxsplit=1)[-1]) if ";" in name else None
@@ -78,13 +78,18 @@ class PackageInfo:
             "Unknown",
         )
 
+    def get_repository_url(self) -> str | None:
+        if "Source" in self.urls:
+            return self.urls["Source"]
+        return self.urls["Repository"] if "Repository" in self.urls else None
+
     def get_keywords(self) -> list[str]:
         return self.metadata.get("Keywords", "").split(",")
 
     def get_required_package_names(self) -> list[str]:
         return [i.name for i in self.requirements]
 
-    def get_extras(self):
+    def get_extras(self) -> set[str]:
         return {extra for dep in self.requirements for extra in dep.extras}
 
     def get_license_file_path(self) -> pathlib.Path | None:
