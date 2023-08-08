@@ -149,21 +149,23 @@ def styled(
 
 
 def link_for_class(kls: type, **kwargs) -> str:
-    if kls.__module__ == "builtins":
-        url = BUILTIN_URL.format(mod="functions", name=kls.__name__)
-        link = linked(url, title=kls.__name__)
-    elif kls.__module__ in sys.stdlib_module_names:
-        mod = kls.__module__
-        url = BUILTIN_URL.format(mod=mod, name=f"{mod}.{kls.__name__}")
-        link = linked(url, title=kls.__name__)
-    elif kls.__module__.startswith(("PyQt", "PySide")):
-        mod = kls.__module__.replace("PySide6.", "").replace("PyQt6.", "")
+    mod_path = kls.__module__
+    kls_name = kls.__name__
+    if mod_path == "builtins":
+        url = BUILTIN_URL.format(mod="functions", name=kls_name)
+        link = linked(url, title=kls_name)
+    elif mod_path in sys.stdlib_module_names:
+        mod = mod_path
+        url = BUILTIN_URL.format(mod=mod, name=f"{mod}.{kls_name}")
+        link = linked(url, title=kls_name)
+    elif mod_path.startswith(("PyQt", "PySide")):
+        mod = mod_path.replace("PySide6.", "").replace("PyQt6.", "")
         url = f"{BASE_URL}{mod}/{kls.__qualname__.replace('.', '/')}.html"
-        link = linked(url, title=kls.__name__)
-    elif kls.__module__.startswith("prettyqt"):
+        link = linked(url, title=kls_name)
+    elif mod_path.startswith("prettyqt"):
         link = linked(kls.__qualname__)
     else:
-        module = kls.__module__.split(".")[0]
+        module = mod_path.split(".")[0]
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
         if url := homepage_for_distro(module):
             link = linked(url, title=qual_name)
@@ -183,10 +185,11 @@ def homepage_for_distro(dist_name: str):
 
 
 def label_for_class(klass: type) -> str:
-    if klass.__module__.startswith("prettyqt."):
-        parts = klass.__module__.split(".")
+    mod = klass.__module__
+    if mod.startswith("prettyqt."):
+        parts = mod.split(".")
         return f"{parts[1]}.{klass.__name__}"
-    return f"{klass.__module__.split('.')[-1]}.{klass.__name__}"
+    return f"{mod.split('.')[-1]}.{klass.__name__}"
 
 
 def to_html_list(
