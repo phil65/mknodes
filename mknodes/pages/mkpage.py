@@ -146,7 +146,7 @@ class MkPage(mkcontainer.MkContainer):
         data.hide_toc = hide_toc
         data.hide_nav = hide_nav
         data.hide_path = hide_path
-        page = cls(path.name, content=text, parent=parent)
+        page = cls(path=path.name, content=text, parent=parent)
         page.metadata = data
         return page
 

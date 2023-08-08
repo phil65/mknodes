@@ -436,7 +436,7 @@ class MkNav(mknode.MkNode):
                     nav += subnav
                 else:
                     page = mkpage.MkPage.from_file(
-                        match[2],
+                        path=match[2],
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
                         hide_path=hide_path,
@@ -512,23 +512,23 @@ class MkNav(mknode.MkNode):
             elif path.name == "index.md":
                 page = mkpage.MkPage(
                     path=path.name,
+                    content=path.read_text(),
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
                     parent=nav,
                 )
-                page += path.read_text()
                 nav.index_page = page
                 nav.index_title = nav.section or "Home"
             elif path.suffix == ".md" and path.name != "SUMMARY.md":
                 page = mkpage.MkPage(
                     path=path.relative_to(folder),
+                    content=path.read_text(),
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
                     parent=nav,
                 )
-                page += path.read_text()
                 nav += page
         return nav
 
