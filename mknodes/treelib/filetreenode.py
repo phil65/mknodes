@@ -64,14 +64,14 @@ class FileTreeNode(node.Node):
         self.sep = "/"
         super().__init__(**kwargs)
 
-    def get_folder_count(self):
+    def get_folder_count(self) -> int:
         return sum(i.path.is_dir() for i in self.descendants)
 
-    def get_file_count(self):
+    def get_file_count(self) -> int:
         return sum(i.path.is_file() for i in self.descendants)
 
     @property
-    def path_name(self):
+    def path_name(self) -> str:
         return str(self.path)
 
     def __repr__(self):
@@ -85,6 +85,8 @@ class FileTreeNode(node.Node):
         predicate: Callable | None = None,
         exclude_folders: list[str] | None = None,
         sort: bool = True,
+        max_items: int | None = None,
+        maximum_depth: int | None = None,
         parent: FileTreeNode | None = None,
     ):
         folder = pathlib.Path(folder)
@@ -104,16 +106,25 @@ class FileTreeNode(node.Node):
                 continue
             if exclude_folders and path.name in exclude_folders and path.is_dir():
                 continue
-            child = (
-                cls(path, parent=node)
-                if path.is_file()
-                else FileTreeNode.from_folder(
+            if path.is_file():
+                child = cls(path, parent=node)
+            else:
+                if maximum_depth is not None and maximum_depth < node.depth + 1:
+                    continue
+                child = FileTreeNode.from_folder(
                     path,
                     parent=node,
                     predicate=predicate,
+                    max_items=max_items,
+                    maximum_depth=maximum_depth,
                     exclude_folders=exclude_folders,
                 )
-            )
+            if max_items is not None:
+                if max_items > 0:
+                    max_items -= 1
+                else:
+                    break
+
             node.append_child(child)
         return node
 
@@ -152,6 +163,7 @@ if __name__ == "__main__":
         ".",
         exclude_folders=["__pycache__", ".git", ".mypy_cache"],
         sort=False,
+        maximum_depth=2,
     )
     logger.warning(folder.get_tree_repr())
     # for node in folder.descendants:
