@@ -1,11 +1,8 @@
 from __future__ import annotations
 
 import logging
-import os
 
-from typing import Any
-
-import requests
+from typing import Any, Literal
 
 from mknodes.basenodes import mktext
 from mknodes.utils import helpers
@@ -24,8 +21,8 @@ class MkCodeOfConduct(mktext.MkText):
 
     def __init__(
         self,
-        contact_email: str,
-        version: str | tuple[int] = "2.1",
+        contact_email: str | None = None,
+        version: Literal["2.0", "2.1"] = "2.1",
         header: str = "# Contributor Covenant Code of Conduct",
         **kwargs: Any,
     ):
@@ -38,11 +35,7 @@ class MkCodeOfConduct(mktext.MkText):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        self.version = (
-            [str(v) for v in version]
-            if isinstance(version, tuple)
-            else version.split(".")
-        )
+        self.version = version
         self.contact_email = contact_email
 
     def __repr__(self):
@@ -54,16 +47,17 @@ class MkCodeOfConduct(mktext.MkText):
 
     @property
     def text(self) -> str:
-        url = URL_START + "/".join(self.version) + URL_END
-        try:
-            if token := os.getenv("GH_TOKEN"):
-                headers = {"Authorization": f"token {token}"}
-                response = requests.get(url, headers=headers).text
-            else:
-                response = requests.get(url).text
-        except requests.exceptions.ConnectionError:
-            response = "**Download failed**"
-        text = response.replace("[INSERT CONTACT METHOD]", self.contact_email)
+        url = URL_START + self.version.replace(".", "/") + URL_END
+        print(url)
+        response = helpers.download(url) or "**Download failed**"
+        match self.contact_email:
+            case str():
+                mail = self.contact_email
+            case None if self.associated_project:
+                mail = self.associated_project.info.get_author_email()
+            case _:
+                mail = "<MAIL NOT SET>"
+        text = response.replace("[INSERT CONTACT METHOD]", mail)
         return "\n".join(text.split("\n")[3:])
 
     @staticmethod
@@ -72,7 +66,9 @@ class MkCodeOfConduct(mktext.MkText):
 
         page.status = "new"  # for the small icon in the left menu
         node = MkCodeOfConduct("my@email.com", version="2.1")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Explicit email")
+        node = MkCodeOfConduct(version="2.0")
+        page += mknodes.MkReprRawRendered(node, header="### Email from project")
 
 
 if __name__ == "__main__":

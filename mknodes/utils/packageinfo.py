@@ -96,6 +96,11 @@ class PackageInfo:
     def get_extras(self) -> set[str]:
         return {extra for dep in self.requirements for extra in dep.extras}
 
+    def get_author_email(self):
+        mail = self.metadata["Author-Email"].split(" ")[-1]
+        return mail.replace("<", "").replace(">", "")
+
 
 if __name__ == "__main__":
-    info = PackageInfo("mkdocs")
+    info = PackageInfo("mknodes")
+    print(info.get_author_email())
