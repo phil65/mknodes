@@ -63,14 +63,10 @@ class MkAdmonition(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
 
     def __repr__(self):
-        from mknodes.basenodes import mktext
-
-        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
-            content = str(self.items[0])
-        elif len(self.items) == 1:
-            content = self.items[0]
+        if len(self.items) == 1:
+            content = helpers.to_str_if_textnode(self.items[0])
         else:
-            content = [str(i) if type(i) == mktext.MkText else i for i in self.items]
+            content = [helpers.to_str_if_textnode(i) for i in self.items]
         return helpers.get_repr(self, content=content, typ=self.typ, title=self.title)
 
     def attach_annotations(self, text: str) -> str:

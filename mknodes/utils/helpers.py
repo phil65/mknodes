@@ -43,6 +43,12 @@ limit_repr.maxlist = 10
 limit_repr.maxstring = 80
 
 
+def to_str_if_textnode(node):
+    import mknodes
+
+    return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
+
+
 @contextlib.contextmanager
 def new_cd(x):
     d = os.getcwd()  # noqa: PTH109

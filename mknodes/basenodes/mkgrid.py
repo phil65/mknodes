@@ -54,14 +54,10 @@ class MkGrid(mkcontainer.MkContainer):
         super().__init__(content=items, header=header, **kwargs)
 
     def __repr__(self):
-        from mknodes.basenodes import mktext
-
         cards = []
         for item in self.items:
-            if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
-                cards.append(str(item.items[0]))
-            elif len(item.items) == 1:
-                cards.append(item.items[0])
+            if len(item.items) == 1:
+                cards.append(helpers.to_str_if_textnode(item.items[0]))
             else:
                 cards.append(item)
         return helpers.get_repr(self, cards=cards)

@@ -37,9 +37,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
         self.items = data
 
     def __repr__(self):
-        kwarg_data = {
-            k: str(v) if isinstance(v, mktext.MkText) else v for k, v in self.data.items()
-        }
+        kwarg_data = {k: helpers.to_str_if_textnode(v) for k, v in self.data.items()}
         return helpers.get_repr(self, data=kwarg_data)
 
     @property

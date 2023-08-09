@@ -109,12 +109,9 @@ class MkAnnotations(mkcontainer.MkContainer):
     def __repr__(self):
         notes = []
         for item in self.items:
-            if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
-                notes.append(str(item.items[0]))
-            elif len(item.items) == 1:
-                notes.append(item.items[0])
-            else:
-                notes.append(item)
+            if len(item.items) == 1:
+                item = helpers.to_str_if_textnode(item.items[0])
+            notes.append(item)
         return helpers.get_repr(self, annotations=notes)
 
     def _get_item_pos(self, num: int) -> int:

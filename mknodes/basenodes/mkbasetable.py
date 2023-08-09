@@ -60,8 +60,7 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def __repr__(self):
         kwarg_data = {
-            k: [str(i) if type(i) == mktext.MkText else i for i in v]
-            for k, v in self.data.items()
+            k: [helpers.to_str_if_textnode(i) for i in v] for k, v in self.data.items()
         }
         return helpers.get_repr(self, data=kwarg_data)
 

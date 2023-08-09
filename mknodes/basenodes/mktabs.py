@@ -105,14 +105,10 @@ class MkTab(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
 
     def __repr__(self):
-        from mknodes.basenodes import mktext
-
-        if len(self.items) == 1 and isinstance(self.items[0], mktext.MkText):
-            content = str(self.items[0])
-        elif len(self.items) == 1:
-            content = self.items[0]
+        if len(self.items) == 1:
+            content = helpers.to_str_if_textnode(self.items[0])
         else:
-            content = self.items
+            content = [helpers.to_str_if_textnode(i) for i in self.items]
         return helpers.get_repr(
             self,
             title=self.title,

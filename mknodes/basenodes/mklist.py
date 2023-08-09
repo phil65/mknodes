@@ -49,9 +49,7 @@ class MkList(mkcontainer.MkContainer):
         return len(self.items)
 
     def __repr__(self):
-        from mknodes.basenodes import mktext
-
-        items = [str(i) if type(i) == mktext.MkText else i for i in self.items]
+        items = [helpers.to_str_if_textnode(i) for i in self.items]
         return helpers.get_repr(
             self,
             items=items,
