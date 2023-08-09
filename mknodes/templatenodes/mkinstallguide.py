@@ -50,8 +50,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         elif self.associated_project:
             project = self.associated_project.package_name
         else:
-            msg = "No project set"
-            raise ValueError(msg)
+            return []
         klasses = [installmethods.InstallMethod.by_id(i) for i in managers]
         methods = [i(project) for i in klasses]
         return [self.get_section_for(method) for method in methods]
@@ -79,6 +78,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
             project=self.project,
             package_managers=self.package_managers,
             header_level=self.header_level,
+            _filter_empty=True,
         )
 
     @staticmethod
@@ -86,12 +86,14 @@ class MkInstallGuide(mkcontainer.MkContainer):
         import mknodes
 
         # MkInstallGuide is just a text snippet for a short Install guide
-        # Currently it is only tailored towards PyPi.
 
-        node = MkInstallGuide(project="mknodes")
-        page += mknodes.MkReprRawRendered(node, header="### Default")
-        node2 = MkInstallGuide(project="mknodes", package_managers=["pipx"])
-        page += mknodes.MkReprRawRendered(node2, header="### Explicit")
+        # this will show the data for our associated project
+        node = MkInstallGuide()
+        page += mknodes.MkReprRawRendered(node, header="### Project data")
+
+        # we can also explicitely define the data
+        node = MkInstallGuide(project="mkdocs", package_managers=["pipx"])
+        page += mknodes.MkReprRawRendered(node, header="### Other")
 
 
 if __name__ == "__main__":

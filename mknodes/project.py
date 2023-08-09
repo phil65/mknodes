@@ -4,7 +4,7 @@ import logging
 import types
 
 from mknodes import mknav
-from mknodes.utils import helpers
+from mknodes.utils import helpers, packageinfo
 
 
 logger = logging.getLogger(__name__)
@@ -17,6 +17,7 @@ class Project:
         self.module = module
         self.package_name = module.__name__
         self.package_managers = package_managers or ["pip"]
+        self.info = packageinfo.PackageInfo(self.package_name)
         self._root_nav = None
 
     def get_root(self, **kwargs):
