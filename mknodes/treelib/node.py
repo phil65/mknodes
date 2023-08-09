@@ -140,6 +140,16 @@ class Node:
         return not len(list(self.children))
 
     @property
+    def is_first_child(self) -> bool:
+        """Get indicator if self is first child of parent."""
+        return not bool(self.left_sibling)
+
+    @property
+    def is_last_child(self) -> bool:
+        """Get indicator if self is last child of parent."""
+        return not bool(self.right_sibling)
+
+    @property
     def root(self) -> Self:
         """Get root node of tree."""
         return self if self._parent is None else self._parent.root
