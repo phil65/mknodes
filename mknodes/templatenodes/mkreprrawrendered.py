@@ -39,7 +39,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
         tabs: dict[str, str | mknode.MkNode] = dict(  # type: ignore[annotation-unchecked]
             Repr=mkcode.MkCode(repr(self.node)),
             Markdown=mkcode.MkCode(self.node, language="markdown"),
-            Rendered=str(self.node),
+            Rendered=self.node.__copy__(),
         )
         if len(self.node.children) > 0:
             tabs["Repr tree"] = mkdirectorytree.MkDirectoryTree(self.node)
