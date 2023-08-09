@@ -6,6 +6,7 @@ import logging
 
 from typing import Self
 
+from mknodes.data import treestyles
 from mknodes.utils import helpers
 
 
@@ -184,6 +185,27 @@ class Node:
         yield indent, self
         for child_item in self.children:
             yield from child_item.iter_nodes(indent + 1)
+
+    def tree_repr(self, style: str = "ascii"):
+        style = next(i for i in treestyles.STYLES if i.identifier == style)
+        if self.parent is None:
+            return repr(self)
+        _filename_prefix = (
+            style.filename_last if self.is_last_child else style.filename_middle
+        )
+        parts = [f"{_filename_prefix!s} {self!r}"]
+        parent = self.parent
+        while parent and parent.parent is not None:
+            parts.append(
+                (style.parent_middle if parent.is_last_child else style.parent_last),
+            )
+            parent = parent.parent
+
+        return "".join(reversed(parts))
+
+    def get_tree_repr(self, style: str = "ascii"):
+        nodes = [self, *list(self.descendants)]
+        return "\n".join(i.tree_repr(style) for i in nodes)
 
 
 def preorder_iter(
