@@ -49,7 +49,6 @@ class MkCodeOfConduct(mktext.MkText):
     @property
     def text(self) -> str:
         url = URL_START + self.version.replace(".", "/") + URL_END
-        print(url)
         response = helpers.download(url) or "**Download failed**"
         match self.contact_email:
             case str():
