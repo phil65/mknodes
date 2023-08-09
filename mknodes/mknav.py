@@ -190,6 +190,7 @@ class MkNav(mknode.MkNode):
         status: Literal["new", "deprecated"] | None = None,
         subtitle: str | None = None,
         description: str | None = None,
+        path: str | None = None,
     ) -> mkpage.MkPage:
         """Register and return a index page with given title.
 
@@ -205,9 +206,10 @@ class MkNav(mknode.MkNode):
             title: Page title
             subtitle: Page subtitle
             description: Page description
+            path: Optional path override
         """
         page = mkpage.MkPage(
-            path="index.md",
+            path=path or "index.md",
             hide_toc=hide_toc,
             hide_nav=hide_nav,
             hide_path=hide_path,
