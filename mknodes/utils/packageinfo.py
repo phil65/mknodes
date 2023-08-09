@@ -101,11 +101,15 @@ class PackageInfo:
             return self.urls["Source"]
         return self.urls["Repository"] if "Repository" in self.urls else None
 
-    def get_repository_username(self):
-        return GITHUB_REGEX.match(self.get_repository_url()).group(1)
+    def get_repository_username(self) -> str | None:
+        if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
+            return match.group(1)
+        return None
 
-    def get_repository_name(self):
-        return GITHUB_REGEX.match(self.get_repository_url()).group(2)
+    def get_repository_name(self) -> str | None:
+        if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
+            return match.group(2)
+        return None
 
     def get_keywords(self) -> list[str]:
         return self.metadata.get("Keywords", "").split(",")
@@ -116,7 +120,7 @@ class PackageInfo:
     def get_extras(self) -> set[str]:
         return {extra for dep in self.requirements for extra in dep.extras}
 
-    def get_author_email(self):
+    def get_author_email(self) -> str:
         mail = self.metadata["Author-Email"].split(" ")[-1]
         return mail.replace("<", "").replace(">", "")
 
