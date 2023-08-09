@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class MkTabContainer(mkcontainer.MkContainer):
     items: list[mktabs.MkTab | mktabs.MkTabBlock]
-    Tab: type[mktabs.MkTab] | type[mktabs.MkTabBlock]
+    Tab: type[mktabs.MkTab | mktabs.MkTabBlock]
     ICON = "material/tab"
 
     def __init__(
