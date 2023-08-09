@@ -171,10 +171,12 @@ class Node:
             return self._parent.children.index(self)  # type: ignore
         return 0
 
-    def pprint(self, indent: int = 0, max_depth: int | None = None):
-        for _indent, child_item in self.iter_nodes(indent, max_depth):
-            text = _indent * "    " + repr(child_item)
-            logger.warning(text)
+    def pformat(self, indent: int = 0, max_depth: int | None = None):
+        lines = [
+            _indent * "    " + repr(child_item)
+            for _indent, child_item in self.iter_nodes(indent, max_depth)
+        ]
+        return "\n".join(lines)
 
     def iter_nodes(self, indent: int = 0, max_depth: int | None = None):
         if max_depth is not None and indent > max_depth:
@@ -249,4 +251,3 @@ if __name__ == "__main__":
     sub = Node(parent=node)
     subsub = Node(parent=sub)
     node.children = [sub, subsub]
-    node.pprint()
