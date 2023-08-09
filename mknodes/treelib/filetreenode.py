@@ -80,6 +80,17 @@ spaces_style = TreeStyle(
     parent_last="    ",
 )
 
+STYLES = [
+    default_style,
+    ansi_style,
+    ascii_style,
+    const_style,
+    const_bold_style,
+    rounded_style,
+    double_style,
+    spaces_style,
+]
+
 
 class FileTreeNode(node.Node):
     def __init__(self, path, **kwargs):
@@ -89,18 +100,12 @@ class FileTreeNode(node.Node):
         self.sep = "/"
         super().__init__(**kwargs)
 
-    def get_folder_count(self) -> int:
-        return sum(i.type == "folder" for i in self.descendants)
-
-    def get_file_count(self) -> int:
-        return sum(i.type == "file" for i in self.descendants)
+    def __repr__(self):
+        return f"{self.name}/" if self.type == "folder" else self.name
 
     @property
     def path_name(self) -> str:
         return str(self.path)
-
-    def __repr__(self):
-        return f"{self.name}/" if self.type == "folder" else self.name
 
     @classmethod
     def from_folder(
@@ -146,12 +151,12 @@ class FileTreeNode(node.Node):
             node.append_child(child)
         return node
 
-    def get_tree_repr(self, style: str = "something"):
+    def get_tree_repr(self, style: str = "ascii"):
         nodes = [self, *list(self.descendants)]
         return "\n".join(i.displayable(style) for i in nodes)
 
-    def displayable(self, style: str = "something"):
-        style = ascii_style
+    def displayable(self, style: str = "ascii"):
+        style = next(i for i in STYLES if i.identifier == style)
         if self.parent is None:
             return repr(self)
         _filename_prefix = (
@@ -170,6 +175,12 @@ class FileTreeNode(node.Node):
             parent = parent.parent
 
         return "".join(reversed(parts))
+
+    def get_folder_count(self) -> int:
+        return sum(i.type == "folder" for i in self.descendants)
+
+    def get_file_count(self) -> int:
+        return sum(i.type == "file" for i in self.descendants)
 
 
 T = TypeVar("T", bound=FileTreeNode)
