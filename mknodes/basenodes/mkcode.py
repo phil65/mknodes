@@ -210,21 +210,20 @@ class MkCode(mkcontainer.MkContainer):
             case _:
                 code_title = obj.__name__
         hl_lines = None
-        if linenums:
-            lines, start_line = helpers.get_source_lines(obj)
-            if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
-                call_file = frame.f_back.f_code.co_filename
-                obj_file = inspect.getfile(obj)
-                if call_file == obj_file:
-                    line_no = frame.f_back.f_lineno
-                    line = line_no - start_line + 1
-                    hl_lines = [line] if 0 <= line <= start_line + len(lines) else None
-        else:
-            start_line = None
+        lines, start_line = helpers.get_source_lines(obj)
+        if isinstance(obj, types.ModuleType):
+            start_line += 1
+        if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
+            call_file = frame.f_back.f_code.co_filename
+            obj_file = inspect.getfile(obj)
+            if call_file == obj_file:
+                line_no = frame.f_back.f_lineno
+                line = line_no - start_line + 1
+                hl_lines = [line] if 0 <= line <= start_line + len(lines) else None
         return cls(
             code=code,
             title=code_title,
-            linenums=start_line,
+            linenums=start_line if linenums else None,
             highlight_lines=hl_lines,
             **kwargs,
         )
