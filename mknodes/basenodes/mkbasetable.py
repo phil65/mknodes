@@ -40,18 +40,20 @@ class MkBaseTable(mkcontainer.MkContainer):
         super().__init__(header=header, **kwargs)
         match data:
             case () | None:
-                self.data: dict[str, list[mknode.MkNode]] = {c: [] for c in columns or []}
+                self._data: dict[str, list[mknode.MkNode]] = {
+                    c: [] for c in columns or []
+                }
             case Mapping():
-                self.data = {
+                self._data = {
                     str(k): [self.to_item(i) for i in v] for k, v in data.items()
                 }
             case ((str(), *_), *_):
                 h = columns or [str(i) for i in range(len(data))]
-                self.data = {}
+                self._data = {}
                 for i, col in enumerate(data):
-                    self.data[h[i]] = [self.to_item(j) for j in col]
+                    self._data[h[i]] = [self.to_item(j) for j in col]
             case (dict(), *_):
-                self.data = {
+                self._data = {
                     k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
                     for k in data[0]
                 }
@@ -63,6 +65,14 @@ class MkBaseTable(mkcontainer.MkContainer):
             k: [helpers.to_str_if_textnode(i) for i in v] for k, v in self.data.items()
         }
         return helpers.get_repr(self, data=kwarg_data)
+
+    @property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = value
 
     @property
     def columns(self):
@@ -77,17 +87,17 @@ class MkBaseTable(mkcontainer.MkContainer):
     def items(self, data):
         match data:
             case Mapping():
-                self.data = {
+                self._data = {
                     str(k): [self.to_item(i) for i in v] for k, v in data.items()
                 }
             case (str(), *_):
-                self.data = {"": [self.to_item(i) for i in data]}
+                self._data = {"": [self.to_item(i) for i in data]}
             case (dict(), *_):
-                self.data = {k: [self.to_item(dic[k]) for dic in data] for k in data[0]}
+                self._data = {k: [self.to_item(dic[k]) for dic in data] for k in data[0]}
             case ():
-                self.data = {"": [self.to_item(k) for k in data]}
+                self._data = {"": [self.to_item(k) for k in data]}
             case None:
-                self.data = {}
+                self._data = {}
             case _:
                 raise TypeError(data)
 
@@ -129,10 +139,9 @@ class MkBaseTable(mkcontainer.MkContainer):
             column: Name or index of the column
         """
         data = self.data  # property
-        if isinstance(column, int):
-            column = list(data.keys())[column]
+        col_name = list(data.keys())[column] if isinstance(column, int) else column
         max_len = max(
-            (len(str(i).replace("\n", "<br>")) for i in data[column]),
+            (len(str(i).replace("\n", "<br>")) for i in data[col_name]),
             default=0,
         )
-        return max(len(column), max_len)
+        return max(len(col_name), max_len)

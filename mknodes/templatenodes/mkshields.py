@@ -57,14 +57,14 @@ class MkShields(mkcontainer.MkContainer):
     def items(self) -> list[mknode.MkNode]:
         match self.user:
             case None if self.associated_project:
-                user = self.associated_project.info.get_repository_username()
+                user = self.associated_project.get_repository_username()
             case None:
                 user = ""
             case str():
                 user = self.user
         match self.project:
             case None if self.associated_project:
-                project = self.associated_project.info.get_repository_name()
+                project = self.associated_project.get_repository_name()
             case None:
                 project = ""
             case str():

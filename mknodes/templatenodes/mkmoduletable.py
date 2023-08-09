@@ -39,10 +39,6 @@ class MkModuleTable(mktable.MkTable):
             for k in data[0]
         }
 
-    @data.setter
-    def data(self, value):
-        pass
-
     @staticmethod
     def create_example_page(page):
         import mkdocstrings

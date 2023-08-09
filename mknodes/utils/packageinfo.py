@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import contextlib
+import functools
+
 from importlib import metadata
 import pathlib
 import re
@@ -57,17 +60,32 @@ class Dependency:
         return f"{type(self).__name__}(name={self.name!r})"
 
 
+@functools.cache
+def get_distribution(name):
+    return metadata.distribution(name)
+
+
+@functools.cache
+def get_metadata(dist):
+    return dist.metadata
+
+
+@functools.cache
+def get_requires(dist):
+    return dist.requires
+
+
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
-        self.distribution = metadata.distribution(pkg_name)
-        self.metadata = self.distribution.metadata
+        self.distribution = get_distribution(pkg_name)
+        self.metadata = get_metadata(self.distribution)
         self.urls = {
             v.split(",")[0]: v.split(",")[1]
             for k, v in self.metadata.items()
             if k == "Project-URL"
         }
-        requires = self.distribution.requires
+        requires = get_requires(self.distribution)
         self.requirements = [Dependency(i) for i in requires] if requires else []
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
         self.version = self.metadata["Version"]
@@ -94,9 +112,6 @@ class PackageInfo:
         return pathlib.Path(file) if file else None
 
     def get_repository_url(self) -> str | None:
-        config = helpers.get_mkdocs_config()
-        if config.repo_url:
-            return config.repo_url
         if "Source" in self.urls:
             return self.urls["Source"]
         return self.urls["Repository"] if "Repository" in self.urls else None
@@ -117,6 +132,24 @@ class PackageInfo:
     def get_required_package_names(self) -> list[str]:
         return [i.name for i in self.requirements]
 
+    def get_required_packages(self) -> dict[PackageInfo, Dependency]:
+        modules = (
+            {Requirement(i).name for i in get_requires(self.distribution)}
+            if get_requires(self.distribution)
+            else set()
+        )
+        packages = {}
+        for mod in modules:
+            with contextlib.suppress(Exception):
+                packages[PackageInfo(mod)] = self.get_dep_info(mod)
+        return packages
+
+    def get_dep_info(self, name):
+        for i in self.requirements:
+            if i.name == name:
+                return i
+        raise ValueError(name)
+
     def get_extras(self) -> set[str]:
         return {extra for dep in self.requirements for extra in dep.extras}
 
@@ -127,4 +160,4 @@ class PackageInfo:
 
 if __name__ == "__main__":
     info = PackageInfo("mknodes")
-    print(info.get_repository_username())
+    print(info.metadata)
