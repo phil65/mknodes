@@ -39,6 +39,21 @@ class PyProject:
                 msg = "No known build backend"
                 raise RuntimeError(msg)
 
+    def has_mypy(self) -> bool:
+        return "mypy" in self.pyproject["tool"]
+
+    def has_ruff(self) -> bool:
+        return "ruff" in self.pyproject["tool"]
+
+    def has_black(self) -> bool:
+        return "ruff" in self.pyproject["tool"]
+
+    def has_pytest(self) -> bool:
+        return "ruff" in self.pyproject["tool"]
+
+    def has_coverage(self) -> bool:
+        return "coverage" in self.pyproject["tool"]
+
 
 if __name__ == "__main__":
     info = PyProject(
