@@ -15,6 +15,7 @@ import sys
 import types
 from typing import Any
 
+from mkdocs import config
 import requests
 
 
@@ -274,6 +275,11 @@ def download(url: str):
     else:
         response = requests.get(url)
     return "" if response.status_code != RESPONSE_CODE_OK else response.text
+
+
+@functools.cache
+def get_mkdocs_config(path: str | None = None):
+    return config.load_config(path or "mkdocs.yml")
 
 
 if __name__ == "__main__":

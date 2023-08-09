@@ -61,10 +61,7 @@ class MkLink(mknode.MkNode):
     def get_url(self) -> str:  # type: ignore[return]
         import mknodes
 
-        if self.associated_project:
-            site_url = self.associated_project.config.site_url or ""
-        else:
-            site_url = ""
+        site_url = helpers.get_mkdocs_config().site_url or ""
         match self.target:
             case mknodes.MkPage():
                 path = self.target.resolved_file_path.replace(".md", ".html")
