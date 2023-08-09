@@ -53,7 +53,7 @@ class MkText(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        self.text = str(text or "")
+        self._text = str(text or "")
 
     def __repr__(self):
         return helpers.get_repr(self, text=self.text)
@@ -63,8 +63,16 @@ class MkText(mknode.MkNode):
         section_text = extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        self._text = value
+
     def _to_markdown(self) -> str:
-        return self.text if isinstance(self.text, str) else self.text.to_markdown()
+        return self.text
 
     @staticmethod
     def create_example_page(page):
