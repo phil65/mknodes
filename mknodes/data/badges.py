@@ -209,13 +209,14 @@ github_language_count_badge = Badge(
     url="https://github.com/{user}/{project}",
 )
 
-github_build_badge = Badge(
-    identifier="build",
-    group="github",
-    title="Github Build",
-    image_url="https://github.com/{user}/{project}/workflows/Build/badge.svg",
-    url="https://github.com/{user}/{project}/actions/",
-)
+# needs branch
+# github_build_badge = Badge(
+#     identifier="build",
+#     group="github",
+#     title="Github Build",
+#     image_url="https://github.com/{user}/{project}/workflows/Build/badge.svg",
+#     url="https://github.com/{user}/{project}/actions/",
+# )
 
 github_weekly_commits_badge = Badge(
     identifier="weekly_commits",
@@ -277,7 +278,7 @@ SHIELDS = [
     wheel_badge,
     python_version_badge,
     implementation_badge,
-    github_build_badge,
+    # github_build_badge,
     github_releases_badge,
     github_contributors_badge,
     github_discussions_badge,

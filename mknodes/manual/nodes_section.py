@@ -175,9 +175,10 @@ def create_from_file_section(nav: mknodes.MkNav):
     text = summary_file.read_text().replace("](", "] (")  # (3)
     # we are wrapping some annotations with Admonitions, that seems to help
     # with nesting / escaping issues in some cases (and it looks nice!).
-    tree_node = mknodes.MkDirectoryTree(mknodes.TEST_RESOURCES / "nav_tree/")
+    path = mknodes.TEST_RESOURCES / "nav_tree/"
+    tree_node = mknodes.MkDirectoryTree(path, header="Directory tree")
     code.annotations[1] = mknodes.MkAdmonition(tree_node)
-    file_content_node = mknodes.MkCode(text)
+    file_content_node = mknodes.MkCode(text, header="SUMMARY.md content")
     code.annotations[2] = mknodes.MkAdmonition(file_content_node)
     code.annotations[3] = HACK_TEXT
     code.annotations[4] = ANNOTATIONS_INFO  # (4)

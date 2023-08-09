@@ -93,6 +93,8 @@ class MkShields(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node)
         node = MkShields(user="phil65", project="mknodes", shields=None)
         page += mknodes.MkReprRawRendered(node)
+        node = MkShields(user="mkdocs", project="mkdocs", shields=None)
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
