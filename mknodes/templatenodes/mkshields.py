@@ -40,7 +40,7 @@ class MkShields(mkcontainer.MkContainer):
         self.user = user
         self.project = project
         self.branch = branch
-        self.shields = shields or [i.identifier for i in badges.SHIELDS]
+        self.shields = shields
 
     def __repr__(self):
         kwargs = dict(
@@ -69,6 +69,7 @@ class MkShields(mkcontainer.MkContainer):
                 project = ""
             case str():
                 project = self.project
+        shields = self.shields or [i.identifier for i in badges.SHIELDS]
         return [
             mkimage.MkImage(
                 s.get_image_url(user=user, project=project, branch=self.branch),
@@ -77,7 +78,7 @@ class MkShields(mkcontainer.MkContainer):
                 parent=self,
             )
             for s in badges.SHIELDS
-            if s.identifier in self.shields
+            if s.identifier in shields
         ]
 
     @items.setter

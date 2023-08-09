@@ -17,7 +17,7 @@ class MkDependencyTable(mktable.MkTable):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, package=self.package)
+        return helpers.get_repr(self, package=self.package, _filter_empty=True)
 
     @property
     def data(self):
