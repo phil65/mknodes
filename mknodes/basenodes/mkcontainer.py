@@ -59,7 +59,7 @@ class MkContainer(mknode.MkNode):
         return iter(self.items)
 
     def __repr__(self):
-        content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
+        content = [str(i) if type(i) == mktext.MkText else i for i in self.items]
         return helpers.get_repr(self, content=content)
 
     @staticmethod

@@ -19,7 +19,7 @@ class MkLicense(mktext.MkText):
     def __init__(
         self,
         license_type: str | None = None,
-        header="License",
+        header: str = "License",
         **kwargs: Any,
     ):
         """Constructor.

@@ -60,7 +60,7 @@ class MkHtmlBlock(mkblock.MkBlock):
         elif len(self.items) == 1:
             content = self.items[0]
         else:
-            content = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
+            content = [str(i) if type(i) == mktext.MkText else i for i in self.items]
         return helpers.get_repr(
             self,
             content=content,

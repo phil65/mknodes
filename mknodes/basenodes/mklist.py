@@ -51,7 +51,7 @@ class MkList(mkcontainer.MkContainer):
     def __repr__(self):
         from mknodes.basenodes import mktext
 
-        items = [str(i) if isinstance(i, mktext.MkText) else i for i in self.items]
+        items = [str(i) if type(i) == mktext.MkText else i for i in self.items]
         return helpers.get_repr(
             self,
             items=items,
