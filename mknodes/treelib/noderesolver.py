@@ -363,6 +363,3 @@ if __name__ == "__main__":
     root = manual.create_root()
     resolver = MkNodeResolver()
     result = resolver.glob("*/*/MkAdm*", root)
-    import pprint
-
-    pprint.pprint(result)

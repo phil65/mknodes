@@ -25,6 +25,4 @@ for submod in extra_docs.iter_modules(predicate=lambda x: not hasattr(x, QT_MODU
     subdoc = extra_docs.add_doc(submod)
     subdoc.collect_classes()
 
-
-# root_nav.pretty_print()
 root_nav.write()  # Finally, we write the whole tree.

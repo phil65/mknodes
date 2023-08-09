@@ -556,8 +556,6 @@ if __name__ == "__main__":
     # print(pathlib.Path(nav_file).read_text())
     # nav = MkNav.from_folder(nav_tree_path)
     # print("\n".join(lines))
-    # import pprint
-    # pprint.pprint(nav.as_dict())
 
     # # print(nav.all_virtual_files())
     nav = MkNav.from_file(nav_file)
@@ -569,6 +567,3 @@ if __name__ == "__main__":
     # page2 = subnav.add_page("And a second one")
     # subsubnav = subnav.add_nav("SubSubNav")
     # subsubnav = subsubnav.add_page("SubSubPage")
-    # from pprint import pprint
-
-    # pprint(docs.all_virtual_files())
