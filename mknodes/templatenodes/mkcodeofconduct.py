@@ -43,6 +43,7 @@ class MkCodeOfConduct(mktext.MkText):
             self,
             contact_email=self.contact_email,
             version=self.version,
+            _filter_empty=True,
         )
 
     @property

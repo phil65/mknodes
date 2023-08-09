@@ -4,6 +4,7 @@ import logging
 import types
 
 from mknodes import mknav
+from mknodes.data import commitconventions
 from mknodes.utils import helpers, packageinfo
 
 
@@ -13,10 +14,18 @@ logger = logging.getLogger(__name__)
 class Project:
     """MkNodes Project."""
 
-    def __init__(self, module: types.ModuleType, package_managers=None):
+    def __init__(
+        self,
+        module: types.ModuleType,
+        package_managers: list[str] | None = None,
+        commit_scopes: list[commitconventions.ScopeStr]
+        | commitconventions.ConventionTypeStr
+        | None = None,
+    ):
         self.module = module
         self.package_name = module.__name__
         self.package_managers = package_managers or ["pip"]
+        self.commit_scopes = commit_scopes
         self.info = packageinfo.PackageInfo(self.package_name)
         self._root_nav = None
 

@@ -87,12 +87,19 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
     @property
     def items(self):
         match self.scopes:
+            case None if self.associated_project:
+                val = self.associated_project.commit_scopes
+            case None:
+                val = "conventional_commits"
+            case _:
+                val = self.scopes
+        match val:
             case "basic":
                 scopes = commitconventions.basic.types
-            case "convententional_commits" | "angular" | None:
+            case "conventional_commits" | "angular" | None:
                 scopes = commitconventions.conventional_commits.types
             case list():
-                scopes = self.scopes
+                scopes = val
             case _:
                 raise TypeError(self.scopes)
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
