@@ -9,14 +9,14 @@ from typing import Any, Literal
 
 from git_changelog import cli
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mktext
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
 
 
-class MkChangelog(mknode.MkNode):
+class MkChangelog(mktext.MkText):
     """Git-based changelog (created by git-changelog).
 
     !!! note
@@ -59,7 +59,8 @@ class MkChangelog(mknode.MkNode):
             _filter_empty=True,
         )
 
-    def _to_markdown(self) -> str:
+    @property
+    def text(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):
             _changelog, text = cli.build_and_render(
                 repository=str(self.repository) if self.repository else ".",

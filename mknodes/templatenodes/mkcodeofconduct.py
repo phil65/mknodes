@@ -7,7 +7,7 @@ from typing import Any
 
 import requests
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mktext
 from mknodes.utils import helpers
 
 
@@ -17,7 +17,7 @@ URL_END = "/code_of_conduct/code_of_conduct.md"
 URL_START = "https://www.contributor-covenant.org/version/"
 
 
-class MkCodeOfConduct(mknode.MkNode):
+class MkCodeOfConduct(mktext.MkText):
     """Contributor Covenant code of conduct."""
 
     ICON = "octicons/code-of-conduct-24"
@@ -52,7 +52,8 @@ class MkCodeOfConduct(mknode.MkNode):
             version=self.version,
         )
 
-    def _to_markdown(self) -> str:
+    @property
+    def text(self) -> str:
         url = URL_START + "/".join(self.version) + URL_END
         try:
             if token := os.getenv("GH_TOKEN"):
