@@ -29,7 +29,7 @@ in general.
 
 Scope and body are optional. Type can be:
 
-{scopes}
+{commit_types}
 
 If you write a body, please add trailers at the end
 (for example issues and PR references, or co-authors),
@@ -64,7 +64,7 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        scopes: list[commitconventions.ScopeStr]
+        commit_types: list[commitconventions.CommitTypeStr]
         | commitconventions.ConventionTypeStr
         | None = None,
         header: str = "Commit message convention",
@@ -73,41 +73,42 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
         """Constructor.
 
         Arguments:
-            scopes: Allowed commit scopes. Can be "basic", "conventional_commits"
-                    or a list of scopes
+            commit_types: Allowed commit commit_types. Can be "basic",
+                          "conventional_commits", or a list of commit_types
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        self.scopes = scopes
+        self.commit_types = commit_types
 
     def __repr__(self):
-        return helpers.get_repr(self, scopes=self.scopes, _filter_empty=True)
+        return helpers.get_repr(self, commit_types=self.commit_types, _filter_empty=True)
 
     @property
     def items(self):
-        match self.scopes:
+        match self.commit_types:
             case None if self.associated_project:
-                val = self.associated_project.commit_scopes
+                val = self.associated_project.commit_types
             case None:
                 val = "conventional_commits"
             case _:
-                val = self.scopes
+                val = self.commit_types
         match val:
             case "basic":
-                scopes = commitconventions.basic.types
+                commit_types = commitconventions.basic.types
             case "conventional_commits" | "angular" | None:
-                scopes = commitconventions.conventional_commits.types
+                commit_types = commitconventions.conventional_commits.types
             case list():
-                scopes = val
+                commit_types = val
             case _:
-                raise TypeError(self.scopes)
+                raise TypeError(self.commit_types)
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
-        ls = mklist.MkList([f"`{k}`: {commitconventions.ALL_SCOPES[k]}" for k in scopes])
+        all_types = commitconventions.ALL_COMMIT_TYPES
+        ls = mklist.MkList([f"`{k}`: {all_types[k]}" for k in commit_types])
         return [
             mktext.MkText(START_TEXT.format(styles=styles), parent=self),
             mkcode.MkCode(COMMIT_TEXT, language="md", parent=self),
-            mktext.MkText(MID_TEXT.format(scopes=ls), parent=self),
+            mktext.MkText(MID_TEXT.format(commit_types=ls), parent=self),
             mkcode.MkCode(BODY_TEXT, language="md", parent=self),
             mktext.MkText(END_TEXT, parent=self),
         ]
@@ -122,9 +123,12 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
 
         page.status = "new"  # for the small icon in the left menu
         node = MkCommitMessageConvention(header="")
-        page += mknodes.MkReprRawRendered(node, header="### All scopes")
-        node = MkCommitMessageConvention(scopes=["fix", "feat", "refactor"], header="")
-        page += mknodes.MkReprRawRendered(node, header="### Selected scopes")
+        page += mknodes.MkReprRawRendered(node, header="### All commit_types")
+        node = MkCommitMessageConvention(
+            commit_types=["fix", "feat", "refactor"],
+            header="",
+        )
+        page += mknodes.MkReprRawRendered(node, header="### Selected commit_types")
 
 
 if __name__ == "__main__":

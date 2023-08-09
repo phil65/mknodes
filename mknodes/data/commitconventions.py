@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 ConventionTypeStr = Literal["conventional_commits", "basic"]
 
-ScopeStr = Literal[
+CommitTypeStr = Literal[
     "build",
     "chore",
     "ci",
@@ -21,6 +21,7 @@ ScopeStr = Literal[
     "fix",
     "ref",
     "revert",
+    "add",
     "change",
     "remove",
     "merge",
@@ -31,7 +32,7 @@ ScopeStr = Literal[
     "tests",
 ]
 
-ALL_SCOPES: dict[ScopeStr, str] = {
+ALL_COMMIT_TYPES: dict[CommitTypeStr, str] = {
     "build": "About packaging, building wheels, etc.",
     "chore": "About packaging or repo/files management.",
     "ci": "About Continuous Integration.",
@@ -42,6 +43,7 @@ ALL_SCOPES: dict[ScopeStr, str] = {
     "fix": "Bug fix.",
     "ref": "Code refactoring.",
     "revert": "Code revert.",
+    "add": "Code Addition.",
     "change": "Code change.",
     "remove": "Code removal.",
     "merge": "Code merge.",
@@ -56,7 +58,9 @@ ALL_SCOPES: dict[ScopeStr, str] = {
 @dataclasses.dataclass
 class CommitConvention:
     name: str
-    types: set[str]
+    types: set[CommitTypeStr]
+    badge: str = ""
+    website: str | None = None
 
 
 basic = CommitConvention(
@@ -66,6 +70,7 @@ basic = CommitConvention(
 
 angular = CommitConvention(
     name="angular",
+    website="https://gist.github.com/stephenparish/9941e89d80e2bc58a153",
     types={
         "build",
         "chore",
@@ -87,6 +92,8 @@ angular = CommitConvention(
 
 conventional_commits = CommitConvention(
     name="conventional_commmits",
+    website="https://www.conventionalcommits.org/en/v1.0.0/",
+    badge="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg",
     types={
         "build",
         "chore",

@@ -18,14 +18,14 @@ class Project:
         self,
         module: types.ModuleType,
         package_managers: list[str] | None = None,
-        commit_scopes: list[commitconventions.ScopeStr]
+        commit_types: list[commitconventions.CommitTypeStr]
         | commitconventions.ConventionTypeStr
         | None = None,
     ):
         self.module = module
         self.package_name = module.__name__
         self.package_managers = package_managers or ["pip"]
-        self.commit_scopes = commit_scopes
+        self.commit_types = commit_types
         self.info = packageinfo.PackageInfo(self.package_name)
         self._root_nav = None
 
