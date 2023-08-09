@@ -35,6 +35,7 @@ theme:
   - navigation.tracking # update URL based on current item in TOC
   - navigation.path  # shows breadcrumbs
   - navigation.tabs # make top level tabs
+  - navigation.prune
   # - navigation.expand # expand all subsections in left sidebar by defuault
   - navigation.indexes # documents can be directly attached to sections (overview pages)
   - navigation.footer # next/previous page buttons in footer
