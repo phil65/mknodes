@@ -51,6 +51,7 @@ class MkLicense(mktext.MkText):
     def create_example_page(page):
         import mknodes
 
+        page.status = "new"
         node = MkLicense()
         page += mknodes.MkReprRawRendered(node)
 

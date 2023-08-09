@@ -18,6 +18,7 @@ def create_development_section(root_nav: mknodes.MkNav):
     create_changelog_page(dev_nav)
     create_coc_page(dev_nav)
     create_contribute_page(dev_nav)
+    create_license_page(dev_nav)
 
 
 def create_changelog_page(nav: mknodes.MkNav):
@@ -40,3 +41,10 @@ def create_contribute_page(nav: mknodes.MkNav):
     page += mknodes.MkCode.for_object(create_contribute_page, header=PAGE_CODE)
     page += mknodes.MkCommitMessageConvention()
     page += mknodes.MkPullRequestGuidelines()
+
+
+def create_license_page(nav: mknodes.MkNav):
+    """Create the "License" MkPage and attach it to given MkNav."""
+    page = nav.add_page("License", icon="material/license", hide_toc=True)
+    page += mknodes.MkCode.for_object(create_license_page, header=PAGE_CODE)
+    page += mknodes.MkLicense()
