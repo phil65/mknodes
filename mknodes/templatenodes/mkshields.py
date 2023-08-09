@@ -40,7 +40,7 @@ class MkShields(mkcontainer.MkContainer):
         self.user = user
         self.project = project
         self.branch = branch
-        self.shields = shields
+        self.shields = shields or [i.identifier for i in badges.SHIELDS]
 
     def __repr__(self):
         kwargs = dict(
