@@ -8,7 +8,7 @@ from mknodes.basenodes import mkdiagram
 from mknodes.utils import connector, helpers
 
 
-DiagramModeStr = Literal["parent_tree", "subclass_tree", "mro"]
+DiagramModeStr = Literal["baseclasses", "subclasses", "mro"]
 
 
 class BaseClassConnector(connector.Connector):
@@ -70,7 +70,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     def __init__(
         self,
         klass: type,
-        mode: DiagramModeStr = "parent_tree",
+        mode: DiagramModeStr = "baseclasses",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,
         header: str = "",
@@ -96,10 +96,10 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     def create_example_page(page):
         import mknodes
 
-        parent_diagram = MkClassDiagram(klass=MkClassDiagram, mode="parent_tree")
+        parent_diagram = MkClassDiagram(klass=MkClassDiagram, mode="baseclasses")
         sub_diagram = MkClassDiagram(
             klass=mknodes.MkContainer,
-            mode="subclass_tree",
+            mode="subclasses",
             direction="LR",
         )
         mro_diagram = MkClassDiagram(klass=mknodes.MkTable, mode="mro")
@@ -119,10 +119,10 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     @property
     def mermaid_code(self) -> str:
         match self.mode:
-            case "subclass_tree":
+            case "subclasses":
                 builder = SubclassConnector(self.klass, max_depth=self._max_depth)
                 return builder.get_graph_connection_text()
-            case "parent_tree":
+            case "baseclasses":
                 builder = ParentClassConnector(self.klass, max_depth=self._max_depth)
                 return builder.get_graph_connection_text()
             case "mro":
@@ -135,5 +135,5 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 if __name__ == "__main__":
     from mknodes.basenodes import mknode
 
-    diagram = MkClassDiagram(mknode.MkNode, mode="subclass_tree", max_depth=3)
+    diagram = MkClassDiagram(mknode.MkNode, mode="subclasses", max_depth=3)
     print(diagram)

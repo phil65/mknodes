@@ -95,7 +95,7 @@ class InheritanceDiagramPageProcessor(PageProcessor):
     ID = "inheritance_diagram"
 
     def append_block(self, page: mkpage.MkPage):
-        diagram = mkclassdiagram.MkClassDiagram(self.item, mode="parent_tree")
+        diagram = mkclassdiagram.MkClassDiagram(self.item, mode="baseclasses")
         page += diagram
 
     def get_default_header(self, page: mkpage.MkPage):

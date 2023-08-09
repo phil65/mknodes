@@ -5,5 +5,5 @@ import mknodes
 
 def test_modes():
     mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="mro")
-    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="subclass_tree")
-    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="parent_tree")
+    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="subclasses")
+    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="baseclasses")

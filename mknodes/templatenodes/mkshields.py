@@ -20,9 +20,9 @@ class MkShields(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        shields: Sequence[badges.BadgeTypeStr],
-        user: str,
-        project: str,
+        shields: Sequence[badges.BadgeTypeStr] | None,
+        user: str | None = None,
+        project: str | None = None,
         branch: str = "main",
         **kwargs: Any,
     ):
@@ -47,6 +47,7 @@ class MkShields(mkcontainer.MkContainer):
             shields=self.shields,
             user=self.user,
             project=self.project,
+            _filter_empty=True,
         )
         if self.branch != "main":
             kwargs["branch"] = self.branch
@@ -54,10 +55,24 @@ class MkShields(mkcontainer.MkContainer):
 
     @property
     def items(self) -> list[mknode.MkNode]:
+        match self.user:
+            case None if self.associated_project:
+                user = self.associated_project.info.get_repository_username()
+            case None:
+                user = ""
+            case str():
+                user = self.user
+        match self.project:
+            case None if self.associated_project:
+                project = self.associated_project.info.get_repository_name()
+            case None:
+                project = ""
+            case str():
+                project = self.project
         return [
             mkimage.MkImage(
-                s.get_image_url(user=self.user, project=self.project, branch=self.branch),
-                link=s.get_url(user=self.user, project=self.project),
+                s.get_image_url(user=user, project=project, branch=self.branch),
+                link=s.get_url(user=user, project=project),
                 title=s.title,
                 parent=self,
             )
@@ -73,11 +88,7 @@ class MkShields(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        node = MkShields(
-            shields=["version", "status", "codecov"],
-            user="phil65",
-            project="mknodes",
-        )
+        node = MkShields(shields=["version", "status", "codecov"])
         page += mknodes.MkReprRawRendered(node)
         node = MkShields(user="phil65", project="mknodes", shields=None)
         page += mknodes.MkReprRawRendered(node)

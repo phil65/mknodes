@@ -2,12 +2,23 @@ from __future__ import annotations
 
 from importlib import metadata
 import pathlib
+import re
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
 
 from mknodes.utils import helpers
 
+
+GITHUB_REGEX = re.compile(
+    r"(?:http?:\/\/|https?:\/\/)?"
+    r"(?:www\.)?"
+    r"github\.com\/"
+    r"(?:\/*)"
+    r"([\w\-\.]*)\/"
+    r"([\w\-]*)"
+    r"(?:\/|$)?"  # noqa: COM812
+)
 
 CLASSIFIERS = [
     "Development Status",
@@ -83,9 +94,18 @@ class PackageInfo:
         return pathlib.Path(file) if file else None
 
     def get_repository_url(self) -> str | None:
+        config = helpers.get_mkdocs_config()
+        if config.repo_url:
+            return config.repo_url
         if "Source" in self.urls:
             return self.urls["Source"]
         return self.urls["Repository"] if "Repository" in self.urls else None
+
+    def get_repository_username(self):
+        return GITHUB_REGEX.match(self.get_repository_url()).group(1)
+
+    def get_repository_name(self):
+        return GITHUB_REGEX.match(self.get_repository_url()).group(2)
 
     def get_keywords(self) -> list[str]:
         return self.metadata.get("Keywords", "").split(",")
@@ -103,4 +123,4 @@ class PackageInfo:
 
 if __name__ == "__main__":
     info = PackageInfo("mknodes")
-    print(info.get_author_email())
+    print(info.get_repository_username())
