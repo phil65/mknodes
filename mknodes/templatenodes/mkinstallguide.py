@@ -18,7 +18,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        project: str,
+        project: str | None = None,
         package_managers: list[str] | None = None,
         header_level: int = 3,
         **kwargs: Any,
@@ -38,12 +38,21 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
     @property
     def items(self) -> list[mknode.MkNode]:
-        if self.associated_project:
+        if self.package_managers:
+            managers = self.package_managers
+        elif self.associated_project:
             managers = self.associated_project.package_managers
         else:
             managers = ["pip"]
+        if self.project:
+            project = self.project
+        elif self.associated_project:
+            project = self.associated_project.package_name
+        else:
+            msg = "No project set"
+            raise ValueError(msg)
         klasses = [installmethods.InstallMethod.by_id(i) for i in managers]
-        methods = [i(self.project) for i in klasses]
+        methods = [i(project) for i in klasses]
         return [self.get_section_for(method) for method in methods]
 
     @items.setter
@@ -78,12 +87,18 @@ class MkInstallGuide(mkcontainer.MkContainer):
         # MkInstallGuide is just a text snippet for a short Install guide
         # Currently it is only tailored towards PyPi.
 
-        node = MkInstallGuide(project="mknodes", package_managers=["pip", "pipx"])
-        page += mknodes.MkReprRawRendered(node, header="Pip / Pipx")
+        node = MkInstallGuide(project="mknodes")
+        page += mknodes.MkReprRawRendered(node, header="### Default")
+        node2 = MkInstallGuide(project="mknodes", package_managers=["pipx"])
+        page += mknodes.MkReprRawRendered(node2, header="### Explicit")
 
 
 if __name__ == "__main__":
     import mknodes
 
-    installguide = MkInstallGuide(project="mknodes")
-    print(mknodes.MkReprRawRendered(installguide))
+    project = mknodes.Project(mknodes)
+    root = project.get_root()
+    page = root.add_index_page()
+    guide = MkInstallGuide()
+    page += guide
+    print(page)
