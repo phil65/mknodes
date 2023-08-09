@@ -248,7 +248,7 @@ def create_adding_to_mkpages_page(nav: mknodes.MkNav):
         status="new",
     )
     page += mknodes.MkCode.for_object(create_adding_to_mkpages_page, header=PAGE_CODE)
-    page += mknodes.MkText("You can add other MkNodes to a page sequentially.")
+    page += mknodes.MkAdmonition("You can add other MkNodes to a page sequentially.")
     page += "Adding strings also works, they get converted to MkText nodes."
     page += "### ...and text starting with # will become a MkHeader."
     page += "Every MkPage has a MkFootNotes node built-in[^1]."
