@@ -91,8 +91,10 @@ class MkNode(node.Node):
     def __eq__(self, other):
         if not type(other) == type(self):
             return False
-        dct_1 = self.__dict__.copy().pop("_parent")
-        dct_2 = other.__dict__.copy().pop("_parent")
+        dct_1 = self.__dict__.copy()
+        dct_1.pop("_parent")
+        dct_2 = other.__dict__.copy()
+        dct_2.pop("_parent")
         return dct_1 == dct_2
 
     def _to_markdown(self) -> str:
