@@ -5,7 +5,8 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mkheader, mknode, mktext
-from mknodes.utils import helpers, installmethods
+from mknodes.data import installmethods
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
