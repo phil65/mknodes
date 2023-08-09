@@ -75,6 +75,11 @@ def get_requires(dist):
     return dist.requires
 
 
+@functools.cache
+def get_dependency(name):
+    return Dependency(name)
+
+
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
@@ -86,7 +91,7 @@ class PackageInfo:
             if k == "Project-URL"
         }
         requires = get_requires(self.distribution)
-        self.requirements = [Dependency(i) for i in requires] if requires else []
+        self.requirements = [get_dependency(i) for i in requires] if requires else []
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
         self.version = self.metadata["Version"]
         self.metadata_version = self.metadata["Metadata-Version"]
