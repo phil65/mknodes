@@ -69,7 +69,9 @@ class MkLicense(mktext.MkText):
 
         page.status = "new"
         node = MkLicense()
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### From project")
+        node = MkLicense("GPL-3.0")
+        page += mknodes.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":
@@ -77,7 +79,7 @@ if __name__ == "__main__":
 
     proj = mknodes.Project(mknodes)
     nav = proj.get_root()
-    lic = MkLicense()
+    lic = MkLicense("GPL-3.0")
     page = nav.add_page("test")
     page += lic
     nav += page
