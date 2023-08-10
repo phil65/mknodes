@@ -4,6 +4,7 @@ import pathlib
 
 import toml
 
+from mknodes.data import buildsystems
 from mknodes.utils import helpers
 
 
@@ -30,20 +31,11 @@ class PyProject:
 
     def build_system(self) -> str:
         back_end = self.pyproject["build-system"]["build-backend"]
-        match back_end:
-            case "hatchling.build":
-                return "hatch"
-            case "poetry.core.masonry.api":
-                return "poetry"
-            case "setuptools.build_meta":
-                return "setuptools"
-            case "flit_core.buildapi":
-                return "flit"
-            case "pdm.backend":
-                return "pdm"
-            case _:
-                msg = "No known build backend"
-                raise RuntimeError(msg)
+        for p in buildsystems.BUILD_SYSTEMS.values():
+            if p.build_backend == back_end:
+                return p.identifier
+        msg = "No known build backend"
+        raise RuntimeError(msg)
 
     def has_mypy(self) -> bool:
         return "mypy" in self.pyproject["tool"]
