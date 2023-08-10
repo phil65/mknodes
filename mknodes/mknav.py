@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any, Literal, Self
 import mkdocs_gen_files
 
 from mknodes.basenodes import mklink, mknode
-from mknodes.pages import mkpage
+from mknodes.pages import metadata, mkpage
 from mknodes.utils import helpers
 
 
@@ -69,6 +69,7 @@ class MkNav(mknode.MkNode):
         self.index_title: str | None = None
         self.append_markdown_to_pages = append_markdown_to_pages
         self._associated_project = project
+        self.metadata = metadata.Metadata()
         super().__init__(**kwargs)
 
     def __repr__(self):
@@ -112,6 +113,15 @@ class MkNav(mknode.MkNode):
             pathlib.Path(self.section) / self.filename
             if self.section
             else pathlib.Path(self.filename)
+        ).as_posix()
+
+    @property
+    def metadata_file(self) -> str:
+        """Get path to metadata file."""
+        return (
+            pathlib.Path(self.section) / ".meta.yml"
+            if self.section
+            else pathlib.Path(".meta.yml")
         ).as_posix()
 
     @property
@@ -228,7 +238,10 @@ class MkNav(mknode.MkNode):
 
     def virtual_files(self) -> dict[str, str]:
         """Override for MkNode.virtual_files."""
-        return {str(self.path): self.to_markdown()}
+        dct = {self.path: self.to_markdown()}
+        if self.metadata:
+            dct[self.metadata_file] = str(self.metadata)
+        return dct
 
     def to_markdown(self) -> str:
         nav = mkdocs_gen_files.Nav()
