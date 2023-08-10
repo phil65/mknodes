@@ -80,6 +80,16 @@ def get_dependency(name):
     return Dependency(name)
 
 
+registry: dict[str, PackageInfo] = {}
+
+
+def get_info(pkg_name):
+    if pkg_name in registry:
+        return registry[pkg_name]
+    registry[pkg_name] = PackageInfo(pkg_name)
+    return registry[pkg_name]
+
+
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
@@ -99,6 +109,9 @@ class PackageInfo:
 
     def __repr__(self):
         return helpers.get_repr(self, pkg_name=self.package_name)
+
+    def __hash__(self):
+        return hash(self.package_name)
 
     def get_license(self) -> str:
         if license_name := self.metadata.get("License-Expression", "").strip():
@@ -146,7 +159,7 @@ class PackageInfo:
         packages = {}
         for mod in modules:
             with contextlib.suppress(Exception):
-                packages[PackageInfo(mod)] = self.get_dep_info(mod)
+                packages[get_info(mod)] = self.get_dep_info(mod)
         return packages
 
     def get_dep_info(self, name):
@@ -164,5 +177,5 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = PackageInfo("mknodes")
+    info = get_info("mknodes")
     print(info.metadata)

@@ -25,7 +25,9 @@ class MkDependencyTable(mktable.MkTable):
             case None if self.associated_project:
                 info = self.associated_project.info
             case str():
-                info = packageinfo.PackageInfo(self.package)
+                info = packageinfo.get_info(self.package)
+            case packageinfo.PackageInfo():
+                info = self.package
             case _:
                 return {}
         rows = []

@@ -37,11 +37,11 @@ class Project:
         self.package_name = module.__name__
         self.package_managers = package_managers or ["pip"]
         self.commit_types = commit_types
-        self.info = packageinfo.PackageInfo(self.package_name)
+        self.info = packageinfo.get_info(self.package_name)
         self._root_nav = None
 
     def get_repository_url(self):
-        config = helpers.get_mkdocs_config()
+        config = helpers.get_mkdocs_config("mkdocs.yml")
         if config.repo_url:
             return config.repo_url
         return self.info.get_repository_url()
