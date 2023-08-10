@@ -63,9 +63,9 @@ class MkCodeOfConduct(mktext.MkText):
     def create_example_page(page):
         import mknodes
 
-        node = MkCodeOfConduct("my@email.com", version="2.1")
+        node = MkCodeOfConduct(contact_email="my@email.com")
         page += mknodes.MkReprRawRendered(node, header="### Explicit email")
-        node = MkCodeOfConduct(version="2.0")
+        node = MkCodeOfConduct()
         page += mknodes.MkReprRawRendered(node, header="### Email from project")
 
 
