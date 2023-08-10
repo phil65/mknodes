@@ -29,7 +29,7 @@ class MkCodeOfConduct(mktext.MkText):
         """Constructor.
 
         Arguments:
-            contact_email: Email for contacting.
+            contact_email: Email for contacting. If None, it will be pulled from Project.
             version: Contributor covenant version
             header: Section header
             kwargs: Keyword arguments passed to parent

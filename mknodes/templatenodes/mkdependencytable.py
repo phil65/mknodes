@@ -38,6 +38,7 @@ class MkDependencyTable(mktable.MkTable):
                 Name=node,
                 Summary=package_info.metadata["Summary"],
                 Markers=str(dep_info.marker) if dep_info.marker else "",
+                Website=package_info.get_repository_url(),
             )
             rows.append(row)
         return {
