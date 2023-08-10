@@ -14,12 +14,11 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
-def get_spdx_license(name: str, copyright_holder: str):
+def get_spdx_license(name: str):
     lic = spdx_lookup.by_id(name)  # there is also by_name, not sure which one to take
     if not lic:
         return None
-    text = lic.template.replace("<year>", str(datetime.date.today().year))
-    return text.replace("<copyright holders>", copyright_holder)
+    return lic.template.replace("<year>", str(datetime.date.today().year))
 
 
 class MkLicense(mktext.MkText):
@@ -52,11 +51,22 @@ class MkLicense(mktext.MkText):
     def text(self):
         if self.license is not None:
             if self.associated_project:
-                holder = self.associated_project.info.metadata["Author-Email"]
+                holder = self.associated_project.info.get_author_name()
+                summary = self.associated_project.info.metadata["Summary"]
+                package_name = self.associated_project.info.name
             else:
                 holder = ""
-            text = get_spdx_license(self.license, copyright_holder=holder)
-            return text or ""
+                summary = ""
+                package_name = ""
+            text = get_spdx_license(self.license)
+            text = text.replace("<copyright holders>", holder)
+            text = text.replace("<name of author>", holder)
+            text = text.replace("<program>", package_name)
+            return text.replace(
+                "<one line to give the program's name and a brief idea of what it does.>",
+                f"{package_name}: {summary}",
+            )
+
         if proj := self.associated_project:
             license_path = proj.info.get_license_file_path()
             if license_path is not None:
