@@ -54,7 +54,7 @@ from .templatenodes.mkdirectorytree import MkDirectoryTree
 from .templatenodes.mklog import MkLog
 from .templatenodes.mklicense import MkLicense
 from .templatenodes.mkdependencytable import MkDependencyTable
-from .templatenodes.mksystemcall import MkSystemCall
+from .templatenodes.mkcommandoutput import MkCommandOutput
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
@@ -115,7 +115,7 @@ __all__ = [
     "MkLog",
     "MkLicense",
     "MkDependencyTable",
-    "MkSystemCall",
+    "MkCommandOutput",
     "Project",
 ]
 

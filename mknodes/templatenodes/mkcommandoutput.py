@@ -11,14 +11,14 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
-class MkSystemCall(mkcode.MkCode):
+class MkCommandOutput(mkcode.MkCode):
     """Table showing info dependencies for a package."""
 
-    ICON = "material/database"
+    ICON = "material/bash"
 
     def __init__(self, call: Sequence[str], **kwargs):
         self.call = call
-        super().__init__(**kwargs)
+        super().__init__(language="bash", **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, call=self.call)
@@ -32,10 +32,10 @@ class MkSystemCall(mkcode.MkCode):
         import mknodes
 
         page.status = "new"
-        node = MkSystemCall(["make", "help"])
+        node = MkCommandOutput(["make", "help"])
         page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    text = MkSystemCall(["make", "help"])
+    text = MkCommandOutput(["make", "help"])
     print(text)
