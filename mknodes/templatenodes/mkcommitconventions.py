@@ -57,7 +57,7 @@ unless they are part of code blocks that must not be wrapped.
 """
 
 
-class MkCommitMessageConvention(mkcontainer.MkContainer):
+class MkCommitConventions(mkcontainer.MkContainer):
     """Text node containing Commit message conventions."""
 
     ICON = "simple/conventionalcommits"
@@ -122,9 +122,9 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
         import mknodes
 
         page.status = "new"  # for the small icon in the left menu
-        node = MkCommitMessageConvention(header="")
+        node = MkCommitConventions(header="")
         page += mknodes.MkReprRawRendered(node, header="### All commit_types")
-        node = MkCommitMessageConvention(
+        node = MkCommitConventions(
             commit_types=["fix", "feat", "refactor"],
             header="",
         )
@@ -132,5 +132,5 @@ class MkCommitMessageConvention(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    conventions = MkCommitMessageConvention()
+    conventions = MkCommitConventions()
     print(conventions)

@@ -42,7 +42,7 @@ def create_contribute_page(nav: mknodes.MkNav):
     """Create the "Contributing" MkPage and attach it to given MkNav."""
     page = nav.add_page("Contributing", icon="material/help")
     page += mknodes.MkCode.for_object(create_contribute_page, header=PAGE_CODE)
-    page += mknodes.MkCommitMessageConvention()
+    page += mknodes.MkCommitConventions()
     page += mknodes.MkPullRequestGuidelines()
 
 

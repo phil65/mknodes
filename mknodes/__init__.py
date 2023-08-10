@@ -43,7 +43,7 @@ from .templatenodes.mkshields import MkShields
 from .templatenodes.mkinstallguide import MkInstallGuide
 from .templatenodes.mkchangelog import MkChangelog
 from .templatenodes.mkcodeofconduct import MkCodeOfConduct
-from .templatenodes.mkcommitmessageconvention import MkCommitMessageConvention
+from .templatenodes.mkcommitconventions import MkCommitConventions
 from .templatenodes.mkpullrequestguidelines import MkPullRequestGuidelines
 from .templatenodes.mkclassdiagram import MkClassDiagram
 from .templatenodes.mkclasstable import MkClassTable
@@ -102,7 +102,7 @@ __all__ = [
     "MkInstallGuide",
     "MkChangelog",
     "MkCodeOfConduct",
-    "MkCommitMessageConvention",
+    "MkCommitConventions",
     "MkPullRequestGuidelines",
     "MkIFrame",
     "MkProgressBar",

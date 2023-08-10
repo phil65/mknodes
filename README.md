@@ -98,7 +98,7 @@ graph LR
   1523124853520["mkinstallguide.MkInstallGuide"]
   1523126010400["mkchangelog.MkChangelog"]
   1523125986400["mkcodeofconduct.MkCodeOfConduct"]
-  1523126017120["mkcommitmessageconvention.MkCommitMessageConvention"]
+  1523126017120["mkcommitconventions.MkCommitConventions"]
   1523126015200["mkpullrequestguidelines.MkPullRequestGuidelines"]
   1523125999840["mkcallable.MkCallable"]
   1523124571872 --> 1523124568032
