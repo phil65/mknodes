@@ -2,18 +2,32 @@ from __future__ import annotations
 
 import dataclasses
 
+from typing import Literal
+
+
+TreeStyleStr = Literal[
+    "regular",
+    "ansi",
+    "ascii",
+    "const",
+    "const_bold",
+    "rounded",
+    "double",
+    "spaces",
+]
+
 
 @dataclasses.dataclass
 class TreeStyle:
-    identifier: str
+    identifier: TreeStyleStr
     filename_middle: str
     filename_last: str
     parent_middle: str
     parent_last: str
 
 
-default_style = TreeStyle(
-    identifier="default",
+regular_style = TreeStyle(
+    identifier="regular",
     filename_middle="├──",
     filename_last="└──",
     parent_middle="    ",
@@ -69,13 +83,16 @@ spaces_style = TreeStyle(
     parent_last="    ",
 )
 
-STYLES = [
-    default_style,
-    ansi_style,
-    ascii_style,
-    const_style,
-    const_bold_style,
-    rounded_style,
-    double_style,
-    spaces_style,
-]
+STYLES: dict[TreeStyleStr, TreeStyle] = {
+    style.identifier: style
+    for style in [
+        regular_style,
+        ansi_style,
+        ascii_style,
+        const_style,
+        const_bold_style,
+        rounded_style,
+        double_style,
+        spaces_style,
+    ]
+}

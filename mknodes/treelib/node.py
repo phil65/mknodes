@@ -186,8 +186,8 @@ class Node:
         for child_item in self.children:
             yield from child_item.iter_nodes(indent + 1)
 
-    def tree_repr(self, style: str = "ascii"):
-        style = next(i for i in treestyles.STYLES if i.identifier == style)
+    def tree_repr(self, style_name: treestyles.TreeStyleStr = "ascii"):
+        style = treestyles.STYLES[style_name]
         if self.parent is None:
             return repr(self)
         _filename_prefix = (
@@ -203,7 +203,7 @@ class Node:
 
         return "".join(reversed(parts))
 
-    def get_tree_repr(self, style: str = "ascii"):
+    def get_tree_repr(self, style: treestyles.TreeStyleStr = "ascii"):
         nodes = [self, *list(self.descendants)]
         return "\n".join(i.tree_repr(style) for i in nodes)
 

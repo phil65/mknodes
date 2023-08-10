@@ -4,25 +4,15 @@ from collections.abc import Callable
 import logging
 import os
 
-from typing import Any, Literal, get_args
+from typing import Any, get_args
 
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
+from mknodes.data import treestyles
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
-
-
-DirectoryTreeStyleStr = Literal[
-    "ansi",
-    "ascii",
-    "const",
-    "const_bold",
-    "rounded",
-    "double",
-    "spaces",
-]
 
 
 class MkDirectoryTree(mkcode.MkCode):
@@ -34,7 +24,7 @@ class MkDirectoryTree(mkcode.MkCode):
         self,
         directory: str | os.PathLike | treelib.Node,
         *,
-        style: DirectoryTreeStyleStr | tuple[str, str, str] | None = None,
+        style: treestyles.TreeStyleStr | tuple[str, str, str] | None = None,
         maximum_depth: int | None = None,
         predicate: Callable | None = None,
         exclude_folders: list[str] | str | None = None,
@@ -104,7 +94,7 @@ class MkDirectoryTree(mkcode.MkCode):
         import mknodes
 
         page.status = "new"
-        for style in get_args(DirectoryTreeStyleStr):
+        for style in get_args(treestyles.TreeStyleStr):
             node = MkDirectoryTree("mknodes/manual", style=style)
             page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
 

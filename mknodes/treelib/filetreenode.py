@@ -73,29 +73,21 @@ class FileTreeNode(node.Node):
             node.append_child(child)
         return node
 
-    def get_tree_repr(self, style: str = "ascii"):
+    def get_tree_repr(self, style: treestyles.TreeStyleStr = "ascii"):
         nodes = [self, *list(self.descendants)]
         return "\n".join(i.displayable(style) for i in nodes)
 
-    def displayable(self, style: str = "ascii"):
-        style = next(i for i in treestyles.STYLES if i.identifier == style)
+    def displayable(self, style_name: treestyles.TreeStyleStr = "ascii"):
+        style = treestyles.STYLES[style_name]
         if self.parent is None:
             return repr(self)
-        _filename_prefix = (
-            style.filename_last if not bool(self.right_sibling) else style.filename_middle
-        )
-        parts = [f"{_filename_prefix!s} {self!r}"]
+        prefix = style.filename_last if self.is_last_child else style.filename_middle
+        parts = [f"{prefix!s} {self!r}"]
         parent = self.parent
         while parent and parent.parent is not None:
-            parts.append(
-                (
-                    style.parent_middle
-                    if not bool(parent.right_sibling)
-                    else style.parent_last
-                ),
-            )
+            part = style.parent_last if parent.is_last_child else style.parent_middle
+            parts.append(part)
             parent = parent.parent
-
         return "".join(reversed(parts))
 
     def get_folder_count(self) -> int:
