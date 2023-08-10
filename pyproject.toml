@@ -57,7 +57,7 @@ build-backend = "hatchling.build"
 [project]
 name = "mknodes"
 authors = [
-  { name = "mknodes", email = "philipptemminghoff@gmail.com" }
+  { name = "Philipp Temminghoff", email = "philipptemminghoff@gmail.com" }
 ]
 description = "Generate docs with ease."
 readme = "README.md"
@@ -93,6 +93,7 @@ dependencies = [
     "git-changelog",
     "requests",
     "toml",
+    "spdx-lookup",
     "PyYAML >=5.1",
 ]
 license = "MIT"

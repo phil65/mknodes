@@ -1,14 +1,25 @@
 from __future__ import annotations
 
+import datetime
 import logging
 
 from typing import Any
+
+import spdx_lookup
 
 from mknodes.basenodes import mktext
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
+
+
+def get_spdx_license(name: str, copyright_holder: str):
+    lic = spdx_lookup.by_id(name)  # there is also by_name, not sure which one to take
+    if not lic:
+        return None
+    text = lic.template.replace("<year>", str(datetime.date.today().year))
+    return text.replace("<copyright holders>", copyright_holder)
 
 
 class MkLicense(mktext.MkText):
@@ -25,7 +36,8 @@ class MkLicense(mktext.MkText):
         """Constructor.
 
         Arguments:
-            license_type: License to show
+            license_type: License to show (identifier from https://spdx.org/licenses/)
+                          If none is set, it will try to get license from Project
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -38,8 +50,12 @@ class MkLicense(mktext.MkText):
     @property
     def text(self):
         if self.license is not None:
-            # TODO.
-            return self.license
+            if self.associated_project:
+                holder = self.associated_project.info.metadata["Author-Email"]
+            else:
+                holder = ""
+            text = get_spdx_license(self.license, copyright_holder=holder)
+            return text or ""
         if proj := self.associated_project:
             license_path = proj.info.get_license_file_path()
             if license_path is not None:
