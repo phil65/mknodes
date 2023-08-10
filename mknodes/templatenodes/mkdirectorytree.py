@@ -37,7 +37,7 @@ class MkDirectoryTree(mkcode.MkCode):
         style: DirectoryTreeStyleStr | tuple[str, str, str] | None = None,
         maximum_depth: int | None = None,
         predicate: Callable | None = None,
-        exclude_folders: list[str] | str | None = None,
+        exclude: list[str] | str | None = None,
         header: str = "",
         **kwargs: Any,
     ):
@@ -48,7 +48,7 @@ class MkDirectoryTree(mkcode.MkCode):
             style: Print style. If tuple, parts are used for stems
             maximum_depth: Maximum nesting depth to print
             predicate: Predicate to filter results
-            exclude_folders: Folders to exclude from listing
+            exclude: Folders to exclude from listing
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -57,35 +57,22 @@ class MkDirectoryTree(mkcode.MkCode):
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
-        self.exclude_folders = (
-            [exclude_folders] if isinstance(exclude_folders, str) else exclude_folders
-        )
+        self.exclude = [exclude] if isinstance(exclude, str) else exclude
 
     @property
     def text(self):
+        style = self.style or "rounded"
         match self.tree:
             case str() | os.PathLike():
-                node = treelib.FileTreeNode.from_folder(
+                node = treelib.FileTreeNode(
                     self.tree,
                     predicate=self.predicate,
-                    exclude_folders=self.exclude_folders,
+                    maximum_depth=self.maximum_depth,
+                    exclude=self.exclude,
                 )
-                return treelib.get_tree_repr(
-                    node,
-                    style=self.style or "rounded",
-                    max_depth=self.maximum_depth or 0,
-                )
+                return node.get_tree_repr(style=style)
             case mknode.MkNode():
-                # lines = [
-                #     f"{level * '    '} {node!r}" for level, node in
-                # self.tree.iter_nodes()
-                # ]
-                # return "\n".join(lines)
-                return treelib.get_tree_repr(
-                    self.tree,
-                    style=self.style or "rounded",
-                    max_depth=self.maximum_depth or 0,
-                )
+                return self.tree.get_tree_repr(style=style)
 
     @text.setter
     def text(self, text):
@@ -110,6 +97,6 @@ class MkDirectoryTree(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    node = MkDirectoryTree(".", header="test", style="ascii")
+    node = MkDirectoryTree("mknodes", header="test", style="ascii")
     print(node.to_markdown())
     print(MkDirectoryTree(node, style="ascii"))
