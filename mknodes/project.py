@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 import re
 import types
 
 from mknodes import config, mknav
 from mknodes.data import commitconventions
-from mknodes.utils import helpers, packageinfo
+from mknodes.utils import helpers, packageinfo, pyproject
 
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ class Project:
         self.package_name = module.__name__
         self.package_repos = package_repos or ["pip"]
         self.commit_types = commit_types
+        self.pyproject = pyproject.PyProject()
         self.info = packageinfo.get_info(self.package_name)
         self._root_nav = None
 
@@ -60,13 +62,22 @@ class Project:
             self._root_nav = mknav.MkNav(project=self, **kwargs)
         return self._root_nav
 
+    def has_precommit(self):
+        path = pathlib.Path().absolute()
+        while not (path / ".pre-commit-config.yaml").exists() and len(path.parts) > 1:
+            path = path.parent
+        if len(path.parts) == 1:
+            msg = "Could not find pyproject.toml"
+            raise FileNotFoundError(msg)
+        return True
+
     def __repr__(self):
         return helpers.get_repr(self, module=self.module)
 
 
 if __name__ == "__main__":
-    import mkdocs
+    import mknodes
 
-    project = Project(mkdocs)
-    bs = project.build_system()
+    project = Project(mknodes)
+    bs = project.has_precommit()
     print(bs)
