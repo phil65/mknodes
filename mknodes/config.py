@@ -24,6 +24,15 @@ def get_site_url():
     return get_config().site_url
 
 
+def get_page_name():
+    return get_config().site_name
+
+
+def get_path(path: str) -> str:
+    config = get_config()
+    return path if config.use_directory_urls else f"{config.site_name}/{path}"
+
+
 if __name__ == "__main__":
-    url = get_repository_url()
+    url = get_path("test.html")
     print(url)

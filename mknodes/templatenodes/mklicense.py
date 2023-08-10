@@ -15,10 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 def get_spdx_license(name: str):
-    lic = spdx_lookup.by_id(name)  # there is also by_name, not sure which one to take
-    if not lic:
-        return None
-    return lic.template.replace("<year>", str(datetime.date.today().year))
+    if lic := spdx_lookup.by_id(name):
+        return lic.template.replace("<year>", str(datetime.date.today().year))
+    return None
 
 
 class MkLicense(mktext.MkText):
