@@ -4,7 +4,7 @@ import logging
 import re
 import types
 
-from mknodes import mknav
+from mknodes import config, mknav
 from mknodes.data import commitconventions
 from mknodes.utils import helpers, packageinfo
 
@@ -41,9 +41,8 @@ class Project:
         self._root_nav = None
 
     def get_repository_url(self):
-        config = helpers.get_mkdocs_config("mkdocs.yml")
-        if config.repo_url:
-            return config.repo_url
+        if url := config.get_repository_url():
+            return url
         return self.info.get_repository_url()
 
     def get_repository_username(self) -> str | None:
@@ -62,7 +61,7 @@ class Project:
         return self._root_nav
 
     def __repr__(self):
-        return helpers.get_repr(self, path=self.path)
+        return helpers.get_repr(self, module=self.module)
 
 
 if __name__ == "__main__":
