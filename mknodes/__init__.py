@@ -45,6 +45,7 @@ from .templatenodes.mkchangelog import MkChangelog
 from .templatenodes.mkcodeofconduct import MkCodeOfConduct
 from .templatenodes.mkcommitconventions import MkCommitConventions
 from .templatenodes.mkpullrequestguidelines import MkPullRequestGuidelines
+from .templatenodes.mkdevenvsetup import MkDevEnvSetup
 from .templatenodes.mkclassdiagram import MkClassDiagram
 from .templatenodes.mkclasstable import MkClassTable
 from .templatenodes.mkreprrawrendered import MkReprRawRendered
@@ -106,6 +107,7 @@ __all__ = [
     "MkCodeOfConduct",
     "MkCommitConventions",
     "MkPullRequestGuidelines",
+    "MkDevEnvSetup",
     "MkIFrame",
     "MkProgressBar",
     "MkDefinitionList",

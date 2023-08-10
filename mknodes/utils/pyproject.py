@@ -29,11 +29,11 @@ class PyProject:
         build_systems = ["poetry", "hatch", "pdm", "flit"]
         return [b for b in build_systems if b in self.pyproject["tool"]]
 
-    def build_system(self) -> str:
+    def build_system(self) -> buildsystems.BuildSystem:
         back_end = self.pyproject["build-system"]["build-backend"]
         for p in buildsystems.BUILD_SYSTEMS.values():
             if p.build_backend == back_end:
-                return p.identifier
+                return p
         msg = "No known build backend"
         raise RuntimeError(msg)
 
