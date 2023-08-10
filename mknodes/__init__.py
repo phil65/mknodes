@@ -55,6 +55,7 @@ from .templatenodes.mklog import MkLog
 from .templatenodes.mklicense import MkLicense
 from .templatenodes.mkdependencytable import MkDependencyTable
 from .templatenodes.mkcommandoutput import MkCommandOutput
+from .templatenodes.mkbadge import MkBadge
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
@@ -116,6 +117,7 @@ __all__ = [
     "MkLicense",
     "MkDependencyTable",
     "MkCommandOutput",
+    "MkBadge",
     "Project",
 ]
 
