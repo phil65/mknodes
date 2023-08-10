@@ -18,6 +18,8 @@ class MkCommandOutput(mkcode.MkCode):
 
     def __init__(self, call: Sequence[str], **kwargs):
         self.call = call
+        # caching on instance level as a compromise
+        self._cache: dict[str, str] = {}  # {call: output}
         super().__init__(language="bash", **kwargs)
 
     def __repr__(self):
@@ -25,7 +27,11 @@ class MkCommandOutput(mkcode.MkCode):
 
     @property
     def text(self):
-        return subprocess.check_output(["make", "help"]).decode()
+        key = " ".join(self.call)
+        if key in self._cache:
+            return self._cache[key]
+        self._cache[key] = subprocess.check_output(self.call).decode()
+        return self._cache[key]
 
     @staticmethod
     def create_example_page(page):
