@@ -4,15 +4,10 @@ import logging
 import re
 import textwrap
 
-from typing import TYPE_CHECKING
-
 import mkdocs_gen_files
 
 from mknodes.treelib import node
 
-
-if TYPE_CHECKING:
-    from mknodes.basenodes import mkannotations
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
 
@@ -74,13 +69,13 @@ class MkNode(node.Node):
         self._annotations = None
         self.shift_header_levels = shift_header_levels
 
-    @property
-    def annotations(self) -> mkannotations.MkAnnotations:
+        # ugly, but convenient.
         from mknodes.basenodes import mkannotations
 
-        if self._annotations is None:
-            self._annotations = mkannotations.MkAnnotations(parent=self)
-        return self._annotations  # type: ignore
+        if not isinstance(self, mkannotations.MkAnnotations):
+            self.annotations = mkannotations.MkAnnotations(parent=self)
+        else:
+            self.annotations = None
 
     def __str__(self):
         return self.to_markdown()
@@ -93,8 +88,10 @@ class MkNode(node.Node):
             return False
         dct_1 = self.__dict__.copy()
         dct_1.pop("_parent")
+        # dct_1.pop("_annotations")
         dct_2 = other.__dict__.copy()
         dct_2.pop("_parent")
+        # dct_2.pop("_annotations")
         return dct_1 == dct_2
 
     def _to_markdown(self) -> str:
