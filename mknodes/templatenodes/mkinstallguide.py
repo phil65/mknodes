@@ -20,7 +20,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def __init__(
         self,
         project: str | None = None,
-        package_managers: list[str] | None = None,
+        package_repos: list[str] | None = None,
         header_level: int = 3,
         **kwargs: Any,
     ):
@@ -28,21 +28,21 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
         Arguments:
             project: name of the project to install
-            package_managers: package managers the project can be installed with
+            package_repos: package repositories the project is available on
             header_level: Header level for each section
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self.project = project
         self.header_level = header_level
-        self.package_managers = package_managers
+        self.package_repos = package_repos
 
     @property
     def items(self) -> list[mknode.MkNode]:
-        if self.package_managers:
-            managers = self.package_managers
+        if self.package_repos:
+            managers = self.package_repos
         elif self.associated_project:
-            managers = self.associated_project.package_managers
+            managers = self.associated_project.package_repos
         else:
             managers = ["pip"]
         if self.project:
@@ -76,7 +76,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         return helpers.get_repr(
             self,
             project=self.project,
-            package_managers=self.package_managers,
+            package_repos=self.package_repos,
             header_level=self.header_level,
             _filter_empty=True,
         )
@@ -92,7 +92,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node, header="### Project data")
 
         # we can also explicitely define the data
-        node = MkInstallGuide(project="mkdocs", package_managers=["pipx"])
+        node = MkInstallGuide(project="mkdocs", package_repos=["pipx"])
         page += mknodes.MkReprRawRendered(node, header="### Other")
 
 

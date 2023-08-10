@@ -28,14 +28,14 @@ class Project:
     def __init__(
         self,
         module: types.ModuleType,
-        package_managers: list[str] | None = None,
+        package_repos: list[str] | None = None,
         commit_types: list[commitconventions.CommitTypeStr]
         | commitconventions.ConventionTypeStr
         | None = None,
     ):
         self.module = module
         self.package_name = module.__name__
-        self.package_managers = package_managers or ["pip"]
+        self.package_repos = package_repos or ["pip"]
         self.commit_types = commit_types
         self.info = packageinfo.get_info(self.package_name)
         self._root_nav = None
