@@ -52,13 +52,16 @@ class Metadata:
 
     def __str__(self):
         data = self.as_dict()
-        if not data:
-            return ""
-        text = yaml.dump(data, Dumper=yaml.Dumper, indent=2)
-        return HEADER.format(options=text)
+        return yaml.dump(data, Dumper=yaml.Dumper, indent=2) if data else ""
 
     def __bool__(self):
         return bool(self.as_dict())
+
+    def as_page_header(self) -> str:
+        text = str(self)
+        if not text:
+            return ""
+        return HEADER.format(options=text)
 
     @property
     def hide(self):

@@ -156,7 +156,7 @@ class MkPage(mkcontainer.MkContainer):
     def to_markdown(self) -> str:
         from mknodes import mknav
 
-        header = str(self.metadata)
+        header = self.metadata.as_page_header()
         if header:
             header += "\n"
         content_str = self._to_markdown()
