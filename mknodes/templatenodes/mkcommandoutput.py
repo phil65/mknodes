@@ -31,8 +31,12 @@ class MkCommandOutput(mkcode.MkCode):
         key = " ".join(self.call)
         if key in self._cache:
             return self._cache[key]
-        self._cache[key] = subprocess.check_output(self.call).decode()
-        return self._cache[key]
+        try:
+            self._cache[key] = subprocess.check_output(self.call).decode()
+        except subprocess.CalledProcessError:
+            return ""
+        else:
+            return self._cache[key]
 
     @staticmethod
     def create_example_page(page):
