@@ -210,9 +210,9 @@ class PackageInfo:
         return mail.replace("<", "").replace(">", "")
 
     def get_author_name(self) -> str:
-        return self.metadata["Author-Email"].split(" ")[0]
+        return self.metadata["Author-Email"].rsplit(" ", 1)[0]
 
 
 if __name__ == "__main__":
     info = get_info("mknodes")
-    print(info.get_extras())
+    print(info.get_author_name())
