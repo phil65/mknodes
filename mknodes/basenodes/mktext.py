@@ -85,7 +85,20 @@ class MkText(mknode.MkNode):
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:
-        text = helpers.download(url)
+        """Build a MkText node on a remote markup file.
+
+        If the URL contains a "#" (http://.../markdown.md#section),
+        it will try to extract the given section.
+
+        Arguments:
+            url: URL to get markdown from.
+        """
+        if "#" in url:
+            url, section = url.split("#")
+            text = helpers.download(url)
+            text = extract_header_section(text, section)
+        else:
+            text = helpers.download(url)
         return cls(text) if text is not None else None
 
 
