@@ -62,7 +62,8 @@ from .templatenodes.mkmoduletable import MkModuleTable
 
 from .project import Project
 
-TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests/data/"
+TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests" / "data"
+RESOURCES = pathlib.Path(__file__).parent / "resources"
 
 __all__ = [
     "MkNode",

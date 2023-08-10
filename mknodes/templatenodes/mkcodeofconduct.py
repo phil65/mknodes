@@ -10,9 +10,6 @@ from mknodes.utils import helpers
 
 logger = logging.getLogger(__name__)
 
-URL_END = "/code_of_conduct/code_of_conduct.md"
-URL_START = "https://www.contributor-covenant.org/version/"
-
 
 class MkCodeOfConduct(mktext.MkText):
     """Contributor Covenant code of conduct."""
@@ -22,15 +19,15 @@ class MkCodeOfConduct(mktext.MkText):
     def __init__(
         self,
         contact_email: str | None = None,
-        version: Literal["2.0", "2.1"] = "2.1",
-        header: str = "# Contributor Covenant Code of Conduct",
+        version: Literal["2.1"] | None = None,
+        header: str = "# Code of Conduct",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             contact_email: Email for contacting. If None, it will be pulled from Project.
-            version: Contributor covenant version
+            version: Contributor covenant version (currently only "2.1")
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -48,8 +45,10 @@ class MkCodeOfConduct(mktext.MkText):
 
     @property
     def text(self) -> str:
-        url = URL_START + self.version.replace(".", "/") + URL_END
-        response = helpers.download(url) or "**Download failed**"
+        import mknodes
+
+        file = mknodes.RESOURCES / "code_of_conduct_2_1.md"
+        text = file.read_text()
         match self.contact_email:
             case str():
                 mail = self.contact_email
@@ -57,7 +56,7 @@ class MkCodeOfConduct(mktext.MkText):
                 mail = self.associated_project.info.get_author_email()
             case _:
                 mail = "<MAIL NOT SET>"
-        text = response.replace("[INSERT CONTACT METHOD]", mail)
+        text = text.replace("[INSERT CONTACT METHOD]", mail)
         return "\n".join(text.split("\n")[3:])
 
     @staticmethod
