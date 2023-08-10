@@ -19,20 +19,23 @@ def create_development_section(root_nav: mknodes.MkNav):
     create_coc_page(dev_nav)
     create_contribute_page(dev_nav)
     create_license_page(dev_nav)
+    create_dependencies_page(dev_nav)
 
 
 def create_changelog_page(nav: mknodes.MkNav):
     """Create the "Changelog" MkPage and attach it to given MkNav."""
-    page = nav.add_page("Changelog", icon="material/format-list-group")
+    node = mknodes.MkChangelog()  # based on "git-changelog" package
+    page = nav.add_page("Changelog", icon=node.ICON)
     page += mknodes.MkCode.for_object(create_changelog_page, header=PAGE_CODE)
-    page += mknodes.MkChangelog()  # based on "git-changelog" package
+    page += node
 
 
 def create_coc_page(nav: mknodes.MkNav):
     """Create the "Code of conduct" MkPage and attach it to given MkNav."""
-    page = nav.add_page("Code of conduct", icon="octicons/code-of-conduct-24")
+    node = mknodes.MkCodeOfConduct()
+    page = nav.add_page("Code of conduct", icon=node.ICON)
     page += mknodes.MkCode.for_object(create_coc_page, header=PAGE_CODE)
-    page += mknodes.MkCodeOfConduct(contact_email="philipptemminghoff@gmail.com")
+    page += node
 
 
 def create_contribute_page(nav: mknodes.MkNav):
@@ -45,6 +48,15 @@ def create_contribute_page(nav: mknodes.MkNav):
 
 def create_license_page(nav: mknodes.MkNav):
     """Create the "License" MkPage and attach it to given MkNav."""
-    page = nav.add_page("License", icon="material/license", hide_toc=True)
+    node = mknodes.MkLicense()
+    page = nav.add_page("License", icon=node.ICON, hide_toc=True)
     page += mknodes.MkCode.for_object(create_license_page, header=PAGE_CODE)
-    page += mknodes.MkLicense()
+    page += node
+
+
+def create_dependencies_page(nav: mknodes.MkNav):
+    """Create the "License" MkPage and attach it to given MkNav."""
+    node = mknodes.MkDependencyTable()
+    page = nav.add_page("Dependencies", icon=node.ICON, hide_toc=True)
+    page += mknodes.MkCode.for_object(create_dependencies_page, header=PAGE_CODE)
+    page += node

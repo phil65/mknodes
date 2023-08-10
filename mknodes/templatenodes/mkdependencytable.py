@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 class MkDependencyTable(mktable.MkTable):
     """Table showing info dependencies for a package."""
 
+    ICON = "material/database"
+
     def __init__(self, package: str | packageinfo.PackageInfo | None = None, **kwargs):
         self.package = package
         super().__init__(**kwargs)
