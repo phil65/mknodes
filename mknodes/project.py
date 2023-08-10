@@ -40,9 +40,11 @@ class Project:
         self.commit_types = commit_types
         self.pyproject = pyproject.PyProject()
         self.info = packageinfo.get_info(self.package_name)
-        self._root_nav = None
 
-    def get_repository_url(self):
+    def __repr__(self):
+        return helpers.get_repr(self, module=self.module)
+
+    def get_repository_url(self) -> str | None:
         if url := config.get_repository_url():
             return url
         return self.info.get_repository_url()
@@ -57,22 +59,20 @@ class Project:
             return match.group(2)
         return None
 
-    def get_root(self, **kwargs):
-        if not self._root_nav:
-            self._root_nav = mknav.MkNav(project=self, **kwargs)
-        return self._root_nav
+    def get_root(self, **kwargs) -> mknav.MkNav:
+        return mknav.MkNav(project=self, **kwargs)
 
-    def has_precommit(self):
+    def has_precommit(self) -> bool:
         path = pathlib.Path().absolute()
         while not (path / ".pre-commit-config.yaml").exists() and len(path.parts) > 1:
             path = path.parent
-        if len(path.parts) == 1:
-            msg = "Could not find pyproject.toml"
-            raise FileNotFoundError(msg)
-        return True
+        return len(path.parts) > 1
 
-    def __repr__(self):
-        return helpers.get_repr(self, module=self.module)
+    def has_conda(self) -> bool:
+        path = pathlib.Path().absolute()
+        while not (path / "meta.yaml").exists() and len(path.parts) > 1:
+            path = path.parent
+        return len(path.parts) > 1
 
 
 if __name__ == "__main__":
