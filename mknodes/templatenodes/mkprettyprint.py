@@ -24,6 +24,7 @@ class MkPrettyPrint(mkcode.MkCode):
     """Node carrying a python data structure and prettyprint settings."""
 
     ICON = "material/printer"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -112,7 +113,6 @@ class MkPrettyPrint(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         node = MkPrettyPrint(obj=[dict(a="test " * 5)] * 5)
         page += mknodes.MkReprRawRendered(node)
 

@@ -107,7 +107,6 @@ class MkSeeDir(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         for style in get_args(DirectoryTreeStyleStr):
             node = MkSeeDir("mknodes/manual", style=style)
             page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")

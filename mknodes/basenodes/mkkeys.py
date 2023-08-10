@@ -46,7 +46,6 @@ class MkKeys(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         page += mknodes.MkAdmonition("MkKeys can be used to show Key combinations.")
         page += mknodes.MkReprRawRendered(MkKeys("M+k+K+e+y+s"))
         page += mknodes.MkReprRawRendered(MkKeys("Ctrl+A"))

@@ -26,6 +26,7 @@ class MkLicense(mktext.MkText):
     """MkLicense. Shows license file from associated project."""
 
     ICON = "material/license"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -67,7 +68,6 @@ class MkLicense(mktext.MkText):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         node = MkLicense()
         page += mknodes.MkReprRawRendered(node, header="### From project")
         node = MkLicense("GPL-3.0")

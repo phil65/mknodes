@@ -67,7 +67,6 @@ class MkPullRequestGuidelines(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         node = MkPullRequestGuidelines()
         page += mknodes.MkReprRawRendered(node)
 

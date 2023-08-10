@@ -99,7 +99,7 @@ def create_section_for_nodes(nav: mknodes.MkNav, klasses: list[type]) -> mknodes
     return table
 
 
-def create_class_page(kls: type, page: mknodes.MkPage):
+def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
     """Create a MkPage with example code for given klass."""
     # Each example page will begin by displaying the code used to create the page.
     code = mknodes.MkCode.for_object(
@@ -115,8 +115,10 @@ def create_class_page(kls: type, page: mknodes.MkPage):
     )
     page += admonition
     page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
-    # and afterwards, we show what was added to the page.
+    # page += mknodes.MkHeader(kls.__doc__.split("\n")[0])
     page += "## Examples"
+    if kls.STATUS == "new":  # some classes are marked as "new"
+        page.status = "new"  # we use that info to display an icon in the menu.
     kls.create_example_page(page)
 
 

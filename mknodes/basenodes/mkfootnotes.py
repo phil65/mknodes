@@ -17,6 +17,7 @@ class MkFootNote(mkcontainer.MkContainer):
     """Represents a single footnote. It gets managed by an MkFootNotes node."""
 
     REQUIRED_EXTENSIONS = ["footnotes"]
+    STATUS = "new"
 
     def __init__(
         self,
@@ -140,7 +141,6 @@ class MkFootNotes(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         node = MkFootNotes()
         page += "The MkFootNotes node aggregates footnotes[^1]."
         node[1] = r"Footnotes are numbered, can be set via \__setitem__."

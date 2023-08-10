@@ -13,6 +13,7 @@ class MkBlockQuote(mkcontainer.MkContainer):
     """BlockQuote node."""
 
     ICON = "material/format-quote-open"
+    STATUS = "new"
 
     def _to_markdown(self) -> str:
         text = super()._to_markdown()
@@ -22,7 +23,6 @@ class MkBlockQuote(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         page += "An MkBlockQuote can display > Blockquotes."
         block = MkBlockQuote(content="Some text")
         page += mknodes.MkReprRawRendered(block, header="### Regular")

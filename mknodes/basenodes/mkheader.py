@@ -15,6 +15,7 @@ class MkHeader(mknode.MkNode):
     """Super simple header node."""
 
     ICON = "material/format-header-pound"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -44,7 +45,6 @@ class MkHeader(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         for i in range(1, 7):
             node = MkHeader(f"Level {i}", level=i)
             page += mknodes.MkReprRawRendered(node)

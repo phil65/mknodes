@@ -16,6 +16,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     """MkCritic block."""
 
     ICON = "material/presentation"
+    STATUS = "new"
 
     def __init__(self, node: mknode.MkNode, **kwargs: Any):
         """Constructor.
@@ -55,7 +56,6 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         example_node = mknodes.MkAdmonition("Some text")
         node = MkReprRawRendered(node=example_node)
         page += node

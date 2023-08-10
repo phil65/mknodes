@@ -4,6 +4,8 @@ import logging
 import re
 import textwrap
 
+from typing import Literal
+
 import mkdocs_gen_files
 
 from mknodes.treelib import node
@@ -45,7 +47,7 @@ class MkNode(node.Node):
     ICON = "material/puzzle-outline"
     REQUIRED_EXTENSIONS: list[str] = []
     REQUIRED_PLUGINS: list[str] = []
-
+    STATUS: Literal["new", "deprecated"] | None = None
     children: list[MkNode]
 
     def __init__(

@@ -12,9 +12,10 @@ logger = logging.getLogger(__name__)
 
 
 class MkCommandOutput(mkcode.MkCode):
-    """Table showing info dependencies for a package."""
+    """Node to display the terminal output of a command."""
 
     ICON = "material/bash"
+    STATUS = "new"
 
     def __init__(self, call: Sequence[str], **kwargs):
         self.call = call
@@ -37,7 +38,6 @@ class MkCommandOutput(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         node = MkCommandOutput(["make", "help"])
         page += mknodes.MkReprRawRendered(node)
 

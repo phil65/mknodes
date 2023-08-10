@@ -13,6 +13,7 @@ class MkDependencyTable(mktable.MkTable):
     """Table showing info dependencies for a package."""
 
     ICON = "material/database"
+    STATUS = "new"
 
     def __init__(self, package: str | packageinfo.PackageInfo | None = None, **kwargs):
         self.package = package
@@ -54,7 +55,6 @@ class MkDependencyTable(mktable.MkTable):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         node_1 = MkDependencyTable()
         node_2 = MkDependencyTable("mkdocs")
         page += mknodes.MkReprRawRendered(node_1, header="### From project")

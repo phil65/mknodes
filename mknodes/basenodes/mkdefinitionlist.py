@@ -74,7 +74,6 @@ class MkDefinitionList(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         definitions = dict(something="A definition", somethingelse="Another\ndefinition")
         node = MkDefinitionList(data=definitions)
         page += mknodes.MkReprRawRendered(node, header="### Regular")

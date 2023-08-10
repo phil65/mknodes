@@ -19,6 +19,7 @@ class MkDirectoryTree(mkcode.MkCode):
     """Node to display directory content as a tree."""
 
     ICON = "material/file-tree-outline"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -93,7 +94,6 @@ class MkDirectoryTree(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         for style in get_args(treestyles.TreeStyleStr):
             node = MkDirectoryTree("mknodes/manual", style=style)
             page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")

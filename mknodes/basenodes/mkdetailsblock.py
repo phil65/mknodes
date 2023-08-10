@@ -31,6 +31,7 @@ class MkDetailsBlock(mkblock.MkBlock):
 
     ICON = "octicons/info-16"
     REQUIRED_EXTENSIONS = ["pymdownx.blocks.details"]
+    STATUS = "new"
 
     def __init__(
         self,
@@ -92,7 +93,6 @@ class MkDetailsBlock(mkblock.MkBlock):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         page += "MkDetailsBlock is a markdown extension based on pymdownx block syntax."
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
         page += mknodes.MkLink(url, "More info", as_button=True)

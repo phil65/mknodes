@@ -16,6 +16,7 @@ class MkProgressBar(mknode.MkNode):
 
     REQUIRED_EXTENSIONS = ["pymdownx.progressbar"]
     ICON = "fontawesome/solid/bars-progress"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -68,7 +69,6 @@ class MkProgressBar(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         page += mknodes.MkAdmonition("MkProgressBar can be used to show a progress bar.")
         page += mknodes.MkDetailsBlock("This Node requires additional css.")
         node = MkProgressBar(60)

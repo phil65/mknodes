@@ -22,6 +22,7 @@ class MkCallable(mknode.MkNode):
     """
 
     ICON = "material/function"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -67,8 +68,6 @@ class MkCallable(mknode.MkNode):
     @staticmethod
     def create_example_page(page):
         import mknodes
-
-        page.status = "new"
 
         def make_page():
             page = mknodes.MkPage("MkCallable Page", virtual=True)

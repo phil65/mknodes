@@ -13,6 +13,7 @@ class MkGridCard(mkcontainer.MkContainer):
     """Node representing a single grid card."""
 
     ICON = "material/square-medium"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -73,7 +74,6 @@ class MkGrid(mkcontainer.MkContainer):
         import mknodes
 
         # only works for Mkdocs-material sponsors.
-        page.status = "new"  # for the small icon in the left menu
         item_1 = mknodes.MkList(items=["Item 1", "Item 2", "Item 3"])
         item_2 = mknodes.MkKeys(keys=["Ctrl+A"])
         grid = MkGrid(cards=[item_1, item_2])

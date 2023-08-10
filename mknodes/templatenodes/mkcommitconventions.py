@@ -61,6 +61,7 @@ class MkCommitConventions(mkcontainer.MkContainer):
     """Text node containing Commit message conventions."""
 
     ICON = "simple/conventionalcommits"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -121,7 +122,6 @@ class MkCommitConventions(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         node = MkCommitConventions(header="")
         page += mknodes.MkReprRawRendered(node, header="### All commit_types")
         node = MkCommitConventions(

@@ -16,6 +16,7 @@ class MkLog(mkcode.MkCode):
     """Node collecting log data. Displays them as simple text afterwards."""
 
     ICON = "octicons/log-24"
+    STATUS = "new"
 
     def __init__(
         self,
@@ -77,7 +78,6 @@ class MkLog(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"
         logger = logging.getLogger("test.logger")
         logger.setLevel(logging.DEBUG)
 

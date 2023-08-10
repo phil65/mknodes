@@ -76,7 +76,6 @@ class MkChangelog(mktext.MkText):
     def create_example_page(page):
         import mknodes
 
-        page.status = "new"  # for the small icon in the left menu
         node = MkChangelog(template="keepachangelog", shift_header_levels=2)
         page += mknodes.MkReprRawRendered(node, header="### keepachangelog template")
         node = MkChangelog(template="angular", shift_header_levels=2)
