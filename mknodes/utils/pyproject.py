@@ -46,10 +46,10 @@ class PyProject:
         return "ruff" in self.pyproject["tool"]
 
     def has_black(self) -> bool:
-        return "ruff" in self.pyproject["tool"]
+        return "black" in self.pyproject["tool"]
 
     def has_pytest(self) -> bool:
-        return "ruff" in self.pyproject["tool"]
+        return "pytest" in self.pyproject["tool"]
 
     def has_coverage(self) -> bool:
         return "coverage" in self.pyproject["tool"]

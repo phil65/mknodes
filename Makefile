@@ -26,6 +26,9 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
+help:
+	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
 clean: ## remove all build, test, coverage and Python artifacts
 	git clean -dfX
 
