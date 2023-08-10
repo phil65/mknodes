@@ -34,7 +34,8 @@ class MkCommandOutput(mkcode.MkCode):
         try:
             self._cache[key] = subprocess.check_output(self.call).decode()
         except subprocess.CalledProcessError:
-            return ""
+            logger.warning("Executing %s failed", key)
+            return "**Command failed**"
         else:
             return self._cache[key]
 
