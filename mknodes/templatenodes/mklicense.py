@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 def get_spdx_license(name: str):
     if lic := spdx_lookup.by_id(name):
         return lic.template.replace("<year>", str(datetime.date.today().year))
+    if lic := spdx_lookup.by_name(name):
+        return lic.template.replace("<year>", str(datetime.date.today().year))
     return None
 
 
@@ -46,31 +48,35 @@ class MkLicense(mktext.MkText):
     def __repr__(self):
         return helpers.get_repr(self, license=self.license, _filter_empty=True)
 
+    def get_license(self, license_name: str) -> str:
+        if self.associated_project:
+            holder = self.associated_project.info.get_author_name()
+            summary = self.associated_project.info.metadata["Summary"]
+            package_name = self.associated_project.info.name
+        else:
+            holder = ""
+            summary = ""
+            package_name = ""
+        text = get_spdx_license(license_name)
+        if not text:
+            return ""
+        text = text.replace("<copyright holders>", holder)
+        text = text.replace("<name of author>", holder)
+        text = text.replace("<program>", package_name)
+        return text.replace(
+            "<one line to give the program's name and a brief idea of what it does.>",
+            f"{package_name}: {summary}",
+        )
+
     @property
     def text(self):
         if self.license is not None:
-            if self.associated_project:
-                holder = self.associated_project.info.get_author_name()
-                summary = self.associated_project.info.metadata["Summary"]
-                package_name = self.associated_project.info.name
-            else:
-                holder = ""
-                summary = ""
-                package_name = ""
-            text = get_spdx_license(self.license)
-            text = text.replace("<copyright holders>", holder)
-            text = text.replace("<name of author>", holder)
-            text = text.replace("<program>", package_name)
-            return text.replace(
-                "<one line to give the program's name and a brief idea of what it does.>",
-                f"{package_name}: {summary}",
-            )
-
+            return self.get_license(self.license)
         if proj := self.associated_project:
-            license_path = proj.info.get_license_file_path()
-            if license_path is not None:
+            if license_path := proj.info.get_license_file_path():
                 return license_path.read_text()
-            return proj.info.get_license()
+            if license_name := proj.info.get_license():
+                return self.get_license(license_name)
         return "Unknown license."
 
     @staticmethod

@@ -113,7 +113,7 @@ class PackageInfo:
     def __hash__(self):
         return hash(self.package_name)
 
-    def get_license(self) -> str:
+    def get_license(self) -> str | None:
         """Get name of the license."""
         if license_name := self.metadata.get("License-Expression", "").strip():
             return license_name
@@ -123,13 +123,18 @@ class PackageInfo:
                 for header, value in self.metadata.items()
                 if header == "Classifier" and value.startswith("License ::")
             ),
-            "Unknown",
+            None,
         )
 
     def get_license_file_path(self) -> pathlib.Path | None:
         """Return license file path (relative to project root) from metadata."""
-        file = self.metadata.get("License-File")
-        return pathlib.Path(file) if file else None
+        if (file := pathlib.Path("LICENSE")).exists():
+            return file
+        if (file := pathlib.Path("LICENSE.md")).exists():
+            return file
+        if file := self.metadata.get("License-File"):
+            return pathlib.Path(file)
+        return None
 
     def get_repository_url(self) -> str | None:
         """Return repository URL from metadata."""
