@@ -143,7 +143,12 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
                 backend = self.associated_project.pyproject.build_system()
             case _:
                 backend = buildsystems.setuptools
-        docs_setup = "MkDocs + Material theme"
+        docs_setup = " + ".join(  # noqa: FLY002
+            [
+                "[MkDocs](http://www.mkdocs.org)",
+                "[Material theme](https://squidfunk.github.io/mkdocs-material/)",
+            ],
+        )
         code = CLONE_CODE.format(repo_url=repo_url, folder_name=folder_name)
         items = [mktext.MkText(START_TEXT), mkcode.MkCode(code, language="md")]
         if use_pre_commit:

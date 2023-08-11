@@ -20,6 +20,7 @@ def create_development_section(root_nav: mknodes.MkNav):
     create_contribute_page(dev_nav)
     create_license_page(dev_nav)
     create_dependencies_page(dev_nav)
+    create_dev_environment_page(dev_nav)
 
 
 def create_changelog_page(nav: mknodes.MkNav):
@@ -55,8 +56,16 @@ def create_license_page(nav: mknodes.MkNav):
 
 
 def create_dependencies_page(nav: mknodes.MkNav):
-    """Create the "License" MkPage and attach it to given MkNav."""
+    """Create the "Dependencies" MkPage and attach it to given MkNav."""
     node = mknodes.MkDependencyTable()
     page = nav.add_page("Dependencies", icon=node.ICON, hide_toc=True)
     page += mknodes.MkCode.for_object(create_dependencies_page, header=PAGE_CODE)
+    page += node
+
+
+def create_dev_environment_page(nav: mknodes.MkNav):
+    """Create the "Development environment" MkPage and attach it to given MkNav."""
+    node = mknodes.MkDevEnvSetup()
+    page = nav.add_page("Development environment", icon=node.ICON)
+    page += mknodes.MkCode.for_object(create_dev_environment_page, header=PAGE_CODE)
     page += node
