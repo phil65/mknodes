@@ -49,7 +49,7 @@ class MkDependencyTable(mktable.MkTable):
                 node = mklink.MkLink(url, package_info.name)
             else:
                 node = f"`{package_info.name}`"
-            link = helpers.styled(node, size=4, bold=True)
+            link = helpers.styled(node, size=3, bold=True)
             marker = str(dep_info.marker) if dep_info.marker else ""
             marker_str = re.sub(r'([A-Za-z_]* [>|=|<]* ".*?")', r"`\g<1>`", marker)
             summary = helpers.styled(package_info.metadata["Summary"], italic=True)
