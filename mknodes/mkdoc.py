@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Sequence
-
-# import contextlib
-# import importlib
 import inspect
 import logging
 import pathlib
@@ -215,15 +212,6 @@ class MkDoc(mknav.MkNav):
         self.nav[section] = page
         return page
 
-    # def add_overview_page(self, predicate: Callable | None = None):
-    #     page = mkpage.MkPage(
-    #         hide_toc=True,
-    #         path=pathlib.Path("index.md"),
-    #         # parent=self,
-    #     )
-    #     page += mknodes.ModuleTable(self.module_name, predicate=predicate)
-    #     return page
-
     def _add_module_overview(
         self,
         title: str | None = None,
@@ -246,55 +234,6 @@ class MkDoc(mknav.MkNav):
         self.index_title = title or self.module_name
         self.index_page = page
         return page
-
-    # def iter_files(self, glob: str = "*/*.py") -> Iterator[pathlib.Path]:
-    #     """Iter through files based on glob.
-
-    #     Arguments:
-    #         glob: glob to use for filtering
-    #     """
-    #     for path in sorted(self.root_path.rglob(glob)):
-    #         if (
-    #             all(i not in path.parts for i in self._exclude)
-    #             and not any(i.startswith("__") for i in path.parent.parts)
-    #             and not path.is_dir()
-    #         ):
-    #             yield path.relative_to(self.root_path)
-
-    # def iter_modules_for_glob(self, glob="*/*.py"):
-    #     for path in self.iter_files(glob):
-    #         module_path = path.with_suffix("")
-    #         parts = tuple(module_path.parts)
-    #         complete_module_path = f"{self.module_name}." + ".".join(parts)
-    #         with contextlib.suppress(ImportError, AttributeError):
-    #             yield importlib.import_module(complete_module_path)
-
-    # def iter_classes_for_glob(
-    #     self,
-    #     glob: str = "*/*.py",
-    #     *,
-    #     recursive: bool = False,
-    #     avoid_duplicates: bool = True,
-    # ) -> Iterator[tuple[type, pathlib.Path]]:
-    #     """Yields (class, path) tuples.
-
-    #     Arguments:
-    #         glob: glob to use for module file selection.
-    #         recursive: Whether to search recursively.
-    #         avoid_duplicates:
-
-    #     """
-    #     seen = set()
-    #     for path in self.iter_files(glob):
-    #         module_path = path.with_suffix("")
-    #         parts = tuple(self.module_name, *module_path.parts)
-    #         module = classhelpers.to_module(parts)
-    #         if not module:
-    #             return
-    #         for klass in self.iter_classes(module, recursive=recursive):
-    #             if (klass, path) not in seen or not avoid_duplicates:
-    #                 seen.add((klass, path))
-    #                 yield klass, path
 
 
 if __name__ == "__main__":
