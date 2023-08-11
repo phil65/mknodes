@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkModuleTable(mktable.MkTable):
-    """Class representing a formatted table containing information a module."""
+    """Node for a table containing formatted information about a module."""
 
     ICON = "material/view-module-outline"
 

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkCodeOfConduct(mktext.MkText):
-    """Contributor Covenant code of conduct."""
+    """Node for a code of conduct section."""
 
     ICON = "octicons/code-of-conduct-24"
 

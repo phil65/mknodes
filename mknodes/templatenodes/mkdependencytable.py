@@ -10,31 +10,40 @@ logger = logging.getLogger(__name__)
 
 
 class MkDependencyTable(mktable.MkTable):
-    """Table showing info dependencies for a package."""
+    """Node for a table showing dependencies for a package."""
 
     ICON = "material/database"
     STATUS = "new"
 
     def __init__(self, package: str | packageinfo.PackageInfo | None = None, **kwargs):
-        self.package = package
+        self._package = package
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, package=self.package, _filter_empty=True)
+        return helpers.get_repr(self, package=self._package, _filter_empty=True)
+
+    @property
+    def package(self):
+        match self._package:
+            case None if self.associated_project:
+                return self.associated_project.info
+            case str():
+                return packageinfo.get_info(self._package)
+            case packageinfo.PackageInfo():
+                return self._package
+            case _:
+                return None
+
+    @package.setter
+    def package(self, value):
+        self._package = value
 
     @property
     def data(self):
-        match self.package:
-            case None if self.associated_project:
-                info = self.associated_project.info
-            case str():
-                info = packageinfo.get_info(self.package)
-            case packageinfo.PackageInfo():
-                info = self.package
-            case _:
-                return {}
+        if not self.package:
+            return {}
         rows = []
-        for package_info, dep_info in info.get_required_packages().items():
+        for package_info, dep_info in self.package.get_required_packages().items():
             if url := package_info.get_repository_url():
                 node = mklink.MkLink(url, package_info.name)
             else:

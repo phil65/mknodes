@@ -17,7 +17,11 @@ StyleStr = Literal["default", "gitlab-scoped"]
 
 
 class MkBadge(mkbinaryimage.MkBinaryImage):
-    """Locally-created badge (based on "anybadge")."""
+    """Node for a locally-created badge (based on "anybadge").
+
+    The node creates a badge svg, appends it to the virtual files, and
+    shows it as an image.
+    """
 
     ICON = "simple/shieldsdotio"
 

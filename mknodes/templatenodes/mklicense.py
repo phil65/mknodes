@@ -21,7 +21,7 @@ def get_spdx_license(name: str):
 
 
 class MkLicense(mktext.MkText):
-    """MkLicense. Shows license file from associated project."""
+    """Node to show a license."""
 
     ICON = "material/license"
     STATUS = "new"

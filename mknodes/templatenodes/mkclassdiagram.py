@@ -65,7 +65,7 @@ class MroConnector(BaseClassConnector):
 
 
 class MkClassDiagram(mkdiagram.MkDiagram):
-    """Class diagram with several modes."""
+    """Node to display the class hierarchy of a class. Supports multiple modes."""
 
     def __init__(
         self,

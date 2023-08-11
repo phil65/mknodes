@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkClassTable(mktable.MkTable):
-    """Table showing info for a list of classes."""
+    """Node for a table showing info for a list of classes."""
 
     def __init__(
         self,
