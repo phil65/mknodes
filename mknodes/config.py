@@ -33,6 +33,15 @@ def get_path(path: str) -> str:
     return path if config.use_directory_urls else f"{config.site_name}/{path}"
 
 
+def get_inventory_info() -> list[dict]:
+    """Returns list of dicts: [{"url": inventory_url, "domains": ["std", "py"]}, ...]."""
+    config = get_config()
+    try:
+        return config.plugins["mkdocstrings"].config["handlers"]["python"]["import"]
+    except KeyError:
+        return []
+
+
 if __name__ == "__main__":
-    url = get_path("test.html")
+    url = get_inventory_info()
     print(url)
