@@ -32,7 +32,7 @@ CommitTypeStr = Literal[
     "tests",
 ]
 
-ALL_COMMIT_TYPES: dict[CommitTypeStr, str] = {
+TYPE_DESCRIPTIONS: dict[CommitTypeStr, str] = {
     "build": "About packaging, building wheels, etc.",
     "chore": "About packaging or repo/files management.",
     "ci": "About Continuous Integration.",

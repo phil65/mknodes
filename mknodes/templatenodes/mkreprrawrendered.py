@@ -13,7 +13,11 @@ logger = logging.getLogger(__name__)
 
 
 class MkReprRawRendered(mktabcontainer.MkTabbed):
-    """MkCritic block."""
+    """Node showing a tabbed bock to visualize a node.
+
+    It contains a tab for the repr, one for the rendered output,
+    one for the markdown and a Repr tree in case the node has children.
+    """
 
     ICON = "material/presentation"
     STATUS = "new"

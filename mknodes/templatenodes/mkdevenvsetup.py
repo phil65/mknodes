@@ -36,10 +36,10 @@ pre-commit install
 """
 
 
-def get_docs_section(backend_name: str, docs_setup: str) -> list[mknode.MkNode]:
+def get_docs_section(project_name: str, docs_setup: str) -> list[mknode.MkNode]:
     return [
         mkheader.MkHeader("Docs Development"),
-        mktext.MkText(f"{backend_name} uses {docs_setup} to build the docs."),
+        mktext.MkText(f"{project_name} uses {docs_setup} to build the docs."),
         mktext.MkText("To build the docs:"),
         mkcode.MkCode("mkdocs build"),
         mktext.MkText("To serve the docs locally at http://127.0.0.1:8000/:"),
@@ -149,7 +149,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         if use_pre_commit:
             items.extend(get_pre_commit_section())
         items.extend(get_build_backend_section(backend))
-        items.extend(get_docs_section(docs_setup=docs_setup, backend_name=folder_name))
+        items.extend(get_docs_section(docs_setup=docs_setup, project_name=folder_name))
         for item in items:
             item.parent = self
         return items

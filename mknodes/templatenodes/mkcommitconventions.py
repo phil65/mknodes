@@ -104,7 +104,7 @@ class MkCommitConventions(mkcontainer.MkContainer):
             case _:
                 raise TypeError(self.commit_types)
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
-        all_types = commitconventions.ALL_COMMIT_TYPES
+        all_types = commitconventions.TYPE_DESCRIPTIONS
         ls = mklist.MkList([f"`{k}`: {all_types[k]}" for k in commit_types])
         return [
             mktext.MkText(START_TEXT.format(styles=styles), parent=self),

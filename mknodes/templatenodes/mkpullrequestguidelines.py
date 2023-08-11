@@ -22,7 +22,7 @@ and we will squash them ourselves if needed, before merging.
 
 
 class MkPullRequestGuidelines(mkcontainer.MkContainer):
-    """Pull request guide text."""
+    """Node showing a pull request guide."""
 
     ICON = "octicons/git-pull-request-24"
 

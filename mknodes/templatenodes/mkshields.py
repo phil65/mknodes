@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkShields(mkcontainer.MkContainer):
-    """MkCritic block."""
+    """Container for Shields.io / GitHub badges."""
 
     ICON = "simple/shieldsdotio"
 

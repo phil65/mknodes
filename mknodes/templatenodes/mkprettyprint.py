@@ -21,7 +21,7 @@ class IsDataclass(Protocol):
 
 
 class MkPrettyPrint(mkcode.MkCode):
-    """Node carrying a python data structure and prettyprint settings."""
+    """Node to show a prettyprinted data structure."""
 
     ICON = "material/printer"
     STATUS = "new"
