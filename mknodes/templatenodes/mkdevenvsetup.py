@@ -41,11 +41,11 @@ def get_docs_section(project_name: str, docs_setup: str) -> list[mknode.MkNode]:
         mkheader.MkHeader("Docs Development"),
         mktext.MkText(f"{project_name} uses {docs_setup} to build the docs."),
         mktext.MkText("To build the docs:"),
-        mkcode.MkCode("mkdocs build"),
+        mkcode.MkCode("mkdocs build", language="bash"),
         mktext.MkText("To serve the docs locally at http://127.0.0.1:8000/:"),
-        mkcode.MkCode("mkdocs serve"),
+        mkcode.MkCode("mkdocs serve", language="bash"),
         mktext.MkText("For additional mkdocs help and options:"),
-        mkcode.MkCode("mkdocs --help"),
+        mkcode.MkCode("mkdocs --help", language="bash"),
     ]
 
 

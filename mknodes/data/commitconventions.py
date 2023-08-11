@@ -58,6 +58,7 @@ TYPE_DESCRIPTIONS: dict[CommitTypeStr, str] = {
 @dataclasses.dataclass
 class CommitConvention:
     name: str
+    display_name: str
     types: set[CommitTypeStr]
     badge: str = ""
     website: str | None = None
@@ -65,11 +66,13 @@ class CommitConvention:
 
 basic = CommitConvention(
     name="basic",
+    display_name="Basic Style",
     types={"add", "fix", "change", "remove", "merge", "doc"},
 )
 
 angular = CommitConvention(
     name="angular",
+    display_name="Angular Style",
     website="https://gist.github.com/stephenparish/9941e89d80e2bc58a153",
     types={
         "build",
@@ -92,6 +95,7 @@ angular = CommitConvention(
 
 conventional_commits = CommitConvention(
     name="conventional_commmits",
+    display_name="Conventional commits",
     website="https://www.conventionalcommits.org/en/v1.0.0/",
     badge="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg",
     types={

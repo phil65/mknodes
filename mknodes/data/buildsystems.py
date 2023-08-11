@@ -44,7 +44,7 @@ pdm = BuildSystem(
     identifier="pdm",
     build_backend="pdm.backend",
     url="https://pdm.fming.dev/",
-    env_setup_cmd=None,
+    env_setup_cmd="pdm install",
     install_url=f"{RAW_GITHUB}/pdm-project/pdm/main/docs/docs/index.md#Installation",
 )
 
