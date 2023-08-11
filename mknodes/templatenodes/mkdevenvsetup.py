@@ -21,7 +21,9 @@ logger = logging.getLogger(__name__)
 
 EXAMPLE_URL = "http://www.some-github-provider.com/my-project.git"
 
-START_TEXT = """First, you'll need to download the source code and install an
+START_TEXT = """All development for this library happens in the
+{link} repo on GitHub.
+First, you'll need to download the source code and install an
 editable version of the Python package:"""
 
 CLONE_CODE = """
@@ -52,6 +54,7 @@ def get_docs_section(project_name: str, docs_setup: str) -> list[mknode.MkNode]:
 def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.MkNode]:
     backend_name = backend.identifier.capitalize()
     return [
+        mkheader.MkHeader("Build system"),
         mktext.MkText(f"{backend_name} is used as the build system."),
         mkcode.MkCode(f"pip install {backend.identifier}", language="bash"),
         mklink.MkLink(backend.url, "More information"),
@@ -174,7 +177,9 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
             ],
         )
         code = CLONE_CODE.format(repo_url=self.repo_url, folder_name=folder_name)
-        items = [mktext.MkText(START_TEXT), mkcode.MkCode(code, language="md")]
+        link = mklink.MkLink(self.repo_url, folder_name)
+        start_text = START_TEXT.format(link=str(link))
+        items = [mktext.MkText(start_text), mkcode.MkCode(code, language="md")]
         if self.use_pre_commit:
             items.extend(get_pre_commit_section())
         items.extend(get_build_backend_section(self.build_backend))
