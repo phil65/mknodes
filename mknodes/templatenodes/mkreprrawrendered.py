@@ -20,7 +20,6 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     """
 
     ICON = "material/presentation"
-    STATUS = "new"
 
     def __init__(self, node: mknode.MkNode, **kwargs: Any):
         """Constructor.

@@ -24,7 +24,6 @@ class MkPrettyPrint(mkcode.MkCode):
     """Node to show a prettyprinted data structure."""
 
     ICON = "material/printer"
-    STATUS = "new"
 
     def __init__(
         self,

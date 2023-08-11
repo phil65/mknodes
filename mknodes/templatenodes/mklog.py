@@ -16,7 +16,6 @@ class MkLog(mkcode.MkCode):
     """Node collecting log data. Displays them as simple text afterwards."""
 
     ICON = "octicons/log-24"
-    STATUS = "new"
 
     def __init__(
         self,

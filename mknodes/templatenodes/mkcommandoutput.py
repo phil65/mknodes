@@ -21,7 +21,7 @@ class MkCommandOutput(mkcode.MkCode):
         self.call = call
         # caching on instance level as a compromise
         self._cache: dict[str, str] = {}  # {call: output}
-        super().__init__(language="bash", **kwargs)
+        super().__init__(language="", **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, call=self.call)
