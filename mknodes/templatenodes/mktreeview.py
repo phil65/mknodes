@@ -26,7 +26,7 @@ class MkTreeView(mkcode.MkCode):
 
     def __init__(
         self,
-        directory: str | os.PathLike | treelib.Node,
+        tree: str | os.PathLike | treelib.Node,
         *,
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] | None = None,
         maximum_depth: int | None = None,
@@ -38,7 +38,7 @@ class MkTreeView(mkcode.MkCode):
         """Constructor.
 
         Arguments:
-            directory: Folder path to prettyprint content from
+            tree: Tree to display. Can be a path to a folder or a Node.
             style: Print style. If tuple, parts are used for stems
             maximum_depth: Maximum nesting depth to print
             predicate: Predicate to filter results
@@ -47,7 +47,7 @@ class MkTreeView(mkcode.MkCode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, **kwargs)
-        self.tree = directory
+        self.tree = tree
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
