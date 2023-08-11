@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import importlib
 import logging
 import os
 import types
@@ -136,9 +135,6 @@ class MkDocStrings(mknode.MkNode):
                 self.obj_path = obj  # for setting a manual path
             case tuple() | list():
                 self.obj_path = ".".join(obj)
-            case os.PathLike():
-                mod = importlib.import_module(os.fspath(obj))
-                self.obj_path = mod.__name__
             case _:
                 raise TypeError(obj)
         self._options = self.OPTIONS_DEFAULT.copy()
@@ -182,6 +178,7 @@ class MkDocStrings(mknode.MkNode):
 
         # The default section style does not work well inside Annotations,
         # so we switch to "list" when any parent is an MkAnnotation
+        # and no style is explicitely set.
         opts = self._options.copy()
         style = opts.get("docstring_section_style")
         if not style and any(
@@ -193,10 +190,11 @@ class MkDocStrings(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         md = f"::: {self.obj_path}\n"
-        if self.options:
-            options = "\n".join(f"      {k}: {v!r}" for k, v in self.options.items())
-            md = f"{md}    options:\n{options}\n"
-        return md
+        if not self.options:
+            return md
+        option_lines = [f"      {k}: {v!r}" for k, v in self.options.items()]
+        option_text = "\n".join(option_lines)
+        return f"{md}    options:\n{option_text}\n"
 
     @staticmethod
     def create_example_page(page):
