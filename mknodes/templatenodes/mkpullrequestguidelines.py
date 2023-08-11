@@ -20,6 +20,9 @@ OUTRO = """If this seems all too complicated, you can push or force-push each ne
 and we will squash them ourselves if needed, before merging.
 """
 
+FIXUP_TEXT = "git commit --fixup=SHA # SHA of commit you want to fix"
+REBASE_TEXT = "git rebase -i --autosquash main"
+
 
 class MkPullRequestGuidelines(mkcontainer.MkContainer):
     """Node showing pull request guidelines."""
@@ -43,17 +46,9 @@ class MkPullRequestGuidelines(mkcontainer.MkContainer):
     def items(self):
         return [
             mktext.MkText(INTRO, parent=self),
-            mkcode.MkCode(
-                "git commit --fixup=SHA # SHA of commit you want to fix",
-                language="bash",
-                parent=self,
-            ),
+            mkcode.MkCode(FIXUP_TEXT, language="bash", parent=self),
             mktext.MkText(SQUASH_TEXT, parent=self),
-            mkcode.MkCode(
-                "git rebase -i --autosquash main",
-                language="bash",
-                parent=self,
-            ),
+            mkcode.MkCode(REBASE_TEXT, language="bash", parent=self),
             mktext.MkText("And force-push:", parent=self),
             mkcode.MkCode("git push -f", language="bash", parent=self),
             mktext.MkText(OUTRO, parent=self),

@@ -11,6 +11,12 @@ PAGE_CODE = "Code for this page"
 
 def create_development_section(root_nav: mknodes.MkNav):
     """Create the "Development" sub-MkNav and attach it to given MkNav."""
+    # Now we will create the "Development" section.
+    # You might notice that this whole section does not contain any specific
+    # reference to mknodes. That is because all nodes containing metadata are
+    # dynamically populated depending on the project the tree is connected to.
+    # This means that this section could be imported by other packages and be
+    # used without any further adaptation.
     dev_nav = root_nav.add_nav("Development")
     page = dev_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
     page += mknodes.MkCode.for_object(create_development_section, header=SECTION_CODE)

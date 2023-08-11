@@ -37,6 +37,12 @@ PRE_COMMIT_CODE = """
 pre-commit install
 """
 
+mkdocs_link = mklink.MkLink("http://www.mkdocs.org", "MkDocs")
+material_link = mklink.MkLink(
+    "https://squidfunk.github.io/mkdocs-material/",
+    "Material for MkDocs",
+)
+
 
 def get_docs_section(project_name: str, docs_setup: str) -> list[mknode.MkNode]:
     return [
@@ -170,12 +176,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     @property
     def items(self):
         folder_name = self.repo_url.removesuffix(".git").split("/")[-1]
-        docs_setup = " + ".join(  # noqa: FLY002
-            [
-                "[MkDocs](http://www.mkdocs.org)",
-                "[Material theme](https://squidfunk.github.io/mkdocs-material/)",
-            ],
-        )
+        docs_str = " + ".join(str(i) for i in [mkdocs_link, material_link])
         code = CLONE_CODE.format(repo_url=self.repo_url, folder_name=folder_name)
         link = mklink.MkLink(self.repo_url, folder_name)
         start_text = START_TEXT.format(link=str(link))
@@ -183,7 +184,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         if self.use_pre_commit:
             items.extend(get_pre_commit_section())
         items.extend(get_build_backend_section(self.build_backend))
-        items.extend(get_docs_section(docs_setup=docs_setup, project_name=folder_name))
+        items.extend(get_docs_section(docs_setup=docs_str, project_name=folder_name))
         for item in items:
             item.parent = self
         return items

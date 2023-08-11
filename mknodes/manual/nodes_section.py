@@ -279,10 +279,7 @@ def create_mkdoc_section(nav: mknodes.MkNav):
     mkdoc_nav = nav.add_nav("MkDoc")
 
     page = mkdoc_nav.add_index_page(hide_toc=True, icon="material/api")
-    page += mknodes.MkCode.for_object(
-        create_mkdoc_section,
-        header=SECTION_CODE,
-    )
+    page += mknodes.MkCode.for_object(create_mkdoc_section, header=SECTION_CODE)
     page += mknodes.MkAdmonition(DOC_TEXT, typ="tip")
     create_mknodes_section(mkdoc_nav)
 
@@ -335,15 +332,17 @@ def create_mknodes_section(nav: mknodes.MkNav):
             for processor in self.processors:
                 # First, we check if the processor gets applied.
                 # If yes, we attach a code block.
-                if processor.check_if_apply(page):
-                    code = mknodes.MkCode.for_object(processor.append_block)
-                    admonition = mknodes.MkAdmonition(
-                        code,
-                        collapsible=True,
-                        typ="quote",
-                        title=processor.__class__.__name__,
-                    )
-                    nodes.append(admonition)
+                if not processor.check_if_apply(page):
+                    continue
+                code = mknodes.MkCode.for_object(processor.append_block)
+                name = processor.__class__.__name__
+                admonition = mknodes.MkAdmonition(
+                    code,
+                    collapsible=True,
+                    typ="quote",
+                    title=name,
+                )
+                nodes.append(admonition)
             page += mknodes.MkAdmonition(
                 nodes,
                 typ="quote",
@@ -390,10 +389,8 @@ def create_mknodes_section(nav: mknodes.MkNav):
         def get_processors(self):
             procs = super().get_processors()
             code_block = mknodes.MkCode.for_object(create_mknodes_section)
-            fn_processor = processors.StaticBlockProcessor(
-                code_block,
-                header="Code for this section",
-            )
+            header = "Code for this section"
+            fn_processor = processors.StaticBlockProcessor(code_block, header=header)
             proc_processor = ShowProcessorCodeProcessor(
                 self.module,
                 processors=procs,
