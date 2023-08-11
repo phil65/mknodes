@@ -33,15 +33,16 @@ class LinkProvider:
         self.inv_manager.add_inv_file(path)
 
     def link_for_klass(self, kls: type) -> str:
-        if kls.__module__ == "builtins":
-            url = BUILTIN_URL.format(mod="functions", name=kls.__name__)
-            return helpers.linked(url, title=kls.__name__)
-        if kls.__module__ in sys.stdlib_module_names:
-            mod = kls.__module__
-            url = BUILTIN_URL.format(mod=mod, name=f"{mod}.{kls.__name__}")
-            return helpers.linked(url, title=kls.__name__)
-        module = kls.__module__.split(".")[0]
+        module_path = kls.__module__
+        kls_name = kls.__name__
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
+        if module_path == "builtins":
+            url = BUILTIN_URL.format(mod="functions", name=kls_name)
+            return helpers.linked(url, title=kls_name)
+        if module_path in sys.stdlib_module_names:
+            url = BUILTIN_URL.format(mod=module_path, name=f"{module_path}.{kls_name}")
+            return helpers.linked(url, title=kls_name)
+        module = module_path.split(".")[0]
         if url := homepage_for_distro(module):
             return helpers.linked(url, title=qual_name)
         return helpers.linked(qual_name)

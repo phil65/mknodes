@@ -14,7 +14,7 @@ import re
 import reprlib
 import sys
 import types
-from typing import Any
+from typing import Any, Literal
 
 import requests
 
@@ -284,13 +284,15 @@ def get_file(klass: type) -> str | None:
 
 
 @functools.cache
-def download(url: str):
+def download(url: str, typ: Literal["text", "data"] = "text"):
     if token := os.getenv("GH_TOKEN"):
         headers = {"Authorization": f"token {token}"}
         response = requests.get(url, headers=headers)
     else:
         response = requests.get(url)
-    return "" if response.status_code != RESPONSE_CODE_OK else response.text
+    if response.status_code != RESPONSE_CODE_OK:
+        return ""
+    return response.text if typ == "text" else response.content
 
 
 if __name__ == "__main__":
