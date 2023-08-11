@@ -73,6 +73,13 @@ class MkTabContainer(mkcontainer.MkContainer):
         content: str | mknode.MkNode | list[str] | list[mknode.MkNode],
         select: bool = False,
     ) -> mktabs.MkTab | mktabs.MkTabBlock:
+        """Append a tab to existing ones.
+
+        Arguments:
+            title: Title of the new tab
+            content: content of the new tab
+            select: Whether new tab should get selected initially
+        """
         tab = self.Tab(title, content, select=select)
         self.append(tab)
         return tab
@@ -82,6 +89,11 @@ class MkTabContainer(mkcontainer.MkContainer):
         return self.items.index(item)
 
     def set_selected(self, index: int | str):
+        """Set tab with given index as selected.
+
+        Arguments:
+            index: Index or title of the tab which should be selected
+        """
         self.select_tab = self._get_tab_pos(index) if isinstance(index, str) else index
         for i, item in enumerate(self.items):
             item.select = i == self.select_tab
