@@ -23,7 +23,7 @@ class MkDependencyTable(mktable.MkTable):
         return helpers.get_repr(self, package=self._package, _filter_empty=True)
 
     @property
-    def package(self):
+    def package(self) -> packageinfo.PackageInfo | None:  # type: ignore[return]
         match self._package:
             case None if self.associated_project:
                 return self.associated_project.info
