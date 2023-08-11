@@ -67,6 +67,16 @@ class MkTabContainer(mkcontainer.MkContainer):
             case _:
                 raise TypeError(tab)
 
+    def add_tab(
+        self,
+        title: str,
+        content: str | mknode.MkNode | list[str] | list[mknode.MkNode],
+        select: bool = False,
+    ) -> mktabs.MkTab | mktabs.MkTabBlock:
+        tab = self.Tab(title, content, select=select)
+        self.append(tab)
+        return tab
+
     def _get_tab_pos(self, tab_title: str) -> int:
         item = next(i for i in self.items if i.title == tab_title)
         return self.items.index(item)
