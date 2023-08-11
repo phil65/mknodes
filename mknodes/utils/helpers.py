@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 import contextlib
 import functools
 
@@ -12,6 +12,7 @@ import os
 import pathlib
 import re
 import reprlib
+import subprocess
 import sys
 import types
 from typing import Any, Literal
@@ -224,6 +225,14 @@ def to_html_list(
     if shorten_after and len(ls) > shorten_after:
         item_str += "<li>...</li>"
     return f"<ul>{item_str}</ul>"
+
+
+def get_output_from_call(call: Sequence[str]):
+    try:
+        return subprocess.check_output(call).decode()
+    except subprocess.CalledProcessError:
+        logger.warning("Executing %s failed", call)
+        return None
 
 
 @functools.cache

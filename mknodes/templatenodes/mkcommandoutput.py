@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 import logging
-import subprocess
 
 from mknodes.basenodes import mkcode
 from mknodes.utils import helpers
@@ -31,13 +30,10 @@ class MkCommandOutput(mkcode.MkCode):
         key = " ".join(self.call)
         if key in self._cache:
             return self._cache[key]
-        try:
-            self._cache[key] = subprocess.check_output(self.call).decode()
-        except subprocess.CalledProcessError:
-            logger.warning("Executing %s failed", key)
-            return "**Command failed**"
-        else:
+        if output := helpers.get_output_from_call(self.call):
+            self._cache[key] = output
             return self._cache[key]
+        return "**Command failed**"
 
     @staticmethod
     def create_example_page(page):
