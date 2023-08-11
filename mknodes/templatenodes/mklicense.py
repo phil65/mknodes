@@ -16,10 +16,16 @@ logger = logging.getLogger(__name__)
 
 def get_spdx_license(name: str):
     if lic := spdx_lookup.by_id(name):
-        return lic.template.replace("<year>", str(datetime.date.today().year))
+        text = lic.template
     if lic := spdx_lookup.by_name(name):
-        return lic.template.replace("<year>", str(datetime.date.today().year))
-    return None
+        text = lic.template.replace("<year>", str(datetime.date.today().year))
+    if not text:
+        return None
+    year = str(datetime.date.today().year)
+    text = text.replace("<year>", year)
+    text = text.replace("[yyyy]", year)
+    text = text.replace("[various years]", year)
+    return text.replace(" 2001 ", f" {year} ")
 
 
 class MkLicense(mktext.MkText):
@@ -53,16 +59,27 @@ class MkLicense(mktext.MkText):
             holder = self.associated_project.info.get_author_name()
             summary = self.associated_project.info.metadata["Summary"]
             package_name = self.associated_project.info.name
+            website = self.associated_project.info.get_repository_url() or ""
+            email = self.associated_project.info.get_author_email() or ""
         else:
             holder = ""
             summary = ""
             package_name = ""
+            website = ""
+            email = ""
         text = get_spdx_license(license_name)
         if not text:
             return ""
+        # some dumb replacing for popular licenses
         text = text.replace("<copyright holders>", holder)
+        text = text.replace("[name of copyright owner]", holder)
         text = text.replace("<name of author>", holder)
+        text = text.replace("<owner>", holder)
+        text = text.replace("David Griffin", holder)
         text = text.replace("<program>", package_name)
+        text = text.replace("Universidad de Palermo, Argentina", holder)
+        text = text.replace("http://www.palermo.edu/", website)
+        text = text.replace("<phk@FreeBSD.ORG>", email)
         return text.replace(
             "<one line to give the program's name and a brief idea of what it does.>",
             f"{package_name}: {summary}",
