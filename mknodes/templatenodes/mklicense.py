@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import functools
 import logging
 
 from typing import Any
@@ -14,6 +15,7 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
+@functools.cache
 def get_spdx_license(name: str):
     if lic := spdx_lookup.by_id(name):
         text = lic.template

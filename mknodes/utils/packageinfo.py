@@ -128,10 +128,9 @@ class PackageInfo:
 
     def get_license_file_path(self) -> pathlib.Path | None:
         """Return license file path (relative to project root) from metadata."""
-        if (file := pathlib.Path("LICENSE")).exists():
-            return file
-        if (file := pathlib.Path("LICENSE.md")).exists():
-            return file
+        for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
+            if (file := pathlib.Path(path)).exists():
+                return file
         if file := self.metadata.get("License-File"):
             return pathlib.Path(file)
         return None
