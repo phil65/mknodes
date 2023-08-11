@@ -89,7 +89,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         *,
         repo_url: str | None = None,
         use_pre_commit: bool | None = None,
-        build_backend: str | None = None,
+        build_backend: buildsystems.BuildSystemStr | None = None,
         header: str = "Setting up a development environment",
         **kwargs: Any,
     ):

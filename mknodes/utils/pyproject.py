@@ -25,9 +25,8 @@ class PyProject:
         else:
             self.pyproject = toml.load(pyproject_path)
 
-    def configured_build_systems(self) -> list[str]:
-        build_systems = ["poetry", "hatch", "pdm", "flit"]
-        return [b for b in build_systems if b in self.pyproject["tool"]]
+    def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
+        return [p for p in buildsystems.BUILD_SYSTEMS if p in self.pyproject["tool"]]
 
     def build_system(self) -> buildsystems.BuildSystem:
         back_end = self.pyproject["build-system"]["build-backend"]

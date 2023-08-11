@@ -2,13 +2,17 @@ from __future__ import annotations
 
 import dataclasses
 
+from typing import Literal
+
 
 RAW_GITHUB = "https://raw.githubusercontent.com"
+
+BuildSystemStr = Literal["hatch", "flit", "poetry", "setuptools", "pdm"]
 
 
 @dataclasses.dataclass
 class BuildSystem:
-    identifier: str
+    identifier: BuildSystemStr
     build_backend: str
     url: str
     env_setup_cmd: str | None
@@ -48,6 +52,6 @@ pdm = BuildSystem(
     install_url=f"{RAW_GITHUB}/pdm-project/pdm/main/docs/docs/index.md#Installation",
 )
 
-BUILD_SYSTEMS: dict[str, BuildSystem] = {
+BUILD_SYSTEMS: dict[BuildSystemStr, BuildSystem] = {
     p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm]
 }
