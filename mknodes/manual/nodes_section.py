@@ -178,7 +178,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     # we are wrapping some annotations with Admonitions, that seems to help
     # with nesting / escaping issues in some cases (and it looks nice!).
     path = mknodes.TEST_RESOURCES / "nav_tree/"
-    tree_node = mknodes.MkDirectoryTree(path, header="Directory tree")
+    tree_node = mknodes.MkTreeView(path, header="Directory tree")
     code.annotations[1] = mknodes.MkAdmonition(tree_node)
     file_content_node = mknodes.MkCode(text, header="SUMMARY.md content")
     code.annotations[2] = mknodes.MkAdmonition(file_content_node)
@@ -208,9 +208,9 @@ def create_from_folder_section(nav: mknodes.MkNav):
     code = mknodes.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
     page = from_folder_nav.add_index_page(hide_toc=True, icon="material/folder")
     page += code
-    page += mknodes.MkDirectoryTree(folder)  # DocStrings: (2)
+    page += mknodes.MkTreeView(folder)  # DocStrings: (2)
     folder_docs = mknodes.MkDocStrings(mknodes.MkNav.from_folder)
-    node_docs = mknodes.MkDocStrings(mknodes.MkDirectoryTree)
+    node_docs = mknodes.MkDocStrings(mknodes.MkTreeView)
     code.annotations[1] = folder_docs
     code.annotations[2] = node_docs
 

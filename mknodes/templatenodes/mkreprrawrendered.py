@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcode, mknode, mktabcontainer, mktabs
-from mknodes.templatenodes import mkdirectorytree
+from mknodes.templatenodes import mktreeview
 from mknodes.utils import helpers
 
 
@@ -46,7 +46,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
             Rendered=self.node.__copy__(),
         )
         if len(self.node.children) > 0:
-            tabs["Repr tree"] = mkdirectorytree.MkDirectoryTree(self.node)
+            tabs["Repr tree"] = mktreeview.MkTreeView(self.node)
         items = [mktabs.MkTab(k, v, parent=self) for k, v in tabs.items()]
         items[0].new = True
         return items

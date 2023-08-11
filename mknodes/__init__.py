@@ -51,7 +51,7 @@ from .templatenodes.mkclasstable import MkClassTable
 from .templatenodes.mkreprrawrendered import MkReprRawRendered
 from .templatenodes.mkprettyprint import MkPrettyPrint
 from .templatenodes.mkcallable import MkCallable
-from .templatenodes.mkdirectorytree import MkDirectoryTree
+from .templatenodes.mktreeview import MkTreeView
 from .templatenodes.mklog import MkLog
 from .templatenodes.mklicense import MkLicense
 from .templatenodes.mkdependencytable import MkDependencyTable
@@ -115,7 +115,7 @@ __all__ = [
     "MkReprRawRendered",
     "MkPrettyPrint",
     "MkCallable",
-    "MkDirectoryTree",
+    "MkTreeView",
     "MkLog",
     "MkLicense",
     "MkDependencyTable",

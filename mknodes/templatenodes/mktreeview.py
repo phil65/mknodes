@@ -15,8 +15,11 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
-class MkDirectoryTree(mkcode.MkCode):
-    """Node to display directory content as a tree."""
+class MkTreeView(mkcode.MkCode):
+    """Node to display tree structures.
+
+    Currently supports directories and Node subclasses (including `MkNodes`).
+    """
 
     ICON = "material/file-tree-outline"
     STATUS = "new"
@@ -93,11 +96,11 @@ class MkDirectoryTree(mkcode.MkCode):
         import mknodes
 
         for style in get_args(treestyles.TreeStyleStr):
-            node = MkDirectoryTree("mknodes/manual", style=style)
+            node = MkTreeView("mknodes/manual", style=style)
             page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
 
 
 if __name__ == "__main__":
-    node = MkDirectoryTree(".", header="test", style="ascii")
+    node = MkTreeView(".", header="test", style="ascii")
     print(node.to_markdown())
-    print(MkDirectoryTree(node, style="ascii"))
+    print(MkTreeView(node, style="ascii"))

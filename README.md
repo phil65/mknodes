@@ -86,7 +86,7 @@ graph LR
   2221091488896["mkcode.MkCode"]
   2221091474256["mkdiagram.MkDiagram"]
   2221091478160["mkclassdiagram.MkClassDiagram"]
-  2221092976096["mkdirectorytree.MkDirectoryTree"]
+  2221092976096["mktreeview.MkTreeView"]
   2221092980000["mkprettyprint.MkPrettyPrint"]
   2221092995616["mklog.MkLog"]
   2221093038560["mkcommandoutput.MkCommandOutput"]
