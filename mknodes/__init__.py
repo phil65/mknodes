@@ -57,6 +57,7 @@ from .templatenodes.mklicense import MkLicense
 from .templatenodes.mkdependencytable import MkDependencyTable
 from .templatenodes.mkcommandoutput import MkCommandOutput
 from .templatenodes.mkbadge import MkBadge
+from .templatenodes.mkmetadatabadges import MkMetadataBadges
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
@@ -122,6 +123,7 @@ __all__ = [
     "MkCommandOutput",
     "MkBadge",
     "Project",
+    "MkMetadataBadges",
 ]
 
 __version__ = "0.25.0"
