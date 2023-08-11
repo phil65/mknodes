@@ -180,7 +180,7 @@ def iter_classes(
         yield kls
 
 
-def get_topmost_module_path(obj: type | types.FunctionType | types.MethodType) -> str:
+def get_topmost_module_path(obj: Callable) -> str:
     """Return path of topmost module containing given class.
 
     If a class is imported in any of its parent modules, return that "shorter" path.
@@ -190,21 +190,15 @@ def get_topmost_module_path(obj: type | types.FunctionType | types.MethodType) -
     Arguments:
         obj: Klass to get the path for.
     """
-    match obj:
-        case type():
-            fn = inspect.isclass
-        case types.MethodType():
-            fn = inspect.ismethod
-        case types.FunctionType():
-            fn = inspect.isfunction
+    to_search_for = obj.__self__ if hasattr(obj, "__self__") else obj
     path = obj.__module__
     parts = path.split(".")
     while parts:
         with contextlib.suppress(TypeError):
             new_path = ".".join(parts)
             mod = importlib.import_module(new_path)
-            objs = [i for _i_name, i in inspect.getmembers(mod, fn)]
-            if obj in objs:
+            objs = [i for _i_name, i in inspect.getmembers(mod)]
+            if to_search_for in objs:
                 path = new_path
         parts = parts[:-1]
     return path
@@ -218,7 +212,7 @@ def get_submodules(
 
 
 if __name__ == "__main__":
-    from prettyqt import widgets
+    import mknodes
 
-    path = iter_classes(widgets, recursive=False)
-    print(len(list(path)))
+    print(get_topmost_module_path(mknodes.MkCode.for_object))
+    print(mknodes.MkCode.for_object.__qualname__)
