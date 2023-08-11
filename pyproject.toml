@@ -262,3 +262,15 @@ exclude = '''
   | tests/.*/setup.py
 )/
 '''
+
+[tool.mknodes]
+allowed-commit-types = [
+    "fix",
+    "feat",
+    "refactor",
+    "docs",
+    "test",
+    "build",
+    "chore",
+]
+extras-descriptions = {seedir = "MkSeeDir node"}
