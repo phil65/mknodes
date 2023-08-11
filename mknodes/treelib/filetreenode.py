@@ -5,9 +5,6 @@ import logging
 import os
 import pathlib
 
-from typing import TypeVar
-
-from mknodes.data import treestyles
 from mknodes.treelib import node
 
 
@@ -24,10 +21,6 @@ class FileTreeNode(node.Node):
 
     def __repr__(self):
         return f"{self.name}/" if self.type == "folder" else self.name
-
-    @property
-    def path_name(self) -> str:
-        return str(self.path)
 
     @classmethod
     def from_folder(
@@ -73,31 +66,11 @@ class FileTreeNode(node.Node):
             node.append_child(child)
         return node
 
-    def get_tree_repr(self, style: treestyles.TreeStyleStr = "ascii"):
-        nodes = [self, *list(self.descendants)]
-        return "\n".join(i.displayable(style) for i in nodes)
-
-    def displayable(self, style_name: treestyles.TreeStyleStr = "ascii"):
-        style = treestyles.STYLES[style_name]
-        if self.parent is None:
-            return repr(self)
-        prefix = style.filename_last if self.is_last_child else style.filename_middle
-        parts = [f"{prefix!s} {self!r}"]
-        parent = self.parent
-        while parent and parent.parent is not None:
-            part = style.parent_last if parent.is_last_child else style.parent_middle
-            parts.append(part)
-            parent = parent.parent
-        return "".join(reversed(parts))
-
     def get_folder_count(self) -> int:
         return sum(i.type == "folder" for i in self.descendants)
 
     def get_file_count(self) -> int:
         return sum(i.type == "file" for i in self.descendants)
-
-
-T = TypeVar("T", bound=FileTreeNode)
 
 
 if __name__ == "__main__":

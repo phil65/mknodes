@@ -186,26 +186,22 @@ class Node:
         for child_item in self.children:
             yield from child_item.iter_nodes(indent + 1)
 
-    def tree_repr(self, style_name: treestyles.TreeStyleStr = "ascii"):
+    def displayable(self, style_name: treestyles.TreeStyleStr = "ascii"):
         style = treestyles.STYLES[style_name]
         if self.parent is None:
             return repr(self)
-        _filename_prefix = (
-            style.filename_last if self.is_last_child else style.filename_middle
-        )
-        parts = [f"{_filename_prefix!s} {self!r}"]
+        prefix = style.filename_last if self.is_last_child else style.filename_middle
+        parts = [f"{prefix!s} {self!r}"]
         parent = self.parent
         while parent and parent.parent is not None:
-            parts.append(
-                (style.parent_middle if parent.is_last_child else style.parent_last),
-            )
+            part = style.parent_last if parent.is_last_child else style.parent_middle
+            parts.append(part)
             parent = parent.parent
-
         return "".join(reversed(parts))
 
     def get_tree_repr(self, style: treestyles.TreeStyleStr = "ascii"):
         nodes = [self, *list(self.descendants)]
-        return "\n".join(i.tree_repr(style) for i in nodes)
+        return "\n".join(i.displayable(style) for i in nodes)
 
 
 def preorder_iter(
@@ -216,16 +212,8 @@ def preorder_iter(
 ) -> Iterable[Node]:
     """Iterate through all children of a tree.
 
-    Pre-Order Iteration Algorithm, NLR
-        1. Visit the current node.
-        2. Recursively traverse the current node's left subtree.
-        3. Recursively traverse the current node's right subtree.
-
     It is topologically sorted because a parent node is processed before its child nodes.
 
-    >>> path_list = ["a/b/d", "a/b/e/g", "a/b/e/h", "a/c/f"]
-    >>> root = list_to_tree(path_list)
-    >>> print_tree(root)
     a
     ├── b
     │   ├── d
@@ -238,24 +226,11 @@ def preorder_iter(
     >>> [node.node_name for node in preorder_iter(root)]
     ['a', 'b', 'd', 'e', 'g', 'h', 'c', 'f']
 
-    >>> [node.node_name for node in preorder_iter(root,
-    filter_condition=lambda x: x.node_name in ["a", "d", "e", "f", "g"])]
-    ['a', 'd', 'e', 'g', 'f']
-
-    >>> [node.node_name for node in preorder_iter(root,
-    stop_condition=lambda x: x.node_name=="e")]
-    ['a', 'b', 'd', 'c', 'f']
-
-    >>> [node.node_name for node in preorder_iter(root, max_depth=3)]
-    ['a', 'b', 'd', 'e', 'c', 'f']
-
-    Args:
+    Arguments:
         tree: input tree
-        filter_condition: function that takes in node as argument, optional
-            Return node if condition evaluates to `True`
-        stop_condition: function that takes in node as argument, optional
-            Stops iteration if condition evaluates to `True`
-        max_depth: maximum depth of iteration, based on `depth` attribute, optional
+        filter_condition: function that takes in node as argument
+        stop_condition: function that takes in node as argument
+        max_depth: maximum depth of iteration, based on `depth` attribute
     """
     if (
         tree
