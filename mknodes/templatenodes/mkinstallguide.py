@@ -68,6 +68,12 @@ class MkInstallGuide(mkcontainer.MkContainer):
             mktext.MkText(method.info_text()),
             mkcode.MkCode(method.install_instructions()),
         ]
+        # proj = self.associated_project
+        # if method.ID == "pip" and proj and (extras := proj.info.get_extras()):
+        #     extras_str = ",".join(extras)
+        #     text = f"{method.install_instructions()}[{extras_str}]"
+        #     code = mkcode.MkCode(text)
+        #     items.append(code)
         return mkcontainer.MkContainer(items, parent=self)
 
     def __repr__(self):
