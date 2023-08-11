@@ -6,7 +6,7 @@ import re
 import types
 
 from mknodes import config, mknav
-from mknodes.data import commitconventions
+from mknodes.data import commitconventions, installmethods
 from mknodes.utils import helpers, packageinfo, pyproject
 
 
@@ -29,7 +29,7 @@ class Project:
     def __init__(
         self,
         module: types.ModuleType,
-        package_repos: list[str] | None = None,
+        package_repos: list[installmethods.InstallMethodStr] | None = None,
         commit_types: list[commitconventions.CommitTypeStr]
         | commitconventions.ConventionTypeStr
         | None = None,

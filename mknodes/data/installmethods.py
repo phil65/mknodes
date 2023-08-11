@@ -3,10 +3,12 @@ from __future__ import annotations
 import dataclasses
 import logging
 
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 
 logger = logging.getLogger(__name__)
+
+InstallMethodStr = Literal["pip", "pipx", "conda_forge", "homebrew"]
 
 
 @dataclasses.dataclass

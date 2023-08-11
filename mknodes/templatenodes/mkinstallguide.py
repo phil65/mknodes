@@ -63,14 +63,12 @@ class MkInstallGuide(mkcontainer.MkContainer):
         self,
         method: installmethods.InstallMethod,
     ) -> mkcontainer.MkContainer:
-        return mkcontainer.MkContainer(
-            [
-                mkheader.MkHeader(method.ID, level=self.header_level),
-                mktext.MkText(method.info_text()),
-                mkcode.MkCode(method.install_instructions()),
-            ],
-            parent=self,
-        )
+        items = [
+            mkheader.MkHeader(method.ID, level=self.header_level),
+            mktext.MkText(method.info_text()),
+            mkcode.MkCode(method.install_instructions()),
+        ]
+        return mkcontainer.MkContainer(items, parent=self)
 
     def __repr__(self):
         return helpers.get_repr(
@@ -85,15 +83,13 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        # MkInstallGuide is just a text snippet for a short Install guide
-
-        # this will show the data for our associated project
+        # this will show an install guide for our associated project
         node = MkInstallGuide()
-        page += mknodes.MkReprRawRendered(node, header="### Project data")
+        page += mknodes.MkReprRawRendered(node, header="### From project")
 
-        # we can also explicitely define the data
+        # we can also explicitely define the repositories
         node = MkInstallGuide(project="mkdocs", package_repos=["pipx"])
-        page += mknodes.MkReprRawRendered(node, header="### Other")
+        page += mknodes.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":
