@@ -9,6 +9,7 @@ import inspect
 import itertools
 import logging
 import os
+import pathlib
 import re
 import reprlib
 import sys
@@ -46,6 +47,16 @@ def to_str_if_textnode(node):
     import mknodes
 
     return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
+
+
+def find_file_in_folder_or_parent(
+    filename: str | pathlib.Path,
+    folder: os.PathLike | str = ".",
+) -> pathlib.Path | None:
+    path = pathlib.Path(folder).absolute()
+    while not (path / filename).exists() and len(path.parts) > 1:
+        path = path.parent
+    return file if (file := (path / filename)).exists() else None
 
 
 @contextlib.contextmanager

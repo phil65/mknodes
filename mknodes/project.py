@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import logging
-import pathlib
 import re
 import types
 
 from mknodes import config, mknav
-from mknodes.data import commitconventions, installmethods
+from mknodes.data import commitconventions, installmethods, taskrunners
 from mknodes.utils import helpers, packageinfo, pyproject
 
 
@@ -63,21 +62,22 @@ class Project:
         return mknav.MkNav(project=self, **kwargs)
 
     def has_precommit(self) -> bool:
-        path = pathlib.Path().absolute()
-        while not (path / ".pre-commit-config.yaml").exists() and len(path.parts) > 1:
-            path = path.parent
-        return len(path.parts) > 1
+        return bool(helpers.find_file_in_folder_or_parent(".pre-commit-config.yaml"))
 
     def has_conda(self) -> bool:
-        path = pathlib.Path().absolute()
-        while not (path / "meta.yaml").exists() and len(path.parts) > 1:
-            path = path.parent
-        return len(path.parts) > 1
+        return bool(helpers.find_file_in_folder_or_parent(".meta.yaml"))
+
+    def get_used_task_runners(self) -> list[taskrunners.TaskRunner]:
+        return [
+            runner
+            for runner in taskrunners.TASK_RUNNERS.values()
+            if any(helpers.find_file_in_folder_or_parent(i) for i in runner.filenames)
+        ]
 
 
 if __name__ == "__main__":
     import mknodes
 
     project = Project(mknodes)
-    bs = project.has_precommit()
+    bs = project.get_used_task_runners()
     print(bs)
