@@ -102,58 +102,82 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        self.repo_url = repo_url
-        self.use_pre_commit = use_pre_commit
-        self.build_backend = build_backend
+        self._repo_url = repo_url
+        self._use_pre_commit = use_pre_commit
+        self._build_backend = build_backend
 
     def __repr__(self):
         return helpers.get_repr(
             self,
-            repo_url=self.repo_url,
-            use_pre_commit=self.use_pre_commit,
-            build_backend=self.build_backend,
+            repo_url=self._repo_url,
+            use_pre_commit=self._use_pre_commit,
+            build_backend=self._build_backend,
             _filter_empty=True,
         )
 
     @property
-    def items(self):
-        match self.repo_url:
+    def repo_url(self) -> str:
+        match self._repo_url:
             case None if self.associated_project:
                 repo_url = self.associated_project.get_repository_url() or EXAMPLE_URL
             case str():
-                repo_url = self.repo_url
+                repo_url = self._repo_url
             case _:
                 repo_url = EXAMPLE_URL
         if not repo_url.endswith(".git"):
             repo_url += ".git"
-        folder_name = repo_url.removesuffix(".git").split("/")[-1]
-        match self.use_pre_commit:
+        return repo_url
+
+    @repo_url.setter
+    def repo_url(self, value):
+        self._repo_url = value
+
+    @property
+    def use_pre_commit(self) -> bool:  # type: ignore[return]
+        match self._use_pre_commit:
             case None if self.associated_project:
-                use_pre_commit = self.associated_project.has_precommit()
-            case str():
-                use_pre_commit = self.use_pre_commit
+                return self.associated_project.has_precommit()
+            case bool():
+                return self._use_pre_commit
             case None:
-                use_pre_commit = True
+                return True
             case _:
-                raise TypeError(self.use_pre_commit)
-        match self.build_backend:
+                raise TypeError(self._use_pre_commit)
+
+    @use_pre_commit.setter
+    def use_pre_commit(self, value):
+        self._use_pre_commit = value
+
+    @property
+    def build_backend(self) -> buildsystems.BuildSystem:  # type: ignore[return]
+        match self._build_backend:
             case str():
-                backend = buildsystems.BUILD_SYSTEMS[self.build_backend]
+                return buildsystems.BUILD_SYSTEMS[self._build_backend]
             case None if self.associated_project:
-                backend = self.associated_project.pyproject.build_system()
+                return self.associated_project.pyproject.build_system()
+            case None:
+                return buildsystems.setuptools
             case _:
-                backend = buildsystems.setuptools
+                raise TypeError(self._build_backend)
+
+    @build_backend.setter
+    def build_backend(self, value):
+        self._build_backend = value
+
+    @property
+    def items(self):
+        folder_name = self.repo_url.removesuffix(".git").split("/")[-1]
         docs_setup = " + ".join(  # noqa: FLY002
             [
                 "[MkDocs](http://www.mkdocs.org)",
                 "[Material theme](https://squidfunk.github.io/mkdocs-material/)",
             ],
         )
-        code = CLONE_CODE.format(repo_url=repo_url, folder_name=folder_name)
+        code = CLONE_CODE.format(repo_url=self.repo_url, folder_name=folder_name)
         items = [mktext.MkText(START_TEXT), mkcode.MkCode(code, language="md")]
-        if use_pre_commit:
+        if self.use_pre_commit:
             items.extend(get_pre_commit_section())
-        items.extend(get_build_backend_section(backend))
+        items.extend(get_build_backend_section(self.build_backend))
         items.extend(get_docs_section(docs_setup=docs_setup, project_name=folder_name))
         for item in items:
             item.parent = self

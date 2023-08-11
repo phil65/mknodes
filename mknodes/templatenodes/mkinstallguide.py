@@ -20,7 +20,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def __init__(
         self,
         project: str | None = None,
-        package_repos: list[str] | None = None,
+        package_repos: list[installmethods.InstallMethodStr] | None = None,
         header_level: int = 3,
         **kwargs: Any,
     ):
@@ -33,26 +33,36 @@ class MkInstallGuide(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.project = project
+        self._project = project
         self.header_level = header_level
-        self.package_repos = package_repos
+        self._package_repos = package_repos
+
+    @property
+    def package_repos(self) -> list[installmethods.InstallMethodStr]:
+        if self._package_repos:
+            return self._package_repos
+        if self.associated_project:
+            return self.associated_project.package_repos
+        return ["pip"]
+
+    @property
+    def project(self):
+        if self._project:
+            return self._project
+        if self.associated_project:
+            return self.associated_project.package_name
+        return None
+
+    @project.setter
+    def project(self, value):
+        self._project = value
 
     @property
     def items(self) -> list[mknode.MkNode]:
-        if self.package_repos:
-            managers = self.package_repos
-        elif self.associated_project:
-            managers = self.associated_project.package_repos
-        else:
-            managers = ["pip"]
-        if self.project:
-            project = self.project
-        elif self.associated_project:
-            project = self.associated_project.package_name
-        else:
+        if not self.project:
             return []
-        klasses = [installmethods.InstallMethod.by_id(i) for i in managers]
-        methods = [i(project) for i in klasses]
+        klasses = [installmethods.InstallMethod.by_id(i) for i in self.package_repos]
+        methods = [i(self.project) for i in klasses]
         return [self.get_section_for(method) for method in methods]
 
     @items.setter
@@ -79,8 +89,8 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def __repr__(self):
         return helpers.get_repr(
             self,
-            project=self.project,
-            package_repos=self.package_repos,
+            project=self._project,
+            package_repos=self._package_repos,
             header_level=self.header_level,
             _filter_empty=True,
         )

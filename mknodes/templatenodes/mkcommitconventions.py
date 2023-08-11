@@ -80,32 +80,43 @@ class MkCommitConventions(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
-        self.commit_types = commit_types
+        self._commit_types = commit_types
 
     def __repr__(self):
-        return helpers.get_repr(self, commit_types=self.commit_types, _filter_empty=True)
+        return helpers.get_repr(
+            self,
+            commit_types=self._commit_types,
+            _filter_empty=True,
+        )
 
     @property
-    def items(self):
-        match self.commit_types:
+    def commit_types(self) -> list[commitconventions.CommitTypeStr]:
+        match self._commit_types:
             case None if self.associated_project:
                 val = self.associated_project.commit_types
             case None:
                 val = "conventional_commits"
             case _:
-                val = self.commit_types
+                val = self._commit_types
         match val:
             case "basic":
-                commit_types = commitconventions.basic.types
+                return list(commitconventions.basic.types)
             case "conventional_commits" | "angular" | None:
-                commit_types = commitconventions.conventional_commits.types
+                return list(commitconventions.conventional_commits.types)
             case list():
-                commit_types = val
+                return val
             case _:
-                raise TypeError(self.commit_types)
+                raise TypeError(self._commit_types)
+
+    @commit_types.setter
+    def commit_types(self, value):
+        self._commit_types = value
+
+    @property
+    def items(self):
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
         all_types = commitconventions.TYPE_DESCRIPTIONS
-        ls = mklist.MkList([f"`{k}`: {all_types[k]}" for k in commit_types])
+        ls = mklist.MkList([f"`{k}`: {all_types[k]}" for k in self.commit_types])
         return [
             mktext.MkText(START_TEXT.format(styles=styles), parent=self),
             mkcode.MkCode(COMMIT_TEXT, language="md", parent=self),
@@ -124,10 +135,7 @@ class MkCommitConventions(mkcontainer.MkContainer):
 
         node = MkCommitConventions(header="")
         page += mknodes.MkReprRawRendered(node, header="### All commit_types")
-        node = MkCommitConventions(
-            commit_types=["fix", "feat", "refactor"],
-            header="",
-        )
+        node = MkCommitConventions(["fix", "feat", "refactor"], header="")
         page += mknodes.MkReprRawRendered(node, header="### Selected commit_types")
 
 
