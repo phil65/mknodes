@@ -68,6 +68,7 @@ class Project:
         return bool(helpers.find_file_in_folder_or_parent(".meta.yaml"))
 
     def get_used_task_runners(self) -> list[taskrunners.TaskRunner]:
+        """Return list of task runners used by this project."""
         return [
             runner
             for runner in taskrunners.TASK_RUNNERS.values()
