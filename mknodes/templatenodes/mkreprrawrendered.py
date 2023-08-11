@@ -21,15 +21,21 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
 
     ICON = "material/presentation"
 
-    def __init__(self, node: mknode.MkNode, **kwargs: Any):
+    def __init__(
+        self,
+        node: mknode.MkNode,
+        select_tab: int | str | None = 2,
+        **kwargs: Any,
+    ):
         """Constructor.
 
         Arguments:
             node: Node to show an example for
+            select_tab: Tab which should be selected initially
             kwargs: Keyword arguments passed to parent
         """
         self.node = node
-        super().__init__(tabs={}, select_tab=2, **kwargs)
+        super().__init__(tabs={}, select_tab=select_tab, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, node=self.node)
@@ -49,6 +55,13 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
             tabs["Repr tree"] = mktreeview.MkTreeView(self.node)
         items = [mktabs.MkTab(k, v, parent=self) for k, v in tabs.items()]
         items[0].new = True
+        if self.select_tab is not None:
+            pos = (
+                self._get_tab_pos(self.select_tab)
+                if isinstance(self.select_tab, str)
+                else self.select_tab
+            )
+            items[pos].select = True
         return items
 
     @items.setter
