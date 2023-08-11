@@ -31,7 +31,7 @@ class MkDocStrings(mknode.MkNode):
         | os.PathLike
         | type
         | Callable,
-        for_topmost: bool = False,
+        for_topmost: bool = True,
         allow_inspection: bool | None = None,
         show_bases: bool | None = None,
         show_source: bool | None = None,
@@ -126,7 +126,7 @@ class MkDocStrings(mknode.MkNode):
         match obj:
             case types.ModuleType():
                 self.obj_path = obj.__name__
-            case type() | types.FunctionType() | types.MethodType():
+            case Callable():
                 if for_topmost:
                     topmost_path = classhelpers.get_topmost_module_path(obj)
                     self.obj_path = f"{topmost_path}.{obj.__qualname__}"
