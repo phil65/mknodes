@@ -25,7 +25,7 @@ class MkDirectoryTree(mkcode.MkCode):
         self,
         directory: str | os.PathLike | treelib.Node,
         *,
-        style: treestyles.TreeStyleStr | tuple[str, str, str] | None = None,
+        style: treestyles.TreeStyleStr | tuple[str, str, str, str] | None = None,
         maximum_depth: int | None = None,
         predicate: Callable | None = None,
         exclude_folders: list[str] | str | None = None,
@@ -61,8 +61,7 @@ class MkDirectoryTree(mkcode.MkCode):
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                 )
-                return treelib.get_tree_repr(
-                    node,
+                return node.get_tree_repr(
                     style=self.style or "rounded",
                     max_depth=self.maximum_depth or 0,
                 )
@@ -72,8 +71,7 @@ class MkDirectoryTree(mkcode.MkCode):
                 # self.tree.iter_nodes()
                 # ]
                 # return "\n".join(lines)
-                return treelib.get_tree_repr(
-                    self.tree,
+                return self.tree.get_tree_repr(
                     style=self.style or "rounded",
                     max_depth=self.maximum_depth or 0,
                 )

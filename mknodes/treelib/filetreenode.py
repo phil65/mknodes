@@ -16,7 +16,6 @@ class FileTreeNode(node.Node):
         self.path = pathlib.Path(path)
         self.name = self.path.name
         self.type = "folder" if self.path.is_dir() else "file"
-        self.sep = "/"
         super().__init__(**kwargs)
 
     def __repr__(self):
