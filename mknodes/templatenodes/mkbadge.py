@@ -80,7 +80,8 @@ class MkBadge(mkbinaryimage.MkBinaryImage):
 
     @property
     def path(self):
-        return f"{self.label}_{self.value}_{hash(repr(self))}.svg"
+        unique = f"{self.label}_{self.value}_{hash(repr(self))}.svg"
+        return helpers.slugify(unique)
 
     @path.setter
     def path(self, value):
