@@ -20,6 +20,8 @@ and blurred borders between code, docs, markdown and rendered html.
 It will be a quite inception-ish experience.
 """
 
+DOC_URL = "https://phil65.github.io/mknodes/"
+
 
 def create_root() -> mknodes.MkNav:
     project = mknodes.Project(mknodes)
@@ -82,12 +84,9 @@ def create_github_index_md() -> mknodes.MkPage:
     page += mknodes.MkCode.for_object(create_github_index_md)
     page += mknodes.MkHeader("MkNodes", level=1)
     page += mknodes.MkHeader("Don't write docs. Code them.", level=4)
-    page += mknodes.MkShields(["build", "version", "status", "black"])
-    page += mknodes.MkLink(
-        "https://phil65.github.io/mknodes/",
-        "Read the completely coded documentation!",
-    )
-    page += mknodes.MkInstallGuide("mknodes", header="How to install")
+    page += mknodes.MkShields()
+    page += mknodes.MkLink(DOC_URL, "Read the completely coded documentation!")
+    page += mknodes.MkInstallGuide(header="How to install")
     page += mknodes.MkHeader("All the nodes!")
     page += mknodes.MkClassDiagram(mknodes.MkNode, mode="subclasses", direction="LR")
     return page

@@ -20,10 +20,10 @@ class MkShields(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        shields: Sequence[badges.BadgeTypeStr] | None,
+        shields: Sequence[badges.BadgeTypeStr] | None = None,
         user: str | None = None,
         project: str | None = None,
-        branch: str = "main",
+        branch: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -37,48 +37,70 @@ class MkShields(mkcontainer.MkContainer):
         """
         super().__init__(**kwargs)
         self.block_separator = "\n"
-        self.user = user
-        self.project = project
-        self.branch = branch
-        self.shields = shields
+        self._user = user
+        self._project = project
+        self._branch = branch
+        self._shields = shields
 
     def __repr__(self):
-        kwargs = dict(
-            shields=self.shields,
-            user=self.user,
-            project=self.project,
+        return helpers.get_repr(
+            self,
+            shields=self._shields,
+            user=self._user,
+            project=self._project,
+            branch=self._branch,
             _filter_empty=True,
         )
-        if self.branch != "main":
-            kwargs["branch"] = self.branch
-        return helpers.get_repr(self, **kwargs)
+
+    @property
+    def user(self):
+        match self._user:
+            case None if self.associated_project:
+                return self.associated_project.get_repository_username()
+            case None:
+                return ""
+            case str():
+                return self._user
+
+    @user.setter
+    def user(self, value):
+        self._user = value
+
+    @property
+    def project(self):
+        match self._project:
+            case None if self.associated_project:
+                return self.associated_project.get_repository_name()
+            case None:
+                return ""
+            case str():
+                return self._project
+            case _:
+                raise TypeError(self._project)
+
+    @project.setter
+    def project(self, value):
+        self._project = value
+
+    @property
+    def shields(self):
+        return self._shields or [i.identifier for i in badges.SHIELDS]
+
+    @property
+    def branch(self):
+        return self._branch or "main"
 
     @property
     def items(self) -> list[mknode.MkNode]:
-        match self.user:
-            case None if self.associated_project:
-                user = self.associated_project.get_repository_username()
-            case None:
-                user = ""
-            case str():
-                user = self.user
-        match self.project:
-            case None if self.associated_project:
-                project = self.associated_project.get_repository_name()
-            case None:
-                project = ""
-            case str():
-                project = self.project
-        shields = self.shields or [i.identifier for i in badges.SHIELDS]
         return [
             mkimage.MkImage(
-                s.get_image_url(user=user, project=project, branch=self.branch),
-                link=s.get_url(user=user, project=project),
+                s.get_image_url(user=self.user, project=self.project, branch=self.branch),
+                link=s.get_url(user=self.user, project=self.project),
                 title=s.title,
                 parent=self,
             )
             for s in badges.SHIELDS
-            if s.identifier in shields
+            if s.identifier in self.shields
         ]
 
     @items.setter
