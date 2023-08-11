@@ -37,6 +37,10 @@ PRE_COMMIT_CODE = """
 pre-commit install
 """
 
+PRE_COMMIT_TEXT = """This project uses `pre-commit` to ensure code quality.
+A .pre-commit-config.yaml configuration file tailored for this project is provided
+in the root folder."""
+
 mkdocs_link = mklink.MkLink("http://www.mkdocs.org", "MkDocs")
 material_link = mklink.MkLink(
     "https://squidfunk.github.io/mkdocs-material/",
@@ -70,7 +74,7 @@ def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.
 def get_pre_commit_section() -> list[mknode.MkNode]:
     return [
         mkheader.MkHeader("Pre-commit"),
-        mktext.MkText("This project uses `pre-commit` to ensure code quality."),
+        mktext.MkText(PRE_COMMIT_TEXT),
         mkcode.MkCode(PRE_COMMIT_CODE, language="md"),
         mkadmonition.MkAdmonition(
             [

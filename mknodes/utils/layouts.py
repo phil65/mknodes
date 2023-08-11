@@ -76,7 +76,7 @@ class ExtendedClassLayout(Layout):
         parent_str = helpers.to_html_list(parent_links, shorten_after=shorten_lists_after)
         desc = helpers.get_doc(kls, escape=True, only_summary=True)
         name = helpers.link_for_class(kls, size=4, bold=True)
-        module = helpers.styled(kls.__module__, size=1, recursive=True)
+        module = helpers.styled(kls.__module__, size=1, italic=True)
         return dict(
             Name=f"{name}<br>{module}<br>{desc}",
             # Module=kls.__module__,

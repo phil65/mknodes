@@ -151,14 +151,14 @@ def styled(
     *,
     size: int | None = None,
     bold: bool = False,
-    recursive: bool = False,
+    italic: bool = False,
     code: bool = False,
 ) -> str:
     if size:
         text = f"<font size='{size}'>{text}</font>"
     if bold:
         text = f"**{text}**"
-    if recursive:
+    if italic:
         text = f"*{text}*"
     if code:
         text = f"`{text}`"

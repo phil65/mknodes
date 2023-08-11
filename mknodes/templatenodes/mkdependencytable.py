@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from mknodes.basenodes import mklink, mktable
 from mknodes.utils import helpers, packageinfo
@@ -48,12 +49,11 @@ class MkDependencyTable(mktable.MkTable):
                 node = mklink.MkLink(url, package_info.name)
             else:
                 node = f"`{package_info.name}`"
-            row = dict(
-                Name=node,
-                Summary=package_info.metadata["Summary"],
-                Markers=str(dep_info.marker) if dep_info.marker else "",
-                Website=package_info.get_repository_url(),
-            )
+            link = helpers.styled(node, size=4, bold=True)
+            marker = str(dep_info.marker) if dep_info.marker else ""
+            marker_str = re.sub(r'([A-Za-z_]* [>|=|<]* ".*?")', r"`\g<1>`", marker)
+            summary = helpers.styled(package_info.metadata["Summary"], italic=True)
+            row = dict(Name=link, Summary=summary, Markers=marker_str)
             rows.append(row)
         return {
             k: [self.to_item(dic[k]) for dic in rows]  # type: ignore[index]
