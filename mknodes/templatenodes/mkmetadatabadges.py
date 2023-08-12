@@ -12,7 +12,7 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
-MetadataTypeStr = Literal["classifiers", "keywords", "websites"]
+MetadataTypeStr = Literal["classifiers", "keywords", "websites", "dependencies"]
 
 
 class MkMetadataBadges(mkcontainer.MkContainer):
@@ -89,6 +89,12 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             case "websites":
                 urls = self.associated_project.info.urls
                 items.extend((name, "", url) for name, url in urls.items())
+            case "dependencies":
+                info = self.associated_project.info.get_required_packages()
+                items.extend(
+                    (package.name, package.version, package.get_repository_url())
+                    for package in info
+                )
         return items
 
     @property
@@ -123,6 +129,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         node = MkMetadataBadges(typ="keywords", use_gitlab_style=True)
         page += mknodes.MkReprRawRendered(node)
         node = MkMetadataBadges(typ="websites")
+        page += mknodes.MkReprRawRendered(node)
+        node = MkMetadataBadges(typ="dependencies")
         page += mknodes.MkReprRawRendered(node)
 
 
