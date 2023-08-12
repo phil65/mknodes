@@ -23,8 +23,8 @@ It will be a quite inception-ish experience.
 DOC_URL = "https://phil65.github.io/mknodes/"
 
 
-def create_root() -> mknodes.MkNav:
-    project = mknodes.Project(mknodes)
+def create_root(config=None, files=None) -> mknodes.MkNav:
+    project = mknodes.Project(mknodes, config, files)
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
     annotations[1] = mknodes.MkDocStrings(mknodes.MkAnnotations)

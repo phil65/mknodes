@@ -59,7 +59,7 @@ plugins:
     # implicit_index: true
 # - autorefs  # allows linking to any header
 - linkreplacer  # allows linking to any markdown page
-- gen-files: # https://github.com/oprypin/mkdocs-gen-files
+- mknodes: # https://github.com/oprypin/mkdocs-gen-files
     scripts:
       - docs/gen_pages.py  # or any other name or path
 # - coverage

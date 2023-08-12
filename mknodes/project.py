@@ -28,12 +28,16 @@ class Project:
     def __init__(
         self,
         module: types.ModuleType,
+        config=None,
+        files=None,
         package_repos: list[installmethods.InstallMethodStr] | None = None,
         commit_types: list[commitconventions.CommitTypeStr]
         | commitconventions.ConventionTypeStr
         | None = None,
     ):
         self.module = module
+        self.config = config
+        self.files = files
         self.package_name = module.__name__
         self.package_repos = package_repos or ["pip"]
         self.commit_types = commit_types

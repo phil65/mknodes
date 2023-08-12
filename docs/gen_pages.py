@@ -1,5 +1,6 @@
 from mknodes import manual
 
 
-root = manual.create_root()
-root.write()
+def build(config, files):
+    root = manual.create_root(config, files)
+    root.write()
