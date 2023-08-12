@@ -2,7 +2,6 @@ import mknodes
 
 from mknodes.manual import routing
 from mknodes.pages import processors
-from mknodes.utils import classhelpers
 
 
 DOC_TEXT = """Now lets create the documentation.
@@ -41,8 +40,13 @@ def create_nodes_section(root_nav: mknodes.MkNav):
 
     create_mknav_section(the_nodes_nav)
     create_mkpage_section(the_nodes_nav)
-    create_base_nodes_section(the_nodes_nav)
-    create_template_nodes_section(the_nodes_nav)
+    create_basic_nodes_section(the_nodes_nav)
+    create_container_nodes_section(the_nodes_nav)
+    create_presentation_nodes_section(the_nodes_nav)
+    create_documentation_nodes_section(the_nodes_nav)
+    create_about_nodes_section(the_nodes_nav)
+    create_special_nodes_section(the_nodes_nav)
+    create_block_nodes_section(the_nodes_nav)
     create_mkdoc_section(the_nodes_nav)
 
     # and then we create the index page (the page you are lookin at right now)
@@ -59,28 +63,143 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     )
 
 
-def create_base_nodes_section(nav: mknodes.MkNav):
+def create_basic_nodes_section(nav: mknodes.MkNav):
     """Add a sub-MkNav containing all base node pages to given MkNav."""
-    all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
-    klasses = [kls for kls in all_classes if ".basenodes." in kls.__module__]
-    klasses.insert(0, mknodes.MkNode)
+    klasses = [
+        mknodes.MkNode,
+        mknodes.MkText,
+        mknodes.MkHeader,
+        mknodes.MkCritic,
+        mknodes.MkLink,
+        mknodes.MkKeys,
+        mknodes.MkProgressBar,
+        mknodes.MkImage,
+        mknodes.MkBadge,
+        mknodes.MkBinaryImage,
+    ]
     base_nodes_nav = nav.add_nav("Base nodes")
     page = base_nodes_nav.add_index_page(hide_toc=True, icon="material/puzzle-outline")
-    page += mknodes.MkCode.for_object(create_base_nodes_section, header=SECTION_CODE)
+    page += mknodes.MkCode.for_object(create_basic_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(base_nodes_nav, klasses)
 
 
-def create_template_nodes_section(nav: mknodes.MkNav):
+def create_container_nodes_section(nav: mknodes.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
-    all_classes = list(classhelpers.iter_subclasses(mknodes.MkNode))
-    klasses = [kls for kls in all_classes if ".templatenodes." in kls.__module__]
-    template_nodes_nav = nav.add_nav("Template nodes")
+    klasses = [
+        mknodes.MkBlockQuote,
+        mknodes.MkAdmonition,
+        mknodes.MkContainer,
+        mknodes.MkGrid,
+        mknodes.MkCode,
+        mknodes.MkList,
+        mknodes.MkTable,
+        mknodes.MkDefinitionList,
+        # mknodes.MkTab,
+        mknodes.MkTabbed,
+        mknodes.MkAnnotations,
+        mknodes.MkFootNotes,
+    ]
+    container_nodes_nav = nav.add_nav("Container nodes")
     icon = "fontawesome/solid/puzzle-piece"
-    page = template_nodes_nav.add_index_page(hide_toc=True, icon=icon)
-    page += mknodes.MkCode.for_object(create_template_nodes_section, header=SECTION_CODE)
+    page = container_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page += mknodes.MkCode.for_object(create_container_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
-    page += create_section_for_nodes(template_nodes_nav, klasses)
+    page += create_section_for_nodes(container_nodes_nav, klasses)
+
+
+def create_presentation_nodes_section(nav: mknodes.MkNav):
+    """Add a sub-MkNav containing all template node pages to given MkNav."""
+    klasses = [
+        mknodes.MkTreeView,
+        mknodes.MkPrettyPrint,
+        mknodes.MkReprRawRendered,
+        mknodes.MkDiagram,
+    ]
+    presentation_nodes_nav = nav.add_nav("Presentation nodes")
+    icon = "fontawesome/solid/puzzle-piece"
+    page = presentation_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page += mknodes.MkHeader(SECTION_CODE)
+    page += mknodes.MkCode.for_object(create_presentation_nodes_section)
+    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += create_section_for_nodes(presentation_nodes_nav, klasses)
+
+
+def create_documentation_nodes_section(nav: mknodes.MkNav):
+    """Add a sub-MkNav containing all template node pages to given MkNav."""
+    klasses = [
+        mknodes.MkClassDiagram,
+        mknodes.MkDocStrings,
+        mknodes.MkClassTable,
+        mknodes.MkModuleTable,
+    ]
+    documentation_nodes_nav = nav.add_nav("Documentation nodes")
+    icon = "fontawesome/solid/puzzle-piece"
+    page = documentation_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page += mknodes.MkHeader(SECTION_CODE)
+    page += mknodes.MkCode.for_object(create_documentation_nodes_section)
+    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += create_section_for_nodes(documentation_nodes_nav, klasses)
+
+
+def create_about_nodes_section(nav: mknodes.MkNav):
+    """Add a sub-MkNav containing all template node pages to given MkNav."""
+    klasses = [
+        mknodes.MkChangelog,
+        mknodes.MkCodeOfConduct,
+        mknodes.MkLicense,
+        mknodes.MkDependencyTable,
+        mknodes.MkInstallGuide,
+        mknodes.MkCommitConventions,
+        mknodes.MkPullRequestGuidelines,
+        mknodes.MkDevEnvSetup,
+        mknodes.MkShields,
+        mknodes.MkMetadataBadges,
+    ]
+    about_nodes_nav = nav.add_nav("About-the-project nodes")
+    icon = "fontawesome/solid/puzzle-piece"
+    page = about_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page += mknodes.MkHeader(SECTION_CODE)
+    page += mknodes.MkCode.for_object(create_about_nodes_section)
+    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += create_section_for_nodes(about_nodes_nav, klasses)
+
+
+def create_special_nodes_section(nav: mknodes.MkNav):
+    """Add a sub-MkNav containing all template node pages to given MkNav."""
+    klasses = [
+        mknodes.MkSnippet,
+        mknodes.MkInclude,
+        mknodes.MkIFrame,
+        mknodes.MkLog,
+        mknodes.MkCommandOutput,
+        mknodes.MkCallable,
+    ]
+    special_nodes_nav = nav.add_nav("Special nodes")
+    icon = "fontawesome/solid/puzzle-piece"
+    page = special_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page += mknodes.MkHeader(SECTION_CODE)
+    page += mknodes.MkCode.for_object(create_special_nodes_section)
+    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += create_section_for_nodes(special_nodes_nav, klasses)
+
+
+def create_block_nodes_section(nav: mknodes.MkNav):
+    """Add a sub-MkNav containing all template node pages to given MkNav."""
+    klasses = [
+        mknodes.MkBlock,
+        mknodes.MkAdmonitionBlock,
+        mknodes.MkDetailsBlock,
+        mknodes.MkHtmlBlock,
+        mknodes.MkTabbedBlocks,
+    ]
+    block_nodes_nav = nav.add_nav("Block nodes")
+    icon = "fontawesome/solid/puzzle-piece"
+    page = block_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page += mknodes.MkHeader(SECTION_CODE)
+    page += mknodes.MkCode.for_object(create_block_nodes_section)
+    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += create_section_for_nodes(block_nodes_nav, klasses)
 
 
 def create_section_for_nodes(nav: mknodes.MkNav, klasses: list[type]) -> mknodes.MkTable:
@@ -107,9 +226,8 @@ def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
         extract_body=True,
         header=PAGE_CODE,
     )
-    admonition = mknodes.MkAdmonition(
+    admonition = mknodes.MkDetailsBlock(
         code,
-        collapsible=True,
         typ="quote",
         title=code.title,
     )
