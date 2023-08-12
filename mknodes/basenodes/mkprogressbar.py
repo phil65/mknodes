@@ -69,8 +69,6 @@ class MkProgressBar(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        page += mknodes.MkAdmonition("MkProgressBar can be used to show a progress bar.")
-        page += mknodes.MkDetailsBlock("This Node requires additional css.")
         node = MkProgressBar(60)
         page += mknodes.MkReprRawRendered(node, header="### Regular")
         node = MkProgressBar(60, style="thin")
@@ -79,6 +77,7 @@ class MkProgressBar(mknode.MkNode):
         page += mknodes.MkReprRawRendered(node, header="### Candystripe")
         node = MkProgressBar(80, style="candystripe_animated")
         page += mknodes.MkReprRawRendered(node, header="### Animated")
+        page += mknodes.MkAdmonition("This Node requires additional css.")
 
 
 if __name__ == "__main__":

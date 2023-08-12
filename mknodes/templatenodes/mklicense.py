@@ -31,7 +31,11 @@ def get_spdx_license(name: str):
 
 
 class MkLicense(mktext.MkText):
-    """Node to show a license."""
+    """Node to show a license.
+
+    If not explicitely set, the license will be pulled from the project.
+
+    """
 
     ICON = "material/license"
     STATUS = "new"
