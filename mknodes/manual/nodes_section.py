@@ -78,7 +78,7 @@ def create_basic_nodes_section(nav: mknodes.MkNav):
         mknodes.MkBinaryImage,
     ]
     base_nodes_nav = nav.add_nav("Base nodes")
-    page = base_nodes_nav.add_index_page(hide_toc=True, icon="material/puzzle-outline")
+    page = base_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkCode.for_object(create_basic_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(base_nodes_nav, klasses)
@@ -101,8 +101,7 @@ def create_container_nodes_section(nav: mknodes.MkNav):
         mknodes.MkFootNotes,
     ]
     container_nodes_nav = nav.add_nav("Container nodes")
-    icon = "fontawesome/solid/puzzle-piece"
-    page = container_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page = container_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkCode.for_object(create_container_nodes_section, header=SECTION_CODE)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(container_nodes_nav, klasses)
@@ -117,8 +116,7 @@ def create_presentation_nodes_section(nav: mknodes.MkNav):
         mknodes.MkDiagram,
     ]
     presentation_nodes_nav = nav.add_nav("Presentation nodes")
-    icon = "fontawesome/solid/puzzle-piece"
-    page = presentation_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page = presentation_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkHeader(SECTION_CODE)
     page += mknodes.MkCode.for_object(create_presentation_nodes_section)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
@@ -134,8 +132,7 @@ def create_documentation_nodes_section(nav: mknodes.MkNav):
         mknodes.MkModuleTable,
     ]
     documentation_nodes_nav = nav.add_nav("Documentation nodes")
-    icon = "fontawesome/solid/puzzle-piece"
-    page = documentation_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page = documentation_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkHeader(SECTION_CODE)
     page += mknodes.MkCode.for_object(create_documentation_nodes_section)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
@@ -157,8 +154,7 @@ def create_about_nodes_section(nav: mknodes.MkNav):
         mknodes.MkMetadataBadges,
     ]
     about_nodes_nav = nav.add_nav("About-the-project nodes")
-    icon = "fontawesome/solid/puzzle-piece"
-    page = about_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page = about_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkHeader(SECTION_CODE)
     page += mknodes.MkCode.for_object(create_about_nodes_section)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
@@ -176,8 +172,7 @@ def create_special_nodes_section(nav: mknodes.MkNav):
         mknodes.MkCallable,
     ]
     special_nodes_nav = nav.add_nav("Special nodes")
-    icon = "fontawesome/solid/puzzle-piece"
-    page = special_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page = special_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkHeader(SECTION_CODE)
     page += mknodes.MkCode.for_object(create_special_nodes_section)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
@@ -194,8 +189,7 @@ def create_block_nodes_section(nav: mknodes.MkNav):
         mknodes.MkTabbedBlocks,
     ]
     block_nodes_nav = nav.add_nav("Block nodes")
-    icon = "fontawesome/solid/puzzle-piece"
-    page = block_nodes_nav.add_index_page(hide_toc=True, icon=icon)
+    page = block_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkHeader(SECTION_CODE)
     page += mknodes.MkCode.for_object(create_block_nodes_section)
     page += mknodes.MkCode.for_object(create_section_for_nodes)
