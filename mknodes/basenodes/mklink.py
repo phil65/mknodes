@@ -4,7 +4,7 @@ import logging
 
 from typing import Any
 
-from mknodes import config, mknav
+from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
@@ -61,9 +61,9 @@ class MkLink(mknode.MkNode):
     def get_url(self) -> str:  # type: ignore[return]
         import mknodes
 
-        site_url = config.get_site_url() or ""
         match self.target:
             case mknodes.MkPage():
+                site_url = self.associated_project.config.site_url or ""
                 path = self.target.resolved_file_path.replace(".md", ".html")
                 return site_url + path
             case mknodes.MkNav():
@@ -72,8 +72,10 @@ class MkLink(mknode.MkNode):
                     path = path.replace(".md", ".html")
                 else:
                     path = self.target.resolved_file_path
+                site_url = self.associated_project.config.site_url or ""
                 return site_url + path
             case str() if self.target.startswith("/"):
+                site_url = self.associated_project.config.site_url or ""
                 return site_url.rstrip("/") + self.target
             case str() if self.target.startswith(("http:", "https:", "www.")):
                 return self.target

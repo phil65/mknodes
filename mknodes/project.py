@@ -4,7 +4,9 @@ import logging
 import re
 import types
 
-from mknodes import config, mknav
+from mkdocs import config
+
+from mknodes import mkdocsconfig, mknav
 from mknodes.data import commitconventions, installmethods, taskrunners
 from mknodes.utils import helpers, packageinfo, pyproject
 
@@ -28,7 +30,7 @@ class Project:
     def __init__(
         self,
         module: types.ModuleType,
-        config=None,
+        mkdocs_config=None,
         files=None,
         package_repos: list[installmethods.InstallMethodStr] | None = None,
         commit_types: list[commitconventions.CommitTypeStr]
@@ -36,7 +38,9 @@ class Project:
         | None = None,
     ):
         self.module = module
-        self.config = config
+        self.config = (
+            mkdocsconfig.Config(mkdocs_config) if mkdocs_config else config.load_config()
+        )
         self.files = files
         self.package_name = module.__name__
         self.package_repos = package_repos or ["pip"]
@@ -48,9 +52,7 @@ class Project:
         return helpers.get_repr(self, module=self.module)
 
     def get_repository_url(self) -> str | None:
-        if url := config.get_repository_url():
-            return url
-        return self.info.get_repository_url()
+        return url if (url := self.config.repo_url) else self.info.get_repository_url()
 
     def get_repository_username(self) -> str | None:
         if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
