@@ -253,7 +253,7 @@ def create_mknav_section(nav: mknodes.MkNav):
     # Every MkNav can have an index page (which corresponds to your index.md)
     # Index pages get inserted first into the menu, so that the mkdocs-section-index
     # plugin can be utizilized.
-    page = nav_section.add_index_page(icon=nav.ICON, hide_toc=True)
+    page = nav_section.add_index_page(hide_toc=True)
     code = mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
     page += code
     # A nav section corresponds to a SUMMARY.md. You can see that when stringifying it.
@@ -330,7 +330,7 @@ def create_from_folder_section(nav: mknodes.MkNav):
 def create_mkpage_section(nav: mknodes.MkNav):
     """Create "MkPage" sub-MkNav and attach it to given MkNav."""
     mkpage_nav = nav.add_nav("MkPage")
-    page = mkpage_nav.add_index_page(hide_toc=True, icon=mknodes.MkPage.ICON)
+    page = mkpage_nav.add_index_page(hide_toc=True)
     page += mknodes.MkCode.for_object(create_mkpage_section, header=SECTION_CODE)
     page += mknodes.MkAdmonition(MKPAGE_TIP, typ="tip")
     create_adding_to_mkpages_page(mkpage_nav)
