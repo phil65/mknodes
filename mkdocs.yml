@@ -58,7 +58,6 @@ plugins:
     nav_file: SUMMARY.md
     # implicit_index: true
 # - autorefs  # allows linking to any header
-- linkreplacer  # allows linking to any markdown page
 - mknodes: # https://github.com/oprypin/mkdocs-gen-files
     scripts:
       - docs/gen_pages.py  # or any other name or path

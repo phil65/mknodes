@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mknodes import linkreplacerplugin
+from mknodes import plugin
 
 
 class File:
@@ -12,5 +12,5 @@ class Page:
 
 
 def test_linkreplacer():
-    replacer = linkreplacerplugin.LinkReplacerPlugin()
+    replacer = plugin.MkNodesPlugin()
     replacer.on_page_markdown("test", page=Page(), config=dict(docs_dir=""), files=[])
