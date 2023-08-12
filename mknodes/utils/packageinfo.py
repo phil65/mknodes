@@ -210,13 +210,30 @@ class PackageInfo:
         return extras
 
     def get_author_email(self) -> str:
-        mail = self.metadata["Author-Email"].split(" ")[-1]
+        mail = self.metadata["Author-email"].split(" ")[-1]
         return mail.replace("<", "").replace(">", "")
 
     def get_author_name(self) -> str:
-        return self.metadata["Author-Email"].rsplit(" ", 1)[0]
+        return self.metadata["Author-email"].rsplit(" ", 1)[0]
+
+    def get_authors(self) -> dict[str, str]:
+        """Return a dict containing the authors.
+
+        {author 1: email of author 1,
+         author_2, email of author 2,
+         ...
+         }
+        """
+        authors: dict[str, str] = {}
+        for k, v in self.metadata.items():
+            if k == "Author-email":
+                mail = v.split(" ")[-1]
+                mail = mail.replace("<", "").replace(">", "")
+                name = v.rsplit(" ", 1)[0]
+                authors[name] = mail
+        return authors
 
 
 if __name__ == "__main__":
     info = get_info("mknodes")
-    print(info.get_author_name())
+    print(info.get_author_email())
