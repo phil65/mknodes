@@ -3,7 +3,7 @@ import mknodes
 from mknodes import manual
 
 
-HEADER = "Don't write docs. Code them."
+HEADER = "°metadata.summary"
 
 INFO = "This is the source code for building this website:"
 

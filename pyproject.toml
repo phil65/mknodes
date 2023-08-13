@@ -59,7 +59,7 @@ name = "mknodes"
 authors = [
   { name = "Philipp Temminghoff", email = "philipptemminghoff@gmail.com" }
 ]
-description = "Generate docs with ease."
+description = "Don't write docs. Code them."
 readme = "README.md"
 dynamic = ["version"]
 classifiers = [

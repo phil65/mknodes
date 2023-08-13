@@ -11,6 +11,7 @@ import pathlib
 import re
 import sys
 import tempfile
+import types
 
 from typing import TYPE_CHECKING
 import urllib.parse
@@ -62,7 +63,7 @@ except ImportError:
 AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 
-def get_module_for_path(path: str | os.PathLike):
+def get_module_for_path(path: str | os.PathLike) -> types.ModuleType:
     module_name = pathlib.Path(path).stem
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None:
@@ -73,7 +74,7 @@ def get_module_for_path(path: str | os.PathLike):
     return module
 
 
-class AutoLinkReplacerPlugin:
+class LinkReplacerPlugin:
     def __init__(self, base_docs_url, page_url, mapping):
         self.mapping = mapping
         self.page_url = page_url
@@ -143,7 +144,12 @@ class MkNodesPlugin(BasePlugin):
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             mapping[filename].append(file_.url)
         #     print(file_.url, file_.dest_uri)
-        plugin = AutoLinkReplacerPlugin(base_docs_url, page_url, mapping)
+        plugin = LinkReplacerPlugin(base_docs_url, page_url, mapping)
+        for k, v in self._project.info.metadata.items():
+            if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
+                markdown = markdown.replace(f"°metadata.{k}", v)
+                markdown = markdown.replace(f"°metadata.{k.lower()}", v)
+                continue
         return re.sub(AUTOLINK_RE, plugin, markdown)
 
     def on_page_content(self, html, page: Page, config: MkDocsConfig, files: Files):
