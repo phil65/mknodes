@@ -120,9 +120,11 @@ class MkNodesPlugin(BasePlugin):
                     if e.code:
                         msg = f"Script {file_name!r} caused {e!r}"
                         raise PluginError(msg) from e
-        if not self._project._root:
-            msg = "No root for project created."
-            raise RuntimeError(msg)
+            root = self._project._root
+            if not root:
+                msg = "No root for project created."
+                raise RuntimeError(msg)
+            root.write()
         self._edit_paths = dict(ed.edit_paths)
         return ed.files
 
