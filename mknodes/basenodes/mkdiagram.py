@@ -51,14 +51,8 @@ class MkDiagram(mkcode.MkCode):
             header: Section header
         """
         super().__init__(language="mermaid", header=header)
-        self.graph_type = (
-            graph_type if graph_type not in self.TYPE_MAP else self.TYPE_MAP[graph_type]
-        )
-        self.direction = (
-            direction
-            if direction not in self.ORIENTATION
-            else self.ORIENTATION[direction]
-        )
+        self._graph_type = graph_type
+        self._direction = direction
         self.names = set(items or [])
         self.connections = set(connections or [])
         self.attributes = attributes or {}
@@ -73,13 +67,39 @@ class MkDiagram(mkcode.MkCode):
         )
 
     @property
+    def graph_type(self):
+        return (
+            self._graph_type
+            if self._graph_type not in self.TYPE_MAP
+            else self.TYPE_MAP[self._graph_type]
+        )
+
+    @property
+    def direction(self):
+        return (
+            self._direction
+            if self._direction not in self.ORIENTATION
+            else self.ORIENTATION[self._direction]
+        )
+
+    @property
     def text(self):
         return f"{self.graph_type} {self.direction}\n{self.mermaid_code}"
 
     @property
     def mermaid_code(self):
-        items = list(self.names) + [f"{a} --> {b}" for a, b in self.connections]
-        return textwrap.indent("\n".join(items), "  ")
+        lines = list(self.names)
+        for connection in self.connections:
+            if len(connection) == 2:  # noqa: PLR2004
+                source, target = connection
+                lines.append(f"{source} --> {target}")
+            elif len(connection) == 3:  # noqa: PLR2004
+                source, target, mark = connection
+                lines.append(f"{source} --> |{mark}| {target}")
+            else:
+                msg = f"Tuple with wrong length: {connection}"
+                raise TypeError(msg)
+        return textwrap.indent("\n".join(lines), "  ")
 
     @property
     def fence_title(self):
@@ -94,7 +114,7 @@ class MkDiagram(mkcode.MkCode):
         page += mknodes.MkReprRawRendered(diagram, header="### Regular")
         diagram = MkDiagram(
             items=["1", "2", "3"],
-            connections=[("1", "2"), ("1", "3")],
+            connections=[("1", "2"), ("1", "3", "comment")],
             direction="LR",
         )
         page += mknodes.MkReprRawRendered(diagram, header="### Direction")

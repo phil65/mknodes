@@ -57,7 +57,7 @@ class MkBinaryImage(mkimage.MkImage):
         page += mknodes.MkReprRawRendered(node)
 
     @classmethod
-    def for_icon(cls, icon: str, **kwargs):
+    def for_icon(cls, icon: str, **kwargs: Any):
         """Return a MkBinaryImage with data for given icon.
 
         Arguments:

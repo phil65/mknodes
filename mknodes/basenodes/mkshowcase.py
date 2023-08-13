@@ -6,6 +6,7 @@ import logging
 import textwrap
 
 from typing import Any, TypeVar
+from xml.etree import ElementTree
 
 from mknodes import mknav
 from mknodes.basenodes import mkcontainer, mknode
@@ -16,17 +17,24 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
-CELL = """
-<a href="{link}">
-    <div class="card">
-        <div class="container">
-        <img src="{image}" alt="{title}" style="width:{size}px;height:{size}px">
-        <div class="overlay">{caption}</div>
-        </div>
-    <p><button>{title}</button></p>
-    </div>
-</a>
-"""
+def get_xml_string(*, link: str, image: str, title: str, size: int, caption: str):
+    root = ElementTree.Element("a", href=link)
+    card_div = ElementTree.SubElement(root, "div", {"class": "card"})
+    container_div = ElementTree.SubElement(card_div, "div", {"class": "container"})
+    ElementTree.SubElement(
+        container_div,
+        "img",
+        src=image,
+        alt=title,
+        style=f"width:{size}px,height:{size}px",
+    )
+    overlay_div = ElementTree.SubElement(container_div, "div", {"class": "overlay"})
+    overlay_div.text = caption
+    p = ElementTree.SubElement(card_div, "p")
+    button = ElementTree.SubElement(p, "button")
+    button.text = title
+    return ElementTree.tostring(root, encoding="unicode")
+
 
 T = TypeVar("T")
 
@@ -94,7 +102,7 @@ class MkShowcaseCard(mknode.MkNode):
         return helpers.get_url(self.target, base_url)
 
     def _to_markdown(self) -> str:
-        return CELL.format(
+        return get_xml_string(
             link=self.url,
             title=self.title,
             caption=self.caption,
@@ -188,4 +196,4 @@ if __name__ == "__main__":
     keys = mknodes.MkKeys(keys="Ctrl+A")
     grid = MkShowcase()
     grid.add_card("Tse", "td", "http://www.google.com")
-    print(grid)
+    print(grid.items[0])
