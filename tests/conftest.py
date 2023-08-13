@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import pathlib
 
-from mkdocs import config
 import pytest
 
-from mknodes import manual
+import mknodes
+
+from mknodes import manual, project
 
 
 @pytest.fixture(scope="session")
@@ -20,5 +21,5 @@ def resources_dir():
 
 @pytest.fixture(scope="session")
 def full_tree():
-    cfg = config.load_config("mkdocs.yml")
-    return manual.create_root(cfg)
+    proj = project.Project(mknodes)
+    return manual.create_root(proj)

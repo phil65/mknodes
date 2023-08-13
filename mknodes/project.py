@@ -4,12 +4,18 @@ import logging
 import re
 import types
 
-from mkdocs import config
+from typing import TYPE_CHECKING
+
+from mkdocs import config as _config
 
 from mknodes import mkdocsconfig, mknav
-from mknodes.data import commitconventions, installmethods, taskrunners
+from mknodes.data import taskrunners
 from mknodes.utils import helpers, packageinfo, pyproject
 
+
+if TYPE_CHECKING:
+    from mkdocs.config.defaults import MkDocsConfig
+    from mkdocs.structure.files import Files
 
 logger = logging.getLogger(__name__)
 
@@ -29,24 +35,39 @@ class Project:
 
     def __init__(
         self,
-        module: types.ModuleType,
-        mkdocs_config=None,
-        files=None,
-        package_repos: list[installmethods.InstallMethodStr] | None = None,
-        commit_types: list[commitconventions.CommitTypeStr]
-        | commitconventions.ConventionTypeStr
-        | None = None,
+        module: types.ModuleType | None = None,
+        config: MkDocsConfig | None = None,
+        files: Files | None = None,
     ):
-        self.module = module
-        self.config = (
-            mkdocsconfig.Config(mkdocs_config) if mkdocs_config else config.load_config()
-        )
+        self._module = module
+        self.config = mkdocsconfig.Config(config) if config else _config.load_config()
         self.files = files
-        self.package_name = module.__name__
-        self.package_repos = package_repos or ["pip"]
-        self.commit_types = commit_types
+        self.package_repos = ["pip"]
         self.pyproject = pyproject.PyProject()
-        self.info = packageinfo.get_info(self.package_name)
+        self._root: mknav.MkNav | None = None
+
+    @property
+    def info(self):
+        return packageinfo.get_info(self.package_name)
+
+    @property
+    def module(self) -> types.ModuleType:
+        if not self._module:
+            msg = "No module set"
+            raise RuntimeError(msg)
+        return self._module
+
+    @module.setter
+    def module(self, value):
+        self._module = value
+
+    @property
+    def commit_types(self):
+        return self.pyproject.allowed_commit_types
+
+    @property
+    def package_name(self):
+        return self.module.__name__
 
     def __repr__(self):
         return helpers.get_repr(self, module=self.module)
@@ -65,7 +86,8 @@ class Project:
         return None
 
     def get_root(self, **kwargs) -> mknav.MkNav:
-        return mknav.MkNav(project=self, **kwargs)
+        self._root = mknav.MkNav(project=self, **kwargs)
+        return self._root
 
     def has_precommit(self) -> bool:
         return bool(helpers.find_file_in_folder_or_parent(".pre-commit-config.yaml"))
@@ -83,8 +105,6 @@ class Project:
 
 
 if __name__ == "__main__":
-    import mknodes
-
-    project = Project(mknodes)
+    project = Project()
     bs = project.get_used_task_runners()
     print(bs)

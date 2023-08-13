@@ -4,22 +4,26 @@ from __future__ import annotations
 
 # Partly based on mkdocs-gen-files
 import collections
+import importlib.util
 import logging
 import os
 import pathlib
 import re
+import sys
 import tempfile
 
 from typing import TYPE_CHECKING
 import urllib.parse
 
 from mkdocs.plugins import BasePlugin
-from mkdocs.structure.files import Files
 from mkdocs.structure.pages import Page
+
+from mknodes import project
 
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
+    from mkdocs.structure.files import Files
 
 
 try:
@@ -58,6 +62,17 @@ except ImportError:
 AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 
+def get_module_for_path(path: str | os.PathLike):
+    module_name = pathlib.Path(path).stem
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None:
+        raise RuntimeError
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)  # type: ignore[union-attr]
+    return module
+
+
 class AutoLinkReplacerPlugin:
     def __init__(self, base_docs_url, page_url, mapping):
         self.mapping = mapping
@@ -90,30 +105,24 @@ class AutoLinkReplacerPlugin:
 
 class MkNodesPlugin(BasePlugin):
     config_scheme = (("scripts", ListOfFiles(required=True)),)
+    _edit_paths: dict
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
+        self._project = project.Project(config=config, files=files)
 
         with FilesEditor(files, config, self._dir.name) as ed:
             for file_name in self.config["scripts"]:
+                module = get_module_for_path(file_name)
                 try:
-                    import importlib.util
-                    import sys
-
-                    file_path = file_name
-                    module_name = pathlib.Path(file_name).stem
-                    spec = importlib.util.spec_from_file_location(module_name, file_path)
-                    if spec is None:
-                        raise RuntimeError
-                    module = importlib.util.module_from_spec(spec)
-                    sys.modules[module_name] = module
-                    spec.loader.exec_module(module)  # type: ignore[union-attr]
-                    module.build(config, files)
+                    module.build(self._project)
                 except SystemExit as e:
                     if e.code:
                         msg = f"Script {file_name!r} caused {e!r}"
                         raise PluginError(msg) from e
-
+        if not self._project._root:
+            msg = "No root for project created."
+            raise RuntimeError(msg)
         self._edit_paths = dict(ed.edit_paths)
         return ed.files
 
