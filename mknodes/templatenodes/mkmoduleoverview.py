@@ -7,6 +7,7 @@ from typing import Any
 
 from mknodes import treelib
 from mknodes.templatenodes import mktreeview
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,15 @@ class MkModuleOverview(mktreeview.MkTreeView):
         return node.get_tree_repr(
             style=self.style,
             max_depth=self.maximum_depth or 0,
+        )
+
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            module=self.tree,
+            style=self._style,
+            maximum_depth=self.maximum_depth,
+            _filter_empty=True,
         )
 
     @staticmethod
