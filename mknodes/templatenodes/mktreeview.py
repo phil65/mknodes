@@ -63,21 +63,15 @@ class MkTreeView(mkcode.MkCode):
                     self.tree,
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
-                )
-                return node.get_tree_repr(
-                    style=self.style,
-                    max_depth=self.maximum_depth or 0,
+                    maximum_depth=self.maximum_depth,
                 )
             case mknode.MkNode():
-                # lines = [
-                #     f"{level * '    '} {node!r}" for level, node in
-                # self.tree.iter_nodes()
-                # ]
-                # return "\n".join(lines)
-                return self.tree.get_tree_repr(
-                    style=self.style,
-                    max_depth=self.maximum_depth or 0,
-                )
+                node = self.tree
+            case None:
+                return ""
+            case _:
+                raise TypeError(self.tree)
+        return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
 
     @text.setter
     def text(self, text):
