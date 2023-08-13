@@ -187,5 +187,5 @@ if __name__ == "__main__":
 
     keys = mknodes.MkKeys(keys="Ctrl+A")
     grid = MkShowcase()
-    grid.add_card("Tse", "td", "")
+    grid.add_card("Tse", "td", "http://www.google.com")
     print(grid)

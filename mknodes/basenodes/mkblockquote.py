@@ -27,7 +27,7 @@ class MkBlockQuote(mkcontainer.MkContainer):
         block = MkBlockQuote(content="Some text")
         page += mknodes.MkReprRawRendered(block, header="### Regular")
         # We can also nest blocks, they will adjust their delimiters automatically.
-        nested_quote = MkBlockQuote(block)
+        nested_quote = MkBlockQuote(MkBlockQuote("nested"))
         page += mknodes.MkReprRawRendered(nested_quote, header="### Nested")
 
 
