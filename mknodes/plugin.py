@@ -63,7 +63,7 @@ except ImportError:
 AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 
-def get_module_for_path(path: str | os.PathLike) -> types.ModuleType:
+def import_file(path: str | os.PathLike) -> types.ModuleType:
     module_name = pathlib.Path(path).stem
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None:
@@ -75,7 +75,7 @@ def get_module_for_path(path: str | os.PathLike) -> types.ModuleType:
 
 
 class LinkReplacerPlugin:
-    def __init__(self, base_docs_url, page_url, mapping):
+    def __init__(self, base_docs_url: str, page_url: str, mapping: dict[str, list[str]]):
         self.mapping = mapping
         self.page_url = page_url
         self.base_docs_url = pathlib.Path(base_docs_url)
@@ -114,7 +114,7 @@ class MkNodesPlugin(BasePlugin):
 
         with FilesEditor(files, config, self._dir.name) as ed:
             for file_name in self.config["scripts"]:
-                module = get_module_for_path(file_name)
+                module = import_file(file_name)
                 try:
                     module.build(self._project)
                 except SystemExit as e:
@@ -172,5 +172,5 @@ class MkNodesPlugin(BasePlugin):
         self._dir.cleanup()
 
         if unused_edit_paths := {k: str(v) for k, v in self._edit_paths.items() if v}:
-            msg = "mkdocs_gen_files: These set_edit_path invocations went unused: %r"
+            msg = "mknodes: These set_edit_path invocations went unused: %r"
             logger.warning(msg, unused_edit_paths)
