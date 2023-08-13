@@ -17,41 +17,40 @@ class PyProject:
             if path.parent is None:
                 msg = "Could not find pyproject.toml"
                 raise FileNotFoundError(msg)
-            self.pyproject = toml.load(path / "pyproject.toml")
+            self._data = toml.load(path / "pyproject.toml")
 
         elif pyproject_path.startswith(("http:", "https:")):
             content = helpers.download(pyproject_path)
-            self.pyproject = toml.loads(content)
+            self._data = toml.loads(content)
         else:
-            self.pyproject = toml.load(pyproject_path)
+            self._data = toml.load(pyproject_path)
+        self.mknodes_section = self._data["tool"].get("mknodes", {})
 
+    @property
     def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
-        return [p for p in buildsystems.BUILD_SYSTEMS if p in self.pyproject["tool"]]
+        return [p for p in buildsystems.BUILD_SYSTEMS if p in self._data["tool"]]
 
+    @property
     def build_system(self) -> buildsystems.BuildSystem:
-        back_end = self.pyproject["build-system"]["build-backend"]
+        back_end = self._data["build-system"]["build-backend"]
         for p in buildsystems.BUILD_SYSTEMS.values():
             if p.build_backend == back_end:
                 return p
         msg = "No known build backend"
         raise RuntimeError(msg)
 
-    def has_mypy(self) -> bool:
-        return "mypy" in self.pyproject["tool"]
+    def has_tool(self, tool_name: str) -> bool:
+        return tool_name in self._data["tool"]
 
-    def has_ruff(self) -> bool:
-        return "ruff" in self.pyproject["tool"]
+    @property
+    def allowed_commit_types(self) -> list[str]:
+        return self.mknodes_section.get("allowed-commit-types", [])
 
-    def has_black(self) -> bool:
-        return "black" in self.pyproject["tool"]
-
-    def has_pytest(self) -> bool:
-        return "pytest" in self.pyproject["tool"]
-
-    def has_coverage(self) -> bool:
-        return "coverage" in self.pyproject["tool"]
+    @property
+    def extras_descriptions(self) -> dict[str, str]:
+        return self.mknodes_section.get("extras-descriptions", {})
 
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.configured_build_systems())
+    print(info.get_allowed_commit_types())

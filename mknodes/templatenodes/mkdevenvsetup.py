@@ -167,7 +167,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
             case str():
                 return buildsystems.BUILD_SYSTEMS[self._build_backend]
             case None if self.associated_project:
-                return self.associated_project.pyproject.build_system()
+                return self.associated_project.pyproject.build_system
             case None:
                 return buildsystems.setuptools
             case _:
