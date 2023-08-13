@@ -48,6 +48,7 @@ class MkNode(node.Node):
     REQUIRED_EXTENSIONS: list[str] = []
     REQUIRED_PLUGINS: list[str] = []
     STATUS: Literal["new", "deprecated"] | None = None
+    CSS = None
     children: list[MkNode]
 
     def __init__(

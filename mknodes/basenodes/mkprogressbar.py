@@ -17,6 +17,7 @@ class MkProgressBar(mknode.MkNode):
     REQUIRED_EXTENSIONS = ["pymdownx.progressbar"]
     ICON = "fontawesome/solid/bars-progress"
     STATUS = "new"
+    CSS = "css/progressbar.css"
 
     def __init__(
         self,
