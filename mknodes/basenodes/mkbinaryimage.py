@@ -5,6 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkimage
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -50,3 +51,24 @@ class MkBinaryImage(mkimage.MkImage):
         """
         node = MkBinaryImage(data, path="some_image.svg", caption="A simple cross")
         page += mknodes.MkReprRawRendered(node)
+        node = MkBinaryImage.for_icon("material/file-image")
+        page += mknodes.MkReprRawRendered(node)
+
+    @classmethod
+    def for_icon(cls, icon: str, **kwargs):
+        """Return a MkBinaryImage with data for given icon.
+
+        Arguments:
+            icon: Icon to get a MkBinaryImage for (example: material/file-image)
+            kwargs: Keyword arguments passed to constructor
+        """
+        folder = helpers.get_material_icon_folder()
+        icon_path = folder / f"{icon}.svg"
+        content = icon_path.read_text()
+        path = f"{helpers.slugify(icon)}.svg"
+        return cls(data=content, path=path, **kwargs)
+
+
+if __name__ == "__main__":
+    node = MkBinaryImage.for_icon(MkBinaryImage.ICON)
+    print(node.data)

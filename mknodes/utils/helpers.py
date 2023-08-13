@@ -275,6 +275,13 @@ def get_doc(
     return escaped(doc) if doc and escape else doc
 
 
+def get_material_icon_folder() -> pathlib.Path:
+    import material
+
+    path = pathlib.Path(material.__path__[0])
+    return path / ".icons"
+
+
 @functools.cache
 def get_source(obj):
     return inspect.getsource(obj)
