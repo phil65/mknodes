@@ -51,7 +51,7 @@ def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, Non
 
 
 class MkShowcaseCard(mknode.MkNode):
-    """A simple Link."""
+    """A single Showcase card."""
 
     ICON = "material/square-medium"
     STATUS = "new"
@@ -114,6 +114,7 @@ class MkShowcaseCard(mknode.MkNode):
 class MkShowcase(mkcontainer.MkContainer):
     """Node for showing a html-based image grid.
 
+    Manages row / column positioning for MkShowcaseCards.
     This node requires addtional CSS to work.
     """
 
