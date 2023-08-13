@@ -6,6 +6,7 @@ import logging
 import types
 
 from mknodes.treelib import node
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -14,14 +15,13 @@ logger = logging.getLogger(__name__)
 class ModuleNode(node.Node):
     def __init__(self, module: types.ModuleType, **kwargs):
         self.module = module
-        self.docstrings = self.module.__doc__ or ""
-        self.summary = self.docstrings.split("\n", maxsplit=1)[0]
+        self.summary = helpers.get_doc(self.module, only_summary=True)
         super().__init__(**kwargs)
 
     def __repr__(self):
         module_name = self.module.__name__.split(".")[-1]
-        if self.docstrings:
-            module_name += f": {self.docstrings}"
+        if self.summary:
+            module_name += f": {self.summary}"
         return module_name
 
     @classmethod
