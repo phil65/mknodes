@@ -84,10 +84,18 @@ class MkShowcaseCard(mknode.MkNode):
             caption=self.caption,
         )
 
+    @property
+    def url(self) -> str:  # type: ignore[return]
+        if self.associated_project:
+            config = self.associated_project.config
+            base_url = config.site_url or ""
+        else:
+            base_url = ""
+        return helpers.get_url(self.target, base_url)
+
     def _to_markdown(self) -> str:
-        # url = self.get_url()
         return CELL.format(
-            link=self.target,
+            link=self.url,
             title=self.title,
             caption=self.caption,
             size=200,
@@ -166,7 +174,7 @@ class MkShowcase(mkcontainer.MkContainer):
         node = MkShowcase()
         for i in range(9):
             node.add_card(
-                link="https://github.io/phil65/mknodes",
+                link="https://phil65.github.io/mknodes/",
                 title=f"Title {i}",
                 image="https://picsum.photos/200",
                 caption=f"Caption {i}",

@@ -58,34 +58,16 @@ class MkLink(mknode.MkNode):
             _filter_false=True,
         )
 
-    def get_url(self) -> str:  # type: ignore[return]
-        import mknodes
-
-        match self.target:
-            case mknodes.MkPage():
-                site_url = self.associated_project.config.site_url or ""
-                path = self.target.resolved_file_path.replace(".md", ".html")
-                return site_url + path
-            case mknodes.MkNav():
-                if self.target.index_page:
-                    path = self.target.index_page.resolved_file_path
-                    path = path.replace(".md", ".html")
-                else:
-                    path = self.target.resolved_file_path
-                site_url = self.associated_project.config.site_url or ""
-                return site_url + path
-            case str() if self.target.startswith("/"):
-                site_url = self.associated_project.config.site_url or ""
-                return site_url.rstrip("/") + self.target
-            case str() if self.target.startswith(("http:", "https:", "www.")):
-                return self.target
-            case str():
-                return f"{self.target}.md"
-            case _:
-                raise TypeError(self.target)
+    @property
+    def url(self) -> str:  # type: ignore[return]
+        if self.associated_project:
+            config = self.associated_project.config
+            base_url = config.site_url or ""
+        else:
+            base_url = ""
+        return helpers.get_url(self.target, base_url)
 
     def _to_markdown(self) -> str:
-        url = self.get_url()
         title = self.target if self.title is None else self.title
         if self.as_button:
             button_suffix = (
@@ -101,7 +83,7 @@ class MkLink(mknode.MkNode):
             else f':{self.icon.replace("/", "-")}:'
         )
         prefix = f"{icon} " if self.icon else ""
-        return f"[{prefix}{title}]({url}){button_suffix}"
+        return f"[{prefix}{title}]({self.url}){button_suffix}"
 
     @staticmethod
     def create_example_page(page):

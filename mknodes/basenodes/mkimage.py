@@ -5,7 +5,9 @@ import pathlib
 
 from typing import Any, Literal
 
+from mknodes import mknav
 from mknodes.basenodes import mknode
+from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
 
@@ -22,7 +24,7 @@ class MkImage(mknode.MkNode):
         self,
         path: str,
         *,
-        link: str | None = None,
+        link: str | mkpage.MkPage | mknav.MkNav | None = None,
         caption: str = "",
         title: str = "",
         align: Literal["left", "right"] | None = None,
@@ -45,7 +47,7 @@ class MkImage(mknode.MkNode):
         super().__init__(**kwargs)
         self.title = title
         self.caption = caption
-        self.link = link
+        self.target = link
         self.align = align
         self.width = width
         self.lazy = lazy
@@ -59,13 +61,24 @@ class MkImage(mknode.MkNode):
         kwargs = dict(
             path=self.path,
             caption=self.caption,
-            link=self.link,
+            link=self.url,
             align=self.align,
             width=self.width,
         )
         if self.lazy:
             kwargs["lazy"] = True
         return helpers.get_repr(self, _filter_empty=True, _filter_false=True, **kwargs)
+
+    @property
+    def url(self) -> str:
+        if not self.target:
+            return ""
+        if self.associated_project:
+            config = self.associated_project.config
+            base_url = config.site_url or ""
+        else:
+            base_url = ""
+        return helpers.get_url(self.target, base_url)
 
     def _to_markdown(self) -> str:
         markdown_link = f"![{self.title}]({self.path})"
@@ -75,9 +88,8 @@ class MkImage(mknode.MkNode):
             markdown_link += f'{{ width="{self.width}" }}'
         if self.lazy:
             markdown_link += "{ loading=lazy }"
-        if self.link:
-            markdown_link = f"[{markdown_link}]({self.link})"
-
+        if self.target:
+            markdown_link = f"[{markdown_link}]({self.url})"
         if not self.caption:
             return markdown_link
         lines = [
