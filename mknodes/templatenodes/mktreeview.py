@@ -46,9 +46,9 @@ class MkTreeView(mkcode.MkCode):
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header, **kwargs)
+        super().__init__(header, language="", **kwargs)
         self.tree = tree
-        self.style = style
+        self._style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
         self.exclude_folders = (
@@ -65,7 +65,7 @@ class MkTreeView(mkcode.MkCode):
                     exclude_folders=self.exclude_folders,
                 )
                 return node.get_tree_repr(
-                    style=self.style or "rounded",
+                    style=self.style,
                     max_depth=self.maximum_depth or 0,
                 )
             case mknode.MkNode():
@@ -75,7 +75,7 @@ class MkTreeView(mkcode.MkCode):
                 # ]
                 # return "\n".join(lines)
                 return self.tree.get_tree_repr(
-                    style=self.style or "rounded",
+                    style=self.style,
                     max_depth=self.maximum_depth or 0,
                 )
 
@@ -83,12 +83,21 @@ class MkTreeView(mkcode.MkCode):
     def text(self, text):
         self.obj = text
 
+    @property
+    def style(self) -> treestyles.TreeStyleStr | tuple[str, str, str, str]:
+        return self._style or "rounded"
+
+    @style.setter
+    def style(self, value: treestyles.TreeStyleStr | tuple[str, str, str, str] | None):
+        self._style = value
+
     def __repr__(self):
         return helpers.get_repr(
             self,
             path=str(self.tree),
-            style=self.style or "rounded",
+            style=self._style,
             maximum_depth=self.maximum_depth,
+            _filter_empty=True,
         )
 
     @staticmethod
