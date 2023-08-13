@@ -120,6 +120,22 @@ class MkPage(mkcontainer.MkContainer):
     def title(self, value: str):
         self.metadata.title = value
 
+    @property
+    def subtitle(self) -> str | None:
+        return self.metadata.subtitle
+
+    @subtitle.setter
+    def subtitle(self, value: str):
+        self.metadata.subtitle = value
+
+    @property
+    def icon(self) -> str | None:
+        return self.metadata.icon
+
+    @icon.setter
+    def icon(self, value: str):
+        self.metadata.icon = value
+
     @classmethod
     def from_file(
         cls,
