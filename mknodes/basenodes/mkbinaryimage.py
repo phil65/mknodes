@@ -51,7 +51,7 @@ class MkBinaryImage(mkimage.MkImage):
         """
         node = MkBinaryImage(data, path="some_image.svg", caption="A simple cross")
         page += mknodes.MkReprRawRendered(node)
-        node = MkBinaryImage.for_icon("material/file-image")
+        node = MkBinaryImage.for_icon("material/file-image", width=200)
         page += mknodes.MkReprRawRendered(node)
 
     @classmethod
