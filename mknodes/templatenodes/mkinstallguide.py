@@ -79,7 +79,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
             mkcode.MkCode(method.install_instructions()),
         ]
         # proj = self.associated_project
-        # if method.ID == "pip" and proj and (extras := proj.info.get_extras()):
+        # if method.ID == "pip" and proj and (extras := proj.info.extras):
         #     extras_str = ",".join(extras)
         #     text = f"{method.install_instructions()}[{extras_str}]"
         #     code = mkcode.MkCode(text)

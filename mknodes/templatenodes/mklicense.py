@@ -62,11 +62,11 @@ class MkLicense(mktext.MkText):
 
     def get_license(self, license_name: str) -> str:
         if self.associated_project:
-            holder = self.associated_project.info.get_author_name()
+            holder = self.associated_project.info.author_name
             summary = self.associated_project.info.metadata["Summary"]
             package_name = self.associated_project.info.name
-            website = self.associated_project.info.get_repository_url() or ""
-            email = self.associated_project.info.get_author_email() or ""
+            website = self.associated_project.info.repository_url or ""
+            email = self.associated_project.info.author_email or ""
         else:
             holder = ""
             summary = ""
@@ -98,8 +98,8 @@ class MkLicense(mktext.MkText):
         if proj := self.associated_project:
             if license_path := proj.info.get_license_file_path():
                 return license_path.read_text()
-            if license_name := proj.info.get_license():
-                return self.get_license(license_name)
+            if proj.info.license_name:
+                return self.get_license(proj.info.license_name)
         return "Unknown license."
 
     @staticmethod

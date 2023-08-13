@@ -132,7 +132,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     def repo_url(self) -> str:
         match self._repo_url:
             case None if self.associated_project:
-                repo_url = self.associated_project.get_repository_url() or EXAMPLE_URL
+                repo_url = self.associated_project.repository_url or EXAMPLE_URL
             case str():
                 repo_url = self._repo_url
             case _:

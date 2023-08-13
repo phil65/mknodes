@@ -113,7 +113,8 @@ class PackageInfo:
     def __hash__(self):
         return hash(self.package_name)
 
-    def get_license(self) -> str | None:
+    @property
+    def license_name(self) -> str | None:
         """Get name of the license."""
         if license_name := self.metadata.get("License-Expression", "").strip():
             return license_name
@@ -126,38 +127,34 @@ class PackageInfo:
             None,
         )
 
-    def get_license_file_path(self) -> pathlib.Path | None:
-        """Return license file path (relative to project root) from metadata."""
-        for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
-            if (file := pathlib.Path(path)).exists():
-                return file
-        if file := self.metadata.get("License-File"):
-            return pathlib.Path(file)
-        return None
-
-    def get_repository_url(self) -> str | None:
+    @property
+    def repository_url(self) -> str | None:
         """Return repository URL from metadata."""
         if "Source" in self.urls:
             return self.urls["Source"]
         return self.urls["Repository"] if "Repository" in self.urls else None
 
-    def get_repository_username(self) -> str | None:
+    @property
+    def repository_username(self) -> str | None:
         """Try to extract repository username from metadata."""
-        if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
+        if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(1)
         return None
 
-    def get_repository_name(self) -> str | None:
+    @property
+    def repository_name(self) -> str | None:
         """Try to extract repository name from metadata."""
-        if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
+        if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(2)
         return None
 
-    def get_keywords(self) -> list[str]:
+    @property
+    def keywords(self) -> list[str]:
         """Return a list of keywords from metadata."""
         return self.metadata.get("Keywords", "").split(",")
 
-    def get_classifiers(self) -> dict[str, list[str]]:
+    @property
+    def classifier_map(self) -> dict[str, list[str]]:
         """Return a dict containing the classifier categories and values from metadata.
 
         {category_1: [classifier_1, ...],
@@ -176,9 +173,58 @@ class PackageInfo:
                     classifiers[category] = [value]
         return classifiers
 
-    def get_required_package_names(self) -> list[str]:
+    @property
+    def required_package_names(self) -> list[str]:
         """Get a list of names from required packages."""
         return [i.name for i in self.required_deps]
+
+    @property
+    def author_email(self) -> str:
+        mail = self.metadata["Author-email"].split(" ")[-1]
+        return mail.replace("<", "").replace(">", "")
+
+    @property
+    def author_name(self) -> str:
+        return self.metadata["Author-email"].rsplit(" ", 1)[0]
+
+    @property
+    def authors(self) -> dict[str, str]:
+        """Return a dict containing the authors.
+
+        {author 1: email of author 1,
+         author_2, email of author 2,
+         ...
+         }
+        """
+        authors: dict[str, str] = {}
+        for k, v in self.metadata.items():
+            if k == "Author-email":
+                mail = v.split(" ")[-1]
+                mail = mail.replace("<", "").replace(">", "")
+                name = v.rsplit(" ", 1)[0]
+                authors[name] = mail
+        return authors
+
+    @property
+    def extras(self) -> dict[str, list[str]]:
+        """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
+        extras: dict[str, list[str]] = {}
+        for dep in self.required_deps:
+            for extra in dep.extras:
+                if extra in extras:
+                    extras[extra].append(dep.name)
+                else:
+                    extras[extra] = [dep.name]
+        return extras
+
+    def get_license_file_path(self) -> pathlib.Path | None:
+        """Return license file path (relative to project root) from metadata."""
+        for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
+            if (file := pathlib.Path(path)).exists():
+                return file
+        if file := self.metadata.get("License-File"):
+            return pathlib.Path(file)
+        return None
 
     def get_required_packages(self) -> dict[PackageInfo, Dependency]:
         modules = (
@@ -198,42 +244,7 @@ class PackageInfo:
                 return i
         raise ValueError(name)
 
-    def get_extras(self) -> dict[str, list[str]]:
-        """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
-        extras: dict[str, list[str]] = {}
-        for dep in self.required_deps:
-            for extra in dep.extras:
-                if extra in extras:
-                    extras[extra].append(dep.name)
-                else:
-                    extras[extra] = [dep.name]
-        return extras
-
-    def get_author_email(self) -> str:
-        mail = self.metadata["Author-email"].split(" ")[-1]
-        return mail.replace("<", "").replace(">", "")
-
-    def get_author_name(self) -> str:
-        return self.metadata["Author-email"].rsplit(" ", 1)[0]
-
-    def get_authors(self) -> dict[str, str]:
-        """Return a dict containing the authors.
-
-        {author 1: email of author 1,
-         author_2, email of author 2,
-         ...
-         }
-        """
-        authors: dict[str, str] = {}
-        for k, v in self.metadata.items():
-            if k == "Author-email":
-                mail = v.split(" ")[-1]
-                mail = mail.replace("<", "").replace(">", "")
-                name = v.rsplit(" ", 1)[0]
-                authors[name] = mail
-        return authors
-
 
 if __name__ == "__main__":
     info = get_info("mknodes")
-    print(info.get_author_email())
+    print(info.metadata.keys())

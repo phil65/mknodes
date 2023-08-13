@@ -5,8 +5,8 @@ from mknodes.utils import packageinfo
 
 def test_packageinfo():
     info = packageinfo.get_info("mknodes")
-    info.get_license()
-    info.get_keywords()
-    info.get_extras()
-    for package in info.get_required_package_names():
+    assert info.license_name == "MIT"
+    assert info.keywords
+    assert info.extras is not None
+    for package in info.required_package_names:
         packageinfo.get_info(package)

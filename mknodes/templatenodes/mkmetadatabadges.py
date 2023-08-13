@@ -78,13 +78,13 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             return items
         match self._typ:
             case "classifiers":
-                dct = self.associated_project.info.get_classifiers()
+                dct = self.associated_project.info.classifier_map
                 for category, labels in dct.items():
                     items.extend([(i, category, None) for i in labels])
             case "keywords":
                 items.extend(
                     (keyword, "", None)
-                    for keyword in self.associated_project.info.get_keywords()
+                    for keyword in self.associated_project.info.keywords
                 )
             case "websites":
                 urls = self.associated_project.info.urls
@@ -92,7 +92,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             case "dependencies":
                 info = self.associated_project.info.get_required_packages()
                 items.extend(
-                    (package.name, package.version, package.get_repository_url())
+                    (package.name, package.version, package.repository_url)
                     for package in info
                 )
         return items

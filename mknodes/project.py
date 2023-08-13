@@ -72,16 +72,19 @@ class Project:
     def __repr__(self):
         return helpers.get_repr(self, module=self.module)
 
-    def get_repository_url(self) -> str | None:
-        return url if (url := self.config.repo_url) else self.info.get_repository_url()
+    @property
+    def repository_url(self) -> str | None:
+        return url if (url := self.config.repo_url) else self.info.repository_url
 
-    def get_repository_username(self) -> str | None:
-        if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
+    @property
+    def repository_username(self) -> str | None:
+        if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(1)
         return None
 
-    def get_repository_name(self) -> str | None:
-        if match := GITHUB_REGEX.match(self.get_repository_url() or ""):
+    @property
+    def repository_name(self) -> str | None:
+        if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(2)
         return None
 
@@ -95,7 +98,8 @@ class Project:
     def has_conda(self) -> bool:
         return bool(helpers.find_file_in_folder_or_parent(".meta.yaml"))
 
-    def get_used_task_runners(self) -> list[taskrunners.TaskRunner]:
+    @property
+    def task_runners(self) -> list[taskrunners.TaskRunner]:
         """Return list of task runners used by this project."""
         return [
             runner
@@ -106,5 +110,5 @@ class Project:
 
 if __name__ == "__main__":
     project = Project()
-    bs = project.get_used_task_runners()
+    bs = project.task_runners
     print(bs)

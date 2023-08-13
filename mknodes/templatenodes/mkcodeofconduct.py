@@ -53,7 +53,7 @@ class MkCodeOfConduct(mktext.MkText):
             case str():
                 mail = self.contact_email
             case None if self.associated_project:
-                mail = self.associated_project.info.get_author_email()
+                mail = self.associated_project.info.author_email
             case _:
                 mail = "<MAIL NOT SET>"
         text = text.replace("[INSERT CONTACT METHOD]", mail)
