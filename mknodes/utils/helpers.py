@@ -117,8 +117,8 @@ def escaped(text: str, entity_type: str | None = None) -> str:
     return re.sub(f"([{re.escape(escape_chars)}])", r"\\\1", text)
 
 
-def slugify(text: str) -> str:
-    text = text.lower()
+def slugify(text: str | os.PathLike) -> str:
+    text = str(text).lower()
     text = re.sub("[^0-9a-zA-Z_.]", "_", text)
     return re.sub("^[^a-zA-Z_#]+", "", text)
 
