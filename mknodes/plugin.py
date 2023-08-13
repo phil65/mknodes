@@ -1,3 +1,5 @@
+"""The Mkdocs Plugin."""
+
 from __future__ import annotations
 
 # Partly based on mkdocs-gen-files
