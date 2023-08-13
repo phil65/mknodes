@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable
 import itertools
 import logging
 import textwrap
 
-from typing import Any
+from typing import Any, TypeVar
 
 from mknodes import mknav
 from mknodes.basenodes import mkcontainer, mknode
@@ -28,8 +28,10 @@ CELL = """
 </a>
 """
 
+T = TypeVar("T")
 
-def batched(iterable: Iterable, n: int):
+
+def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, None]:
     """Batch data into tuples of length n. The last batch may be shorter."""
     # batched('ABCDEFG', 3) --> ABC DEF G
     if n < 1:
