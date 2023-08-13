@@ -99,6 +99,7 @@ def create_container_nodes_section(nav: mknodes.MkNav):
         mknodes.MkTabbed,
         mknodes.MkAnnotations,
         mknodes.MkFootNotes,
+        mknodes.MkShowcase,
     ]
     container_nodes_nav = nav.add_nav("Container nodes")
     page = container_nodes_nav.add_index_page(hide_toc=True)

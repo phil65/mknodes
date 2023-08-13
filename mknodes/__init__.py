@@ -30,6 +30,7 @@ from .basenodes.mkfootnotes import MkFootNotes
 from .basenodes.mkiframe import MkIFrame
 from .basenodes.mkprogressbar import MkProgressBar
 from .basenodes.mkdefinitionlist import MkDefinitionList
+from .basenodes.mkshowcase import MkShowcase
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -115,6 +116,7 @@ __all__ = [
     "MkIFrame",
     "MkProgressBar",
     "MkDefinitionList",
+    "MkShowcase",
     "MkReprRawRendered",
     "MkPrettyPrint",
     "MkCallable",
