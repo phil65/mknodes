@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import logging
 
 from typing import Any, Literal
@@ -85,8 +86,8 @@ class MkBadge(mkbinaryimage.MkBinaryImage):
     @property
     def data(self):
         badge = anybadge.Badge(
-            label=self.label,
-            value=self.value,
+            label=html.escape(self.label),
+            value=html.escape(self.value),
             font_size=self.font_size,
             font_name=self.font_name,
             num_padding_chars=self.num_padding_chars,
