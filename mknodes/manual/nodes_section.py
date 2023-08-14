@@ -220,12 +220,12 @@ def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
     code = mknodes.MkCode.for_object(
         create_class_page,
         extract_body=True,
-        header=PAGE_CODE,
     )
     admonition = mknodes.MkDetailsBlock(
         code,
         typ="quote",
         title=code.title,
+        header=PAGE_CODE,
     )
     page += admonition
     page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
