@@ -100,6 +100,8 @@ class PackageInfo:
             for k, v in self.metadata.items()
             if k == "Project-URL"
         }
+        if "Home-page" in self.metadata:
+            self.urls["Home-page"] = self.metadata["Home-page"]
         requires = get_requires(self.distribution)
         self.required_deps = [get_dependency(i) for i in requires] if requires else []
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
@@ -130,9 +132,22 @@ class PackageInfo:
     @property
     def repository_url(self) -> str | None:
         """Return repository URL from metadata."""
-        if "Source" in self.urls:
-            return self.urls["Source"]
-        return self.urls["Repository"] if "Repository" in self.urls else None
+        return next(
+            (
+                self.urls[tag].strip()
+                for tag in ["Source", "Repository", "Source Code"]
+                if tag in self.urls
+            ),
+            None,
+        )
+
+    @property
+    def homepage(self) -> str | None:
+        if "Home-page" in self.urls:
+            return self.urls["Home-page"]
+        if "Homepage" in self.urls:
+            return self.urls["Homepage"]
+        return self.repository_url
 
     @property
     def repository_username(self) -> str | None:
@@ -246,5 +261,5 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = get_info("mknodes")
-    print(info.metadata.keys())
+    info = get_info("anybadge")
+    print(info.repository_url)

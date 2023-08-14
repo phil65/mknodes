@@ -45,7 +45,7 @@ class MkDependencyTable(mktable.MkTable):
             return {}
         rows = []
         for package_info, dep_info in self.package.get_required_packages().items():
-            if url := package_info.repository_url:
+            if url := package_info.homepage:
                 node = mklink.MkLink(url, package_info.name)
             else:
                 node = f"`{package_info.name}`"
