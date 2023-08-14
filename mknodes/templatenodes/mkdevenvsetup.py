@@ -13,7 +13,7 @@ from mknodes.basenodes import (
     mknode,
     mktext,
 )
-from mknodes.data import buildsystems
+from mknodes.data import buildsystems, tools
 from mknodes.utils import helpers
 
 
@@ -71,19 +71,19 @@ def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.
     ]
 
 
-def get_pre_commit_section() -> list[mknode.MkNode]:
+def get_tool_section(tool: tools.Tool) -> list[mknode.MkNode]:
     return [
-        mkheader.MkHeader("Pre-commit"),
-        mktext.MkText(PRE_COMMIT_TEXT),
-        mkcode.MkCode(PRE_COMMIT_CODE, language="md"),
+        mkheader.MkHeader(tool.title),
+        mktext.MkText(tool.description),
+        mkcode.MkCode(tool.setup_cmd, language="md"),
         mkadmonition.MkAdmonition(
             [
-                "To install pre-commit:",
-                mkcode.MkCode("pip install pre-commit", language="bash"),
-                mklink.MkLink("https://pre-commit.com", "More information"),
+                f"To install {tool.identifier}:",
+                mkcode.MkCode(f"pip install {tool.identifier}", language="bash"),
+                mklink.MkLink(tool.url, "More information"),
             ],
             collapsible=True,
-            title="Installing pre-commit",
+            title=f"Installing {tool.title}",
         ),
     ]
 
@@ -98,7 +98,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         self,
         *,
         repo_url: str | None = None,
-        use_pre_commit: bool | None = None,
+        tools: list[tools.ToolStr] | None = None,
         build_backend: buildsystems.BuildSystemStr | None = None,
         header: str = "Setting up a development environment",
         **kwargs: Any,
@@ -107,8 +107,8 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
         Arguments:
             repo_url: Repo url to show. If None, it will be pulled from project.
-            use_pre_commit: Show pre-commit install instructions.
-                            If None, it will be pulled from project.
+            tools: Tools to show install / setup instructions for.
+                            If None, tools will be pulled from project.
             build_backend: Build backend to show install instructions for.
                             If None, it will be pulled from project.
             header: Section header
@@ -116,14 +116,14 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         """
         super().__init__(header=header, **kwargs)
         self._repo_url = repo_url
-        self._use_pre_commit = use_pre_commit
+        self._tools = tools
         self._build_backend = build_backend
 
     def __repr__(self):
         return helpers.get_repr(
             self,
             repo_url=self._repo_url,
-            use_pre_commit=self._use_pre_commit,
+            tools=self._tools,
             build_backend=self._build_backend,
             _filter_empty=True,
         )
@@ -146,20 +146,16 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         self._repo_url = value
 
     @property
-    def use_pre_commit(self) -> bool:  # type: ignore[return]
-        match self._use_pre_commit:
+    def tools(self) -> list[tools.Tool]:  # type: ignore[return]
+        match self._tools:
+            case list():
+                return [tools.TOOLS[i] for i in self._tools]
             case None if self.associated_project:
-                return self.associated_project.has_precommit()
-            case bool():
-                return self._use_pre_commit
+                return self.associated_project.tools
             case None:
-                return True
+                return []
             case _:
-                raise TypeError(self._use_pre_commit)
-
-    @use_pre_commit.setter
-    def use_pre_commit(self, value):
-        self._use_pre_commit = value
+                raise TypeError(self._tools)
 
     @property
     def build_backend(self) -> buildsystems.BuildSystem:  # type: ignore[return]
@@ -185,8 +181,8 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         link = mklink.MkLink(self.repo_url, folder_name)
         start_text = START_TEXT.format(link=str(link))
         items = [mktext.MkText(start_text), mkcode.MkCode(code, language="md")]
-        if self.use_pre_commit:
-            items.extend(get_pre_commit_section())
+        for tool in self.tools:
+            items.extend(get_tool_section(tool))
         items.extend(get_build_backend_section(self.build_backend))
         items.extend(get_docs_section(docs_setup=docs_str, project_name=folder_name))
         for item in items:
@@ -208,5 +204,11 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
+    from mknodes import mknav, project
+
+    nav = mknav.MkNav()
+    nav._associated_project = project.Project()
+    page = nav.add_page("test")
     setup_text = MkDevEnvSetup(build_backend="flit")
+    page += setup_text
     print(setup_text)

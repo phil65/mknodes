@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from mkdocs import config as _config
 
 from mknodes import mkdocsconfig, mknav
-from mknodes.data import taskrunners
+from mknodes.data import taskrunners, tools
 from mknodes.utils import helpers, packageinfo, pyproject
 
 
@@ -92,11 +92,12 @@ class Project:
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
 
+    @property
+    def tools(self) -> list[tools.Tool]:
+        return [t for t in tools.TOOLS.values() if t.is_used()]
+
     def has_precommit(self) -> bool:
         return bool(helpers.find_file_in_folder_or_parent(".pre-commit-config.yaml"))
-
-    def has_conda(self) -> bool:
-        return bool(helpers.find_file_in_folder_or_parent(".meta.yaml"))
 
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:
