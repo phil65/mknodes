@@ -180,8 +180,7 @@ class PackageInfo:
         classifiers: dict[str, list[str]] = {}
         for k, v in self.metadata.items():
             if k == "Classifier":
-                category = v.split(" :: ")[0]
-                value = v.split(" :: ", 1)[1]
+                category, value = v.split(" :: ", 1)
                 if category in classifiers:
                     classifiers[category].append(value)
                 else:
