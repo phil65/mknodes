@@ -71,7 +71,7 @@ class MkNode(node.Node):
         self.indent = indent
         self._annotations = None
         self.shift_header_levels = shift_header_levels
-
+        self._files: dict[str, str | bytes] = {}
         # ugly, but convenient.
         from mknodes.basenodes import mkannotations
 
@@ -133,7 +133,7 @@ class MkNode(node.Node):
 
         This can be overridden by nodes if they want files to be included in the build.
         """
-        return {}
+        return self._files
 
     @property
     def resolved_virtual_files(self) -> dict[str, str | bytes]:
@@ -145,6 +145,9 @@ class MkNode(node.Node):
         if section:
             section += "/"
         return {f"{section}{k}": v for k, v in self.virtual_files().items()}
+
+    def add_file(self, filename: str, data: str | bytes):
+        self._files[filename] = data
 
     def all_virtual_files(self, only_children: bool = False) -> dict[str, str | bytes]:
         """Return a dictionary containing all virtual files of itself and all children.

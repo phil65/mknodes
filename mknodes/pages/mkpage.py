@@ -167,7 +167,8 @@ class MkPage(mkcontainer.MkContainer):
         return page
 
     def virtual_files(self) -> dict[str, str]:
-        return {} if self.virtual else {self.path: self.to_markdown()}
+        dct = {} if self.virtual else {self.path: self.to_markdown()}
+        return dct | super().virtual_files()
 
     def to_markdown(self) -> str:
         from mknodes import mknav

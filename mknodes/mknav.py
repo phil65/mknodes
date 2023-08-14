@@ -241,7 +241,7 @@ class MkNav(mknode.MkNode):
         dct = {self.path: self.to_markdown()}
         if self.metadata:
             dct[self.metadata_file] = str(self.metadata)
-        return dct
+        return dct | super().virtual_files()
 
     def to_markdown(self) -> str:
         nav = mkdocs_gen_files.Nav()

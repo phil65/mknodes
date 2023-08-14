@@ -63,7 +63,7 @@ class MkCallable(mknode.MkNode):
 
     def virtual_files(self):
         node = self.__call__()
-        return node.virtual_files()
+        return node.virtual_files() | super().virtual_files()
 
     @staticmethod
     def create_example_page(page):

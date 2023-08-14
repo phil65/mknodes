@@ -33,7 +33,7 @@ class MkBinaryImage(mkimage.MkImage):
         self.data = data
 
     def virtual_files(self):
-        return {self.path: self.data}
+        return {self.path: self.data} | super().virtual_files()
 
     @staticmethod
     def create_example_page(page):
