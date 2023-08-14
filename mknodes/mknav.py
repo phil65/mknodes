@@ -236,7 +236,7 @@ class MkNav(mknode.MkNode):
         self.index_title = title or self.section or "Home"
         return page
 
-    def virtual_files(self) -> dict[str, str]:
+    def virtual_files(self) -> dict[str, str | bytes]:
         """Override for MkNode.virtual_files."""
         dct = {self.path: self.to_markdown()}
         if self.metadata:
