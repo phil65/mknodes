@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from typing import Any, Literal
+from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.templatenodes import mkbadge
@@ -87,8 +88,11 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     for keyword in self.associated_project.info.keywords
                 )
             case "websites":
-                urls = self.associated_project.info.urls
-                items.extend((name, "", url) for name, url in urls.items())
+                urls = [
+                    (name, parse.urlparse(url).netloc, url)
+                    for name, url in self.associated_project.info.urls.items()
+                ]
+                items.extend(urls)
             case "dependencies":
                 info = self.associated_project.info.get_required_packages()
                 items.extend(
