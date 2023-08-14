@@ -5,11 +5,10 @@ import itertools
 import logging
 import textwrap
 
-from typing import Any, TypeVar
-from xml.etree import ElementTree
+from typing import TypeVar
 
 from mknodes import mknav
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcard, mkcontainer, mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
@@ -17,35 +16,6 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 CARD_DEFAULT_SIZE = 200
-
-
-def build_html_card(
-    *,
-    image: str,
-    title: str,
-    link: str | None = None,
-    size: int = CARD_DEFAULT_SIZE,
-    caption: str | None = None,
-):
-    root = ElementTree.Element("a")
-    if link:
-        root.set("href", link)
-    card_div = ElementTree.SubElement(root, "div", {"class": "card"})
-    container_div = ElementTree.SubElement(card_div, "div", {"class": "container"})
-    ElementTree.SubElement(
-        container_div,
-        "img",
-        src=image,
-        alt=title,
-        style=f"width:{size}px,height:{size}px",
-    )
-    if caption:
-        overlay_div = ElementTree.SubElement(container_div, "div", {"class": "overlay"})
-        overlay_div.text = caption
-    p = ElementTree.SubElement(card_div, "p")
-    button = ElementTree.SubElement(p, "button")
-    button.text = title
-    return ElementTree.tostring(root, encoding="unicode")
 
 
 T = TypeVar("T")
@@ -62,77 +32,13 @@ def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, Non
         yield batch
 
 
-class MkShowcaseCard(mknode.MkNode):
-    """A single Showcase card.
-
-    This node requires addtional CSS to work.
-    """
-
-    ICON = "material/square-medium"
-    STATUS = "new"
-    CSS = "css/grid.css"
-
-    def __init__(
-        self,
-        title: str,
-        image: str,
-        caption: str | None = None,
-        target: str | mkpage.MkPage | mknav.MkNav | None = None,
-        size: int = CARD_DEFAULT_SIZE,
-        **kwargs: Any,
-    ):
-        """Constructor.
-
-        Arguments:
-            title: Button text
-            image: Card image
-            caption: Image caption
-            target: Link target. Can be a URL, an MkPage, or an MkNav
-            size: Height/Width of the card
-            kwargs: keyword arguments passed to parent
-        """
-        super().__init__(**kwargs)
-        self.target = target
-        self.title = title
-        self.image = image
-        self.caption = caption
-        self.size = size
-
-    def __repr__(self):
-        return helpers.get_repr(
-            self,
-            title=self.title,
-            image=self.image,
-            caption=self.caption,
-            target=self.target,
-            size=self.size if self.size != CARD_DEFAULT_SIZE else None,
-            _filter_empty=True,
-        )
-
-    @property
-    def url(self) -> str:  # type: ignore[return]
-        if self.associated_project:
-            config = self.associated_project.config
-            base_url = config.site_url or ""
-        else:
-            base_url = ""
-        return helpers.get_url(self.target, base_url)
-
-    def _to_markdown(self) -> str:
-        return build_html_card(
-            title=self.title,
-            image=self.image,
-            caption=self.caption,
-            link=self.url,
-            size=self.size,
-        )
-
-
 class MkShowcase(mkcontainer.MkContainer):
     """Node for showing a html-based image grid.
 
-    Manages row / column positioning for MkShowcaseCards.
-    This node requires addtional CSS to work.
+    Manages row / column positioning.
+    Mainly intended for MkCards, but can also include other markdown (there are limits
+    though.)
+    When adding MkCards, then addtional CSS is required.
     """
 
     ICON = "material/view-grid"
@@ -156,17 +62,17 @@ class MkShowcase(mkcontainer.MkContainer):
     def __repr__(self):
         return helpers.get_repr(self, cards=self.items)
 
-    def to_item(self, item) -> MkShowcaseCard:
+    def to_item(self, item) -> mkcard.MkCard:
         match item:
             case mkpage.MkPage():
-                return MkShowcaseCard(
+                return mkcard.MkCard(
                     target=item,
                     title=item.title or " ",
                     caption=item.subtitle or " ",
                     image=":material-tab:",
                     parent=self,
                 )
-            case MkShowcaseCard():
+            case mkcard.MkCard():
                 return item
             case _:
                 raise TypeError(item)
@@ -189,7 +95,7 @@ class MkShowcase(mkcontainer.MkContainer):
         link: str | mkpage.MkPage | mknav.MkNav | None = None,
         caption: str | None = None,
     ):
-        card = MkShowcaseCard(target=link, title=title, image=image, caption=caption)
+        card = mkcard.MkCard(target=link, title=title, image=image, caption=caption)
         self.append(card)
 
     @staticmethod
