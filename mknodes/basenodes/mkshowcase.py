@@ -63,7 +63,10 @@ def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, Non
 
 
 class MkShowcaseCard(mknode.MkNode):
-    """A single Showcase card."""
+    """A single Showcase card.
+
+    This node requires addtional CSS to work.
+    """
 
     ICON = "material/square-medium"
     STATUS = "new"
@@ -117,11 +120,11 @@ class MkShowcaseCard(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         return build_html_card(
-            link=self.url,
             title=self.title,
-            caption=self.caption,
-            size=self.size,
             image=self.image,
+            caption=self.caption,
+            link=self.url,
+            size=self.size,
         )
 
 
@@ -133,7 +136,6 @@ class MkShowcase(mkcontainer.MkContainer):
     """
 
     ICON = "material/view-grid"
-    CSS = "css/grid.css"
 
     def __init__(
         self,
@@ -184,7 +186,7 @@ class MkShowcase(mkcontainer.MkContainer):
         self,
         title: str,
         image: str,
-        link: str | None = None,
+        link: str | mkpage.MkPage | mknav.MkNav | None = None,
         caption: str | None = None,
     ):
         card = MkShowcaseCard(target=link, title=title, image=image, caption=caption)
