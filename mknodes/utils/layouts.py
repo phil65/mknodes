@@ -91,14 +91,11 @@ class ExtendedClassLayout(Layout):
 
 class ModuleLayout(Layout):
     def get_row_for(self, module: types.ModuleType) -> dict[str, str]:
+        fallback = "*No docstrings defined.*"
         return dict(
             Name=module.__name__,
             # helpers.link_for_class(submod, size=4, bold=True),
-            DocStrings=helpers.get_doc(
-                module,
-                fallback="*No docstrings defined.*",
-                only_summary=True,
-            ),
+            DocStrings=helpers.get_doc(module, fallback=fallback, only_summary=True),
             Members=(
                 helpers.to_html_list(module.__all__, make_link=True)
                 if hasattr(module, "__all__")

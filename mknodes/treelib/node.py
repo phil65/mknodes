@@ -90,6 +90,9 @@ class Node:
         """Get iterator to yield all descendants of self, does not include self."""
         yield from preorder_iter(self, filter_condition=lambda _node: _node != self)
 
+    def is_descendant_of(self, kls: type) -> bool:
+        return any(isinstance(i, kls) for i in self.ancestors)
+
     @property
     def leaves(self) -> Iterable[Self]:
         """Get iterator to yield all leaf nodes from self."""

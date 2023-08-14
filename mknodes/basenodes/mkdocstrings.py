@@ -122,21 +122,7 @@ class MkDocStrings(mknode.MkNode):
         """
         super().__init__(**kwargs)
         self.obj = obj
-        match obj:
-            case types.ModuleType():
-                self.obj_path = obj.__name__
-            case Callable():
-                if for_topmost:
-                    topmost_path = classhelpers.get_topmost_module_path(obj)
-                    self.obj_path = f"{topmost_path}.{obj.__qualname__}"
-                else:
-                    self.obj_path = f"{obj.__module__}.{obj.__qualname__}"
-            case str():
-                self.obj_path = obj  # for setting a manual path
-            case tuple() | list():
-                self.obj_path = ".".join(obj)
-            case _:
-                raise TypeError(obj)
+        self.for_topmost = for_topmost
         self._options = self.OPTIONS_DEFAULT.copy()
         self._options["allow_inspection"] = allow_inspection
         self._options["show_bases"] = show_bases
@@ -173,6 +159,23 @@ class MkDocStrings(mknode.MkNode):
         return helpers.get_repr(self, obj=self.obj, **option_kwargs)
 
     @property
+    def obj_path(self):
+        match self.obj:
+            case types.ModuleType():
+                return self.obj.__name__
+            case Callable():
+                if not self.for_topmost:
+                    return f"{self.obj.__module__}.{self.obj.__qualname__}"
+                topmost_path = classhelpers.get_topmost_module_path(self.obj)
+                return f"{topmost_path}.{self.obj.__qualname__}"
+            case str():
+                return self.obj  # for setting a manual path
+            case tuple() | list():
+                return ".".join(self.obj)
+            case _:
+                raise TypeError(self.obj)
+
+    @property
     def options(self):
         import mknodes
 
@@ -181,9 +184,7 @@ class MkDocStrings(mknode.MkNode):
         # and no style is explicitely set.
         opts = self._options.copy()
         style = opts.get("docstring_section_style")
-        if not style and any(
-            isinstance(i, mknodes.MkAnnotations) for i in self.ancestors
-        ):
+        if not style and self.is_descendant_of(mknodes.MkAnnotations):
             opts["docstring_section_style"] = "list"
             opts["show_root_heading"] = True
         return opts

@@ -58,16 +58,17 @@ class MkImage(mknode.MkNode):
             self.path = pathlib.Path(path).name  # this should not be needed.
 
     def __repr__(self):
-        kwargs = dict(
+        return helpers.get_repr(
+            self,
             path=self.path,
             caption=self.caption,
             link=self.url,
             align=self.align,
             width=self.width,
+            lazy=self.lazy,
+            _filter_empty=True,
+            _filter_false=True,
         )
-        if self.lazy:
-            kwargs["lazy"] = True
-        return helpers.get_repr(self, _filter_empty=True, _filter_false=True, **kwargs)
 
     @property
     def url(self) -> str:

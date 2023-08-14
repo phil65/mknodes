@@ -90,9 +90,10 @@ class MkAdmonition(mkcontainer.MkContainer):
             ann_marker = ""
             annotations = ""
         title = f' "{self.title}"' if self.title is not None else ""
-        text = textwrap.indent("\n".join(i.to_markdown() for i in self.items), "    ")
+        text = "\n".join(i.to_markdown() for i in self.items)
+        indented = textwrap.indent(text, "    ")
         optional = ann_marker + inline_label
-        return f"{block_start} {self.typ}{optional}{title}\n{text}\n{annotations}"
+        return f"{block_start} {self.typ}{optional}{title}\n{indented}\n{annotations}"
 
     @staticmethod
     def create_example_page(page):
