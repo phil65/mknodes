@@ -16,9 +16,20 @@ from mknodes.utils import helpers
 
 logger = logging.getLogger(__name__)
 
+CARD_DEFAULT_SIZE = 200
 
-def get_xml_string(*, link: str, image: str, title: str, size: int, caption: str):
-    root = ElementTree.Element("a", href=link)
+
+def build_html_card(
+    *,
+    image: str,
+    title: str,
+    link: str | None = None,
+    size: int = CARD_DEFAULT_SIZE,
+    caption: str | None = None,
+):
+    root = ElementTree.Element("a")
+    if link:
+        root.set("href", link)
     card_div = ElementTree.SubElement(root, "div", {"class": "card"})
     container_div = ElementTree.SubElement(card_div, "div", {"class": "container"})
     ElementTree.SubElement(
@@ -28,8 +39,9 @@ def get_xml_string(*, link: str, image: str, title: str, size: int, caption: str
         alt=title,
         style=f"width:{size}px,height:{size}px",
     )
-    overlay_div = ElementTree.SubElement(container_div, "div", {"class": "overlay"})
-    overlay_div.text = caption
+    if caption:
+        overlay_div = ElementTree.SubElement(container_div, "div", {"class": "overlay"})
+        overlay_div.text = caption
     p = ElementTree.SubElement(card_div, "p")
     button = ElementTree.SubElement(p, "button")
     button.text = title
@@ -61,9 +73,9 @@ class MkShowcaseCard(mknode.MkNode):
         self,
         title: str,
         image: str,
-        caption: str,
+        caption: str | None = None,
         target: str | mkpage.MkPage | mknav.MkNav | None = None,
-        size: int = 200,
+        size: int = CARD_DEFAULT_SIZE,
         **kwargs: Any,
     ):
         """Constructor.
@@ -86,10 +98,12 @@ class MkShowcaseCard(mknode.MkNode):
     def __repr__(self):
         return helpers.get_repr(
             self,
-            target=self.target,
             title=self.title,
             image=self.image,
             caption=self.caption,
+            target=self.target,
+            size=self.size if self.size != CARD_DEFAULT_SIZE else None,
+            _filter_empty=True,
         )
 
     @property
@@ -102,11 +116,11 @@ class MkShowcaseCard(mknode.MkNode):
         return helpers.get_url(self.target, base_url)
 
     def _to_markdown(self) -> str:
-        return get_xml_string(
+        return build_html_card(
             link=self.url,
             title=self.title,
             caption=self.caption,
-            size=200,
+            size=self.size,
             image=self.image,
         )
 
@@ -171,7 +185,7 @@ class MkShowcase(mkcontainer.MkContainer):
         title: str,
         image: str,
         link: str | None = None,
-        caption: str = "",
+        caption: str | None = None,
     ):
         card = MkShowcaseCard(target=link, title=title, image=image, caption=caption)
         self.append(card)
