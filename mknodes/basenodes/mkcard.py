@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from typing import Any
+from xml.dom import minidom
 from xml.etree import ElementTree
 
 from mknodes import mknav
@@ -42,7 +43,12 @@ def build_html_card(
     p = ElementTree.SubElement(card_div, "p")
     button = ElementTree.SubElement(p, "button")
     button.text = title
-    return ElementTree.tostring(root, encoding="unicode")
+    return (
+        minidom.parseString(ElementTree.tostring(root))
+        .childNodes[0]
+        .toprettyxml(indent="   ")
+    )
+    # return ElementTree.tostring(root, encoding="unicode")
 
 
 class MkCard(mknode.MkNode):

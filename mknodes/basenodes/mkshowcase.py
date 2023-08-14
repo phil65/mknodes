@@ -82,9 +82,9 @@ class MkShowcase(mkcontainer.MkContainer):
         for items in batched(self.items, self.column_count):
             text += '<div class="row">'
             for item in items:
-                text += '\n  <div class="column">'
+                text += '\n  <div class="column">\n'
                 text += textwrap.indent(str(item), "    ")
-                text += "\n  </div>"
+                text += "  </div>"
             text += "\n</div>"
         return text
 
