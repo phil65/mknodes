@@ -204,11 +204,5 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    from mknodes import mknav, project
-
-    nav = mknav.MkNav()
-    nav._associated_project = project.Project()
-    page = nav.add_page("test")
     setup_text = MkDevEnvSetup(build_backend="flit")
-    page += setup_text
     print(setup_text)

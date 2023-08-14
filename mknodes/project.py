@@ -6,8 +6,6 @@ import types
 
 from typing import TYPE_CHECKING
 
-from mkdocs import config as _config
-
 from mknodes import mkdocsconfig, mknav
 from mknodes.data import taskrunners, tools
 from mknodes.utils import helpers, packageinfo, pyproject
@@ -40,7 +38,7 @@ class Project:
         files: Files | None = None,
     ):
         self._module = module
-        self.config = mkdocsconfig.Config(config) if config else _config.load_config()
+        self.config = mkdocsconfig.Config(config)
         self.files = files
         self.package_repos = ["pip"]
         self.pyproject = pyproject.PyProject()

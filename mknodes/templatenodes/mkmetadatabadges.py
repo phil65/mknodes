@@ -42,7 +42,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             font_size: Size of font to use
             font_name: Name of font to use
             num_padding_chars: Number of chars to use for padding
-            badge_color: Badge color
+            badge_color: Badge color. If none is set, it will be pulled from project.
             text_color: Badge color
             use_gitlab_style: Use Gitlab-scope style
             kwargs: Keyword arguments passed to parent
@@ -53,7 +53,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.font_size = font_size
         self.font_name = font_name
         self.num_padding_chars = num_padding_chars
-        self.badge_color = badge_color
+        self._badge_color = badge_color
         self.text_color = text_color
         self.use_gitlab_style = use_gitlab_style
 
@@ -63,7 +63,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             typ=self._typ,
             font_size=self.font_size,
             font_name=self.font_name,
-            badge_color=self.badge_color,
+            badge_color=self._badge_color,
             text_color=self.text_color,
             num_padding_chars=self.num_padding_chars,
             use_gitlab_style=self.use_gitlab_style,
@@ -96,6 +96,28 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     for package in info
                 )
         return items
+
+    @property
+    def badge_color(self) -> str | None:  # noqa: PLR0911
+        match self._badge_color:
+            case None if self.associated_project:
+                color = self.associated_project.config.get_primary_color()
+                match color:
+                    case "deep purple":
+                        return "rebeccapurple"  # or mediumpurple
+                    case "cyan":
+                        return "lightcyan"
+                    case "amber":
+                        return "orange_2"
+                    case "grey":
+                        return "gray"
+                    case "blue grey":
+                        return "lightslategray"
+                    case _:
+                        return color.replace(" ", "")
+            case str():
+                return self._badge_color
+        return None
 
     @property
     def items(self) -> list[mknode.MkNode]:
