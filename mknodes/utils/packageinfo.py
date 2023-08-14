@@ -96,12 +96,12 @@ class PackageInfo:
         self.distribution = get_distribution(pkg_name)
         self.metadata = get_metadata(self.distribution)
         self.urls = {
-            v.split(",")[0]: v.split(",")[1]
+            v.split(",")[0].strip(): v.split(",")[1].strip()
             for k, v in self.metadata.items()
             if k == "Project-URL"
         }
         if "Home-page" in self.metadata:
-            self.urls["Home-page"] = self.metadata["Home-page"]
+            self.urls["Home-page"] = self.metadata["Home-page"].strip()
         requires = get_requires(self.distribution)
         self.required_deps = [get_dependency(i) for i in requires] if requires else []
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
@@ -134,7 +134,7 @@ class PackageInfo:
         """Return repository URL from metadata."""
         return next(
             (
-                self.urls[tag].strip()
+                self.urls[tag]
                 for tag in ["Source", "Repository", "Source Code"]
                 if tag in self.urls
             ),

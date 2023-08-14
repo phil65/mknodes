@@ -7,7 +7,7 @@ from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.templatenodes import mkbadge
-from mknodes.utils import helpers
+from mknodes.utils import helpers, packageinfo
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def __init__(
         self,
         typ: MetadataTypeStr,
+        package: str | None = None,
         font_size: Literal[10, 11, 12] | None = None,
         font_name: str | None = None,
         num_padding_chars: int | None = None,
@@ -40,6 +41,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
         Arguments:
             typ: Metadata badges to show
+            package: Package to show badges for. If None, it will get pulled from project
             font_size: Size of font to use
             font_name: Name of font to use
             num_padding_chars: Number of chars to use for padding
@@ -50,6 +52,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         """
         super().__init__(**kwargs)
         self.block_separator = "\n"
+        self._package = package
         self._typ = typ
         self.font_size = font_size
         self.font_name = font_name
@@ -62,6 +65,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         return helpers.get_repr(
             self,
             typ=self._typ,
+            package=self._package,
             font_size=self.font_size,
             font_name=self.font_name,
             badge_color=self.badge_color,
@@ -73,28 +77,39 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         )
 
     @property
+    def package_info(self):
+        match self._package:
+            case str():
+                return packageinfo.get_info(self._package)
+            case None if self.associated_project:
+                return self.associated_project.info
+            case None:
+                return None
+            case _:
+                raise TypeError(self._package)
+
+    @property
     def badge_content(self) -> list[tuple]:
         items: list[tuple] = []
-        if not self.associated_project:
+        if not self.package_info:
             return items
         match self._typ:
             case "classifiers":
-                dct = self.associated_project.info.classifier_map
+                dct = self.package_info.classifier_map
                 for category, labels in dct.items():
                     items.extend([(i, category, None) for i in labels])
             case "keywords":
                 items.extend(
-                    (keyword, "", None)
-                    for keyword in self.associated_project.info.keywords
+                    (keyword, "", None) for keyword in self.package_info.keywords
                 )
             case "websites":
                 urls = [
                     (name, parse.urlparse(url).netloc, url)
-                    for name, url in self.associated_project.info.urls.items()
+                    for name, url in self.package_info.urls.items()
                 ]
                 items.extend(urls)
             case "dependencies":
-                info = self.associated_project.info.get_required_packages()
+                info = self.package_info.get_required_packages()
                 items.extend(
                     (package.name, package.version, package.repository_url)
                     for package in info
@@ -128,16 +143,18 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
-        node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
-        page += mknodes.MkReprRawRendered(node)
         node = MkMetadataBadges(typ="classifiers")
-        page += mknodes.MkReprRawRendered(node)
-        node = MkMetadataBadges(typ="keywords", use_gitlab_style=True)
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Classifiers")
+        node = MkMetadataBadges(typ="keywords")
+        page += mknodes.MkReprRawRendered(node, header="### Keywords")
         node = MkMetadataBadges(typ="websites")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Websites")
         node = MkMetadataBadges(typ="dependencies")
-        page += mknodes.MkReprRawRendered(node)
+        page += mknodes.MkReprRawRendered(node, header="### Dependencies")
+        node = MkMetadataBadges(typ="dependencies", package="mkdocs")
+        page += mknodes.MkReprRawRendered(node, header="### For other package")
+        node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
+        page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
 
 
 if __name__ == "__main__":
