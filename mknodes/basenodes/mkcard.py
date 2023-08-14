@@ -7,7 +7,7 @@ from xml.dom import minidom
 from xml.etree import ElementTree
 
 from mknodes import mknav
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mkbinaryimage, mknode
 from mknodes.pages import mkpage
 from mknodes.utils import helpers
 
@@ -105,7 +105,7 @@ class MkCard(mknode.MkNode):
             base_url = config.site_url or ""
         else:
             base_url = ""
-        return helpers.get_url(self.target, base_url)
+        return helpers.get_url(self.target, base_url) if self.target else ""
 
     def _to_markdown(self) -> str:
         return build_html_card(
@@ -115,6 +115,20 @@ class MkCard(mknode.MkNode):
             link=self.url,
             size=self.size,
         )
+
+    @classmethod
+    def for_page(cls, page):
+        image = mkbinaryimage.MkBinaryImage.for_icon(page.icon)
+        files = image.virtual_files()
+        path, data = next(iter(files.items()))
+        card = MkCard(
+            page.title,
+            image=path,
+            caption=page.subtitle or "",
+            target=page,
+        )
+        card.add_file(path, data)
+        return card
 
     @staticmethod
     def create_example_page(page):
@@ -137,5 +151,6 @@ class MkCard(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    grid = MkCard("test", "test")
-    print(grid)
+    page = mkpage.MkPage("test", icon="material/puzzle-edit")
+    card = MkCard.for_page(page)
+    print(card)
