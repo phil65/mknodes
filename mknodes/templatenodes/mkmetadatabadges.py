@@ -54,7 +54,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.font_name = font_name
         self.num_padding_chars = num_padding_chars
         self._badge_color = badge_color
-        self.text_color = text_color
+        self._text_color = text_color
         self.use_gitlab_style = use_gitlab_style
 
     def __repr__(self):
@@ -64,7 +64,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             font_size=self.font_size,
             font_name=self.font_name,
             badge_color=self._badge_color,
-            text_color=self.text_color,
+            text_color=self._text_color,
             num_padding_chars=self.num_padding_chars,
             use_gitlab_style=self.use_gitlab_style,
             _filter_empty=True,
@@ -98,25 +98,25 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         return items
 
     @property
-    def badge_color(self) -> str | None:  # noqa: PLR0911
+    def badge_color(self) -> str | None:
         match self._badge_color:
             case None if self.associated_project:
-                color = self.associated_project.config.get_primary_color()
-                match color:
-                    case "deep purple":
-                        return "rebeccapurple"  # or mediumpurple
-                    case "cyan":
-                        return "lightcyan"
-                    case "amber":
-                        return "orange_2"
-                    case "grey":
-                        return "gray"
-                    case "blue grey":
-                        return "lightslategray"
-                    case _:
-                        return color.replace(" ", "")
+                return self.associated_project.config.get_primary_color()
             case str():
                 return self._badge_color
+        return None
+
+    @property
+    def text_color(self) -> str | None:
+        match self._text_color:
+            case None if self.associated_project and self.use_gitlab_style:
+                color = self.associated_project.config.get_text_color()
+                return f"{color},#fff"
+            case None if self.associated_project:
+                color = self.associated_project.config.get_text_color()
+                return f"#fff,{color}"
+            case str():
+                return self._text_color
         return None
 
     @property
@@ -146,6 +146,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def create_example_page(page):
         import mknodes
 
+        node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
+        page += mknodes.MkReprRawRendered(node)
         node = MkMetadataBadges(typ="classifiers")
         page += mknodes.MkReprRawRendered(node)
         node = MkMetadataBadges(typ="keywords", use_gitlab_style=True)
