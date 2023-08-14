@@ -181,12 +181,14 @@ class MkNode(node.Node):
         extensions = set()
         for desc in self.descendants:
             extensions.update(desc.REQUIRED_EXTENSIONS)
+        extensions.update(self.REQUIRED_EXTENSIONS)
         return extensions
 
     def all_plugins(self) -> set[str]:
         plugins = set()
         for desc in self.descendants:
             plugins.update(desc.REQUIRED_PLUGINS)
+        plugins.update(self.REQUIRED_PLUGINS)
         return plugins
 
     @staticmethod
