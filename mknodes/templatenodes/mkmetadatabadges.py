@@ -13,7 +13,16 @@ from mknodes.utils import helpers, packageinfo
 logger = logging.getLogger(__name__)
 
 
-MetadataTypeStr = Literal["classifiers", "keywords", "websites", "dependencies"]
+MetadataTypeStr = (
+    Literal[
+        "classifiers",
+        "Typing",
+        "keywords",
+        "websites",
+        "dependencies",
+    ]
+    | packageinfo.ClassifierStr
+)
 
 
 class MkMetadataBadges(mkcontainer.MkContainer):
@@ -114,6 +123,9 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     (package.name, package.version, package.repository_url)
                     for package in info
                 )
+            case _ if self._typ in packageinfo.CLASSIFIERS:
+                labels = self.package_info.classifier_map.get(self._typ, [])
+                items.extend([(i, self._typ, None) for i in labels])
         return items
 
     @property

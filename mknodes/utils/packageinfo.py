@@ -6,6 +6,7 @@ import functools
 from importlib import metadata
 import pathlib
 import re
+from typing import Literal
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
@@ -23,7 +24,20 @@ GITHUB_REGEX = re.compile(
     r"(?:\/|$)?"  # noqa: COM812
 )
 
-CLASSIFIERS = [
+ClassifierStr = Literal[
+    "Development Status",
+    "Environment",
+    "Framework",
+    "Intended Audience",
+    "License",
+    "Natural Language",
+    "Operating System",
+    "Programming Language",
+    "Topic",
+    "Typing",
+]
+
+CLASSIFIERS: list[ClassifierStr] = [
     "Development Status",
     "Environment",
     "Framework",
