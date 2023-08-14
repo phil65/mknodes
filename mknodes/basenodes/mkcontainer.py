@@ -23,17 +23,19 @@ class MkContainer(mknode.MkNode):
     def __init__(
         self,
         content: list | None | str | mknode.MkNode = None,
+        block_separator: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             content: Child Nodes of this container
+            block_separator: Separator to put between blocks. Defaults to 2 linebreaks
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self.items: list[mknode.MkNode] = []
-        self.block_separator = "\n\n"
+        self.block_separator = "\n\n" if block_separator is None else block_separator
         match content:
             case None:
                 items: list[mknode.MkNode] = []
