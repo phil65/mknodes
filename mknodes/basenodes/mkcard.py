@@ -135,14 +135,14 @@ class MkCard(mknode.MkNode):
         import mknodes
 
         node = MkCard(
-            image="https://picsum.photos/200",
+            image="https://picsum.photos/300",
             title="Title",
             target="https://phil65.github.io/mknodes/",
         )
         page += mknodes.MkReprRawRendered(node, header="### Without caption")
 
         node = MkCard(
-            image="https://picsum.photos/200",
+            image="https://picsum.photos/300",
             title="Title",
             target="https://phil65.github.io/mknodes/",
             caption="Caption",

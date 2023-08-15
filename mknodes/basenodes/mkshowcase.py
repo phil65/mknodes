@@ -107,7 +107,7 @@ class MkShowcase(mkcontainer.MkContainer):
             node.add_card(
                 link="https://phil65.github.io/mknodes/",
                 title=f"Title {i}",
-                image="https://picsum.photos/200",
+                image="https://picsum.photos/300",
                 caption=f"Caption {i}",
             )
         page += mknodes.MkReprRawRendered(node)
