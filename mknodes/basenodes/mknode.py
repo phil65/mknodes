@@ -72,6 +72,7 @@ class MkNode(node.Node):
         self._annotations = None
         self.shift_header_levels = shift_header_levels
         self._files: dict[str, str | bytes] = {}
+        self._css_classes: set[str] = set()
         # ugly, but convenient.
         from mknodes.basenodes import mkannotations
 
@@ -107,6 +108,10 @@ class MkNode(node.Node):
             text = shift_header_levels(text, self.shift_header_levels)
         if self.indent:
             text = textwrap.indent(text, self.indent)
+        if self._css_classes:
+            classes = " ".join(f".{kls_name}" for kls_name in self._css_classes)
+            suffix = f"{{: {classes}}}"
+            text += suffix
         if not self.header:
             return self.attach_annotations(text)
         header = self.header if self.header.startswith("#") else f"## {self.header}"
@@ -148,6 +153,9 @@ class MkNode(node.Node):
 
     def add_file(self, filename: str, data: str | bytes):
         self._files[filename] = data
+
+    def add_css_class(self, class_name: str):
+        self._css_classes.add(class_name)
 
     def all_virtual_files(self, only_children: bool = False) -> dict[str, str | bytes]:
         """Return a dictionary containing all virtual files of itself and all children.
