@@ -94,9 +94,6 @@ class Project:
     def tools(self) -> list[tools.Tool]:
         return [t for t in tools.TOOLS.values() if t.is_used()]
 
-    def has_precommit(self) -> bool:
-        return bool(helpers.find_file_in_folder_or_parent(".pre-commit-config.yaml"))
-
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:
         """Return list of task runners used by this project."""
