@@ -58,9 +58,9 @@ plugins:
     nav_file: SUMMARY.md
     # implicit_index: true
 # - autorefs  # allows linking to any header
-- mknodes: # https://github.com/oprypin/mkdocs-gen-files
+- mknodes:
     scripts:
-      - docs/gen_pages.py  # or any other name or path
+      - docs/gen_pages.py
 # - coverage
 - mkdocstrings:
     default_handler: python
@@ -125,7 +125,6 @@ markdown_extensions:
 - pymdownx.emoji:
     emoji_index: !!python/name:materialx.emoji.twemoji
     emoji_generator: !!python/name:materialx.emoji.to_svg
-- md_in_html
 - toc:
     # toc_depth: 2
     permalink: true
