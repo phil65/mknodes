@@ -99,7 +99,8 @@ markdown_extensions:
 # - pymdownx.mark
 # - pymdownx.tilde
 - pymdownx.magiclink # auto-convert links
-- pymdownx.blocks.tab # new-style tabs
+- pymdownx.blocks.tab: # new-style tabs
+    alternate_style: true
 - pymdownx.blocks.admonition # new-style admonition
 - pymdownx.blocks.definition # new-style definition
 - pymdownx.blocks.details # new-style details
