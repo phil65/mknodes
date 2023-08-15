@@ -18,6 +18,7 @@ import urllib.parse
 
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
+from mkdocs.utils import write_file
 
 from mknodes import paths, project
 
@@ -107,6 +108,7 @@ class LinkReplacerPlugin:
 class MkNodesPlugin(BasePlugin):
     config_scheme = (("scripts", ListOfFiles(required=True)),)
     _edit_paths: dict
+    css_filename = "mknodes.css"
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
@@ -129,11 +131,13 @@ class MkNodesPlugin(BasePlugin):
             root.write()
             css_files: set[str] = {des.CSS for des in root.descendants if des.CSS}
             for css_path in css_files:
-                logger.info("Appending %s to extra_css", css_path)
-                config.extra_css.append(css_path)
+                logger.info("Appending %s to mknodes.css", css_path)
                 file_path = paths.RESOURCES / css_path
                 self._css += file_path.read_text()
-
+            if self._css:
+                config.extra_css.append(self.css_filename)
+                path = pathlib.Path(config["site_dir"]) / self.css_filename
+                write_file(self._css.encode(), str(path))
         self._edit_paths = dict(ed.edit_paths)
         return ed.files
 
@@ -174,11 +178,6 @@ class MkNodesPlugin(BasePlugin):
                 url = urllib.parse.urljoin(repo_url, edit_uri)
                 page.edit_url = path and urllib.parse.urljoin(url, path)
         return html
-
-    def on_post_page(self, output, page, config, **kwargs):
-        # Inject CSS into html
-        head_regex = re.compile(r"<head>(.*?)<\/head>", flags=re.DOTALL)
-        return head_regex.sub(f"<head>\\1<style>{self._css}</style></head>", output)
 
     @event_priority(-100)
     def on_post_build(self, config: MkDocsConfig):
