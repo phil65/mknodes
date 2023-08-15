@@ -389,9 +389,9 @@ def create_metadata_page(nav: mknodes.MkNav):
         subtitle="Subtitle",
         description="Description",
     )
-    metadata = str(page)
     page += mknodes.MkCode.for_object(create_metadata_page, header=PAGE_CODE)
-    page += mknodes.MkCode(metadata, language="yaml")
+    # page.metadata is a dataclass, we can prettyprint these with MkPrettyPrint.
+    page += mknodes.MkPrettyPrint(page.metadata)
     page += mknodes.MkHtmlBlock(str(page))
 
 
