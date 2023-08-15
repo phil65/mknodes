@@ -4,9 +4,12 @@ import abc
 
 from collections.abc import Callable
 import logging
+import re
 import types
 
-from mknodes.utils import classhelpers, helpers
+from mknodes.basenodes import mkcontainer, mklink, mknode
+from mknodes.templatenodes import mkmetadatabadges
+from mknodes.utils import classhelpers, helpers, packageinfo
 
 
 logger = logging.getLogger(__name__)
@@ -105,6 +108,29 @@ class ModuleLayout(Layout):
 
     def get_columns(self):
         return ["Name", "DocStrings", "Members"]
+
+
+class BadgePackageLayout(Layout):
+    def get_row_for(
+        self,
+        dependency: tuple[packageinfo.PackageInfo, packageinfo.Dependency],
+    ) -> dict[str, str | mknode.MkNode]:
+        package_info = dependency[0]
+        dep_info = dependency[1]
+        if url := package_info.homepage:
+            node = mklink.MkLink(url, package_info.name)
+        else:
+            node = f"`{package_info.name}`"
+        link = helpers.styled(str(node), size=3, bold=True)
+        marker = str(dep_info.marker) if dep_info.marker else ""
+        marker_str = re.sub(r'([A-Za-z_]* [>|=|<]* ".*?")', r"`\g<1>`", marker)
+        summary = helpers.styled(package_info.metadata["Summary"], italic=True)
+        info = mkmetadatabadges.MkMetadataBadges("websites", package=package_info.name)
+        info.block_separator = "  "
+        container_1 = mkcontainer.MkContainer([link, marker_str])
+        container_1.block_separator = "\n"
+        container_2 = mkcontainer.MkContainer([summary, info])
+        return dict(Name=container_1, Summary=container_2)
 
 
 if __name__ == "__main__":
