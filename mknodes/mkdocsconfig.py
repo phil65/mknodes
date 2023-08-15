@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import logging
 import pathlib
 
 from typing import TYPE_CHECKING, Literal
 
 from mkdocs import config as _config
 
+from mknodes.utils import helpers
+
+
+logger = logging.getLogger(__name__)
 
 COLORS = {
     "red": {"color": "#ef5552", "text": "#ffffff"},
@@ -37,7 +42,15 @@ if TYPE_CHECKING:
 
 class Config:
     def __init__(self, config: MkDocsConfig | None = None):
-        self._config = config or _config.load_config()
+        if config:
+            self._config = config
+        else:
+            file = helpers.find_file_in_folder_or_parent("mkdocs.yml")
+            if not file:
+                msg = "Could not find config file"
+                raise FileNotFoundError(msg)
+            self._config = _config.load_config(str(file))
+            logger.info("Loaded config from %s", file)
 
     def __getattr__(self, name):
         return getattr(self._config, name)
