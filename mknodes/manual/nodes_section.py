@@ -237,7 +237,7 @@ def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
         page.status = "new"  # we use that info to display an icon in the menu.
     kls.create_example_page(page)
     if kls.CSS:
-        path = paths.DOCS_DIR / kls.CSS
+        path = paths.RESOURCES / kls.CSS
         text = path.read_text()
         css_code = mknodes.MkCode(text, language="css")
         page += mknodes.MkDetailsBlock(css_code, title="Required CSS")

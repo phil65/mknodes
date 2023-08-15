@@ -131,7 +131,7 @@ class MkNodesPlugin(BasePlugin):
             for css_path in css_files:
                 logger.info("Appending %s to extra_css", css_path)
                 config.extra_css.append(css_path)
-                file_path = paths.DOCS_DIR / css_path
+                file_path = paths.RESOURCES / css_path
                 self._css += file_path.read_text()
 
         self._edit_paths = dict(ed.edit_paths)
