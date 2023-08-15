@@ -8,6 +8,7 @@ from typing import Literal
 
 import mkdocs_gen_files
 
+from mknodes import paths
 from mknodes.treelib import node
 
 
@@ -186,18 +187,24 @@ class MkNode(node.Node):
                 file.write(v)
 
     def all_markdown_extensions(self) -> set[str]:
-        extensions = set()
-        for desc in self.descendants:
-            extensions.update(desc.REQUIRED_EXTENSIONS)
+        extensions = {p for desc in self.descendants for p in desc.REQUIRED_EXTENSIONS}
         extensions.update(self.REQUIRED_EXTENSIONS)
         return extensions
 
     def all_plugins(self) -> set[str]:
-        plugins = set()
-        for desc in self.descendants:
-            plugins.update(desc.REQUIRED_PLUGINS)
+        plugins = {p for desc in self.descendants for p in desc.REQUIRED_PLUGINS}
         plugins.update(self.REQUIRED_PLUGINS)
         return plugins
+
+    def all_css(self) -> str:
+        css_files: set[str] = {des.CSS for des in self.descendants if des.CSS}
+
+        css = ""
+        for css_path in css_files:
+            logger.debug("Appending %s to mknodes.css", css_path)
+            file_path = paths.RESOURCES / css_path
+            css += file_path.read_text()
+        return css
 
     @staticmethod
     def create_example_page(page):

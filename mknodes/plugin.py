@@ -21,7 +21,7 @@ from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
 from mkdocs.utils import write_file
 
-from mknodes import paths, project
+from mknodes import project
 
 
 if TYPE_CHECKING:
@@ -65,6 +65,11 @@ AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 
 def import_file(path: str | os.PathLike) -> types.ModuleType:
+    """Import a module based on a file path.
+
+    Arguments:
+        path: Path which should get imported
+    """
     module_name = pathlib.Path(path).stem
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None:
@@ -111,6 +116,11 @@ class MkNodesPlugin(BasePlugin):
     css_filename = "mknodes.css"
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
+        """On_files hook.
+
+        During this phase all Markdown files as well as an aggregated css file
+        are written.
+        """
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         self._project = project.Project(config=config, files=files)
 
@@ -128,18 +138,17 @@ class MkNodesPlugin(BasePlugin):
                 msg = "No root for project created."
                 raise RuntimeError(msg)
             root.write()
-            css_files: set[str] = {des.CSS for des in root.descendants if des.CSS}
-            css = ""
-            for css_path in css_files:
-                logger.debug("Appending %s to mknodes.css", css_path)
-                file_path = paths.RESOURCES / css_path
-                css += file_path.read_text()
+            css = root.all_css()
             if css:
                 logger.info("Creating %s...", self.css_filename)
                 config.extra_css.append(self.css_filename)
                 path = pathlib.Path(config["site_dir"]) / self.css_filename
                 write_file(css.encode(), str(path))
         self._edit_paths = dict(ed.edit_paths)
+        self._file_mapping = collections.defaultdict(list)
+        for file_ in files:
+            filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
+            self._file_mapping[filename].append(file_.url)
         return ed.files
 
     def on_page_markdown(
@@ -150,14 +159,11 @@ class MkNodesPlugin(BasePlugin):
         config: MkDocsConfig,
         files: Files,
     ) -> str | None:
+        """During this phase [title](some_page.md) and °metadata stuff gets replaced."""
+        #     print(file_.url, file_.dest_uri)
         base_docs_url = config["docs_dir"]
         page_url = page.file.src_uri
-        mapping = collections.defaultdict(list)
-        for file_ in files:
-            filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
-            mapping[filename].append(file_.url)
-        #     print(file_.url, file_.dest_uri)
-        link_replacer = LinkReplacer(base_docs_url, page_url, mapping)
+        link_replacer = LinkReplacer(base_docs_url, page_url, self._file_mapping)
         for k, v in self._project.info.metadata.items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
@@ -166,6 +172,7 @@ class MkNodesPlugin(BasePlugin):
         return re.sub(AUTOLINK_RE, link_replacer, markdown)
 
     def on_page_content(self, html, page: Page, config: MkDocsConfig, files: Files):
+        """During this phase edit urls are set."""
         repo_url = config.get("repo_url", None)
         edit_uri = config.get("edit_uri", None)
 
