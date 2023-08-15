@@ -1,5 +1,6 @@
 import mknodes
 
+from mknodes import paths
 from mknodes.manual import routing
 from mknodes.pages import processors
 
@@ -236,7 +237,7 @@ def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
         page.status = "new"  # we use that info to display an icon in the menu.
     kls.create_example_page(page)
     if kls.CSS:
-        path = mknodes.DOCS_DIR / kls.CSS
+        path = paths.DOCS_DIR / kls.CSS
         text = path.read_text()
         css_code = mknodes.MkCode(text, language="css")
         page += mknodes.MkDetailsBlock(css_code, title="Required CSS")
@@ -275,7 +276,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     # We will now demonstate loading an existing Nav tree.
 
     # This path contains Markdown files/ folders and a pre-populated SUMMARY.md.
-    folder = mknodes.TEST_RESOURCES / "nav_tree/"  # Folder content: # (1)
+    folder = paths.TEST_RESOURCES / "nav_tree/"  # Folder content: # (1)
     summary_file = folder / "SUMMARY.md"  # File content: # (2)
 
     # We will load it as an MkNav...
@@ -297,7 +298,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     text = summary_file.read_text().replace("](", "] (")  # (3)
     # we are wrapping some annotations with Admonitions, that seems to help
     # with nesting / escaping issues in some cases (and it looks nice!).
-    path = mknodes.TEST_RESOURCES / "nav_tree/"
+    path = paths.TEST_RESOURCES / "nav_tree/"
     tree_node = mknodes.MkTreeView(path, header="Directory tree")
     code.annotations[1] = mknodes.MkAdmonition(tree_node)
     file_content_node = mknodes.MkCode(text, header="SUMMARY.md content")
@@ -313,7 +314,7 @@ def create_from_file_section(nav: mknodes.MkNav):
 def create_from_folder_section(nav: mknodes.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
-    folder = mknodes.TEST_RESOURCES / "nav_tree/test_folder/"
+    folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
 
     # First, we create the MkNav based on folder content (DocStrings for from_folder: (1))
     from_folder_nav = mknodes.MkNav.from_folder(folder, parent=nav, hide_toc=True)

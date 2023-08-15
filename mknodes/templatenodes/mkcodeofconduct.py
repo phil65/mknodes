@@ -4,6 +4,7 @@ import logging
 
 from typing import Any, Literal
 
+from mknodes import paths
 from mknodes.basenodes import mktext
 from mknodes.utils import helpers
 
@@ -45,9 +46,7 @@ class MkCodeOfConduct(mktext.MkText):
 
     @property
     def text(self) -> str:
-        import mknodes
-
-        file = mknodes.RESOURCES / "code_of_conduct_2_1.md"
+        file = paths.RESOURCES / "code_of_conduct_2_1.md"
         text = file.read_text()
         match self.contact_email:
             case str():

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pathlib
-
 from .basenodes.mkblock import MkBlock
 from .basenodes.mkhtmlblock import MkHtmlBlock
 from .basenodes.mkadmonitionblock import MkAdmonitionBlock
@@ -65,10 +63,6 @@ from .templatenodes.mkmoduleoverview import MkModuleOverview
 from .templatenodes.mkmoduletable import MkModuleTable
 
 from .project import Project
-
-TEST_RESOURCES = pathlib.Path(__file__).parent.parent / "tests" / "data"
-RESOURCES = pathlib.Path(__file__).parent / "resources"
-DOCS_DIR = pathlib.Path(__file__).parent.parent / "docs"
 
 __all__ = [
     "MkNode",
