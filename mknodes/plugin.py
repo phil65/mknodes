@@ -19,7 +19,7 @@ import urllib.parse
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
 
-from mknodes import project
+from mknodes import paths, project
 
 
 if TYPE_CHECKING:
@@ -111,6 +111,7 @@ class MkNodesPlugin(BasePlugin):
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         self._project = project.Project(config=config, files=files)
+        self._css = ""
 
         with FilesEditor(files, config, self._dir.name) as ed:
             for file_name in self.config["scripts"]:
@@ -126,6 +127,13 @@ class MkNodesPlugin(BasePlugin):
                 msg = "No root for project created."
                 raise RuntimeError(msg)
             root.write()
+            css_files: set[str] = {des.CSS for des in root.descendants if des.CSS}
+            for css_path in css_files:
+                logger.info("Appending %s to extra_css", css_path)
+                config.extra_css.append(css_path)
+                file_path = paths.DOCS_DIR / css_path
+                self._css += file_path.read_text()
+
         self._edit_paths = dict(ed.edit_paths)
         return ed.files
 
@@ -166,6 +174,11 @@ class MkNodesPlugin(BasePlugin):
                 url = urllib.parse.urljoin(repo_url, edit_uri)
                 page.edit_url = path and urllib.parse.urljoin(url, path)
         return html
+
+    def on_post_page(self, output, page, config, **kwargs):
+        # Inject CSS into html
+        head_regex = re.compile(r"<head>(.*?)<\/head>", flags=re.DOTALL)
+        return head_regex.sub(f"<head>\\1<style>{self._css}</style></head>", output)
 
     @event_priority(-100)
     def on_post_build(self, config: MkDocsConfig):
