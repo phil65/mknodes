@@ -16,10 +16,11 @@ logger = logging.getLogger(__name__)
 MetadataTypeStr = (
     Literal[
         "classifiers",
-        "Typing",
         "keywords",
+        "keywords_combined",
         "websites",
         "dependencies",
+        "required_python",
     ]
     | packageinfo.ClassifierStr
 )
@@ -111,6 +112,11 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 items.extend(
                     (keyword, "", None) for keyword in self.package_info.keywords
                 )
+            case "keywords_combined":
+                items.append(("Keywords", " | ".join(self.package_info.keywords), None))
+            case "required_python":
+                string = self.package_info.required_python_version
+                items.append(("Python", string, "https://www.python.org"))
             case "websites":
                 urls = [
                     (name, parse.urlparse(url).netloc, url)
@@ -159,6 +165,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node, header="### Classifiers")
         node = MkMetadataBadges(typ="keywords")
         page += mknodes.MkReprRawRendered(node, header="### Keywords")
+        node = MkMetadataBadges(typ="keywords_combined")
+        page += mknodes.MkReprRawRendered(node, header="### Keywords")
         node = MkMetadataBadges(typ="websites")
         page += mknodes.MkReprRawRendered(node, header="### Websites")
         node = MkMetadataBadges(typ="dependencies")
@@ -166,6 +174,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         node = MkMetadataBadges(typ="dependencies", package="mkdocs")
         page += mknodes.MkReprRawRendered(node, header="### For other package")
         node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
+        page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
+        node = MkMetadataBadges(typ="required_python", badge_color="red")
         page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
 
 

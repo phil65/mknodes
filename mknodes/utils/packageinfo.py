@@ -4,6 +4,7 @@ import contextlib
 import functools
 
 from importlib import metadata
+import logging
 import pathlib
 import re
 from typing import Literal
@@ -12,6 +13,9 @@ from packaging.markers import Marker
 from packaging.requirements import Requirement
 
 from mknodes.utils import helpers
+
+
+logger = logging.getLogger(__name__)
 
 
 GITHUB_REGEX = re.compile(
@@ -250,9 +254,13 @@ class PackageInfo:
         for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
             if (file := pathlib.Path(path)).exists():
                 return file
-        if file := self.metadata.get("License-File"):
+        if file := self.metadata.json.get("license_file"):
             return pathlib.Path(file)
         return None
+
+    @property
+    def required_python_version(self) -> str | None:
+        return self.metadata.json.get("requires_python")
 
     def get_required_packages(self) -> dict[PackageInfo, Dependency]:
         modules = (
