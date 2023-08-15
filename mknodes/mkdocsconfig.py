@@ -52,7 +52,6 @@ class Config:
             self._config = _config.load_config(str(file))
             logger.info("Loaded config from %s", file)
         self.plugin = self._config.plugins["mknodes"]
-        self.scripts = self.plugin.config["scripts"]
 
     def __getattr__(self, name):
         return getattr(self._config, name)

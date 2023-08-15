@@ -16,6 +16,7 @@ import types
 from typing import TYPE_CHECKING
 import urllib.parse
 
+from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
 from mkdocs.utils import write_file
@@ -33,7 +34,6 @@ try:
 except ImportError:
     PluginError = SystemExit  # type: ignore
 
-from mkdocs_gen_files.config_items import ListOfFiles
 from mkdocs_gen_files.editor import FilesEditor
 
 
@@ -75,7 +75,7 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
     return module
 
 
-class LinkReplacerPlugin:
+class LinkReplacer:
     def __init__(self, base_docs_url: str, page_url: str, mapping: dict[str, list[str]]):
         self.mapping = mapping
         self.page_url = page_url
@@ -106,38 +106,39 @@ class LinkReplacerPlugin:
 
 
 class MkNodesPlugin(BasePlugin):
-    config_scheme = (("scripts", ListOfFiles(required=True)),)
+    config_scheme = (("script", config_options.Type(str)),)
     _edit_paths: dict
     css_filename = "mknodes.css"
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         self._project = project.Project(config=config, files=files)
-        self._css = ""
 
         with FilesEditor(files, config, self._dir.name) as ed:
-            for file_name in self.config["scripts"]:
-                module = import_file(file_name)
-                try:
-                    module.build(self._project)
-                except SystemExit as e:
-                    if e.code:
-                        msg = f"Script {file_name!r} caused {e!r}"
-                        raise PluginError(msg) from e
+            file_name = self.config["script"]
+            module = import_file(file_name)
+            try:
+                module.build(self._project)
+            except SystemExit as e:
+                if e.code:
+                    msg = f"Script {file_name!r} caused {e!r}"
+                    raise PluginError(msg) from e
             root = self._project._root
             if not root:
                 msg = "No root for project created."
                 raise RuntimeError(msg)
             root.write()
             css_files: set[str] = {des.CSS for des in root.descendants if des.CSS}
+            css = ""
             for css_path in css_files:
-                logger.info("Appending %s to mknodes.css", css_path)
+                logger.debug("Appending %s to mknodes.css", css_path)
                 file_path = paths.RESOURCES / css_path
-                self._css += file_path.read_text()
-            if self._css:
+                css += file_path.read_text()
+            if css:
+                logger.info("Creating %s...", self.css_filename)
                 config.extra_css.append(self.css_filename)
                 path = pathlib.Path(config["site_dir"]) / self.css_filename
-                write_file(self._css.encode(), str(path))
+                write_file(css.encode(), str(path))
         self._edit_paths = dict(ed.edit_paths)
         return ed.files
 
@@ -156,13 +157,13 @@ class MkNodesPlugin(BasePlugin):
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             mapping[filename].append(file_.url)
         #     print(file_.url, file_.dest_uri)
-        plugin = LinkReplacerPlugin(base_docs_url, page_url, mapping)
+        link_replacer = LinkReplacer(base_docs_url, page_url, mapping)
         for k, v in self._project.info.metadata.items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
                 continue
-        return re.sub(AUTOLINK_RE, plugin, markdown)
+        return re.sub(AUTOLINK_RE, link_replacer, markdown)
 
     def on_page_content(self, html, page: Page, config: MkDocsConfig, files: Files):
         repo_url = config.get("repo_url", None)

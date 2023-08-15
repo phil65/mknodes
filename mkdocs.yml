@@ -59,8 +59,7 @@ plugins:
     # implicit_index: true
 # - autorefs  # allows linking to any header
 - mknodes:
-    scripts:
-      - docs/gen_pages.py
+    script: docs/gen_pages.py
 # - coverage
 - mkdocstrings:
     default_handler: python
