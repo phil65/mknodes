@@ -4,7 +4,7 @@ from __future__ import annotations
 
 # Partly based on mkdocs-gen-files
 import collections
-import importlib.util
+import importlib
 import os
 import pathlib
 import tempfile
@@ -16,6 +16,7 @@ from mkdocs.config import config_options
 from mkdocs.exceptions import PluginError
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.utils import write_file
+
 from mknodes import project
 from mknodes.plugin import linkreplacer, fileseditor
 from mknodes.pages import mkpage
@@ -99,17 +100,21 @@ class MkNodesPlugin(BasePlugin):
         """During this phase we set the edit paths."""
         repo_url = config.get("repo_url", None)
         edit_uri = config.get("edit_uri", "edit/main/")
-        if page.file.src_uri in self._page_mapping and repo_url:
-            if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
-                repo_url += "/"
-            if edit_path := self._page_mapping[page.file.src_uri]._edit_path:
-                # root_path = pathlib.Path(config["docs_dir"]).parent
-                # edit_path = str(edit_path.relative_to(root_path))
-                rel_path = edit_path
-            else:
-                rel_path = self.config["path"]
-            url = urllib.parse.urljoin(repo_url, edit_uri)
-            page.edit_url = urllib.parse.urljoin(url, rel_path)
+        if not repo_url or not edit_uri:
+            return None
+        if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
+            repo_url += "/"
+        rel_path = self.config["path"]
+        if not rel_path.endswith(".py"):
+            rel_path = rel_path.replace(".", "/")
+            rel_path += ".py"
+        base_url = urllib.parse.urljoin(repo_url, edit_uri)
+        node = self._page_mapping.get(page.file.src_uri)
+        if node and repo_url and (edit_path := node._edit_path):
+            # root_path = pathlib.Path(config["docs_dir"]).parent
+            # edit_path = str(edit_path.relative_to(root_path))
+            rel_path = edit_path
+        page.edit_url = urllib.parse.urljoin(base_url, rel_path)
         return page
 
     def on_page_markdown(
