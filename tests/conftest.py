@@ -4,6 +4,8 @@ import pathlib
 
 import pytest
 
+from responsemock import utils
+
 import mknodes
 
 from mknodes import manual, project
@@ -55,10 +57,10 @@ def resources_dir():
     return pathlib.Path(__file__).parent.parent / "mknodes/resources/"
 
 
-@pytest.fixture()
-def full_tree(response_mock):
+@pytest.fixture(scope="session")
+def full_tree():
     proj = project.Project(mknodes)
-    with response_mock(
+    with utils.response_mock(
         [
             (
                 "GET https://raw.githubusercontent.com/phil65/mknodes/main/README.md ->"
