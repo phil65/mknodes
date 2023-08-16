@@ -124,7 +124,8 @@ class MkNav(mknode.MkNode):
     @property
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
-        return "/".join(self.resolved_parts) + "/" + self.filename
+        path = "/".join(self.resolved_parts) + "/" + self.filename
+        return path.lstrip("/")
 
     @property
     def navs(self) -> list[MkNav]:

@@ -105,7 +105,8 @@ class MkPage(mkcontainer.MkContainer):
     @property
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
-        return "/".join(self.resolved_parts) + "/" + self.path
+        path = "/".join(self.resolved_parts) + "/" + self.path
+        return path.lstrip("/")
 
     @property
     def status(self) -> Literal["new", "deprecated"] | None:
