@@ -5,7 +5,6 @@ from __future__ import annotations
 # Partly based on mkdocs-gen-files
 import collections
 import importlib.util
-import logging
 import os
 import pathlib
 import tempfile
@@ -14,9 +13,9 @@ from typing import TYPE_CHECKING
 import urllib.parse
 
 from mkdocs.config import config_options
-from mkdocs.plugins import BasePlugin
+from mkdocs.exceptions import PluginError
+from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.utils import write_file
-
 from mknodes import project
 from mknodes.plugin import linkreplacer, fileseditor
 from mknodes.pages import mkpage
@@ -29,27 +28,7 @@ if TYPE_CHECKING:
     from mkdocs.structure.nav import Navigation
 
 
-try:
-    from mkdocs.exceptions import PluginError
-except ImportError:
-    PluginError = SystemExit  # type: ignore
-
-
-try:
-    from mkdocs.plugins import event_priority
-except ImportError:
-
-    def event_priority(priority):
-        return lambda f: f  # No-op fallback
-
-
-try:
-    from mkdocs.plugins import get_plugin_logger
-
-    logger = get_plugin_logger(__name__)
-except ImportError:
-    # TODO: remove once support for MkDocs <1.5 is dropped
-    logger = logging.getLogger(f"mkdocs.plugins.{__name__}")  # type: ignore[assignment]
+logger = get_plugin_logger(__name__)
 
 
 class MkNodesPlugin(BasePlugin):
@@ -142,7 +121,6 @@ class MkNodesPlugin(BasePlugin):
         files: Files,
     ) -> str | None:
         """During this phase [title](some_page.md) and °metadata stuff gets replaced."""
-        #     print(file_.url, file_.dest_uri)
         docs_dir = config["docs_dir"]
         page_url = page.file.src_uri
         for k, v in self._project.info.metadata.items():

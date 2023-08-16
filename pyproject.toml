@@ -90,7 +90,7 @@ keywords = [
 requires-python = ">=3.11"
 dependencies = [
     # "typing_extensions",
-    "mkdocs",
+    "mkdocs >=1.5",
     "mkdocs-gen-files",
     "mkdocs-literate-nav",
     "git-changelog",
