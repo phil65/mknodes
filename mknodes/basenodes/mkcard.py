@@ -24,6 +24,7 @@ def build_html_card(
     link: str | None = None,
     size: int = CARD_DEFAULT_SIZE,
     caption: str | None = None,
+    path_dark_mode: str | None = None,
 ):
     root = ElementTree.Element("a")
     if link:
@@ -33,10 +34,18 @@ def build_html_card(
     ElementTree.SubElement(
         container_div,
         "img",
-        src=image,
+        src=f"{image}#only-light" if path_dark_mode else image,
         alt=title,
         style=f"width:{size}px,height:{size}px",
     )
+    if path_dark_mode:
+        ElementTree.SubElement(
+            container_div,
+            "img",
+            src=f"{path_dark_mode}#only-dark",
+            alt=title,
+            style=f"width:{size}px,height:{size}px",
+        )
     if caption:
         overlay_div = ElementTree.SubElement(container_div, "div", {"class": "overlay"})
         overlay_div.text = caption
@@ -68,6 +77,7 @@ class MkCard(mknode.MkNode):
         caption: str | None = None,
         target: str | mkpage.MkPage | mknav.MkNav | None = None,
         size: int = CARD_DEFAULT_SIZE,
+        path_dark_mode: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -78,6 +88,7 @@ class MkCard(mknode.MkNode):
             caption: Image caption
             target: Link target. Can be a URL, an MkPage, or an MkNav
             size: Height/Width of the card
+            path_dark_mode: Optional alternative image for dark mode
             kwargs: keyword arguments passed to parent
         """
         super().__init__(**kwargs)
@@ -86,6 +97,7 @@ class MkCard(mknode.MkNode):
         self.image = image
         self.caption = caption
         self.size = size
+        self.path_dark_mode = path_dark_mode
 
     def __repr__(self):
         return helpers.get_repr(
@@ -95,6 +107,7 @@ class MkCard(mknode.MkNode):
             caption=self.caption,
             target=self.target,
             size=self.size if self.size != CARD_DEFAULT_SIZE else None,
+            path_dark_mode=self.path_dark_mode,
             _filter_empty=True,
         )
 
@@ -114,6 +127,7 @@ class MkCard(mknode.MkNode):
             caption=self.caption,
             link=self.url,
             size=self.size,
+            path_dark_mode=self.path_dark_mode,
         )
 
     @classmethod
@@ -148,6 +162,13 @@ class MkCard(mknode.MkNode):
             caption="Caption",
         )
         page += mknodes.MkReprRawRendered(node, header="### With caption")
+
+        node = MkCard(
+            image="https://picsum.photos/300",
+            title="Title",
+            path_dark_mode="https://picsum.photos/200",
+        )
+        page += mknodes.MkReprRawRendered(node, header="### Separate dark mode image")
 
 
 if __name__ == "__main__":
