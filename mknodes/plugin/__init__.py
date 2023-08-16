@@ -80,7 +80,6 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
 
 class MkNodesPlugin(BasePlugin):
     config_scheme = (("script", config_options.Type(str)),)
-    _edit_paths: dict
     css_filename = "mknodes.css"
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
@@ -116,7 +115,6 @@ class MkNodesPlugin(BasePlugin):
                 config.extra_css.append(self.css_filename)
                 path = pathlib.Path(config["site_dir"]) / self.css_filename
                 write_file(css.encode(), str(path))
-        self._edit_paths = dict(ed.edit_paths)
         return ed.files
 
     def on_nav(
@@ -155,22 +153,10 @@ class MkNodesPlugin(BasePlugin):
         """During this phase edit urls are set."""
         repo_url = config.get("repo_url", None)
         edit_uri = config.get("edit_uri", None)
-
-        src_path = pathlib.PurePath(page.file.src_path).as_posix()
-        if src_path in self._edit_paths:
-            path = self._edit_paths.pop(src_path)
-            if repo_url and edit_uri:
-                # Ensure urljoin behavior is correct
-                if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
-                    repo_url += "/"
-                url = urllib.parse.urljoin(repo_url, edit_uri)
-                page.edit_url = path and urllib.parse.urljoin(url, path)
+        if repo_url and edit_uri:
+            # Ensure urljoin behavior is correct
+            if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
+                repo_url += "/"
+            url = urllib.parse.urljoin(repo_url, edit_uri)
+            page.edit_url = urllib.parse.urljoin(url, self.config["script"])
         return html
-
-    @event_priority(-100)
-    def on_post_build(self, config: MkDocsConfig):
-        self._dir.cleanup()
-
-        if unused_edit_paths := {k: str(v) for k, v in self._edit_paths.items() if v}:
-            msg = "mknodes: These set_edit_path invocations went unused: %r"
-            logger.warning(msg, unused_edit_paths)

@@ -26,7 +26,6 @@ def file_sort_key(f: File):
 class FilesEditor:
     config: Config  # https://www.mkdocs.org/user-guide/plugins/#config)
     directory: str  # https://www.mkdocs.org/user-guide/configuration/#docs_dir
-    edit_paths: MutableMapping[str, str | None]
 
     def open(  # noqa: A003
         self,
@@ -63,22 +62,16 @@ class FilesEditor:
         if new or normname not in self._files:
             os.makedirs(dir_name, exist_ok=True)  # noqa: PTH103
             self._files[normname] = new_f
-            self.edit_paths.setdefault(normname, None)
             return new_f.abs_src_path
 
         f = self._files[normname]
         if f.abs_src_path != new_f.abs_src_path:
             os.makedirs(dir_name, exist_ok=True)  # noqa: PTH103
             self._files[normname] = new_f
-            self.edit_paths.setdefault(normname, None)
             shutil.copyfile(f.abs_src_path, new_f.abs_src_path)
             return new_f.abs_src_path
 
         return f.abs_src_path
-
-    def set_edit_path(self, name: str, edit_name: str | None) -> None:
-        """Choose a file path to use for the edit URI of this file."""
-        self.edit_paths[pathlib.PurePath(name).as_posix()] = edit_name and str(edit_name)
 
     def __init__(self, files: Files, config: Config, directory: str | None = None):
         self._files: MutableMapping[str, File] = collections.ChainMap(
@@ -89,7 +82,6 @@ class FilesEditor:
         if directory is None:
             directory = config["docs_dir"]
         self.directory = directory
-        self.edit_paths = {}
 
     _current: ClassVar[FilesEditor | None] = None
     _default: ClassVar[FilesEditor | None] = None
