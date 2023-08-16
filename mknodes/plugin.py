@@ -20,6 +20,7 @@ from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
 from mkdocs.utils import write_file
+import mkdocs_gen_files
 
 from mknodes import project
 
@@ -137,7 +138,11 @@ class MkNodesPlugin(BasePlugin):
             if not root:
                 msg = "No root for project created."
                 raise RuntimeError(msg)
-            root.write()
+            for k, v in root.all_virtual_files(only_children=False).items():
+                logger.info("Writing file to %s", k)
+                mode = "w" if isinstance(v, str) else "wb"
+                with mkdocs_gen_files.open(k, mode) as file:
+                    file.write(v)
             css = root.all_css()
             if css:
                 logger.info("Creating %s...", self.css_filename)

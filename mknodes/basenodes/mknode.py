@@ -6,8 +6,6 @@ import textwrap
 
 from typing import Literal
 
-import mkdocs_gen_files
-
 from mknodes import paths
 from mknodes.treelib import node
 
@@ -172,20 +170,6 @@ class MkNode(node.Node):
             all_files |= self.resolved_virtual_files
         return all_files
 
-    def write(self, only_children: bool = False):
-        """Write files to virtual folder.
-
-        Arguments:
-            only_children: Whether to exclude self for data.
-        """
-        # path = pathlib.Path(self.path)
-        # path.parent.mkdir(parents=True, exist_ok=True)
-        for k, v in self.all_virtual_files(only_children=only_children).items():
-            logger.info("Written file to %s", k)
-            mode = "w" if isinstance(v, str) else "wb"
-            with mkdocs_gen_files.open(k, mode) as file:
-                file.write(v)
-
     def all_markdown_extensions(self) -> set[str]:
         extensions = {p for desc in self.descendants for p in desc.REQUIRED_EXTENSIONS}
         extensions.update(self.REQUIRED_EXTENSIONS)
@@ -198,7 +182,8 @@ class MkNode(node.Node):
 
     def all_css(self) -> str:
         css_files: set[str] = {des.CSS for des in self.descendants if des.CSS}
-
+        if self.CSS:
+            css_files.add(self.CSS)
         css = ""
         for css_path in css_files:
             logger.debug("Appending %s to mknodes.css", css_path)
