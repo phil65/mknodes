@@ -4,11 +4,14 @@ import logging
 import re
 import textwrap
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from mknodes import paths
 from mknodes.treelib import node
 
+
+if TYPE_CHECKING:
+    from mknodes import project
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
 
@@ -55,6 +58,7 @@ class MkNode(node.Node):
         header: str = "",
         indent: str = "",
         shift_header_levels: int = 0,
+        project: project.Project | None = None,
         parent: MkNode | None = None,
     ):
         """Constructor.
@@ -63,6 +67,7 @@ class MkNode(node.Node):
             header: Optional header for contained Markup
             indent: Indentation of given Markup (unused ATM)
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
+            project: Project this Nav is connected to.
             parent: Parent for building the tree
         """
         super().__init__(parent=parent)
@@ -72,6 +77,7 @@ class MkNode(node.Node):
         self.shift_header_levels = shift_header_levels
         self._files: dict[str, str | bytes] = {}
         self._css_classes: set[str] = set()
+        self._associated_project = project
         # ugly, but convenient.
         from mknodes.basenodes import mkannotations
 
@@ -208,10 +214,11 @@ class MkNode(node.Node):
 
     @property
     def associated_project(self):
-        from mknodes import mknav
-
-        if isinstance(self.root, mknav.MkNav) and self.root._associated_project:
-            return self.root._associated_project
+        if proj := self._associated_project:
+            return proj
+        for ancestor in self.ancestors:
+            if proj := ancestor._associated_project:
+                return proj
         return None
 
 
