@@ -165,7 +165,6 @@ class MkTabbedBlocks(MkTabContainer):
 
         # this one is basically the same as MkTabbed,
         # but based on new pymdownx block syntax.
-        # i think it is not supported by Material for MkDocs yet.
         node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
         page += mknodes.MkReprRawRendered(node, header="### Regular")
 
