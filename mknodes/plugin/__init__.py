@@ -86,8 +86,7 @@ class MkNodesPlugin(BasePlugin):
                 mode = "w" if isinstance(v, str) else "wb"
                 with ed.open(k, mode) as file:
                     file.write(v)
-            css = root.all_css()
-            if css:
+            if css := root.all_css():
                 logger.info("Creating %s...", self.css_filename)
                 config.extra_css.append(self.css_filename)
                 path = pathlib.Path(config["site_dir"]) / self.css_filename

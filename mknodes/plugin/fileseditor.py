@@ -26,6 +26,50 @@ def file_sort_key(f: File):
 class FilesEditor:
     config: Config  # https://www.mkdocs.org/user-guide/plugins/#config)
     directory: str  # https://www.mkdocs.org/user-guide/configuration/#docs_dir
+    _current: ClassVar[FilesEditor | None] = None
+    _default: ClassVar[FilesEditor | None] = None
+
+    def __init__(self, files: Files, config: Config, directory: str | None = None):
+        files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files}
+        self._files: MutableMapping[str, File] = collections.ChainMap({}, files_map)
+        self.config = config
+        self.directory = directory or config["docs_dir"]
+
+    def __enter__(self):
+        type(self)._current = self
+        return self
+
+    def __exit__(self, *exc):
+        type(self)._current = None
+
+    @classmethod
+    def current(cls) -> FilesEditor:
+        """The instance of FilesEditor associated with the currently ongoing MkDocs build.
+
+        If used as part of a MkDocs build (*gen-files* plugin), it's an instance using
+        virtual files that feed back into the build.
+
+        If not, this still tries to load the MkDocs config to find out the *docs_dir*, and
+        then actually performs any file writes that happen via `.open()`.
+
+        This is global (not thread-safe).
+        """
+        if cls._current:
+            return cls._current
+        if not cls._default:
+            config = load_config("mkdocs.yml")
+            config["plugins"].run_event("config", config)
+            cls._default = FilesEditor(Files([]), config)
+        return cls._default
+
+    @property
+    def files(self) -> Files:
+        """Access the files as they currently are, as a MkDocs [Files][] collection.
+
+        [Files]: https://github.com/mkdocs/mkdocs/blob/master/mkdocs/structure/files.py
+        """
+        files = sorted(self._files.values(), key=file_sort_key)
+        return Files(files)
 
     def open(  # noqa: A003
         self,
@@ -72,52 +116,3 @@ class FilesEditor:
             return new_f.abs_src_path
 
         return f.abs_src_path
-
-    def __init__(self, files: Files, config: Config, directory: str | None = None):
-        self._files: MutableMapping[str, File] = collections.ChainMap(
-            {},
-            {pathlib.PurePath(f.src_path).as_posix(): f for f in files},
-        )
-        self.config = config
-        if directory is None:
-            directory = config["docs_dir"]
-        self.directory = directory
-
-    _current: ClassVar[FilesEditor | None] = None
-    _default: ClassVar[FilesEditor | None] = None
-
-    @classmethod
-    def current(cls) -> FilesEditor:
-        """The instance of FilesEditor associated with the currently ongoing MkDocs build.
-
-        If used as part of a MkDocs build (*gen-files* plugin), it's an instance using
-        virtual files that feed back into the build.
-
-        If not, this still tries to load the MkDocs config to find out the *docs_dir*, and
-        then actually performs any file writes that happen via `.open()`.
-
-        This is global (not thread-safe).
-        """
-        if cls._current:
-            return cls._current
-        if not cls._default:
-            config = load_config("mkdocs.yml")
-            config["plugins"].run_event("config", config)
-            cls._default = FilesEditor(Files([]), config)
-        return cls._default
-
-    def __enter__(self):
-        type(self)._current = self
-        return self
-
-    def __exit__(self, *exc):
-        type(self)._current = None
-
-    @property
-    def files(self) -> Files:
-        """Access the files as they currently are, as a MkDocs [Files][] collection.
-
-        [Files]: https://github.com/mkdocs/mkdocs/blob/master/mkdocs/structure/files.py
-        """
-        files = sorted(self._files.values(), key=file_sort_key)
-        return Files(files)
