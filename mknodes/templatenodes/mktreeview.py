@@ -3,13 +3,14 @@ from __future__ import annotations
 from collections.abc import Callable
 import logging
 import os
+import pathlib
 
 from typing import Any, get_args
 
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
 from mknodes.data import treestyles
-from mknodes.utils import helpers
+from mknodes.utils import fsspecdir, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ class MkTreeView(mkcode.MkCode):
         predicate: Callable | None = None,
         exclude_folders: list[str] | str | None = None,
         header: str = "",
+        storage_options: dict | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -44,6 +46,7 @@ class MkTreeView(mkcode.MkCode):
             predicate: Predicate to filter results
             exclude_folders: Folders to exclude from listing
             header: Section header
+            storage_options: Used when tree is a fsspec path
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, language="", **kwargs)
@@ -51,6 +54,7 @@ class MkTreeView(mkcode.MkCode):
         self._style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
+        self.storage_options = storage_options or {}
         self.exclude_folders = (
             [exclude_folders] if isinstance(exclude_folders, str) else exclude_folders
         )
@@ -58,9 +62,17 @@ class MkTreeView(mkcode.MkCode):
     @property
     def text(self):
         match self.tree:
+            case str() if "://" in self.tree:
+                protocol, path = self.tree.split("://", 1)
+                node = treelib.FileTreeNode.from_folder(
+                    fsspecdir.FsSpecPath(path, protocol, **self.storage_options),
+                    predicate=self.predicate,
+                    exclude_folders=self.exclude_folders,
+                    maximum_depth=self.maximum_depth,
+                )
             case str() | os.PathLike():
                 node = treelib.FileTreeNode.from_folder(
-                    self.tree,
+                    pathlib.Path(self.tree),
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                     maximum_depth=self.maximum_depth,
@@ -91,6 +103,8 @@ class MkTreeView(mkcode.MkCode):
             path=str(self.tree),
             style=self._style,
             maximum_depth=self.maximum_depth,
+            exclude_folders=self.exclude_folders,
+            storage_options=self.storage_options,
             _filter_empty=True,
         )
 
@@ -98,12 +112,24 @@ class MkTreeView(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
+        # Different styles
         for style in get_args(treestyles.TreeStyleStr):
             node = MkTreeView("mknodes/manual", style=style)
             page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
+        opts = dict(org="mkdocstrings", repo="mkdocstrings")
+
+        # Showing a remote tree structure (using fsspec package)
+        node = MkTreeView("github://", storage_options=opts, maximum_depth=2)
+        page += mknodes.MkReprRawRendered(node, header="### From remote (FsSpec)'")
 
 
 if __name__ == "__main__":
-    node = MkTreeView(".", header="test", style="ascii")
+    opts = dict(org="mkdocstrings", repo="mkdocstrings")
+    node = MkTreeView(
+        "github://",
+        storage_options=opts,
+        header="test",
+        style="ascii",
+        maximum_depth=2,
+    )
     print(node.to_markdown())
-    print(MkTreeView(node, style="ascii"))

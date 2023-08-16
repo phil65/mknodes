@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import logging
-import os
 import pathlib
 
 from mknodes.treelib import node
@@ -13,18 +12,17 @@ logger = logging.getLogger(__name__)
 
 class FileTreeNode(node.Node):
     def __init__(self, path, **kwargs):
-        self.path = pathlib.Path(path)
+        self.path = path
         self.name = self.path.name
-        self.type = "folder" if self.path.is_dir() else "file"
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return f"{self.name}/" if self.type == "folder" else self.name
+        return f"{self.name}/" if self.path.is_dir() else self.name
 
     @classmethod
     def from_folder(
         cls,
-        folder: str | os.PathLike,
+        folder: pathlib.Path,
         *,
         predicate: Callable | None = None,
         exclude_folders: list[str] | None = None,
@@ -33,7 +31,6 @@ class FileTreeNode(node.Node):
         maximum_depth: int | None = None,
         parent: FileTreeNode | None = None,
     ):
-        folder = pathlib.Path(folder)
         node = cls(folder, parent=parent)
         children = list(folder.iterdir())
         if sort:
@@ -66,15 +63,15 @@ class FileTreeNode(node.Node):
         return node
 
     def get_folder_count(self) -> int:
-        return sum(i.type == "folder" for i in self.descendants)
+        return sum(i.path.is_folder() for i in self.descendants)
 
     def get_file_count(self) -> int:
-        return sum(i.type == "file" for i in self.descendants)
+        return sum(i.path.is_file() for i in self.descendants)
 
 
 if __name__ == "__main__":
     folder = FileTreeNode.from_folder(
-        ".",
+        pathlib.Path(),
         exclude_folders=["__pycache__", ".git", ".mypy_cache"],
         sort=False,
         maximum_depth=2,
