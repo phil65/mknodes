@@ -65,6 +65,9 @@ class MkPage(mkcontainer.MkContainer):
         """
         super().__init__(**kwargs)
         self._path = str(path) if path else None
+        # import inspect
+        # self._edit_path = pathlib.Path(inspect.currentframe().f_back.f_code.co_filename)
+        self._edit_path = None
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.append_markdown = append_markdown
         self.virtual = virtual

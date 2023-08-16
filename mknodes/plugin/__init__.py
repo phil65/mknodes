@@ -21,6 +21,7 @@ from mkdocs.utils import write_file
 
 from mknodes import project
 from mknodes.plugin import linkreplacer, fileseditor
+from mknodes.pages import mkpage
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
@@ -127,7 +128,35 @@ class MkNodesPlugin(BasePlugin):
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             self._file_mapping[filename].append(file_.url)
+        self._page_mapping = {}
+        if root := self._project._root:
+            for _level, node in root.iter_nodes():
+                if isinstance(node, mkpage.MkPage):
+                    self._page_mapping[node.resolved_file_path] = node
         return nav
+
+    def on_pre_page(
+        self,
+        page: Page,
+        *,
+        config: MkDocsConfig,
+        files: Files,
+    ) -> Page | None:
+        """During this phase we set the edit paths."""
+        repo_url = config.get("repo_url", None)
+        edit_uri = config.get("edit_uri", "edit/main/")
+        if page.file.src_uri in self._page_mapping and repo_url:
+            if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
+                repo_url += "/"
+            if edit_path := self._page_mapping[page.file.src_uri]._edit_path:
+                # root_path = pathlib.Path(config["docs_dir"]).parent
+                # edit_path = str(edit_path.relative_to(root_path))
+                rel_path = edit_path
+            else:
+                rel_path = self.config["script"]
+            url = urllib.parse.urljoin(repo_url, edit_uri)
+            page.edit_url = urllib.parse.urljoin(url, rel_path)
+        return page
 
     def on_page_markdown(
         self,
@@ -148,15 +177,3 @@ class MkNodesPlugin(BasePlugin):
                 continue
         link_replacer = linkreplacer.LinkReplacer(docs_dir, page_url, self._file_mapping)
         return link_replacer.replace(markdown)
-
-    def on_page_content(self, html, page: Page, config: MkDocsConfig, files: Files):
-        """During this phase edit urls are set."""
-        repo_url = config.get("repo_url", None)
-        edit_uri = config.get("edit_uri", None)
-        if repo_url and edit_uri:
-            # Ensure urljoin behavior is correct
-            if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
-                repo_url += "/"
-            url = urllib.parse.urljoin(repo_url, edit_uri)
-            page.edit_url = urllib.parse.urljoin(url, self.config["script"])
-        return html
