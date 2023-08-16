@@ -50,6 +50,10 @@ class PyProject:
     def extras_descriptions(self) -> dict[str, str]:
         return self.mknodes_section.get("extras-descriptions", {})
 
+    @property
+    def package_repos(self) -> list[str]:
+        return self.mknodes_section.get("package-repositories", [])
+
 
 if __name__ == "__main__":
     info = PyProject()

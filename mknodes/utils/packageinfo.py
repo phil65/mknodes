@@ -111,6 +111,7 @@ def get_info(pkg_name):
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
+        logger.info("Loading package info for %s", pkg_name)
         self.distribution = get_distribution(pkg_name)
         self.metadata = get_metadata(self.distribution)
         self.urls = {

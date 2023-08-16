@@ -43,7 +43,7 @@ class FsSpecPath:
         return self.protocol_path
 
     def __repr__(self):
-        return f"FsSpecDir({self.protocol_path!r})"
+        return f"FsSpecPath({self.protocol_path!r})"
 
     def __truediv__(self, other):
         path = str(pathlib.Path(self.path["name"]) / other)

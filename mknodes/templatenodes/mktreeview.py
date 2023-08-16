@@ -10,7 +10,7 @@ from typing import Any, get_args
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
 from mknodes.data import treestyles
-from mknodes.utils import fsspecdir, helpers
+from mknodes.utils import fsspecpath, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -65,7 +65,7 @@ class MkTreeView(mkcode.MkCode):
             case str() if "://" in self.tree:
                 protocol, path = self.tree.split("://", 1)
                 node = treelib.FileTreeNode.from_folder(
-                    fsspecdir.FsSpecPath(path, protocol, **self.storage_options),
+                    fsspecpath.FsSpecPath(path, protocol, **self.storage_options),
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                     maximum_depth=self.maximum_depth,
