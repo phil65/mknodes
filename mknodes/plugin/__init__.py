@@ -17,7 +17,6 @@ import urllib.parse
 
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
-from mkdocs.structure.pages import Page
 from mkdocs.utils import write_file
 import mkdocs_gen_files
 
@@ -27,6 +26,8 @@ from mknodes.plugin import linkreplacer
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
     from mkdocs.structure.files import Files
+    from mkdocs.structure.pages import Page
+    from mkdocs.structure.nav import Navigation
 
 
 try:
@@ -119,11 +120,19 @@ class MkNodesPlugin(BasePlugin):
                 path = pathlib.Path(config["site_dir"]) / self.css_filename
                 write_file(css.encode(), str(path))
         self._edit_paths = dict(ed.edit_paths)
+        return ed.files
+
+    def on_nav(
+        self,
+        nav: Navigation,
+        files: Files,
+        config: MkDocsConfig,
+    ) -> Navigation | None:
         self._file_mapping = collections.defaultdict(list)
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             self._file_mapping[filename].append(file_.url)
-        return ed.files
+        return nav
 
     def on_page_markdown(
         self,
