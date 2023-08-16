@@ -124,6 +124,7 @@ class MkNode(node.Node):
         return self.attach_annotations(text)
 
     def attach_annotations(self, text: str) -> str:
+        """Can be reimplemented if non-default annotations are needed."""
         return self.annotations.annotate_text(text) if self.annotations else text
 
     @property
