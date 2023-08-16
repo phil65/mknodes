@@ -18,10 +18,9 @@ import urllib.parse
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.utils import write_file
-import mkdocs_gen_files
 
 from mknodes import project
-from mknodes.plugin import linkreplacer
+from mknodes.plugin import linkreplacer, fileseditor
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
@@ -34,8 +33,6 @@ try:
     from mkdocs.exceptions import PluginError
 except ImportError:
     PluginError = SystemExit  # type: ignore
-
-from mkdocs_gen_files.editor import FilesEditor
 
 
 try:
@@ -95,7 +92,7 @@ class MkNodesPlugin(BasePlugin):
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         self._project = project.Project(config=config, files=files)
 
-        with FilesEditor(files, config, self._dir.name) as ed:
+        with fileseditor.FilesEditor(files, config, self._dir.name) as ed:
             file_name = self.config["script"]
             module = import_file(file_name)
             try:
@@ -111,7 +108,7 @@ class MkNodesPlugin(BasePlugin):
             for k, v in root.all_virtual_files(only_children=False).items():
                 logger.info("Writing file to %s", k)
                 mode = "w" if isinstance(v, str) else "wb"
-                with mkdocs_gen_files.open(k, mode) as file:
+                with ed.open(k, mode) as file:
                     file.write(v)
             css = root.all_css()
             if css:

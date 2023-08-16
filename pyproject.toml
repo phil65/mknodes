@@ -25,7 +25,6 @@ dependencies = [
     "pyreadline3",
     "mkdocs-glightbox",
     "mkdocs-section-index",
-    "mkdocs-gen-files",
     "markdown-exec[ansi]",
     "mkdocs-coverage",
     "pygments",
