@@ -60,7 +60,7 @@ def serve_script(script_file: str | os.PathLike):
     config_file = yaml.load(text, Loader=yaml.Loader)
     for plugin in config_file["plugins"]:
         if isinstance(plugin, dict) and next(iter(plugin.keys())) == "mknodes":
-            plugin["mknodes"]["scripts"] = [script_file.as_posix()]
+            plugin["mknodes"]["script"] = script_file.as_posix()
     output = yaml.dump(config_file, Dumper=yaml.Dumper)
     stream = io.StringIO(output)
     serve.serve(
