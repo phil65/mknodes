@@ -25,7 +25,7 @@ def create_internals_section(root_nav: mknodes.MkNav):
     # Each tree item can carry virtual files.
     # Lets dispay all files which are currently attached to the tree:
     create_files_page(internals_nav)
-    create_required_extensions_page(internals_nav)
+    create_requirements_page(internals_nav)
     create_complete_code_section(internals_nav)
 
 
@@ -47,10 +47,10 @@ def create_files_page(nav: mknodes.MkNav):
     page += mknodes.MkPrettyPrint(list(virtual_files.keys()))
 
 
-def create_required_extensions_page(nav: mknodes.MkNav):
+def create_requirements_page(nav: mknodes.MkNav):
     """Create the "Required extensions" MkPage and attach it to given MkNav."""
-    page = nav.add_page("Required extensions", hide_toc=True, icon="material/puzzle-edit")
-    page += mknodes.MkCode.for_object(create_required_extensions_page, header=PAGE_CODE)
+    page = nav.add_page("Requirements", hide_toc=True, icon="material/puzzle-edit")
+    page += mknodes.MkCode.for_object(create_requirements_page, header=PAGE_CODE)
     page += "The tree requires these Markdown extensions to be available:"
     # Based on which items we used, we can get info about the required extensions:
     extensions = nav.root.all_markdown_extensions()
@@ -59,6 +59,10 @@ def create_required_extensions_page(nav: mknodes.MkNav):
     page += "The tree requires these MkDocs plugins to be available:"
     plugins = nav.root.all_plugins()
     page += mknodes.MkPrettyPrint(plugins)
+    # the required css is added automatically to each build.
+    page += "The tree requires the following css in order to work correctly:"
+    css = nav.root.all_css()
+    page += mknodes.MkCode(css, language="css")
 
 
 def create_complete_code_section(nav: mknodes.MkNav):
