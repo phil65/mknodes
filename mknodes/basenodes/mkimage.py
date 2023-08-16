@@ -30,6 +30,7 @@ class MkImage(mknode.MkNode):
         align: Literal["left", "right"] | None = None,
         width: int | None = None,
         lazy: bool = False,
+        path_dark_mode: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -42,6 +43,7 @@ class MkImage(mknode.MkNode):
             align: Image alignment
             width: Image width in pixels
             lazy: Whether to lazy-load image
+            path_dark_mode: Optional alternative image for dark mode
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
@@ -51,11 +53,25 @@ class MkImage(mknode.MkNode):
         self.align = align
         self.width = width
         self.lazy = lazy
-        if path.startswith(("http:", "https:", "www.")):
-            self.path = path
-        else:
-            # TODO: linkreplacer doesnt work yet with full path
-            self.path = pathlib.Path(path).name  # this should not be needed.
+        self._path_dark_mode = path_dark_mode
+        self._path = path
+
+    @property
+    def path(self):
+        if self._path.startswith(("http:", "https:", "www.")):
+            return self._path
+        # TODO: linkreplacer doesnt work yet with full path
+        return pathlib.Path(self._path).name  # this should not be needed.
+
+    @property
+    def path_dark_mode(self):
+        match self._path_dark_mode:
+            case str() if self._path_dark_mode.startswith(("http:", "https:", "www.")):
+                return self._path_dark_mode
+            case str():
+                return pathlib.Path(self._path_dark_mode).name
+            case _:
+                return None
 
     def __repr__(self):
         return helpers.get_repr(
@@ -66,6 +82,7 @@ class MkImage(mknode.MkNode):
             align=self.align,
             width=self.width,
             lazy=self.lazy,
+            path_dark_mode=self.path_dark_mode,
             _filter_empty=True,
             _filter_false=True,
         )
@@ -82,15 +99,12 @@ class MkImage(mknode.MkNode):
         return helpers.get_url(self.target, base_url)
 
     def _to_markdown(self) -> str:
-        markdown_link = f"![{self.title}]({self.path})"
-        if self.align:
-            markdown_link += f"{{ align={self.align} }}"
-        if self.width:
-            markdown_link += f'{{ width="{self.width}" }}'
-        if self.lazy:
-            markdown_link += "{ loading=lazy }"
-        if self.target:
-            markdown_link = f"[{markdown_link}]({self.url})"
+        if not self.path_dark_mode:
+            markdown_link = self._build(self.path)
+        else:
+            link_2 = self._build(self.path, "light")
+            link_1 = self._build(self.path_dark_mode, "dark")
+            markdown_link = f"{link_1} {link_2}"
         if not self.caption:
             return markdown_link
         lines = [
@@ -100,6 +114,20 @@ class MkImage(mknode.MkNode):
             "</figure>",
         ]
         return "\n".join(lines) + "\n"
+
+    def _build(self, path, mode: Literal["light", "dark"] | None = None) -> str:
+        if mode:
+            path += f"#only-{mode}"
+        markdown_link = f"![{self.title}]({path})"
+        if self.align:
+            markdown_link += f"{{ align={self.align} }}"
+        if self.width:
+            markdown_link += f'{{ width="{self.width}" }}'
+        if self.lazy:
+            markdown_link += "{ loading=lazy }"
+        if self.target:
+            markdown_link = f"[{markdown_link}]({self.url})"
+        return markdown_link
 
     @staticmethod
     def create_example_page(page):
@@ -116,6 +144,13 @@ class MkImage(mknode.MkNode):
 
         node = MkImage(path="https://picsum.photos/200", link="https://www.google.com")
         page += mknodes.MkReprRawRendered(node, header="### Linked")
+
+        node = MkImage(
+            path="https://picsum.photos/200",
+            link="https://www.google.com",
+            path_dark_mode="https://picsum.photos/300",
+        )
+        page += mknodes.MkReprRawRendered(node, header="### Separate dark mode")
 
 
 if __name__ == "__main__":
