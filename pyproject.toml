@@ -97,6 +97,7 @@ dependencies = [
     "requests",
     "toml",
     "spdx-lookup",
+    "fsspec",
     "anybadge",
     "PyYAML >=5.1",
 ]
