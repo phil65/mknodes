@@ -40,6 +40,7 @@ class MkPage(mkcontainer.MkContainer):
         template: str | None = None,
         append_markdown: bool | None = None,
         virtual: bool = False,
+        edit_path: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -61,13 +62,14 @@ class MkPage(mkcontainer.MkContainer):
                              containing the markup at the bottom. Setting is
                              inherited from the parent navs if not set.
             virtual: Whether the Page should result in a file. Mainly for testing purposes
+            edit_path: Custom edit path for this page
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self._path = str(path) if path else None
         # import inspect
         # self._edit_path = pathlib.Path(inspect.currentframe().f_back.f_code.co_filename)
-        self._edit_path = None
+        self._edit_path = edit_path
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.append_markdown = append_markdown
         self.virtual = virtual
