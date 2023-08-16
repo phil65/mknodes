@@ -80,4 +80,4 @@ def full_tree():
             ),
         ],
     ):
-        return manual.create_root(proj)
+        return manual.build(proj)

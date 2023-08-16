@@ -23,7 +23,7 @@ It will be a quite inception-ish experience.
 DOC_URL = "https://phil65.github.io/mknodes/"
 
 
-def create_root(project: mknodes.Project) -> mknodes.MkNav:
+def build(project: mknodes.Project) -> mknodes.MkNav:
     project.module = mknodes
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
@@ -66,7 +66,7 @@ def create_root(project: mknodes.Project) -> mknodes.MkNav:
     # Now we add the MkNode you are looking at right now.
     # We will use MkCode.for_object quite a lot in the next sections.
     # DocStrings for for_object: (7)
-    page += mknodes.MkCode.for_object(create_root)
+    page += mknodes.MkCode.for_object(build)
     page += annotations  # here we add the (invisible) annotations block to the page.
 
     # We can still add more annotations, things only get written at the very end:

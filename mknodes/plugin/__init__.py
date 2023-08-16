@@ -8,9 +8,7 @@ import importlib.util
 import logging
 import os
 import pathlib
-import sys
 import tempfile
-import types
 
 from typing import TYPE_CHECKING
 import urllib.parse
@@ -22,6 +20,7 @@ from mkdocs.utils import write_file
 from mknodes import project
 from mknodes.plugin import linkreplacer, fileseditor
 from mknodes.pages import mkpage
+from mknodes.utils import classhelpers
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
@@ -53,34 +52,8 @@ except ImportError:
     logger = logging.getLogger(f"mkdocs.plugins.{__name__}")  # type: ignore[assignment]
 
 
-# For Regex, match groups are:
-#       0: Whole markdown link e.g. [Alt-text](url)
-#       1: Alt text
-#       2: Full URL e.g. url + hash anchor
-#       3: Filename e.g. filename.md
-#       4: File extension e.g. .md, .png, etc.
-#       5. hash anchor e.g. #my-sub-heading-link
-AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
-
-
-def import_file(path: str | os.PathLike) -> types.ModuleType:
-    """Import a module based on a file path.
-
-    Arguments:
-        path: Path which should get imported
-    """
-    module_name = pathlib.Path(path).stem
-    spec = importlib.util.spec_from_file_location(module_name, path)
-    if spec is None:
-        raise RuntimeError
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)  # type: ignore[union-attr]
-    return module
-
-
 class MkNodesPlugin(BasePlugin):
-    config_scheme = (("script", config_options.Type(str)),)
+    config_scheme = (("path", config_options.Type(str)),)
     css_filename = "mknodes.css"
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
@@ -93,8 +66,11 @@ class MkNodesPlugin(BasePlugin):
         self._project = project.Project(config=config, files=files)
 
         with fileseditor.FilesEditor(files, config, self._dir.name) as ed:
-            file_name = self.config["script"]
-            module = import_file(file_name)
+            file_name = self.config["path"]
+            if file_name.endswith(".py"):
+                module = classhelpers.import_file(file_name)
+            else:
+                module = importlib.import_module(file_name)
             try:
                 module.build(self._project)
             except SystemExit as e:
@@ -153,7 +129,7 @@ class MkNodesPlugin(BasePlugin):
                 # edit_path = str(edit_path.relative_to(root_path))
                 rel_path = edit_path
             else:
-                rel_path = self.config["script"]
+                rel_path = self.config["path"]
             url = urllib.parse.urljoin(repo_url, edit_uri)
             page.edit_url = urllib.parse.urljoin(url, rel_path)
         return page

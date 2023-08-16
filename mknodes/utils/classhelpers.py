@@ -3,9 +3,12 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator, Sequence
 import contextlib
 import importlib
+import importlib.util
 import inspect
 import logging
+import os
 import pathlib
+import sys
 import types
 import typing
 
@@ -209,6 +212,22 @@ def get_submodules(
 ) -> list[types.ModuleType]:
     module = to_module(module)
     return [mod for _, mod in inspect.getmembers(module, inspect.ismodule)]
+
+
+def import_file(path: str | os.PathLike) -> types.ModuleType:
+    """Import a module based on a file path.
+
+    Arguments:
+        path: Path which should get imported
+    """
+    module_name = pathlib.Path(path).stem
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None:
+        raise RuntimeError
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)  # type: ignore[union-attr]
+    return module
 
 
 if __name__ == "__main__":

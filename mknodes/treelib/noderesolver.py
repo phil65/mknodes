@@ -361,6 +361,6 @@ if __name__ == "__main__":
     from mknodes import manual, project
 
     proj = project.Project()
-    root = manual.create_root(proj)
+    root = manual.build(proj)
     resolver = MkNodeResolver()
     result = resolver.glob("*/*/MkAdm*", root)
