@@ -120,7 +120,7 @@ class MkTreeView(mkcode.MkCode):
 
         # Showing a remote tree structure (using fsspec package)
         node = MkTreeView("github://", storage_options=opts, maximum_depth=2)
-        page += mknodes.MkReprRawRendered(node, header="### From remote (FsSpec)'")
+        page += mknodes.MkReprRawRendered(node, header="### From remote (FsSpec)")
 
 
 if __name__ == "__main__":
