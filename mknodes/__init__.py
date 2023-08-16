@@ -20,6 +20,7 @@ from .basenodes.mkbinaryimage import MkBinaryImage
 from .basenodes.mklist import MkList
 from .basenodes.mkdiagram import MkDiagram
 from .basenodes.mktable import MkTable
+from .basenodes.mkhtmltable import MkHtmlTable
 from .basenodes.mktabcontainer import MkTabbedBlocks, MkTabbed
 from .basenodes.mksnippet import MkSnippet
 from .basenodes.mkcritic import MkCritic
@@ -88,6 +89,7 @@ __all__ = [
     "MkClassDiagram",
     "Connector",
     "MkTable",
+    "MkHtmlTable",
     "MkClassTable",
     "MkList",
     "MkClassPage",

@@ -96,6 +96,7 @@ def create_container_nodes_section(nav: mknodes.MkNav):
         mknodes.MkCode,
         mknodes.MkList,
         mknodes.MkTable,
+        mknodes.MkHtmlTable,
         mknodes.MkDefinitionList,
         # mknodes.MkTab,
         mknodes.MkTabbed,
