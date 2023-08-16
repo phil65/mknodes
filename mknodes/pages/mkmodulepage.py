@@ -49,12 +49,14 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         return helpers.get_repr(self, module=self.module, path=str(self.path))
 
     def get_processors(self) -> list:
-        procs: list[processors.PageProcessor] = [processors.DocPageProcessor(self.module)]
+        procs: list[processors.ContainerProcessor] = [
+            processors.DocContainerProcessor(self.module),
+        ]
         if self.show_class_table:
-            proc = processors.ClassTablePageProcessor(self.klasses)
+            proc = processors.ClassTableContainerProcessor(self.klasses)
             procs.append(proc)
         if self.docstrings:
-            proc = processors.MkDocStringPageProcessor(self.module)
+            proc = processors.MkDocStringContainerProcessor(self.module)
             procs.append(proc)
         return procs
 

@@ -49,10 +49,10 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 
     def get_processors(self):
         return [
-            processors.BaseClassTablePageProcessor(self.klass),
-            processors.SubClassTablePageProcessor(self.klass),
-            processors.InheritanceDiagramPageProcessor(self.klass),
-            processors.MkDocStringPageProcessor(self.klass),
+            processors.BaseClassTableContainerProcessor(self.klass),
+            processors.SubClassTableContainerProcessor(self.klass),
+            processors.InheritanceDiagramContainerProcessor(self.klass),
+            processors.MkDocStringContainerProcessor(self.klass),
         ]
 
 

@@ -428,19 +428,19 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # First, we write a custom processor which fetches the page-building code from the
     # existing processors, puts them into code blocks and adds them to the page.
 
-    class ShowProcessorCodeProcessor(processors.PageProcessor):
+    class ShowProcessorCodeProcessor(processors.ContainerProcessor):
         ID = "show_processor_code"
 
         def __init__(
             self,
             *args,
-            processors: list[processors.PageProcessor] | None = None,
+            processors: list[processors.ContainerProcessor] | None = None,
             **kwargs,
         ):
             super().__init__(*args, **kwargs)
             self.processors = processors or []
 
-        def append_block(self, page: mknodes.MkPage):
+        def append_block(self, node: mknodes.MkContainer):
             code = mknodes.MkCode.for_object(self.append_block)
             nodes: list[mknodes.MkAdmonition] = []
             admonition = mknodes.MkAdmonition(
@@ -453,7 +453,7 @@ def create_mknodes_section(nav: mknodes.MkNav):
             for processor in self.processors:
                 # First, we check if the processor gets applied.
                 # If yes, we attach a code block.
-                if not processor.check_if_apply(page):
+                if not processor.check_if_apply(node):
                     continue
                 code = mknodes.MkCode.for_object(processor.append_block)
                 name = processor.__class__.__name__
@@ -464,27 +464,27 @@ def create_mknodes_section(nav: mknodes.MkNav):
                     title=name,
                 )
                 nodes.append(admonition)
-            page += mknodes.MkAdmonition(
+            node += mknodes.MkAdmonition(
                 nodes,
                 typ="quote",
                 collapsible=True,
-                title=f"Source code for *{page.resolved_file_path}*",
+                title=f"Source code for *{node.resolved_file_path}*",
             )
 
-        def get_header(self, page):
+        def get_header(self, node):
             return "Code for the processors"
 
     # .. and while we are at it, we will also write another processor to add
     # the required extensions to the page:
 
-    class ExtensionInfoProcessor(processors.PageProcessor):
+    class ExtensionInfoProcessor(processors.ContainerProcessor):
         ID = "extension_info"
 
-        def append_block(self, page: mknodes.MkPage):
+        def append_block(self, node: mknodes.MkContainer):
             extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
-            page += mknodes.MkAdmonition(extensions, title="Required extensions")
+            node += mknodes.MkAdmonition(extensions, title="Required extensions")
 
-        def check_if_apply(self, page: mknodes.MkPage):
+        def check_if_apply(self, node: mknodes.MkContainer):
             # only add this section for MkNodes which have required extensions
             return issubclass(self.item, mknodes.MkNode) and self.item.REQUIRED_EXTENSIONS
 
