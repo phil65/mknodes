@@ -23,7 +23,7 @@ def create_routing_section(nav: mknodes.MkNav):
     page += mknodes.MkDocStrings(mknodes.MkNav.route, header="MkNav.route Docstrings")
 
 
-@route_nav.route("Routed page")
+@route_nav.route("Routed page", show_source=True)
 def routed_page() -> mknodes.MkPage:
     """Builds a MkPage and attaches it to the router MkNav."""
     page = mknodes.MkPage("Routing to pages")
@@ -31,7 +31,7 @@ def routed_page() -> mknodes.MkPage:
     return page
 
 
-@route_nav.route("Routed", "Deeply", "Nested", "Page")
+@route_nav.route("Routed", "Deeply", "Nested", "Page", show_source=True)
 def routed_nested_page() -> mknodes.MkPage:
     """Builds a nested MkPage and attaches it to the router MkNav."""
     page = mknodes.MkPage("Routing to nested pages")
@@ -39,7 +39,7 @@ def routed_nested_page() -> mknodes.MkPage:
     return page
 
 
-@route_nav.route("Routed", "Deeply", "Nested", "Nav")
+@route_nav.route("Routed", "Deeply", "Nested", "Nav", show_source=True)
 def routed_section() -> mknodes.MkNav:
     """Builds a nested MkNav and attaches it to the router MkNav."""
     section = mknodes.MkNav("Routing to navs")

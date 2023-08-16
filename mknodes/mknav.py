@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any, Literal, Self
 
 import mkdocs_gen_files
 
-from mknodes.basenodes import mklink, mknode
+from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import helpers
 
@@ -151,7 +151,11 @@ class MkNav(mknode.MkNode):
     def children(self, items):
         self.nav = dict(items)
 
-    def route(self, *path: str) -> Callable[[Callable], Callable]:
+    def route(
+        self,
+        *path: str,
+        show_source: bool = False,
+    ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing.
 
         The decorated functions need to return either a MkPage or an MkNav.
@@ -159,11 +163,21 @@ class MkNav(mknode.MkNode):
 
         Arguments:
             path: The section path for the returned MkNav / MkPage
+            show_source: If True, a section containing the code will be inserted
+                         at the start of the page (or index page if node is a Nav)
         """
 
         def decorator(fn: Callable[..., NavSubType], path=path) -> Callable:
             node = fn()
             node.parent = self
+            if show_source and isinstance(node, mkpage.MkPage):
+                code = mkcode.MkCode.for_object(fn, header="Code for this page")
+                code.parent = node
+                node.items.insert(0, code)
+            if show_source and isinstance(node, MkNav) and node.index_page:
+                code = mkcode.MkCode.for_object(fn, header="Code for this section")
+                code.parent = node.index_page
+                node.index_page.items.insert(0, code)
             self.nav[path] = node
             return fn
 
