@@ -8,7 +8,6 @@ import importlib.util
 import logging
 import os
 import pathlib
-import re
 import sys
 import tempfile
 import types
@@ -23,7 +22,7 @@ from mkdocs.utils import write_file
 import mkdocs_gen_files
 
 from mknodes import project
-
+from mknodes.plugin import linkreplacer
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
@@ -81,36 +80,6 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
     return module
 
 
-class LinkReplacer:
-    def __init__(self, base_docs_url: str, page_url: str, mapping: dict[str, list[str]]):
-        self.mapping = mapping
-        self.page_url = page_url
-        self.base_docs_url = pathlib.Path(base_docs_url)
-        # Absolute URL of the linker
-        self.linker_url = os.path.dirname(self.base_docs_url / page_url)  # noqa: PTH120
-
-    def __call__(self, match):
-        filename = urllib.parse.unquote(match.group(3).strip())
-        if filename not in self.mapping:
-            return f"`{match.group(3).replace('.md', '')}`"
-        filenames = self.mapping[filename]
-        if len(filenames) > 1:
-            text = "%s: %s has multiple targets: %s"
-            logger.debug(text, self.page_url, match.group(3), filenames)
-        abs_link_url = (self.base_docs_url / filenames[0]).parent
-        # need os.replath here bc pathlib.relative_to throws an exception
-        # when linking across drives
-        rel_path = os.path.relpath(abs_link_url, self.linker_url)
-        rel_link_url = os.path.join(rel_path, filename)  # noqa: PTH118
-        new_text = match.group(0).replace(match.group(2), rel_link_url)
-        to_replace_with = rel_link_url + (match.group(5) or "")
-        new_text = match.group(0).replace(match.group(2), to_replace_with)
-        new_text = new_text.replace("\\", "/")
-        text = "LinkReplacer: %s: %s -> %s"
-        logger.debug(text, self.page_url, match.group(3), rel_link_url)
-        return new_text
-
-
 class MkNodesPlugin(BasePlugin):
     config_scheme = (("script", config_options.Type(str)),)
     _edit_paths: dict
@@ -166,15 +135,15 @@ class MkNodesPlugin(BasePlugin):
     ) -> str | None:
         """During this phase [title](some_page.md) and °metadata stuff gets replaced."""
         #     print(file_.url, file_.dest_uri)
-        base_docs_url = config["docs_dir"]
+        docs_dir = config["docs_dir"]
         page_url = page.file.src_uri
-        link_replacer = LinkReplacer(base_docs_url, page_url, self._file_mapping)
         for k, v in self._project.info.metadata.items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
                 continue
-        return re.sub(AUTOLINK_RE, link_replacer, markdown)
+        link_replacer = linkreplacer.LinkReplacer(docs_dir, page_url, self._file_mapping)
+        return link_replacer.replace(markdown)
 
     def on_page_content(self, html, page: Page, config: MkDocsConfig, files: Files):
         """During this phase edit urls are set."""
