@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Generator, Iterable, Sequence
 import contextlib
 import functools
 
@@ -15,7 +15,7 @@ import reprlib
 import subprocess
 import sys
 import types
-from typing import Any, Literal
+from typing import Any, Literal, TypeVar
 
 import requests
 
@@ -333,6 +333,20 @@ def download(url: str, typ: Literal["text", "data"] = "text"):
     if response.status_code != RESPONSE_CODE_OK:
         return ""
     return response.text if typ == "text" else response.content
+
+
+T = TypeVar("T")
+
+
+def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, None]:
+    """Batch data into tuples of length n. The last batch may be shorter."""
+    # batched('ABCDEFG', 3) --> ABC DEF G
+    if n < 1:
+        msg = "n must be at least one"
+        raise ValueError(msg)
+    it = iter(iterable)
+    while batch := tuple(itertools.islice(it, n)):
+        yield batch
 
 
 if __name__ == "__main__":

@@ -1,11 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Generator, Iterable
-import itertools
 import logging
 import textwrap
-
-from typing import TypeVar
 
 from mknodes import mknav
 from mknodes.basenodes import mkcard, mkcontainer, mknode
@@ -14,22 +10,6 @@ from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
-
-CARD_DEFAULT_SIZE = 200
-
-
-T = TypeVar("T")
-
-
-def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, None]:
-    """Batch data into tuples of length n. The last batch may be shorter."""
-    # batched('ABCDEFG', 3) --> ABC DEF G
-    if n < 1:
-        msg = "n must be at least one"
-        raise ValueError(msg)
-    it = iter(iterable)
-    while batch := tuple(itertools.islice(it, n)):
-        yield batch
 
 
 class MkShowcase(mkcontainer.MkContainer):
@@ -79,7 +59,7 @@ class MkShowcase(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         text = ""
-        for items in batched(self.items, self.column_count):
+        for items in helpers.batched(self.items, self.column_count):
             text += '<div class="row">'
             for item in items:
                 text += '\n  <div class="column">\n'
