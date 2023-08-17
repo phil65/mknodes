@@ -40,14 +40,14 @@ class MkContainer(mknode.MkNode):
             case None:
                 items: list[mknode.MkNode] = []
             case str():
-                items = [mktext.MkText(content)] if content else []
+                items = [self._to_item(content)] if content else []
             case mknode.MkNode():
-                items = [content]
+                items = [self._to_item(content)]
             case list():
-                items = [mktext.MkText(i) if isinstance(i, str) else i for i in content]
+                items = [self._to_item(i) for i in content]
             case _:
                 raise TypeError(content)
-        for item in items or []:
+        for item in items:
             self.append(item)  # noqa: PERF402
 
     def __bool__(self):
@@ -79,16 +79,24 @@ class MkContainer(mknode.MkNode):
         return self.block_separator.join(i.to_markdown() for i in self.items)
 
     def append(self, other: str | mknode.MkNode):
+        node = self._to_item(other)
+        self.items.append(node)  # type: ignore[arg-type]
+
+    def insert(self, index: int, other: str | mknode.MkNode):
+        node = self._to_item(other)
+        self.items.insert(index, node)
+
+    def _to_item(self, other) -> mknode.MkNode:  # type: ignore[return]
         match other:
             case str() if (match := HEADER_REGEX.match(other)):
-                other = mkheader.MkHeader(match[2], level=len(match[1]), parent=self)
+                return mkheader.MkHeader(match[2], level=len(match[1]), parent=self)
             case str():
-                other = mktext.MkText(other, parent=self)
+                return mktext.MkText(other, parent=self)
             case mknode.MkNode():
                 other.parent = self
+                return other
             case _:
                 raise TypeError(other)
-        self.items.append(other)  # type: ignore[arg-type]
 
     @property  # type: ignore
     def children(self) -> list[mknode.MkNode]:
