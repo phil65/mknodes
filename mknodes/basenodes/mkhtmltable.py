@@ -15,6 +15,8 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
     but it can contain more complex Markdown in cells.
     """
 
+    STATUS = "new"
+
     def _to_markdown(self) -> str:
         table_data = self.data  # property
         if not any(table_data[k] for k in table_data):
