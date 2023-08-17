@@ -84,19 +84,17 @@ class MkCommentedCode(mkcontainer.MkContainer):
                     code = "\n".join(section)
                     start_line = line_num if self.linenums else None
                     sections.append(mkcode.MkCode(code, linenums=start_line))
-                    section = [line.strip().removeprefix("#")[1:]]
+                    section = []
                     line_num = i
-                else:
-                    section.append(line.strip().removeprefix("#")[1:])
+                section.append(line.strip().removeprefix("#")[1:])
                 mode = "comment"
             elif not line.strip().startswith("#"):
                 if mode == "comment":
                     text = "\n".join(section)
                     sections.append(Class(text))
-                    section = [line]
+                    section = []
                     line_num = i
-                else:
-                    section.append(line)
+                section.append(line)
                 mode = "code"
         if mode == "code":
             code = "\n".join(section)
