@@ -5,6 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mktext
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,17 @@ class MkCommentedCode(mkcontainer.MkContainer):
         self.use_admonitions = use_admonitions
         super().__init__(content=code, header=header, **kwargs)
 
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            code=self.code,
+            language=self.language,
+            linenums=self.linenums,
+            use_admonitions=self.use_admonitions,
+            _filter_empty=True,
+            _filter_false=True,
+        )
+
     @property
     def items(self):
         if not self.code:
@@ -71,14 +83,14 @@ class MkCommentedCode(mkcontainer.MkContainer):
                     code = "\n".join(section)
                     start_line = line_num if self.linenums else None
                     sections.append(mkcode.MkCode(code, linenums=start_line))
-                    section = [line]
+                    section = [line.strip().removeprefix("#")[1:]]
                     line_num = i
                 else:
-                    section.append(line)
+                    section.append(line.strip().removeprefix("#")[1:])
                 mode = "comment"
             elif not line.strip().startswith("#"):
                 if mode == "comment":
-                    text = "\n".join(section).replace("#", "").strip()
+                    text = "\n".join(section)
                     sections.append(Class(text))
                     section = [line]
                     line_num = i
@@ -90,7 +102,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
             start_line = line_num if self.linenums else None
             sections.append(mkcode.MkCode(code, linenums=start_line))
         elif mode == "comment":
-            text = "\n".join(section).replace("#", "").strip()
+            text = "\n".join(section)
             sections.append(Class(text))
         for section in sections:
             section.parent = self
@@ -102,13 +114,17 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     @staticmethod
     def create_example_page(page):
+        # Comment sections automatically get converted to non-codeblock sections.
+        # That way you can explain your code in-line.
         import inspect
 
+        # ## you can use headers.
         import mknodes
 
-        from mknodes import manual
-
-        code = inspect.getsource(manual.build)
+        # !!! note
+        #     Admonitions and everything else work, too.
+        #
+        code = inspect.getsource(MkCommentedCode.create_example_page)
         node = MkCommentedCode(code)
         page += mknodes.MkReprRawRendered(node, header="### Regular")
         node = MkCommentedCode(code, use_admonitions=True)
