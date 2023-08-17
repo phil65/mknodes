@@ -176,7 +176,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
         page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
         node = MkMetadataBadges(typ="required_python", badge_color="red")
-        page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
+        page += mknodes.MkReprRawRendered(node, header="### Colored")
 
 
 if __name__ == "__main__":
