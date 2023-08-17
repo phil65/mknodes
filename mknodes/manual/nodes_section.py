@@ -132,6 +132,7 @@ def create_documentation_nodes_section(nav: mknodes.MkNav):
     klasses = [
         mknodes.MkClassDiagram,
         mknodes.MkDocStrings,
+        mknodes.MkCommentedCode,
         mknodes.MkClassTable,
         mknodes.MkModuleTable,
     ]
