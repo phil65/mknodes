@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 import logging
 import re
 import textwrap
@@ -58,6 +59,7 @@ class MkNode(node.Node):
         header: str = "",
         indent: str = "",
         shift_header_levels: int = 0,
+        css_classes: Iterable[str] | None = None,
         project: project.Project | None = None,
         parent: MkNode | None = None,
     ):
@@ -67,6 +69,7 @@ class MkNode(node.Node):
             header: Optional header for contained Markup
             indent: Indentation of given Markup (unused ATM)
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
+            css_classes: A sequence of css class names to use for this node
             project: Project this Nav is connected to.
             parent: Parent for building the tree
         """
@@ -76,7 +79,7 @@ class MkNode(node.Node):
         self._annotations = None
         self.shift_header_levels = shift_header_levels
         self._files: dict[str, str | bytes] = {}
-        self._css_classes: set[str] = set()
+        self._css_classes: set[str] = set(css_classes or [])
         self._associated_project = project
         # ugly, but convenient.
         from mknodes.basenodes import mkannotations
