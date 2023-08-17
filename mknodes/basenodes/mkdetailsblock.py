@@ -2,28 +2,14 @@ from __future__ import annotations
 
 import logging
 
-from typing import Any, Literal, get_args
+from typing import Any, get_args
 
 from mknodes.basenodes import mkblock, mknode
+from mknodes.data import datatypes
 from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
-
-AdmonitionTypeStr = Literal[
-    "node",
-    "abstract",
-    "info",
-    "tip",
-    "success",
-    "question",
-    "warning",
-    "failure",
-    "danger",
-    "bug",
-    "example",
-    "quote",
-]
 
 
 class MkDetailsBlock(mkblock.MkBlock):
@@ -37,7 +23,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         self,
         content: str | list | mknode.MkNode,
         *,
-        typ: AdmonitionTypeStr = "info",
+        typ: datatypes.AdmonitionTypeStr = "info",
         expand: bool | None = None,
         title: str | None = None,
         **kwargs: Any,
@@ -74,11 +60,11 @@ class MkDetailsBlock(mkblock.MkBlock):
         )
 
     @property
-    def typ(self) -> AdmonitionTypeStr:
+    def typ(self) -> datatypes.AdmonitionTypeStr:
         return self.attributes["type"]
 
     @typ.setter
-    def typ(self, value: AdmonitionTypeStr):
+    def typ(self, value: datatypes.AdmonitionTypeStr):
         self.attributes["type"] = value
 
     @property
@@ -97,7 +83,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
         page += mknodes.MkLink(url, "More info", as_button=True)
         # AdmonitionTypeStr is a Literal containing all Admonition types
-        for typ in get_args(AdmonitionTypeStr):
+        for typ in get_args(datatypes.AdmonitionTypeStr):
             page += mknodes.MkHeader(f"Type '{typ}'", level=3)
             title = f"Details block with type {typ!r}"
             content = f"This is type **{typ}**"
