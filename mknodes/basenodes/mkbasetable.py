@@ -5,7 +5,7 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import mkcontainer, mknode, mktext
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import helpers
 
 
@@ -45,16 +45,16 @@ class MkBaseTable(mkcontainer.MkContainer):
                 }
             case Mapping():
                 self._data = {
-                    str(k): [self.to_item(i) for i in v] for k, v in data.items()
+                    str(k): [self.to_child_node(i) for i in v] for k, v in data.items()
                 }
             case ((str(), *_), *_):
                 h = columns or [str(i) for i in range(len(data))]
                 self._data = {}
                 for i, col in enumerate(data):
-                    self._data[h[i]] = [self.to_item(j) for j in col]
+                    self._data[h[i]] = [self.to_child_node(j) for j in col]
             case (dict(), *_):
                 self._data = {
-                    k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
+                    k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
                     for k in data[0]
                 }
             case _:
@@ -88,23 +88,20 @@ class MkBaseTable(mkcontainer.MkContainer):
         match data:
             case Mapping():
                 self._data = {
-                    str(k): [self.to_item(i) for i in v] for k, v in data.items()
+                    str(k): [self.to_child_node(i) for i in v] for k, v in data.items()
                 }
             case (str(), *_):
-                self._data = {"": [self.to_item(i) for i in data]}
+                self._data = {"": [self.to_child_node(i) for i in data]}
             case (dict(), *_):
-                self._data = {k: [self.to_item(dic[k]) for dic in data] for k in data[0]}
+                self._data = {
+                    k: [self.to_child_node(dic[k]) for dic in data] for k in data[0]
+                }
             case ():
-                self._data = {"": [self.to_item(k) for k in data]}
+                self._data = {"": [self.to_child_node(k) for k in data]}
             case None:
                 self._data = {}
             case _:
                 raise TypeError(data)
-
-    def to_item(self, i):
-        item = mktext.MkText(i) if isinstance(i, str | None) else i
-        item.parent = self
-        return item
 
     def add_row(
         self,
@@ -116,10 +113,10 @@ class MkBaseTable(mkcontainer.MkContainer):
         match row:
             case dict():
                 for k, v in row.items():
-                    self.data[k].append(self.to_item(v))
+                    self.data[k].append(self.to_child_node(v))
             case _:
                 for i, key in enumerate(self.data.keys()):
-                    self.data[key].append(self.to_item(row[i]))
+                    self.data[key].append(self.to_child_node(row[i]))
 
     def iter_rows(self) -> Iterator[list[mknode.MkNode]]:
         data = self.data  # property

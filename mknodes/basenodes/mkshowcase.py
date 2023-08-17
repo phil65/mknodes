@@ -55,14 +55,14 @@ class MkShowcase(mkcontainer.MkContainer):
             case None:
                 items = []
             case list():
-                items = [self.to_item(card) for card in cards]
+                items = [self.to_child_node(card) for card in cards]
         self.column_count = column_count
         super().__init__(content=items, header=header, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, cards=self.items)
 
-    def to_item(self, item) -> mkcard.MkCard:
+    def to_child_node(self, item) -> mkcard.MkCard:
         match item:
             case mkpage.MkPage():
                 return mkcard.MkCard(

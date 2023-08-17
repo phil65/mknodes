@@ -5,7 +5,7 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import mkcontainer, mknode, mktext
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import helpers
 
 
@@ -48,18 +48,13 @@ class MkDefinitionList(mkcontainer.MkContainer):
     def items(self, data):
         match data:
             case Mapping():
-                self.data = {k: self.to_item(v) for k, v in data.items()}
+                self.data = {k: self.to_child_node(v) for k, v in data.items()}
             case list():
-                self.data = {i: self.to_item(item) for i, item in enumerate(data)}
+                self.data = {i: self.to_child_node(item) for i, item in enumerate(data)}
             case None:
                 self.data = {}
             case _:
                 raise TypeError(data)
-
-    def to_item(self, i):
-        item = mktext.MkText(i) if isinstance(i, str | None) else i
-        item.parent = self
-        return item
 
     def _to_markdown(self) -> str:
         result = []

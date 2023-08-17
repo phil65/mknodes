@@ -40,11 +40,11 @@ class MkContainer(mknode.MkNode):
             case None:
                 items: list[mknode.MkNode] = []
             case str():
-                items = [self._to_item(content)] if content else []
+                items = [self.to_child_node(content)] if content else []
             case mknode.MkNode():
-                items = [self._to_item(content)]
+                items = [self.to_child_node(content)]
             case list():
-                items = [self._to_item(i) for i in content]
+                items = [self.to_child_node(i) for i in content]
             case _:
                 raise TypeError(content)
         for item in items:
@@ -79,14 +79,14 @@ class MkContainer(mknode.MkNode):
         return self.block_separator.join(i.to_markdown() for i in self.items)
 
     def append(self, other: str | mknode.MkNode):
-        node = self._to_item(other)
+        node = self.to_child_node(other)
         self.items.append(node)  # type: ignore[arg-type]
 
     def insert(self, index: int, other: str | mknode.MkNode):
-        node = self._to_item(other)
+        node = self.to_child_node(other)
         self.items.insert(index, node)
 
-    def _to_item(self, other) -> mknode.MkNode:  # type: ignore[return]
+    def to_child_node(self, other) -> mknode.MkNode:  # type: ignore[return]
         match other:
             case str() if (match := HEADER_REGEX.match(other)):
                 return mkheader.MkHeader(match[2], level=len(match[1]), parent=self)

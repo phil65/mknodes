@@ -35,7 +35,7 @@ class MkModuleTable(mktable.MkTable):
             return {}
         data = [self.layouter.get_row_for(mod) for mod in self.modules]
         return {
-            k: [self.to_item(dic[k]) for dic in data]  # type: ignore[index]
+            k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
             for k in data[0]
         }
 

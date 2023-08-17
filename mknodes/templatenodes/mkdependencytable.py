@@ -56,7 +56,7 @@ class MkDependencyTable(mktable.MkTable):
             row = dict(Name=link, Summary=summary, Markers=marker_str)
             rows.append(row)
         return {
-            k: [self.to_item(dic[k]) for dic in rows]  # type: ignore[index]
+            k: [self.to_child_node(dic[k]) for dic in rows]  # type: ignore[index]
             for k in rows[0]
         }
 
