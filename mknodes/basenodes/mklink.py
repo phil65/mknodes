@@ -45,6 +45,10 @@ class MkLink(mknode.MkNode):
         self.primary_color = primary_color
         icon = icon or ""
         self.icon = icon
+        if as_button:
+            self.add_css_class("md-button")
+        if primary_color:
+            self.add_css_class("md-button--primary")
 
     def __repr__(self):
         return helpers.get_repr(
@@ -69,21 +73,13 @@ class MkLink(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         title = self.target if self.title is None else self.title
-        if self.as_button:
-            button_suffix = (
-                "{ .md-button .md-button--primary }"
-                if self.primary_color
-                else "{ .md-button }"
-            )
-        else:
-            button_suffix = ""
         icon = (
             self.icon
             if not self.icon or self.icon.startswith(":")
             else f':{self.icon.replace("/", "-")}:'
         )
         prefix = f"{icon} " if self.icon else ""
-        return f"[{prefix}{title}]({self.url}){button_suffix}"
+        return f"[{prefix}{title}]({self.url})"
 
     @staticmethod
     def create_example_page(page):

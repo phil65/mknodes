@@ -38,6 +38,14 @@ class MkProgressBar(mknode.MkNode):
         self.title = title
         self.percentage = percentage
         self.style = style
+        match self.style:
+            case "thin":
+                self.add_css_class("thin")
+            case "candystripe":
+                self.add_css_class("candystripe")
+            case "candystripe_animated":
+                self.add_css_class("candystripe")
+                self.add_css_class("candystripe-animate")
 
     def __repr__(self):
         return helpers.get_repr(
@@ -55,16 +63,7 @@ class MkProgressBar(mknode.MkNode):
                 title = self.title.format(percentage=self.percentage)
             case True:
                 title = f"{self.percentage}%"
-        match self.style:
-            case "thin":
-                suffix = "{: .thin}"
-            case "candystripe":
-                suffix = "{: .candystripe}"
-            case "candystripe_animated":
-                suffix = "{: .candystripe .candystripe-animate}"
-            case _:
-                suffix = ""
-        return rf'[={self.percentage}% "{title}"]{suffix}'
+        return rf'[={self.percentage}% "{title}"]'
 
     @staticmethod
     def create_example_page(page):
