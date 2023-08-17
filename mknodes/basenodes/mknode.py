@@ -128,7 +128,8 @@ class MkNode(node.Node):
     def virtual_files(self):
         """Returns a dict containing the virtual files attached to this tree element.
 
-        This can be overridden by nodes if they want files to be included in the build.
+        This can be overridden by nodes if they want files to be included dynamically.
+        For static files, use `add_file`.
         """
         return self._files
 
