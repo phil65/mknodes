@@ -98,6 +98,8 @@ dependencies = [
     "toml",
     "spdx-lookup",
     "fsspec",
+    "cssutils",
+    "coloraide",
     "anybadge",
     "PyYAML >=5.1",
 ]

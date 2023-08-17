@@ -7,6 +7,7 @@ import types
 from typing import TYPE_CHECKING
 
 from mknodes import mkdocsconfig, mknav
+from mknodes.cssclasses import rootcss
 from mknodes.data import taskrunners, tools
 from mknodes.utils import helpers, packageinfo, pyproject
 
@@ -40,6 +41,7 @@ class Project:
         self._module = module
         self.config = mkdocsconfig.Config(config)
         self.files = files
+        self.root_css = rootcss.RootCSS()
         self.package_repos = ["pip"]
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None

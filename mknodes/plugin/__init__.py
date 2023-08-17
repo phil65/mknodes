@@ -6,7 +6,6 @@ from __future__ import annotations
 import collections
 import importlib
 import os
-import pathlib
 import tempfile
 
 from typing import TYPE_CHECKING
@@ -15,7 +14,6 @@ import urllib.parse
 from mkdocs.config import config_options
 from mkdocs.exceptions import PluginError
 from mkdocs.plugins import BasePlugin, get_plugin_logger
-from mkdocs.utils import write_file
 
 from mknodes import project
 from mknodes.plugin import linkreplacer, fileseditor
@@ -67,10 +65,9 @@ class MkNodesPlugin(BasePlugin):
                 with ed.open(k, mode) as file:
                     file.write(v)
             if css := root.all_css():
-                logger.info("Creating %s...", self.css_filename)
-                config.extra_css.append(self.css_filename)
-                path = pathlib.Path(config["site_dir"]) / self.css_filename
-                write_file(css.encode(), str(path))
+                self._project.config.register_css(self.css_filename, css)
+            if css := self._project.root_css:
+                self._project.config.register_css("mknodes_root.css", str(css))
         return ed.files
 
     def on_nav(

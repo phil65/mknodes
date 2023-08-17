@@ -19,3 +19,7 @@ AdmonitionTypeStr = Literal[
 ]
 
 PageStatusStr = Literal["new", "deprecated", "encrypted"]
+
+RGBColorType = tuple[int, int, int] | str
+RGBAColorType = tuple[int, int, int, float] | str
+ColorType = RGBColorType | RGBAColorType

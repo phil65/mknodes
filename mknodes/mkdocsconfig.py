@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import logging
+import os
 import pathlib
 
 from typing import TYPE_CHECKING, Literal
 
 from mkdocs import config as _config
+from mkdocs.utils import write_file
 
 from mknodes.utils import helpers
 
@@ -101,6 +103,13 @@ class Config:
                 return palette.get(color_type, fallback)
             case _:
                 return fallback
+
+    def register_css(self, filename: str | os.PathLike, css: str):
+        site_dir = pathlib.Path(self._config["site_dir"])
+        path = (pathlib.Path("assets") / filename).as_posix()
+        logger.info("Creating %s...", path)
+        self._config.extra_css.append(path)
+        write_file(css.encode(), (site_dir / path).as_posix())
 
 
 if __name__ == "__main__":
