@@ -8,11 +8,12 @@ import pathlib
 import re
 import types
 
-from typing import TYPE_CHECKING, Any, Literal, Self
+from typing import TYPE_CHECKING, Any, Self
 
 import mkdocs_gen_files
 
 from mknodes.basenodes import mkcode, mklink, mknode
+from mknodes.data.datatypes import PageStatusStr
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import helpers
 
@@ -209,7 +210,7 @@ class MkNav(mknode.MkNode):
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
-        status: Literal["new", "deprecated"] | None = None,
+        status: PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
         path: str | None = None,
@@ -287,7 +288,7 @@ class MkNav(mknode.MkNode):
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
-        status: Literal["new", "deprecated"] | None = None,
+        status: PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
     ) -> mkpage.MkPage:

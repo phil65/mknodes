@@ -17,3 +17,5 @@ AdmonitionTypeStr = Literal[
     "example",
     "quote",
 ]
+
+PageStatusStr = Literal["new", "deprecated", "encrypted"]

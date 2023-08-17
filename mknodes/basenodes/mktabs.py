@@ -135,18 +135,19 @@ class MkTab(mkcontainer.MkContainer):
         return text
 
     def _to_markdown(self) -> str:
-        item_str = "\n\n".join(i.to_markdown() for i in self.items)
-        indented_text = textwrap.indent(item_str.rstrip("\n"), prefix="    ")
+        text = "\n\n".join(i.to_markdown() for i in self.items)
+        text = text.rstrip("\n")
         if self.annotations:
-            annotates = textwrap.indent(str(self.annotations), prefix="    ")
-            indented_text = f"{indented_text}\n    {{ .annotate }}\n\n{annotates}"
+            annotates = str(self.annotations)
+            text = f"{text}\n{{ .annotate }}\n\n{annotates}"
+        text = textwrap.indent(text, prefix="    ")
         if self.new:
             mark = "!"
         elif self.select:
             mark = "+"
         else:
             mark = ""
-        lines = [f'==={mark} "{self.title}"', indented_text]
+        lines = [f'==={mark} "{self.title}"', text]
         return "\n".join(lines) + "\n"
 
 

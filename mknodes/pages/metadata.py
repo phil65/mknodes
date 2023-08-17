@@ -3,9 +3,11 @@ from __future__ import annotations
 import dataclasses
 import re
 
-from typing import Literal, Self
+from typing import Self
 
 import yaml
+
+from mknodes.data import datatypes
 
 
 HEADER = "---\n{options}---\n"
@@ -21,7 +23,7 @@ class Metadata:
     search_boost: float | None = None
     exclude_from_search: bool | None = None
     icon: str | None = None
-    status: Literal["new", "deprecated"] | None = None
+    status: datatypes.PageStatusStr | None = None
     title: str | None = None
     subtitle: str | None = None
     description: str | None = None

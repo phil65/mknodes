@@ -4,9 +4,10 @@ import logging
 import os
 import pathlib
 
-from typing import Any, Literal, Self
+from typing import Any, Self
 
 from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock, mknode
+from mknodes.data import datatypes
 from mknodes.pages import metadata
 from mknodes.utils import helpers
 
@@ -34,7 +35,7 @@ class MkPage(mkcontainer.MkContainer):
         exclude_from_search: bool | None = None,
         icon: str | None = None,
         path: str | os.PathLike | None = None,
-        status: Literal["new", "deprecated"] | None = None,
+        status: datatypes.PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
         template: str | None = None,
@@ -111,11 +112,11 @@ class MkPage(mkcontainer.MkContainer):
         return path.lstrip("/")
 
     @property
-    def status(self) -> Literal["new", "deprecated"] | None:
+    def status(self) -> datatypes.PageStatusStr | None:
         return self.metadata.status
 
     @status.setter
-    def status(self, value: Literal["new", "deprecated"]):
+    def status(self, value: datatypes.PageStatusStr):
         self.metadata.status = value
 
     @property

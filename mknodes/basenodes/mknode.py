@@ -3,10 +3,11 @@ from __future__ import annotations
 from collections.abc import Iterable
 import logging
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
 from mknodes import paths
 from mknodes.basenodes import processors
+from mknodes.data import datatypes
 from mknodes.treelib import node
 
 
@@ -35,7 +36,7 @@ class MkNode(node.Node):
     ICON = "material/puzzle-outline"
     REQUIRED_EXTENSIONS: list[str] = []
     REQUIRED_PLUGINS: list[str] = []
-    STATUS: Literal["new", "deprecated"] | None = None
+    STATUS: datatypes.PageStatusStr | None = None
     CSS = None
     children: list[MkNode]
 
