@@ -2,31 +2,16 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 import logging
-import re
-import textwrap
 
 from typing import TYPE_CHECKING, Literal
 
 from mknodes import paths
+from mknodes.basenodes import processors
 from mknodes.treelib import node
 
 
 if TYPE_CHECKING:
     from mknodes import project
-
-HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
-
-
-def shift_header_levels(text: str, levels: int) -> str:
-    def mod_header(match: re.Match, levels: int) -> str:
-        header_str = match[1]
-        if levels > 0:
-            header_str += levels * "#"
-        else:
-            header_str = header_str[:levels]
-        return f"{header_str} {match[2]}"
-
-    return re.sub(HEADER_REGEX, lambda x: mod_header(x, levels), text)
 
 
 logger = logging.getLogger(__name__)
@@ -76,7 +61,6 @@ class MkNode(node.Node):
         super().__init__(parent=parent)
         self.header = header
         self.indent = indent
-        self._annotations = None
         self.shift_header_levels = shift_header_levels
         self._files: dict[str, str | bytes] = {}
         self._css_classes: set[str] = set(css_classes or [])
@@ -112,19 +96,18 @@ class MkNode(node.Node):
     def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
         text = self._to_markdown()
-        if self.shift_header_levels:
-            text = shift_header_levels(text, self.shift_header_levels)
-        if self.indent:
-            text = textwrap.indent(text, self.indent)
-        if self._css_classes:
-            classes = " ".join(f".{kls_name}" for kls_name in self._css_classes)
-            suffix = f"{{: {classes}}}"
-            text += suffix
-        if not self.header:
-            return self.attach_annotations(text)
-        header = self.header if self.header.startswith("#") else f"## {self.header}"
-        text = f"{header}\n\n{text}"
-        return self.attach_annotations(text)
+        for proc in self.get_processors():
+            text = proc.run(text)
+        return text
+
+    def get_processors(self):
+        return [
+            processors.ShiftHeaderLevelProcessor(self.shift_header_levels),
+            processors.IndentationProcessor(self.indent),
+            processors.AppendCssClassesProcessor(self._css_classes),
+            processors.PrependHeaderProcessor(self.header),
+            processors.AnnotationProcessor(self),
+        ]
 
     def attach_annotations(self, text: str) -> str:
         """Can be reimplemented if non-default annotations are needed."""
