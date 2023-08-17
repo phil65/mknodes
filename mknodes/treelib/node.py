@@ -289,10 +289,8 @@ def preorder_iter(
         stop_condition: function that takes in node as argument
         max_depth: maximum depth of iteration, based on `depth` attribute
     """
-    if (
-        tree
-        and (not max_depth or tree.depth <= max_depth)
-        and (not stop_condition or not stop_condition(tree))
+    if (not max_depth or tree.depth <= max_depth) and (
+        not stop_condition or not stop_condition(tree)
     ):
         if not filter_condition or filter_condition(tree):
             yield tree
