@@ -44,10 +44,13 @@ class Project:
         self.root_css = rootcss.RootCSS()
         md = self.config.get_markdown_instance()
         self.block_manager = templateblocks.BlockManager(md)
-        self.package_repos = ["pip"]
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
+
+    @property
+    def package_repos(self):
+        return self.pyproject.package_repos
 
     @property
     def info(self):
