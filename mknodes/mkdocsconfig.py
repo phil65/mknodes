@@ -124,16 +124,13 @@ class Config:
         path = (pathlib.Path("assets") / filename).as_posix()
         logger.info("Creating %s...", path)
         self._config.extra_css.append(path)
-        write_file(css.encode(), (site_dir / path).as_posix())
+        write_file(css.encode(), (site_dir / path))
 
     def register_main_html(self, content: str):
-        site_dir = pathlib.Path(self._config["docs_dir"])
+        custom_dir = pathlib.Path(self._config.theme.custom_dir) / "main.html"
         path = pathlib.Path("overrides") / "main.html"
         logger.info("Creating %s...", path.as_posix())
-        # self._config.theme._custom_dir = str(path)
-        # self._config.theme.dirs.append(path)
-        write_file(content.encode(), (site_dir / path).as_posix())
-        # write_file(content.encode(), (site_dir / path).as_posix())
+        write_file(content.encode(), custom_dir)
 
     def get_markdown_instance(self) -> markdown.Markdown:
         return markdown.Markdown(
