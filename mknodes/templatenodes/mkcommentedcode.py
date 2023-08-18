@@ -15,7 +15,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
     """Node which displays a list of code / comment blocks for given code.
 
     Lines beginning with # are shown in dedicated blocks and can be used to
-    inline-explain the code.
+    inline-explain the code. Lines can be hidden by ending a line with "#".
     """
 
     ICON = "material/code-json"
@@ -77,7 +77,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         )
         line_num = self.linenums or 0
         for i, line in enumerate(self.code.split("\n"), start=line_num):
-            if not line.strip():
+            if not line.strip() or line.rstrip().endswith("#"):
                 continue
             if line.strip().startswith("#"):
                 if mode == "code":
