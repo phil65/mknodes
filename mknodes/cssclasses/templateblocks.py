@@ -28,7 +28,9 @@ BlockStr = Literal[
 
 
 BLOCK = """{{% block {block_name} %}}
-{pre}{super}{post}
+{pre_block}
+{super_block}
+{post_block}
 {{% endblock %}}
 """
 
@@ -75,7 +77,7 @@ class BlockManager:
         self.data.setdefault(block, {})["after"] = value
 
     def build_main_html(self) -> str | None:
-        blocks = [r'{% extends "base.html" %}']
+        blocks = [r'{% extends "base.html" %}\n']
         if not self.data:
             return None
         for k, v in self.data.items():
@@ -83,7 +85,12 @@ class BlockManager:
                 pre = v["replace"]
                 if isinstance(pre, mknode.MkNode):
                     pre = self.md.convert(str(pre))
-                b = BLOCK.format(block_name=k, pre=pre, super="", post="")
+                b = BLOCK.format(
+                    block_name=k,
+                    pre_block=pre,
+                    super_block="",
+                    post_block="",
+                )
                 blocks.append(b)
             elif "before" in v or "after" in v:
                 pre = v.get("before", "")
@@ -94,12 +101,12 @@ class BlockManager:
                     post = self.md.convert(str(post))
                 b = BLOCK.format(
                     block_name=k,
-                    pre=str(pre) + "\n",
-                    super="{{ super() }}\n",
-                    post=str(post),
+                    pre_block=str(pre),
+                    super_block="{{ super() }}",
+                    post_block=str(post),
                 )
                 blocks.append(b)
-        return "\n".join(blocks)
+        return "\n".join(blocks) + "\n"
 
 
 if __name__ == "__main__":
