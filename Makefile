@@ -1,13 +1,6 @@
 .PHONY: help clean lint test docs serve release bump
 .DEFAULT_GOAL := help
 
-define BROWSER_PYSCRIPT
-import os, webbrowser, sys
-from urllib.request import pathname2url
-webbrowser.open("file:" + pathname2url(os.path.abspath(sys.argv[1])))
-endef
-export BROWSER_PYSCRIPT
-
 define BUMP_SCRIPT
 import os, prettyqt
 version = prettyqt.__version__
@@ -40,7 +33,6 @@ mypy: ## run mypy type checking
 
 docs: ## builds the documentation
 	hatch run docs-build
-	$(BROWSER) site/index.html
 
 serve: ## run html server watching file changes in realtime
 	hatch run docs-serve
