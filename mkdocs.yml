@@ -8,6 +8,7 @@ copyright: Copyright &copy; 2023 Philipp Temminghoff
 
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
   # Palette toggle for light mode
   - media: "(prefers-color-scheme: light)"
