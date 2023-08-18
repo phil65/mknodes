@@ -10,12 +10,10 @@ import types
 
 from typing import TYPE_CHECKING, Any, Self
 
-import mkdocs_gen_files
-
 from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import helpers
+from mknodes.utils import helpers, navbuilder
 
 
 if TYPE_CHECKING:
@@ -262,7 +260,7 @@ class MkNav(mknode.MkNode):
         return dct | super().virtual_files()
 
     def to_markdown(self) -> str:
-        nav = mkdocs_gen_files.Nav()
+        nav = navbuilder.NavBuilder()
         # In a nav, the first inserted item becomes the index page in case
         # the section-index plugin is used, so we add it first.
         if self.index_page and self.index_title:

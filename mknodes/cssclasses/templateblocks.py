@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     cfg = mkdocsconfig.Config()
     md = cfg.get_markdown_instance()
-    manager = PageTemplate(md)
+    manager = PageTemplate(md, filename="main.html")
     manager._insert_after_block(
         "announce",
         mknodes.MkAdmonition("test"),
