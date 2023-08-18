@@ -126,14 +126,19 @@ class Config:
         self._config.extra_css.append(path)
         write_file(css.encode(), (site_dir / path).as_posix())
 
-    def convert_markdown(self, text: str) -> str:
-        md = markdown.Markdown(
+    def register_main_html(self, content: str):
+        site_dir = pathlib.Path(self._config["site_dir"])
+        path = pathlib.Path("overrides") / "main.html"
+        logger.info("Creating %s...", path.as_posix())
+        # self._config.theme._custom_dir = str(path.absolute())
+        write_file(content.encode(), (site_dir / path).as_posix())
+
+    def get_markdown_instance(self) -> markdown.Markdown:
+        return markdown.Markdown(
             extensions=self._config["markdown_extensions"],
             extension_configs=self._config["mdx_configs"] or {},
         )
-        return md.convert(text)
 
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg.convert_markdown("!!! note\n    test"))
