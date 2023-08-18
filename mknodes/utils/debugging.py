@@ -56,12 +56,12 @@ def serve_node(node):
 def serve_script(script_file: str | os.PathLike):
     script_file = pathlib.Path(script_file).absolute()
     script_file = script_file.relative_to(pathlib.Path.cwd())
-    path = ".".join(script_file.parts).removeprefix(".py")
+    # path = ".".join(script_file.parts).removeprefix(".py")
     text = pathlib.Path("mkdocs.yml").read_text()
     config_file = yaml.load(text, Loader=yaml.Loader)
     for plugin in config_file["plugins"]:
         if isinstance(plugin, dict) and next(iter(plugin.keys())) == "mknodes":
-            plugin["mknodes"]["path"] = path
+            plugin["mknodes"]["path"] = str(script_file)  # path
     output = yaml.dump(config_file, Dumper=yaml.Dumper)
     stream = io.StringIO(output)
     serve.serve(
