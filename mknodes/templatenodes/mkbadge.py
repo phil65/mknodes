@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 import anybadge
 
-from mknodes.basenodes import mkbinaryimage
+from mknodes.basenodes import mkimage
 from mknodes.utils import helpers
 
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 StyleStr = Literal["default", "gitlab-scoped"]
 
 
-class MkBadge(mkbinaryimage.MkBinaryImage):
+class MkBadge(mkimage.MkImage):
     """Node for a locally-created badge (based on "anybadge").
 
     The node creates a badge svg, appends it to the virtual files, and
@@ -51,7 +51,7 @@ class MkBadge(mkbinaryimage.MkBinaryImage):
             use_gitlab_style: Use Gitlab-scope style
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__("", "", **kwargs)
+        super().__init__("", **kwargs)
         self.label = label
         self.value = value
         self.font_size = font_size
@@ -69,6 +69,11 @@ class MkBadge(mkbinaryimage.MkBinaryImage):
             case str():
                 return self._badge_color
         return None
+
+    def _to_markdown(self):
+        data = self.data.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+        inner = f"<a href={self.url!r}>{data}</a>" if self.url else data
+        return f"<body>{inner}</body>"
 
     @property
     def text_color(self) -> str | None:
