@@ -53,6 +53,9 @@ class RootCSS(cssclasses.CSS):
     def __init__(self):
         super().__init__(r":root {}")
 
+    def set_content_area_width(self, width: int):
+        self.add_rule(".md-grid", {"max-width": f"{width}px"})
+
     def set_tooltip_width(self, height: int):
         self[self.PREFIX]["--md-tooltip-width"] = f"{height}px"
 
