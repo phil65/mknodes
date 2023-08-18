@@ -44,20 +44,20 @@ class Project:
         self.files = files
         self.root_css = rootcss.RootCSS()
         md = self.config.get_markdown_instance()
-        self.block_manager = templateblocks.BlockManager(md)
+        self.main_template = templateblocks.PageTemplate(md)
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
 
     @property
     def announcement_bar(self):
-        return self.block_manager.announcement_bar
+        return self.main_template.announcement_bar
 
     @announcement_bar.setter
     def announcement_bar(self, value):
         if isinstance(value, mknode.MkNode):
             value._associated_project = self
-        self.block_manager.announcement_bar = value
+        self.main_template.announcement_bar = value
 
     @property
     def package_repos(self):

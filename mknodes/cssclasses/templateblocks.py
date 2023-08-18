@@ -35,7 +35,7 @@ BLOCK = """{{% block {block_name} %}}
 """
 
 
-class BlockManager:
+class PageTemplate:
     def __init__(self, md):
         self.data: dict[BlockStr, dict[str, str | mknode.MkNode]] = {}
         self.md = md
@@ -46,9 +46,9 @@ class BlockManager:
 
     @announcement_bar.setter
     def announcement_bar(self, value):
-        self.replace_block("announce", value, convert_markdown=True)
+        self._replace_block("announce", value, convert_markdown=True)
 
-    def replace_block(
+    def _replace_block(
         self,
         block: BlockStr,
         text: str | mknode.MkNode,
@@ -60,7 +60,7 @@ class BlockManager:
             value = text
         self.data.setdefault(block, {})["replace"] = value
 
-    def insert_before_block(
+    def _insert_before_block(
         self,
         block: BlockStr,
         text: str | mknode.MkNode,
@@ -72,7 +72,7 @@ class BlockManager:
             value = text
         self.data.setdefault(block, {})["before"] = value
 
-    def insert_after_block(
+    def _insert_after_block(
         self,
         block: BlockStr,
         text: str | mknode.MkNode,
@@ -124,8 +124,8 @@ if __name__ == "__main__":
 
     cfg = mkdocsconfig.Config()
     md = cfg.get_markdown_instance()
-    manager = BlockManager(md)
-    manager.insert_after_block(
+    manager = PageTemplate(md)
+    manager._insert_after_block(
         "announce",
         mknodes.MkAdmonition("test"),
         convert_markdown=True,

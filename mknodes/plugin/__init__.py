@@ -70,7 +70,7 @@ class MkNodesPlugin(BasePlugin):
                 self._project.config.register_css(self.css_filename, css)
             if css := self._project.root_css:
                 self._project.config.register_css("mknodes_root.css", str(css))
-            if main_html := self._project.block_manager.build_main_html():
+            if main_html := self._project.main_template.build_main_html():
                 self.main_html_content = main_html
                 self._project.config.register_main_html(main_html)
         return ed.files
