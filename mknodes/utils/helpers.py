@@ -338,6 +338,18 @@ def download(url: str, typ: Literal["text", "data"] = "text"):
 T = TypeVar("T")
 
 
+def load_yaml(text: str):
+    import yaml
+
+    return yaml.safe_load(text)
+
+
+def dump_yaml(yaml_obj) -> str:
+    import yaml
+
+    return yaml.dump(yaml_obj, Dumper=yaml.Dumper, indent=2)
+
+
 def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, None]:
     """Batch data into tuples of length n. The last batch may be shorter."""
     # batched('ABCDEFG', 3) --> ABC DEF G

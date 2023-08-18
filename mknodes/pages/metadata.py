@@ -5,9 +5,8 @@ import re
 
 from typing import Self
 
-import yaml
-
 from mknodes.data import datatypes
+from mknodes.utils import helpers
 
 
 HEADER = "---\n{options}---\n"
@@ -28,13 +27,14 @@ class Metadata:
     subtitle: str | None = None
     description: str | None = None
     template: str | None = None
+    tags: list[str] | None = None
 
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
         dct = {}
         if match := HEADER_RE.match(text):
             content = match[1]
-            dct = yaml.safe_load(content)
+            dct = helpers.load_yaml(content)
             if hide := dct.pop("hide", None):
                 dct["hide_toc"] = "toc" in hide
                 dct["hide_nav"] = "navigation" in hide
@@ -54,16 +54,14 @@ class Metadata:
 
     def __str__(self):
         data = self.as_dict()
-        return yaml.dump(data, Dumper=yaml.Dumper, indent=2) if data else ""
+        return helpers.dump_yaml(data) if data else ""
 
     def __bool__(self):
         return bool(self.as_dict())
 
     def as_page_header(self) -> str:
         text = str(self)
-        if not text:
-            return ""
-        return HEADER.format(options=text)
+        return "" if not text else HEADER.format(options=text)
 
     @property
     def hide(self):
@@ -95,6 +93,7 @@ class Metadata:
             template=self.template,
             hide=self.hide,
             search=self.search,
+            tags=self.tags,
         )
         return {k: v for k, v in data.items() if v is not None}
 
