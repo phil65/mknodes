@@ -6,6 +6,7 @@ from __future__ import annotations
 import collections
 import importlib
 import os
+import pathlib
 import tempfile
 
 from typing import TYPE_CHECKING
@@ -42,6 +43,7 @@ class MkNodesPlugin(BasePlugin):
         """
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         self._project = project.Project(config=config, files=files)
+        self.main_html_content = None
 
         with fileseditor.FilesEditor(files, config, self._dir.name) as ed:
             file_name = self.config["path"]
@@ -69,6 +71,7 @@ class MkNodesPlugin(BasePlugin):
             if css := self._project.root_css:
                 self._project.config.register_css("mknodes_root.css", str(css))
             if main_html := self._project.block_manager.build_main_html():
+                self.main_html_content = main_html
                 self._project.config.register_main_html(main_html)
         return ed.files
 
@@ -134,3 +137,8 @@ class MkNodesPlugin(BasePlugin):
                 continue
         link_replacer = linkreplacer.LinkReplacer(docs_dir, page_url, self._file_mapping)
         return link_replacer.replace(markdown)
+
+    def on_post_build(self, config: MkDocsConfig):
+        if config.theme.custom_dir and self.main_html_content:
+            path = pathlib.Path(config.theme.custom_dir) / "main.html"
+            path.unlink(missing_ok=True)
