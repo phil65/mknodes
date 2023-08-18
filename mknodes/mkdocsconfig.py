@@ -36,6 +36,7 @@ COLORS = {
     "blue grey": {"color": "#546d78", "text": "#ffffff"},
     "black": {"color": "#000000", "text": "#ffffff"},
     "white": {"color": "#ffffff", "text": "#000000"},
+    "custom": {"color": "#000000", "text": "#FFFFFF"},
 }
 
 if TYPE_CHECKING:
@@ -103,6 +104,18 @@ class Config:
                 return palette.get(color_type, fallback)
             case _:
                 return fallback
+
+    def set_color(self, color_type: Literal["primary", "accent"], value: str):
+        palettes = self._config.theme.get("palette")
+        match palettes:
+            case list():
+                for pal in palettes:
+                    pal["primary"] = value
+            case dict():
+                palettes["primary"] = value
+            case _:
+                msg = "Could not find palette"
+                raise RuntimeError(msg)
 
     def register_css(self, filename: str | os.PathLike, css: str):
         site_dir = pathlib.Path(self._config["site_dir"])
