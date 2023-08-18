@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from mknodes import mkdocsconfig, mknav
 from mknodes.cssclasses import rootcss
-from mknodes.data import taskrunners, tools
+from mknodes.data import datatypes, taskrunners, tools
 from mknodes.utils import helpers, packageinfo, pyproject
 
 
@@ -104,6 +104,32 @@ class Project:
             for runner in taskrunners.TASK_RUNNERS.values()
             if any(helpers.find_file_in_folder_or_parent(i) for i in runner.filenames)
         ]
+
+    def set_primary_foreground_color(
+        self,
+        color: datatypes.ColorType,
+        light_shade: datatypes.ColorType | None = None,
+        dark_shade: datatypes.ColorType | None = None,
+    ):
+        self.root_css.set_primary_foreground_color(color, light_shade, dark_shade)
+        self._foreground_color = color
+        self.config.set_color("primary", "custom")
+
+    def set_primary_background_color(self, color: datatypes.RGBColorType):
+        self.root_css.set_primary_background_color(color)
+        self.config.set_color("primary", "custom")
+
+    def set_accent_foreground_color(self, color: datatypes.RGBColorType):
+        self.root_css.set_accent_foreground_color(color)
+        self.config.set_color("accent", "custom")
+
+    def get_primary_color(self):
+        if self._foreground_color:
+            return self._foreground_color
+        return self.config.get_primary_color()
+
+    def get_text_color(self):
+        return self.config.get_text_color()
 
 
 if __name__ == "__main__":
