@@ -61,6 +61,7 @@ from .templatenodes.mkbadge import MkBadge
 from .templatenodes.mkmetadatabadges import MkMetadataBadges
 from .templatenodes.mkmoduleoverview import MkModuleOverview
 from .templatenodes.mkcommentedcode import MkCommentedCode
+from .templatenodes.mkconfigsetting import MkConfigSetting
 
 from .templatenodes.mkmoduletable import MkModuleTable
 
@@ -129,6 +130,7 @@ __all__ = [
     "MkMetadataBadges",
     "MkModuleOverview",
     "MkCommentedCode",
+    "MkConfigSetting",
 ]
 
 __version__ = "0.29.0"

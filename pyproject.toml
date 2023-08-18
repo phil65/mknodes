@@ -100,6 +100,7 @@ dependencies = [
     "fsspec",
     "cssutils",
     "coloraide",
+    "tomli-w",
     "anybadge",
     "PyYAML >=5.1",
 ]

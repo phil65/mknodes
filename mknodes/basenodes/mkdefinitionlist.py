@@ -12,6 +12,54 @@ from mknodes.utils import helpers
 logger = logging.getLogger(__name__)
 
 
+class MkDefinition(mkcontainer.MkContainer):
+    """Node for a single definition."""
+
+    REQUIRED_EXTENSIONS = ["def_list"]
+    ICON = "material/library"
+
+    def __init__(
+        self,
+        title: str = "",
+        content: list | None | str | mknode.MkNode = None,
+        **kwargs: Any,
+    ):
+        """Constructor.
+
+        Arguments:
+            title: Setting title
+            content: Markdown content for this block
+            kwargs: Keyword arguments passed to parent
+        """
+        super().__init__(content=content, **kwargs)
+        self._title = title
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+
+    def __repr__(self):
+        return helpers.get_repr(self, title=self._title, content=self.items)
+
+    def _to_markdown(self) -> str:
+        lines = super()._to_markdown().split("\n")
+        result = [f"{self.title}", f":   {lines[0]}"]
+        result.extend(f"    {i}" for i in lines[1:])
+        result.append("")
+        return "\n".join(result) + "\n"
+
+    @staticmethod
+    def create_example_page(page):
+        import mknodes
+
+        node = MkDefinition("test", content="hfkdlsjk")
+        page += mknodes.MkReprRawRendered(node, header="### Regular")
+
+
 class MkDefinitionList(mkcontainer.MkContainer):
     """Node for definition lists."""
 
