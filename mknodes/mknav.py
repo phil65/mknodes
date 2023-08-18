@@ -214,6 +214,8 @@ class MkNav(mknode.MkNode):
         subtitle: str | None = None,
         description: str | None = None,
         path: str | None = None,
+        template: str | None = None,
+        tags: list[str] | None = None,
     ) -> mkpage.MkPage:
         """Register and return a index page with given title.
 
@@ -226,10 +228,11 @@ class MkNav(mknode.MkNode):
             exclude_from_search: Exclude page from search index
             icon: optional page icon
             status: Page status
-            title: Page title
-            subtitle: Page subtitle
-            description: Page description
             path: Optional path override
+            description: Page description
+            subtitle: Page subtitle
+            template: Page template
+            tags: tags to show above the main headline and within the search preview
         """
         page = mkpage.MkPage(
             path=path or "index.md",
@@ -243,6 +246,8 @@ class MkNav(mknode.MkNode):
             title=title,
             subtitle=subtitle,
             description=description,
+            template=template,
+            tags=tags,
             parent=self,
         )
         self.index_page = page
@@ -291,6 +296,8 @@ class MkNav(mknode.MkNode):
         status: PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
+        template: str | None = None,
+        tags: list[str] | None = None,
     ) -> mkpage.MkPage:
         """Add a page to the Nav.
 
@@ -307,6 +314,8 @@ class MkNav(mknode.MkNode):
             status: Page status
             subtitle: Page subtitle
             description: Page description
+            template: Page template
+            tags: tags to show above the main headline and within the search preview
         """
         path = "index.md" if as_index else (path or f"{title}.md")
         page = mkpage.MkPage(
@@ -322,6 +331,8 @@ class MkNav(mknode.MkNode):
             status=status,
             subtitle=subtitle,
             description=description,
+            template=template,
+            tags=tags,
         )
         if as_index:
             self.index_page = page

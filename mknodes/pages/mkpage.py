@@ -41,6 +41,7 @@ class MkPage(mkcontainer.MkContainer):
         template: str | None = None,
         append_markdown: bool | None = None,
         virtual: bool = False,
+        tags: list[str] | None = None,
         edit_path: str | None = None,
         **kwargs: Any,
     ):
@@ -63,6 +64,7 @@ class MkPage(mkcontainer.MkContainer):
                              containing the markup at the bottom. Setting is
                              inherited from the parent navs if not set.
             virtual: Whether the Page should result in a file. Mainly for testing purposes
+            tags: tags to show above the main headline and within the search preview
             edit_path: Custom edit path for this page
             kwargs: Keyword arguments passed to parent
         """
@@ -86,6 +88,7 @@ class MkPage(mkcontainer.MkContainer):
             title=title,
             description=description,
             template=template,
+            tags=tags,
         )
 
     def __repr__(self):
