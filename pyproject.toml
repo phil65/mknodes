@@ -94,7 +94,6 @@ dependencies = [
     "mkdocs-literate-nav",
     "git-changelog",
     "requests",
-    "toml",
     "spdx-lookup",
     "fsspec",
     "cssutils",

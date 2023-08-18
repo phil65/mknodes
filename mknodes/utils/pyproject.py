@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 import pathlib
-
-import toml
+import tomllib
 
 from mknodes.data import buildsystems
 from mknodes.utils import helpers
@@ -17,13 +16,15 @@ class PyProject:
             if path.parent is None:
                 msg = "Could not find pyproject.toml"
                 raise FileNotFoundError(msg)
-            self._data = toml.load(path / "pyproject.toml")
+            file = path / "pyproject.toml"
+            self._data = tomllib.loads(file.read_text())
 
         elif helpers.is_url(pyproject_path):
             content = helpers.download(pyproject_path)
-            self._data = toml.loads(content)
+            self._data = tomllib.loads(content)
         else:
-            self._data = toml.load(pyproject_path)
+            text = pathlib.Path(pyproject_path).read_text()
+            self._data = tomllib.loads(text)
         self.mknodes_section = self._data["tool"].get("mknodes", {})
 
     @property
