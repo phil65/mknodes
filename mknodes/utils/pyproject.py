@@ -19,7 +19,7 @@ class PyProject:
                 raise FileNotFoundError(msg)
             self._data = toml.load(path / "pyproject.toml")
 
-        elif pyproject_path.startswith(("http:", "https:")):
+        elif helpers.is_url(pyproject_path):
             content = helpers.download(pyproject_path)
             self._data = toml.loads(content)
         else:

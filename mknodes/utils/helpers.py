@@ -138,12 +138,7 @@ def groupby_first_letter(data, keyfunc: Callable | None = None) -> dict[str, lis
 
 
 def linked(identifier: str, title: str | None = None) -> str:
-    suffix = (
-        ""
-        if identifier.startswith(("http:", "https:", "www."))
-        or identifier.endswith(".md")
-        else ".md"
-    )
+    suffix = "" if is_url(identifier) or identifier.endswith(".md") else ".md"
     return f"[{identifier if title is None else title}]({identifier}{suffix})"
 
 
@@ -182,7 +177,7 @@ def get_url(target, site_url: str = ""):
             return site_url + path
         case str() if target.startswith("/"):
             return site_url.rstrip("/") + target
-        case str() if target.startswith(("http:", "https:", "www.")):
+        case str() if is_url(target):
             return target
         case str():
             return f"{target}.md"
@@ -359,6 +354,10 @@ def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, Non
     it = iter(iterable)
     while batch := tuple(itertools.islice(it, n)):
         yield batch
+
+
+def is_url(path: str) -> bool:
+    return path.startswith(("http:/", "https:/", "www."))
 
 
 if __name__ == "__main__":

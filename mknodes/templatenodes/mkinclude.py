@@ -46,7 +46,7 @@ class MkInclude(mknode.MkNode):
 
     def _to_markdown(self) -> str:  # type: ignore[return]
         match self.target:
-            case str() if self.target.startswith(("http:", "https", "www.")):
+            case str() if helpers.is_url(self.target):
                 return helpers.download(self.target)
             case os.PathLike() | str():
                 return pathlib.Path(self.target).read_text()

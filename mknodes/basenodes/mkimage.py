@@ -58,7 +58,7 @@ class MkImage(mknode.MkNode):
 
     @property
     def path(self):
-        if self._path.startswith(("http:", "https:", "www.")):
+        if helpers.is_url(self._path):
             return self._path
         # TODO: linkreplacer doesnt work yet with full path
         return pathlib.Path(self._path).name  # this should not be needed.
@@ -66,7 +66,7 @@ class MkImage(mknode.MkNode):
     @property
     def path_dark_mode(self):
         match self._path_dark_mode:
-            case str() if self._path_dark_mode.startswith(("http:", "https:", "www.")):
+            case str() if helpers.is_url(self._path_dark_mode):
                 return self._path_dark_mode
             case str():
                 return pathlib.Path(self._path_dark_mode).name

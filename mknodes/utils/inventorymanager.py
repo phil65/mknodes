@@ -14,6 +14,8 @@ import types
 from mkdocstrings import inventory
 import requests
 
+from mknodes.utils import helpers
+
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +76,7 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
         domains: list[str] | None = None,
     ):
         path = str(path)
-        if path.startswith(("http:", "https:", "www.")):
+        if helpers.is_url(path):
             inv = Inventory.from_url(path, base_url=base_url, domains=domains)
         elif base_url:
             inv = Inventory.from_file(path, domains=domains, base_url=base_url)
