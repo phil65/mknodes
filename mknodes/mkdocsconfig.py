@@ -6,6 +6,8 @@ import pathlib
 
 from typing import TYPE_CHECKING, Literal
 
+import markdown
+
 from mkdocs import config as _config
 from mkdocs.utils import write_file
 
@@ -124,7 +126,14 @@ class Config:
         self._config.extra_css.append(path)
         write_file(css.encode(), (site_dir / path).as_posix())
 
+    def convert_markdown(self, text: str) -> str:
+        md = markdown.Markdown(
+            extensions=self._config["markdown_extensions"],
+            extension_configs=self._config["mdx_configs"] or {},
+        )
+        return md.convert(text)
+
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg.get_primary_color())
+    print(cfg.convert_markdown("!!! note\n    test"))
