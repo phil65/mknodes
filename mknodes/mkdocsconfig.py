@@ -61,6 +61,13 @@ class Config:
     def __getattr__(self, name):
         return getattr(self._config, name)
 
+    @property
+    def site_url(self) -> str:
+        url = self._config.site_url
+        if url is None:
+            return ""
+        return url if url.endswith("/") else f"{url}/"
+
     def get_path(self, path: str) -> str:
         return (
             path
