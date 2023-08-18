@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 import pathlib
 
@@ -9,12 +8,13 @@ from typing import TYPE_CHECKING, Literal
 import markdown
 
 from mkdocs import config as _config
+from mkdocs.plugins import get_plugin_logger
 from mkdocs.utils import write_file
 
 from mknodes.utils import helpers
 
 
-logger = logging.getLogger(__name__)
+logger = get_plugin_logger(__name__)
 
 COLORS = {
     "red": {"color": "#ef5552", "text": "#ffffff"},
