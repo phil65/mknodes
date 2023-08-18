@@ -72,7 +72,7 @@ class MkNodesPlugin(BasePlugin):
                 self._project.config.register_css("mknodes_root.css", str(css))
             if main_html := self._project.main_template.build_main_html():
                 self.main_html_content = main_html
-                self._project.config.register_main_html(main_html)
+                self._project.config.register_template(main_html, filename="main.html")
         return ed.files
 
     def on_nav(

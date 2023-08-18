@@ -7,6 +7,7 @@ import pathlib
 from typing import Any, Self
 
 from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock, mknode
+from mknodes.cssclasses import templateblocks
 from mknodes.data import datatypes
 from mknodes.pages import metadata
 from mknodes.utils import helpers
@@ -145,6 +146,14 @@ class MkPage(mkcontainer.MkContainer):
     @icon.setter
     def icon(self, value: str):
         self.metadata.icon = value
+
+    @property
+    def template(self):
+        return self.metadata.template
+
+    @template.setter
+    def template(self, value: str | templateblocks.PageTemplate):
+        self.metadata.template = value
 
     @classmethod
     def from_file(

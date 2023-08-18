@@ -36,7 +36,8 @@ BLOCK = """{{% block {block_name} %}}
 
 
 class PageTemplate:
-    def __init__(self, md):
+    def __init__(self, md, filename):
+        self.filename = filename
         self.data: dict[BlockStr, dict[str, str | mknode.MkNode]] = {}
         self.md = md
 

@@ -133,9 +133,9 @@ class Config:
         self._config.extra_css.append(path)
         write_file(css.encode(), (site_dir / path))
 
-    def register_main_html(self, content: str):
-        custom_dir = pathlib.Path(self._config.theme.custom_dir) / "main.html"
-        path = pathlib.Path("overrides") / "main.html"
+    def register_template(self, content: str, filename: str):
+        custom_dir = pathlib.Path(self._config.theme.custom_dir) / filename
+        path = pathlib.Path("overrides") / filename
         logger.info("Creating %s...", path.as_posix())
         write_file(content.encode(), custom_dir)
 

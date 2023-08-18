@@ -44,7 +44,7 @@ class Project:
         self.files = files
         self.root_css = rootcss.RootCSS()
         md = self.config.get_markdown_instance()
-        self.main_template = templateblocks.PageTemplate(md)
+        self.main_template = templateblocks.PageTemplate(md, filename="main.html")
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
