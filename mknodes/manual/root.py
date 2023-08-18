@@ -40,11 +40,7 @@ def build(project: mknodes.Project) -> mknodes.MkNav:
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
     root_nav = project.get_root(append_markdown_to_pages=True)
-    project.block_manager.insert_before_block(
-        "announce",
-        "**Announcement!**",
-        convert_markdown=True,
-    )
+    project.announcement_bar = mknodes.MkMetadataBadges("dependencies")
     # By using append_markdown_to_pages, every page will have a expandable Admonition
     # attached at the bottom. You can see the generated Markdown there for every page.
     annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)

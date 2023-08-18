@@ -61,7 +61,7 @@ class MkNodesPlugin(BasePlugin):
             if not root:
                 msg = "No root for project created."
                 raise RuntimeError(msg)
-            for k, v in root.all_virtual_files(only_children=False).items():
+            for k, v in self._project.all_files().items():
                 logger.info("Writing file to %s", k)
                 mode = "w" if isinstance(v, str) else "wb"
                 with ed.open(k, mode) as file:

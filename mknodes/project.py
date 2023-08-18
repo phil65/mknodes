@@ -7,6 +7,7 @@ import types
 from typing import TYPE_CHECKING
 
 from mknodes import mkdocsconfig, mknav
+from mknodes.basenodes import mknode
 from mknodes.cssclasses import rootcss, templateblocks
 from mknodes.data import datatypes, taskrunners, tools
 from mknodes.utils import helpers, packageinfo, pyproject
@@ -47,6 +48,16 @@ class Project:
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
+
+    @property
+    def announcement_bar(self):
+        return self.block_manager.announcement_bar
+
+    @announcement_bar.setter
+    def announcement_bar(self, value):
+        if isinstance(value, mknode.MkNode):
+            value._associated_project = self
+        self.block_manager.announcement_bar = value
 
     @property
     def package_repos(self):
@@ -110,6 +121,12 @@ class Project:
             for runner in taskrunners.TASK_RUNNERS.values()
             if any(helpers.find_file_in_folder_or_parent(i) for i in runner.filenames)
         ]
+
+    def all_files(self) -> dict[str, str | bytes]:
+        files = self._root.all_virtual_files() if self._root else {}
+        if isinstance(self.announcement_bar, mknode.MkNode):
+            files |= self.announcement_bar.all_virtual_files()
+        return files
 
     def set_primary_foreground_color(
         self,

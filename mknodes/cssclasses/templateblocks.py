@@ -40,6 +40,14 @@ class BlockManager:
         self.data: dict[BlockStr, dict[str, str | mknode.MkNode]] = {}
         self.md = md
 
+    @property
+    def announcement_bar(self):
+        return dct.get("replace") if (dct := self.data.get("announce")) else None
+
+    @announcement_bar.setter
+    def announcement_bar(self, value):
+        self.replace_block("announce", value, convert_markdown=True)
+
     def replace_block(
         self,
         block: BlockStr,
