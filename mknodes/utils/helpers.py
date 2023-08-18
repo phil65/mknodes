@@ -341,7 +341,7 @@ T = TypeVar("T")
 def load_yaml(text: str):
     import yaml
 
-    return yaml.safe_load(text)
+    return yaml.load(text, Loader=yaml.FullLoader)
 
 
 def dump_yaml(yaml_obj) -> str:
