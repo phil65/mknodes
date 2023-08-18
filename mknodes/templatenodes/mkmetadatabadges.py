@@ -38,6 +38,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def __init__(
         self,
         typ: MetadataTypeStr,
+        *,
         package: str | None = None,
         font_size: Literal[10, 11, 12] | None = None,
         font_name: str | None = None,

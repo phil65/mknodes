@@ -45,6 +45,7 @@ class Project:
         self.package_repos = ["pip"]
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
+        self._foreground_color = None
 
     @property
     def info(self):
