@@ -3,10 +3,11 @@ from __future__ import annotations
 import logging
 import os
 import pathlib
+import textwrap
 
 from typing import Any, Self
 
-from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mkhtmlblock, mknode
+from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mknode
 from mknodes.cssclasses import templateblocks
 from mknodes.data import datatypes
 from mknodes.pages import metadata
@@ -211,7 +212,7 @@ class MkPage(mkcontainer.MkContainer):
             return text
         for node in self.ancestors:
             if isinstance(node, mknav.MkNav) and node.append_markdown_to_pages:
-                code = mkhtmlblock.MkHtmlBlock(text)
+                code = f'\n\n<pre>\n{textwrap.indent(text, "    ")}\n</pre>\n\n'
                 admonition = mkadmonition.MkAdmonition(
                     code,
                     collapsible=True,
