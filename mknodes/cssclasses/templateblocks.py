@@ -85,7 +85,7 @@ class PageTemplate:
             value = text
         self.data.setdefault(block, {})["after"] = value
 
-    def build_main_html(self) -> str | None:
+    def build_html(self) -> str | None:
         blocks = [r'{% extends "base.html" %}\n']
         if not self.data:
             return None
@@ -131,5 +131,5 @@ if __name__ == "__main__":
         mknodes.MkAdmonition("test"),
         convert_markdown=True,
     )
-    html = manager.build_main_html()
+    html = manager.build_html()
     print(html)
