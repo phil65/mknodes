@@ -139,6 +139,16 @@ class RootCSS(cssclasses.CSS):
             },
         )
 
+    def show_annotation_numbers(self):
+        self.add_rule(
+            ".md-typeset .md-annotation__index > ::before",
+            {"content": "attr(data-md-annotation-id)"},
+        )
+        self.add_rule(
+            ".md-typeset :focus-within > .md-annotation__index > ::before",
+            {"transform": "none"},
+        )
+
 
 if __name__ == "__main__":
     ss = RootCSS()

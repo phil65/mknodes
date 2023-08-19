@@ -40,7 +40,7 @@ class Project:
         files: Files | None = None,
     ):
         self._module = module
-        self.config = mkdocsconfig.Config(config)
+        self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)  # mypy dumb.
         self.files = files
         self.root_css = rootcss.RootCSS()
         md = self.config.get_markdown_instance()
