@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from mknodes import mkdocsconfig, mknav
 from mknodes.basenodes import mknode
-from mknodes.cssclasses import rootcss, templateblocks
+from mknodes.cssclasses import rootcss, templateregistry
 from mknodes.data import datatypes, taskrunners, tools
 from mknodes.utils import helpers, packageinfo, pyproject
 
@@ -44,7 +44,8 @@ class Project:
         self.files = files
         self.root_css = rootcss.RootCSS()
         md = self.config.get_markdown_instance()
-        self.main_template = templateblocks.PageTemplate(md, filename="main.html")
+        self.template_registry = templateregistry.TemplateRegistry(md)
+        self.main_template = self.template_registry["main.html"]
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
