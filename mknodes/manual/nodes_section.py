@@ -21,9 +21,6 @@ MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
 
-HACK_TEXT = """The replace() is a small hack to prevent links from getting processed
-by plugins. Ignore it."""
-
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
@@ -268,9 +265,9 @@ def create_mknav_section(nav: mknodes.MkNav):
     page = nav_section.add_index_page(hide_toc=True)
     code = mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
     page += code
-    # A nav section corresponds to a SUMMARY.md. You can see that when stringifying it.
-    text = str(nav_section).replace("](", "] (")  # (1)
-    code.annotations[1] = HACK_TEXT
+    # A nav section corresponds to a `SUMMARY.md`. You can see that when stringifying it.
+    text = str(nav_section)
+    text = text.replace("](", "] (") ##
     page += mknodes.MkCode(text, header="The resulting MkNav")
 
 
@@ -298,7 +295,8 @@ def create_from_file_section(nav: mknodes.MkNav):
     code = mknodes.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
     page += code
 
-    text = summary_file.read_text().replace("](", "] (")  # (3)
+    text = summary_file.read_text()
+    text = text.replace("](", "] (") ##
     # we are wrapping some annotations with Admonitions, that seems to help
     # with nesting / escaping issues in some cases (and it looks nice!).
     path = paths.TEST_RESOURCES / "nav_tree/"
@@ -306,8 +304,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     code.annotations[1] = mknodes.MkAdmonition(tree_node)
     file_content_node = mknodes.MkCode(text, header="SUMMARY.md content")
     code.annotations[2] = mknodes.MkAdmonition(file_content_node)
-    code.annotations[3] = HACK_TEXT
-    code.annotations[4] = ANNOTATIONS_INFO  # (4)
+    code.annotations[3] = ANNOTATIONS_INFO  # (3)
 
     # we could also add the annotiation nodes to the page of course:
     page += tree_node

@@ -86,7 +86,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         )
         line_num = self.linenums or 0
         for i, line in enumerate(self.code.split("\n"), start=line_num):
-            if not line.strip() or line.rstrip().endswith("#"):
+            if not line.strip() or line.rstrip().endswith("##"):
                 continue
             if line.strip().startswith("#"):
                 if mode == "code":
