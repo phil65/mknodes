@@ -20,8 +20,11 @@ class StyleRule(Mapping, metaclass=ABCMeta):
     def __getitem__(self, index: str) -> str:
         return self.rule.style[index]
 
-    def __setitem__(self, index: str, value: str | tuple[str, str]):
-        self.rule.style[index] = value
+    def __setitem__(self, index: str, value: str | tuple[str, str] | float):
+        self.rule.style[index] = str(value) if isinstance(value, int | float) else value
+
+    def set_value(self, index, value: str | float, important: bool = False):
+        self.rule.style[index] = (str(value), "important") if important else str(value)
 
     def __delitem__(self, index: str):
         del self.rule.style[index]
@@ -64,7 +67,7 @@ class CSS:
     def __bool__(self):
         return bool(str(self).strip())
 
-    def add_rule(self, selector, data):
+    def add_rule(self, selector: str, data: dict):
         rule = StyleRule.from_dict(selector, data)
         self.stylesheet.add(rule.rule)
         self.rules.append(rule)
