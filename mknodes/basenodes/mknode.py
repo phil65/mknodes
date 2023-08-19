@@ -91,6 +91,24 @@ class MkNode(node.Node):
         # dct_2.pop("_annotations")
         return dct_1 == dct_2
 
+    def __rshift__(self, other, inverse: bool = False):
+        import mknodes
+
+        if self.parent or (isinstance(other, mknodes.MkNode) and other.parent):
+            msg = "Can only perform shift when nodes have no parent"
+            raise RuntimeError(msg)
+        container = mknodes.MkContainer(parent=self.parent, block_separator=" ")
+        if inverse:
+            container.append(other)
+            container.append(self)
+        else:
+            container.append(self)
+            container.append(other)
+        return container
+
+    def __rrshift__(self, other):
+        return self.__rshift__(other, inverse=True)
+
     def _to_markdown(self) -> str:
         return NotImplemented
 
@@ -214,5 +232,5 @@ class MkNode(node.Node):
 if __name__ == "__main__":
     import mknodes
 
-    section = mknodes.MkText("hello\n# Header\nfdsfds", shift_header_levels=2)
+    section = "pre" >> mknodes.MkText("hello\n# Header\nfdsfds") >> "test" >> "xx"
     print(section)
