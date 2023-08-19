@@ -59,6 +59,12 @@ class RootCSS(cssclasses.CSS):
     def set_tooltip_width(self, height: int):
         self[self.PREFIX]["--md-tooltip-width"] = f"{height}px"
 
+    def set_classic_admonition_style(self):
+        self.add_rule(
+            ".md-typeset .admonition, .md-typeset details",
+            {"border-width": 0, "border-left-width": "4px"},
+        )
+
     def add_admonition_type(
         self,
         name: str,
