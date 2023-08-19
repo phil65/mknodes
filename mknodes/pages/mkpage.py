@@ -39,7 +39,7 @@ class MkPage(mkcontainer.MkContainer):
         status: datatypes.PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
-        template: str | None = None,
+        template: str | templateblocks.PageTemplate | None = None,
         append_markdown: bool | None = None,
         virtual: bool = False,
         tags: list[str] | None = None,
@@ -60,7 +60,8 @@ class MkPage(mkcontainer.MkContainer):
             title: Page title
             subtitle: Page subtitle
             description: Page description
-            template: Page template (filename relative to `overrides` directory)
+            template: Page template (filename relative to `overrides` directory or
+                       PageTemplate object)
             append_markdown: Whether pages should contain a collapsible admonition
                              containing the markup at the bottom. Setting is
                              inherited from the parent navs if not set.
@@ -88,9 +89,10 @@ class MkPage(mkcontainer.MkContainer):
             subtitle=subtitle,
             title=title,
             description=description,
-            template=template,
+            template=None,
             tags=tags,
         )
+        self.template = template
 
     def __repr__(self):
         meta_kwargs = self.metadata.repr_kwargs()
@@ -149,11 +151,16 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def template(self):
-        return self.metadata.template
+        return self._template
 
     @template.setter
-    def template(self, value: str | templateblocks.PageTemplate):
-        self.metadata.template = value
+    def template(self, value: str | templateblocks.PageTemplate | None):
+        if isinstance(value, templateblocks.PageTemplate):
+            self.metadata.template = value.filename
+            self._template = value
+        else:
+            self.metadata.template = value
+            self._template = None
 
     @classmethod
     def from_file(
