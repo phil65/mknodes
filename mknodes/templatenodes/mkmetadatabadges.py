@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import pkgutil
 
 from typing import Any, Literal
 from urllib import parse
@@ -21,6 +22,7 @@ MetadataTypeStr = (
         "websites",
         "dependencies",
         "required_python",
+        "installed_packages",
     ]
     | packageinfo.ClassifierStr
 )
@@ -127,8 +129,20 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             case "dependencies":
                 info = self.package_info.get_required_packages()
                 items.extend(
-                    (package.name, package.version, package.repository_url)
-                    for package in info
+                    (package.name, package.version, package.homepage) for package in info
+                )
+            case "installed_packages":
+                pkgs = []
+                for mod in pkgutil.iter_modules():
+                    if not mod.ispkg:
+                        continue
+                    try:
+                        dist = packageinfo.get_info(mod.name)
+                        pkgs.append(dist)
+                    except Exception:  # noqa: BLE001
+                        pass
+                items.extend(
+                    (package.name, package.version, package.homepage) for package in pkgs
                 )
             case _ if self._typ in packageinfo.CLASSIFIERS:
                 labels = self.package_info.classifier_map.get(self._typ, [])
@@ -174,6 +188,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node, header="### Dependencies")
         node = MkMetadataBadges(typ="dependencies", package="mkdocs")
         page += mknodes.MkReprRawRendered(node, header="### For other package")
+        node = MkMetadataBadges(typ="installed_packages")
+        page += mknodes.MkReprRawRendered(node, header="### Installed packages")
         node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
         page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
         node = MkMetadataBadges(typ="required_python", badge_color="red")
@@ -185,7 +201,7 @@ if __name__ == "__main__":
 
     proj = mknodes.Project(mknodes)
     nav = proj.get_root()
-    node = MkMetadataBadges("classifiers")
+    node = MkMetadataBadges("installed_packages")
     page = nav.add_page("test")
     page += node
     nav += page
