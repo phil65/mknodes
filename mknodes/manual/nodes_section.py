@@ -249,25 +249,26 @@ def create_mknav_section(nav: mknodes.MkNav):
 
     # MkNavs can either be populated manually with MkPages and MkNavs, or we can load
     # existing folders containing markup files. There are two ways for this:
-
-    # 1) Load an existing SUMMARY.md and create a nav based on given file content.
+    #
+    #   * Load an existing SUMMARY.md and create a nav based on given file content.
+    #
     create_from_file_section(nav_section)
 
-    # 2) Load all .md files from a directory tree and create the Navs based on these.
+    #   * Load all .md files from a directory tree and create the Navs based on these.
     create_from_folder_section(nav_section)
 
     # Another approach to set up navs is by using decorators. We will explain that here:
     routing.create_routing_section(nav_section)
 
-    # Every MkNav can have an index page (which corresponds to your index.md)
-    # Index pages get inserted first into the menu, so that the mkdocs-section-index
+    # Every MkNav can have an index page (which corresponds to your `index.md`)
+    # Index pages get inserted first into the menu, so that the `mkdocs-section-index`
     # plugin can be utizilized.
     page = nav_section.add_index_page(hide_toc=True)
     code = mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
     page += code
     # A nav section corresponds to a `SUMMARY.md`. You can see that when stringifying it.
     text = str(nav_section)
-    text = text.replace("](", "] (") ##
+    text = text.replace("](", "] (")  ##
     page += mknodes.MkCode(text, header="The resulting MkNav")
 
 
@@ -296,7 +297,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     page += code
 
     text = summary_file.read_text()
-    text = text.replace("](", "] (") ##
+    text = text.replace("](", "] (")  ##
     # we are wrapping some annotations with Admonitions, that seems to help
     # with nesting / escaping issues in some cases (and it looks nice!).
     path = paths.TEST_RESOURCES / "nav_tree/"
