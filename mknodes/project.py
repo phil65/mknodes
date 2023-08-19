@@ -8,8 +8,9 @@ from typing import TYPE_CHECKING
 
 from mknodes import mkdocsconfig, mknav
 from mknodes.basenodes import mknode
-from mknodes.cssclasses import rootcss, templateregistry
+from mknodes.cssclasses import rootcss
 from mknodes.data import datatypes, taskrunners, tools
+from mknodes.pages import templateregistry
 from mknodes.utils import helpers, packageinfo, pyproject
 
 

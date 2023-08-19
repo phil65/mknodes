@@ -8,9 +8,8 @@ import textwrap
 from typing import Any, Self
 
 from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mknode
-from mknodes.cssclasses import templateblocks
 from mknodes.data import datatypes
-from mknodes.pages import metadata
+from mknodes.pages import metadata, pagetemplate
 from mknodes.utils import helpers
 
 
@@ -40,7 +39,7 @@ class MkPage(mkcontainer.MkContainer):
         status: datatypes.PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
-        template: str | templateblocks.PageTemplate | None = None,
+        template: str | pagetemplate.PageTemplate | None = None,
         append_markdown: bool | None = None,
         virtual: bool = False,
         tags: list[str] | None = None,
@@ -155,8 +154,8 @@ class MkPage(mkcontainer.MkContainer):
         return self._template
 
     @template.setter
-    def template(self, value: str | templateblocks.PageTemplate | None):
-        if isinstance(value, templateblocks.PageTemplate):
+    def template(self, value: str | pagetemplate.PageTemplate | None):
+        if isinstance(value, pagetemplate.PageTemplate):
             self.metadata.template = value.filename
             self._template = value
         else:

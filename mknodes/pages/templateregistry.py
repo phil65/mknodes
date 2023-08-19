@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import markdown
 
-from mknodes.cssclasses import templateblocks
+from mknodes.pages import pagetemplate
 
 
 class TemplateRegistry:
     def __init__(self, md: markdown.Markdown):
-        self.templates: dict[str, templateblocks.PageTemplate] = {}
+        self.templates: dict[str, pagetemplate.PageTemplate] = {}
         self.md = md
 
-    def __getitem__(self, value: str) -> templateblocks.PageTemplate:
+    def __getitem__(self, value: str) -> pagetemplate.PageTemplate:
         return self.templates.setdefault(
             value,
-            templateblocks.PageTemplate(self.md, filename=value),
+            pagetemplate.PageTemplate(self.md, filename=value),
         )
 
     def __setitem__(self, index, value):

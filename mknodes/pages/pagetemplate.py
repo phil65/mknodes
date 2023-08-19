@@ -1,33 +1,10 @@
 from __future__ import annotations
 
-from typing import Literal
-
 import markdown
 
 from mknodes.basenodes import mknode
+from mknodes.pages import templateblocks
 from mknodes.utils import helpers
-
-
-BlockStr = Literal[
-    "analytics",
-    "announce",
-    "config",
-    "container",
-    "content",
-    "extrahead",
-    "fonts",
-    "footer",
-    "header",
-    "hero",
-    "htmltitle",
-    "libs",
-    "outdated",
-    "scripts",
-    "site_meta",
-    "site_nav",
-    "styles",
-    "tabs",
-]
 
 
 BLOCK = """{{% block {block_name} %}}
@@ -46,7 +23,7 @@ class PageTemplate:
         extends: str | None = "base",
     ):
         self.filename = filename
-        self.data: dict[BlockStr, dict[str, str | mknode.MkNode]] = {}
+        self.data: dict[templateblocks.BlockStr, dict[str, str | mknode.MkNode]] = {}
         self.extends = extends
         self.md = md
 
@@ -76,7 +53,7 @@ class PageTemplate:
 
     def _replace_block(
         self,
-        block: BlockStr,
+        block: templateblocks.BlockStr,
         text: str | mknode.MkNode,
         convert_markdown: bool = False,
     ):
@@ -88,7 +65,7 @@ class PageTemplate:
 
     def _insert_before_block(
         self,
-        block: BlockStr,
+        block: templateblocks.BlockStr,
         text: str | mknode.MkNode,
         convert_markdown: bool = False,
     ):
@@ -100,7 +77,7 @@ class PageTemplate:
 
     def _insert_after_block(
         self,
-        block: BlockStr,
+        block: templateblocks.BlockStr,
         text: str | mknode.MkNode,
         convert_markdown: bool = False,
     ):
