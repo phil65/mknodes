@@ -47,6 +47,7 @@ class Project:
         md = self.config.get_markdown_instance()
         self.template_registry = templateregistry.TemplateRegistry(md)
         self.main_template = self.template_registry["main.html"]
+        self.error_page = self.template_registry["404.html"]
         self.pyproject = pyproject.PyProject()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
