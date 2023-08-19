@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Literal
 
+import markdown
+
 from mknodes.basenodes import mknode
 
 
@@ -36,9 +38,15 @@ BLOCK = """{{% block {block_name} %}}
 
 
 class PageTemplate:
-    def __init__(self, md, filename):
+    def __init__(
+        self,
+        md: markdown.Markdown,
+        filename: str,
+        extends: str | None = "base",
+    ):
         self.filename = filename
         self.data: dict[BlockStr, dict[str, str | mknode.MkNode]] = {}
+        self.extends = extends
         self.md = md
 
     @property
@@ -86,7 +94,7 @@ class PageTemplate:
         self.data.setdefault(block, {})["after"] = value
 
     def build_html(self) -> str | None:
-        blocks = [r'{% extends "base.html" %}\n']
+        blocks = ['{% extends "' + self.extends + '.html" %}\\n'] if self.extends else []
         if not self.data:
             return None
         for k, v in self.data.items():
