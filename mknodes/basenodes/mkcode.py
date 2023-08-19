@@ -11,6 +11,7 @@ import types
 from typing import Any, Self
 
 from mknodes.basenodes import mkcontainer, mknode
+from mknodes.data import datatypes
 from mknodes.utils import classhelpers, helpers
 
 
@@ -159,14 +160,7 @@ class MkCode(mkcontainer.MkContainer):
     @classmethod
     def for_object(
         cls,
-        obj: types.ModuleType
-        | type
-        | types.MethodType
-        | types.FunctionType
-        | types.TracebackType
-        | types.FrameType
-        | types.CodeType
-        | Callable[..., Any],
+        obj: datatypes.HasCodeType,
         *,
         dedent: bool = True,
         extract_body: bool = False,
@@ -192,7 +186,7 @@ class MkCode(mkcontainer.MkContainer):
                               this method.
             kwargs: Keyword arguments passed to MkCode ctor
         """
-        if extract_body and isinstance(obj, type | types.FunctionType | types.MethodType):
+        if extract_body and callable(obj):
             code = helpers.get_function_body(obj)
         elif extract_body:
             msg = "Can only extract body from Functions, Methods and classes"

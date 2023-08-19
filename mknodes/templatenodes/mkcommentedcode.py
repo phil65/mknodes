@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import logging
-import types
 
 from typing import Any
 
 from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mktext
+from mknodes.data import datatypes
 from mknodes.utils import helpers
 
 
@@ -31,15 +30,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        code: str
-        | types.ModuleType
-        | type
-        | types.MethodType
-        | types.FunctionType
-        | types.TracebackType
-        | types.FrameType
-        | types.CodeType
-        | Callable[..., Any] = "",
+        code: str | datatypes.HasCodeType,
         language: str = "py",
         *,
         linenums: int | None = None,
