@@ -24,9 +24,9 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         title: str,
         description: str,
         setting: dict | str | None = None,
-        default: str | None = None,
+        default: str | int = None,
         version_added: str | None = None,
-        optional: bool = False,
+        optional: bool | None = None,
         mode: Literal["yaml", "json", "toml"] | None = None,
         **kwargs: Any,
     ):
@@ -38,7 +38,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             setting: (Nested) json-like object representing the setting
             default: Default setting value
             version_added: Version added
-            optional: Whether setting is optional
+            optional: Whether setting is optional. (None hides the label)
             mode: Markup language of settings file
             kwargs: Keyword arguments passed to parent
         """
@@ -59,6 +59,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             version_added=self.version_added,
             optional=self.optional,
             mode=self.mode,
+            _filter_empty=True,
         )
 
     @property
@@ -67,11 +68,12 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
 
     @property
     def items(self):
-        text = f"Default: `{self.default}`\n\n"
+        text = f"Default: `{self.default!r}`\n\n"
         if self.version_added:
             text += f"Version added: `{self.version_added}`\n\n"
-        required = "no" if self.optional else "yes"
-        text += f"Required: `{required}`\n\n"
+        if self.optional is not None:
+            required = "no" if self.optional else "yes"
+            text += f"Required: `{required}`\n\n"
         text += f"{self.description}\n"
         items: list[mknode.MkNode] = [mktext.MkText(text, parent=self)]
         if self.setting:

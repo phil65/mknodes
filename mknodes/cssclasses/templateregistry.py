@@ -23,7 +23,8 @@ class TemplateRegistry:
 if __name__ == "__main__":
     import mknodes
 
-    md = mknodes.Project().config.get_markdown_instance()
+    proj = mknodes.Project()
+    md = proj.config.get_markdown_instance()
     registry = TemplateRegistry(md)
     a = registry["main.html"]
     print(a)
