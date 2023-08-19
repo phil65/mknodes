@@ -42,7 +42,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         if self._package_repos:
             return self._package_repos
         if self.associated_project:
-            return self.associated_project.package_repos
+            return self.associated_project.folderinfo.package_repos
         return ["pip"]
 
     @property

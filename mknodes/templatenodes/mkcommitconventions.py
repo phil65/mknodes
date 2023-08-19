@@ -93,7 +93,7 @@ class MkCommitConventions(mkcontainer.MkContainer):
     def commit_types(self) -> list[commitconventions.CommitTypeStr]:
         match self._commit_types:
             case None if self.associated_project:
-                val = self.associated_project.commit_types
+                val = self.associated_project.folderinfo.commit_types
             case None:
                 val = "conventional_commits"
             case _:

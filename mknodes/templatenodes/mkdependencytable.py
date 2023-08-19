@@ -4,7 +4,8 @@ import logging
 import re
 
 from mknodes.basenodes import mklink, mktable
-from mknodes.utils import helpers, packageinfo
+from mknodes.info import packageinfo
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)

@@ -7,8 +7,9 @@ from typing import Any, Literal
 from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mknode
+from mknodes.info import packageinfo
 from mknodes.templatenodes import mkbadge
-from mknodes.utils import helpers, packageinfo
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)

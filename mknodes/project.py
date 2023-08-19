@@ -9,9 +9,10 @@ from typing import TYPE_CHECKING
 from mknodes import mkdocsconfig, mknav
 from mknodes.basenodes import mknode
 from mknodes.cssclasses import rootcss
-from mknodes.data import datatypes, taskrunners, tools
+from mknodes.data import datatypes
+from mknodes.info import folderinfo, packageinfo
 from mknodes.pages import templateregistry
-from mknodes.utils import helpers, packageinfo, pyproject
+from mknodes.utils import helpers
 
 
 if TYPE_CHECKING:
@@ -48,7 +49,7 @@ class Project:
         self.template_registry = templateregistry.TemplateRegistry(md)
         self.main_template = self.template_registry["main.html"]
         self.error_page = self.template_registry["404.html"]
-        self.pyproject = pyproject.PyProject()
+        self.folderinfo = folderinfo.FolderInfo()
         self._root: mknav.MkNav | None = None
         self._foreground_color = None
 
@@ -61,10 +62,6 @@ class Project:
         if isinstance(value, mknode.MkNode):
             value._associated_project = self
         self.main_template.announcement_bar = value
-
-    @property
-    def package_repos(self):
-        return self.pyproject.package_repos
 
     @property
     def info(self):
@@ -80,10 +77,6 @@ class Project:
     @module.setter
     def module(self, value):
         self._module = value
-
-    @property
-    def commit_types(self):
-        return self.pyproject.allowed_commit_types
 
     @property
     def package_name(self):
@@ -111,19 +104,6 @@ class Project:
     def get_root(self, **kwargs) -> mknav.MkNav:
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
-
-    @property
-    def tools(self) -> list[tools.Tool]:
-        return [t for t in tools.TOOLS.values() if t.is_used()]
-
-    @property
-    def task_runners(self) -> list[taskrunners.TaskRunner]:
-        """Return list of task runners used by this project."""
-        return [
-            runner
-            for runner in taskrunners.TASK_RUNNERS.values()
-            if any(helpers.find_file_in_folder_or_parent(i) for i in runner.filenames)
-        ]
 
     def all_files(self) -> dict[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
@@ -160,5 +140,3 @@ class Project:
 
 if __name__ == "__main__":
     project = Project()
-    bs = project.task_runners
-    print(bs)

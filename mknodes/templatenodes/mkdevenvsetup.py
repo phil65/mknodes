@@ -151,7 +151,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
             case list():
                 return [tools.TOOLS[i] for i in self._tools]
             case None if self.associated_project:
-                return self.associated_project.tools
+                return self.associated_project.folderinfo.tools
             case None:
                 return []
             case _:
@@ -163,7 +163,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
             case str():
                 return buildsystems.BUILD_SYSTEMS[self._build_backend]
             case None if self.associated_project:
-                return self.associated_project.pyproject.build_system
+                return self.associated_project.folderinfo.pyproject.build_system
             case None:
                 return buildsystems.setuptools
             case _:

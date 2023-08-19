@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mknodes.utils import packageinfo
+from mknodes.info import packageinfo
 
 
 def test_packageinfo():

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import pathlib
 import tomllib
 
@@ -8,7 +9,7 @@ from mknodes.utils import helpers
 
 
 class PyProject:
-    def __init__(self, pyproject_path: str | None = None):
+    def __init__(self, pyproject_path: str | os.PathLike | None = None):
         path = pathlib.Path().absolute()
         if not pyproject_path:
             while not (path / "pyproject.toml").exists() and path.parent is not None:
@@ -19,11 +20,12 @@ class PyProject:
             file = path / "pyproject.toml"
             self._data = tomllib.loads(file.read_text())
 
-        elif helpers.is_url(pyproject_path):
-            content = helpers.download(pyproject_path)
+        elif helpers.is_url(str(pyproject_path)):
+            content = helpers.download(str(pyproject_path))
             self._data = tomllib.loads(content)
         else:
-            text = pathlib.Path(pyproject_path).read_text()
+            local_path = pathlib.Path(pyproject_path)
+            text = local_path.read_text()
             self._data = tomllib.loads(text)
         self.mknodes_section = self._data["tool"].get("mknodes", {})
 

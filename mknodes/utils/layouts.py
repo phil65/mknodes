@@ -8,8 +8,9 @@ import re
 import types
 
 from mknodes.basenodes import mkcontainer, mklink, mknode
+from mknodes.info import packageinfo
 from mknodes.templatenodes import mkmetadatabadges
-from mknodes.utils import classhelpers, helpers, packageinfo
+from mknodes.utils import classhelpers, helpers
 
 
 logger = logging.getLogger(__name__)
