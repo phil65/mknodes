@@ -5,6 +5,7 @@ from typing import Literal
 import markdown
 
 from mknodes.basenodes import mknode
+from mknodes.utils import helpers
 
 
 BlockStr = Literal[
@@ -49,6 +50,14 @@ class PageTemplate:
         self.extends = extends
         self.md = md
 
+    def __repr__(self):
+        return helpers.get_repr(
+            self,
+            filename=self.filename,
+            extends=self.extends if self.extends != "base" else None,
+            _filter_empty=True,
+        )
+
     @property
     def announcement_bar(self):
         return dct.get("replace") if (dct := self.data.get("announce")) else None
@@ -56,6 +65,14 @@ class PageTemplate:
     @announcement_bar.setter
     def announcement_bar(self, value):
         self._replace_block("announce", value, convert_markdown=True)
+
+    @property
+    def content(self):
+        return dct.get("replace") if (dct := self.data.get("content")) else None
+
+    @content.setter
+    def content(self, value):
+        self._replace_block("content", value, convert_markdown=True)
 
     def _replace_block(
         self,
