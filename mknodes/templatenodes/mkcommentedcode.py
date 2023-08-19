@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import logging
+import types
 
 from typing import Any
 
@@ -29,7 +31,15 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        code: str = "",
+        code: str
+        | types.ModuleType
+        | type
+        | types.MethodType
+        | types.FunctionType
+        | types.TracebackType
+        | types.FrameType
+        | types.CodeType
+        | Callable[..., Any] = "",
         language: str = "py",
         *,
         linenums: int | None = None,
@@ -47,12 +57,12 @@ class MkCommentedCode(mkcontainer.MkContainer):
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        self.code = code
+        self._code = code
         self.language = language
         self.title = ""
         self.linenums = linenums
         self.use_admonitions = use_admonitions
-        super().__init__(content=code, header=header, **kwargs)
+        super().__init__(content=None, header=header, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(
@@ -64,6 +74,14 @@ class MkCommentedCode(mkcontainer.MkContainer):
             _filter_empty=True,
             _filter_false=True,
         )
+
+    @property
+    def code(self):
+        match self._code:
+            case str():
+                return self._code
+            case _:
+                return helpers.get_source(self._code)
 
     @property
     def items(self):
@@ -113,28 +131,25 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     @staticmethod
     def create_example_page(page):
-        # Comment sections automatically get converted to non-codeblock sections.
-        # That way you can explain your code in-line.
-        import inspect
-
-        # ## you can use headers.
         import mknodes
 
+        # Comment sections automatically get converted to non-codeblock sections.
+        # That way you can explain your code in-line.
+
+        # ## you can use headers.
+
+        node = MkCommentedCode(MkCommentedCode.create_example_page)
+        page += mknodes.MkReprRawRendered(node, header="### Regular")
         # !!! note
         #     Admonitions and everything else work, too.
         #
-        code = inspect.getsource(MkCommentedCode.create_example_page)
-        node = MkCommentedCode(code)
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
-        node = MkCommentedCode(code, use_admonitions=True)
+
+        node = MkCommentedCode(MkCommentedCode.create_example_page, use_admonitions=True)
         page += mknodes.MkReprRawRendered(node, header="### Admonitions")
 
 
 if __name__ == "__main__":
-    import inspect
-
     from mknodes import manual
 
-    code = inspect.getsource(manual.build)
-    node = MkCommentedCode(code)
+    node = MkCommentedCode(manual.build)
     print(node)
