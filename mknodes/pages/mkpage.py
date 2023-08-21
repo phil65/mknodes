@@ -32,6 +32,7 @@ class MkPage(mkcontainer.MkContainer):
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
         hide_path: bool | None = None,
+        hide_tags: bool | None = None,
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
@@ -53,6 +54,7 @@ class MkPage(mkcontainer.MkContainer):
             hide_toc: Whether TOC should be shown when this page is displayed.
             hide_nav: Whether Nav should be shown when this page is displayed.
             hide_path: Whether Breadcrumbs should be shown when this page is displayed.
+            hide_tags: Whether tags should be shown when this page is displayed.
             search_boost: Factor to modify search ranking
             exclude_from_search: Whether to exclude this page from search listings
             icon: Optional page icon
@@ -82,6 +84,7 @@ class MkPage(mkcontainer.MkContainer):
             hide_toc=hide_toc,
             hide_nav=hide_nav,
             hide_path=hide_path,
+            hide_tags=hide_tags,
             search_boost=search_boost,
             exclude_from_search=exclude_from_search,
             icon=icon,

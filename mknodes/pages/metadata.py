@@ -19,6 +19,7 @@ class Metadata:
     hide_toc: bool | None = None
     hide_nav: bool | None = None
     hide_path: bool | None = None
+    hide_tags: bool | None = None
     search_boost: float | None = None
     exclude_from_search: bool | None = None
     icon: str | None = None
@@ -39,6 +40,7 @@ class Metadata:
                 dct["hide_toc"] = "toc" in hide
                 dct["hide_nav"] = "navigation" in hide
                 dct["hide_path"] = "path" in hide
+                dct["hide_tags"] = "tags" in hide
             if search := dct.pop("search", None):
                 dct["search_boost"] = search.get("boost")
                 dct["exclude_from_search"] = search.get("exclude")
@@ -72,6 +74,8 @@ class Metadata:
             hide_list.append("toc")
         if self.hide_path:
             hide_list.append("path")
+        if self.hide_tags:
+            hide_list.append("tags")
         return hide_list or None
 
     @property
