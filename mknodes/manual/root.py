@@ -41,6 +41,8 @@ def build(project: mknodes.Project) -> mknodes.MkNav:
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
     root_nav = project.get_root(append_markdown_to_pages=True)
     project.announcement_bar = mknodes.MkMetadataBadges("dependencies")
+    project.error_page.content = mknodes.MkAdmonition("Page does not exist!")
+    project.root_css.show_annotation_numbers()
     # By using append_markdown_to_pages, every page will have a expandable Admonition
     # attached at the bottom. You can see the generated Markdown there for every page.
     annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)
