@@ -28,6 +28,23 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
     tasklist_checked="md-tasklist-icon--checked",
 )
 
+CONTAINER_RULE = """.mdx-container {
+  padding-top: px2rem(20px);
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: hsla(0, 0%, 100%, 1)' /></svg>") no-repeat bottom,
+    linear-gradient(
+      to bottom,
+      var(--md-primary-fg-color),
+      hsla(280, 67%, 55%, 1) 99%,
+      var(--md-default-bg-color) 99%
+    );
+"""  # noqa: E501
+
+
+class MdxContainerRule(cssclasses.StyleRule):
+    def __init__(self):
+        super().__init__(CONTAINER_RULE)
+
 
 def wrap_svg(data):
     return f"url('data:image/svg+xml;charset=utf-8,{data}')"
@@ -156,7 +173,7 @@ class RootCSS(cssclasses.CSS):
         )
 
 
-if __name__ == "__main__":
-    ss = RootCSS()
-    ss.set_primary_background_color((100, 100, 100))
-    print(ss)
+# if __name__ == "__main__":
+#     ss = RootCSS()
+#     ss.set_primary_background_color((100, 100, 100))
+#     print(ss)
