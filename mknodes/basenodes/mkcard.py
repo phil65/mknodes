@@ -30,7 +30,11 @@ def build_html_card(
     if link:
         root.set("href", link)
     card_div = ElementTree.SubElement(root, "div", {"class": "card"})
-    container_div = ElementTree.SubElement(card_div, "div", {"class": "container"})
+    container_div = ElementTree.SubElement(
+        card_div,
+        "div",
+        {"class": "showcase-container"},
+    )
     ElementTree.SubElement(
         container_div,
         "img",

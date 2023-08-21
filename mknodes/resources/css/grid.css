@@ -2,13 +2,13 @@
 * {box-sizing: border-box}
 
 /* Container needed to position the overlay. Adjust the width as needed */
-.container {
+.showcase-container {
   position: relative;
   width: 100%;
   max-width: 300px;
 }
 
-.container .content {
+.showcase-container .content {
   position: absolute; /* Position the background text */
   bottom: 0; /* At the bottom. Use top:0 to append it to the top */
   background: rgb(0, 0, 0); /* Fallback color */
