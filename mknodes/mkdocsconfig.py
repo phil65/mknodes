@@ -9,6 +9,7 @@ import markdown
 
 from mkdocs import config as _config
 from mkdocs.plugins import get_plugin_logger
+from mkdocs.structure.files import File
 from mkdocs.utils import write_file
 
 from mknodes.utils import helpers
@@ -145,6 +146,16 @@ class Config:
             extension_configs=self._config["mdx_configs"] or {},
         )
 
+    def get_file(self, path) -> File:
+        return File(
+            str(path),
+            src_dir=self._config.docs_dir,
+            dest_dir=self._config.site_dir,
+            use_directory_urls=self._config.use_directory_urls,
+        )
+
 
 if __name__ == "__main__":
     cfg = Config()
+    print(cfg._config.use_directory_urls)
+    cfg.nav = "test"
