@@ -42,6 +42,7 @@ class MkNode(node.Node):
 
     def __init__(
         self,
+        *,
         header: str = "",
         indent: str = "",
         shift_header_levels: int = 0,

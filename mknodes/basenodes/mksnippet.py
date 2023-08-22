@@ -31,7 +31,7 @@ class MkSnippet(mknode.MkNode):
             path: Path to markdown file.
             header: Section header
         """
-        super().__init__(header)
+        super().__init__(header=header)
         self.path = path
 
     def __str__(self):

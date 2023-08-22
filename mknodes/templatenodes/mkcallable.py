@@ -42,7 +42,7 @@ class MkCallable(mknode.MkNode):
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header, **kwargs)
+        super().__init__(header=header, **kwargs)
         self.fn = fn
         self.args = args or []
         self.kw_args = kw_args or {}
