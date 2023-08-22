@@ -71,13 +71,16 @@ class Config:
         path = (pathlib.Path("assets") / filename).as_posix()
         logger.info("Creating %s...", path)
         self._config.extra_css.append(path)
-        write_file(css.encode(), (site_dir / path))
+        write_file(css.encode(), str(site_dir / path))
 
     def register_template(self, content: str, filename: str):
+        if not self._config.theme.custom_dir:
+            msg = "No custom dir set"
+            raise RuntimeError(msg)
         custom_dir = pathlib.Path(self._config.theme.custom_dir) / filename
         path = pathlib.Path("overrides") / filename
         logger.info("Creating %s...", path.as_posix())
-        write_file(content.encode(), custom_dir)
+        write_file(content.encode(), str(custom_dir))
 
     def get_markdown_instance(self) -> markdown.Markdown:
         return markdown.Markdown(
