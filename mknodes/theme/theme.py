@@ -27,7 +27,7 @@ class Theme:
         self.css = rootcss.RootCSS()
         md = self.config.get_markdown_instance()
         self.templates = template_registry or templateregistry.TemplateRegistry(md)
-        self._associated_project = project
+        self.associated_project = project
 
     @classmethod
     def get_theme(cls, config: mkdocsconfig.Config, **kwargs):

@@ -121,7 +121,7 @@ class MaterialTheme(theme.Theme):
     @announcement_bar.setter
     def announcement_bar(self, value):
         if isinstance(value, mknode.MkNode):
-            value._associated_project = self._associated_project
+            value.associated_project = self.associated_project
         self.main_template.announcement_bar = value
 
     def get_accent_color(self) -> str:

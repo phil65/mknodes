@@ -28,7 +28,7 @@ GITHUB_REGEX = re.compile(
     r"(?:\/|$)?"  # noqa: COM812
 )
 
-T = TypeVar("T")
+T = TypeVar("T", bound=theme_.Theme)
 
 
 class Project(Generic[T]):
@@ -47,6 +47,14 @@ class Project(Generic[T]):
         self.error_page = self.templates["404.html"]
         self.folderinfo = folderinfo.FolderInfo()
         self._root: mknav.MkNav | None = None
+
+    @classmethod
+    def for_mknodes(cls) -> Project:
+        import mknodes
+
+        config = mkdocsconfig.Config()
+        theme = theme_.Theme.get_theme(config)
+        return cls(mknodes, config._config, theme)
 
     @property
     def info(self):
@@ -96,4 +104,5 @@ class Project(Generic[T]):
 
 
 if __name__ == "__main__":
-    project = Project[theme_.Theme]()
+    project = Project.for_mknodes()
+    print(project)

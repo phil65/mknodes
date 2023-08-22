@@ -111,7 +111,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
 if __name__ == "__main__":
     import mknodes
 
-    project = mknodes.Project[None](mknodes)
+    project = mknodes.Project.for_mknodes()
     root = project.get_root()
     page = root.add_index_page()
     guide = MkInstallGuide()

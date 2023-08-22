@@ -47,13 +47,14 @@ class MkNodesPlugin(BasePlugin):
         command: Literal["build", "gh-deploy", "serve"],
         dirty: bool = False,
     ):
-        pass
+        """Defined to activate new-style MkDocs plugin handling."""
 
     def on_config(self, config: MkDocsConfig):
+        """Create the project based on MkDocs config."""
         cfg = mkdocsconfig.Config(config)
         skin = theme.Theme.get_theme(config=cfg)
         self._project = project.Project[type(skin)](config=config, theme=skin)
-        skin._associated_project = self._project
+        skin.associated_project = self._project
 
     #     if config.nav is None:
     #         file = File(
@@ -68,10 +69,15 @@ class MkNodesPlugin(BasePlugin):
     #         config.nav = Navigation([section], [])
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
-        """On_files hook.
+        """Create the node tree and write files to build folder.
 
-        During this phase all Markdown files as well as an aggregated css file
-        are written.
+        In this step we build the node tree by calling the user-set method,
+        and aggregate all files we need to build the website.
+        This includes:
+
+          - Markdown pages (MkPages)
+          - Templates
+          - CSS files
         """
         with fileseditor.FilesEditor(files, config, self._dir.name) as ed:
             file_name = self.config["path"]
@@ -117,6 +123,7 @@ class MkNodesPlugin(BasePlugin):
         files: Files,
         config: MkDocsConfig,
     ) -> Navigation | None:
+        """Build mappings needed for linking in following steps."""
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             self._file_mapping[filename].append(file_.url)
@@ -161,7 +168,7 @@ class MkNodesPlugin(BasePlugin):
         config: MkDocsConfig,
         files: Files,
     ) -> str | None:
-        """During this phase [title](some_page.md) and °metadata stuff gets replaced."""
+        """During this phase links and `°metadata` stuff get replaced."""
         for k, v in self._project.info.metadata.items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
@@ -175,6 +182,7 @@ class MkNodesPlugin(BasePlugin):
         return link_replacer.replace(markdown)
 
     def on_post_build(self, config: MkDocsConfig):
+        """Delete the temporary template files."""
         if not config.theme.custom_dir:
             return
         for template in self._project.templates:

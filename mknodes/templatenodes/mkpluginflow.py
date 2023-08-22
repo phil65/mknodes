@@ -125,9 +125,6 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    import mknodes
+    from mknodes import plugin
 
-    proj = mknodes.Project[None](module=mknodes)
-
-    setup_text = MkPluginFlow()
-    setup_text._associated_project = proj
+    setup_text = MkPluginFlow(plugin.MkNodesPlugin)

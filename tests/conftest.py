@@ -6,8 +6,6 @@ import pytest
 
 from responsemock import utils
 
-import mknodes
-
 from mknodes import manual, project
 
 
@@ -59,7 +57,7 @@ def resources_dir():
 
 @pytest.fixture(scope="session")
 def full_tree():
-    proj = project.Project[None](mknodes)
+    proj = project.Project.for_mknodes()
     with utils.response_mock(
         [
             (

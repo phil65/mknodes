@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
+from mknodes.pages import pagetemplate
 from mknodes.treelib import node
 
 
@@ -184,6 +185,24 @@ class MkNode(node.Node):
             all_files |= self.resolved_virtual_files
         return all_files
 
+    def all_templates(self) -> list:
+        """Return list of templates."""
+        all_templates = [
+            des.template
+            for des in self.descendants
+            if hasattr(des, "template")
+            and isinstance(
+                des.template,
+                pagetemplate.PageTemplate,
+            )
+        ]
+        if hasattr(self, "template") and isinstance(
+            self.template,
+            pagetemplate.PageTemplate,
+        ):
+            all_templates.append(self.template)
+        return all_templates
+
     def all_markdown_extensions(self) -> set[str]:
         extensions = {p for desc in self.descendants for p in desc.REQUIRED_EXTENSIONS}
         extensions.update(self.REQUIRED_EXTENSIONS)
@@ -194,16 +213,17 @@ class MkNode(node.Node):
         plugins.update(self.REQUIRED_PLUGINS)
         return plugins
 
+    def get_css(self) -> str | None:
+        if not self.CSS:
+            return None
+        file_path = paths.RESOURCES / self.CSS
+        return file_path.read_text()
+
     def all_css(self) -> str:
-        css_files: set[str] = {des.CSS for des in self.descendants if des.CSS}
-        if self.CSS:
-            css_files.add(self.CSS)
-        css = ""
-        for css_path in css_files:
-            logger.debug("Appending %s to mknodes.css", css_path)
-            file_path = paths.RESOURCES / css_path
-            css += file_path.read_text()
-        return css
+        all_css: set[str] = {css for des in self.descendants if (css := des.get_css())}
+        if self_css := self.get_css():
+            all_css.add(self_css)
+        return "\n".join(all_css)
 
     @staticmethod
     def create_example_page(page):
@@ -221,13 +241,17 @@ class MkNode(node.Node):
         page += mknodes.MkReprRawRendered(node, header="### Append annotations")
 
     @property
-    def associated_project(self):
+    def associated_project(self) -> project.Project | None:
         if proj := self._associated_project:
             return proj
         for ancestor in self.ancestors:
             if proj := ancestor._associated_project:
                 return proj
         return None
+
+    @associated_project.setter
+    def associated_project(self, value: project.Project):
+        self._associated_project = value
 
 
 if __name__ == "__main__":
