@@ -47,7 +47,7 @@ class MkChangelog(mktext.MkText):
         self.convention = convention
         self.template = template
         self.sections = sections
-        self.repository = repository
+        self._repository = repository
 
     def __repr__(self):
         return helpers.get_repr(
@@ -60,10 +60,20 @@ class MkChangelog(mktext.MkText):
         )
 
     @property
+    def repository(self):
+        match self._repository:
+            case None if self.associated_project:
+                return str(self.associated_project.folderinfo.path)
+            case None:
+                return "."
+            case _:
+                return str(self._repository)
+
+    @property
     def text(self) -> str:
         with contextlib.redirect_stdout(io.StringIO()):
             _changelog, text = cli.build_and_render(
-                repository=str(self.repository) if self.repository else ".",
+                repository=self.repository,
                 template=self.template,
                 convention=self.convention,
                 parse_refs=True,
