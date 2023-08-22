@@ -21,7 +21,7 @@ class MkDoc(mknav.MkNav):
 
     def __init__(
         self,
-        module: types.ModuleType | Sequence[str] | str,
+        module: types.ModuleType | Sequence[str] | str | None = None,
         *,
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
@@ -43,12 +43,10 @@ class MkDoc(mknav.MkNav):
             flatten_nav: Whether classes should be put into top-level of the nav
             kwargs: Keyword arguments passed to parent
         """
-        self.module = classhelpers.to_module(module, return_none=False)
-        self.is_package = hasattr(self.module, "__path__")
-        self.module_name = self.module.__name__.split(".")[-1]
-        self.module_path = self.module.__name__
-        self.file_path = self.module.__file__
-
+        if module:
+            self._module = classhelpers.to_module(module, return_none=False)
+        else:
+            self._module = None
         self.ClassPage = class_page or mkclasspage.MkClassPage
         self.ModulePage = module_page or mkmodulepage.MkModulePage
         self.flatten_nav = flatten_nav
@@ -67,8 +65,20 @@ class MkDoc(mknav.MkNav):
             filename=self.filename,
         )
 
+    @property
+    def module(self):
+        match self._module:
+            case None if self.associated_project:
+                return self.associated_project.module
+            case _:
+                return self._module
+
+    @property
+    def module_name(self):
+        return self.module.__name__.split(".")[-1]
+
     def to_markdown(self) -> str:
-        self._add_module_overview()
+        self._create_index_page()
         for klass in self.klasses:
             self.add_class_page(klass=klass, flatten=self.flatten_nav)
         for submod in self.submodules:
@@ -212,7 +222,7 @@ class MkDoc(mknav.MkNav):
         self.nav[section] = page
         return page
 
-    def _add_module_overview(
+    def _create_index_page(
         self,
         title: str | None = None,
         **kwargs: Any,

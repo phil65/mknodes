@@ -341,7 +341,7 @@ class MkNav(mknode.MkNode):
 
     def add_doc(
         self,
-        module: types.ModuleType | Sequence[str] | str,
+        module: types.ModuleType | Sequence[str] | str | None = None,
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
