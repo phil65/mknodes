@@ -99,12 +99,14 @@ class MkPluginFlow(mkcontainer.MkContainer):
             return []
         items = []
         for event in Flow:
-            if hasattr(self.plugin, event):
-                fn = getattr(self.plugin, event)
-                bubble = mkspeechbubble.MkSpeechBubble(get_event_section(fn))
-                items.append(bubble)
-        for item in items:
-            item.parent = self
+            if not hasattr(self.plugin, event):
+                continue
+            fn = getattr(self.plugin, event)
+            section = get_event_section(fn)
+            bubble = mkspeechbubble.MkSpeechBubble(section, parent=self)
+            items.append(bubble)
+        if items:
+            items[-1].arrow = None
         return items
 
     @items.setter

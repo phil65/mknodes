@@ -20,19 +20,20 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     def __init__(
         self,
         content: str | mknode.MkNode | list | None = None,
-        arrow_pos: Literal["top", "bottom", "left", "right"] = "bottom",
+        arrow: Literal["top", "bottom", "left", "right"] | None = "bottom",
         *,
         header: str = "",
         **kwargs,
     ):
-        self.arrow_pos = arrow_pos
+        self.arrow = arrow
         super().__init__(content=content or [], header=header, **kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, content=self.items)
 
     def _to_markdown(self) -> str:
-        begin = f'<div class="speech {self.arrow_pos}">\n'
+        arrow_str = f" {self.arrow}" if self.arrow else ""
+        begin = f'<div class="speech{arrow_str}" markdown="1">\n'
         content = super()._to_markdown()
         end = "\n</div>"
         return f"{begin}{content}{end}"
@@ -43,7 +44,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
 
         node = MkSpeechBubble(MkSpeechBubble.__doc__)
         page += mknodes.MkReprRawRendered(node)
-        node = MkSpeechBubble(MkSpeechBubble.__doc__, arrow_pos="left")
+        node = MkSpeechBubble(MkSpeechBubble.__doc__, arrow="left")
         page += mknodes.MkReprRawRendered(node)
 
 
