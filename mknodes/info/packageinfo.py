@@ -282,7 +282,7 @@ class PackageInfo:
                 return i
         raise ValueError(name)
 
-    def get_entry_points(self, group: str | None = None):
+    def get_entry_points(self, group: str | None = None) -> dict[str, type]:
         if not group:
             eps = self.distribution.entry_points
         else:

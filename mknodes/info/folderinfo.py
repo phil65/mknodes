@@ -31,11 +31,12 @@ class FolderInfo:
 
     @property
     def tools(self) -> list[tools.Tool]:
+        """Return a list of build tools used by this package."""
         return [t for t in tools.TOOLS.values() if t.is_used(self.path)]
 
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:
-        """Return list of task runners used by this project."""
+        """Return list of task runners used by this package."""
         return [
             runner
             for runner in taskrunners.TASK_RUNNERS.values()
