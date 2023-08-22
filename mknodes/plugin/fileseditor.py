@@ -77,7 +77,6 @@ class FilesEditor:
         mode,
         buffering=-1,
         encoding=None,
-        *args,
         **kwargs,
     ) -> IO:
         """Open a file under `docs_dir` virtually.
@@ -90,7 +89,7 @@ class FilesEditor:
         path = self._get_file(name, new="w" in mode)
         if encoding is None and "b" not in mode:
             encoding = "utf-8"
-        return open(path, mode, buffering, encoding, *args, **kwargs)  # noqa: PTH123
+        return open(path, mode, buffering, encoding, **kwargs)  # noqa: PTH123 SIM115
 
     def _get_file(self, name: str, new: bool = False) -> str:
         # sourcery skip: extract-duplicate-method
