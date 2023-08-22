@@ -31,6 +31,7 @@ from .basenodes.mkprogressbar import MkProgressBar
 from .basenodes.mkdefinitionlist import MkDefinitionList
 from .basenodes.mkcard import MkCard
 from .basenodes.mkshowcase import MkShowcase
+from .basenodes.mkspeechbubble import MkSpeechBubble
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -62,7 +63,6 @@ from .templatenodes.mkmetadatabadges import MkMetadataBadges
 from .templatenodes.mkmoduleoverview import MkModuleOverview
 from .templatenodes.mkcommentedcode import MkCommentedCode
 from .templatenodes.mkconfigsetting import MkConfigSetting
-
 from .templatenodes.mkmoduletable import MkModuleTable
 
 from .project import Project
@@ -131,6 +131,7 @@ __all__ = [
     "MkModuleOverview",
     "MkCommentedCode",
     "MkConfigSetting",
+    "MkSpeechBubble",
 ]
 
 __version__ = "0.29.0"

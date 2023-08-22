@@ -1,0 +1,45 @@
+.speech {
+   font-size: 1.1em;
+  color: var(--md-primary-fg-color);
+  background: var(--md-primary-bg-color);
+  border-color: var(--md-primary-fg-color);
+  position: relative;
+  padding: 20px;
+  border-radius: 10px;
+  border-style: solid;
+  margin: 50px auto;
+}
+
+.speech::after {
+  content: "";
+  border: 20px solid transparent;
+  position: absolute;
+}
+
+.bottom.speech::after {
+  border-top-color: var(--md-primary-fg-color);
+  border-bottom: 0;
+  bottom: -20px; left: 50%;
+  margin-left: -20px;
+}
+
+.top.speech::after {
+  border-bottom-color: var(--md-primary-fg-color);
+  border-top: 0;
+  top: -20px; left: 50%;
+  margin-left: -20px;
+}
+
+.left.speech::after {
+  border-right-color: var(--md-primary-fg-color);
+  border-left: 0;
+  left: -20px; top: 50%;
+  margin-top: -20px;
+}
+
+.right.speech::after {
+  border-left-color: var(--md-primary-fg-color);
+  border-right: 0;
+  right: -20px; top: 50%;
+  margin-top: -20px;
+}

@@ -41,7 +41,7 @@ class Project(Generic[T]):
         theme: T | None = None,
     ):
         self._module = module
-        self.config = mkdocsconfig.Config(config)
+        self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
         self.theme: theme_.Theme = theme or theme_.Theme.get_theme(config=self.config)
         self.templates = self.theme.templates
         self.error_page = self.templates["404.html"]

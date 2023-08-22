@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from typing import Any
+from typing import Any, Literal
 
-from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mktext
+from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mkspeechbubble, mktext
 from mknodes.data import datatypes
 from mknodes.utils import helpers
 
@@ -34,7 +34,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         language: str = "py",
         *,
         linenums: int | None = None,
-        use_admonitions: bool = False,
+        style: Literal["text", "admonition", "bubble"] = "bubble",
         header: str = "",
         **kwargs: Any,
     ):
@@ -44,7 +44,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
             code: Code to show
             language: language for syntax highlighting
             linenums: If set, use as start linenumber
-            use_admonitions: If set, put comments into admonitions
+            style: Comment style
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -52,7 +52,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         self.language = language
         self.title = ""
         self.linenums = linenums
-        self.use_admonitions = use_admonitions
+        self._style = style
         super().__init__(content=None, header=header, **kwargs)
 
     def __repr__(self):
@@ -61,7 +61,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
             code=self.code,
             language=self.language,
             linenums=self.linenums,
-            use_admonitions=self.use_admonitions,
+            style=self._style,
             _filter_empty=True,
             _filter_false=True,
         )
@@ -75,15 +75,22 @@ class MkCommentedCode(mkcontainer.MkContainer):
                 return helpers.get_source(self._code)
 
     @property
+    def comment_class(self):
+        match self._style:
+            case "text":
+                return mktext.MkText
+            case "bubble":
+                return mkspeechbubble.MkSpeechBubble
+            case "admonition":
+                return mkadmonition.MkAdmonition
+
+    @property
     def items(self):
         if not self.code:
             return {}
         section = []
         sections = []
         mode = ""
-        Class = (  # noqa: N806
-            mkadmonition.MkAdmonition if self.use_admonitions else mktext.MkText
-        )
         line_num = self.linenums or 0
         for i, line in enumerate(self.code.split("\n"), start=line_num):
             if not line.strip() or line.rstrip().endswith("##"):
@@ -100,7 +107,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
             elif not line.strip().startswith("#"):
                 if mode == "comment":
                     text = "\n".join(section)
-                    sections.append(Class(text))
+                    sections.append(self.comment_class(text))
                     section = []
                     line_num = i
                 section.append(line)
@@ -111,7 +118,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
             sections.append(mkcode.MkCode(code, linenums=start_line))
         elif mode == "comment":
             text = "\n".join(section)
-            sections.append(Class(text))
+            sections.append(self.comment_class(text))
         for section in sections:
             section.parent = self
         return sections
@@ -135,8 +142,10 @@ class MkCommentedCode(mkcontainer.MkContainer):
         #     Admonitions and everything else work, too.
         #
 
-        node = MkCommentedCode(MkCommentedCode.create_example_page, use_admonitions=True)
+        node = MkCommentedCode(MkCommentedCode.create_example_page, style="admonition")
         page += mknodes.MkReprRawRendered(node, header="### Admonitions")
+        node = MkCommentedCode(MkCommentedCode.create_example_page, style="text")
+        page += mknodes.MkReprRawRendered(node, header="### Plain text")
 
 
 if __name__ == "__main__":
