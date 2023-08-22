@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import functools
+import importlib
 
 from importlib import metadata
 import logging
@@ -281,7 +282,20 @@ class PackageInfo:
                 return i
         raise ValueError(name)
 
+    def get_entry_points(self, group: str | None = None):
+        if not group:
+            eps = self.distribution.entry_points
+        else:
+            eps = [i for i in self.distribution.entry_points if i.group == group]
+        dct = {}
+        for ep in eps:
+            name, dotted_path = ep.name, ep.value
+            mod_name, kls_name = dotted_path.split(":")
+            mod = importlib.import_module(mod_name)
+            dct[name] = getattr(mod, kls_name)
+        return dct
+
 
 if __name__ == "__main__":
-    info = get_info("anybadge")
-    print(info.repository_url)
+    info = get_info("mknodes")
+    print(info.get_entry_points())

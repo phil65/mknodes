@@ -64,6 +64,7 @@ from .templatenodes.mkmoduleoverview import MkModuleOverview
 from .templatenodes.mkcommentedcode import MkCommentedCode
 from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
+from .templatenodes.mkpluginflow import MkPluginFlow
 
 from .project import Project
 
@@ -97,6 +98,7 @@ __all__ = [
     "MkClassPage",
     "MkModulePage",
     "MkModuleTable",
+    "MkPluginFlow",
     "MkAnnotations",
     "MkFootNotes",
     "MkDoc",
