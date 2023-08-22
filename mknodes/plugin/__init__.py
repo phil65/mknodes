@@ -9,23 +9,24 @@ import os
 import pathlib
 import tempfile
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 import urllib.parse
 
 from mkdocs.config import config_options
 from mkdocs.exceptions import PluginError
 from mkdocs.plugins import BasePlugin, get_plugin_logger
+from mkdocs.structure.nav import Navigation
+from mkdocs.structure.pages import Page
 
-from mknodes import project
+from mknodes import mkdocsconfig, project
 from mknodes.plugin import linkreplacer, fileseditor
 from mknodes.pages import mkpage
 from mknodes.utils import classhelpers
+from mknodes.theme import theme
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
     from mkdocs.structure.files import Files
-    from mkdocs.structure.pages import Page
-    from mkdocs.structure.nav import Navigation
 
 
 logger = get_plugin_logger(__name__)
@@ -33,7 +34,38 @@ logger = get_plugin_logger(__name__)
 
 class MkNodesPlugin(BasePlugin):
     config_scheme = (("path", config_options.Type(str)),)
-    css_filename = "mknodes.css"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.main_html_content = None
+        self._file_mapping = collections.defaultdict(list)
+        self._page_mapping = {}
+        self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
+
+    def on_startup(
+        self,
+        command: Literal["build", "gh-deploy", "serve"],
+        dirty: bool = False,
+    ):
+        pass
+
+    def on_config(self, config: MkDocsConfig):
+        cfg = mkdocsconfig.Config(config)
+        skin = theme.Theme.get_theme(config=cfg)
+        self._project = project.Project[type(skin)](config=config, theme=skin)
+        skin._associated_project = self._project
+
+    #     if config.nav is None:
+    #         file = File(
+    #             "/mknodes/blogs/index.md",
+    #             src_dir=config["docs_dir"],
+    #             dest_dir=config["site_dir"],
+    #             use_directory_urls=config["use_directory_urls"],
+    #         )
+    #         page = SectionPage("blog", file, config, [])
+    #         section = Section("Blog", [page])
+
+    #         config.nav = Navigation([section], [])
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """On_files hook.
@@ -41,10 +73,6 @@ class MkNodesPlugin(BasePlugin):
         During this phase all Markdown files as well as an aggregated css file
         are written.
         """
-        self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
-        self._project = project.Project(config=config, files=files)
-        self.main_html_content = None
-
         with fileseditor.FilesEditor(files, config, self._dir.name) as ed:
             file_name = self.config["path"]
             if file_name.endswith(".py"):
@@ -67,12 +95,20 @@ class MkNodesPlugin(BasePlugin):
                 with ed.open(k, mode) as file:
                     file.write(v)
             if css := root.all_css():
-                self._project.config.register_css(self.css_filename, css)
-            if css := self._project.root_css:
-                self._project.config.register_css("mknodes_root.css", str(css))
-            if main_html := self._project.main_template.build_html():
-                self.main_html_content = main_html
-                self._project.config.register_template(main_html, filename="main.html")
+                self._project.config.register_css("mknodes_nodes.css", css)
+            if css := self._project.theme.css:
+                self._project.config.register_css("mknodes_theme.css", str(css))
+            for template in self._project.templates:
+                if html := template.build_html():
+                    self._project.config.register_template(
+                        html,
+                        filename=template.filename,
+                    )
+            for template in root.all_templates():
+                self._project.config.register_template(
+                    template.build_html(),
+                    filename=template.filename,
+                )
         return ed.files
 
     def on_nav(
@@ -81,11 +117,9 @@ class MkNodesPlugin(BasePlugin):
         files: Files,
         config: MkDocsConfig,
     ) -> Navigation | None:
-        self._file_mapping = collections.defaultdict(list)
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             self._file_mapping[filename].append(file_.url)
-        self._page_mapping = {}
         if root := self._project._root:
             for _level, node in root.iter_nodes():
                 if isinstance(node, mkpage.MkPage):
@@ -100,8 +134,8 @@ class MkNodesPlugin(BasePlugin):
         files: Files,
     ) -> Page | None:
         """During this phase we set the edit paths."""
-        repo_url = config.get("repo_url", None)
-        edit_uri = config.get("edit_uri", "edit/main/")
+        repo_url = config.repo_url
+        edit_uri = config.edit_uri or "edit/main/"
         if not repo_url or not edit_uri:
             return None
         if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
@@ -128,17 +162,21 @@ class MkNodesPlugin(BasePlugin):
         files: Files,
     ) -> str | None:
         """During this phase [title](some_page.md) and °metadata stuff gets replaced."""
-        docs_dir = config["docs_dir"]
-        page_url = page.file.src_uri
         for k, v in self._project.info.metadata.items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
                 continue
-        link_replacer = linkreplacer.LinkReplacer(docs_dir, page_url, self._file_mapping)
+        link_replacer = linkreplacer.LinkReplacer(
+            base_docs_url=config.docs_dir,
+            page_url=page.file.src_uri,
+            mapping=self._file_mapping,
+        )
         return link_replacer.replace(markdown)
 
     def on_post_build(self, config: MkDocsConfig):
-        if config.theme.custom_dir and self.main_html_content:
-            path = pathlib.Path(config.theme.custom_dir) / "main.html"
+        if not config.theme.custom_dir:
+            return
+        for template in self._project.templates:
+            path = pathlib.Path(config.theme.custom_dir) / template.filename
             path.unlink(missing_ok=True)

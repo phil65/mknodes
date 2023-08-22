@@ -59,7 +59,7 @@ def resources_dir():
 
 @pytest.fixture(scope="session")
 def full_tree():
-    proj = project.Project(mknodes)
+    proj = project.Project[None](mknodes)
     with utils.response_mock(
         [
             (

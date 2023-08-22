@@ -200,7 +200,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 if __name__ == "__main__":
     import mknodes
 
-    proj = mknodes.Project(mknodes)
+    proj = mknodes.Project[None](mknodes)
     nav = proj.get_root()
     node = MkMetadataBadges("installed_packages")
     page = nav.add_page("test")

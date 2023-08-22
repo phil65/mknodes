@@ -72,6 +72,10 @@ class CSS:
         self.stylesheet.add(rule.rule)
         self.rules.append(rule)
 
+    @classmethod
+    def wrap_svg(cls, data: str):
+        return f"url('data:image/svg+xml;charset=utf-8,{data}')"
+
 
 if __name__ == "__main__":
     ss = CSS("")

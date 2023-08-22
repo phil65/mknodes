@@ -65,7 +65,7 @@ class MkBadge(mkimage.MkImage):
     def badge_color(self) -> str | None:
         match self._badge_color:
             case None if self.associated_project:
-                return self.associated_project.get_primary_color()
+                return self.associated_project.theme.get_primary_color()
             case str():
                 return self._badge_color
         return None
@@ -79,10 +79,10 @@ class MkBadge(mkimage.MkImage):
     def text_color(self) -> str | None:
         match self._text_color:
             case None if self.associated_project and self.use_gitlab_style:
-                color = self.associated_project.get_text_color()
+                color = self.associated_project.theme.get_text_color()
                 return f"{color},#fff"
             case None if self.associated_project:
-                color = self.associated_project.get_text_color()
+                color = self.associated_project.theme.get_text_color()
                 return f"#fff,{color}"
             case str():
                 return self._text_color

@@ -1,6 +1,7 @@
 import mknodes
 
 from mknodes import manual
+from mknodes.theme import materialtheme
 
 
 HEADER = "°metadata.summary"
@@ -23,7 +24,7 @@ It will be a quite inception-ish experience.
 DOC_URL = "https://phil65.github.io/mknodes/"
 
 
-def build(project: mknodes.Project) -> mknodes.MkNav:
+def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNav:
     project.module = mknodes
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
@@ -40,9 +41,9 @@ def build(project: mknodes.Project) -> mknodes.MkNav:
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
     root_nav = project.get_root(append_markdown_to_pages=True)
-    project.announcement_bar = mknodes.MkMetadataBadges("dependencies")
+    project.theme.announcement_bar = mknodes.MkMetadataBadges("dependencies")
     project.error_page.content = mknodes.MkAdmonition("Page does not exist!")
-    project.root_css.show_annotation_numbers()
+    project.theme.show_annotation_numbers()
     # By using append_markdown_to_pages, every page will have a expandable Admonition
     # attached at the bottom. You can see the generated Markdown there for every page.
     annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)
