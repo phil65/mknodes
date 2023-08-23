@@ -86,6 +86,7 @@ CONTAINER_RULE = """.mdx-container {
       hsla(280, 67%, 55%, 1) 99%,
       var(--md-default-bg-color) 99%
     );
+    }
 """  # noqa: E501
 
 
