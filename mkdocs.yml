@@ -8,6 +8,7 @@ copyright: Copyright &copy; 2023 Philipp Temminghoff
 theme:
   name: material
   custom_dir: docs/overrides
+  icon: material/graph-outline
   palette:
   # Palette toggle for light mode
   - media: "(prefers-color-scheme: light)"
@@ -26,7 +27,7 @@ theme:
       name: Switch to light mode
   features:
   - announce.dismiss
-  # - content.action.edit
+  - content.action.edit
   - content.code.copy
   - content.code.select
   - content.code.annotate
@@ -47,7 +48,6 @@ theme:
   # - navigation.sections # top-level sections are rendered as groups
   - search.highlight
   - search.suggest
-  - content.action.edit
   # - search.share
 plugins:
 - search
