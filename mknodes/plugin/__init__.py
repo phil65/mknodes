@@ -18,7 +18,7 @@ from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
 
-from mknodes import mkdocsconfig, project
+from mknodes import mkdocsconfig, paths, project
 from mknodes.plugin import linkreplacer, fileseditor
 from mknodes.pages import mkpage
 from mknodes.utils import classhelpers
@@ -102,6 +102,10 @@ class MkNodesPlugin(BasePlugin):
                     file.write(v)
             if css := root.all_css():
                 self._project.config.register_css("mknodes_nodes.css", css)
+            if js_files := root.all_js_files():
+                for file in js_files:
+                    content = (paths.RESOURCES / file).read_text()
+                    self._project.config.register_js(file, content)
             if css := self._project.theme.css:
                 self._project.config.register_css("mknodes_theme.css", str(css))
             for template in self._project.templates:

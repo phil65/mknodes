@@ -73,6 +73,13 @@ class Config:
         self._config.extra_css.append(path)
         write_file(css.encode(), str(site_dir / path))
 
+    def register_js(self, filename: str | os.PathLike, js: str):
+        site_dir = pathlib.Path(self._config["site_dir"])
+        path = (pathlib.Path("assets") / filename).as_posix()
+        logger.info("Creating %s...", path)
+        self._config.extra_javascript.append(path)
+        write_file(js.encode(), str(site_dir / path))
+
     def register_template(self, content: str, filename: str):
         if not self._config.theme.custom_dir:
             msg = "No custom dir set"

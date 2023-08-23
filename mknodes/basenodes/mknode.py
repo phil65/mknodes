@@ -39,6 +39,7 @@ class MkNode(node.Node):
     REQUIRED_PLUGINS: list[str] = []
     STATUS: datatypes.PageStatusStr | None = None
     CSS = None
+    JS = None
     children: list[MkNode]
 
     def __init__(
@@ -224,6 +225,21 @@ class MkNode(node.Node):
         if self_css := self.get_css():
             all_css.add(self_css)
         return "\n".join(all_css)
+
+    def all_js_files(self) -> set[str]:
+        all_js_files: set[str] = set()
+        for des in self.descendants:
+            if js := des.JS:
+                if isinstance(js, list):
+                    all_js_files.update(js)
+                else:
+                    all_js_files.add(js)
+        if self.JS:
+            if isinstance(self.JS, list):
+                all_js_files.update(self.JS)
+            else:
+                all_js_files.add(self.JS)
+        return all_js_files
 
     @staticmethod
     def create_example_page(page):
