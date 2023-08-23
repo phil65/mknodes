@@ -3,7 +3,6 @@ site_description: "Don´t write docs. Code them."
 repo_url: "https://github.com/phil65/mknodes/"
 site_url: https://phil65.github.io/mknodes/
 edit_uri: edit/main
-watch: [mkdocs.yml, README.md, mknodes/]
 copyright: Copyright &copy; 2023 Philipp Temminghoff
 
 theme:

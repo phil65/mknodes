@@ -58,7 +58,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
     def __repr__(self):
         return helpers.get_repr(
             self,
-            code=self.code,
+            code=self._code,
             language=self.language,
             linenums=self.linenums,
             style=self._style,
@@ -83,6 +83,8 @@ class MkCommentedCode(mkcontainer.MkContainer):
                 return mkspeechbubble.MkSpeechBubble
             case "admonition":
                 return mkadmonition.MkAdmonition
+            case _:
+                raise TypeError(self._style)
 
     @property
     def items(self):

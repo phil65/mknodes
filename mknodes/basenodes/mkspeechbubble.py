@@ -21,15 +21,13 @@ class MkSpeechBubble(mkcontainer.MkContainer):
         self,
         content: str | mknode.MkNode | list | None = None,
         arrow: Literal["top", "bottom", "left", "right"] | None = "bottom",
-        *,
-        header: str = "",
         **kwargs,
     ):
         self.arrow = arrow
-        super().__init__(content=content or [], header=header, **kwargs)
+        super().__init__(content=content or [], **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, content=self.items)
+        return helpers.get_repr(self, content=self.items, arrow=self.arrow)
 
     def _to_markdown(self) -> str:
         arrow_str = f" {self.arrow}" if self.arrow else ""
