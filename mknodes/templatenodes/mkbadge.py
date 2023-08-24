@@ -72,7 +72,8 @@ class MkBadge(mkimage.MkImage):
 
     def _to_markdown(self):
         data = self.data.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
-        inner = f"<a href={self.url!r}>{data}</a>" if self.url else data
+        content = data.replace("\n", "")
+        inner = f"<a href={self.url!r}>{content}</a>" if self.url else content
         return f"<body>{inner}</body>"
 
     @property

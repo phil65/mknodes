@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import logging
-import re
 
-from mknodes.basenodes import mklink, mktable
+from typing import Literal
+
+from mknodes.basenodes import mktable
 from mknodes.info import packageinfo
-from mknodes.utils import helpers
+from mknodes.utils import helpers, layouts
 
 
 logger = logging.getLogger(__name__)
+
+PackageLayoutStr = Literal["default", "badge"]
 
 
 class MkDependencyTable(mktable.MkTable):
@@ -17,8 +20,20 @@ class MkDependencyTable(mktable.MkTable):
     ICON = "material/database"
     STATUS = "new"
 
-    def __init__(self, package: str | packageinfo.PackageInfo | None = None, **kwargs):
+    def __init__(
+        self,
+        package: str | packageinfo.PackageInfo | None = None,
+        layout: PackageLayoutStr = "default",
+        **kwargs,
+    ):
         self._package = package
+        match layout:
+            case "default":
+                self.layouter = layouts.DefaultPackageLayout()
+            case "badge":
+                self.layouter = layouts.BadgePackageLayout()
+            case _:
+                raise ValueError(layout)
         super().__init__(**kwargs)
 
     def __repr__(self):
@@ -44,21 +59,11 @@ class MkDependencyTable(mktable.MkTable):
     def data(self):
         if not self.package:
             return {}
-        rows = []
-        for package_info, dep_info in self.package.get_required_packages().items():
-            if url := package_info.homepage:
-                node = mklink.MkLink(url, package_info.name)
-            else:
-                node = f"`{package_info.name}`"
-            link = helpers.styled(node, size=3, bold=True)
-            marker = str(dep_info.marker) if dep_info.marker else ""
-            marker_str = re.sub(r'([A-Za-z_]* [>|=|<]* ".*?")', r"`\g<1>`", marker)
-            summary = helpers.styled(package_info.metadata["Summary"], italic=True)
-            row = dict(Name=link, Summary=summary, Markers=marker_str)
-            rows.append(row)
+        packages = self.package.get_required_packages()
+        data = [self.layouter.get_row_for(kls) for kls in packages.items()]
         return {
-            k: [self.to_child_node(dic[k]) for dic in rows]  # type: ignore[index]
-            for k in rows[0]
+            k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
+            for k in data[0]
         }
 
     @staticmethod
@@ -66,9 +71,11 @@ class MkDependencyTable(mktable.MkTable):
         import mknodes
 
         node_1 = MkDependencyTable()
-        node_2 = MkDependencyTable("mkdocs")
         page += mknodes.MkReprRawRendered(node_1, header="### From project")
+        node_2 = MkDependencyTable("mkdocs")
         page += mknodes.MkReprRawRendered(node_2, header="### Explicitely defined")
+        node_3 = MkDependencyTable(layout="badge")
+        page += mknodes.MkReprRawRendered(node_3, header="### From project")
 
 
 if __name__ == "__main__":
