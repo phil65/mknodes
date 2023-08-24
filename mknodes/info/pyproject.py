@@ -55,7 +55,7 @@ class PyProject:
 
     @property
     def package_repos(self) -> list[str]:
-        return self.mknodes_section.get("package-repositories", [])
+        return self.mknodes_section.get("package-repositories", ["pip"])
 
 
 if __name__ == "__main__":
