@@ -4,6 +4,9 @@ from collections.abc import Callable
 import logging
 import pathlib
 
+from typing import cast
+
+from mknodes.data import treestyles
 from mknodes.treelib import node
 
 
@@ -17,7 +20,7 @@ class FileTreeNode(node.Node):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return f"{self.name}/" if self.path.is_dir() else self.name
+        return f"{self.name}/" if self.path.is_dir() else f"{self.name}"
 
     @classmethod
     def from_folder(
@@ -67,6 +70,27 @@ class FileTreeNode(node.Node):
 
     def get_file_count(self) -> int:
         return sum(i.path.is_file() for i in self.descendants)
+
+    def get_tree_repr(
+        self,
+        max_depth: int | None = None,
+        style: treestyles.TreeStyleStr | tuple[str, str, str, str] | None = None,
+        show_icon: bool = True,
+    ) -> str:
+        lines = []
+        for pre_str, fill_str, _node in self.yield_tree(
+            max_depth=max_depth,
+            style=style or "ascii",
+        ):
+            _node = cast(FileTreeNode, _node)
+            if show_icon and _node.path.is_dir():
+                icon = "📁"
+            elif show_icon:
+                icon = "📄"
+            else:
+                icon = ""
+            lines.append(f"{pre_str}{fill_str}{icon}{_node!r}")
+        return repr(self) + "\n" + "\n".join(lines[1:])
 
 
 if __name__ == "__main__":
