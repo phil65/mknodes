@@ -198,21 +198,20 @@ class MkPage(mkcontainer.MkContainer):
         dct = {} if self.virtual else {self.path: self.to_markdown()}
         return dct | super().virtual_files()
 
-    def to_markdown(self) -> str:  # sourcery skip: use-next
+    def get_processors(self):
         import mknodes
 
-        header = self.metadata.as_page_header()
-        if header:
-            header += "\n"
-        content_str = self._to_markdown()
-        if self.footnotes:
-            content_str = f"{content_str}\n\n{self.footnotes}"
-        content_str = self.attach_annotations(content_str)
-        text = header + content_str if header else content_str
+        procs = [
+            processors.PrependMetadataProcessor(self.metadata),
+            processors.FootNotesProcessor(self),
+            processors.AnnotationProcessor(self),
+        ]
         for node in self.ancestors:
             if isinstance(node, mknodes.MkNav) and node.append_markdown_to_pages:
-                return processors.GeneratedMarkdownProcessor(self).run(text)
-        return text
+                proc = processors.GeneratedMarkdownProcessor(self)
+                procs.append(proc)
+                break
+        return procs
 
     def add_newlines(self, num: int):
         """Add line separators to the page.

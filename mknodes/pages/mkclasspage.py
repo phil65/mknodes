@@ -47,7 +47,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     def __repr__(self):
         return helpers.get_repr(self, klass=self.klass, path=str(self.path))
 
-    def get_processors(self):
+    def get_pageprocessors(self):
         return [
             processors.BaseClassTableContainerProcessor(self.klass),
             processors.SubClassTableContainerProcessor(self.klass),

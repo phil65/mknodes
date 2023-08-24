@@ -48,7 +48,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     def __repr__(self):
         return helpers.get_repr(self, module=self.module, path=str(self.path))
 
-    def get_processors(self) -> list:
+    def get_pageprocessors(self) -> list:
         procs: list[processors.ContainerProcessor] = [
             processors.DocContainerProcessor(self.module),
         ]

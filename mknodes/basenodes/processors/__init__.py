@@ -4,6 +4,8 @@ import logging
 import re
 import textwrap
 
+from mknodes.pages.metadata import Metadata
+
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
 
@@ -25,6 +27,16 @@ class AnnotationProcessor(TextProcessor):
 
     def run(self, text: str) -> str:
         return self.item.attach_annotations(text) if self.item.annotations else text
+
+
+class FootNotesProcessor(TextProcessor):
+    ID = "footnotes"
+
+    def __init__(self, item):
+        self.item = item
+
+    def run(self, text: str) -> str:
+        return f"{text}\n\n{self.item.footnotes}" if self.item.footnotes else text
 
 
 class IndentationProcessor(TextProcessor):
@@ -71,6 +83,17 @@ class AppendCssClassesProcessor(TextProcessor):
         suffix = f"{{: {classes}}}"
         text += suffix
         return text
+
+
+class PrependMetadataProcessor(TextProcessor):
+    ID = "prepend_metadata"
+
+    def __init__(self, metadata: Metadata):
+        self.metadata = metadata
+
+    def run(self, text: str) -> str:
+        header = self.metadata.as_page_header()
+        return f"{header}\n{text}" if header else text
 
 
 class PrependHeaderProcessor(TextProcessor):

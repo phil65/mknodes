@@ -495,8 +495,8 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # overrides get_processors and includes our new processors.
 
     class CustomClassPage(mknodes.MkClassPage):
-        def get_processors(self):
-            processors = super().get_processors()
+        def get_pageprocessors(self):
+            processors = super().get_pageprocessors()
             code_processor = ShowProcessorCodeProcessor(self.klass, processors=processors)
             extensions_processor = ExtensionInfoProcessor(self.klass)
             # we will add the code at the top and the Extension infobox at the end.
@@ -510,8 +510,8 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # documentation section. We will also insert the source code there.
 
     class CustomModulePage(mknodes.MkModulePage):
-        def get_processors(self):
-            procs = super().get_processors()
+        def get_pageprocessors(self):
+            procs = super().get_pageprocessors()
             code_block = mknodes.MkCode.for_object(create_mknodes_section)
             header = "Code for this section"
             fn_processor = processors.StaticBlockProcessor(code_block, header=header)

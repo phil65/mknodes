@@ -19,12 +19,12 @@ class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
         self._build()
 
     @abc.abstractmethod
-    def get_processors(self) -> Sequence[processors.ContainerProcessor]:
+    def get_pageprocessors(self) -> Sequence[processors.ContainerProcessor]:
         raise NotImplementedError
 
     def _build(self):
         self.items = []
-        for processor in self.get_processors():
+        for processor in self.get_pageprocessors():
             if processor.check_if_apply(self):
                 processor.append_section(self)
 
