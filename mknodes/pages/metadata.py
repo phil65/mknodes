@@ -63,7 +63,7 @@ class Metadata:
 
     def as_page_header(self) -> str:
         text = str(self)
-        return "" if not text else HEADER.format(options=text)
+        return HEADER.format(options=text) if text else ""
 
     @property
     def hide(self):

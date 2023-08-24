@@ -3,11 +3,10 @@ from __future__ import annotations
 import logging
 import os
 import pathlib
-import textwrap
 
 from typing import Any, Self
 
-from mknodes.basenodes import mkadmonition, mkcontainer, mkfootnotes, mknode
+from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
 from mknodes.utils import helpers
@@ -199,8 +198,8 @@ class MkPage(mkcontainer.MkContainer):
         dct = {} if self.virtual else {self.path: self.to_markdown()}
         return dct | super().virtual_files()
 
-    def to_markdown(self) -> str:
-        from mknodes import mknav
+    def to_markdown(self) -> str:  # sourcery skip: use-next
+        import mknodes
 
         header = self.metadata.as_page_header()
         if header:
@@ -210,20 +209,9 @@ class MkPage(mkcontainer.MkContainer):
             content_str = f"{content_str}\n\n{self.footnotes}"
         content_str = self.attach_annotations(content_str)
         text = header + content_str if header else content_str
-        if self.append_markdown is False:
-            return text
         for node in self.ancestors:
-            if isinstance(node, mknav.MkNav) and node.append_markdown_to_pages:
-                code = f'\n\n<pre>\n{textwrap.indent(text, "    ")}\n</pre>\n\n'
-                admonition = mkadmonition.MkAdmonition(
-                    code,
-                    collapsible=True,
-                    typ="quote",
-                    title=f"Generated Markdown for *{self.resolved_file_path}*",
-                )
-                text += "\n"
-                text += str(admonition)
-                break
+            if isinstance(node, mknodes.MkNav) and node.append_markdown_to_pages:
+                return processors.GeneratedMarkdownProcessor(self).run(text)
         return text
 
     def add_newlines(self, num: int):
