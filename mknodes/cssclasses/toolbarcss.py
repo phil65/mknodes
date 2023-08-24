@@ -6,7 +6,6 @@ from mknodes.cssclasses import cssclasses
 TOOLTIP = """
 :root {
   --md-tooltip-width: 700px;
-  --md-tooltip-width: 700px;
 }
 """
 

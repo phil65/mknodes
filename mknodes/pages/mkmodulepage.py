@@ -63,6 +63,4 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
 
 if __name__ == "__main__":
     doc = MkModulePage(mktemplatepage)
-    doc.add_admonition("Warning. This is still beta", typ="danger", title="Warning")
     print(doc)
-    # print(doc.children)
