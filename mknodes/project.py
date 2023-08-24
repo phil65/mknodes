@@ -36,13 +36,13 @@ class Project(Generic[T]):
 
     def __init__(
         self,
+        theme: T,
         module: types.ModuleType | None = None,
         config: MkDocsConfig | None = None,
-        theme: T | None = None,
     ):
         self._module = module
         self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
-        self.theme: theme_.Theme = theme or theme_.Theme.get_theme(config=self.config)
+        self.theme: T = theme
         self.templates = self.theme.templates
         self.error_page = self.templates["404.html"]
         self.folderinfo = folderinfo.FolderInfo()
@@ -54,7 +54,7 @@ class Project(Generic[T]):
 
         config = mkdocsconfig.Config()
         theme = theme_.Theme.get_theme(config)
-        return cls(mknodes, config._config, theme)
+        return cls(module=mknodes, config=config._config, theme=theme)
 
     @property
     def info(self):

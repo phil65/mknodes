@@ -110,15 +110,10 @@ class MkNodesPlugin(BasePlugin):
                 self._project.config.register_css("mknodes_theme.css", str(css))
             for template in self._project.templates:
                 if html := template.build_html():
-                    self._project.config.register_template(
-                        html,
-                        filename=template.filename,
-                    )
+                    self._project.config.register_template(template.filename, html)
             for template in root.all_templates():
-                self._project.config.register_template(
-                    template.build_html(),
-                    filename=template.filename,
-                )
+                html = template.build_html()
+                self._project.config.register_template(template.filename, html)
         return ed.files
 
     def on_nav(

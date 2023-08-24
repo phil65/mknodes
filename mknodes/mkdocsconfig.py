@@ -63,10 +63,19 @@ class Config:
         except KeyError:
             return []
 
-    def get_docs_dir(self) -> pathlib.Path:
+    @property
+    def docs_dir(self) -> pathlib.Path:
         return pathlib.Path(self._config.docs_dir)
 
     def register_css(self, filename: str | os.PathLike, css: str):
+        """Register a css file.
+
+        Writes file to build assets folder and registers extra_css in config
+
+        Arguments:
+            filename: Filename to write
+            css: file content
+        """
         site_dir = pathlib.Path(self._config["site_dir"])
         path = (pathlib.Path("assets") / filename).as_posix()
         logger.info("Creating %s...", path)
@@ -74,20 +83,36 @@ class Config:
         write_file(css.encode(), str(site_dir / path))
 
     def register_js(self, filename: str | os.PathLike, js: str):
+        """Register a javascript file.
+
+        Writes file to build assets folder and registers extra_javascript in config
+
+        Arguments:
+            filename: Filename to write
+            js: file content
+        """
         site_dir = pathlib.Path(self._config["site_dir"])
         path = (pathlib.Path("assets") / filename).as_posix()
         logger.info("Creating %s...", path)
         self._config.extra_javascript.append(path)
         write_file(js.encode(), str(site_dir / path))
 
-    def register_template(self, content: str, filename: str):
+    def register_template(self, filename: str, content: str):
+        """Register a html template.
+
+        Writes file to build custom_dir folder
+
+        Arguments:
+            filename: Filename to write
+            content: file content
+        """
         if not self._config.theme.custom_dir:
             msg = "No custom dir set"
             raise RuntimeError(msg)
-        custom_dir = pathlib.Path(self._config.theme.custom_dir) / filename
-        path = pathlib.Path("overrides") / filename
-        logger.info("Creating %s...", path.as_posix())
-        write_file(content.encode(), str(custom_dir))
+        target_path = pathlib.Path(self._config.theme.custom_dir) / filename
+        # path = pathlib.Path("overrides") / filename
+        logger.info("Creating %s...", target_path.as_posix())
+        write_file(content.encode(), str(target_path))
 
     def get_markdown_instance(self) -> markdown.Markdown:
         return markdown.Markdown(
@@ -95,7 +120,7 @@ class Config:
             extension_configs=self._config["mdx_configs"] or {},
         )
 
-    def get_file(self, path) -> File:
+    def get_file(self, path: str | os.PathLike) -> File:
         return File(
             str(path),
             src_dir=self._config.docs_dir,
