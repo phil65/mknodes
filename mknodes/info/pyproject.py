@@ -42,6 +42,10 @@ class PyProject:
         msg = "No known build backend"
         raise RuntimeError(msg)
 
+    @property
+    def name(self) -> str:
+        return self._data["project"]["name"]
+
     def has_tool(self, tool_name: str) -> bool:
         return tool_name in self._data["tool"]
 
@@ -60,4 +64,4 @@ class PyProject:
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.get_allowed_commit_types())
+    print(info.extras_descriptions)
