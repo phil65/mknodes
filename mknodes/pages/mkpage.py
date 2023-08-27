@@ -40,7 +40,6 @@ class MkPage(mkcontainer.MkContainer):
         subtitle: str | None = None,
         description: str | None = None,
         template: str | pagetemplate.PageTemplate | None = None,
-        append_markdown: bool | None = None,
         virtual: bool = False,
         tags: list[str] | None = None,
         edit_path: str | None = None,
@@ -63,9 +62,6 @@ class MkPage(mkcontainer.MkContainer):
             description: Page description
             template: Page template (filename relative to `overrides` directory or
                        PageTemplate object)
-            append_markdown: Whether pages should contain a collapsible admonition
-                             containing the markup at the bottom. Setting is
-                             inherited from the parent navs if not set.
             virtual: Whether the Page should result in a file. Mainly for testing purposes
             tags: tags to show above the main headline and within the search preview
             edit_path: Custom edit path for this page
@@ -77,7 +73,6 @@ class MkPage(mkcontainer.MkContainer):
         # self._edit_path = pathlib.Path(inspect.currentframe().f_back.f_code.co_filename)
         self._edit_path = edit_path
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
-        self.append_markdown = append_markdown
         self.virtual = virtual
         self.metadata = metadata.Metadata(
             hide_toc=hide_toc,
@@ -206,11 +201,12 @@ class MkPage(mkcontainer.MkContainer):
             processors.FootNotesProcessor(self),
             processors.AnnotationProcessor(self),
         ]
-        for node in self.ancestors:
-            if isinstance(node, mknodes.MkNav) and node.append_markdown_to_pages:
-                proc = processors.GeneratedMarkdownProcessor(self)
-                procs.append(proc)
-                break
+        if any(
+            isinstance(node, mknodes.MkNav) and node.append_markdown_to_pages
+            for node in self.ancestors
+        ):
+            proc = processors.GeneratedMarkdownProcessor(self)
+            procs.append(proc)
         return procs
 
     def add_newlines(self, num: int):

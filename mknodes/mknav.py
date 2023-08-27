@@ -174,7 +174,7 @@ class MkNav(mknode.MkNode):
                 code = mkcode.MkCode.for_object(fn, header="Code for this page")
                 code.parent = node
                 node.items.insert(0, code)
-            if show_source and isinstance(node, MkNav) and node.index_page:
+            elif show_source and isinstance(node, MkNav) and node.index_page:
                 code = mkcode.MkCode.for_object(fn, header="Code for this section")
                 code.parent = node.index_page
                 node.index_page.items.insert(0, code)

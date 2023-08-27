@@ -9,10 +9,14 @@ import os
 import os.path
 import pathlib
 import shutil
-from typing import IO, ClassVar
+from typing import IO, TYPE_CHECKING, ClassVar
 
-from mkdocs.config import Config, load_config
+from mkdocs.config import load_config
 from mkdocs.structure.files import File, Files
+
+
+if TYPE_CHECKING:
+    from mkdocs.config.defaults import MkDocsConfig
 
 
 def file_sort_key(f: File):
@@ -24,12 +28,10 @@ def file_sort_key(f: File):
 
 
 class FilesEditor:
-    config: Config  # https://www.mkdocs.org/user-guide/plugins/#config)
-    directory: str  # https://www.mkdocs.org/user-guide/configuration/#docs_dir
     _current: ClassVar[FilesEditor | None] = None
     _default: ClassVar[FilesEditor | None] = None
 
-    def __init__(self, files: Files, config: Config, directory: str | None = None):
+    def __init__(self, files: Files, config: MkDocsConfig, directory: str | None = None):
         files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files}
         self._files: MutableMapping[str, File] = collections.ChainMap({}, files_map)
         self.config = config
@@ -46,7 +48,7 @@ class FilesEditor:
     def current(cls) -> FilesEditor:
         """The instance of FilesEditor associated with the currently ongoing MkDocs build.
 
-        If used as part of a MkDocs build (*gen-files* plugin), it's an instance using
+        If used as part of a MkDocs build, it's an instance using
         virtual files that feed back into the build.
 
         If not, this still tries to load the MkDocs config to find out the *docs_dir*, and
@@ -96,8 +98,8 @@ class FilesEditor:
         new_f = File(
             name,
             src_dir=self.directory,
-            dest_dir=self.config["site_dir"],
-            use_directory_urls=self.config["use_directory_urls"],
+            dest_dir=self.config.site_dir,
+            use_directory_urls=self.config.use_directory_urls,
         )
         new_f.generated_by = "mknodes"  # type: ignore
         normname = pathlib.PurePath(name).as_posix()
