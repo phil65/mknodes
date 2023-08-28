@@ -102,6 +102,14 @@ class Project(Generic[T]):
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
 
+    def aggregate_info(self):
+        infos = dict(
+            repository_name=self.repository_name,
+            repository_username=self.repository_username,
+            repository_url=self.repository_url,
+        )
+        return infos | self.info.metadata.json | self.theme.aggregate_info()
+
 
 if __name__ == "__main__":
     project = Project.for_mknodes()

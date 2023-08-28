@@ -168,7 +168,7 @@ class MkNodesPlugin(BasePlugin):
         files: Files,
     ) -> str | None:
         """During this phase links and `°metadata` stuff get replaced."""
-        for k, v in self._project.info.metadata.items():
+        for k, v in self._project.aggregate_info().items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)

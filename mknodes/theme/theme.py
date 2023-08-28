@@ -41,7 +41,7 @@ class Theme:
     def get_files(self):
         return {}
 
-    def get_primary_color(self):
+    def get_primary_color(self) -> str:
         return "#5555BB"
 
     def get_text_color(self) -> str:
@@ -49,6 +49,12 @@ class Theme:
 
     def __repr__(self):
         return helpers.get_repr(self, theme_name=self.theme_name)
+
+    def aggregate_info(self) -> dict:
+        return dict(
+            primary_color=self.get_primary_color(),
+            text_color=self.get_text_color(),
+        )
 
 
 if __name__ == "__main__":
