@@ -61,6 +61,12 @@ class Metadata:
     def __bool__(self):
         return bool(self.as_dict())
 
+    def __iter__(self):
+        return iter(self.as_dict().keys())
+
+    def __len__(self):
+        return len(self.as_dict())
+
     def as_page_header(self) -> str:
         text = str(self)
         return HEADER.format(options=text) if text else ""

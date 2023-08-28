@@ -16,6 +16,7 @@ EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
 
 
 def extract_header_section(markdown: str, section_name: str) -> str | None:
+    """Extract block with given header from markdown."""
     header_pattern = re.compile(f"^(#+) {section_name}$", re.MULTILINE)
     header_match = header_pattern.search(markdown)
     if header_match is None:
