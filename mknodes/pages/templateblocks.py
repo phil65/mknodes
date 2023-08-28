@@ -26,6 +26,11 @@ BlockStr = Literal[
 ]
 
 
+class Super:
+    def __str__(self):
+        return "{{ super() }}"
+
+
 class Block:
     block_id: str
 
@@ -40,19 +45,24 @@ class Block:
 class HtmlBlock(Block):
     block_id: str
 
-    def __init__(
-        self,
-        pre: str,
-        include_super: bool,
-        post: str,
-    ):
-        self.pre = pre
-        self.include_super = include_super
-        self.post = post
+    def __init__(self, md):
+        self.items = [Super()]
+        self.md = md
 
+    def __bool__(self):
+        return len(self.items) != 1 or not isinstance(self.items[0], Super)
+
+    @property
     def block_content(self):
-        super_ = "{{ super() }}" if self.include_super else ""
-        return f"{self.pre}\n{super_}\n{self.post}"
+        return "\n".join(self.md.convert(str(i)) for i in self.items)
+
+    @property
+    def content(self):
+        return self.items[0]
+
+    @content.setter
+    def content(self, value):
+        self.items = [value]
 
 
 class ContentBlock(HtmlBlock):
@@ -64,7 +74,7 @@ class AnnouncementBarBlock(HtmlBlock):
 
 
 class FooterBlock(HtmlBlock):
-    block_id = "announce"
+    block_id = "footer"
 
 
 class TitleBlock(Block):
@@ -127,5 +137,5 @@ class StylesBlock(Block):
 
 
 if __name__ == "__main__":
-    cfg = TitleBlock("a")
+    cfg = LibsBlock()
     print(cfg)
