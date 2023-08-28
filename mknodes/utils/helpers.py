@@ -60,14 +60,6 @@ def find_file_in_folder_or_parent(
     return file if (file := (path / filename)).exists() else None
 
 
-@contextlib.contextmanager
-def new_cd(x):
-    d = os.getcwd()  # noqa: PTH109
-    os.chdir(x)
-    yield
-    os.chdir(d)
-
-
 def get_repr(
     _obj: Any,
     *args: Any,

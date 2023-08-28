@@ -410,23 +410,26 @@ class MkNav(mknode.MkNode):
 
         """
         path = pathlib.Path(path)
+        if path.is_absolute():
+            path = path.relative_to(pathlib.Path().absolute())
         content = path.read_text()
-        with helpers.new_cd(path.parent):
-            return cls.from_text(
-                content,
-                section=section,
-                hide_toc=hide_toc,
-                hide_nav=hide_nav,
-                hide_path=hide_path,
-                parent=parent,
-            )
+        return cls._from_text(
+            content,
+            section=section,
+            hide_toc=hide_toc,
+            hide_nav=hide_nav,
+            hide_path=hide_path,
+            parent=parent,
+            path=path,
+        )
         # max_indent = max(len(line) - len(line.lstrip()) for line in content.split("\n"))
         # content = [line.lstrip() for line in content.split("\n")]
 
     @classmethod
-    def from_text(
+    def _from_text(
         cls,
         text: str,
+        path: pathlib.Path,
         section: str | None = None,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
@@ -446,6 +449,7 @@ class MkNav(mknode.MkNode):
             hide_nav: Hide navigation menu for all pages
             hide_path: Hide breadcrumbs path for all pages
             parent: Optional parent-nav in case the new nav shouldnt become the root nav.
+            path: path of the file containing the text.
         """
         nav = cls(section, parent=parent)
         lines = text.split("\n")
@@ -459,13 +463,14 @@ class MkNav(mknode.MkNode):
                     itertools.takewhile(lambda x: x.startswith("    "), next_lines),
                 ):
                     unindented = "\n".join(j[4:] for j in indented)
-                    subnav = MkNav.from_text(
+                    subnav = MkNav._from_text(
                         unindented,
                         section=match[1],
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
                         hide_path=hide_path,
                         parent=nav,
+                        path=path,
                     )
                     page = subnav.add_index_page(
                         hide_toc=hide_toc,
@@ -481,7 +486,7 @@ class MkNav(mknode.MkNode):
                     nav += subnav
                 else:
                     page = mkpage.MkPage.from_file(
-                        path=match[2],
+                        path=path.parent / match[2],
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
                         hide_path=hide_path,
@@ -491,7 +496,7 @@ class MkNav(mknode.MkNode):
                     logger.info("Created page %s from %s", match[1], match[2])
             # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
-                file_path = f"{match[2]}/SUMMARY.md"
+                file_path = path.parent / f"{match[2]}/SUMMARY.md"
                 subnav = MkNav.from_file(
                     file_path,
                     section=match[1],
@@ -507,13 +512,14 @@ class MkNav(mknode.MkNode):
                 next_lines = lines[i + 1 :]
                 indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
                 unindented = "\n".join(j[4:] for j in indented)
-                subnav = MkNav.from_text(
+                subnav = MkNav._from_text(
                     unindented,
                     section=match[1],
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
                     hide_path=hide_path,
                     parent=nav,
+                    path=path,
                 )
                 logger.info("Created subsection %s from text", match[1])
                 nav[match[1]] = subnav
