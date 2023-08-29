@@ -23,8 +23,8 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         self,
         title: str,
         description: str,
-        setting: dict | str | None = None,
-        default: str | int = None,
+        setting: dict[str, Any] | str | None = None,
+        default: str | int | None = None,
         version_added: str | None = None,
         optional: bool | None = None,
         mode: Literal["yaml", "json", "toml"] | None = None,
@@ -64,7 +64,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
 
     @property
     def title(self):
-        return f"**`{self._title}`**"
+        return helpers.styled(self._title, bold=True, code=True)
 
     @property
     def items(self):
@@ -82,7 +82,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
                     code = helpers.dump_yaml(self.setting)
                 case "json":
                     code = json.dumps(self.setting, indent=4)
-                case "toml":
+                case "toml" if isinstance(self.setting, dict):
                     code = tomli_w.dumps(self.setting)
                 case _:
                     raise TypeError(self.mode)
