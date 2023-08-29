@@ -44,7 +44,7 @@ class Metadata:
             if search := dct.pop("search", None):
                 dct["search_boost"] = search.get("boost")
                 dct["exclude_from_search"] = search.get("exclude")
-            text = text[match.endpos :]
+            text = text[match.span()[1] :]
         # TODO: right now, additional metadata would lead to an exception
         return cls(**dct), text
 
