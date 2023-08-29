@@ -116,11 +116,11 @@ class MkTreeView(mkcode.MkCode):
         for style in get_args(treestyles.TreeStyleStr):
             node = MkTreeView("mknodes/manual", style=style)
             page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
-        opts = dict(org="mkdocstrings", repo="mkdocstrings")
 
         # Showing a remote tree structure (using fsspec package)
-        node = MkTreeView("github://", storage_options=opts, maximum_depth=2)
-        page += mknodes.MkReprRawRendered(node, header="### From remote (FsSpec)")
+        # opts = dict(org="mkdocstrings", repo="mkdocstrings")
+        # node = MkTreeView("github://", storage_options=opts, maximum_depth=2)
+        # page += mknodes.MkReprRawRendered(node, header="### From remote (FsSpec)")
 
 
 if __name__ == "__main__":
