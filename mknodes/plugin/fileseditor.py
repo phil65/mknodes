@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import collections
-
-from collections.abc import MutableMapping
-import os
-import os.path
 import pathlib
 import shutil
+
 from typing import IO, TYPE_CHECKING, ClassVar
 
 from mkdocs.config import load_config
@@ -33,9 +30,9 @@ class FilesEditor:
 
     def __init__(self, files: Files, config: MkDocsConfig, directory: str | None = None):
         files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files}
-        self._files: MutableMapping[str, File] = collections.ChainMap({}, files_map)
+        self._files: collections.ChainMap[str, File] = collections.ChainMap({}, files_map)
         self.config = config
-        self.directory = directory or config["docs_dir"]
+        self.directory = directory or config.docs_dir
 
     def __enter__(self):
         type(self)._current = self
@@ -60,7 +57,7 @@ class FilesEditor:
             return cls._current
         if not cls._default:
             config = load_config("mkdocs.yml")
-            config["plugins"].run_event("config", config)
+            config.plugins.run_event("config", config)
             cls._default = FilesEditor(Files([]), config)
         return cls._default
 
@@ -77,8 +74,8 @@ class FilesEditor:
         self,
         name: str,
         mode,
-        buffering=-1,
-        encoding=None,
+        buffering: int = -1,
+        encoding: str | None = None,
         **kwargs,
     ) -> IO:
         """Open a file under `docs_dir` virtually.
@@ -91,9 +88,9 @@ class FilesEditor:
         path = self._get_file(name, new="w" in mode)
         if encoding is None and "b" not in mode:
             encoding = "utf-8"
-        return open(path, mode, buffering, encoding, **kwargs)  # noqa: PTH123 SIM115
+        return path.open(mode, buffering, encoding, **kwargs)  # noqa: SIM115
 
-    def _get_file(self, name: str, new: bool = False) -> str:
+    def _get_file(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
         new_f = File(
             name,
@@ -103,17 +100,18 @@ class FilesEditor:
         )
         new_f.generated_by = "mknodes"  # type: ignore
         normname = pathlib.PurePath(name).as_posix()
-        dir_name = os.path.dirname(new_f.abs_src_path)  # noqa: PTH120
+        new_path = pathlib.Path(new_f.abs_src_path)
         if new or normname not in self._files:
-            os.makedirs(dir_name, exist_ok=True)  # noqa: PTH103
+            new_path.parent.mkdir(exist_ok=True, parents=True)
             self._files[normname] = new_f
-            return new_f.abs_src_path
+            return new_path
 
         f = self._files[normname]
-        if f.abs_src_path != new_f.abs_src_path:
-            os.makedirs(dir_name, exist_ok=True)  # noqa: PTH103
+        source_path = pathlib.Path(f.abs_src_path)
+        if source_path != new_path:
+            new_path.parent.mkdir(exist_ok=True, parents=True)
             self._files[normname] = new_f
-            shutil.copyfile(f.abs_src_path, new_f.abs_src_path)
-            return new_f.abs_src_path
+            shutil.copyfile(source_path, new_path)
+            return new_path
 
-        return f.abs_src_path
+        return source_path
