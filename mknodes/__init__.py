@@ -65,6 +65,7 @@ from .templatenodes.mkcommentedcode import MkCommentedCode
 from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkpluginflow import MkPluginFlow
+from .templatenodes.mkargparsehelp import MkArgParseHelp
 
 from .project import Project
 
@@ -99,6 +100,7 @@ __all__ = [
     "MkModulePage",
     "MkModuleTable",
     "MkPluginFlow",
+    "MkArgParseHelp",
     "MkAnnotations",
     "MkFootNotes",
     "MkDoc",
