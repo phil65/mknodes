@@ -182,9 +182,12 @@ class MkPage(mkcontainer.MkContainer):
         path = pathlib.Path(path)
         file_content = path.read_text()
         data, text = metadata.Metadata.parse(file_content)
-        data.hide_toc = hide_toc
-        data.hide_nav = hide_nav
-        data.hide_path = hide_path
+        if hide_toc is not None:
+            data.hide_toc = hide_toc
+        if hide_nav is not None:
+            data.hide_nav = hide_nav
+        if hide_path is not None:
+            data.hide_path = hide_path
         page = cls(path=str(path), content=text, parent=parent)
         page.metadata = data
         return page
