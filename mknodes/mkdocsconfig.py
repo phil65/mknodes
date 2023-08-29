@@ -114,8 +114,8 @@ class Config:
             content: file content
         """
         if not self._config.theme.custom_dir:
-            msg = "No custom dir set"
-            raise RuntimeError(msg)
+            logger.warning("Cannot write %s. No custom_dir set in config.", filename)
+            return
         target_path = pathlib.Path(self._config.theme.custom_dir) / filename
         # path = pathlib.Path("overrides") / filename
         logger.info("Creating %s...", target_path.as_posix())
