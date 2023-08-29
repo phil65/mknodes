@@ -34,8 +34,8 @@ class LinkProvider:
         self.inv_manager = inventorymanager.InventoryManager()
         self.config = config or mkdocsconfig.load_config()
 
-    def add_inv_file(self, path: str | os.PathLike):
-        self.inv_manager.add_inv_file(path)
+    def add_inv_file(self, path: str | os.PathLike, base_url: str | None = None):
+        self.inv_manager.add_inv_file(path, base_url=base_url)
 
     def link_for_module(self, mod: types.ModuleType) -> str:
         dotted_path = mod.__name__
