@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 from mknodes import mknav
 from mknodes.basenodes import mkbinaryimage, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers
+from mknodes.utils import helpers, linkprovider
 
 
 logger = logging.getLogger(__name__)
@@ -117,12 +117,11 @@ class MkCard(mknode.MkNode):
 
     @property
     def url(self) -> str:  # type: ignore[return]
+        if not self.target:
+            return ""
         if self.associated_project:
-            config = self.associated_project.config
-            base_url = config.site_url or ""
-        else:
-            base_url = ""
-        return helpers.get_url(self.target, base_url) if self.target else ""
+            return self.associated_project.linkprovider.get_link(self.target)
+        return linkprovider.LinkProvider().get_link(self.target)
 
     def _to_markdown(self) -> str:
         return build_html_card(

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import os
 import pathlib
 
@@ -22,6 +23,12 @@ if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
 
 
+@functools.cache
+def load_config(path: str | os.PathLike | None = None):
+    path = None if path is None else str(path)
+    return _config.load_config(path)
+
+
 class Config:
     def __init__(self, config: MkDocsConfig | None = None):
         if config:
@@ -31,7 +38,7 @@ class Config:
             if not file:
                 msg = "Could not find config file"
                 raise FileNotFoundError(msg)
-            self._config = _config.load_config(str(file))
+            self._config = load_config(str(file))
             logger.info("Loaded config from %s", file)
         self.plugin = self._config.plugins["mknodes"]
 

@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Generic, TypeVar
 from mknodes import mkdocsconfig, mknav
 from mknodes.info import folderinfo, packageinfo
 from mknodes.theme import theme as theme_
-from mknodes.utils import helpers
+from mknodes.utils import helpers, linkprovider
 
 
 if TYPE_CHECKING:
@@ -41,6 +41,7 @@ class Project(Generic[T]):
         config: MkDocsConfig | None = None,
     ):
         self._module = module
+        self.linkprovider = linkprovider.LinkProvider(config)
         self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
         self.theme: T = theme
         self.templates = self.theme.templates

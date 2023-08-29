@@ -153,30 +153,6 @@ def styled(
     return text
 
 
-def get_url(target, site_url: str = ""):
-    import mknodes
-
-    match target:
-        case mknodes.MkPage():
-            path = target.resolved_file_path.replace(".md", ".html")
-            return site_url + path
-        case mknodes.MkNav():
-            if target.index_page:
-                path = target.index_page.resolved_file_path
-                path = path.replace(".md", ".html")
-            else:
-                path = target.resolved_file_path
-            return site_url + path
-        case str() if target.startswith("/"):
-            return site_url.rstrip("/") + target
-        case str() if is_url(target):
-            return target
-        case str():
-            return f"{target}.md"
-        case _:
-            raise TypeError(target)
-
-
 def link_for_class(kls: type, **kwargs) -> str:
     mod_path = kls.__module__
     kls_name = kls.__name__
