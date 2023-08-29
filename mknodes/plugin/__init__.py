@@ -175,6 +175,8 @@ class MkNodesPlugin(BasePlugin):
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
                 continue
         uri = page.file.src_uri
+        if uri.endswith("SUMMARY.md"):
+            return markdown
         link_replacer = linkreplacer.LinkReplacer(uri, mapping=self._file_mapping)
         return link_replacer.replace(markdown)
 
