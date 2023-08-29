@@ -21,9 +21,6 @@ RESPONSE_CODE_OK = 200
 
 logger = logging.getLogger(__name__)
 
-BASE_URL = "https://doc.qt.io/qtforpython-6/PySide6/"
-BUILTIN_URL = "https://docs.python.org/3/library/{mod}.html#{name}"
-
 
 class LengthLimitRepr(reprlib.Repr):
     def repr_type(self, obj, level):
