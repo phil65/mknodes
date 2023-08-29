@@ -5,6 +5,7 @@ import functools
 from importlib import metadata
 import logging
 import os
+import types
 
 from mknodes import mkdocsconfig
 from mknodes.utils import helpers, inventorymanager
@@ -23,6 +24,11 @@ def homepage_for_distro(dist_name: str) -> str | None:
         return dist.metadata["Home-Page"]
 
 
+def linked(identifier: str, title: str | None = None) -> str:
+    suffix = "" if helpers.is_url(identifier) or identifier.endswith(".md") else ".md"
+    return f"[{identifier if title is None else title}]({identifier}{suffix})"
+
+
 class LinkProvider:
     def __init__(self, config=None):
         self.inv_manager = inventorymanager.InventoryManager()
@@ -31,16 +37,27 @@ class LinkProvider:
     def add_inv_file(self, path: str | os.PathLike):
         self.inv_manager.add_inv_file(path)
 
+    def link_for_module(self, mod: types.ModuleType) -> str:
+        dotted_path = mod.__name__
+        if dotted_path in self.inv_manager:
+            link = self.inv_manager[dotted_path]
+            return linked(link, title=dotted_path)
+        module = dotted_path.split(".")[0]
+        if url := homepage_for_distro(module):
+            return linked(url, title=mod.__name__)
+        return linked(mod.__name__)
+
     def link_for_klass(self, kls: type) -> str:
         module_path = kls.__module__
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
         dotted_path = f"{module_path}.{qual_name}"
         if dotted_path in self.inv_manager:
-            return self.inv_manager[dotted_path]
+            link = self.inv_manager[dotted_path]
+            return linked(link, title=qual_name)
         module = module_path.split(".")[0]
         if url := homepage_for_distro(module):
-            return helpers.linked(url, title=qual_name)
-        return helpers.linked(qual_name)
+            return linked(url, title=qual_name)
+        return linked(qual_name)
 
     def get_link(self, target) -> str:  # type: ignore[return]
         import mknodes

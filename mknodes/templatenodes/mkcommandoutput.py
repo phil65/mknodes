@@ -16,6 +16,16 @@ TEXT = """<div data-terminal>
 </div>"""
 
 
+def get_output_from_call(call: Sequence[str]):
+    import subprocess
+
+    try:
+        return subprocess.check_output(call).decode()
+    except subprocess.CalledProcessError:
+        logger.warning("Executing %s failed", call)
+        return None
+
+
 class MkCommandOutput(mknode.MkNode):
     """Node to display the terminal output of a command."""
 
@@ -37,7 +47,7 @@ class MkCommandOutput(mknode.MkNode):
         key = " ".join(self.call)
         if key in self._cache:
             return self._cache[key]
-        if output := helpers.get_output_from_call(self.call):
+        if output := get_output_from_call(self.call):
             self._cache[key] = output.replace("\n", "<br>").replace(" ", "&nbsp;")
             return self._cache[key]
         return "**Command failed**"

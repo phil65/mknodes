@@ -7,10 +7,10 @@ import logging
 import re
 import types
 
-from mknodes.basenodes import mkcontainer, mklink, mknode
+from mknodes.basenodes import mkcontainer, mklink, mklist, mknode
 from mknodes.info import packageinfo
 from mknodes.templatenodes import mkmetadatabadges
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, helpers, linkprovider
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,8 @@ class Layout(metaclass=abc.ABCMeta):
 class CompactClassLayout(Layout):
     """Table showing info for a list of classes."""
 
-    def __init__(self):
+    def __init__(self, link_provider: linkprovider.LinkProvider | None = None):
+        self.linkprovider = link_provider or linkprovider.LinkProvider()
         super().__init__()
 
     def get_columns(self):
@@ -35,7 +36,7 @@ class CompactClassLayout(Layout):
 
     def get_row_for(self, kls: type) -> dict[str, str]:
         return dict(
-            Class=helpers.link_for_class(kls),
+            Class=self.linkprovider.link_for_klass(kls),
             Module=kls.__module__,
             Description=helpers.get_doc(kls, only_summary=True),
         )
@@ -44,7 +45,12 @@ class CompactClassLayout(Layout):
 class ExtendedClassLayout(Layout):
     """Table showing info for a list of classes."""
 
-    def __init__(self, subclass_predicate: Callable | None = None):
+    def __init__(
+        self,
+        link_provider: linkprovider.LinkProvider | None = None,
+        subclass_predicate: Callable | None = None,
+    ):
+        self.linkprovider = link_provider or linkprovider.LinkProvider()
         if subclass_predicate is None:
 
             def always_true(_):
@@ -65,11 +71,11 @@ class ExtendedClassLayout(Layout):
         Includes columns for child and parent classes including links.
         """
         subclass_links = [
-            helpers.link_for_class(sub)
+            self.linkprovider.link_for_klass(sub)
             for sub in classhelpers.iter_subclasses(kls, recursive=False)
             if self.subclass_predicate(sub)
         ]
-        subclass_str = helpers.to_html_list(
+        subclass_str = mklist.MkList(
             subclass_links,
             shorten_after=shorten_lists_after,
         )
@@ -78,16 +84,17 @@ class ExtendedClassLayout(Layout):
             for base_kls in kls.__bases__
             if "<locals>" not in base_kls.__qualname__  # filter locally defined
         ]
-        parent_links = [helpers.link_for_class(parent) for parent in parents]
-        parent_str = helpers.to_html_list(parent_links, shorten_after=shorten_lists_after)
+        parent_links = [self.linkprovider.link_for_klass(parent) for parent in parents]
+        parent_str = mklist.MkList(parent_links, shorten_after=shorten_lists_after)
         desc = helpers.get_doc(kls, escape=True, only_summary=True)
-        name = helpers.link_for_class(kls, size=4, bold=True)
+        link = self.linkprovider.link_for_klass(kls)
+        name = helpers.styled(link, size=4, bold=True)
         module = helpers.styled(kls.__module__, size=1, italic=True)
         return dict(
             Name=f"{name}<br>{module}<br>{desc}",
             # Module=kls.__module__,
-            Children=subclass_str,
-            Inherits=parent_str,
+            Children=subclass_str.to_html(),
+            Inherits=parent_str.to_html(),
             # Description=desc,
         )
 
@@ -96,14 +103,17 @@ class ExtendedClassLayout(Layout):
 
 
 class ModuleLayout(Layout):
+    def __init__(self, link_provider: linkprovider.LinkProvider | None = None):
+        self.linkprovider = link_provider or linkprovider.LinkProvider()
+        super().__init__()
+
     def get_row_for(self, module: types.ModuleType) -> dict[str, str]:
         fallback = "*No docstrings defined.*"
         return dict(
-            Name=module.__name__,
-            # helpers.link_for_class(submod, size=4, bold=True),
+            Name=self.linkprovider.link_for_module(module),
             DocStrings=helpers.get_doc(module, fallback=fallback, only_summary=True),
             Members=(
-                helpers.to_html_list(module.__all__, make_link=True)
+                mklist.MkList(module.__all__, as_links=True).to_html()
                 if hasattr(module, "__all__")
                 else ""
             ),

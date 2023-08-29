@@ -4,8 +4,7 @@ import pathlib
 
 import pytest
 
-from responsemock import utils
-
+# from responsemock import utils
 from mknodes import manual, project
 
 
@@ -58,24 +57,24 @@ def resources_dir():
 @pytest.fixture(scope="session")
 def full_tree():
     proj = project.Project.for_mknodes()
-    with utils.response_mock(
-        [
-            (
-                "GET https://raw.githubusercontent.com/phil65/mknodes/main/README.md ->"
-                ' 200 :{"default_branch":"main"}'
-            ),
-            # (
-            #     "GET https://api.github.com/repos/mkdocstrings/mkdocstrings -> 200 :"
-            #     f" {RESPONSE_1}"
-            # ),
-            # (
-            #     "GET https://api.github.com/repos/mkdocstrings/mkdocstrings/git/trees/main"
-            #     f" -> 200 :{RESPONSE_2}"
-            # ),
-            # (
-            #     "GET https://api.github.com/repos/mkdocstrings/mkdocstrings/git/trees/b30cc0fde9b9684fc1cdbe8238161c4d85202bcb"
-            #     f" -> 200 :{RESPONSE_3}"
-            # ),
-        ],
-    ):
-        return manual.build(proj)
+    # with utils.response_mock(
+    #     [
+    #         (
+    #             "GET https://raw.githubusercontent.com/phil65/mknodes/main/README.md ->"
+    #             ' 200 :{"default_branch":"main"}'
+    #         ),
+    #         (
+    #             "GET https://api.github.com/repos/mkdocstrings/mkdocstrings -> 200 :"
+    #             f" {RESPONSE_1}"
+    #         ),
+    #         (
+    #             "GET https://api.github.com/repos/mkdocstrings/mkdocstrings/git/trees/main"
+    #             f" -> 200 :{RESPONSE_2}"
+    #         ),
+    #         (
+    #             "GET https://api.github.com/repos/mkdocstrings/mkdocstrings/git/trees/b30cc0fde9b9684fc1cdbe8238161c4d85202bcb"
+    #             f" -> 200 :{RESPONSE_3}"
+    #         ),
+    #     ],
+    # ):
+    return manual.build(proj)

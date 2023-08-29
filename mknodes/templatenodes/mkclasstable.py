@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import logging
 
 from typing import Literal
 
 from mknodes.basenodes import mktable
-from mknodes.utils import helpers, layouts
+from mknodes.utils import helpers, layouts, linkprovider
 
 
 logger = logging.getLogger(__name__)
@@ -19,24 +18,35 @@ class MkClassTable(mktable.MkTable):
         self,
         klasses: list[type] | set[type],
         *,
-        layout: Literal["compact", "extended"] = "extended",
-        filter_fn: Callable | None = None,
+        layout: Literal["compact", "extended"] | layouts.Layout = "extended",
         **kwargs,
     ):
         self.klasses = klasses
         # STRIP_CODE = r"```[^\S\r\n]*[a-z]*\n.*?\n```"
         # docs = [re.sub(STRIP_CODE, '', k.__module__, 0, re.DOTALL) for k in klasses]
-        match layout:
-            case "compact":
-                self.layouter = layouts.CompactClassLayout()
-            case "extended":
-                self.layouter = layouts.ExtendedClassLayout(subclass_predicate=filter_fn)
-            case _:
-                raise ValueError(layout)
+        self.layout = layout
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, klasses=self.klasses)
+        return helpers.get_repr(self, layout=self.layout, klasses=self.klasses)
+
+    @property
+    def linkprovider(self):
+        if self.associated_project:
+            return self.associated_project.linkprovider
+        return linkprovider.LinkProvider()
+
+    @property
+    def layouter(self):
+        match self.layout:
+            case "compact":
+                return layouts.CompactClassLayout(link_provider=self.linkprovider)
+            case "extended":
+                return layouts.ExtendedClassLayout(link_provider=self.linkprovider)
+            case layouts.Layout():
+                return self.layout
+            case _:
+                raise ValueError(self.layout)
 
     @property
     def data(self):

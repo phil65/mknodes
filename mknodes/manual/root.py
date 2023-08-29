@@ -44,6 +44,7 @@ def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNa
     project.theme.announcement_bar = mknodes.MkMetadataBadges("dependencies")
     project.error_page.content = mknodes.MkAdmonition("Page does not exist!")
     project.theme.show_annotation_numbers()
+    project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
     # By using append_markdown_to_pages, every page will have a expandable Admonition
     # attached at the bottom. You can see the generated Markdown there for every page.
     annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)

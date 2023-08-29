@@ -4,7 +4,7 @@ from collections.abc import Sequence
 import logging
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import helpers, linkprovider
 
 
 logger = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ class MkList(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(list_4, header="### Containing markdown")
 
     def _prep(self, item) -> str:
-        return helpers.linked(item) if self.as_links else str(item)
+        return linkprovider.linked(item) if self.as_links else str(item)
 
     def _to_markdown(self) -> str:
         if not self.items:

@@ -6,7 +6,7 @@ import logging
 import types
 
 from mknodes.basenodes import mktable
-from mknodes.utils import classhelpers, helpers, layouts
+from mknodes.utils import classhelpers, helpers, layouts, linkprovider
 
 
 logger = logging.getLogger(__name__)
@@ -23,17 +23,23 @@ class MkModuleTable(mktable.MkTable):
         **kwargs,
     ):
         self.modules = [classhelpers.to_module(i, return_none=False) for i in modules]
-        self.layouter = layouts.ModuleLayout()
         super().__init__(**kwargs)
 
     def __repr__(self):
         return helpers.get_repr(self, modules=self.modules)
 
     @property
+    def linkprovider(self):
+        if self.associated_project:
+            return self.associated_project.linkprovider
+        return linkprovider.LinkProvider()
+
+    @property
     def data(self):
         if not self.modules:
             return {}
-        data = [self.layouter.get_row_for(mod) for mod in self.modules]
+        layout = layouts.ModuleLayout(link_provider=self.linkprovider)
+        data = [layout.get_row_for(mod) for mod in self.modules]
         return {
             k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
             for k in data[0]
