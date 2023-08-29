@@ -88,7 +88,7 @@ class MkContainer(mknode.MkNode):
 
     def to_child_node(self, other) -> mknode.MkNode:  # type: ignore[return]
         match other:
-            case str() if (match := HEADER_REGEX.match(other)):
+            case str() if (match := HEADER_REGEX.match(other)) and "\n" not in other:
                 return mkheader.MkHeader(match[2], level=len(match[1]), parent=self)
             case str():
                 return mktext.MkText(other, parent=self)
