@@ -203,7 +203,10 @@ def create_block_nodes_section(nav: mknodes.MkNav):
     page += create_section_for_nodes(block_nodes_nav, klasses)
 
 
-def create_section_for_nodes(nav: mknodes.MkNav, klasses: list[type]) -> mknodes.MkTable:
+def create_section_for_nodes(
+    nav: mknodes.MkNav,
+    klasses: list[type[mknodes.MkNode]],
+) -> mknodes.MkTable:
     """Add a MkPage to the MkNav for each class, create a index MkTable and return it."""
     table = mknodes.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
