@@ -1,22 +1,14 @@
-"""The Mkdocs Plugin."""
+"""Link replacer."""
 
 from __future__ import annotations
 
-# Partly based on mkdocs-gen-files
-import logging
-import os
-import pathlib
 import re
 import urllib.parse
 
+from mkdocs.plugins import get_plugin_logger
 
-try:
-    from mkdocs.plugins import get_plugin_logger
 
-    logger = get_plugin_logger(__name__)
-except ImportError:
-    # TODO: remove once support for MkDocs <1.5 is dropped
-    logger = logging.getLogger(f"mkdocs.plugins.{__name__}")  # type: ignore[assignment]
+logger = get_plugin_logger(__name__)
 
 
 # For Regex, match groups are:
@@ -29,33 +21,53 @@ except ImportError:
 AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 
+def relative_url(url_a: str, url_b: str) -> str:
+    """Compute the relative path from URL A to URL B.
+
+    Arguments:
+        url_a: URL A.
+        url_b: URL B.
+
+    Returns:
+        The relative URL to go from A to B.
+    """
+    parts_a = url_a.split("/")
+    if "#" in url_b:
+        url_b, anchor = url_b.split("#", 1)
+    else:
+        anchor = None
+    parts_b = url_b.split("/")
+
+    # remove common left parts
+    while parts_a and parts_b and parts_a[0] == parts_b[0]:
+        parts_a.pop(0)
+        parts_b.pop(0)
+
+    # go up as many times as remaining a parts' depth
+    levels = len(parts_a) - 1
+    parts_relative = [".."] * levels + parts_b
+    relative = "/".join(parts_relative)
+    return f"{relative}#{anchor}" if anchor else relative
+
+
 class LinkReplacer:
-    def __init__(self, base_docs_url: str, page_url: str, mapping: dict[str, list[str]]):
+    def __init__(self, page_url: str, mapping: dict[str, list[str]]):
         self.mapping = mapping
         self.page_url = page_url
-        self.base_docs_url = pathlib.Path(base_docs_url)
-        # Absolute URL of the linker
-        self.linker_url = os.path.dirname(self.base_docs_url / page_url)  # noqa: PTH120
 
     def __call__(self, match):
         filename = urllib.parse.unquote(match.group(3).strip())
         if filename not in self.mapping:
-            return f"`{match.group(3).replace('.md', '')}`"
+            return f"`{match.group(1)}`"
         filenames = self.mapping[filename]
         if len(filenames) > 1:
             text = "%s: %s has multiple targets: %s"
             logger.debug(text, self.page_url, match.group(3), filenames)
-        abs_link_url = (self.base_docs_url / filenames[0]).parent
-        # need os.replath here bc pathlib.relative_to throws an exception
-        # when linking across drives
-        rel_path = os.path.relpath(abs_link_url, self.linker_url)
-        rel_link_url = os.path.join(rel_path, filename)  # noqa: PTH118
-        new_text = match.group(0).replace(match.group(2), rel_link_url)
-        to_replace_with = rel_link_url + (match.group(5) or "")
-        new_text = match.group(0).replace(match.group(2), to_replace_with)
-        new_text = new_text.replace("\\", "/")
+        new_link = relative_url(self.page_url, filenames[0])
+        new_text = match.group(0).replace(match.group(2), new_link)
+        # new_text = new_text.replace("\\", "/")
         text = "LinkReplacer: %s: %s -> %s"
-        logger.debug(text, self.page_url, match.group(3), rel_link_url)
+        logger.debug(text, self.page_url, match.group(3), new_text)
         return new_text
 
     def replace(self, markdown: str) -> str:

@@ -125,7 +125,8 @@ class MkNodesPlugin(BasePlugin):
         """Build mappings needed for linking in following steps."""
         for file_ in files:
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
-            self._file_mapping[filename].append(file_.url)
+            url = urllib.parse.unquote(file_.src_uri)
+            self._file_mapping[filename].append(url)
         if root := self._project._root:
             for _level, node in root.iter_nodes():
                 if isinstance(node, mkpage.MkPage):
@@ -173,11 +174,8 @@ class MkNodesPlugin(BasePlugin):
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
                 continue
-        link_replacer = linkreplacer.LinkReplacer(
-            base_docs_url=config.docs_dir,
-            page_url=page.file.src_uri,
-            mapping=self._file_mapping,
-        )
+        uri = page.file.src_uri
+        link_replacer = linkreplacer.LinkReplacer(uri, mapping=self._file_mapping)
         return link_replacer.replace(markdown)
 
     def on_post_build(self, config: MkDocsConfig):
