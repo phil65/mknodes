@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import functools
 import io
 import logging
 import os
@@ -14,6 +15,25 @@ from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
+
+
+@functools.cache
+def get_changelog(
+    repository: str,
+    template: str,
+    convention: str,
+    sections: tuple[str, ...] | None = None,
+) -> str:
+    with contextlib.redirect_stdout(io.StringIO()):
+        _changelog, text = cli.build_and_render(
+            repository=repository,
+            template=template,
+            convention=convention,
+            parse_refs=True,
+            parse_trailers=True,
+            sections=list(sections) if sections else None,
+        )
+    return text
 
 
 class MkChangelog(mktext.MkText):
@@ -71,16 +91,12 @@ class MkChangelog(mktext.MkText):
 
     @property
     def text(self) -> str:
-        with contextlib.redirect_stdout(io.StringIO()):
-            _changelog, text = cli.build_and_render(
-                repository=self.repository,
-                template=self.template,
-                convention=self.convention,
-                parse_refs=True,
-                parse_trailers=True,
-                sections=self.sections,
-            )
-        return text
+        return get_changelog(
+            repository=self.repository,
+            template=self.template,
+            convention=self.convention,
+            sections=tuple(self.sections) if self.sections else None,
+        )
 
     @staticmethod
     def create_example_page(page):
