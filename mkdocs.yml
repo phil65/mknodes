@@ -86,26 +86,10 @@ plugins:
           line_length: 90
 markdown_extensions:
 # - codehilite
-- admonition
-- def_list
 - attr_list
-- abbr
-- md_in_html
-- tables
-- footnotes
-- pymdownx.critic
-# - pymdownx.caret
-- pymdownx.keys
-- pymdownx.progressbar
-# - pymdownx.mark
-# - pymdownx.tilde
 - pymdownx.magiclink # auto-convert links
 - pymdownx.blocks.tab: # new-style tabs
     alternate_style: true
-- pymdownx.blocks.admonition # new-style admonition
-- pymdownx.blocks.definition # new-style definition
-- pymdownx.blocks.details # new-style details
-- pymdownx.blocks.html # new-style html
 # - pymdownx.saneheaders # require a whitespace after header #
 - pymdownx.tasklist:
     custom_checkbox: true
@@ -115,8 +99,6 @@ markdown_extensions:
     pygments_lang_class: true
     # linenums: true
 # - pymdownx.inlinehilite  # syntax highlighting inside line (`#!py mycode`)
-- pymdownx.snippets
-- pymdownx.details
 - pymdownx.superfences:
     custom_fences:
     - name: mermaid

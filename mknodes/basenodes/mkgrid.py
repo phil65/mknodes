@@ -14,6 +14,7 @@ class MkGridCard(mkcontainer.MkContainer):
 
     ICON = "material/square-medium"
     STATUS = "new"
+    REQUIRED_EXTENSIONS = ["attr_list", "md_in_html"]
 
     def __init__(
         self,

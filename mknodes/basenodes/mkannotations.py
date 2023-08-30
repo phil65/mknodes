@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
+    REQUIRED_EXTENSIONS = ["attr_list", "md_in_html", "pymdownx.superfences"]
+
     def __init__(
         self,
         num: int,

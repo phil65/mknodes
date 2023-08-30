@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 class MkTable(mkbasetable.MkBaseTable):
     """Class representing a formatted table."""
 
+    REQUIRED_EXTENSIONS = ["tables"]
+
     def _to_markdown(self) -> str:
         table_data = self.data  # property
         if not any(table_data[k] for k in table_data):
