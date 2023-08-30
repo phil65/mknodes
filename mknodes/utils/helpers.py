@@ -144,10 +144,10 @@ def styled(
 
 def label_for_class(klass: type) -> str:
     mod = klass.__module__
+    parts = mod.split(".")
     if mod.startswith("prettyqt."):
-        parts = mod.split(".")
         return f"{parts[1]}.{klass.__name__}"
-    return f"{mod.split('.')[-1]}.{klass.__name__}"
+    return f"{parts[-1]}.{klass.__name__}"
 
 
 @functools.cache
