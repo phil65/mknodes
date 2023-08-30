@@ -27,6 +27,25 @@ def create_development_section(root_nav: mknodes.MkNav):
     create_license_page(dev_nav)
     create_dependencies_page(dev_nav)
     create_dev_environment_page(dev_nav)
+    create_module_overview_page(dev_nav)
+    create_plugin_flow_page(dev_nav)
+
+
+def create_module_overview_page(nav: mknodes.MkNav):
+    """Create the "Module overview" MkPage and attach it to given MkNav."""
+    node = mknodes.MkModuleOverview()
+    page = nav.add_page("Module overview", icon=node.ICON)
+    page += mknodes.MkCode.for_object(create_module_overview_page, header=PAGE_CODE)
+    page += node
+
+
+def create_plugin_flow_page(nav: mknodes.MkNav):
+    """Create the "Plugin flow" MkPage and attach it to given MkNav."""
+    node = mknodes.MkPluginFlow()
+    page = nav.add_page("Plugin flow", icon=node.ICON)
+    page += mknodes.MkCode.for_object(create_plugin_flow_page, header=PAGE_CODE)
+    page += node
+
 
 
 def create_changelog_page(nav: mknodes.MkNav):
