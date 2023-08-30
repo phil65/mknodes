@@ -113,7 +113,7 @@ class ModuleLayout(Layout):
             Name=self.linkprovider.link_for_module(module),
             DocStrings=helpers.get_doc(module, fallback=fallback, only_summary=True),
             Members=(
-                mklist.MkList(module.__all__, as_links=True).to_html()
+                mklist.MkList(module.__all__, as_links=True, shorten_after=10).to_html()
                 if hasattr(module, "__all__")
                 else ""
             ),
