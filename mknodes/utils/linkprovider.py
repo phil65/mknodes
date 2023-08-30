@@ -50,7 +50,8 @@ class LinkProvider:
     def link_for_klass(self, kls: type) -> str:
         module_path = kls.__module__
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
-        dotted_path = f"{module_path}.{qual_name}"
+        is_builtin = module_path == "builtins"
+        dotted_path = qual_name if is_builtin else f"{module_path}.{qual_name}"
         if dotted_path in self.inv_manager:
             link = self.inv_manager[dotted_path]
             return linked(link, title=qual_name)
