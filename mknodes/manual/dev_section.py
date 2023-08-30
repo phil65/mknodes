@@ -8,6 +8,9 @@ a Development section.
 SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
 
+# this is the nav we will populate via decorators.
+dev_nav = mknodes.MkNav("Development")
+
 
 def create_development_section(root_nav: mknodes.MkNav):
     """Create the "Development" sub-MkNav and attach it to given MkNav."""
@@ -17,80 +20,79 @@ def create_development_section(root_nav: mknodes.MkNav):
     # dynamically populated depending on the project the tree is connected to.
     # This means that this section could be imported by other packages and be
     # used without any further adaptation.
-    dev_nav = root_nav.add_nav("Development")
+    root_nav += dev_nav
     page = dev_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
     page += mknodes.MkCode.for_object(create_development_section, header=SECTION_CODE)
     page += mknodes.MkAdmonitionBlock(INTRO_TEXT)
-    create_changelog_page(dev_nav)
-    create_coc_page(dev_nav)
-    create_contribute_page(dev_nav)
-    create_license_page(dev_nav)
-    create_dependencies_page(dev_nav)
-    create_dev_environment_page(dev_nav)
-    create_module_overview_page(dev_nav)
-    create_plugin_flow_page(dev_nav)
 
 
-def create_module_overview_page(nav: mknodes.MkNav):
+@dev_nav.route("Module overview", show_source=True)
+def create_module_overview_page():
     """Create the "Module overview" MkPage and attach it to given MkNav."""
     node = mknodes.MkModuleOverview()
-    page = nav.add_page("Module overview", icon=node.ICON)
-    page += mknodes.MkCode.for_object(create_module_overview_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Module overview", icon=node.ICON)
     page += node
+    return page
 
 
-def create_plugin_flow_page(nav: mknodes.MkNav):
+@dev_nav.route("Plugin flow", show_source=True)
+def create_plugin_flow_page():
     """Create the "Plugin flow" MkPage and attach it to given MkNav."""
     node = mknodes.MkPluginFlow()
-    page = nav.add_page("Plugin flow", icon=node.ICON)
-    page += mknodes.MkCode.for_object(create_plugin_flow_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Plugin flow", icon=node.ICON)
     page += node
+    return page
 
 
-
-def create_changelog_page(nav: mknodes.MkNav):
+@dev_nav.route("Changelog", show_source=True)
+def create_changelog_page():
     """Create the "Changelog" MkPage and attach it to given MkNav."""
     node = mknodes.MkChangelog()  # based on "git-changelog" package
-    page = nav.add_page("Changelog", icon=node.ICON)
-    page += mknodes.MkCode.for_object(create_changelog_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Changelog", icon=node.ICON)
     page += node
+    return page
 
 
-def create_coc_page(nav: mknodes.MkNav):
+@dev_nav.route("Code of conduct", show_source=True)
+def create_coc_page():
     """Create the "Code of conduct" MkPage and attach it to given MkNav."""
     node = mknodes.MkCodeOfConduct()
-    page = nav.add_page("Code of conduct", icon=node.ICON)
-    page += mknodes.MkCode.for_object(create_coc_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Code of conduct", icon=node.ICON)
     page += node
+    return page
 
 
-def create_contribute_page(nav: mknodes.MkNav):
+@dev_nav.route("Contributing", show_source=True)
+def create_contribute_page():
     """Create the "Contributing" MkPage and attach it to given MkNav."""
-    page = nav.add_page("Contributing", icon="material/help")
-    page += mknodes.MkCode.for_object(create_contribute_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Contributing", icon="material/help")
     page += mknodes.MkCommitConventions()
     page += mknodes.MkPullRequestGuidelines()
+    return page
 
 
-def create_license_page(nav: mknodes.MkNav):
+@dev_nav.route("License", show_source=True)
+def create_license_page():
     """Create the "License" MkPage and attach it to given MkNav."""
     node = mknodes.MkLicense()
-    page = nav.add_page("License", icon=node.ICON, hide_toc=True)
-    page += mknodes.MkCode.for_object(create_license_page, header=PAGE_CODE)
+    page = mknodes.MkPage("License", icon=node.ICON, hide_toc=True)
     page += node
+    return page
 
 
-def create_dependencies_page(nav: mknodes.MkNav):
+@dev_nav.route("Dependencies", show_source=True)
+def create_dependencies_page():
     """Create the "Dependencies" MkPage and attach it to given MkNav."""
     node = mknodes.MkDependencyTable()
-    page = nav.add_page("Dependencies", icon=node.ICON, hide_toc=True)
-    page += mknodes.MkCode.for_object(create_dependencies_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Dependencies", icon=node.ICON, hide_toc=True)
     page += node
+    return page
 
 
-def create_dev_environment_page(nav: mknodes.MkNav):
+@dev_nav.route("Development environment", show_source=True)
+def create_dev_environment_page():
     """Create the "Development environment" MkPage and attach it to given MkNav."""
     node = mknodes.MkDevEnvSetup()
-    page = nav.add_page("Development environment", icon=node.ICON)
-    page += mknodes.MkCode.for_object(create_dev_environment_page, header=PAGE_CODE)
+    page = mknodes.MkPage("Development environment", icon=node.ICON)
     page += node
+    return page
