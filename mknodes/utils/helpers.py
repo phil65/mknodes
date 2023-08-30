@@ -198,19 +198,31 @@ def get_material_icon_folder() -> pathlib.Path:
 
 
 @functools.cache
-def get_source(obj):
+def get_source(obj: inspect._SourceObjectType) -> str:
     return inspect.getsource(obj)
 
 
 @functools.cache
-def get_source_lines(obj):
+def get_source_lines(obj: inspect._SourceObjectType) -> tuple[list[str], int]:
+    """Cached wrapper for inspect.getsourcelines.
+
+    Arguments:
+        obj: Object to return source lines for.
+    """
     return inspect.getsourcelines(obj)
 
 
 @functools.cache
-def get_file(klass: type) -> str | None:
+def get_file(
+    obj: inspect._SourceObjectType,
+) -> str | None:
+    """Cached wrapper for inspect.getfile.
+
+    Arguments:
+        obj: Object to get file for
+    """
     with contextlib.suppress(TypeError):
-        return inspect.getfile(klass)
+        return inspect.getfile(obj)
     return None
 
 

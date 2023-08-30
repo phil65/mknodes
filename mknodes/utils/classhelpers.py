@@ -88,6 +88,10 @@ def to_module(
 
 
 def to_class(klass: type | str | tuple[str, ...] | list[str]):
+    """Convert given input to a class.
+
+    If input is a string or Sequence, interpret it as a dotted path.
+    """
     match klass:
         case type():
             return klass
@@ -128,6 +132,11 @@ def to_module_parts(  # type: ignore
 def to_dotted_path(
     obj: Sequence[str] | str | types.ModuleType | types.MethodType | type,
 ) -> str:
+    """Return dotted path for given input.
+
+    Arguments:
+        obj: Input to return dotted path for
+    """
     match obj:
         case (str(), *_):
             return ".".join(obj)
@@ -210,6 +219,11 @@ def get_topmost_module_path(obj: Callable) -> str:
 def get_submodules(
     module: types.ModuleType | str | tuple[str, ...],
 ) -> list[types.ModuleType]:
+    """Return list of submodules of given module.
+
+    Arguments:
+        module: Module to return submodules from.
+    """
     module = to_module(module)
     return [mod for _, mod in inspect.getmembers(module, inspect.ismodule)]
 

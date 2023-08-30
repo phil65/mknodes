@@ -122,12 +122,18 @@ class Config:
         write_file(content.encode(), str(target_path))
 
     def get_markdown_instance(self) -> markdown.Markdown:
+        """Return a markdown instance based on given config."""
         return markdown.Markdown(
             extensions=self._config["markdown_extensions"],
             extension_configs=self._config["mdx_configs"] or {},
         )
 
     def get_file(self, path: str | os.PathLike) -> File:
+        """Return a MkDocs File for given path.
+
+        Arguments:
+            path: path to get a File object for
+        """
         return File(
             str(path),
             src_dir=self._config.docs_dir,
@@ -138,5 +144,4 @@ class Config:
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg._config.use_directory_urls)
-    cfg.nav = "test"
+    print(cfg.use_directory_urls)
