@@ -112,7 +112,7 @@ markdown_extensions:
 - toc:
     # toc_depth: 2
     permalink: true
-use_directory_urls: false
+use_directory_urls: true
 
 extra:
   social:
