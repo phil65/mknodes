@@ -60,6 +60,11 @@ class NavBuilder:
     _markdown_escape_chars = tuple("!#()*+-[\\]_`{}")
 
     def build_literate_nav(self, indentation: int | str = "") -> Iterable[str]:
+        """Convert data to a literate-nav formatted markdown list.
+
+        Arguments:
+            indentation: Initial indentation
+        """
         if isinstance(indentation, int):
             indentation = " " * indentation
         for item in self.items():

@@ -122,7 +122,8 @@ class MkNode(node.Node):
             text = proc.run(text)
         return text
 
-    def get_processors(self):
+    def get_processors(self) -> list[processors.TextProcessor]:
+        """Return list of processors used to created markdown."""
         return [
             processors.ShiftHeaderLevelProcessor(self.shift_header_levels),
             processors.IndentationProcessor(self.indent),
@@ -132,12 +133,18 @@ class MkNode(node.Node):
         ]
 
     def attach_annotations(self, text: str) -> str:
-        """Can be reimplemented if non-default annotations are needed."""
+        """Attach annotations block to given markdown.
+
+        Can be reimplemented if non-default annotations are needed.
+
+        Arguments:
+            text: Markdown to annote
+        """
         return self.annotations.annotate_text(text) if self.annotations else text
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:
-        """Returns a tuple containing all section names."""
+        """Return a tuple containing all section names."""
         from mknodes import mknav
 
         node = self
@@ -148,7 +155,7 @@ class MkNode(node.Node):
         return tuple(reversed(parts))
 
     def virtual_files(self):
-        """Returns a dict containing the virtual files attached to this tree element.
+        """Return a dict containing the virtual files attached to this tree element.
 
         This can be overridden by nodes if they want files to be included dynamically.
         For static files, use `add_file`.
@@ -167,9 +174,20 @@ class MkNode(node.Node):
         return {f"{section}{k}": v for k, v in self.virtual_files().items()}
 
     def add_file(self, filename: str, data: str | bytes):
+        """Add a static file as data to this node.
+
+        Arguments:
+            filename: Filename of the file to add
+            data: Data of the file
+        """
         self._files[filename] = data
 
     def add_css_class(self, class_name: str):
+        """Wrap node markdown with given css class.
+
+        Arguments:
+            class_name: CSS class to wrap the node with
+        """
         self._css_classes.add(class_name)
 
     def all_virtual_files(self, only_children: bool = False) -> dict[str, str | bytes]:
@@ -205,28 +223,33 @@ class MkNode(node.Node):
         return all_templates
 
     def all_markdown_extensions(self) -> set[str]:
+        """Return set of all markdown extensions used by the node (including children)."""
         extensions = {p for desc in self.descendants for p in desc.REQUIRED_EXTENSIONS}
         extensions.update(self.REQUIRED_EXTENSIONS)
         return extensions
 
     def all_plugins(self) -> set[str]:
+        """Return set of all plugins used by the node (including children)."""
         plugins = {p for desc in self.descendants for p in desc.REQUIRED_PLUGINS}
         plugins.update(self.REQUIRED_PLUGINS)
         return plugins
 
     def get_css(self) -> str | None:
+        """Get css used by this node."""
         if not self.CSS:
             return None
         file_path = paths.RESOURCES / self.CSS
         return file_path.read_text()
 
     def all_css(self) -> str:
+        """Return string containing all css needed by this node (including children)."""
         all_css: set[str] = {css for des in self.descendants if (css := des.get_css())}
         if self_css := self.get_css():
             all_css.add(self_css)
         return "\n".join(all_css)
 
     def all_js_files(self) -> set[str]:
+        """Return set of all javascript files used by the node (including children)."""
         all_js_files: set[str] = set()
         for des in self.descendants:
             if js := des.JS:
