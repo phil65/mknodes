@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes.basenodes import mkcontainer, mkdocstrings, mkheader
-from mknodes.templatenodes import mkclassdiagram, mkclasstable
+from mknodes.templatenodes import mkclassdiagram, mkclasstable, mkmoduletable
 from mknodes.utils import classhelpers, helpers
 
 
@@ -50,12 +50,30 @@ class StaticBlockProcessor(ContainerProcessor):
         return None
 
 
+class ModuleTableContainerProcessor(ContainerProcessor):
+    ID = "module_table"
+
+    def append_block(self, node: mkcontainer.MkContainer):
+        modules = classhelpers.get_submodules(self.item)
+        table = mkmoduletable.MkModuleTable(modules)
+        node += table
+
+    def check_if_apply(self, node: mkcontainer.MkContainer):
+        return bool(classhelpers.get_submodules(self.item))
+
+    def get_default_header(self, node: mkcontainer.MkContainer):
+        return "Modules"
+
+
 class ClassTableContainerProcessor(ContainerProcessor):
     ID = "baseclass_table"
 
     def append_block(self, node: mkcontainer.MkContainer):
         table = mkclasstable.MkClassTable(self.item)
         node += table
+
+    def check_if_apply(self, node: mkcontainer.MkContainer):
+        return bool(self.item)
 
     def get_default_header(self, node: mkcontainer.MkContainer):
         return "Classes"

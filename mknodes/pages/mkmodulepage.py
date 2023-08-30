@@ -24,6 +24,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         path: str | os.PathLike = "index.md",
         docstrings: bool = False,
         show_class_table: bool = True,
+        show_module_table: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
@@ -33,7 +34,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             path: Some path for the file. Default is index.md
             klasses: klasses to use
             docstrings: Whether to show docstrings for given module.
-            show_class_table: ModuleType or path to model to show info for.
+            show_class_table: Whether to show a table with classes part of the module
+            show_module_table: Whether to show a table with submodules
             kwargs: further keyword arguments passed to parent
         """
         self.parts = classhelpers.to_module_parts(module)
@@ -43,6 +45,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0]),
         )
         self.show_class_table = show_class_table
+        self.show_module_table = show_module_table
         super().__init__(path=path, **kwargs)
 
     def __repr__(self):
@@ -54,6 +57,9 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         ]
         if self.show_class_table:
             proc = processors.ClassTableContainerProcessor(self.klasses)
+            procs.append(proc)
+        if self.show_module_table:
+            proc = processors.ModuleTableContainerProcessor(self.module)
             procs.append(proc)
         if self.docstrings:
             proc = processors.MkDocStringContainerProcessor(self.module)
