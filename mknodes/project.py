@@ -41,8 +41,7 @@ class Project(Generic[T]):
         config: MkDocsConfig | None = None,
     ):
         self._module = module
-        self.linkprovider = linkprovider.LinkProvider(config)
-        self.linkprovider.add_inv_file("https://docs.python.org/3/objects.inv")
+        self.linkprovider = linkprovider.LinkProvider(config, include_stdlib=True)
         self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
         self.theme: T = theme
         self.templates = self.theme.templates

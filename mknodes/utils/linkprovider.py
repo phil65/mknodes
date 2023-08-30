@@ -7,7 +7,7 @@ import logging
 import os
 import types
 
-from mknodes import mkdocsconfig
+from mknodes import mkdocsconfig, paths
 from mknodes.utils import helpers, inventorymanager
 
 
@@ -30,9 +30,14 @@ def linked(identifier: str, title: str | None = None) -> str:
 
 
 class LinkProvider:
-    def __init__(self, config=None):
+    def __init__(self, config=None, include_stdlib: bool = False):
         self.inv_manager = inventorymanager.InventoryManager()
         self.config = config or mkdocsconfig.load_config()
+        if include_stdlib:
+            self.add_inv_file(
+                paths.RESOURCES / "python_objects.inv",
+                base_url="https://docs.python.org/3/",
+            )
 
     def add_inv_file(self, path: str | os.PathLike, base_url: str | None = None):
         self.inv_manager.add_inv_file(path, base_url=base_url)
