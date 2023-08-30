@@ -77,7 +77,7 @@ class MkList(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(list_4, header="### Containing markdown")
 
     def _prep(self, item) -> str:
-        return linkprovider.linked(item) if self.as_links else str(item)
+        return linkprovider.linked(str(item)) if self.as_links else str(item)
 
     def _to_markdown(self) -> str:
         if not self.items:
