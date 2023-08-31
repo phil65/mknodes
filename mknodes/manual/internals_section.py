@@ -53,7 +53,7 @@ def create_requirements_page(nav: mknodes.MkNav):
     page += mknodes.MkCode.for_object(create_requirements_page, header=PAGE_CODE)
     page += "The tree requires these Markdown extensions to be available:"
     # Based on which items we used, we can get info about the required extensions:
-    extensions = nav.associated_project.all_markdown_extensions()  # type: ignore[union-attr]
+    extensions = nav.associated_project.all_markdown_extensions()  # type: ignore[union-attr]  # noqa: E501
     page += mknodes.MkCode(helpers.dump_yaml(extensions), language="yaml")
     # we can do the same for plugins
     page += "The tree requires these MkDocs plugins to be available:"

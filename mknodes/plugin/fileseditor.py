@@ -95,7 +95,7 @@ class FilesEditor:
         path = self._get_file(name, new="w" in mode)
         if encoding is None and "b" not in mode:
             encoding = "utf-8"
-        return path.open(mode, buffering, encoding, **kwargs)  # noqa: SIM115
+        return path.open(mode, buffering, encoding, **kwargs)
 
     def _get_file(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
