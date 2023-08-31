@@ -112,9 +112,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
                 self._project.config.register_css("mknodes_theme.css", str(css))
             if extensions := self._project._root.all_markdown_extensions():
                 for ext in extensions:
-                    if ext not in config.markdown_extensions:
-                        logger.info("Adding %s to extensions", ext)
-                        config.markdown_extensions.append(ext)  # noqa: PERF401
+                    self._project.config.register_extension(ext)
             for template in self._project.templates:
                 if html := template.build_html():
                     self._project.config.register_template(template.filename, html)

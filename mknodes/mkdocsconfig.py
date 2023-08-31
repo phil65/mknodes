@@ -74,6 +74,11 @@ class Config:
     def docs_dir(self) -> pathlib.Path:
         return pathlib.Path(self._config.docs_dir)
 
+    def register_extension(self, extension: str):
+        if extension not in self.markdown_extensions:
+            logger.info("Adding %s to extensions", extension)
+            self.markdown_extensions.append(extension)
+
     def register_css(self, filename: str | os.PathLike, css: str):
         """Register a css file.
 
