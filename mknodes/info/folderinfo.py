@@ -4,7 +4,7 @@ import logging
 import os
 
 from mknodes.data import taskrunners, tools
-from mknodes.info import pyproject
+from mknodes.info import gitrepository, pyproject
 from mknodes.utils import helpers
 
 
@@ -17,6 +17,7 @@ class FolderInfo:
     def __init__(self, path: str | os.PathLike | None = None):
         self.path = path or "."
         self.pyproject = pyproject.PyProject(path)
+        self.git = gitrepository.GitRepository(self.path)
 
     def __repr__(self):
         return helpers.get_repr(self, path=self.path)

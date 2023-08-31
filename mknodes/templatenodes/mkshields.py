@@ -88,7 +88,15 @@ class MkShields(mkcontainer.MkContainer):
 
     @property
     def branch(self):
-        return self._branch or "main"
+        match self._branch:
+            case None if self.associated_project:
+                return self.associated_project.folderinfo.git.main_branch
+            case None:
+                return "main"
+            case str():
+                return self._branch
+            case _:
+                raise TypeError(self._branch)
 
     @property
     def items(self) -> list[mknode.MkNode]:

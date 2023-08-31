@@ -101,6 +101,7 @@ dependencies = [
     "coloraide",
     "tomli-w",
     "anybadge",
+    "gitpython",
     "PyYAML >=5.1",
 ]
 license = "MIT"
