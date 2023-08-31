@@ -4,12 +4,12 @@ import functools
 import os
 import pathlib
 
-from typing import TYPE_CHECKING
 from urllib import parse
 
 import markdown
 
 from mkdocs import config as _config
+from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure.files import File
 from mkdocs.utils import write_file
@@ -20,10 +20,6 @@ from mknodes.utils import helpers
 logger = get_plugin_logger(__name__)
 
 
-if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
-
-
 @functools.cache
 def load_config(path: str | os.PathLike | None = None):
     path = None if path is None else str(path)
@@ -31,16 +27,21 @@ def load_config(path: str | os.PathLike | None = None):
 
 
 class Config:
-    def __init__(self, config: MkDocsConfig | None = None):
-        if config:
-            self._config = config
-        else:
-            file = helpers.find_file_in_folder_or_parent("mkdocs.yml")
-            if not file:
-                msg = "Could not find config file"
-                raise FileNotFoundError(msg)
-            self._config = load_config(str(file))
-            logger.info("Loaded config from %s", file)
+    def __init__(self, config: MkDocsConfig | str | os.PathLike | None = None):
+        match config:
+            case MkDocsConfig():
+                self._config: MkDocsConfig = config
+            case str() | os.PathLike() as file:
+                self._config = load_config(str(file))
+            case None:
+                file = helpers.find_file_in_folder_or_parent("mkdocs.yml")
+                if not file:
+                    msg = "Could not find config file"
+                    raise FileNotFoundError(msg)
+                self._config = load_config(str(file))
+                logger.info("Loaded config from %s", file)
+            case _:
+                raise TypeError(config)
         self.plugin = self._config.plugins["mknodes"]
 
     def __getattr__(self, name):
@@ -173,4 +174,4 @@ class Config:
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg.get_code_repository())
+    print(cfg.mdx_configs)
