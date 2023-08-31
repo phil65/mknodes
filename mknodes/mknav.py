@@ -38,7 +38,7 @@ class MkNav(mknode.MkNode):
     """
 
     ICON = "material/navigation-outline"
-    REQUIRED_PLUGINS = ["mkdocs.literate_nav", "mkdocs.section_index"]
+    REQUIRED_PLUGINS = ["literate_nav", "section_index"]
 
     def __init__(
         self,

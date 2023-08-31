@@ -25,6 +25,12 @@ def homepage_for_distro(dist_name: str) -> str | None:
 
 
 def linked(identifier: str, title: str | None = None) -> str:
+    """Create a markdown link.
+
+    Arguments:
+        identifier: Target url
+        title: Title to show as label
+    """
     suffix = "" if helpers.is_url(identifier) or identifier.endswith(".md") else ".md"
     return f"[{identifier if title is None else title}]({identifier}{suffix})"
 
@@ -43,6 +49,11 @@ class LinkProvider:
         self.inv_manager.add_inv_file(path, base_url=base_url)
 
     def link_for_module(self, mod: types.ModuleType) -> str:
+        """Return a markdown link for given module.
+
+        Arguments:
+            mod: Module to get a link for
+        """
         dotted_path = mod.__name__
         if dotted_path in self.inv_manager:
             link = self.inv_manager[dotted_path]
@@ -53,6 +64,11 @@ class LinkProvider:
         return linked(mod.__name__)
 
     def link_for_klass(self, kls: type) -> str:
+        """Return a markdown link for given class.
+
+        Arguments:
+            kls: Klass to get a link for
+        """
         module_path = kls.__module__
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
         is_builtin = module_path == "builtins"

@@ -16,6 +16,8 @@ from typing import Any, Literal, TypeVar
 
 import requests
 
+from mknodes.data import datatypes
+
 
 RESPONSE_CODE_OK = 200
 
@@ -48,6 +50,12 @@ def find_file_in_folder_or_parent(
     filename: str | pathlib.Path,
     folder: os.PathLike | str = ".",
 ) -> pathlib.Path | None:
+    """Search for a file with given name in folder and its parent folders.
+
+    Arguments:
+        filename: File to search
+        folder: Folder to start searching from
+    """
     path = pathlib.Path(folder).absolute()
     while not (path / filename).exists() and len(path.parts) > 1:
         path = path.parent
@@ -104,6 +112,13 @@ def escaped(text: str, entity_type: str | None = None) -> str:
 
 
 def slugify(text: str | os.PathLike) -> str:
+    """Create a slug for given text.
+
+    Returned text only contains alphanumerical and underscore.
+
+    Arguments:
+        text: text to get a slug for
+    """
     text = str(text).lower()
     text = re.sub("[^0-9a-zA-Z_.]", "_", text)
     return re.sub("^[^a-zA-Z_#]+", "", text)
@@ -131,6 +146,15 @@ def styled(
     italic: bool = False,
     code: bool = False,
 ) -> str:
+    """Apply styling to given markdown.
+
+    Arguments:
+        text: Text to style
+        size: Optional text size
+        bold: Whether styled text should be bold
+        italic: Whether styled text should be italic
+        code: Whether styled text should styled as (inline) code
+    """
     if size:
         text = f"<font size='{size}'>{text}</font>"
     if bold:
@@ -152,6 +176,11 @@ def label_for_class(klass: type) -> str:
 
 @functools.cache
 def get_function_body(func: types.MethodType | types.FunctionType | type) -> str:
+    """Get body of given function. Strips off the signature.
+
+    Arguments:
+        func: Callable to get the body from
+    """
     # see https://stackoverflow.com/questions/38050649
     source_lines, _ = get_source_lines(func)
     source_lines = itertools.dropwhile(lambda x: x.strip().startswith("@"), source_lines)
@@ -167,6 +196,11 @@ def get_function_body(func: types.MethodType | types.FunctionType | type) -> str
 
 
 def get_deprecated_message(obj) -> str | None:
+    """Return deprecated message (created by deprecated decorator).
+
+    Arguments:
+        obj: Object to check
+    """
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
@@ -179,6 +213,15 @@ def get_doc(
     from_base_classes: bool = False,
     only_summary: bool = False,
 ) -> str:
+    """Get __doc__ for given object.
+
+    Arguments:
+        obj: Object to get docstrings from
+        escape: Whether docstrings should get escaped
+        fallback: Fallback in case docstrings dont exist
+        from_base_classes: Use base class docstrings if docstrings dont exist
+        only_summary: Only return first line of docstrings
+    """
     if from_base_classes:
         doc = inspect.getdoc(obj)
     else:
@@ -198,12 +241,17 @@ def get_material_icon_folder() -> pathlib.Path:
 
 
 @functools.cache
-def get_source(obj: inspect._SourceObjectType) -> str:
+def get_source(obj: datatypes.HasCodeType) -> str:
+    """Cached wrapper for inspect.getsource.
+
+    Arguments:
+        obj: Object to return source for.
+    """
     return inspect.getsource(obj)
 
 
 @functools.cache
-def get_source_lines(obj: inspect._SourceObjectType) -> tuple[list[str], int]:
+def get_source_lines(obj: datatypes.HasCodeType) -> tuple[list[str], int]:
     """Cached wrapper for inspect.getsourcelines.
 
     Arguments:
@@ -213,9 +261,7 @@ def get_source_lines(obj: inspect._SourceObjectType) -> tuple[list[str], int]:
 
 
 @functools.cache
-def get_file(
-    obj: inspect._SourceObjectType,
-) -> str | None:
+def get_file(obj: datatypes.HasCodeType) -> str | None:
     """Cached wrapper for inspect.getfile.
 
     Arguments:
