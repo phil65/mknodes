@@ -57,8 +57,18 @@ class HtmlBlock(Block):
         return len(self.items) != 1 or not isinstance(self.items[0], Super)
 
     def block_content(self, md: markdown.Markdown | None = None):
+        import mknodes
+
         instance = md or mkdocsconfig.Config().get_markdown_instance()
-        return "\n".join(instance.convert(str(i)) for i in self.items)
+        result = ""
+        for i in self.items:
+            match i:
+                case mknodes.MkNode():
+                    result += instance.convert(str(i))
+                case _:
+                    result += str(i)
+            result += "\n"
+        return result
 
     @property
     def content(self):
@@ -79,6 +89,10 @@ class AnnouncementBarBlock(HtmlBlock):
 
 class FooterBlock(HtmlBlock):
     block_id = "footer"
+
+
+class TabsBlock(HtmlBlock):
+    block_id = "tabs"
 
 
 class TitleBlock(Block):
@@ -138,5 +152,5 @@ class StylesBlock(Block):
 
 
 if __name__ == "__main__":
-    cfg = LibsBlock()
-    print(cfg)
+    cfg = AnnouncementBarBlock()
+    print(cfg.to_markdown())

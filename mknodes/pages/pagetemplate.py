@@ -21,6 +21,7 @@ class PageTemplate:
         self.extends = extends
         self.title_block = templateblocks.TitleBlock()
         self.content_block = templateblocks.ContentBlock()
+        self.tabs_block = templateblocks.TabsBlock()
         self.announce_block = templateblocks.AnnouncementBarBlock()
         self.footer_block = templateblocks.FooterBlock()
         self.libs_block = templateblocks.LibsBlock()
@@ -31,6 +32,7 @@ class PageTemplate:
         return [
             self.title_block,
             self.content_block,
+            self.tabs_block,
             self.announce_block,
             self.footer_block,
             self.libs_block,
@@ -73,7 +75,7 @@ if __name__ == "__main__":
 
     cfg = mkdocsconfig.Config()
     md = cfg.get_markdown_instance()
-    template = PageTemplate(md, filename="main.html")
+    template = PageTemplate(filename="main.html")
     template.announce_block.content = mknodes.MkAdmonition("test")
-    html = template.build_html()
+    html = template.build_html(md)
     print(html)
