@@ -555,7 +555,7 @@ class MkNav(mknode.MkNode):
         folder = pathlib.Path(folder)
         nav = cls(folder.name if parent else None, parent=parent)
         for path in folder.iterdir():
-            if path.is_dir() and recursive:
+            if path.is_dir() and recursive and any(path.iterdir()):
                 path = folder / path.parts[-1]
                 subnav = cls.from_folder(
                     folder=path,
@@ -578,7 +578,7 @@ class MkNav(mknode.MkNode):
                 logger.info("Loaded index page from %s", path)
                 nav.index_page = page
                 nav.index_title = nav.section or "Home"
-            elif path.suffix == ".md" and path.name != "SUMMARY.md":
+            elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
                 page = mkpage.MkPage(
                     path=path.relative_to(folder),
                     content=path.read_text(),
