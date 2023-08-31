@@ -111,7 +111,7 @@ mknodes = "mknodes.plugin:MkNodesPlugin"
 [project.urls]
 Documentation = "https://phil65.github.io/mknodes/"
 Source = "https://github.com/phil65/mknodes"
-
+Gitter = "https://app.gitter.im/#/room/#mknodes:gitter.im"
 
 [tool.pytest.ini_options]
 minversion = "7.0"
