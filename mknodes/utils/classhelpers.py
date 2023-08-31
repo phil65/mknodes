@@ -225,7 +225,11 @@ def get_submodules(
         module: Module to return submodules from.
     """
     module = to_module(module)
-    return [mod for _, mod in inspect.getmembers(module, inspect.ismodule)]
+    return [
+        mod
+        for name, mod in inspect.getmembers(module, inspect.ismodule)
+        if name.startswith(module.__name__)
+    ]
 
 
 def import_file(path: str | os.PathLike) -> types.ModuleType:
