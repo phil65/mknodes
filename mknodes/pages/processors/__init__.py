@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from mknodes.basenodes import mkcontainer, mkdocstrings, mkheader
+from mknodes.basenodes import mkcontainer, _mkdocstrings, mkheader
 from mknodes.templatenodes import mkclassdiagram, mkclasstable, mkmoduletable
 from mknodes.utils import classhelpers, helpers
 
@@ -126,7 +126,7 @@ class MkDocStringContainerProcessor(ContainerProcessor):
 
     def append_block(self, node: mkcontainer.MkContainer):
         path = classhelpers.to_dotted_path(self.item)
-        diagram = mkdocstrings.MkDocStrings(path, show_root_toc_entry=False)
+        diagram = _mkdocstrings.MkDocStrings(path, show_root_toc_entry=False)
         node += diagram
 
     def get_default_header(self, node: mkcontainer.MkContainer):

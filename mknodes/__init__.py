@@ -14,7 +14,7 @@ from .basenodes.mkkeys import MkKeys
 from .basenodes.mkgrid import MkGrid
 from .basenodes.mkcontainer import MkContainer
 from .basenodes.mkcode import MkCode
-from .basenodes.mkdocstrings import MkDocStrings
+from .basenodes._mkdocstrings import MkDocStrings
 from .basenodes.mkimage import MkImage
 from .basenodes.mkbinaryimage import MkBinaryImage
 from .basenodes.mklist import MkList

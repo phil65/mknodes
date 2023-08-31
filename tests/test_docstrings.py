@@ -3,7 +3,7 @@ from __future__ import annotations
 import mknodes
 
 
-EXPECTED_IN_ANNOTATIONS = """1.  ::: mknodes.basenodes.mkdocstrings.MkDocStrings.__init__
+EXPECTED_IN_ANNOTATIONS = """1.  ::: mknodes.basenodes._mkdocstrings.MkDocStrings.__init__
         options:
           docstring_section_style: 'list'
           show_root_heading: True
