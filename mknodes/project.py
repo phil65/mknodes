@@ -103,6 +103,10 @@ class Project(Generic[T]):
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
 
+    def all_markdown_extensions(self) -> dict[str, dict]:
+        extensions = self._root.all_markdown_extensions() if self._root else {}
+        return self.theme.adapt_extensions(extensions)
+
     def aggregate_info(self):
         infos = dict(
             repository_name=self.repository_name,

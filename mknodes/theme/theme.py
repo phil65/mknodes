@@ -56,6 +56,9 @@ class Theme:
             text_color=self.get_text_color(),
         )
 
+    def adapt_extensions(self, extensions: dict[str, dict]) -> dict[str, dict]:
+        return extensions
+
 
 if __name__ == "__main__":
     theme = Theme(theme_name="material")

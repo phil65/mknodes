@@ -267,6 +267,25 @@ class MaterialTheme(theme.Theme):
             {"transform": "none"},
         )
 
+    def adapt_extensions(self, extensions: dict[str, dict]) -> dict[str, dict]:
+        result = extensions.copy()
+        for k in extensions:
+            if k == "pymdownx.emoji":
+                from materialx import emoji
+
+                result[k].update(
+                    {
+                        "emoji_index": emoji.twemoji,
+                        "emoji_generator": emoji.to_svg,
+                    },
+                )
+            elif k in ["pymdownx.blocks.tab", "pymdownx.tabbed"]:
+                result[k]["alternate_style"] = True
+            elif k == "pymdownx.tasklist":
+                result[k]["custom_checkbox"] = True
+        return result
+
 
 if __name__ == "__main__":
     theme = MaterialTheme()
+    theme.show_annotation_numbers()
