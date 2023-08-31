@@ -4,6 +4,7 @@ repo_url: "https://github.com/phil65/mknodes/"
 site_url: https://phil65.github.io/mknodes/
 edit_uri: edit/main
 copyright: Copyright &copy; 2023 Philipp Temminghoff
+use_directory_urls: true
 
 theme:
   name: material
@@ -38,31 +39,27 @@ theme:
   - navigation.path  # shows breadcrumbs
   - navigation.tabs # make top level tabs
   - navigation.prune
-  # - navigation.expand # expand all subsections in left sidebar by defuault
   - navigation.indexes # documents can be directly attached to sections (overview pages)
   - navigation.footer # next/previous page buttons in footer
+  - navigation.top  # adds back-to-top button
+  # - navigation.sections # top-level sections are rendered as groups
+  # - navigation.expand # expand all subsections in left sidebar by defuault
   # - navigation.tabs.sticky # and make them sticky
   - toc.follow  # makes toc follow scrolling
   # - toc.integrate  # integrates toc into left menu
-  - navigation.top  # adds back-to-top button
-  # - navigation.sections # top-level sections are rendered as groups
   - search.highlight
   - search.suggest
   # - search.share
+
 plugins:
 - search
-# - social  # this one has dependency which is not on pypi for windows. (cairocffi)
+# - social
 - tags
-- section-index  # clickable sections leading to index page (https://github.com/oprypin/mkdocs-section-index)
-# - glightbox  # better image support
+- section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
 - markdown-exec
-- literate-nav:  # move nav out of mkdocs.yml
-    nav_file: SUMMARY.md
-    # implicit_index: true
-# - autorefs  # allows linking to any header
+- literate-nav
 - mknodes:
     path: mknodes.manual.root
-# - coverage
 - mkdocstrings:
     default_handler: python
     handlers:
@@ -79,26 +76,22 @@ plugins:
           show_symbol_type_heading: true
           # merge_init_into_class: true
           ignore_init_summary: true
-          # show_if_no_docstring: true
           inherited_members: false
           signature_crossrefs: true
           separate_signature: true
           line_length: 90
+
 markdown_extensions:
-# - codehilite
 - attr_list
 - pymdownx.magiclink # auto-convert links
 - pymdownx.blocks.tab: # new-style tabs
     alternate_style: true
-# - pymdownx.saneheaders # require a whitespace after header #
 - pymdownx.tasklist:
     custom_checkbox: true
 - pymdownx.highlight:  # syntax highlighting
     anchor_linenums: true
     line_spans: __span
     pygments_lang_class: true
-    # linenums: true
-# - pymdownx.inlinehilite  # syntax highlighting inside line (`#!py mycode`)
 - pymdownx.superfences:
     custom_fences:
     - name: mermaid
@@ -112,7 +105,6 @@ markdown_extensions:
 - toc:
     # toc_depth: 2
     permalink: true
-use_directory_urls: true
 
 extra:
   social:
