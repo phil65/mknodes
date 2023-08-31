@@ -35,7 +35,7 @@ class MkNode(node.Node):
     # METADATA (should be set by subclasses)
 
     ICON = "material/puzzle-outline"
-    REQUIRED_EXTENSIONS: list[str] = []
+    REQUIRED_EXTENSIONS: list[str] | dict[str, dict] = []
     REQUIRED_PLUGINS: list[str] = []
     STATUS: datatypes.PageStatusStr | None = None
     CSS = None
@@ -222,11 +222,27 @@ class MkNode(node.Node):
             all_templates.append(self.template)
         return all_templates
 
-    def all_markdown_extensions(self) -> set[str]:
-        """Return set of all markdown extensions used by the node (including children)."""
-        extensions = {p for desc in self.descendants for p in desc.REQUIRED_EXTENSIONS}
-        extensions.update(self.REQUIRED_EXTENSIONS)
-        return extensions
+    def all_markdown_extensions(self) -> dict[str, dict]:
+        """Return dict of all md extensions used by the node (including children)."""
+        result: dict[str, dict] = {}
+        for desc in self.descendants:
+            match desc.REQUIRED_EXTENSIONS:
+                case dict() as dct:
+                    result |= dct
+                case list() as ls:
+                    for ext in ls:
+                        result[ext] = {}
+                case _ as typ:
+                    raise TypeError(typ)
+        match self.REQUIRED_EXTENSIONS:
+            case dict() as dct:
+                result |= dct
+            case list() as ls:
+                for ext in ls:
+                    result[ext] = {}
+            case _ as typ:
+                raise TypeError(typ)
+        return result
 
     def all_plugins(self) -> set[str]:
         """Return set of all plugins used by the node (including children)."""
