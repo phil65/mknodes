@@ -74,6 +74,10 @@ class Config:
     def docs_dir(self) -> pathlib.Path:
         return pathlib.Path(self._config.docs_dir)
 
+    @property
+    def site_dir(self) -> pathlib.Path:
+        return pathlib.Path(self._config.site_dir)
+
     def register_extension(self, extension: str):
         if extension not in self.markdown_extensions:
             logger.info("Adding %s to extensions", extension)
@@ -88,11 +92,10 @@ class Config:
             filename: Filename to write
             css: file content
         """
-        site_dir = pathlib.Path(self._config["site_dir"])
         path = (pathlib.Path("assets") / filename).as_posix()
         logger.info("Creating %s...", path)
         self._config.extra_css.append(path)
-        write_file(css.encode(), str(site_dir / path))
+        write_file(css.encode(), str(self.site_dir / path))
 
     def register_js(self, filename: str | os.PathLike, js: str):
         """Register a javascript file.
@@ -103,11 +106,10 @@ class Config:
             filename: Filename to write
             js: file content
         """
-        site_dir = pathlib.Path(self._config["site_dir"])
         path = (pathlib.Path("assets") / filename).as_posix()
         logger.info("Creating %s...", path)
         self._config.extra_javascript.append(path)
-        write_file(js.encode(), str(site_dir / path))
+        write_file(js.encode(), str(self.site_dir / path))
 
     def register_template(self, filename: str, content: str):
         """Register a html template.
@@ -129,22 +131,31 @@ class Config:
     def get_markdown_instance(self) -> markdown.Markdown:
         """Return a markdown instance based on given config."""
         return markdown.Markdown(
-            extensions=self._config["markdown_extensions"],
-            extension_configs=self._config["mdx_configs"] or {},
+            extensions=self._config.markdown_extensions,
+            extension_configs=self._config.mdx_configs or {},
         )
 
-    def get_file(self, path: str | os.PathLike) -> File:
+    def get_file(
+        self,
+        path: str | os.PathLike,
+        src_dir: str | os.PathLike | None = None,
+        dest_dir: str | os.PathLike | None = None,
+    ) -> File:
         """Return a MkDocs File for given path.
 
         Arguments:
-            path: path to get a File object for
+            path: path to get a File object for (relative to src_dir)
+            src_dir: Source directory. If None, docs_dir is used.
+            dest_dir: Target directory. If None, site_dir is used.
         """
-        return File(
+        new_f = File(
             str(path),
-            src_dir=self._config.docs_dir,
-            dest_dir=self._config.site_dir,
+            src_dir=str(src_dir) if src_dir else self._config.docs_dir,
+            dest_dir=str(dest_dir) if dest_dir else self._config.site_dir,
             use_directory_urls=self._config.use_directory_urls,
         )
+        new_f.generated_by = "mknodes"  # type: ignore
+        return new_f
 
 
 if __name__ == "__main__":
