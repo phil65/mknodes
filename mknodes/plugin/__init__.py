@@ -12,7 +12,7 @@ import tempfile
 from typing import TYPE_CHECKING, Literal
 import urllib.parse
 
-from mkdocs.config import config_options
+from mkdocs.config import base, config_options
 from mkdocs.exceptions import PluginError
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.structure.nav import Navigation
@@ -32,9 +32,11 @@ if TYPE_CHECKING:
 logger = get_plugin_logger(__name__)
 
 
-class MkNodesPlugin(BasePlugin):
-    config_scheme = (("path", config_options.Type(str)),)
+class PluginConfig(base.Config):
+    path = config_options.Type(str)
 
+
+class MkNodesPlugin(BasePlugin[PluginConfig]):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.main_html_content = None
