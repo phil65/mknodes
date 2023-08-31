@@ -3,17 +3,19 @@
 from __future__ import annotations
 
 import collections
+import os
 import pathlib
 import shutil
 
 from typing import IO, TYPE_CHECKING, ClassVar
 
-from mkdocs.config import load_config
-from mkdocs.structure.files import File, Files
+from mkdocs.structure.files import Files
+
+from mknodes import mkdocsconfig
 
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
+    from mkdocs.structure.files import File
 
 
 def file_sort_key(f: File):
@@ -28,11 +30,16 @@ class FilesEditor:
     _current: ClassVar[FilesEditor | None] = None
     _default: ClassVar[FilesEditor | None] = None
 
-    def __init__(self, files: Files, config: MkDocsConfig, directory: str | None = None):
+    def __init__(
+        self,
+        files: Files,
+        config: mkdocsconfig.Config,
+        directory: str | os.PathLike | None = None,
+    ):
         files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files}
         self._files: collections.ChainMap[str, File] = collections.ChainMap({}, files_map)
         self.config = config
-        self.directory = directory or config.docs_dir
+        self.directory = str(directory or config.docs_dir)
 
     def __enter__(self):
         type(self)._current = self
@@ -56,8 +63,8 @@ class FilesEditor:
         if cls._current:
             return cls._current
         if not cls._default:
-            config = load_config("mkdocs.yml")
-            config.plugins.run_event("config", config)
+            config = mkdocsconfig.Config()
+            config.plugins.run_event("config", config._config)
             cls._default = FilesEditor(Files([]), config)
         return cls._default
 
@@ -92,13 +99,7 @@ class FilesEditor:
 
     def _get_file(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
-        new_f = File(
-            name,
-            src_dir=self.directory,
-            dest_dir=self.config.site_dir,
-            use_directory_urls=self.config.use_directory_urls,
-        )
-        new_f.generated_by = "mknodes"  # type: ignore
+        new_f = self.config.get_file(name, src_dir=self.directory)
         normname = pathlib.PurePath(name).as_posix()
         new_path = pathlib.Path(new_f.abs_src_path)
         if new or normname not in self._files:

@@ -61,9 +61,9 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
     #     if config.nav is None:
     #         file = File(
     #             "/mknodes/blogs/index.md",
-    #             src_dir=config["docs_dir"],
-    #             dest_dir=config["site_dir"],
-    #             use_directory_urls=config["use_directory_urls"],
+    #             src_dir=config.docs_dir,
+    #             dest_dir=config.site_dir,
+    #             use_directory_urls=config.use_directory_urls,
     #         )
     #         page = SectionPage("blog", file, config, [])
     #         section = Section("Blog", [page])
@@ -81,7 +81,8 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
           - Templates
           - CSS files
         """
-        with fileseditor.FilesEditor(files, config, self._dir.name) as ed:
+        cfg = mkdocsconfig.Config(config)
+        with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             file_name = self.config["path"]
             if file_name.endswith(".py"):
                 module = classhelpers.import_file(file_name)
