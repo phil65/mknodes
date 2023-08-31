@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Generic, TypeVar
 
 from mknodes import mkdocsconfig, mknav
 from mknodes.info import folderinfo, packageinfo
+from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
 from mknodes.utils import helpers, linkprovider
 
@@ -45,7 +46,7 @@ class Project(Generic[T]):
         self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
         self.theme: T = theme
         self.templates = self.theme.templates
-        self.error_page = self.templates["404.html"]
+        self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
         self.folderinfo = folderinfo.FolderInfo()
         self._root: mknav.MkNav | None = None
 

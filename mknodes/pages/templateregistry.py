@@ -1,19 +1,16 @@
 from __future__ import annotations
 
-import markdown
-
 from mknodes.pages import pagetemplate
 
 
 class TemplateRegistry:
-    def __init__(self, md: markdown.Markdown):
+    def __init__(self):
         self.templates: dict[str, pagetemplate.PageTemplate] = {}
-        self.md = md
 
     def __getitem__(self, value: str) -> pagetemplate.PageTemplate:
         return self.templates.setdefault(
             value,
-            pagetemplate.PageTemplate(self.md, filename=value),
+            pagetemplate.PageTemplate(filename=value),
         )
 
     def __setitem__(self, index, value):
@@ -30,8 +27,7 @@ if __name__ == "__main__":
     import mknodes
 
     proj = mknodes.Project.for_mknodes()
-    md = proj.config.get_markdown_instance()
-    registry = TemplateRegistry(md)
+    registry = TemplateRegistry()
     a = registry["main.html"]
     for template in registry:
         print(template)

@@ -114,8 +114,9 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             if extensions := self._project.all_markdown_extensions():
                 for ext in extensions:
                     self._project.config.register_extension(ext)
+            md = self._project.config.get_markdown_instance()
             for template in self._project.templates:
-                if html := template.build_html():
+                if html := template.build_html(md):
                     self._project.config.register_template(template.filename, html)
             for template in root.all_templates():
                 html = template.build_html()

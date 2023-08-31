@@ -3,6 +3,10 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Literal
 
+from markdown import markdown
+
+from mknodes import mkdocsconfig
+
 
 BlockStr = Literal[
     "analytics",
@@ -34,27 +38,27 @@ class Super:
 class Block:
     block_id: str
 
-    @property
-    def block_content(self):
+    def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
-    def __str__(self):
-        return f"{{% block {self.block_id} %}}\n{self.block_content}\n{{% endblock %}}"
+    def to_markdown(self, md: markdown.Markdown | None = None):
+        instance = md or mkdocsconfig.Config().get_markdown_instance()
+        content = self.block_content(instance)
+        return f"{{% block {self.block_id} %}}\n{content}\n{{% endblock %}}"
 
 
 class HtmlBlock(Block):
     block_id: str
 
-    def __init__(self, md):
+    def __init__(self):
         self.items = [Super()]
-        self.md = md
 
     def __bool__(self):
         return len(self.items) != 1 or not isinstance(self.items[0], Super)
 
-    @property
-    def block_content(self):
-        return "\n".join(self.md.convert(str(i)) for i in self.items)
+    def block_content(self, md: markdown.Markdown | None = None):
+        instance = md or mkdocsconfig.Config().get_markdown_instance()
+        return "\n".join(instance.convert(str(i)) for i in self.items)
 
     @property
     def content(self):
@@ -86,8 +90,7 @@ class TitleBlock(Block):
     def __bool__(self):
         return bool(self.title)
 
-    @property
-    def block_content(self):
+    def block_content(self, md: markdown.Markdown | None = None):
         return f"<title>{self.title}</title>"
 
 
@@ -104,8 +107,7 @@ class LibsBlock(Block):
     def __bool__(self):
         return bool(self.scripts)
 
-    @property
-    def block_content(self):
+    def block_content(self, md: markdown.Markdown | None = None):
         lines = [
             f'<script src="{{ base_url }}/{path}"></script>' for path in self.scripts
         ]
@@ -126,8 +128,7 @@ class StylesBlock(Block):
     def __bool__(self):
         return bool(self.styles)
 
-    @property
-    def block_content(self):
+    def block_content(self, md: markdown.Markdown | None = None):
         lines = [
             f'<link rel="stylesheet" href="{{ base_url }}/{path}" />'
             for path in self.styles

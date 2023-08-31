@@ -25,8 +25,7 @@ class Theme:
         self.theme_name = theme_name
         self.config = config or mkdocsconfig.Config()
         self.css = rootcss.RootCSS()
-        md = self.config.get_markdown_instance()
-        self.templates = template_registry or templateregistry.TemplateRegistry(md)
+        self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
 
     @classmethod

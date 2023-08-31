@@ -1,30 +1,33 @@
 from __future__ import annotations
 
-import markdown
+from typing import TYPE_CHECKING
 
+from mknodes import mkdocsconfig
 from mknodes.pages import templateblocks
 from mknodes.utils import helpers
+
+
+if TYPE_CHECKING:
+    import markdown
 
 
 class PageTemplate:
     def __init__(
         self,
-        md: markdown.Markdown,
         filename: str,
         extends: str | None = "base",
     ):
         self.filename = filename
         self.extends = extends
-        self.md = md
         self.title_block = templateblocks.TitleBlock()
-        self.content_block = templateblocks.ContentBlock(md)
-        self.announce_block = templateblocks.AnnouncementBarBlock(md)
-        self.footer_block = templateblocks.FooterBlock(md)
+        self.content_block = templateblocks.ContentBlock()
+        self.announce_block = templateblocks.AnnouncementBarBlock()
+        self.footer_block = templateblocks.FooterBlock()
         self.libs_block = templateblocks.LibsBlock()
         self.styles_block = templateblocks.StylesBlock()
 
     @property
-    def blocks(self):
+    def blocks(self) -> list[templateblocks.Block]:
         return [
             self.title_block,
             self.content_block,
@@ -58,16 +61,15 @@ class PageTemplate:
     def content(self, value):
         self.content_block.content = value
 
-    def build_html(self) -> str | None:
+    def build_html(self, md: markdown.Markdown | None = None) -> str | None:
+        md = md or mkdocsconfig.Config().get_markdown_instance()
         blocks = ['{% extends "' + self.extends + '.html" %}\n'] if self.extends else []
-        blocks.extend(str(block) for block in self.blocks if block)
+        blocks.extend(block.to_markdown(md) for block in self.blocks if block)
         return "\n".join(blocks) + "\n" if blocks else None
 
 
 if __name__ == "__main__":
     import mknodes
-
-    from mknodes import mkdocsconfig
 
     cfg = mkdocsconfig.Config()
     md = cfg.get_markdown_instance()
