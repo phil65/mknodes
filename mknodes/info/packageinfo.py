@@ -102,7 +102,15 @@ def get_dependency(name):
 registry: dict[str, PackageInfo] = {}
 
 
+@functools.cache
+def get_package_map():
+    return metadata.packages_distributions()
+
+
 def get_info(pkg_name):
+    mapping = get_package_map()
+    if pkg_name in mapping:
+        pkg_name = mapping[pkg_name][0]
     if pkg_name in registry:
         return registry[pkg_name]
     registry[pkg_name] = PackageInfo(pkg_name)
