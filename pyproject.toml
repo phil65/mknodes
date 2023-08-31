@@ -97,6 +97,7 @@ dependencies = [
     "spdx-lookup",
     "fsspec",
     "cssutils",
+    "mergedeep",
     "coloraide",
     "tomli-w",
     "anybadge",

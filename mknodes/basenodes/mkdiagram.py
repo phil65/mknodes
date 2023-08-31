@@ -4,18 +4,26 @@ import textwrap
 
 from typing import Literal
 
+from pymdownx import superfences
+
 from mknodes.basenodes import mkcode
 from mknodes.utils import helpers
 
 
 GraphTypeStr = Literal["flow", "sequence", "state"]
 
+config = {
+    "custom_fences": [
+        {"name": "mermaid", "class": "mermaid", "format": superfences.fence_code_format},
+    ],
+}
+
 
 class MkDiagram(mkcode.MkCode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     ICON = "material/graph-outline"
-    REQUIRED_EXTENSIONS = ["pymdownx.superfences"]
+    REQUIRED_EXTENSIONS = {"pymdownx.superfences": config}
 
     TYPE_MAP = dict(
         flow="graph",

@@ -5,6 +5,8 @@ import logging
 
 from typing import TYPE_CHECKING
 
+import mergedeep
+
 from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
@@ -224,25 +226,21 @@ class MkNode(node.Node):
 
     def all_markdown_extensions(self) -> dict[str, dict]:
         """Return dict of all md extensions used by the node (including children)."""
-        result: dict[str, dict] = {}
-        for desc in self.descendants:
-            match desc.REQUIRED_EXTENSIONS:
-                case dict() as dct:
-                    result |= dct
-                case list() as ls:
-                    for ext in ls:
-                        result[ext] = {}
-                case _ as typ:
-                    raise TypeError(typ)
-        match self.REQUIRED_EXTENSIONS:
-            case dict() as dct:
-                result |= dct
-            case list() as ls:
-                for ext in ls:
-                    result[ext] = {}
-            case _ as typ:
-                raise TypeError(typ)
-        return result
+        dicts = [
+            (
+                i.REQUIRED_EXTENSIONS
+                if isinstance(i.REQUIRED_EXTENSIONS, dict)
+                else {k: {} for k in i.REQUIRED_EXTENSIONS}
+            )
+            for i in self.descendants
+        ]
+        own = (
+            self.REQUIRED_EXTENSIONS
+            if isinstance(self.REQUIRED_EXTENSIONS, dict)
+            else {k: {} for k in self.REQUIRED_EXTENSIONS}
+        )
+        dicts.append(own)
+        return mergedeep.merge(*dicts)
 
     def all_plugins(self) -> set[str]:
         """Return set of all plugins used by the node (including children)."""
