@@ -119,7 +119,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
                 if html := template.build_html(md):
                     self._project.config.register_template(template.filename, html)
             for template in root.all_templates():
-                html = template.build_html()
+                html = template.build_html(md)
                 self._project.config.register_template(template.filename, html)
         return ed.files
 
