@@ -14,7 +14,7 @@ class MkList(mkcontainer.MkContainer):
     """Node for showing a formatted list."""
 
     ICON = "octicons/list-unordered-24"
-    REQUIRED_EXTENSIONS = ["def_list", "pymdownx.tasklist"]
+    REQUIRED_EXTENSIONS = ["def_list"]
 
     def __init__(
         self,
