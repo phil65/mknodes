@@ -29,7 +29,7 @@ def create_development_section(root_nav: mknodes.MkNav):
 @dev_nav.route("Module overview", show_source=True)
 def create_module_overview_page():
     """Create the "Module overview" MkPage and attach it to given MkNav."""
-    node = mknodes.MkModuleOverview()
+    node = mknodes.MkModuleOverview(maximum_depth=2)
     page = mknodes.MkPage("Module overview", icon=node.ICON)
     page += node
     return page
