@@ -21,7 +21,14 @@ def homepage_for_distro(dist_name: str) -> str | None:
     except metadata.PackageNotFoundError:
         return None
     else:
-        return dist.metadata["Home-Page"]
+        meta = dist.metadata
+        if "Home-Page" in meta:
+            return meta["Home-Page"]
+        if "Homepage" in meta:
+            return meta["Homepage"]
+        if "Documentation" in meta:
+            return meta["Documentation"]
+    return None
 
 
 def linked(identifier: str, title: str | None = None) -> str:
