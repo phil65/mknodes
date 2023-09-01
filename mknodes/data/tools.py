@@ -76,7 +76,7 @@ class Ruff(Tool):
 class MyPy(Tool):
     identifier = "mypy"
     title = "MyPy"
-    url = "https://mypy.org"
+    url = "https://mypy-lang.org"
     description = MYPY_TEXT
     setup_cmd = MYPY_CODE
 
