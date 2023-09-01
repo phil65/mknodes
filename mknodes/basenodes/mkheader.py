@@ -21,6 +21,7 @@ class MkHeader(mknode.MkNode):
         self,
         text: str | mknode.MkNode | None = "",
         level: int = 2,
+        exclude_from_search: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
@@ -28,18 +29,21 @@ class MkHeader(mknode.MkNode):
         Arguments:
             text: Header text
             level: Header level
+            exclude_from_search: Whether section should be included in search.
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self.text = str(text or "")
         self.level = level
+        self._exclude_from_search = exclude_from_search
 
     def __repr__(self):
         return reprhelpers.get_repr(self, text=self.text, level=self.level)
 
     def _to_markdown(self) -> str:
         level_str = "#" * self.level
-        return f"{level_str} {self.text}"
+        suffix = " { data-search-exclude }" if self._exclude_from_search else ""
+        return f"{level_str} {self.text}{suffix}"
 
     @staticmethod
     def create_example_page(page):
