@@ -35,7 +35,7 @@ class FolderInfo:
         text = (self.path / "mkdocs.yml").read_text(encoding="utf-8")
         self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
         mod_name = self.git.remotes.origin.url.split(".git")[0].split("/")[-1]
-        self.module = importlib.import_module(mod_name)
+        self.module = importlib.import_module(mod_name.replace("-", "_"))
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
