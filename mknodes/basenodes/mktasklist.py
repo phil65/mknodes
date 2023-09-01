@@ -50,7 +50,11 @@ class MkTaskList(mkcontainer.MkContainer):
     REQUIRED_EXTENSIONS = ["pymdownx.tasklist"]
     ICON = "material/library"
 
-    def __init__(self, content=None, **kwargs):
+    def __init__(
+        self,
+        content: list | None | str | mknode.MkNode = None,
+        **kwargs: Any,
+    ):
         """Constructor.
 
         Arguments:
