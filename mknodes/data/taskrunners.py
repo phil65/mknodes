@@ -2,13 +2,18 @@ from __future__ import annotations
 
 import dataclasses
 
+from typing import Literal
+
 
 @dataclasses.dataclass
 class TaskRunner:
-    identifier: str
+    identifier: TaskRunnerStr
     website: str
     filenames: list[str]
     help_cmd: list[str]
+
+
+TaskRunnerStr = Literal["makefile", "task", "just", "duty", "invoke", "doit"]
 
 
 makefile = TaskRunner(
@@ -55,6 +60,13 @@ invoke = TaskRunner(
     help_cmd=["invoke", "--list"],
 )
 
-TASK_RUNNERS: dict[str, TaskRunner] = {
-    p.identifier: p for p in [makefile, task, just, duty, invoke]
+doit = TaskRunner(
+    identifier="doit",
+    website="http://pydoit.org",
+    filenames=["dodo.py"],
+    help_cmd=["doit", "list"],
+)
+
+TASK_RUNNERS: dict[TaskRunnerStr, TaskRunner] = {
+    p.identifier: p for p in [makefile, task, just, duty, invoke, doit]
 }
