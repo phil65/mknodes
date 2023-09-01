@@ -9,6 +9,7 @@ import shutil
 
 from typing import IO, TYPE_CHECKING, ClassVar
 
+from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure.files import Files
 
 from mknodes import mkdocsconfig
@@ -16,6 +17,9 @@ from mknodes import mkdocsconfig
 
 if TYPE_CHECKING:
     from mkdocs.structure.files import File
+
+
+logger = get_plugin_logger(__name__)
 
 
 def file_sort_key(f: File):
@@ -42,11 +46,11 @@ class FilesEditor:
         self.directory = str(directory or config.docs_dir)
 
     def __enter__(self):
-        type(self)._current = self
+        FilesEditor._current = self
         return self
 
     def __exit__(self, *exc):
-        type(self)._current = None
+        FilesEditor._current = None
 
     @classmethod
     def current(cls) -> FilesEditor:
@@ -96,6 +100,16 @@ class FilesEditor:
         if encoding is None and "b" not in mode:
             encoding = "utf-8"
         return path.open(mode, buffering, encoding, **kwargs)
+
+    def write(self, path: str | os.PathLike, content: str | bytes):
+        mode = "w" if isinstance(content, str) else "wb"
+        logger.info("Writing file to %s", path)
+        with self.open(os.fspath(path), mode) as file:
+            file.write(content)
+
+    def write_files(self, dct: dict[str, str | bytes]):
+        for k, v in dct.items():
+            self.write(k, v)
 
     def _get_file(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method

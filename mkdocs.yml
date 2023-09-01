@@ -59,7 +59,7 @@ plugins:
 - markdown-exec
 - literate-nav
 - mknodes:
-    path: mknodes.manual.root
+    path: mknodes.manual.root:build
 - mkdocstrings:
     default_handler: python
     handlers:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 # Partly based on mkdocs-gen-files
 import collections
+from collections.abc import Callable
 import importlib
 import os
 import pathlib
@@ -32,6 +33,20 @@ if TYPE_CHECKING:
 logger = get_plugin_logger(__name__)
 
 
+def get_callable_from_path(path: str) -> Callable:
+    modname, _qualname_separator, qualname = path.partition(":")
+    if modname.endswith(".py"):
+        obj = classhelpers.import_file(modname)
+    else:
+        obj = importlib.import_module(modname)
+    for attr in qualname.split("."):
+        obj = getattr(obj, attr)
+    if not callable(obj):
+        msg = "Incorrect path"
+        raise TypeError(msg)
+    return obj
+
+
 class PluginConfig(base.Config):
     path = config_options.Type(str)
 
@@ -55,8 +70,15 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         """Create the project based on MkDocs config."""
         cfg = mkdocsconfig.Config(config)
         skin = theme.Theme.get_theme(config=cfg)
-        self._project = project.Project[type(skin)](config=config, theme=skin)
-        skin.associated_project = self._project
+        self.project = project.Project[type(skin)](config=config, theme=skin)
+        skin.associated_project = self.project
+        project_fn = get_callable_from_path(self.config["path"])
+        try:
+            project_fn(self.project)
+        except SystemExit as e:
+            if e.code:
+                msg = f"Script {self.config['path']!r} caused {e!r}"
+                raise PluginError(msg) from e
 
     #     if config.nav is None:
     #         file = File(
@@ -81,46 +103,31 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
           - Templates
           - CSS files
         """
+        if not self.project._root:
+            msg = "No root for project created."
+            raise RuntimeError(msg)
+        root = self.project._root
         cfg = mkdocsconfig.Config(config)
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
-            file_name = self.config["path"]
-            if file_name.endswith(".py"):
-                module = classhelpers.import_file(file_name)
-            else:
-                module = importlib.import_module(file_name)
-            try:
-                module.build(self._project)
-            except SystemExit as e:
-                if e.code:
-                    msg = f"Script {file_name!r} caused {e!r}"
-                    raise PluginError(msg) from e
-            root = self._project._root
-            if not root:
-                msg = "No root for project created."
-                raise RuntimeError(msg)
-            for k, v in self._project.all_files().items():
-                logger.info("Writing file to %s", k)
-                mode = "w" if isinstance(v, str) else "wb"
-                with ed.open(k, mode) as file:
-                    file.write(v)
+            ed.write_files(self.project.all_files())
             if css := root.all_css():
-                self._project.config.register_css("mknodes_nodes.css", css)
+                self.project.config.register_css("mknodes_nodes.css", css)
             if js_files := root.all_js_files():
                 for file in js_files:
                     content = (paths.RESOURCES / file).read_text()
-                    self._project.config.register_js(file, content)
-            if css := self._project.theme.css:
-                self._project.config.register_css("mknodes_theme.css", str(css))
-            if extensions := self._project.all_markdown_extensions():
+                    self.project.config.register_js(file, content)
+            if css := self.project.theme.css:
+                self.project.config.register_css("mknodes_theme.css", str(css))
+            if extensions := self.project.all_markdown_extensions():
                 for ext in extensions:
-                    self._project.config.register_extension(ext)
-            md = self._project.config.get_markdown_instance()
-            for template in self._project.templates:
+                    self.project.config.register_extension(ext)
+            md = self.project.config.get_markdown_instance()
+            for template in self.project.templates:
                 if html := template.build_html(md):
-                    self._project.config.register_template(template.filename, html)
+                    self.project.config.register_template(template.filename, html)
             for template in root.all_templates():
                 html = template.build_html(md)
-                self._project.config.register_template(template.filename, html)
+                self.project.config.register_template(template.filename, html)
         return ed.files
 
     def on_nav(
@@ -134,7 +141,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
             url = urllib.parse.unquote(file_.src_uri)
             self._file_mapping[filename].append(url)
-        if root := self._project._root:
+        if root := self.project._root:
             for _level, node in root.iter_nodes():
                 if isinstance(node, mkpage.MkPage):
                     self._page_mapping[node.resolved_file_path] = node
@@ -176,7 +183,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links and `°metadata` stuff get replaced."""
-        for k, v in self._project.aggregate_info().items():
+        for k, v in self.project.aggregate_info().items():
             if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
@@ -191,6 +198,6 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         """Delete the temporary template files."""
         if not config.theme.custom_dir:
             return
-        for template in self._project.templates:
+        for template in self.project.templates:
             path = pathlib.Path(config.theme.custom_dir) / template.filename
             path.unlink(missing_ok=True)
