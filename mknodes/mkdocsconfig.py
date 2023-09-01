@@ -4,6 +4,7 @@ import functools
 import os
 import pathlib
 
+from typing import Any
 from urllib import parse
 
 import markdown
@@ -130,12 +131,17 @@ class Config:
         logger.info("Creating %s...", target_path.as_posix())
         write_file(content.encode(), str(target_path))
 
-    def get_markdown_instance(self) -> markdown.Markdown:
+    def get_markdown_instance(
+        self,
+        additional_extensions: list[str] | None = None,
+        config_override: dict[str, Any] | None = None,
+    ) -> markdown.Markdown:
         """Return a markdown instance based on given config."""
-        return markdown.Markdown(
-            extensions=self._config.markdown_extensions,
-            extension_configs=self._config.mdx_configs or {},
-        )
+        extensions = self._config.markdown_extensions
+        if additional_extensions:
+            extensions = list(set(additional_extensions + extensions))
+        configs = self._config.mdx_configs | (config_override or {})
+        return markdown.Markdown(extensions=extensions, extension_configs=configs)
 
     def get_file(
         self,
