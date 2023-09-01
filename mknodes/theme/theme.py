@@ -35,7 +35,7 @@ class Theme:
             from mknodes.theme import materialtheme
 
             return materialtheme.MaterialTheme(**kwargs)
-        return Theme(theme_name, **kwargs)
+        return Theme(theme_name, config=config, **kwargs)
 
     def get_files(self):
         return {}

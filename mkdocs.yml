@@ -84,15 +84,8 @@ plugins:
 markdown_extensions:
 - attr_list
 - pymdownx.magiclink # auto-convert links
-- pymdownx.highlight:  # syntax highlighting
-    anchor_linenums: true
-    line_spans: __span
-    pygments_lang_class: true
-- pymdownx.emoji:
-    emoji_index: !!python/name:materialx.emoji.twemoji
-    emoji_generator: !!python/name:materialx.emoji.to_svg
+- pymdownx.emoji
 - toc:
-    # toc_depth: 2
     permalink: true
 
 extra:

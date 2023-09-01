@@ -22,12 +22,15 @@ class MkCode(mkcontainer.MkContainer):
     """Class representing a Code block."""
 
     ICON = "material/code-json"
-
-    REQUIRED_EXTENSIONS = [
-        "pymdownx.highlight",
-        "pymdownx.snippets",
-        "pymdownx.superfences",
-    ]
+    REQUIRED_EXTENSIONS = {
+        "pymdownx.highlight": dict(
+            anchor_linenums=True,
+            line_spans="__span",
+            pygments_lang_class=True,
+        ),
+        "pymdownx.snippets": {},
+        "pymdownx.superfences": {},
+    }
 
     def __init__(
         self,
