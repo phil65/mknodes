@@ -87,7 +87,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
             case None if self.associated_project:
                 info = self.associated_project.info
                 eps = info.get_entry_points("mkdocs.plugins")
-                return next(iter(eps.values()))
+                return next(iter(eps.values())) if eps else None
             case None:
                 return None
             case _:
