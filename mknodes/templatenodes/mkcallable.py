@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ class MkCallable(mknode.MkNode):
         return node
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             fn=self.fn,
             args=self.args,

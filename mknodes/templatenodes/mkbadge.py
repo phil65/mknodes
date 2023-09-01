@@ -8,7 +8,7 @@ from typing import Any, Literal
 import anybadge
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ class MkBadge(mkimage.MkImage):
         pass
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             label=self.label,
             value=self.value,

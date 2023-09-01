@@ -4,7 +4,7 @@ import logging
 import os
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ class MkSnippet(mknode.MkNode):
         return self.to_markdown()
 
     def __repr__(self):
-        return helpers.get_repr(self, path=str(self.path))
+        return reprhelpers.get_repr(self, path=str(self.path))
 
     @staticmethod
     def create_example_page(page):

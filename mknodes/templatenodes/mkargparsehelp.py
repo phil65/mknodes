@@ -4,7 +4,7 @@ import argparse
 import logging
 
 from mknodes.basenodes import mkcontainer, mkheader, mktext
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class MkArgParseHelp(mkcontainer.MkContainer):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, parser=self.parser)
+        return reprhelpers.get_repr(self, parser=self.parser)
 
     @property
     def items(self):

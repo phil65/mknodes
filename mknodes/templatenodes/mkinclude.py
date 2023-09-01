@@ -8,7 +8,7 @@ from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
@@ -42,7 +42,7 @@ class MkInclude(mknode.MkNode):
         self.target = target
 
     def __repr__(self):
-        return helpers.get_repr(self, target=self.target)
+        return reprhelpers.get_repr(self, target=self.target)
 
     def _to_markdown(self) -> str:  # type: ignore[return]
         match self.target:

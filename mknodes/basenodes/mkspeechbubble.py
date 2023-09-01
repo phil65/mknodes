@@ -5,7 +5,7 @@ import logging
 from typing import Literal
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
         super().__init__(content=content or [], **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, content=self.items, arrow=self.arrow)
+        return reprhelpers.get_repr(self, content=self.items, arrow=self.arrow)
 
     def _to_markdown(self) -> str:
         arrow_str = f" {self.arrow}" if self.arrow else ""

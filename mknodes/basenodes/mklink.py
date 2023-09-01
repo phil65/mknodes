@@ -7,7 +7,7 @@ from typing import Any
 from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, linkprovider
+from mknodes.utils import linkprovider, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ class MkLink(mknode.MkNode):
             self.add_css_class("md-button--primary")
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             target=self.target,
             title=self.title,

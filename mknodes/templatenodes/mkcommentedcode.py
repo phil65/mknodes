@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mkspeechbubble, mktext
 from mknodes.data import datatypes
-from mknodes.utils import helpers, inspecthelpers
+from mknodes.utils import inspecthelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         super().__init__(content=None, header=header, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             code=self._code,
             language=self.language,

@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class MkTask(mkcontainer.MkContainer):
         self.value = value
 
     def __repr__(self):
-        return helpers.get_repr(self, value=self.value, content=self.items)
+        return reprhelpers.get_repr(self, value=self.value, content=self.items)
 
     def _to_markdown(self) -> str:
         lines = super()._to_markdown().split("\n")

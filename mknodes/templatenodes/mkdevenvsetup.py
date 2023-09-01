@@ -14,7 +14,7 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.data import buildsystems, tools
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -120,7 +120,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         self._build_backend = build_backend
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             repo_url=self._repo_url,
             tools=self._tools,

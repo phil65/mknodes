@@ -6,7 +6,7 @@ import re
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class MkText(mknode.MkNode):
         self._text = str(text or "")
 
     def __repr__(self):
-        return helpers.get_repr(self, text=self.text)
+        return reprhelpers.get_repr(self, text=self.text)
 
     def __getitem__(self, section_name: str) -> Self | None:
         markdown = self._to_markdown()

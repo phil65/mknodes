@@ -7,7 +7,7 @@ import textwrap
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktext
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class MkFootNote(mkcontainer.MkContainer):
         self.num = num
 
     def __repr__(self):
-        return helpers.get_repr(self, num=self.num, content=self.items)
+        return reprhelpers.get_repr(self, num=self.num, content=self.items)
 
     def _to_markdown(self) -> str:
         item_str = "\n".join(i.to_markdown() for i in self.items)
@@ -98,7 +98,7 @@ class MkFootNotes(mkcontainer.MkContainer):
                 notes.append(item.items[0])
             else:
                 notes.append(item)
-        return helpers.get_repr(self, footnotes=notes)
+        return reprhelpers.get_repr(self, footnotes=notes)
 
     def __len__(self):
         return len(self.items)

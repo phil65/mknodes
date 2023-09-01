@@ -5,7 +5,7 @@ import logging
 from typing import Literal
 
 from mknodes.basenodes import mktable
-from mknodes.utils import helpers, layouts, linkprovider
+from mknodes.utils import layouts, linkprovider, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class MkClassTable(mktable.MkTable):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, layout=self.layout, klasses=self.klasses)
+        return reprhelpers.get_repr(self, layout=self.layout, klasses=self.klasses)
 
     @property
     def linkprovider(self):

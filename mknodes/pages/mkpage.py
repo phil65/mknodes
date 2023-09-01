@@ -9,7 +9,7 @@ from typing import Any, Self
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ class MkPage(mkcontainer.MkContainer):
 
     def __repr__(self):
         meta_kwargs = self.metadata.repr_kwargs()
-        return helpers.get_repr(self, path=str(self.path), **meta_kwargs)
+        return reprhelpers.get_repr(self, path=str(self.path), **meta_kwargs)
 
     def __str__(self):
         return self.to_markdown()

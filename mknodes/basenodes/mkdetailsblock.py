@@ -6,7 +6,7 @@ from typing import Any, get_args
 
 from mknodes.basenodes import mkblock, mknode
 from mknodes.data import datatypes
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ class MkDetailsBlock(mkblock.MkBlock):
             content = helpers.to_str_if_textnode(self.items[0])
         else:
             content = [helpers.to_str_if_textnode(i) for i in self.items]
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             content=content,
             typ=self.typ,

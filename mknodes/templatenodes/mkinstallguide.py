@@ -6,7 +6,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mkheader, mknode, mktext
 from mknodes.data import installmethods
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -87,7 +87,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         return mkcontainer.MkContainer(items, parent=self)
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             project=self._project,
             package_repos=self._package_repos,

@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktext
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class MkAnnotation(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, num=self.num, content=self.items)
+        return reprhelpers.get_repr(self, num=self.num, content=self.items)
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
@@ -114,7 +114,7 @@ class MkAnnotations(mkcontainer.MkContainer):
             if len(item.items) == 1:
                 item = helpers.to_str_if_textnode(item.items[0])
             notes.append(item)
-        return helpers.get_repr(self, annotations=notes)
+        return reprhelpers.get_repr(self, annotations=notes)
 
     def _get_item_pos(self, num: int) -> int:
         item = next(i for i in self.items if i.num == num)

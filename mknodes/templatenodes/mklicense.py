@@ -9,7 +9,7 @@ from typing import Any
 import spdx_lookup
 
 from mknodes.basenodes import mktext
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ class MkLicense(mktext.MkText):
         self.license = license_type
 
     def __repr__(self):
-        return helpers.get_repr(self, license=self.license, _filter_empty=True)
+        return reprhelpers.get_repr(self, license=self.license, _filter_empty=True)
 
     def get_license(self, license_name: str) -> str:
         if self.associated_project:

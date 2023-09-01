@@ -11,7 +11,7 @@ from typing import Any, Literal
 from git_changelog import cli
 
 from mknodes.basenodes import mktext
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ class MkChangelog(mktext.MkText):
         self._repository = repository
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             convention=self.convention,
             template=self.template,

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ class MkGrid(mkcontainer.MkContainer):
                 cards.append(helpers.to_str_if_textnode(item.items[0]))
             else:
                 cards.append(item)
-        return helpers.get_repr(self, cards=cards)
+        return reprhelpers.get_repr(self, cards=cards)
 
     def _to_markdown(self) -> str:
         begin = '<div class="grid cards" markdown>'

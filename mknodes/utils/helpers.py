@@ -7,9 +7,8 @@ import logging
 import os
 import pathlib
 import re
-import reprlib
 
-from typing import Any, Literal, TypeVar
+from typing import Literal, TypeVar
 
 import requests
 
@@ -17,22 +16,6 @@ import requests
 RESPONSE_CODE_OK = 200
 
 logger = logging.getLogger(__name__)
-
-
-class LengthLimitRepr(reprlib.Repr):
-    def repr_type(self, obj, level):
-        return obj.__name__
-
-    def repr_module(self, obj, level):
-        return obj.__name__
-
-    def repr_function(self, obj, level):
-        return obj.__name__
-
-
-limit_repr = LengthLimitRepr()
-limit_repr.maxlist = 10
-limit_repr.maxstring = 80
 
 
 def to_str_if_textnode(node):
@@ -55,37 +38,6 @@ def find_file_in_folder_or_parent(
     while not (path / filename).exists() and len(path.parts) > 1:
         path = path.parent
     return file if (file := (path / filename)).exists() else None
-
-
-def get_repr(
-    _obj: Any,
-    *args: Any,
-    _shorten: bool = True,
-    _filter_empty: bool = False,
-    _filter_false: bool = False,
-    **kwargs: Any,
-) -> str:
-    """Get a suitable __repr__ string for an object.
-
-    Args:
-        _obj: The object to get a repr for.
-        _shorten: Whether to shorten the repr.
-        *args: Arguments for the repr
-        **kwargs: Keyword arguments for the repr
-    """
-    my_repr = limit_repr.repr if _shorten else repr
-    classname = type(_obj).__name__
-    parts = [my_repr(val) for val in args]
-    kw_parts = []
-    for k, v in kwargs.items():
-        if _filter_empty and (v is None or v == "" or v == {}):
-            continue
-        if _filter_false and v is False:
-            continue
-        name = my_repr(v)
-        kw_parts.append(f"{k}={name}")
-    sig = ", ".join(parts + kw_parts)
-    return f"{classname}({sig})"
 
 
 def escaped(text: str, entity_type: str | None = None) -> str:
@@ -220,4 +172,4 @@ def is_url(path: str) -> bool:
 
 if __name__ == "__main__":
     strings = groupby_first_letter([str(i) for i in range(1000)])
-    print(limit_repr.repr(strings))
+    print(strings)

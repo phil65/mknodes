@@ -9,7 +9,7 @@ from urllib import parse
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.info import packageinfo
 from mknodes.templatenodes import mkbadge
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.use_gitlab_style = use_gitlab_style
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             typ=self._typ,
             package=self._package,

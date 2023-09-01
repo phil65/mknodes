@@ -7,7 +7,7 @@ import types
 from typing import Any
 
 from mknodes.pages import mktemplatepage, processors
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         super().__init__(path=path, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, module=self.module, path=str(self.path))
+        return reprhelpers.get_repr(self, module=self.module, path=str(self.path))
 
     def get_pageprocessors(self) -> list:
         procs: list[processors.ContainerProcessor] = [

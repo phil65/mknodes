@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -65,7 +65,7 @@ class MkLog(mkcode.MkCode):
         pass
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             log_level=self.log_level,
             log_format=self._log_format,

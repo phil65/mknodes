@@ -6,7 +6,7 @@ import textwrap
 from mknodes import mknav
 from mknodes.basenodes import mkcard, mkcontainer, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class MkShowcase(mkcontainer.MkContainer):
         super().__init__(content=cards or [], header=header, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, cards=self.items)
+        return reprhelpers.get_repr(self, cards=self.items)
 
     def to_child_node(self, item) -> mknode.MkNode:
         match item:

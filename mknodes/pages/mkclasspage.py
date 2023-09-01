@@ -7,7 +7,7 @@ import pathlib
 from typing import Any
 
 from mknodes.pages import mktemplatepage, processors
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         super().__init__(path=path, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, klass=self.klass, path=str(self.path))
+        return reprhelpers.get_repr(self, klass=self.klass, path=str(self.path))
 
     def get_pageprocessors(self):
         return [

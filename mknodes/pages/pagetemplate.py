@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from mknodes import mkdocsconfig
 from mknodes.pages import templateblocks
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 if TYPE_CHECKING:
@@ -40,7 +40,7 @@ class PageTemplate:
         ]
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             filename=self.filename,
             extends=self.extends,

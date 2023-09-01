@@ -7,7 +7,7 @@ from typing import Any
 
 from mknodes import treelib
 from mknodes.templatenodes import mktreeview
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class MkModuleOverview(mktreeview.MkTreeView):
         )
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             module=self.tree,
             style=self._style,

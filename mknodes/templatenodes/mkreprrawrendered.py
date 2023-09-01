@@ -6,7 +6,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcode, mknode, mktabcontainer, mktabs
 from mknodes.templatenodes import mktreeview
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
         super().__init__(tabs={}, select_tab=select_tab, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, node=self.node)
+        return reprhelpers.get_repr(self, node=self.node)
 
     @property
     def items(self):

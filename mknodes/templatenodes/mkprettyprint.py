@@ -9,7 +9,7 @@ from types import MappingProxyType, SimpleNamespace
 from typing import Any, ClassVar, Protocol, runtime_checkable
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -95,7 +95,7 @@ class MkPrettyPrint(mkcode.MkCode):
         self.obj = text
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             obj=self.obj,
             indent=self.print_indent,

@@ -10,7 +10,7 @@ from mknodes import mkdocsconfig, mknav
 from mknodes.info import folderinfo, packageinfo
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
-from mknodes.utils import helpers, linkprovider
+from mknodes.utils import linkprovider, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -78,7 +78,7 @@ class Project(Generic[T]):
         return self.module.__name__
 
     def __repr__(self):
-        return helpers.get_repr(self, module=self.module)
+        return reprhelpers.get_repr(self, module=self.module)
 
     @property
     def repository_url(self) -> str | None:

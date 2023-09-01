@@ -4,7 +4,7 @@ from collections.abc import Sequence
 import logging
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class MkCommandOutput(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, call=self.call)
+        return reprhelpers.get_repr(self, call=self.call)
 
     @property
     def output(self):

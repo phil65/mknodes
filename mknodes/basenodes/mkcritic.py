@@ -5,7 +5,7 @@ import logging
 from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class MkCritic(mkcontainer.MkContainer):
         self.mark = mark
 
     def __repr__(self):
-        return helpers.get_repr(self, content=self.items, mark=self.mark)
+        return reprhelpers.get_repr(self, content=self.items, mark=self.mark)
 
     def _to_markdown(self) -> str:
         match self.mark:

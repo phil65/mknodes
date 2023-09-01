@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 from mknodes import mknav
 from mknodes.basenodes import mkbinaryimage, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, linkprovider
+from mknodes.utils import linkprovider, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -104,7 +104,7 @@ class MkCard(mknode.MkNode):
         self.path_dark_mode = path_dark_mode
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             title=self.title,
             image=self.image,

@@ -13,7 +13,7 @@ from typing import Literal
 from packaging.markers import Marker
 from packaging.requirements import Requirement
 
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -138,7 +138,7 @@ class PackageInfo:
         self.name = self.metadata["Name"]
 
     def __repr__(self):
-        return helpers.get_repr(self, pkg_name=self.package_name)
+        return reprhelpers.get_repr(self, pkg_name=self.package_name)
 
     def __hash__(self):
         return hash(self.package_name)

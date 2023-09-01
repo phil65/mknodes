@@ -10,7 +10,7 @@ from typing import Any, get_args
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
 from mknodes.data import treestyles
-from mknodes.utils import fsspecpath, helpers
+from mknodes.utils import fsspecpath, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -98,7 +98,7 @@ class MkTreeView(mkcode.MkCode):
         self._style = value
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             path=str(self.tree),
             style=self._style,

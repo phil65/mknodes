@@ -5,7 +5,7 @@ import logging
 from mknodes import mkdocsconfig, project
 from mknodes.cssclasses import rootcss
 from mknodes.pages import templateregistry
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class Theme:
         return "#000000"
 
     def __repr__(self):
-        return helpers.get_repr(self, theme_name=self.theme_name)
+        return reprhelpers.get_repr(self, theme_name=self.theme_name)
 
     def aggregate_info(self) -> dict:
         return dict(

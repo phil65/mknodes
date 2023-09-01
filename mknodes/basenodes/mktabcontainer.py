@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktabs, mktext
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -114,7 +114,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             self.items.append(tab)
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             tabs=self.to_dict(),
             select_tab=self.select_tab,

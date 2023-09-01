@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class MkHeader(mknode.MkNode):
         self.level = level
 
     def __repr__(self):
-        return helpers.get_repr(self, text=self.text, level=self.level)
+        return reprhelpers.get_repr(self, text=self.text, level=self.level)
 
     def _to_markdown(self) -> str:
         level_str = "#" * self.level

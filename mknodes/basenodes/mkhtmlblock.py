@@ -5,7 +5,7 @@ import logging
 from typing import Any, Literal
 
 from mknodes.basenodes import mkblock, mknode
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class MkHtmlBlock(mkblock.MkBlock):
             content = helpers.to_str_if_textnode(self.items[0])
         else:
             content = [helpers.to_str_if_textnode(i) for i in self.items]
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             content=content,
             block_type=self.argument,

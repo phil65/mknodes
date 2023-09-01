@@ -8,7 +8,7 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -158,7 +158,7 @@ class MkDocStrings(mknode.MkNode):
 
     def __repr__(self):
         option_kwargs = {k: v for k, v in self.options.items() if v is not None}
-        return helpers.get_repr(self, obj=self.obj, **option_kwargs)
+        return reprhelpers.get_repr(self, obj=self.obj, **option_kwargs)
 
     @property
     def obj_path(self):

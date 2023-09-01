@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class MkBaseTable(mkcontainer.MkContainer):
         kwarg_data = {
             k: [helpers.to_str_if_textnode(i) for i in v] for k, v in self.data.items()
         }
-        return helpers.get_repr(self, data=kwarg_data)
+        return reprhelpers.get_repr(self, data=kwarg_data)
 
     @property
     def data(self):

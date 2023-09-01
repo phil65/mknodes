@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any, Self
 from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import helpers, navbuilder
+from mknodes.utils import navbuilder, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -69,7 +69,7 @@ class MkNav(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             section=self.section or "<root>",
             filename=self.filename,

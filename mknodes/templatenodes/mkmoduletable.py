@@ -6,7 +6,7 @@ import logging
 import types
 
 from mknodes.basenodes import mktable
-from mknodes.utils import classhelpers, helpers, layouts, linkprovider
+from mknodes.utils import classhelpers, helpers, layouts, linkprovider, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class MkModuleTable(mktable.MkTable):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(self, modules=self.modules)
+        return reprhelpers.get_repr(self, modules=self.modules)
 
     @property
     def linkprovider(self):

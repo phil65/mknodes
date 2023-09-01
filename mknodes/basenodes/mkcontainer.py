@@ -7,7 +7,7 @@ import re
 from typing import Any
 
 from mknodes.basenodes import mkheader, mknode, mktext
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
@@ -62,7 +62,7 @@ class MkContainer(mknode.MkNode):
 
     def __repr__(self):
         content = [helpers.to_str_if_textnode(i) for i in self.items]
-        return helpers.get_repr(self, content=content)
+        return reprhelpers.get_repr(self, content=content)
 
     @staticmethod
     def create_example_page(page):

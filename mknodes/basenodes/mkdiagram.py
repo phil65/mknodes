@@ -7,7 +7,7 @@ from typing import Literal
 from pymdownx import superfences
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 GraphTypeStr = Literal["flow", "sequence", "state"]
@@ -66,7 +66,7 @@ class MkDiagram(mkcode.MkCode):
         self.attributes = attributes or {}
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             graph_type=self.graph_type,
             items=self.names,

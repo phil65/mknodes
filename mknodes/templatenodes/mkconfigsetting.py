@@ -8,7 +8,7 @@ from typing import Any, Literal
 import tomli_w
 
 from mknodes.basenodes import mkcode, mkdefinitionlist, mknode, mktext
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         self.mode = mode
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             title=self.title,
             description=self.description,

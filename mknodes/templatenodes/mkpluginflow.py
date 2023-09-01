@@ -17,7 +17,7 @@ from mknodes.basenodes import (
     mkspeechbubble,
     mktext,
 )
-from mknodes.utils import helpers, inspecthelpers
+from mknodes.utils import inspecthelpers, reprhelpers
 
 
 MKDOCS_LINK = "https://www.mkdocs.org/dev-guide/plugins/#{event}"
@@ -79,7 +79,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
         self.block_separator = "\n"
 
     def __repr__(self):
-        return helpers.get_repr(self, plugin=self._plugin, _filter_empty=True)
+        return reprhelpers.get_repr(self, plugin=self._plugin, _filter_empty=True)
 
     @property
     def plugin(self):

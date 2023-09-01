@@ -5,7 +5,7 @@ import logging
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class MkProgressBar(mknode.MkNode):
                 self.add_css_class("candystripe-animate")
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             percentage=self.percentage,
             title=self.title,

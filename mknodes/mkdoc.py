@@ -10,7 +10,7 @@ from typing import Any
 
 from mknodes import mknav
 from mknodes.pages import mkclasspage, mkmodulepage
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ class MkDoc(mknav.MkNav):
         super().__init__(section=section_name or self.module_name, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             module=self.module_name,
             section=self.section or "<root>",

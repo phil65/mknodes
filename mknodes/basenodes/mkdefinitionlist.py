@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers
+from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class MkDefinition(mkcontainer.MkContainer):
         self._title = value
 
     def __repr__(self):
-        return helpers.get_repr(self, title=self._title, content=self.items)
+        return reprhelpers.get_repr(self, title=self._title, content=self.items)
 
     def _to_markdown(self) -> str:
         lines = super()._to_markdown().split("\n")
@@ -86,7 +86,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
 
     def __repr__(self):
         kwarg_data = {k: helpers.to_str_if_textnode(v) for k, v in self.data.items()}
-        return helpers.get_repr(self, data=kwarg_data)
+        return reprhelpers.get_repr(self, data=kwarg_data)
 
     @property
     def items(self):

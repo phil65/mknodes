@@ -5,7 +5,7 @@ import itertools
 from typing import Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import connector, helpers
+from mknodes.utils import connector, helpers, reprhelpers
 
 
 DiagramModeStr = Literal["baseclasses", "subclasses", "mro"]
@@ -85,7 +85,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         )
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             klass=self.klass,
             mode=self.mode,

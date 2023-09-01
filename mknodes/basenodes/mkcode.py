@@ -12,7 +12,7 @@ from typing import Any, Self
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, helpers, inspecthelpers
+from mknodes.utils import classhelpers, inspecthelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ class MkCode(mkcontainer.MkContainer):
         super().__init__(content=code, header=header, **kwargs)
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             code=self.items,
             language=self.language,

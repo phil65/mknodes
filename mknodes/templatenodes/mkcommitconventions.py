@@ -6,7 +6,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mklist, mktext
 from mknodes.data import commitconventions
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ class MkCommitConventions(mkcontainer.MkContainer):
         self._commit_types = commit_types
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             commit_types=self._commit_types,
             _filter_empty=True,

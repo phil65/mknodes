@@ -10,7 +10,7 @@ from mknodes.basenodes import mknode
 from mknodes.cssclasses import cssclasses, rootcss
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -108,7 +108,7 @@ class MaterialTheme(theme.Theme):
         self.blog = mkblog.MkBlog()
 
     def __repr__(self):
-        return helpers.get_repr(self)
+        return reprhelpers.get_repr(self)
 
     def get_files(self):
         if isinstance(self.announcement_bar, mknode.MkNode):

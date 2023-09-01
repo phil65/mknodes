@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from mknodes import paths
 from mknodes.basenodes import mktext
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class MkCodeOfConduct(mktext.MkText):
         self.contact_email = contact_email
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             contact_email=self.contact_email,
             version=self.version,

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers
+from mknodes.utils import reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class MkIFrame(mknode.MkNode):
         self.height = height
 
     def __repr__(self):
-        return helpers.get_repr(
+        return reprhelpers.get_repr(
             self,
             url=self.url,
             width=self.width,
