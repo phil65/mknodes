@@ -63,6 +63,10 @@ class Project(Generic[T]):
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
 
+    def set_root(self, nav: mknav.MkNav):
+        self._root = nav
+        nav.associated_project = self
+
     def all_files(self) -> dict[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()

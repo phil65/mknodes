@@ -17,6 +17,9 @@ class GitRepository(git.Repo):
         has_main_branch = any(branch.name == "main" for branch in self.branches)
         return "main" if has_main_branch else "master"
 
+    def get_repo_name(self) -> str:
+        return self.remotes.origin.url.split(".git")[0].split("/")[-1]
+
     def get_last_commits(self, num: int):
         return list(self.iter_commits(self.main_branch, max_count=num))
 

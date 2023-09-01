@@ -34,7 +34,7 @@ class FolderInfo:
         self.git = gitrepository.GitRepository(self.path)
         text = (self.path / "mkdocs.yml").read_text(encoding="utf-8")
         self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
-        mod_name = self.git.remotes.origin.url.split(".git")[0].split("/")[-1]
+        mod_name = self.git.get_repo_name()
         self.module = importlib.import_module(mod_name.replace("-", "_"))
 
     def __repr__(self):
@@ -98,6 +98,34 @@ class FolderInfo:
         """Return a list of build tools used by this package."""
         return [t for t in tools.TOOLS.values() if t.is_used(self)]
 
+    def get_license_file_path(self) -> pathlib.Path | None:
+        """Return license file path (relative to project root) from metadata."""
+        for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
+            if (file := self.path / path).exists():
+                return file
+        if file := self.info.metadata.json.get("license_file"):
+            return pathlib.Path(file)
+        return None
+
+    def get_social_info(self) -> list[dict]:
+        result = []
+        if self.repository_url:
+            result.append(
+                dict(icon="fontawesome/brands/github", link=self.repository_url),
+            )
+        for link in self.info.urls.values():
+            if "gitter.im" in link or "matrix.to" in link:
+                result.append(dict(icon="fontawesome/brands/gitter", link=link))
+            if "twitter.com" in link:
+                result.append(dict(icon="fontawesome/brands/twitter", link=link))
+        result.append(
+            dict(
+                icon="fontawesome/brands/python",
+                link=f"https://pypi.org/project/{self.module.__name__}/",
+            ),
+        )
+        return result
+
     def aggregate_info(self) -> dict:
         infos = dict(
             repository_name=self.repository_name,
@@ -121,4 +149,4 @@ class FolderInfo:
 
 if __name__ == "__main__":
     info = FolderInfo.clone_from("https://github.com/mkdocs/mkdocs.git")
-    print(info)
+    print(info.get_social_info())

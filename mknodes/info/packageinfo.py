@@ -6,8 +6,6 @@ import importlib
 
 from importlib import metadata
 import logging
-import pathlib
-import re
 from typing import Literal
 
 from packaging.markers import Marker
@@ -18,16 +16,6 @@ from mknodes.utils import reprhelpers
 
 logger = logging.getLogger(__name__)
 
-
-GITHUB_REGEX = re.compile(
-    r"(?:http?:\/\/|https?:\/\/)?"
-    r"(?:www\.)?"
-    r"github\.com\/"
-    r"(?:\/*)"
-    r"([\w\-\.]*)\/"
-    r"([\w\-]*)"
-    r"(?:\/|$)?"  # noqa: COM812
-)
 
 ClassifierStr = Literal[
     "Development Status",
@@ -244,15 +232,6 @@ class PackageInfo:
                 else:
                     extras[extra] = [dep.name]
         return extras
-
-    def get_license_file_path(self) -> pathlib.Path | None:
-        """Return license file path (relative to project root) from metadata."""
-        for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
-            if (file := pathlib.Path(path)).exists():
-                return file
-        if file := self.metadata.json.get("license_file"):
-            return pathlib.Path(file)
-        return None
 
     @property
     def required_python_version(self) -> str | None:

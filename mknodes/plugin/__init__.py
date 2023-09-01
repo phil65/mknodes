@@ -79,7 +79,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         skin.associated_project = self.project
         project_fn = get_callable_from_path(self.config.path)
         try:
-            project_fn(self.project)
+            project_fn(project=self.project)
         except SystemExit as e:
             if e.code:
                 msg = f"Script {self.config.path!r} caused {e!r}"
