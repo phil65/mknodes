@@ -49,6 +49,7 @@ def get_callable_from_path(path: str) -> Callable:
 
 class PluginConfig(base.Config):
     path = config_options.Type(str)
+    repo_path = config_options.Type(str, default=".")
 
 
 class MkNodesPlugin(BasePlugin[PluginConfig]):
@@ -70,14 +71,18 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         """Create the project based on MkDocs config."""
         cfg = mkdocsconfig.Config(config)
         skin = theme.Theme.get_theme(config=cfg)
-        self.project = project.Project[type(skin)](config=config, theme=skin)
+        self.project = project.Project[type(skin)](
+            config=config,
+            theme=skin,
+            repo_path=self.config.repo_path,
+        )
         skin.associated_project = self.project
-        project_fn = get_callable_from_path(self.config["path"])
+        project_fn = get_callable_from_path(self.config.path)
         try:
             project_fn(self.project)
         except SystemExit as e:
             if e.code:
-                msg = f"Script {self.config['path']!r} caused {e!r}"
+                msg = f"Script {self.config.path!r} caused {e!r}"
                 raise PluginError(msg) from e
 
     #     if config.nav is None:
@@ -160,7 +165,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             return None
         if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
             repo_url += "/"
-        rel_path = self.config["path"]
+        rel_path = self.config.path
         if not rel_path.endswith(".py"):
             rel_path = rel_path.replace(".", "/")
             rel_path += ".py"

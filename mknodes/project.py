@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
 import types
 
@@ -10,7 +11,7 @@ from mknodes import mkdocsconfig, mknav
 from mknodes.info import folderinfo, packageinfo
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
-from mknodes.utils import linkprovider, reprhelpers
+from mknodes.utils import helpers, linkprovider, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -40,6 +41,7 @@ class Project(Generic[T]):
         theme: T,
         module: types.ModuleType | None = None,
         config: MkDocsConfig | None = None,
+        repo_path: str | os.PathLike | None = None,
     ):
         self._module = module
         self.linkprovider = linkprovider.LinkProvider(config, include_stdlib=True)
@@ -47,7 +49,10 @@ class Project(Generic[T]):
         self.theme: T = theme
         self.templates = self.theme.templates
         self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
-        self.folderinfo = folderinfo.FolderInfo()
+        if helpers.is_url(str(repo_path)):
+            self.folderinfo = folderinfo.FolderInfo.clone_from(str(repo_path))
+        else:
+            self.folderinfo = folderinfo.FolderInfo(repo_path)
         self._root: mknav.MkNav | None = None
 
     @classmethod

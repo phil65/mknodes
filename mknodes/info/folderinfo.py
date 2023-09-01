@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import pathlib
 
 from mknodes.data import taskrunners, tools
 from mknodes.info import gitrepository, pyproject
@@ -15,9 +16,10 @@ class FolderInfo:
     """Aggregates information about a working dir."""
 
     def __init__(self, path: str | os.PathLike | None = None):
-        self.path = path or "."
+        self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
         self.git = gitrepository.GitRepository(self.path)
+        # self.mkdocs_config = mkdocsconfig.Config(self.path / "mkdocs.yml")
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
