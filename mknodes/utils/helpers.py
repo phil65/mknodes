@@ -143,10 +143,35 @@ def download(url: str, typ: Literal["text", "data"] = "text"):
 T = TypeVar("T")
 
 
-def load_yaml(text: str):
+def load_yaml(text: str, mode="unsafe"):
     import yaml
 
-    return yaml.load(text, Loader=yaml.FullLoader)
+    """Wrap PyYaml's loader so we can extend it to suit our needs."""
+    match mode:
+        case "unsafe":
+            base_loader_cls: type = yaml.UnsafeLoader
+        case "full":
+            base_loader_cls = yaml.FullLoader
+        case "safe":
+            base_loader_cls = yaml.SafeLoader
+        case _:
+            base_loader_cls = yaml.Loader
+
+    class MyLoader(base_loader_cls):
+        """Derive from global loader to leave the global loader unaltered."""
+
+    # Attach Environment Variable constructor.
+    # See https://github.com/waylan/pyyaml-env-tag
+    import yaml_env_tag
+
+    MyLoader.add_constructor("!ENV", yaml_env_tag.construct_env_tag)
+
+    # if config is not None:
+    #     MyLoader.add_constructor(
+    #         "!relative", functools.partial(_construct_dir_placeholder, config)
+    #     )
+
+    return yaml.load(text, Loader=MyLoader)
 
 
 def dump_yaml(yaml_obj) -> str:

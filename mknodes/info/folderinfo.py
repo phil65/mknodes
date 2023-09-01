@@ -19,7 +19,8 @@ class FolderInfo:
         self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
         self.git = gitrepository.GitRepository(self.path)
-        # self.mkdocs_config = mkdocsconfig.Config(self.path / "mkdocs.yml")
+        text = (self.path / "mkdocs.yml").read_text()
+        self.mkdocs_config = helpers.load_yaml(text)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
@@ -69,4 +70,4 @@ class FolderInfo:
 
 if __name__ == "__main__":
     info = FolderInfo.clone_from("https://github.com/mkdocstrings/mkdocstrings.git")
-    print(info.task_runners)
+    print(info.mkdocs_config)

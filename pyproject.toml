@@ -103,6 +103,7 @@ dependencies = [
     "anybadge",
     "gitpython",
     "PyYAML >=5.1",
+    "pyyaml_env_tag",
 ]
 license = "MIT"
 
