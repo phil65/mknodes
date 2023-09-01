@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from typing import Literal
 
+from mknodes.info import folderinfo
 from mknodes.utils import helpers
 
 
-ToolStr = Literal["pre-commit"]
+ToolStr = Literal["pre-commit", "ruff", "mypy"]
 
 PRE_COMMIT_CODE = """
 # Setup pre-commit hooks for required formatting
@@ -17,6 +18,21 @@ A .pre-commit-config.yaml configuration file tailored for this project is provid
 in the root folder."""
 
 
+MYPY_CODE = """
+mypy --help
+"""
+
+MYPY_TEXT = """MyPy is used for type checking. You can find the configuration in the
+pyproject.toml file."""
+
+RUFF_CODE = """
+ruff --help
+"""
+
+RUFF_TEXT = """Ruff is used as a linter. You can find the configuration in the
+pyproject.toml file."""
+
+
 class Tool:
     identifier: ToolStr
     title: str
@@ -24,7 +40,7 @@ class Tool:
     description: str
     setup_cmd: str
 
-    def is_used(self, folder=None) -> bool:
+    def is_used(self, folder: folderinfo.FolderInfo | None = None) -> bool:
         """Return whether tool is used for given directory.
 
         Arguments:
@@ -40,10 +56,32 @@ class PreCommit(Tool):
     description = PRE_COMMIT_TEXT
     setup_cmd = PRE_COMMIT_CODE
 
-    def is_used(self, folder=None):
-        folder = folder or "."
+    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+        directory = folder.path if folder else "."
         filename = ".pre-commit-config.yaml"
-        return bool(helpers.find_file_in_folder_or_parent(filename, folder))
+        return bool(helpers.find_file_in_folder_or_parent(filename, str(directory)))
 
 
-TOOLS: dict[ToolStr, Tool] = {p.identifier: p for p in [PreCommit()]}
+class Ruff(Tool):
+    identifier = "ruff"
+    title = "Ruff"
+    url = "https://beta.ruff.rs/"
+    description = RUFF_TEXT
+    setup_cmd = RUFF_CODE
+
+    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+        return folder.pyproject.has_tool("ruff") if folder else False
+
+
+class MyPy(Tool):
+    identifier = "mypy"
+    title = "MyPy"
+    url = "https://mypy.org"
+    description = MYPY_TEXT
+    setup_cmd = MYPY_CODE
+
+    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+        return folder.pyproject.has_tool("mypy") if folder else False
+
+
+TOOLS: dict[ToolStr, Tool] = {p.identifier: p for p in [PreCommit(), Ruff(), MyPy()]}

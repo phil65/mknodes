@@ -19,8 +19,8 @@ class FolderInfo:
         self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
         self.git = gitrepository.GitRepository(self.path)
-        text = (self.path / "mkdocs.yml").read_text()
-        self.mkdocs_config = helpers.load_yaml(text)
+        text = (self.path / "mkdocs.yml").read_text(encoding="utf-8")
+        self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
@@ -30,7 +30,7 @@ class FolderInfo:
         cls,
         url: str,
         # path: str | os.PathLike,
-        depth: int = 1,
+        depth: int = 100,
     ):
         import tempfile
 
@@ -53,7 +53,7 @@ class FolderInfo:
     @property
     def tools(self) -> list[tools.Tool]:
         """Return a list of build tools used by this package."""
-        return [t for t in tools.TOOLS.values() if t.is_used(self.path)]
+        return [t for t in tools.TOOLS.values() if t.is_used(self)]
 
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:
@@ -69,5 +69,5 @@ class FolderInfo:
 
 
 if __name__ == "__main__":
-    info = FolderInfo.clone_from("https://github.com/mkdocstrings/mkdocstrings.git")
-    print(info.mkdocs_config)
+    info = FolderInfo.clone_from("https://github.com/mkdocs/mkdocs.git")
+    print(info.tools)
