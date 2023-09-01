@@ -178,20 +178,6 @@ class PackageInfo:
         return self.repository_url
 
     @property
-    def repository_username(self) -> str | None:
-        """Try to extract repository username from metadata."""
-        if match := GITHUB_REGEX.match(self.repository_url or ""):
-            return match.group(1)
-        return None
-
-    @property
-    def repository_name(self) -> str | None:
-        """Try to extract repository name from metadata."""
-        if match := GITHUB_REGEX.match(self.repository_url or ""):
-            return match.group(2)
-        return None
-
-    @property
     def keywords(self) -> list[str]:
         """Return a list of keywords from metadata."""
         return self.metadata.get("Keywords", "").split(",")

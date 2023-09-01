@@ -4,6 +4,7 @@ import importlib
 import logging
 import os
 import pathlib
+import re
 
 from mknodes.data import taskrunners, tools
 from mknodes.info import gitrepository, packageinfo, pyproject
@@ -11,6 +12,17 @@ from mknodes.utils import helpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
+
+
+GITHUB_REGEX = re.compile(
+    r"(?:http?:\/\/|https?:\/\/)?"
+    r"(?:www\.)?"
+    r"github\.com\/"
+    r"(?:\/*)"
+    r"([\w\-\.]*)\/"
+    r"([\w\-]*)"
+    r"(?:\/|$)?"  # noqa: COM812
+)
 
 
 class FolderInfo:
@@ -50,6 +62,26 @@ class FolderInfo:
         return packageinfo.get_info(self.pyproject.name)
 
     @property
+    def repository_url(self) -> str | None:
+        return (
+            url
+            if (url := self.mkdocs_config.get("repo_url"))
+            else self.info.repository_url
+        )
+
+    @property
+    def repository_username(self) -> str | None:
+        if match := GITHUB_REGEX.match(self.repository_url or ""):
+            return match.group(1)
+        return None
+
+    @property
+    def repository_name(self) -> str | None:
+        if match := GITHUB_REGEX.match(self.repository_url or ""):
+            return match.group(2)
+        return None
+
+    @property
     def package_name(self):
         return self.module.__name__
 
@@ -65,6 +97,14 @@ class FolderInfo:
     def tools(self) -> list[tools.Tool]:
         """Return a list of build tools used by this package."""
         return [t for t in tools.TOOLS.values() if t.is_used(self)]
+
+    def aggregate_info(self) -> dict:
+        infos = dict(
+            repository_name=self.repository_name,
+            repository_username=self.repository_username,
+            repository_url=self.repository_url,
+        )
+        return infos | self.info.metadata.json
 
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:

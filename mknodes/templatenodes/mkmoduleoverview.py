@@ -41,7 +41,7 @@ class MkModuleOverview(mktreeview.MkTreeView):
     def tree(self):
         match self._module:
             case None if self.associated_project:
-                return self.associated_project.module
+                return self.associated_project.folderinfo.module
             case types.ModuleType():
                 return self._module
             case _:

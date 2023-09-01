@@ -69,7 +69,7 @@ class MkDoc(mknav.MkNav):
     def module(self):
         match self._module:
             case None if self.associated_project:
-                return self.associated_project.module
+                return self.associated_project.folderinfo.module
             case _:
                 return self._module
 

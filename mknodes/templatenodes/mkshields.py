@@ -56,7 +56,7 @@ class MkShields(mkcontainer.MkContainer):
     def user(self):
         match self._user:
             case None if self.associated_project:
-                return self.associated_project.repository_username
+                return self.associated_project.folderinfo.repository_username
             case None:
                 return ""
             case str():
@@ -70,7 +70,7 @@ class MkShields(mkcontainer.MkContainer):
     def project(self):
         match self._project:
             case None if self.associated_project:
-                return self.associated_project.repository_name
+                return self.associated_project.folderinfo.repository_name
             case None:
                 return ""
             case str():

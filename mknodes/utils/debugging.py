@@ -15,7 +15,6 @@ content = """
 import mknodes
 
 def build(project):
-    project.module = mknodes
     root = project.get_root()
     page = root.add_index_page(hide_toc=True)
     page += '''{node}'''

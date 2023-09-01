@@ -65,7 +65,7 @@ class MkLicense(mktext.MkText):
             holder = self.associated_project.info.author_name
             summary = self.associated_project.info.metadata["Summary"]
             package_name = self.associated_project.info.name
-            website = self.associated_project.info.repository_url or ""
+            website = self.associated_project.folderinfo.repository_url or ""
             email = self.associated_project.info.author_email or ""
         else:
             holder = ""
