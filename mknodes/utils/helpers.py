@@ -10,8 +10,6 @@ import re
 
 from typing import Literal, TypeVar
 
-import requests
-
 
 RESPONSE_CODE_OK = 200
 
@@ -130,6 +128,8 @@ def get_material_icon_folder() -> pathlib.Path:
 
 @functools.cache
 def download(url: str, typ: Literal["text", "data"] = "text"):
+    import requests
+
     if token := os.getenv("GH_TOKEN"):
         headers = {"Authorization": f"token {token}"}
         response = requests.get(url, headers=headers)
