@@ -119,8 +119,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             if css := self.project.theme.css:
                 self.project.config.register_css("mknodes_theme.css", str(css))
             if extensions := self.project.all_markdown_extensions():
-                for ext in extensions:
-                    self.project.config.register_extension(ext)
+                self.project.config.register_extensions(extensions)
             md = self.project.config.get_markdown_instance()
             for template in self.project.templates:
                 if html := template.build_html(md):

@@ -80,10 +80,12 @@ class Config:
     def site_dir(self) -> pathlib.Path:
         return pathlib.Path(self._config.site_dir)
 
-    def register_extension(self, extension: str):
-        if extension not in self.markdown_extensions:
-            logger.info("Adding %s to extensions", extension)
-            self.markdown_extensions.append(extension)
+    def register_extensions(self, extensions: dict[str, dict]):
+        for ext_name in extensions:
+            if ext_name not in self.markdown_extensions:
+                logger.info("Adding %s to extensions", ext_name)
+                self.markdown_extensions.append(ext_name)
+        self._config.mdx_configs.update(extensions)
 
     def register_css(self, filename: str | os.PathLike, css: str):
         """Register a css file.

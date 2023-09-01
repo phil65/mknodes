@@ -84,21 +84,10 @@ plugins:
 markdown_extensions:
 - attr_list
 - pymdownx.magiclink # auto-convert links
-- pymdownx.blocks.tab: # new-style tabs
-    alternate_style: true
-- pymdownx.tasklist:
-    custom_checkbox: true
 - pymdownx.highlight:  # syntax highlighting
     anchor_linenums: true
     line_spans: __span
     pygments_lang_class: true
-- pymdownx.superfences:
-    custom_fences:
-    - name: mermaid
-      class: mermaid
-      format: !!python/name:pymdownx.superfences.fence_code_format
-- pymdownx.tabbed:
-    alternate_style: true
 - pymdownx.emoji:
     emoji_index: !!python/name:materialx.emoji.twemoji
     emoji_generator: !!python/name:materialx.emoji.to_svg
