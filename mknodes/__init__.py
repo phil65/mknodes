@@ -32,6 +32,7 @@ from .basenodes.mkdefinitionlist import MkDefinitionList
 from .basenodes.mkcard import MkCard
 from .basenodes.mkshowcase import MkShowcase
 from .basenodes.mkspeechbubble import MkSpeechBubble
+from .basenodes.mktasklist import MkTaskList
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -136,6 +137,7 @@ __all__ = [
     "MkCommentedCode",
     "MkConfigSetting",
     "MkSpeechBubble",
+    "MkTaskList",
 ]
 
 __version__ = "0.31.0"
