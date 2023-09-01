@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import pathlib
 import tomllib
 
 from mknodes.data import buildsystems
@@ -10,24 +9,20 @@ from mknodes.utils import helpers
 
 class PyProject:
     def __init__(self, pyproject_path: str | os.PathLike | None = None):
-        path = pathlib.Path().absolute()
-        if not pyproject_path:
-            while not (path / "pyproject.toml").exists() and path.parent is not None:
-                path = path.parent
-            if path.parent is None:
-                msg = "Could not find pyproject.toml"
-                raise FileNotFoundError(msg)
-            file = path / "pyproject.toml"
-            self._data = tomllib.loads(file.read_text())
-
-        elif helpers.is_url(str(pyproject_path)):
+        if helpers.is_url(str(pyproject_path)):
             content = helpers.download(str(pyproject_path))
             self._data = tomllib.loads(content)
         else:
-            local_path = pathlib.Path(pyproject_path)
-            text = local_path.read_text()
-            self._data = tomllib.loads(text)
+            folder = pyproject_path or "."
+            path = helpers.find_file_in_folder_or_parent("pyproject.toml", folder)
+            if path is None:
+                msg = "Could not find pyproject.toml"
+                raise FileNotFoundError(msg)
+            self._data = tomllib.loads(path.read_text())
         self.mknodes_section = self._data["tool"].get("mknodes", {})
+
+    def __repr__(self):
+        return f"PyProject({self._data['project']})"
 
     @property
     def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
@@ -64,4 +59,4 @@ class PyProject:
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.extras_descriptions)
+    print(info)
