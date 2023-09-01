@@ -13,6 +13,7 @@ from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure.files import Files
 
 from mknodes import mkdocsconfig
+from mknodes.plugin import mkdocsbuilder
 
 
 if TYPE_CHECKING:
@@ -113,7 +114,8 @@ class FilesEditor:
 
     def _get_file(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
-        new_f = self.config.get_file(name, src_dir=self.directory)
+        builder = mkdocsbuilder.MkDocsBuilder(self.config)
+        new_f = builder.get_file(name, src_dir=self.directory)
         normname = pathlib.PurePath(name).as_posix()
         new_path = pathlib.Path(new_f.abs_src_path)
         if new or normname not in self._files:
