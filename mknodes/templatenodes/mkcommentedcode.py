@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mkspeechbubble, mktext
 from mknodes.data import datatypes
-from mknodes.utils import helpers
+from mknodes.utils import helpers, inspecthelpers
 
 
 logger = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
             case str():
                 return self._code
             case _:
-                return helpers.get_source(self._code)
+                return inspecthelpers.get_source(self._code)
 
     @property
     def comment_class(self):

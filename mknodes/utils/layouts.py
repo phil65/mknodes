@@ -10,7 +10,7 @@ import types
 from mknodes.basenodes import mkcontainer, mklink, mklist, mknode
 from mknodes.info import packageinfo
 from mknodes.templatenodes import mkmetadatabadges
-from mknodes.utils import classhelpers, helpers, linkprovider
+from mknodes.utils import classhelpers, helpers, inspecthelpers, linkprovider
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ class CompactClassLayout(Layout):
         return dict(
             Class=self.linkprovider.link_for_klass(kls),
             Module=kls.__module__,
-            Description=helpers.get_doc(kls, only_summary=True),
+            Description=inspecthelpers.get_doc(kls, only_summary=True),
         )
 
 
@@ -86,7 +86,7 @@ class ExtendedClassLayout(Layout):
         ]
         parent_links = [self.linkprovider.link_for_klass(parent) for parent in parents]
         parent_str = mklist.MkList(parent_links, shorten_after=shorten_lists_after)
-        desc = helpers.get_doc(kls, escape=True, only_summary=True)
+        desc = inspecthelpers.get_doc(kls, escape=True, only_summary=True)
         link = self.linkprovider.link_for_klass(kls)
         name = helpers.styled(link, size=4, bold=True)
         module = helpers.styled(kls.__module__, size=1, italic=True)
@@ -109,9 +109,10 @@ class ModuleLayout(Layout):
 
     def get_row_for(self, module: types.ModuleType) -> dict[str, str]:
         fallback = "*No docstrings defined.*"
+        doc = inspecthelpers.get_doc(module, fallback=fallback, only_summary=True)
         return dict(
             Name=self.linkprovider.link_for_module(module),
-            DocStrings=helpers.get_doc(module, fallback=fallback, only_summary=True),
+            DocStrings=doc,
             Members=(
                 mklist.MkList(module.__all__, as_links=True, shorten_after=10).to_html()
                 if hasattr(module, "__all__")

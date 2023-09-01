@@ -4,7 +4,7 @@ import logging
 
 from mknodes.basenodes import mkcontainer, _mkdocstrings, mkheader
 from mknodes.templatenodes import mkclassdiagram, mkclasstable, mkmoduletable
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, inspecthelpers
 
 
 logger = logging.getLogger(__name__)
@@ -137,7 +137,7 @@ class DocContainerProcessor(ContainerProcessor):
     ID = "doc"
 
     def append_block(self, node: mkcontainer.MkContainer):
-        node += helpers.get_doc(self.item)
+        node += inspecthelpers.get_doc(self.item)
 
     def get_default_header(self, node: mkcontainer.MkContainer):
         return "Docs"

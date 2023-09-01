@@ -12,7 +12,7 @@ from typing import Any, Self
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, helpers, inspecthelpers
 
 
 logger = logging.getLogger(__name__)
@@ -187,12 +187,12 @@ class MkCode(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to MkCode ctor
         """
         if extract_body and callable(obj):
-            code = helpers.get_function_body(obj)
+            code = inspecthelpers.get_function_body(obj)
         elif extract_body:
             msg = "Can only extract body from Functions, Methods and classes"
             raise TypeError(msg)
         else:
-            code = helpers.get_source(obj)
+            code = inspecthelpers.get_source(obj)
         code = textwrap.dedent(code) if dedent else code
         match obj:
             case _ if title is not None:
@@ -204,7 +204,7 @@ class MkCode(mkcontainer.MkContainer):
             case _:
                 code_title = obj.__name__
         hl_lines = None
-        lines, start_line = helpers.get_source_lines(obj)
+        lines, start_line = inspecthelpers.get_source_lines(obj)
         if isinstance(obj, types.ModuleType):
             start_line += 1
         if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:

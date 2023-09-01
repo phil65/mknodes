@@ -17,7 +17,7 @@ from mknodes.basenodes import (
     mkspeechbubble,
     mktext,
 )
-from mknodes.utils import helpers
+from mknodes.utils import helpers, inspecthelpers
 
 
 MKDOCS_LINK = "https://www.mkdocs.org/dev-guide/plugins/#{event}"
@@ -56,7 +56,7 @@ def get_event_section(fn: Callable) -> list[mknode.MkNode]:
     link = mklink.MkLink(MKDOCS_LINK.format(event=fn.__name__), fn.__name__)
     return [
         mkheader.MkHeader(link),
-        mktext.MkText(helpers.get_doc(fn)),
+        mktext.MkText(inspecthelpers.get_doc(fn)),
         mkadmonition.MkAdmonition(code, collapsible=True, typ="quote", title="Source"),
     ]
 
