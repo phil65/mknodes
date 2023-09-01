@@ -25,7 +25,6 @@ DOC_URL = "https://phil65.github.io/mknodes/"
 
 
 def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNav:
-    project.module = mknodes
     # We will use annotations to explain things a bit.
     annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
     annotations[1] = mknodes.MkDocStrings(mknodes.MkAnnotations)

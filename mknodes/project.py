@@ -39,11 +39,9 @@ class Project(Generic[T]):
     def __init__(
         self,
         theme: T,
-        module: types.ModuleType | None = None,
         config: MkDocsConfig | None = None,
         repo_path: str | os.PathLike | None = None,
     ):
-        self._module = module
         self.linkprovider = linkprovider.LinkProvider(config, include_stdlib=True)
         self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
         self.theme: T = theme
@@ -57,11 +55,9 @@ class Project(Generic[T]):
 
     @classmethod
     def for_mknodes(cls) -> Project:
-        import mknodes
-
         config = mkdocsconfig.Config()
         theme = theme_.Theme.get_theme(config)
-        return cls(module=mknodes, config=config._config, theme=theme)
+        return cls(config=config._config, theme=theme)
 
     @property
     def info(self):
@@ -69,21 +65,17 @@ class Project(Generic[T]):
 
     @property
     def module(self) -> types.ModuleType:
-        if not self._module:
+        if not self.folderinfo.module:
             msg = "No module set"
             raise RuntimeError(msg)
-        return self._module
-
-    @module.setter
-    def module(self, value):
-        self._module = value
+        return self.folderinfo.module
 
     @property
     def package_name(self):
-        return self.module.__name__
+        return self.folderinfo.package_name
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, module=self.module)
+        return reprhelpers.get_repr(self, repo_path=self.folderinfo.path)
 
     @property
     def repository_url(self) -> str | None:

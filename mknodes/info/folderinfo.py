@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import importlib
 import logging
 import os
 import pathlib
 
 from mknodes.data import taskrunners, tools
-from mknodes.info import gitrepository, pyproject
+from mknodes.info import gitrepository, packageinfo, pyproject
 from mknodes.utils import helpers, reprhelpers
 
 
@@ -21,6 +22,8 @@ class FolderInfo:
         self.git = gitrepository.GitRepository(self.path)
         text = (self.path / "mkdocs.yml").read_text(encoding="utf-8")
         self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
+        mod_name = self.git.remotes.origin.url.split(".git")[0].split("/")[-1]
+        self.module = importlib.import_module(mod_name)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
@@ -41,6 +44,14 @@ class FolderInfo:
         kls = cls(repo.working_dir)
         kls._temp_directory = directory
         return kls
+
+    @property
+    def info(self):
+        return packageinfo.get_info(self.pyproject.name)
+
+    @property
+    def package_name(self):
+        return self.module.__name__
 
     @property
     def package_repos(self):
@@ -70,4 +81,4 @@ class FolderInfo:
 
 if __name__ == "__main__":
     info = FolderInfo.clone_from("https://github.com/mkdocs/mkdocs.git")
-    print(info.tools)
+    print(info)
