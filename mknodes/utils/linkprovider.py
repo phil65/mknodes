@@ -110,27 +110,40 @@ class LinkProvider:
             return linked(url, qual_name)
         return linked(qual_name)
 
-    def get_link(self, target) -> str:  # type: ignore[return]
+    def url_for_nav(self, nav) -> str:
+        if nav.index_page:
+            path = nav.index_page.resolved_file_path
+            if self.use_directory_urls:
+                path = path.replace(".md", "/")
+            else:
+                path = path.replace(".md", ".html")
+        else:
+            path = nav.resolved_file_path
+        return self.base_url + path
+
+    def url_for_page(self, page) -> str:
+        path = page.resolved_file_path
+        if self.use_directory_urls:
+            path = path.replace(".md", "/")
+        else:
+            path = path.replace(".md", ".html")
+        return self.base_url + path
+
+    def get_link(self, target, title: str | None = None):
+        return linked(self.get_url(target), title)
+
+    def get_url(self, target) -> str:  # type: ignore[return]  # noqa: PLR0911
         import mknodes
 
         match target:
             case mknodes.MkPage():
-                path = target.resolved_file_path
-                if self.use_directory_urls:
-                    path = path.replace(".md", "/")
-                else:
-                    path = path.replace(".md", ".html")
-                return self.base_url + path
+                return self.url_for_page(target)
             case mknodes.MkNav():
-                if target.index_page:
-                    path = target.index_page.resolved_file_path
-                    if self.use_directory_urls:
-                        path = path.replace(".md", "/")
-                    else:
-                        path = path.replace(".md", ".html")
-                else:
-                    path = target.resolved_file_path
-                return self.base_url + path
+                return self.url_for_nav(target)
+            case type():
+                return self.url_for_klass(target) or ""
+            case types.ModuleType():
+                return self.url_for_module(target) or ""
             case str() if target.startswith("/"):
                 return self.base_url.rstrip("/") + target
             case str() if helpers.is_url(target):

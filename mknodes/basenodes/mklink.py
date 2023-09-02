@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import types
 
 from typing import Any
 
@@ -21,7 +22,7 @@ class MkLink(mknode.MkNode):
 
     def __init__(
         self,
-        target: str | mkpage.MkPage | mknav.MkNav,
+        target: str | mkpage.MkPage | mknav.MkNav | type | types.ModuleType,
         title: str | None = None,
         icon: str | None = None,
         as_button: bool = False,
@@ -65,8 +66,8 @@ class MkLink(mknode.MkNode):
     @property
     def url(self) -> str:  # type: ignore[return]
         if self.associated_project:
-            return self.associated_project.linkprovider.get_link(self.target)
-        return linkprovider.LinkProvider().get_link(self.target)
+            return self.associated_project.linkprovider.get_url(self.target)
+        return linkprovider.LinkProvider().get_url(self.target)
 
     def _to_markdown(self) -> str:
         title = self.target if self.title is None else self.title

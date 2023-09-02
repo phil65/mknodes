@@ -120,8 +120,8 @@ class MkCard(mknode.MkNode):
         if not self.target:
             return ""
         if self.associated_project:
-            return self.associated_project.linkprovider.get_link(self.target)
-        return linkprovider.LinkProvider().get_link(self.target)
+            return self.associated_project.linkprovider.get_url(self.target)
+        return linkprovider.LinkProvider().get_url(self.target)
 
     def _to_markdown(self) -> str:
         return build_html_card(
