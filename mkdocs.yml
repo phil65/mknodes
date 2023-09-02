@@ -90,12 +90,12 @@ markdown_extensions:
 
 extra:
   social:
-  - icon: fontawesome/brands/github
-    link: https://github.com/phil65
-  - icon: fontawesome/brands/gitter
-    link: https://matrix.to/#/#mknodes:gitter.im
-  - icon: fontawesome/brands/python
-    link: https://pypi.org/project/mknodes/
+  # - icon: fontawesome/brands/github
+  #   link: https://github.com/phil65
+  # - icon: fontawesome/brands/gitter
+  #   link: https://matrix.to/#/#mknodes:gitter.im
+  # - icon: fontawesome/brands/python
+  #   link: https://pypi.org/project/mknodes/
   # generator: false disable "made with Material"
   # version:  # multiple doc versions
   #   provider: mike

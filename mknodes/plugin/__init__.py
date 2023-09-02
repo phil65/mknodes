@@ -125,6 +125,10 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
                 self.project.config.register_css("mknodes_theme.css", str(css))
             if extensions := self.project.all_markdown_extensions():
                 self.project.config.register_extensions(extensions)
+            if info := self.project.folderinfo.get_social_info():
+                extra = self.project.config._config.extra
+                if not extra.get("social"):
+                    extra["social"] = info
             md = self.project.config.get_markdown_instance()
             for template in self.project.templates:
                 if html := template.build_html(md):
