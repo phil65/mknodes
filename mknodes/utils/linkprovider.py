@@ -1,34 +1,25 @@
 from __future__ import annotations
 
-import functools
-
 from importlib import metadata
 import logging
 import os
 import types
 
 from mknodes import paths
+from mknodes.info import packageinfo
 from mknodes.utils import helpers, inventorymanager
 
 
 logger = logging.getLogger(__name__)
 
 
-@functools.cache
 def homepage_for_distro(dist_name: str) -> str | None:
     try:
-        dist = metadata.distribution(dist_name)
+        dist = packageinfo.get_info(dist_name)
     except metadata.PackageNotFoundError:
         return None
     else:
-        meta = dist.metadata
-        if "Home-Page" in meta:
-            return meta["Home-Page"]
-        if "Homepage" in meta:
-            return meta["Homepage"]
-        if "Documentation" in meta:
-            return meta["Documentation"]
-    return None
+        return dist.homepage
 
 
 def linked(identifier: str, title: str | None = None) -> str:

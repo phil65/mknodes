@@ -95,7 +95,7 @@ def get_package_map():
     return metadata.packages_distributions()
 
 
-def get_info(pkg_name):
+def get_info(pkg_name: str) -> PackageInfo:
     mapping = get_package_map()
     if pkg_name in mapping:
         pkg_name = mapping[pkg_name][0]
@@ -163,6 +163,8 @@ class PackageInfo:
             return self.urls["Home-page"]
         if "Homepage" in self.urls:
             return self.urls["Homepage"]
+        if "Documentation" in self.urls:
+            return self.urls["Documentation"]
         return self.repository_url
 
     @property
