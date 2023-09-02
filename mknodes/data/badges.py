@@ -271,7 +271,7 @@ pyup_badge = Badge(
 SHIELDS = [
     license_badge,
     package_status_badge,
-    weekly_downloads_badge,
+    daily_downloads_badge,
     weekly_downloads_badge,
     monthly_downloads_badge,
     format_badge,
