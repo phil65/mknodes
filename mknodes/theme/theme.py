@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import MutableMapping
 import logging
 
 from mknodes import mkdocsconfig, project
@@ -55,7 +56,7 @@ class Theme:
             text_color=self.get_text_color(),
         )
 
-    def adapt_extensions(self, extensions: dict[str, dict]):
+    def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         pass
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import MutableMapping
 import logging
 
 from typing import Literal
@@ -267,7 +268,7 @@ class MaterialTheme(theme.Theme):
             {"transform": "none"},
         )
 
-    def adapt_extensions(self, extensions: dict[str, dict]):
+    def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         for k in extensions.copy():
             if k == "pymdownx.emoji":
                 from materialx import emoji

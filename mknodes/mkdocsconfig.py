@@ -151,7 +151,7 @@ class Config:
         edit_uri = self.edit_uri or "edit/main/"
         if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
             repo_url += "/"
-        rel_path = self.path
+        rel_path = self.plugin.config.path
         if not rel_path.endswith(".py"):
             rel_path = rel_path.replace(".", "/")
             rel_path += ".py"
@@ -165,4 +165,4 @@ class Config:
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg._config.theme["features"])
+    print(cfg.plugin.config.path)

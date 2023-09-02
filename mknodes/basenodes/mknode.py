@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, MutableMapping
 import logging
 
 from typing import TYPE_CHECKING
@@ -224,7 +224,7 @@ class MkNode(node.Node):
             all_templates.append(self.template)
         return all_templates
 
-    def all_markdown_extensions(self) -> dict[str, dict]:
+    def all_markdown_extensions(self) -> MutableMapping[str, dict]:
         """Return dict of all md extensions used by the node (including children)."""
         dicts = [
             (
@@ -239,6 +239,7 @@ class MkNode(node.Node):
             if isinstance(self.REQUIRED_EXTENSIONS, dict)
             else {k: {} for k in self.REQUIRED_EXTENSIONS}
         )
+        own["pymdownx.emoji"] = {}
         dicts.append(own)
         return mergedeep.merge(*dicts)
 

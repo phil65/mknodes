@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import MutableMapping
 import logging
 import os
 
@@ -77,7 +78,7 @@ class Project(Generic[T]):
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
 
-    def all_markdown_extensions(self) -> dict[str, dict]:
+    def all_markdown_extensions(self) -> MutableMapping[str, dict]:
         extensions = self._root.all_markdown_extensions() if self._root else {}
         self.theme.adapt_extensions(extensions)
         extensions["pymdownx.magiclink"] = dict(
