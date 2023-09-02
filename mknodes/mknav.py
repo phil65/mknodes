@@ -94,6 +94,11 @@ class MkNav(mknode.MkNode):
             index = tuple(index.split("."))
         del self.nav[index]
 
+    def __add__(self, other: NavSubType):
+        other.parent = self
+        self._register(other)
+        return self
+
     # def __len__(self):
     #     return len(self.nav) + (1 if self.index_page else 0)
 
@@ -192,11 +197,6 @@ class MkNav(mknode.MkNode):
         navi = MkNav(section=section, parent=self)
         self._register(navi)
         return navi
-
-    def __add__(self, other: NavSubType):
-        other.parent = self
-        self._register(other)
-        return self
 
     def add_index_page(
         self,

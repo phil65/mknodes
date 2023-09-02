@@ -14,6 +14,19 @@ from mknodes.utils import helpers, reprhelpers
 logger = logging.getLogger(__name__)
 
 
+SOCIALS = {
+    "gitter.im": "fontawesome/brands/gitter",
+    "matrix.to": "fontawesome/brands/gitter",
+    "twitter.com": "fontawesome/brands/twitter",
+    "docker.com": "fontawesome/brands/docker",
+    "fosstodon.org": "fontawesome/brands/mastodon",
+    "discord.gg": "fontawesome/brands/discord",
+    "linkedin.com": "fontawesome/brands/linkedin",
+    "dev.to": "fontawesome/brands/dev",
+    "medium.to": "fontawesome/brands/medium",
+}
+
+
 GITHUB_REGEX = re.compile(
     r"(?:http?:\/\/|https?:\/\/)?"
     r"(?:www\.)?"
@@ -111,17 +124,6 @@ class FolderInfo:
         return None
 
     def get_social_info(self) -> list[dict]:
-        mapping = {
-            "gitter.im": "fontawesome/brands/gitter",
-            "matrix.to": "fontawesome/brands/gitter",
-            "twitter.com": "fontawesome/brands/twitter",
-            "docker.com": "fontawesome/brands/docker",
-            "fosstodon.org": "fontawesome/brands/mastodon",
-            "discord.gg": "fontawesome/brands/discord",
-            "linkedin.com": "fontawesome/brands/linkedin",
-            "dev.to": "fontawesome/brands/dev",
-            "medium.to": "fontawesome/brands/medium",
-        }
         result = []
         if self.repository_url:
             result.append(
@@ -129,7 +131,7 @@ class FolderInfo:
             )
         for link in self.info.urls.values():
             result.extend(
-                dict(icon=v, link=link) for k, v in mapping.items() if k in link
+                dict(icon=v, link=link) for k, v in SOCIALS.items() if k in link
             )
         result.append(
             dict(
