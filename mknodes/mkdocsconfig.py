@@ -5,6 +5,7 @@ import os
 import pathlib
 
 from typing import Any
+from urllib import parse
 
 import markdown
 
@@ -142,6 +143,24 @@ class Config:
             extensions = list(set(additional_extensions + extensions))
         configs = self._config.mdx_configs | (config_override or {})
         return markdown.Markdown(extensions=extensions, extension_configs=configs)
+
+    def get_edit_uri(self, edit_path: str | None) -> str | None:
+        repo_url = self.repo_url
+        if not repo_url:
+            return None
+        edit_uri = self.edit_uri or "edit/main/"
+        if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
+            repo_url += "/"
+        rel_path = self.path
+        if not rel_path.endswith(".py"):
+            rel_path = rel_path.replace(".", "/")
+            rel_path += ".py"
+        base_url = parse.urljoin(repo_url, edit_uri)
+        if repo_url and edit_path:
+            # root_path = pathlib.Path(config["docs_dir"]).parent
+            # edit_path = str(edit_path.relative_to(root_path))
+            rel_path = edit_path
+        return parse.urljoin(base_url, rel_path)
 
 
 if __name__ == "__main__":

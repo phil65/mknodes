@@ -248,6 +248,20 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
     return module
 
 
+def get_callable_from_path(path: str) -> Callable:
+    modname, _qualname_separator, qualname = path.partition(":")
+    if modname.endswith(".py"):
+        obj = import_file(modname)
+    else:
+        obj = importlib.import_module(modname)
+    for attr in qualname.split("."):
+        obj = getattr(obj, attr)
+    if not callable(obj):
+        msg = "Incorrect path"
+        raise TypeError(msg)
+    return obj
+
+
 if __name__ == "__main__":
     import mknodes
 
