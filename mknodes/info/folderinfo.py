@@ -98,15 +98,15 @@ class FolderInfo:
         return None
 
     @property
-    def package_name(self):
+    def package_name(self) -> str:
         return self.module.__name__
 
     @property
-    def package_repos(self):
+    def package_repos(self) -> list[str]:
         return self.pyproject.package_repos
 
     @property
-    def commit_types(self):
+    def commit_types(self) -> list[str]:
         return self.pyproject.allowed_commit_types
 
     @property
