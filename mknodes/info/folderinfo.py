@@ -38,7 +38,7 @@ class FolderInfo:
         else:
             self.mkdocs_config = {}
         mod_name = self.git.get_repo_name()
-        self.module = importlib.import_module(mod_name.replace("-", "_"))
+        self.module = importlib.import_module(mod_name.replace("-", "_").lower())
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
@@ -111,21 +111,26 @@ class FolderInfo:
         return None
 
     def get_social_info(self) -> list[dict]:
+        mapping = {
+            "gitter.im": "fontawesome/brands/gitter",
+            "matrix.to": "fontawesome/brands/gitter",
+            "twitter.com": "fontawesome/brands/twitter",
+            "docker.com": "fontawesome/brands/docker",
+            "fosstodon.org": "fontawesome/brands/mastodon",
+            "discord.gg": "fontawesome/brands/discord",
+            "linkedin.com": "fontawesome/brands/linkedin",
+            "dev.to": "fontawesome/brands/dev",
+            "medium.to": "fontawesome/brands/medium",
+        }
         result = []
         if self.repository_url:
             result.append(
                 dict(icon="fontawesome/brands/github", link=self.repository_url),
             )
         for link in self.info.urls.values():
-            if "gitter.im" in link or "matrix.to" in link:
-                result.append(dict(icon="fontawesome/brands/gitter", link=link))
-            if "twitter.com" in link:
-                result.append(dict(icon="fontawesome/brands/twitter", link=link))
-            if "docker.com" in link:
-                result.append(dict(icon="fontawesome/brands/docker", link=link))
-            if "fosstodon.org" in link:
-                result.append(dict(icon="fontawesome/brands/mastodon", link=link))
-
+            result.extend(
+                dict(icon=v, link=link) for k, v in mapping.items() if k in link
+            )
         result.append(
             dict(
                 icon="fontawesome/brands/python",
