@@ -56,7 +56,9 @@ mesonpy = BuildSystem(
     build_backend="mesonpy",
     url="https://github.com/mesonbuild/meson-python",
     env_setup_cmd=None,
-    install_url="https://meson-python.readthedocs.io/en/latest/how-to-guides/first-project.html",
+    install_url=(
+        "https://meson-python.readthedocs.io/en/latest/how-to-guides/first-project.html"
+    ),
 )
 
 BUILD_SYSTEMS: dict[BuildSystemStr, BuildSystem] = {

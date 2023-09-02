@@ -38,7 +38,6 @@ class GitRepository(git.Repo):
                 return repo_host.split(".")[0].title()
 
 
-
 if __name__ == "__main__":
     repo = GitRepository(".")
     print(repo.get_code_repository())
