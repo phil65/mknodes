@@ -3,15 +3,10 @@
 from __future__ import annotations
 
 # Partly based on mkdocs-gen-files
-import collections
-from collections.abc import Callable
-import importlib
-import os
 import pathlib
 import tempfile
 
 from typing import TYPE_CHECKING, Literal
-import urllib.parse
 
 from mkdocs.config import base, config_options
 from mkdocs.exceptions import PluginError
@@ -33,20 +28,6 @@ if TYPE_CHECKING:
 logger = get_plugin_logger(__name__)
 
 
-def get_callable_from_path(path: str) -> Callable:
-    modname, _qualname_separator, qualname = path.partition(":")
-    if modname.endswith(".py"):
-        obj = classhelpers.import_file(modname)
-    else:
-        obj = importlib.import_module(modname)
-    for attr in qualname.split("."):
-        obj = getattr(obj, attr)
-    if not callable(obj):
-        msg = "Incorrect path"
-        raise TypeError(msg)
-    return obj
-
-
 class PluginConfig(base.Config):
     path = config_options.Type(str)
     repo_path = config_options.Type(str, default=".")
@@ -55,10 +36,9 @@ class PluginConfig(base.Config):
 class MkNodesPlugin(BasePlugin[PluginConfig]):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.main_html_content = None
-        self._file_mapping = collections.defaultdict(list)
         self._page_mapping = {}
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
+        self.link_replacer = linkreplacer.LinkReplacer()
 
     def on_startup(
         self,
@@ -72,12 +52,13 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         cfg = mkdocsconfig.Config(config)
         skin = theme.Theme.get_theme(config=cfg)
         self.project = project.Project[type(skin)](
-            config=config,
+            base_url=config.site_url or "",
+            use_directory_urls=config.use_directory_urls,
             theme=skin,
             repo_path=self.config.repo_path,
         )
         skin.associated_project = self.project
-        project_fn = get_callable_from_path(self.config.path)
+        project_fn = classhelpers.get_callable_from_path(self.config.path)
         try:
             project_fn(project=self.project)
         except SystemExit as e:
@@ -116,26 +97,26 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             ed.write_files(self.project.all_files())
             if css := root.all_css():
-                self.project.config.register_css("mknodes_nodes.css", css)
+                cfg.register_css("mknodes_nodes.css", css)
             if js_files := root.all_js_files():
                 for file in js_files:
                     content = (paths.RESOURCES / file).read_text()
-                    self.project.config.register_js(file, content)
+                    cfg.register_js(file, content)
             if css := self.project.theme.css:
-                self.project.config.register_css("mknodes_theme.css", str(css))
+                cfg.register_css("mknodes_theme.css", str(css))
             if extensions := self.project.all_markdown_extensions():
-                self.project.config.register_extensions(extensions)
+                cfg.register_extensions(extensions)
             if info := self.project.folderinfo.get_social_info():
-                extra = self.project.config._config.extra
+                extra = cfg._config.extra
                 if not extra.get("social"):
                     extra["social"] = info
-            md = self.project.config.get_markdown_instance()
+            md = cfg.get_markdown_instance()
             for template in self.project.templates:
                 if html := template.build_html(md):
-                    self.project.config.register_template(template.filename, html)
+                    cfg.register_template(template.filename, html)
             for template in root.all_templates():
                 html = template.build_html(md)
-                self.project.config.register_template(template.filename, html)
+                cfg.register_template(template.filename, html)
         return ed.files
 
     def on_nav(
@@ -144,15 +125,14 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
         config: MkDocsConfig,
     ) -> Navigation | None:
-        """Build mappings needed for linking in following steps."""
-        for file_ in files:
-            filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
-            url = urllib.parse.unquote(file_.src_uri)
-            self._file_mapping[filename].append(url)
+        """Populate LinkReplacer and build path->MkPage mapping for following steps."""
+        self.link_replacer.add_files(files)
         if root := self.project._root:
-            for _level, node in root.iter_nodes():
-                if isinstance(node, mkpage.MkPage):
-                    self._page_mapping[node.resolved_file_path] = node
+            self._page_mapping = {
+                node.resolved_file_path: node
+                for _level, node in root.iter_nodes()
+                if isinstance(node, mkpage.MkPage)
+            }
         return nav
 
     def on_pre_page(
@@ -163,23 +143,11 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> Page | None:
         """During this phase we set the edit paths."""
-        repo_url = config.repo_url
-        edit_uri = config.edit_uri or "edit/main/"
-        if not repo_url or not edit_uri:
-            return None
-        if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
-            repo_url += "/"
-        rel_path = self.config.path
-        if not rel_path.endswith(".py"):
-            rel_path = rel_path.replace(".", "/")
-            rel_path += ".py"
-        base_url = urllib.parse.urljoin(repo_url, edit_uri)
         node = self._page_mapping.get(page.file.src_uri)
-        if node and repo_url and (edit_path := node._edit_path):
-            # root_path = pathlib.Path(config["docs_dir"]).parent
-            # edit_path = str(edit_path.relative_to(root_path))
-            rel_path = edit_path
-        page.edit_url = urllib.parse.urljoin(base_url, rel_path)
+        edit_path = node._edit_path if node else None
+        cfg = mkdocsconfig.Config(config)
+        if path := cfg.get_edit_path(edit_path):
+            page.edit_url = path
         return page
 
     def on_page_markdown(
@@ -196,11 +164,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
                 markdown = markdown.replace(f"°metadata.{k}", v)
                 markdown = markdown.replace(f"°metadata.{k.lower()}", v)
                 continue
-        uri = page.file.src_uri
-        if uri.endswith("SUMMARY.md"):
-            return markdown
-        link_replacer = linkreplacer.LinkReplacer(uri, mapping=self._file_mapping)
-        return link_replacer.replace(markdown)
+        return self.link_replacer.replace(markdown, page.file.src_uri)
 
     def on_post_build(self, config: MkDocsConfig):
         """Delete the temporary template files."""
