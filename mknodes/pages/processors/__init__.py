@@ -88,7 +88,10 @@ class BaseClassTableContainerProcessor(ContainerProcessor):
         node += table
 
     def check_if_apply(self, node: mkcontainer.MkContainer):
-        return len(self.item.mro()) > 2  # noqa: PLR2004
+        try:
+            return len(self.item.mro()) > 2  # noqa: PLR2004
+        except TypeError:
+            return False
 
     def get_default_header(self, node: mkcontainer.MkContainer):
         return "Base classes"

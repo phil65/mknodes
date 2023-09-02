@@ -32,8 +32,11 @@ class FolderInfo:
         self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
         self.git = gitrepository.GitRepository(self.path)
-        text = (self.path / "mkdocs.yml").read_text(encoding="utf-8")
-        self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
+        if (path := self.path / "mkdocs.yml").exists():
+            text = path.read_text(encoding="utf-8")
+            self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
+        else:
+            self.mkdocs_config = {}
         mod_name = self.git.get_repo_name()
         self.module = importlib.import_module(mod_name.replace("-", "_"))
 

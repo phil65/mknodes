@@ -7,7 +7,7 @@ from typing import Literal
 
 RAW_GITHUB = "https://raw.githubusercontent.com"
 
-BuildSystemStr = Literal["hatch", "flit", "poetry", "setuptools", "pdm"]
+BuildSystemStr = Literal["hatch", "flit", "poetry", "setuptools", "pdm", "meson_python"]
 
 
 @dataclasses.dataclass
@@ -51,7 +51,14 @@ pdm = BuildSystem(
     env_setup_cmd="pdm install",
     install_url=f"{RAW_GITHUB}/pdm-project/pdm/main/docs/docs/index.md#Installation",
 )
+mesonpy = BuildSystem(
+    identifier="meson_python",
+    build_backend="mesonpy",
+    url="https://github.com/mesonbuild/meson-python",
+    env_setup_cmd=None,
+    install_url="https://meson-python.readthedocs.io/en/latest/how-to-guides/first-project.html",
+)
 
 BUILD_SYSTEMS: dict[BuildSystemStr, BuildSystem] = {
-    p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm]
+    p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm, mesonpy]
 }
