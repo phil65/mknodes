@@ -48,6 +48,14 @@ class Tool:
         """
         raise NotImplementedError
 
+    def get_config(self, folder) -> str | None:
+        """Return config for given tool.
+
+        Arguments:
+            folder: Folder to get config from. Defaults to current working directory.
+        """
+        return None
+
 
 class PreCommit(Tool):
     identifier = "pre-commit"
@@ -72,6 +80,9 @@ class Ruff(Tool):
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
         return folder.pyproject.has_tool("ruff") if folder else False
 
+    def get_config(self, folder):
+        folder.pyproject.get_tool("ruff")
+
 
 class MyPy(Tool):
     identifier = "mypy"
@@ -82,6 +93,9 @@ class MyPy(Tool):
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
         return folder.pyproject.has_tool("mypy") if folder else False
+
+    def get_config(self, folder):
+        folder.pyproject.get_tool("mypy")
 
 
 TOOLS: dict[ToolStr, Tool] = {p.identifier: p for p in [PreCommit(), Ruff(), MyPy()]}
