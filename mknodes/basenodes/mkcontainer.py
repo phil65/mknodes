@@ -48,7 +48,7 @@ class MkContainer(mknode.MkNode):
             case _:
                 raise TypeError(content)
         for item in items:
-            self.append(item)  # noqa: PERF402
+            self.append(item)
 
     def __bool__(self):
         return bool(self.items)
