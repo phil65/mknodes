@@ -65,8 +65,7 @@ class MkDependencyTable(mktable.MkTable):
                 k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
                 for k in data[0]
             }
-        else:
-            return {}
+        return {}
 
     @staticmethod
     def create_example_page(page):

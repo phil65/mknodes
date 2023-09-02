@@ -62,7 +62,7 @@ class FolderInfo:
 
     @property
     def info(self):
-        return packageinfo.get_info(self.pyproject.name)
+        return packageinfo.get_info(self.pyproject.name or self.git.get_repo_name())
 
     @property
     def repository_url(self) -> str | None:
