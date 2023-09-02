@@ -118,6 +118,11 @@ class FolderInfo:
                 result.append(dict(icon="fontawesome/brands/gitter", link=link))
             if "twitter.com" in link:
                 result.append(dict(icon="fontawesome/brands/twitter", link=link))
+            if "docker.com" in link:
+                result.append(dict(icon="fontawesome/brands/docker", link=link))
+            if "fosstodon.org" in link:
+                result.append(dict(icon="fontawesome/brands/mastodon", link=link))
+
         result.append(
             dict(
                 icon="fontawesome/brands/python",
