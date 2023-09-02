@@ -7,7 +7,7 @@ import logging
 import os
 import types
 
-from mknodes import mkdocsconfig, paths
+from mknodes import paths
 from mknodes.utils import helpers, inventorymanager
 
 
@@ -43,9 +43,15 @@ def linked(identifier: str, title: str | None = None) -> str:
 
 
 class LinkProvider:
-    def __init__(self, config=None, include_stdlib: bool = False):
+    def __init__(
+        self,
+        base_url: str = "",
+        use_directory_urls: bool = True,
+        include_stdlib: bool = False,
+    ):
         self.inv_manager = inventorymanager.InventoryManager()
-        self.config = config or mkdocsconfig.load_config()
+        self.base_url = base_url
+        self.use_directory_urls = use_directory_urls
         if include_stdlib:
             self.add_inv_file(
                 paths.RESOURCES / "python_objects.inv",
@@ -91,27 +97,26 @@ class LinkProvider:
     def get_link(self, target) -> str:  # type: ignore[return]
         import mknodes
 
-        base_url = self.config.site_url or ""
         match target:
             case mknodes.MkPage():
                 path = target.resolved_file_path
-                if self.config.use_directory_urls:
+                if self.use_directory_urls:
                     path = path.replace(".md", "/")
                 else:
                     path = path.replace(".md", ".html")
-                return base_url + path
+                return self.base_url + path
             case mknodes.MkNav():
                 if target.index_page:
                     path = target.index_page.resolved_file_path
-                    if self.config.use_directory_urls:
+                    if self.use_directory_urls:
                         path = path.replace(".md", "/")
                     else:
                         path = path.replace(".md", ".html")
                 else:
                     path = target.resolved_file_path
-                return base_url + path
+                return self.base_url + path
             case str() if target.startswith("/"):
-                return base_url.rstrip("/") + target
+                return self.base_url.rstrip("/") + target
             case str() if helpers.is_url(target):
                 return target
             case str():

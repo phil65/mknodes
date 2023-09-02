@@ -3,17 +3,13 @@ from __future__ import annotations
 import logging
 import os
 
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import Generic, TypeVar
 
-from mknodes import mkdocsconfig, mknav
+from mknodes import mknav
 from mknodes.info import folderinfo
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
 from mknodes.utils import helpers, linkprovider, reprhelpers
-
-
-if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
 
 
 logger = logging.getLogger(__name__)
@@ -28,11 +24,15 @@ class Project(Generic[T]):
     def __init__(
         self,
         theme: T,
-        config: MkDocsConfig | None = None,
+        base_url: str = "",
+        use_directory_urls: bool = True,
         repo_path: str | os.PathLike | None = None,
     ):
-        self.linkprovider = linkprovider.LinkProvider(config, include_stdlib=True)
-        self.config: mkdocsconfig.Config = mkdocsconfig.Config(config)
+        self.linkprovider = linkprovider.LinkProvider(
+            base_url=base_url,
+            use_directory_urls=use_directory_urls,
+            include_stdlib=True,
+        )
         self.theme: T = theme
         self.templates = self.theme.templates
         self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
@@ -43,13 +43,19 @@ class Project(Generic[T]):
         self._root: mknav.MkNav | None = None
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, repo_path=self.folderinfo.path)
+        return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
 
     @classmethod
     def for_mknodes(cls) -> Project:
+        from mknodes import mkdocsconfig
+
         config = mkdocsconfig.Config()
         theme = theme_.Theme.get_theme(config)
-        return cls(config=config._config, theme=theme)
+        return cls(
+            base_url=config.site_url or "",
+            use_directory_urls=config.use_directory_urls,
+            theme=theme,
+        )
 
     @property
     def info(self):
