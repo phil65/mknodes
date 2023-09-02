@@ -18,8 +18,8 @@ class PyProject:
             if path is None:
                 msg = "Could not find pyproject.toml"
                 raise FileNotFoundError(msg)
-            self._data = tomllib.loads(path.read_text())
-        self.mknodes_section = self._data["tool"].get("mknodes", {})
+            self._data = tomllib.loads(path.read_text(encoding="utf-8"))
+        self.mknodes_section = self._data.get("tool", {}).get("mknodes", {})
 
     def __repr__(self):
         return f"PyProject({self._data['project']})"

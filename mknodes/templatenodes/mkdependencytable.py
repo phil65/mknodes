@@ -60,11 +60,13 @@ class MkDependencyTable(mktable.MkTable):
         if not self.package:
             return {}
         packages = self.package.get_required_packages()
-        data = [self.layouter.get_row_for(kls) for kls in packages.items()]
-        return {
-            k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
-            for k in data[0]
-        }
+        if data := [self.layouter.get_row_for(kls) for kls in packages.items()]:
+            return {
+                k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
+                for k in data[0]
+            }
+        else:
+            return {}
 
     @staticmethod
     def create_example_page(page):
