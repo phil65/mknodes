@@ -5,7 +5,6 @@ import os
 import pathlib
 
 from typing import Any
-from urllib import parse
 
 import markdown
 
@@ -144,19 +143,7 @@ class Config:
         configs = self._config.mdx_configs | (config_override or {})
         return markdown.Markdown(extensions=extensions, extension_configs=configs)
 
-    def get_code_repository(self) -> str:
-        if self.repo_name:
-            return self.repo_name
-        repo_host = parse.urlsplit(self.repo_url).netloc.lower()
-        if repo_host == "github.com":
-            return "GitHub"
-        if repo_host == "bitbucket.org":
-            return "Bitbucket"
-        if repo_host == "gitlab.com":
-            return "GitLab"
-        return repo_host.split(".")[0].title()
-
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg.mdx_configs)
+    print(cfg._config.theme["features"])
