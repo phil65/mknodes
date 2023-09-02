@@ -389,6 +389,7 @@ class MkNav(mknode.MkNode):
         cls,
         path: str | os.PathLike,
         section: str | None = None,
+        *,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
         hide_path: bool | None = None,
@@ -430,6 +431,7 @@ class MkNav(mknode.MkNode):
         cls,
         text: str,
         path: pathlib.Path,
+        *,
         section: str | None = None,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
@@ -596,17 +598,5 @@ if __name__ == "__main__":
     docs = MkNav()
     nav_tree_path = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/"
     nav_file = nav_tree_path / "SUMMARY.md"
-    # print(pathlib.Path(nav_file).read_text())
-    # nav = MkNav.from_folder(nav_tree_path)
-    # print("\n".join(lines))
-
-    # # print(nav.all_virtual_files())
     nav = MkNav.from_file(nav_file)
-    # print(str(nav))
-    # print(nav_file.read_text())
-    # subnav = docs.add_nav("subnav")
-    # page = subnav.add_page("My first page!")
-    # page += mknodes.MkAdmonition("Warning This is still beta", typ="danger")
-    # page2 = subnav.add_page("And a second one")
-    # subsubnav = subnav.add_nav("SubSubNav")
-    # subsubnav = subsubnav.add_page("SubSubPage")
+    print(nav)
