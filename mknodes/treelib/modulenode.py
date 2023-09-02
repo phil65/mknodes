@@ -35,8 +35,10 @@ class ModuleNode(node.Node):
         max_items: int | None = None,
         maximum_depth: int | None = None,
         parent: ModuleNode | None = None,
+        _seen=None,
     ):
         node = cls(module, parent=parent)
+        seen = _seen or set()
         children = [
             mod
             for _name, mod in inspect.getmembers(module, inspect.ismodule)
@@ -54,21 +56,25 @@ class ModuleNode(node.Node):
             else:
                 if maximum_depth is not None and maximum_depth < node.depth + 1:
                     continue
-                child = ModuleNode.from_module(
-                    submod,
-                    parent=node,
-                    predicate=predicate,
-                    max_items=max_items,
-                    maximum_depth=maximum_depth,
-                    exclude=exclude,
-                )
+                child = None
+                if submod not in seen:
+                    seen.add(submod)
+                    child = ModuleNode.from_module(
+                        submod,
+                        parent=node,
+                        predicate=predicate,
+                        max_items=max_items,
+                        maximum_depth=maximum_depth,
+                        exclude=exclude,
+                        _seen=seen,
+                    )
             if max_items is not None:
                 if max_items > 0:
                     max_items -= 1
                 else:
                     break
-
-            node.append_child(child)
+            if child:
+                node.append_child(child)
         return node
 
 
