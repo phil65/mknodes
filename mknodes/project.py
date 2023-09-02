@@ -79,7 +79,7 @@ class Project(Generic[T]):
 
     def all_markdown_extensions(self) -> dict[str, dict]:
         extensions = self._root.all_markdown_extensions() if self._root else {}
-        extensions = self.theme.adapt_extensions(extensions)
+        self.theme.adapt_extensions(extensions)
         extensions["pymdownx.magiclink"] = dict(
             repo_url_shorthand=True,
             user=self.folderinfo.repository_username,
