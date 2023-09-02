@@ -21,6 +21,9 @@ class PyProject:
             self._data = tomllib.loads(path.read_text(encoding="utf-8"))
         self.mknodes_section = self._data.get("tool", {}).get("mknodes", {})
 
+    def __getitem__(self, value):
+        return self._data.__getitem__(value)
+
     def __repr__(self):
         return f"PyProject({self._data['project']})"
 
@@ -39,10 +42,13 @@ class PyProject:
 
     @property
     def name(self) -> str:
-        return self._data["project"]["name"]
+        return self._data.get("project", {}).get("name")
 
     def has_tool(self, tool_name: str) -> bool:
-        return tool_name in self._data["tool"]
+        return tool_name in self._data.get("tool", {})
+
+    def get_tool(self, tool_name: str) -> str | None:
+        return self._data.get("tool", {}).get(tool_name)
 
     @property
     def allowed_commit_types(self) -> list[str]:
