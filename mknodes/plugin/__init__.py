@@ -146,7 +146,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         node = self._page_mapping.get(page.file.src_uri)
         edit_path = node._edit_path if node else None
         cfg = mkdocsconfig.Config(config)
-        if path := cfg.get_edit_path(edit_path):
+        if path := cfg.get_edit_url(edit_path):
             page.edit_url = path
         return page
 

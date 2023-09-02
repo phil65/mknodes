@@ -144,7 +144,7 @@ class Config:
         configs = self._config.mdx_configs | (config_override or {})
         return markdown.Markdown(extensions=extensions, extension_configs=configs)
 
-    def get_edit_uri(self, edit_path: str | None) -> str | None:
+    def get_edit_url(self, edit_path: str | None) -> str | None:
         repo_url = self.repo_url
         if not repo_url:
             return None
