@@ -4,8 +4,11 @@ import logging
 
 import jinja2
 
+from mknodes.utils import yamlhelpers
+
 
 logger = logging.getLogger(__name__)
+
 
 
 class LaxUndefined(jinja2.Undefined):
@@ -27,13 +30,14 @@ UNDEFINED_BEHAVIOR = {
 class Environment:
     """MkNodes Environment."""
 
-    def __init__(self, undefined: str = "silent", load_templates: bool = False):
+    def __init__(self, undefined: str = "strict", load_templates: bool = False):
         if load_templates:
             loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
         else:
             loader = None
         behavior = UNDEFINED_BEHAVIOR[undefined]
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
+        self.extras = {"dump_yaml": yamlhelpers.dump_yaml}
 
     def render(self, markdown: str, variables=None):
         try:
@@ -42,11 +46,13 @@ class Environment:
             logger.warning("Error when rendering markdown: %s", e)
             return markdown
         variables = variables or {}
+        variables.update(self.extras)
         return md_template.render(**variables)
 
     def render_template(self, template_name: str, variables=None):
         template = self.env.get_template(template_name)
         variables = variables or {}
+        variables.update(self.extras)
         return template.render(**variables)
 
 
