@@ -153,7 +153,9 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links get replaced and `jinja2` stuff get rendered."""
+        node = self.infocollector["page_mapping"].get(page.file.src_uri)
         self.infocollector["page"] = page
+        self.infocollector["mkpage"] = node
         markdown = self.infocollector.render(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 

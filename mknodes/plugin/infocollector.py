@@ -79,7 +79,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             )
             self.variables.update(infos)
 
-    def render(self, markdown: str):
+    def render(self, markdown: str) -> str:
         return self.env.render(markdown, self.variables)
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 import contextlib
 import functools
 import importlib
@@ -68,22 +69,22 @@ class Dependency:
 
 
 @functools.cache
-def get_distribution(name):
+def get_distribution(name: str) -> metadata.Distribution:
     return metadata.distribution(name)
 
 
 @functools.cache
-def get_metadata(dist):
+def get_metadata(dist: metadata.Distribution):
     return dist.metadata
 
 
 @functools.cache
-def get_requires(dist):
-    return dist.requires
+def get_requires(dist: metadata.Distribution) -> list[str]:
+    return dist.requires or []
 
 
 @functools.cache
-def get_dependency(name):
+def get_dependency(name) -> Dependency:
     return Dependency(name)
 
 
@@ -91,7 +92,7 @@ registry: dict[str, PackageInfo] = {}
 
 
 @functools.cache
-def get_package_map():
+def get_package_map() -> Mapping[str, list[str]]:
     return metadata.packages_distributions()
 
 
@@ -118,8 +119,6 @@ class PackageInfo:
         }
         if "Home-page" in self.metadata:
             self.urls["Home-page"] = self.metadata["Home-page"].strip()
-        requires = get_requires(self.distribution)
-        self.required_deps = [get_dependency(i) for i in requires] if requires else []
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
         self.version = self.metadata["Version"]
         self.metadata_version = self.metadata["Metadata-Version"]
@@ -130,6 +129,11 @@ class PackageInfo:
 
     def __hash__(self):
         return hash(self.package_name)
+
+    @functools.cached_property
+    def required_deps(self) -> list[Dependency]:
+        requires = get_requires(self.distribution)
+        return [get_dependency(i) for i in requires] if requires else []
 
     @property
     def license_name(self) -> str | None:
