@@ -7,11 +7,11 @@ import logging
 
 from typing import Any
 
-import jinja2
 import mergedeep
 
 from mknodes import paths, project as project_
 from mknodes.pages import mkpage
+from mknodes.plugin import environment
 from mknodes.utils import reprhelpers
 
 
@@ -22,7 +22,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
     """MkNodes InfoCollector."""
 
     def __init__(self, data: dict[str, Any] | None = None):
-        self.env = jinja2.Environment()
+        self.env = environment.Environment()
         self.variables = data or {}
         if util.find_spec("markdown_exec"):
             self.set_markdown_exec_namespace()
@@ -61,6 +61,11 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             js_files = {
                 path: (paths.RESOURCES / path).read_text() for path in root.all_js_files()
             }
+            page_mapping = {
+                node.resolved_file_path: node
+                for _level, node in root.iter_nodes()
+                if isinstance(node, mkpage.MkPage)
+            }
             infos = dict(
                 files=project.all_files(),
                 css=root.all_css(),
@@ -69,22 +74,12 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
                 markdown_extensions=project.all_markdown_extensions(),
                 social_info=project.folderinfo.get_social_info(),
                 templates=list(project.templates) + root.all_templates(),
+                page_mapping=page_mapping,
             )
             self.variables.update(infos)
-            page_mapping = {
-                node.resolved_file_path: node
-                for _level, node in root.iter_nodes()
-                if isinstance(node, mkpage.MkPage)
-            }
-            self.variables["page_mapping"] = page_mapping
 
-    def render(self, markdown: str, additional_globals=None):
-        try:
-            md_template = self.env.from_string(markdown, globals=additional_globals or {})
-        except jinja2.exceptions.TemplateSyntaxError as e:
-            logger.warning("Error when rendering markdown: %s", e)
-            return markdown
-        return md_template.render(**self.variables)
+    def render(self, markdown: str):
+        return self.env.render(markdown, self.variables)
 
 
 if __name__ == "__main__":
