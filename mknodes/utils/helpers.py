@@ -1,17 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Generator, Iterable
-import functools
 import itertools
 import logging
 import os
 import pathlib
 import re
 
-from typing import Literal, TypeVar
+from typing import TypeVar
 
-
-RESPONSE_CODE_OK = 200
 
 logger = logging.getLogger(__name__)
 
@@ -124,20 +121,6 @@ def get_material_icon_folder() -> pathlib.Path:
 
     path = pathlib.Path(material.__path__[0])
     return path / ".icons"
-
-
-@functools.cache
-def download(url: str, typ: Literal["text", "data"] = "text"):
-    import requests
-
-    if token := os.getenv("GH_TOKEN"):
-        headers = {"Authorization": f"token {token}"}
-        response = requests.get(url, headers=headers)
-    else:
-        response = requests.get(url)
-    if response.status_code != RESPONSE_CODE_OK:
-        return ""
-    return response.text if typ == "text" else response.content
 
 
 T = TypeVar("T")

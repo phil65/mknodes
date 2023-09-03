@@ -4,13 +4,13 @@ import os
 import tomllib
 
 from mknodes.data import buildsystems
-from mknodes.utils import helpers
+from mknodes.utils import cache, helpers
 
 
 class PyProject:
     def __init__(self, pyproject_path: str | os.PathLike | None = None):
         if helpers.is_url(str(pyproject_path)):
-            content = helpers.download(str(pyproject_path))
+            content = cache.download_and_cache_url(str(pyproject_path), days=1).decode()
             self._data = tomllib.loads(content)
         else:
             folder = pyproject_path or "."

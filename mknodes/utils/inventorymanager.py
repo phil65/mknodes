@@ -12,9 +12,8 @@ import posixpath
 import types
 
 from mkdocstrings import inventory
-import requests
 
-from mknodes.utils import helpers
+from mknodes.utils import cache, helpers
 
 
 logger = logging.getLogger(__name__)
@@ -51,8 +50,7 @@ class Inventory(inventory.Inventory):
         base_url: str | None = None,
         domains: list[str] | None = None,
     ):
-        response = requests.get(url)
-        data = response.content
+        data = cache.download_and_cache_url(url, days=1)
         buffer = io.BytesIO(data)
         if base_url is None:
             base_url = os.path.dirname(url)  # noqa: PTH120

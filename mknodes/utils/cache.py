@@ -13,6 +13,9 @@ from urllib import parse, request
 import platformdirs
 
 
+logger = logging.getLogger(__name__)
+
+
 @contextmanager
 def tempfile(suffix="", directory=None):
     """Context for temporary file.
@@ -32,7 +35,7 @@ def tempfile(suffix="", directory=None):
         try:
             pathlib.Path(tf.name).unlink()
         except OSError as e:
-            if e.errno != 2:
+            if e.errno != 2:  # noqa: PLR2004
                 raise
 
 
@@ -61,10 +64,7 @@ def open_atomic(filepath, fsync: bool = False, binary: bool = False):
                     os.fsync(file.fileno())
         if abs_path.exists():
             abs_path.unlink()
-        os.rename(path, abs_path)
-
-
-log = logging.getLogger(__name__)
+        os.rename(path, abs_path)  # noqa: PTH104
 
 
 def download_and_cache_url(
@@ -96,7 +96,7 @@ def download_and_cache_url(
         weeks: Amount of weeks the content should be cached.
         comment: The appropriate comment prefix for this file format.
     """
-    print(f"Getting {url}")
+    logger.info("Getting %s", url)
     if parse.urlsplit(url).scheme not in ("http", "https"):
         with pathlib.Path(url).open("rb") as f:
             return f.read()
@@ -126,20 +126,19 @@ def download_and_cache_url(
                     line = line[len(prefix) :]
                     timestamp = int(line)
                     if datetime.timedelta(seconds=(now - timestamp)) <= cache_duration:
-                        log.debug("Using cached '%s' for '%s'", path, url)
-                        print(f"Loaded from cache: {url}")
+                        logger.debug("Using cached '%s' for '%s'", path, url)
                         return f.read()
         except (OSError, ValueError) as e:
-            log.debug("%s: %s", type(e).__name__, e)
+            logger.debug("%s: %s", type(e).__name__, e)
 
     # Download and cache the file
-    log.debug("Downloading %s to %s", url, path)
+    logger.debug("Downloading %s to %s", url, path)
     content = download(url)
     directory.mkdir(exist_ok=True, parents=True)
     with open_atomic(str(path), binary=True) as f:
         f.write(b"%s%d\n" % (prefix, now))
         f.write(content)
-    print(f"Downloaded {url}")
+    logger.info("Downloaded %s", url)
     return content
 
 
