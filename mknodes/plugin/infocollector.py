@@ -72,6 +72,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
                 js_files=js_files,
                 theme_css=project.theme.css,
                 markdown_extensions=project.all_markdown_extensions(),
+                plugins=root.all_plugins(),
                 social_info=project.folderinfo.get_social_info(),
                 templates=list(project.templates) + root.all_templates(),
                 page_mapping=page_mapping,
