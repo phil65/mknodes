@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-# Partly based on mkdocs-gen-files
 import pathlib
 import tempfile
 
@@ -87,9 +86,9 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             msg = "No root for project created."
             raise RuntimeError(msg)
         cfg = mkdocsconfig.Config(config)
-        self.infocollector.get_info_from_project(self.project)
-        self.infocollector["config"] = config
         info = self.infocollector
+        info.get_info_from_project(self.project)
+        info["config"] = config
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             ed.write_files(info["files"])
             if css := info["css"]:
