@@ -35,6 +35,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         super().__init__(**kwargs)
         self._page_mapping = {}
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
+        logger.debug("Creating temporary dir %s", self._dir.name)
         self.link_replacer = linkreplacer.LinkReplacer()
         self.infocollector = infocollector.InfoCollector()
 
@@ -57,7 +58,9 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         )
         skin.associated_project = self.project
         project_fn = classhelpers.get_callable_from_path(self.config.path)
+        logger.debug("Building page...")
         project_fn(project=self.project)
+        logger.debug("Finished building page.")
 
     #     if config.nav is None:
     #         file = File(
