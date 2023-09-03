@@ -6,7 +6,7 @@ import re
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import cache, helpers, reprhelpers
+from mknodes.utils import cache, reprhelpers
 
 
 logger = logging.getLogger(__name__)

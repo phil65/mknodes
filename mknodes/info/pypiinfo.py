@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from mknodes.utils import cache, helpers
+from mknodes.utils import cache
 
 
 logger = logging.getLogger(__name__)
