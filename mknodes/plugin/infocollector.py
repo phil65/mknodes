@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
+from importlib import util
 import logging
 
 from typing import Any
@@ -23,6 +24,8 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
     def __init__(self, data: dict[str, Any] | None = None):
         self.env = jinja2.Environment()
         self.variables = data or {}
+        if util.find_spec("markdown_exec"):
+            self.set_markdown_exec_namespace()
 
     def __getitem__(self, index):
         return self.variables[index]
@@ -44,10 +47,16 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
 
     def merge(self, other, additive: bool = False):
         strategy = mergedeep.Strategy.ADDITIVE if additive else mergedeep.Strategy.REPLACE
-        self.variables = mergedeep.merge(self.variables, other, strategy=strategy)
+        self.variables = dict(mergedeep.merge(self.variables, other, strategy=strategy))
+
+    def set_markdown_exec_namespace(self):
+        from markdown_exec.formatters import python
+
+        python._sessions_globals["mknodes"] = self.variables
 
     def get_info_from_project(self, project: project_.Project):
         self.variables["metadata"] = project.aggregate_info()
+        self.variables["project"] = project
         if root := project._root:
             js_files = {
                 path: (paths.RESOURCES / path).read_text() for path in root.all_js_files()

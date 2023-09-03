@@ -88,7 +88,8 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             raise RuntimeError(msg)
         cfg = mkdocsconfig.Config(config)
         self.infocollector.get_info_from_project(self.project)
-        info = self.infocollector.variables
+        self.infocollector["config"] = config
+        info = self.infocollector
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             ed.write_files(info["files"])
             if css := info["css"]:
@@ -144,6 +145,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links get replaced and `jinja2` stuff get rendered."""
+        self.infocollector["page"] = page
         markdown = self.infocollector.render(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 
