@@ -9,7 +9,6 @@ import tempfile
 from typing import TYPE_CHECKING, Literal
 
 from mkdocs.config import base, config_options
-from mkdocs.exceptions import PluginError
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
@@ -59,12 +58,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         )
         skin.associated_project = self.project
         project_fn = classhelpers.get_callable_from_path(self.config.path)
-        try:
-            project_fn(project=self.project)
-        except SystemExit as e:
-            if e.code:
-                msg = f"Script {self.config.path!r} caused {e!r}"
-                raise PluginError(msg) from e
+        project_fn(project=self.project)
 
     #     if config.nav is None:
     #         file = File(
