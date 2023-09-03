@@ -120,7 +120,7 @@ class FolderInfo:
             if (file := self.path / path).exists():
                 return file
         if file := self.info.metadata.json.get("license_file"):
-            return pathlib.Path(file)
+            return self.path / file
         return None
 
     def get_social_info(self) -> list[dict]:
