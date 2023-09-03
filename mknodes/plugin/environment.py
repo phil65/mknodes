@@ -44,6 +44,11 @@ class Environment:
         variables = variables or {}
         return md_template.render(**variables)
 
+    def render_template(self, template_name: str, variables=None):
+        template = self.env.get_template(template_name)
+        variables = variables or {}
+        return template.render(**variables)
+
 
 if __name__ == "__main__":
     env = Environment(load_templates=True)
