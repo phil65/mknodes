@@ -64,8 +64,7 @@ class MkBinaryImage(mkimage.MkImage):
             icon: Icon to get a MkBinaryImage for (example: material/file-image)
             kwargs: Keyword arguments passed to constructor
         """
-        folder = helpers.get_material_icon_folder()
-        icon_path = folder / f"{icon}.svg"
+        icon_path = helpers.get_material_icon_path(icon)
         content = icon_path.read_text()
         path = f"{helpers.slugify(icon)}.svg"
         return cls(data=content, path=path, **kwargs)
