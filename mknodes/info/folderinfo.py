@@ -8,7 +8,7 @@ import re
 
 from mknodes.data import taskrunners, tools
 from mknodes.info import gitrepository, packageinfo, pyproject
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class FolderInfo:
         self.git = gitrepository.GitRepository(self.path)
         if (path := self.path / "mkdocs.yml").exists():
             text = path.read_text(encoding="utf-8")
-            self.mkdocs_config = helpers.load_yaml(text, mode="unsafe")
+            self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
         else:
             self.mkdocs_config = {}
         mod_name = self.git.get_repo_name()

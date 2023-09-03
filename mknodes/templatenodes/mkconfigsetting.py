@@ -8,7 +8,7 @@ from typing import Any, Literal
 import tomli_w
 
 from mknodes.basenodes import mkcode, mkdefinitionlist, mknode, mktext
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -79,7 +79,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         if self.setting:
             match self.mode:
                 case None | "yaml":
-                    code = helpers.dump_yaml(self.setting)
+                    code = yamlhelpers.dump_yaml(self.setting)
                 case "json":
                     code = json.dumps(self.setting, indent=4)
                 case "toml" if isinstance(self.setting, dict):

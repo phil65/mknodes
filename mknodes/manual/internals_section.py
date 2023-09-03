@@ -2,7 +2,7 @@ import inspect
 
 import mknodes
 
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import classhelpers, yamlhelpers
 
 
 INTRO_TEXT = """In this section you will find some information about the tree of nodes
@@ -54,7 +54,7 @@ def create_requirements_page(nav: mknodes.MkNav):
     page += "The tree requires these Markdown extensions to be available:"
     # Based on which items we used, we can get info about the required extensions:
     extensions = nav.associated_project.all_markdown_extensions()  # type: ignore[union-attr]  # noqa: E501
-    page += mknodes.MkCode(helpers.dump_yaml(extensions), language="yaml")
+    page += mknodes.MkCode(yamlhelpers.dump_yaml(extensions), language="yaml")
     # we can do the same for plugins
     page += "The tree requires these MkDocs plugins to be available:"
     plugins = nav.root.all_plugins()

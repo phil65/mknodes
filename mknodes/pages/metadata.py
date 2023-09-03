@@ -6,7 +6,7 @@ import re
 from typing import Self
 
 from mknodes.data import datatypes
-from mknodes.utils import helpers
+from mknodes.utils import yamlhelpers
 
 
 HEADER = "---\n{options}---\n"
@@ -35,7 +35,7 @@ class Metadata:
         dct = {}
         if match := HEADER_RE.match(text):
             content = match[1]
-            dct = helpers.load_yaml(content)
+            dct = yamlhelpers.load_yaml(content)
             if hide := dct.pop("hide", None):
                 dct["hide_toc"] = "toc" in hide
                 dct["hide_nav"] = "navigation" in hide
@@ -56,7 +56,7 @@ class Metadata:
 
     def __str__(self):
         data = self.as_dict()
-        return helpers.dump_yaml(data) if data else ""
+        return yamlhelpers.dump_yaml(data) if data else ""
 
     def __bool__(self):
         return bool(self.as_dict())
