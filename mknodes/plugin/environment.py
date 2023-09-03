@@ -27,8 +27,13 @@ UNDEFINED_BEHAVIOR = {
 class Environment:
     """MkNodes Environment."""
 
-    def __init__(self):
-        self.env = jinja2.Environment(undefined=UNDEFINED_BEHAVIOR["silent"])
+    def __init__(self, undefined: str = "silent", load_templates: bool = False):
+        if load_templates:
+            loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
+        else:
+            loader = None
+        behavior = UNDEFINED_BEHAVIOR[undefined]
+        self.env = jinja2.Environment(undefined=behavior, loader=loader)
 
     def render(self, markdown: str, variables=None):
         try:
@@ -41,6 +46,7 @@ class Environment:
 
 
 if __name__ == "__main__":
-    builder = Environment()
-    builder.render("{{test}}")
-    print(builder)
+    env = Environment(load_templates=True)
+    env.env.get_template("macros_info.md")
+    text = env.render("{{test}}", dict(test="fkj"))
+    print(text)
