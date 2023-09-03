@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from abc import ABCMeta
-from collections.abc import Mapping
+from collections.abc import MutableMapping
 
 import cssutils
 
 
-class StyleRule(Mapping, metaclass=ABCMeta):
+class StyleRule(MutableMapping, metaclass=ABCMeta):
     def __init__(self, rule: cssutils.css.CSSRule | str):
         if isinstance(rule, str):
             parser = cssutils.CSSParser(validate=False)

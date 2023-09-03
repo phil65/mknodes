@@ -123,7 +123,7 @@ class FolderInfo:
             return self.path / file
         return None
 
-    def get_social_info(self) -> list[dict]:
+    def get_social_info(self) -> list[dict[str, str]]:
         result = []
         if self.repository_url:
             result.append(
