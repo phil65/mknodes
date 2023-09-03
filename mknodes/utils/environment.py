@@ -10,7 +10,6 @@ from mknodes.utils import yamlhelpers
 logger = logging.getLogger(__name__)
 
 
-
 class LaxUndefined(jinja2.Undefined):
     """Pass anything wrong as blank."""
 
@@ -37,7 +36,12 @@ class Environment:
             loader = None
         behavior = UNDEFINED_BEHAVIOR[undefined]
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
-        self.extras = {"dump_yaml": yamlhelpers.dump_yaml}
+        filters = {"dump_yaml": yamlhelpers.dump_yaml}
+        import mknodes
+
+        for kls_name in mknodes.__all__:
+            filters[kls_name] = getattr(mknodes, kls_name)
+        self.env.filters.update(filters)
 
     def render(self, markdown: str, variables=None):
         try:
@@ -46,13 +50,11 @@ class Environment:
             logger.warning("Error when rendering markdown: %s", e)
             return markdown
         variables = variables or {}
-        variables.update(self.extras)
         return md_template.render(**variables)
 
     def render_template(self, template_name: str, variables=None):
         template = self.env.get_template(template_name)
         variables = variables or {}
-        variables.update(self.extras)
         return template.render(**variables)
 
 

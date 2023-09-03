@@ -92,7 +92,6 @@ __all__ = [
     "MkAdmonition",
     "MkDiagram",
     "MkClassDiagram",
-    "Connector",
     "MkTable",
     "MkHtmlTable",
     "MkClassTable",

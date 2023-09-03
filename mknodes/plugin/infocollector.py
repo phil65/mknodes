@@ -11,8 +11,7 @@ import mergedeep
 
 from mknodes import paths, project as project_
 from mknodes.pages import mkpage
-from mknodes.plugin import environment
-from mknodes.utils import reprhelpers
+from mknodes.utils import environment, reprhelpers
 
 
 logger = logging.getLogger(__name__)

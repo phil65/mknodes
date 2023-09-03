@@ -4,6 +4,7 @@ import logging
 import re
 import textwrap
 
+from mknodes.utils import environment
 from mknodes.pages.metadata import Metadata
 
 
@@ -68,6 +69,17 @@ class ShiftHeaderLevelProcessor(TextProcessor):
             return f"{header_str} {match[2]}"
 
         return re.sub(HEADER_REGEX, lambda x: mod_header(x, self.level_shift), text)
+
+
+class RenderJinjaProcessor(TextProcessor):
+    ID = "render_jinja_templates"
+
+    def __init__(self, env: environment.Environment, variables=None):
+        self.env = env
+        self.variables = variables or {}
+
+    def run(self, text: str) -> str:
+        return self.env.render(text, self.variables)
 
 
 class AppendCssClassesProcessor(TextProcessor):
