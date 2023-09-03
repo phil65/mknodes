@@ -78,8 +78,12 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             }
             self.variables["page_mapping"] = page_mapping
 
-    def render(self, markdown: str):
-        md_template = self.env.from_string(markdown)
+    def render(self, markdown: str, additional_globals=None):
+        try:
+            md_template = self.env.from_string(markdown, globals=additional_globals or {})
+        except jinja2.exceptions.TemplateSyntaxError as e:
+            logger.warning("Error when rendering markdown: %s", e)
+            return markdown
         return md_template.render(**self.variables)
 
 
