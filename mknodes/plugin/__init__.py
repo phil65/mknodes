@@ -6,6 +6,7 @@ import pathlib
 import tempfile
 
 from typing import TYPE_CHECKING, Literal
+import jinja2
 
 from mkdocs.config import base, config_options
 from mkdocs.plugins import BasePlugin, get_plugin_logger
@@ -38,6 +39,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         logger.debug("Creating temporary dir %s", self._dir.name)
         self.link_replacer = linkreplacer.LinkReplacer()
         self.infocollector = infocollector.InfoCollector()
+        logger.debug("Finished initializing plugin")
 
     def on_startup(
         self,
@@ -122,6 +124,10 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         """Populate LinkReplacer and build path->MkPage mapping for following steps."""
         self.link_replacer.add_files(files)
         return nav
+
+    def on_env(self, env: jinja2.Environment, config: MkDocsConfig, files: Files):
+        env.globals["mknodes"] = self.infocollector.variables
+        logger.debug("Added variables to jinja2 environment.")
 
     def on_pre_page(
         self,
