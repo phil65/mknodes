@@ -90,6 +90,7 @@ class MkPage(mkcontainer.MkContainer):
             tags=tags,
         )
         self.template = template
+        logger.info("Created MkPage %s", self.resolved_file_path)
 
     def __repr__(self):
         meta_kwargs = self.metadata.repr_kwargs()
