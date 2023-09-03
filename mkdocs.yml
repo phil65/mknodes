@@ -60,6 +60,8 @@ plugins:
 - literate-nav
 - mknodes:
     path: mknodes.manual.root:build
+    # path: mknodes.mkwebsite:MkWebSite.for_project
+    # repo_path: https://github.com/pallets/jinja2.git
 - mkdocstrings:
     default_handler: python
     handlers:
@@ -83,13 +85,12 @@ plugins:
 
 markdown_extensions:
 - attr_list
-- pymdownx.magiclink # auto-convert links
 - pymdownx.emoji
 - toc:
     permalink: true
 
-extra:
-  social:
+# extra:
+#   social:
   # - icon: fontawesome/brands/github
   #   link: https://github.com/phil65
   # - icon: fontawesome/brands/gitter
