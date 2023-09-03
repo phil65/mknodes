@@ -40,6 +40,7 @@ class MkCode(mkcontainer.MkContainer):
         title: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
+        fence_level: int | None = None,
         header: str = "",
         **kwargs: Any,
     ):
@@ -51,6 +52,7 @@ class MkCode(mkcontainer.MkContainer):
             title: Code block title
             linenums: If set, use as start linenumber
             highlight_lines: Optionally highlight lines
+            fence_level: Determines amount of ` used for fence. If None, auto-determine.
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
@@ -58,6 +60,7 @@ class MkCode(mkcontainer.MkContainer):
         self.title = title
         self.linenums = linenums
         self.highlight_lines = highlight_lines
+        self._fence_level = fence_level
         super().__init__(content=code, header=header, **kwargs)
 
     def __repr__(self):
@@ -79,6 +82,8 @@ class MkCode(mkcontainer.MkContainer):
     @property
     def fence_boundary(self) -> str:
         """Fence boundary."""
+        if self._fence_level:
+            return "`" * (self._fence_level + 3)
         block_level = sum(isinstance(i, MkCode) for i in self.ancestors)
         return "`" * (block_level + 3)
 
