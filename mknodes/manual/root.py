@@ -4,7 +4,7 @@ from mknodes import manual
 from mknodes.theme import materialtheme
 
 
-HEADER = "°metadata.summary"
+HEADER = r"{{metadata.summary}}"
 
 INFO = "This is the source code for building this website:"
 

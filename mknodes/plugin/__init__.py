@@ -13,9 +13,8 @@ from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
 
-from mknodes import mkdocsconfig, paths, project
-from mknodes.plugin import linkreplacer, fileseditor
-from mknodes.pages import mkpage
+from mknodes import mkdocsconfig, project
+from mknodes.plugin import infocollector, linkreplacer, fileseditor
 from mknodes.utils import classhelpers
 from mknodes.theme import theme
 
@@ -38,6 +37,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self._page_mapping = {}
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         self.link_replacer = linkreplacer.LinkReplacer()
+        self.infocollector = infocollector.InfoCollector()
 
     def on_startup(
         self,
@@ -86,31 +86,28 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         if not self.project._root:
             msg = "No root for project created."
             raise RuntimeError(msg)
-        root = self.project._root
         cfg = mkdocsconfig.Config(config)
+        self.infocollector.get_info_from_project(self.project)
+        info = self.infocollector.variables
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
-            ed.write_files(self.project.all_files())
-            if css := root.all_css():
+            ed.write_files(info["files"])
+            if css := info["css"]:
                 cfg.register_css("mknodes_nodes.css", css)
-            if js_files := root.all_js_files():
-                for file in js_files:
-                    content = (paths.RESOURCES / file).read_text()
-                    cfg.register_js(file, content)
-            if css := self.project.theme.css:
+            if js_files := info["js_files"]:
+                for k, v in js_files.items():
+                    cfg.register_js(k, v)
+            if css := info["theme_css"]:
                 cfg.register_css("mknodes_theme.css", str(css))
-            if extensions := self.project.all_markdown_extensions():
+            if extensions := info["markdown_extensions"]:
                 cfg.register_extensions(extensions)
-            if info := self.project.folderinfo.get_social_info():
+            if social := info["social_info"]:
                 extra = cfg._config.extra
                 if not extra.get("social"):
-                    extra["social"] = info
+                    extra["social"] = social
             md = cfg.get_markdown_instance()
-            for template in self.project.templates:
+            for template in info["templates"]:
                 if html := template.build_html(md):
                     cfg.register_template(template.filename, html)
-            for template in root.all_templates():
-                html = template.build_html(md)
-                cfg.register_template(template.filename, html)
         return ed.files
 
     def on_nav(
@@ -121,12 +118,6 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
     ) -> Navigation | None:
         """Populate LinkReplacer and build path->MkPage mapping for following steps."""
         self.link_replacer.add_files(files)
-        if root := self.project._root:
-            self._page_mapping = {
-                node.resolved_file_path: node
-                for _level, node in root.iter_nodes()
-                if isinstance(node, mkpage.MkPage)
-            }
         return nav
 
     def on_pre_page(
@@ -137,7 +128,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> Page | None:
         """During this phase we set the edit paths."""
-        node = self._page_mapping.get(page.file.src_uri)
+        node = self.infocollector["page_mapping"].get(page.file.src_uri)
         edit_path = node._edit_path if node else None
         cfg = mkdocsconfig.Config(config)
         if path := cfg.get_edit_url(edit_path):
@@ -152,12 +143,8 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         config: MkDocsConfig,
         files: Files,
     ) -> str | None:
-        """During this phase links and `°metadata` stuff get replaced."""
-        for k, v in self.project.aggregate_info().items():
-            if f"°metadata.{k}" in markdown or f"°metadata.{k.lower()}" in markdown:
-                markdown = markdown.replace(f"°metadata.{k}", v)
-                markdown = markdown.replace(f"°metadata.{k.lower()}", v)
-                continue
+        """During this phase links get replaced and `jinja2` stuff get rendered."""
+        markdown = self.infocollector.render(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 
     def on_post_build(self, config: MkDocsConfig):
