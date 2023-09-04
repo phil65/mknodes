@@ -76,6 +76,7 @@ def create_basic_nodes_section(nav: mknodes.MkNav):
         mknodes.MkBinaryImage,
         mknodes.MkCard,
         mknodes.MkSpeechBubble,
+        mknodes.MkJinjaTemplate,
     ]
     base_nodes_nav = nav.add_nav("Base nodes")
     page = base_nodes_nav.add_index_page(hide_toc=True)

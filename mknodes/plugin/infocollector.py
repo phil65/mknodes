@@ -46,11 +46,8 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
         self.variables: dict[str, Any] = {}
         filters = {"dump_yaml": yamlhelpers.dump_yaml, "styled": helpers.styled}
-        import mknodes
-
-        for kls_name in mknodes.__all__:
-            filters[kls_name] = getattr(mknodes, kls_name)
         self.env.filters.update(filters)
+        self.set_mknodes_filters()
         if util.find_spec("markdown_exec"):
             self.set_markdown_exec_namespace()
 
@@ -72,6 +69,18 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
     def __repr__(self):
         return reprhelpers.get_repr(self, self.variables)
 
+    def set_mknodes_filters(self, parent=None):
+        import functools
+
+        import mknodes
+
+        filters = {}
+        for kls_name in mknodes.__all__:
+            kls = getattr(mknodes, kls_name)
+            fn = functools.partial(kls, parent=parent) if parent else kls
+            filters[kls_name] = fn
+        self.env.filters.update(filters)
+
     def merge(self, other: Mapping, additive: bool = False):
         strategy = mergedeep.Strategy.ADDITIVE if additive else mergedeep.Strategy.REPLACE
         self.variables = dict(mergedeep.merge(self.variables, other, strategy=strategy))
@@ -85,7 +94,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         self.variables["metadata"] = (
             project.folderinfo.aggregate_info() | project.theme.aggregate_info()
         )
-        self.variables["files"] = {}
+        self.variables["filenames"] = {}
         self.variables["project"] = project
         self.variables["css"] = project.all_css()
         self.variables["markdown_extensions"] = project.all_markdown_extensions()
@@ -107,7 +116,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
                 page_mapping=page_mapping,
             )
             self.variables.update(infos)
-        self.variables["files"] = project.all_files()
+            self.variables["filenames"] = list(page_mapping.keys())
 
     def render(self, markdown: str, variables=None):
         try:

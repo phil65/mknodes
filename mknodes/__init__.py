@@ -67,6 +67,7 @@ from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mkargparsehelp import MkArgParseHelp
+from .templatenodes.mkjinjatemplate import MkJinjaTemplate
 
 from .project import Project
 
@@ -137,6 +138,7 @@ __all__ = [
     "MkConfigSetting",
     "MkSpeechBubble",
     "MkTaskList",
+    "MkJinjaTemplate",
 ]
 
 __version__ = "0.32.0"

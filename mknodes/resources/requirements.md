@@ -1,28 +1,31 @@
 ## Plugin requirements
 
 ### Files
-All files conneted to the node tree:
-````` py
-{{ files.keys() | list | pprint | indent(4, first=True) }}
-`````
+
+All files connected to the node tree:
+
+{{ filenames | MkPrettyPrint }}
 
 ### Plugins
-Standard MkDocs configuration information. Do not try to modify.
 
-````` py
-{{ plugins | pprint | indent(4, first=True) }}
-`````
+Plugins used by the tree nodes:
+
+{{ plugins | MkPrettyPrint }}
 
 ### CSS
-Standard MkDocs configuration information. Do not try to modify.
 
-````` css
-{{ css | pprint | indent(4, first=True) }}
-`````
+CSS used by the tree nodes:
+
+{% for filename, content in css.items() %}
+
+{{ filename | MkHeader(level=4)}}
+
+{{ content | MkCode(language="css") }}
+
+{% endfor %}
 
 ### Markdown extensions
+
 Extensions used by the tree nodes:
 
-````` py
-{{ markdown_extensions | pprint | indent(4, first=True) }}
-`````
+{{ markdown_extensions | dump_yaml |  MkCode(language="yaml") }}

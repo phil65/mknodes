@@ -2,7 +2,6 @@ import inspect
 
 import mknodes
 
-from mknodes import paths
 from mknodes.utils import classhelpers
 
 
@@ -41,7 +40,7 @@ def create_requirements_page(nav: mknodes.MkNav):
     """Create the "Required extensions" MkPage and attach it to given MkNav."""
     page = nav.add_page("Requirements", hide_toc=True, icon="material/puzzle-edit")
     page += mknodes.MkCode.for_object(create_requirements_page, header=PAGE_CODE)
-    page += (paths.RESOURCES / "requirements.md").read_text()
+    page += mknodes.MkJinjaTemplate("requirements.md")
 
 
 def create_complete_code_section(nav: mknodes.MkNav):

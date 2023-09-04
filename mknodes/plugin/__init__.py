@@ -94,7 +94,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self.project.aggregate_info()
         info["config"] = config
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
-            ed.write_files(info["files"])
+            ed.write_files(self.project.all_files())
             for k, v in info["css"].items():
                 cfg.register_css(k, v)
             if js_files := info["js_files"]:
@@ -153,6 +153,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         node = self.project.infocollector["page_mapping"].get(page.file.src_uri)
         self.project.infocollector["page"] = page
         self.project.infocollector["mkpage"] = node
+        self.project.infocollector.set_mknodes_filters(parent=node)
         markdown = self.project.infocollector.render(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 
