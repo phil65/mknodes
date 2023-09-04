@@ -6,7 +6,7 @@ import logging
 from mknodes import mkdocsconfig, project
 from mknodes.cssclasses import rootcss
 from mknodes.pages import templateregistry
-from mknodes.utils import reprhelpers
+from mknodes.utils import reprhelpers, requirements
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,12 @@ class Theme:
         self.css = rootcss.RootCSS()
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
+
+    def get_requirements(self):
+        return requirements.Requirements(
+            css=str(self.css),
+            templates=list(self.templates),
+        )
 
     @classmethod
     def get_theme(cls, config: mkdocsconfig.Config, **kwargs):

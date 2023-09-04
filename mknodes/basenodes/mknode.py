@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, MutableMapping
+from collections.abc import Iterable
 import logging
 
 from typing import TYPE_CHECKING
@@ -12,6 +12,7 @@ from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.pages import pagetemplate
 from mknodes.treelib import node
+from mknodes.utils import requirements
 
 
 if TYPE_CHECKING:
@@ -206,48 +207,41 @@ class MkNode(node.Node):
             all_files |= self.resolved_virtual_files
         return all_files
 
-    def all_templates(self) -> list:
-        """Return list of templates."""
-        all_templates = [
-            des.template
-            for des in self.descendants
-            if hasattr(des, "template")
-            and isinstance(
+    def get_requirements(self, recursive: bool = True) -> requirements.Requirements:
+        all_templates: list[pagetemplate.PageTemplate] = []
+        all_js_files: set[str] = set()
+        all_plugins: set[str] = set()
+        all_extensions: list[dict] = [{"pymdownx.emoji": {}}]
+        all_css: set[str] = set()
+        nodes = [*list(self.descendants), self] if recursive else [self]
+        for des in nodes:
+            if hasattr(des, "template") and isinstance(
                 des.template,
                 pagetemplate.PageTemplate,
+            ):
+                all_templates.append(des.template)
+            extension = (
+                des.REQUIRED_EXTENSIONS
+                if isinstance(des.REQUIRED_EXTENSIONS, dict)
+                else {k: {} for k in des.REQUIRED_EXTENSIONS}
             )
-        ]
-        if hasattr(self, "template") and isinstance(
-            self.template,
-            pagetemplate.PageTemplate,
-        ):
-            all_templates.append(self.template)
-        return all_templates
-
-    def all_markdown_extensions(self) -> MutableMapping[str, dict]:
-        """Return dict of all md extensions used by the node (including children)."""
-        dicts = [
-            (
-                i.REQUIRED_EXTENSIONS
-                if isinstance(i.REQUIRED_EXTENSIONS, dict)
-                else {k: {} for k in i.REQUIRED_EXTENSIONS}
-            )
-            for i in self.descendants
-        ]
-        own = (
-            self.REQUIRED_EXTENSIONS
-            if isinstance(self.REQUIRED_EXTENSIONS, dict)
-            else {k: {} for k in self.REQUIRED_EXTENSIONS}
+            all_extensions.append(extension)
+            if js := des.JS:
+                if isinstance(js, list):
+                    all_js_files.update(js)
+                else:
+                    all_js_files.add(js)
+            for p in des.REQUIRED_PLUGINS:
+                all_plugins.add(p)
+            if css := des.get_css():
+                all_css.add(css)
+        return requirements.Requirements(
+            templates=all_templates,
+            js_files=all_js_files,
+            markdown_extensions=mergedeep.merge(*all_extensions),
+            plugins=all_plugins,
+            css="\n".join(all_css),
         )
-        own["pymdownx.emoji"] = {}
-        dicts.append(own)
-        return mergedeep.merge(*dicts)
-
-    def all_plugins(self) -> set[str]:
-        """Return set of all plugins used by the node (including children)."""
-        plugins = {p for desc in self.descendants for p in desc.REQUIRED_PLUGINS}
-        plugins.update(self.REQUIRED_PLUGINS)
-        return plugins
 
     def get_css(self) -> str | None:
         """Get css used by this node."""
@@ -255,29 +249,6 @@ class MkNode(node.Node):
             return None
         file_path = paths.RESOURCES / self.CSS
         return file_path.read_text()
-
-    def all_css(self) -> str:
-        """Return string containing all css needed by this node (including children)."""
-        all_css: set[str] = {css for des in self.descendants if (css := des.get_css())}
-        if self_css := self.get_css():
-            all_css.add(self_css)
-        return "\n".join(all_css)
-
-    def all_js_files(self) -> set[str]:
-        """Return set of all javascript files used by the node (including children)."""
-        all_js_files: set[str] = set()
-        for des in self.descendants:
-            if js := des.JS:
-                if isinstance(js, list):
-                    all_js_files.update(js)
-                else:
-                    all_js_files.add(js)
-        if self.JS:
-            if isinstance(self.JS, list):
-                all_js_files.update(self.JS)
-            else:
-                all_js_files.add(self.JS)
-        return all_js_files
 
     @staticmethod
     def create_example_page(page):
@@ -313,3 +284,4 @@ if __name__ == "__main__":
 
     section = "pre" >> mknodes.MkText("hello\n# Header\nfdsfds") >> "test" >> "xx"
     print(section)
+    print(section.get_requirements())

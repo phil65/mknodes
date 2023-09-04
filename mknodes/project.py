@@ -80,14 +80,22 @@ class Project(Generic[T]):
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
 
-    def all_css(self):
+    def all_css(self) -> dict[str, str]:
         css = {"mknodes_theme.css": str(self.theme.css)}
         if self._root:
-            css["mknodes_nodes.css"] = self._root.all_css()
+            css["mknodes_nodes.css"] = self._root.get_requirements().css
         return css
 
+    def all_templates(self) -> list[pagetemplate.PageTemplate]:
+        templates = list(self.theme.templates)
+        if self._root:
+            templates.extend(self._root.get_requirements().templates)
+        return templates
+
     def all_markdown_extensions(self) -> MutableMapping[str, dict]:
-        extensions = self._root.all_markdown_extensions() if self._root else {}
+        extensions = (
+            self._root.get_requirements().markdown_extensions if self._root else {}
+        )
         self.theme.adapt_extensions(extensions)
         extensions["pymdownx.magiclink"] = dict(
             repo_url_shorthand=True,

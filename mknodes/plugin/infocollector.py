@@ -91,17 +91,20 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         python._sessions_globals["mknodes"] = self.variables
 
     def get_info_from_project(self, project: project_.Project):
-        self.variables["metadata"] = (
-            project.folderinfo.aggregate_info() | project.theme.aggregate_info()
-        )
-        self.variables["filenames"] = {}
-        self.variables["project"] = project
-        self.variables["css"] = project.all_css()
-        self.variables["markdown_extensions"] = project.all_markdown_extensions()
-        self.variables["plugins"] = {}
+        variables = {
+            "metadata": (
+                project.folderinfo.aggregate_info() | project.theme.aggregate_info()
+            ),
+            "filenames": {},
+            "project": project,
+            "css": project.all_css(),
+            "markdown_extensions": project.all_markdown_extensions(),
+            "plugins": set(),
+        }
         if root := project._root:
+            reqs = root.get_requirements()
             js_files = {
-                path: (paths.RESOURCES / path).read_text() for path in root.all_js_files()
+                path: (paths.RESOURCES / path).read_text() for path in reqs.js_files
             }
             page_mapping = {
                 node.resolved_file_path: node
@@ -110,13 +113,14 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             }
             infos = dict(
                 js_files=js_files,
-                plugins=root.all_plugins(),
+                plugins=reqs.plugins,
                 social_info=project.folderinfo.get_social_info(),
-                templates=list(project.templates) + root.all_templates(),
+                templates=project.all_templates(),
                 page_mapping=page_mapping,
             )
-            self.variables.update(infos)
-            self.variables["filenames"] = list(page_mapping.keys())
+            variables |= infos
+            variables["filenames"] = list(page_mapping.keys())
+        self.variables |= variables
 
     def render(self, markdown: str, variables=None):
         try:
