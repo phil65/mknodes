@@ -77,14 +77,6 @@ class MkDoc(mknav.MkNav):
     def module_name(self):
         return self.module.__name__.split(".")[-1]
 
-    def to_markdown(self) -> str:
-        self._create_index_page()
-        for klass in self.klasses:
-            self.add_class_page(klass=klass, flatten=self.flatten_nav)
-        for submod in self.submodules:
-            self.add_doc(submod, class_page=self.ClassPage, flatten_nav=self.flatten_nav)
-        return super().to_markdown()
-
     def collect_classes(
         self,
         *,
@@ -98,6 +90,11 @@ class MkDoc(mknav.MkNav):
             submodule=submodule,
         ):
             self.klasses.add(klass)
+        for klass in self.klasses:
+            self.add_class_page(klass=klass, flatten=self.flatten_nav)
+        for submod in self.submodules:
+            self.add_doc(submod, class_page=self.ClassPage, flatten_nav=self.flatten_nav)
+        self._create_index_page()
 
     def iter_classes(
         self,
