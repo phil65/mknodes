@@ -225,7 +225,8 @@ class MkNode(node.Node):
                 if isinstance(des.REQUIRED_EXTENSIONS, dict)
                 else {k: {} for k in des.REQUIRED_EXTENSIONS}
             )
-            all_extensions.append(extension)
+            if extension:
+                all_extensions.append(extension)
             if js := des.JS:
                 if isinstance(js, list):
                     all_js_files.update(js)
