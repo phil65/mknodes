@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import MutableMapping
 import logging
 import os
 
@@ -73,16 +72,17 @@ class Project(Generic[T]):
         return self._root
 
     def get_requirements(self) -> requirements.Requirements:
-        reqs = dict(self._root.get_requirements()) if self._root else {}
-        # reqs = mergedeep.merge(reqs, dict(self.theme.get_requirements()))
-        reqs = reqs | dict(self.theme.get_requirements())
+        reqs = requirements.Requirements()
+        if self._root:
+            reqs.merge(self._root.get_requirements())
+        reqs.merge(self.theme.get_requirements())
         self.theme.adapt_extensions(reqs["markdown_extensions"])
         reqs["markdown_extensions"]["pymdownx.magiclink"] = dict(
             repo_url_shorthand=True,
             user=self.folderinfo.repository_username,
             repo=self.folderinfo.repository_name,
         )
-        return requirements.Requirements(**reqs)
+        return reqs
 
     def set_root(self, nav: mknav.MkNav):
         self._root = nav
@@ -91,18 +91,6 @@ class Project(Generic[T]):
     def all_files(self) -> dict[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
-
-    def all_markdown_extensions(self) -> MutableMapping[str, dict]:
-        extensions = (
-            self._root.get_requirements().markdown_extensions if self._root else {}
-        )
-        self.theme.adapt_extensions(extensions)
-        extensions["pymdownx.magiclink"] = dict(
-            repo_url_shorthand=True,
-            user=self.folderinfo.repository_username,
-            repo=self.folderinfo.repository_name,
-        )
-        return extensions
 
     def aggregate_info(self):
         self.infocollector.get_info_from_project(self)

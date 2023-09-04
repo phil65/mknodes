@@ -100,7 +100,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             "filenames": {},
             "project": project,
             "css": reqs.css,
-            "markdown_extensions": project.all_markdown_extensions(),
+            "markdown_extensions": reqs.markdown_extensions,
             "plugins": reqs.plugins,
             "templates": reqs.templates,
             "js_files": js_files,
