@@ -130,6 +130,16 @@ class PackageInfo:
     def __hash__(self):
         return hash(self.package_name)
 
+    @property
+    def inventory_url(self) -> str | None:
+        """Return best guess for a link to an inventory file."""
+        for v in self.urls.values():
+            if "github.io" in v or "readthedocs" in v:
+                return f"{v.rstrip('/')}/objects.inv"
+        if url := self.urls.get("Documentation"):
+            return f"{url.rstrip('/')}/objects.inv"
+        return None
+
     @functools.cached_property
     def required_deps(self) -> list[Dependency]:
         requires = get_requires(self.distribution)
@@ -276,5 +286,5 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = get_info("mknodes")
-    print(info.get_entry_points())
+    info = get_info("jinja2")
+    print(info.inventory_url)

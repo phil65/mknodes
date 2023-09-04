@@ -98,6 +98,13 @@ class FolderInfo:
         return None
 
     @property
+    def inventory_url(self) -> str | None:
+        """Return best guess for a link to an inventory file."""
+        if url := self.mkdocs_config.get("site_url"):
+            return f"{url.rstrip('/')}/objects.inv"
+        return None
+
+    @property
     def package_name(self) -> str:
         return self.module.__name__
 
@@ -164,4 +171,4 @@ class FolderInfo:
 
 if __name__ == "__main__":
     info = FolderInfo.clone_from("https://github.com/mkdocs/mkdocs.git")
-    print(info.get_social_info())
+    print(info.inventory_url)
