@@ -118,6 +118,7 @@ def label_for_class(klass: type) -> str:
 
 def get_material_icon_path(icon: str) -> pathlib.Path:
     import material
+
     path = pathlib.Path(material.__path__[0])
     return path / ".icons" / f"{icon}.svg"
 
