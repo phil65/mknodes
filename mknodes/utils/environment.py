@@ -29,13 +29,14 @@ UNDEFINED_BEHAVIOR = {
 class Environment:
     """MkNodes Environment."""
 
-    def __init__(self, undefined: str = "strict", load_templates: bool = False):
+    def __init__(self, undefined: str = "silent", load_templates: bool = False):
         if load_templates:
             loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
         else:
             loader = None
         behavior = UNDEFINED_BEHAVIOR[undefined]
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
+        self.variables = {}
         filters = {"dump_yaml": yamlhelpers.dump_yaml}
         import mknodes
 
@@ -45,16 +46,16 @@ class Environment:
 
     def render(self, markdown: str, variables=None):
         try:
-            md_template = self.env.from_string(markdown)
+            template = self.env.from_string(markdown)
         except jinja2.exceptions.TemplateSyntaxError as e:
-            logger.warning("Error when rendering markdown: %s", e)
+            logger.warning("Error when loading template: %s", e)
             return markdown
-        variables = variables or {}
-        return md_template.render(**variables)
+        variables = self.variables | (variables or {})
+        return template.render(**variables)
 
     def render_template(self, template_name: str, variables=None):
         template = self.env.get_template(template_name)
-        variables = variables or {}
+        variables = self.variables | (variables or {})
         return template.render(**variables)
 
 
