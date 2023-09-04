@@ -8,7 +8,7 @@ from mknodes.pages import pagetemplate
 
 @dataclasses.dataclass
 class Requirements(collections.abc.Mapping):
-    css: str = ""
+    css: dict[str, str] = dataclasses.field(default_factory=dict)
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
     markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
     plugins: set[str] = dataclasses.field(default_factory=set)

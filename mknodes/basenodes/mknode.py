@@ -240,7 +240,7 @@ class MkNode(node.Node):
             js_files=all_js_files,
             markdown_extensions=mergedeep.merge(*all_extensions),
             plugins=all_plugins,
-            css="\n".join(all_css),
+            css={"mknodes_nodes.css": "\n".join(all_css)},
         )
 
     def get_css(self) -> str | None:

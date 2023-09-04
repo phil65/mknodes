@@ -81,9 +81,9 @@ class Project(Generic[T]):
         return files | self.theme.get_files()
 
     def all_css(self) -> dict[str, str]:
-        css = {"mknodes_theme.css": str(self.theme.css)}
+        css = self.theme.get_requirements().css
         if self._root:
-            css["mknodes_nodes.css"] = self._root.get_requirements().css
+            css |= self._root.get_requirements().css
         return css
 
     def all_templates(self) -> list[pagetemplate.PageTemplate]:

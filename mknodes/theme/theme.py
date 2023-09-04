@@ -31,7 +31,7 @@ class Theme:
 
     def get_requirements(self):
         return requirements.Requirements(
-            css=str(self.css),
+            css={"mknodes_theme.css": str(self.css)},
             templates=list(self.templates),
         )
 
