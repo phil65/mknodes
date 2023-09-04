@@ -6,8 +6,6 @@ import os
 
 from typing import Generic, TypeVar
 
-import mergedeep
-
 from mknodes import mknav
 from mknodes.info import folderinfo
 from mknodes.pages import pagetemplate
@@ -76,7 +74,8 @@ class Project(Generic[T]):
 
     def get_requirements(self) -> requirements.Requirements:
         reqs = dict(self._root.get_requirements()) if self._root else {}
-        reqs = mergedeep.merge(reqs, dict(self.theme.get_requirements()))
+        # reqs = mergedeep.merge(reqs, dict(self.theme.get_requirements()))
+        reqs = reqs | dict(self.theme.get_requirements())
         self.theme.adapt_extensions(reqs["markdown_extensions"])
         reqs["markdown_extensions"]["pymdownx.magiclink"] = dict(
             repo_url_shorthand=True,
@@ -92,18 +91,6 @@ class Project(Generic[T]):
     def all_files(self) -> dict[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
-
-    def all_css(self) -> dict[str, str]:
-        css = self.theme.get_requirements().css
-        if self._root:
-            css |= self._root.get_requirements().css
-        return css
-
-    def all_templates(self) -> list[pagetemplate.PageTemplate]:
-        templates = self.theme.get_requirements().templates[:]
-        if self._root:
-            templates.extend(self._root.get_requirements().templates)
-        return templates
 
     def all_markdown_extensions(self) -> MutableMapping[str, dict]:
         extensions = (
@@ -123,4 +110,9 @@ class Project(Generic[T]):
 
 if __name__ == "__main__":
     project = Project.for_mknodes()
-    print(project.get_requirements())
+    from mknodes.manual import root
+
+    root.build(project)
+    project.aggregate_info()
+    reqs = project.get_requirements()
+    print(reqs.keys())

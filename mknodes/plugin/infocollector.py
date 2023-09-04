@@ -91,34 +91,29 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         python._sessions_globals["mknodes"] = self.variables
 
     def get_info_from_project(self, project: project_.Project):
+        reqs = project.get_requirements()
+        js_files = {path: (paths.RESOURCES / path).read_text() for path in reqs.js_files}
         variables = {
             "metadata": (
                 project.folderinfo.aggregate_info() | project.theme.aggregate_info()
             ),
             "filenames": {},
             "project": project,
-            "css": project.all_css(),
+            "css": reqs.css,
             "markdown_extensions": project.all_markdown_extensions(),
-            "plugins": set(),
+            "plugins": reqs.plugins,
+            "templates": reqs.templates,
+            "js_files": js_files,
+            "social_info": project.folderinfo.get_social_info(),
         }
+
         if root := project._root:
-            reqs = root.get_requirements()
-            js_files = {
-                path: (paths.RESOURCES / path).read_text() for path in reqs.js_files
-            }
             page_mapping = {
                 node.resolved_file_path: node
                 for _level, node in root.iter_nodes()
                 if isinstance(node, mkpage.MkPage)
             }
-            infos = dict(
-                js_files=js_files,
-                plugins=reqs.plugins,
-                social_info=project.folderinfo.get_social_info(),
-                templates=project.all_templates(),
-                page_mapping=page_mapping,
-            )
-            variables |= infos
+            variables["page_mapping"] = page_mapping
             variables["filenames"] = list(page_mapping.keys())
         self.variables |= variables
 
@@ -161,4 +156,4 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
 if __name__ == "__main__":
     builder = InfoCollector()
     builder.get_info_from_project(project_.Project.for_mknodes())
-    print(builder)
+    print(dict(builder))
