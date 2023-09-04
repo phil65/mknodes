@@ -1,4 +1,4 @@
-``` py title='__main__.create_github_index_md' linenums="82" hl_lines="3"
+``` py title='__main__.create_github_index_md' linenums="86" hl_lines="3"
 def create_github_index_md() -> mknodes.MkPage:
     page = mknodes.MkPage("Github index")
     page += mknodes.MkCode.for_object(create_github_index_md)
@@ -19,7 +19,7 @@ def create_github_index_md() -> mknodes.MkPage:
 
 [![PyPI License](https://img.shields.io/pypi/l/mknodes.svg)](https://pypi.org/project/mknodes/)
 [![Package status](https://img.shields.io/pypi/status/mknodes.svg)](https://pypi.org/project/mknodes/)
-[![Weekly downloads](https://img.shields.io/pypi/dw/mknodes.svg)](https://pypi.org/project/mknodes/)
+[![Daily downloads](https://img.shields.io/pypi/dd/mknodes.svg)](https://pypi.org/project/mknodes/)
 [![Weekly downloads](https://img.shields.io/pypi/dw/mknodes.svg)](https://pypi.org/project/mknodes/)
 [![Monthly downloads](https://img.shields.io/pypi/dm/mknodes.svg)](https://pypi.org/project/mknodes/)
 [![Distribution format](https://img.shields.io/pypi/format/mknodes.svg)](https://pypi.org/project/mknodes/)
@@ -61,127 +61,157 @@ pip install mknodes
 
 ``` mermaid
 graph LR
-  2221091714352["mknode.MkNode"]
-  2221091724112["mkheader.MkHeader"]
-  2221091722160["mktext.MkText"]
-  2221092966336["mkchangelog.MkChangelog"]
-  2221092971216["mkcodeofconduct.MkCodeOfConduct"]
-  2221093014160["mklicense.MkLicense"]
-  2221091715328["mkcontainer.MkContainer"]
-  2221091710448["mkblock.MkBlock"]
-  2221091712400["mkhtmlblock.MkHtmlBlock"]
-  2221091717280["mkadmonitionblock.MkAdmonitionBlock"]
-  2221091718256["mkdetailsblock.MkDetailsBlock"]
-  2221091469376["mktabs.MkTabBlock"]
-  2221091719232["mkadmonition.MkAdmonition"]
-  2221091721184["mkblockquote.MkBlockQuote"]
-  2221091467424["mkfootnotes.MkFootNote"]
-  2221091479136["mkfootnotes.MkFootNotes"]
-  2221091482064["mkpage.MkPage"]
-  2221091507440["mktemplatepage.MkTemplatePage"]
-  2221091514272["mkclasspage.MkClassPage"]
-  2221091501584["mkmodulepage.MkModulePage"]
-  2221091466448["mkgrid.MkGridCard"]
-  2221091472304["mkgrid.MkGrid"]
-  2221091488896["mkcode.MkCode"]
-  2221091474256["mkdiagram.MkDiagram"]
-  2221091478160["mkclassdiagram.MkClassDiagram"]
-  2221092976096["mktreeview.MkTreeView"]
-  2221092980000["mkprettyprint.MkPrettyPrint"]
-  2221092995616["mklog.MkLog"]
-  2221093038560["mkcommandoutput.MkCommandOutput"]
-  2221091475232["mklist.MkList"]
-  2221091489872["mkbasetable.MkBaseTable"]
-  2221091471328["mktable.MkTable"]
-  2221091497680["mkclasstable.MkClassTable"]
-  2221093027824["mkdependencytable.MkDependencyTable"]
-  2221093033680["mkmoduletable.MkModuleTable"]
-  2221091483040["mktabs.MkTab"]
-  2221091470352["mktabcontainer.MkTabContainer"]
-  2221091484016["mktabcontainer.MkTabbed"]
-  2221092977072["mkreprrawrendered.MkReprRawRendered"]
-  2221091460592["mktabcontainer.MkTabbedBlocks"]
-  2221091484992["mkcritic.MkCritic"]
-  2221091480112["mkannotations.MkAnnotation"]
-  2221091476208["mkannotations.MkAnnotations"]
-  2221091487920["mkdefinitionlist.MkDefinitionList"]
-  2221091503536["mkshields.MkShields"]
-  2221091517200["mkinstallguide.MkInstallGuide"]
-  2221092969264["mkcommitconventions.MkCommitConventions"]
-  2221092970240["mkpullrequestguidelines.MkPullRequestGuidelines"]
-  2221092974144["mkdevenvsetup.MkDevEnvSetup"]
-  2221091465472["mknav.MkNav"]
-  2221091515248["mkdoc.MkDoc"]
-  2221091491824["mklink.MkLink"]
-  2221091486944["mkkeys.MkKeys"]
-  2221091463520["mkdocstrings.MkDocStrings"]
-  2221091481088["mkimage.MkImage"]
-  2221091468400["mkbinaryimage.MkBinaryImage"]
-  2221093042464["mkbadge.MkBadge"]
-  2221091473280["mksnippet.MkSnippet"]
-  2221091485968["mkiframe.MkIFrame"]
-  2221091492800["mkprogressbar.MkProgressBar"]
-  2221091502560["mkinclude.MkInclude"]
-  2221093000496["mkcallable.MkCallable"]
-  2221091714352 --> 2221091724112
-  2221091714352 --> 2221091722160
-  2221091722160 --> 2221092966336
-  2221091722160 --> 2221092971216
-  2221091722160 --> 2221093014160
-  2221091714352 --> 2221091715328
-  2221091715328 --> 2221091710448
-  2221091710448 --> 2221091712400
-  2221091710448 --> 2221091717280
-  2221091710448 --> 2221091718256
-  2221091710448 --> 2221091469376
-  2221091715328 --> 2221091719232
-  2221091715328 --> 2221091721184
-  2221091715328 --> 2221091467424
-  2221091715328 --> 2221091479136
-  2221091715328 --> 2221091482064
-  2221091482064 --> 2221091507440
-  2221091507440 --> 2221091514272
-  2221091507440 --> 2221091501584
-  2221091715328 --> 2221091466448
-  2221091715328 --> 2221091472304
-  2221091715328 --> 2221091488896
-  2221091488896 --> 2221091474256
-  2221091474256 --> 2221091478160
-  2221091488896 --> 2221092976096
-  2221091488896 --> 2221092980000
-  2221091488896 --> 2221092995616
-  2221091488896 --> 2221093038560
-  2221091715328 --> 2221091475232
-  2221091715328 --> 2221091489872
-  2221091489872 --> 2221091471328
-  2221091471328 --> 2221091497680
-  2221091471328 --> 2221093027824
-  2221091471328 --> 2221093033680
-  2221091715328 --> 2221091483040
-  2221091715328 --> 2221091470352
-  2221091470352 --> 2221091484016
-  2221091484016 --> 2221092977072
-  2221091470352 --> 2221091460592
-  2221091715328 --> 2221091484992
-  2221091715328 --> 2221091480112
-  2221091715328 --> 2221091476208
-  2221091715328 --> 2221091487920
-  2221091715328 --> 2221091503536
-  2221091715328 --> 2221091517200
-  2221091715328 --> 2221092969264
-  2221091715328 --> 2221092970240
-  2221091715328 --> 2221092974144
-  2221091714352 --> 2221091465472
-  2221091465472 --> 2221091515248
-  2221091714352 --> 2221091491824
-  2221091714352 --> 2221091486944
-  2221091714352 --> 2221091463520
-  2221091714352 --> 2221091481088
-  2221091481088 --> 2221091468400
-  2221091468400 --> 2221093042464
-  2221091714352 --> 2221091473280
-  2221091714352 --> 2221091485968
-  2221091714352 --> 2221091492800
-  2221091714352 --> 2221091502560
-  2221091714352 --> 2221093000496
+  2257944740368["mknode.MkNode"]
+  2257944738416["mkheader.MkHeader"]
+  2257955065920["mktext.MkText"]
+  2257991175136["mkchangelog.MkChangelog"]
+  2257991176112["mkcodeofconduct.MkCodeOfConduct"]
+  2257952121424["mklicense.MkLicense"]
+  2257955088368["mkcontainer.MkContainer"]
+  2257955064944["mkblock.MkBlock"]
+  2257955089344["mkhtmlblock.MkHtmlBlock"]
+  2257955078608["mkadmonitionblock.MkAdmonitionBlock"]
+  2257955077632["mkdetailsblock.MkDetailsBlock"]
+  2257955160592["mktabs.MkTabBlock"]
+  2257955071776["mkadmonition.MkAdmonition"]
+  2257955084464["mkblockquote.MkBlockQuote"]
+  2257955086416["mkcode.MkCode"]
+  2257955158640["mkdiagram.MkDiagram"]
+  2257954958560["mkclassdiagram.MkClassDiagram"]
+  2257952071648["mktreeview.MkTreeView"]
+  2257952109712["mkmoduleoverview.MkModuleOverview"]
+  2257952072624["mkprettyprint.MkPrettyPrint"]
+  2257952105808["mklog.MkLog"]
+  2257955091296["mkfootnotes.MkFootNote"]
+  2257955082512["mkfootnotes.MkFootNotes"]
+  2257955101056["mkpage.MkPage"]
+  2257954988816["mktemplatepage.MkTemplatePage"]
+  2257954999552["mkclasspage.MkClassPage"]
+  2257954994672["mkmodulepage.MkModulePage"]
+  2257955157664["mkgrid.MkGridCard"]
+  2257955147904["mkgrid.MkGrid"]
+  2257955154736["mklist.MkList"]
+  2257955175232["mkbasetable.MkBaseTable"]
+  2257955144976["mktable.MkTable"]
+  2257954973200["mkclasstable.MkClassTable"]
+  2257954940992["mkmoduletable.MkModuleTable"]
+  2257952107760["mkdependencytable.MkDependencyTable"]
+  2257955159616["mkhtmltable.MkHtmlTable"]
+  2257955161568["mktabs.MkTab"]
+  2257955162544["mktabcontainer.MkTabContainer"]
+  2257955163520["mktabcontainer.MkTabbed"]
+  2257952104832["mkreprrawrendered.MkReprRawRendered"]
+  2257955164496["mktabcontainer.MkTabbedBlocks"]
+  2257955171328["mkcritic.MkCritic"]
+  2257955166448["mkannotations.MkAnnotation"]
+  2257955168400["mkannotations.MkAnnotations"]
+  2257955172304["mkdefinitionlist.MkDefinition"]
+  2257952113616["mkconfigsetting.MkConfigSetting"]
+  2257955173280["mkdefinitionlist.MkDefinitionList"]
+  2257954969296["mkshowcase.MkShowcase"]
+  2257954957584["mkspeechbubble.MkSpeechBubble"]
+  2257954949776["mktasklist.MkTask"]
+  2257954941968["mktasklist.MkTaskList"]
+  2257954944896["mkmetadatabadges.MkMetadataBadges"]
+  2257954981984["mkshields.MkShields"]
+  2257954992720["mkinstallguide.MkInstallGuide"]
+  2257991178064["mkcommitconventions.MkCommitConventions"]
+  2257991156592["mkpullrequestguidelines.MkPullRequestGuidelines"]
+  2257952053104["mkdevenvsetup.MkDevEnvSetup"]
+  2257952110688["mkcommentedcode.MkCommentedCode"]
+  2257952114592["mkpluginflow.MkPluginFlow"]
+  2257952116544["mkargparsehelp.MkArgParseHelp"]
+  2257955097152["mknav.MkNav"]
+  2257954996624["mkdoc.MkDoc"]
+  2257994953952["mkblog.MkBlog"]
+  2257955149856["mklink.MkLink"]
+  2257955129360["mkkeys.MkKeys"]
+  2257955139120["_mkdocstrings.MkDocStrings"]
+  2257955131312["mkimage.MkImage"]
+  2257955150832["mkbinaryimage.MkBinaryImage"]
+  2257954964416["mkbadge.MkBadge"]
+  2257955165472["mksnippet.MkSnippet"]
+  2257955169376["mkiframe.MkIFrame"]
+  2257955170352["mkprogressbar.MkProgressBar"]
+  2257954960512["mkcard.MkCard"]
+  2257954976128["mkinclude.MkInclude"]
+  2257952115568["mkcallable.MkCallable"]
+  2257952108736["mkcommandoutput.MkCommandOutput"]
+  2257952117520["mkjinjatemplate.MkJinjaTemplate"]
+  2257944740368 --> 2257944738416
+  2257944740368 --> 2257955065920
+  2257955065920 --> 2257991175136
+  2257955065920 --> 2257991176112
+  2257955065920 --> 2257952121424
+  2257944740368 --> 2257955088368
+  2257955088368 --> 2257955064944
+  2257955064944 --> 2257955089344
+  2257955064944 --> 2257955078608
+  2257955064944 --> 2257955077632
+  2257955064944 --> 2257955160592
+  2257955088368 --> 2257955071776
+  2257955088368 --> 2257955084464
+  2257955088368 --> 2257955086416
+  2257955086416 --> 2257955158640
+  2257955158640 --> 2257954958560
+  2257955086416 --> 2257952071648
+  2257952071648 --> 2257952109712
+  2257955086416 --> 2257952072624
+  2257955086416 --> 2257952105808
+  2257955088368 --> 2257955091296
+  2257955088368 --> 2257955082512
+  2257955088368 --> 2257955101056
+  2257955101056 --> 2257954988816
+  2257954988816 --> 2257954999552
+  2257954988816 --> 2257954994672
+  2257955088368 --> 2257955157664
+  2257955088368 --> 2257955147904
+  2257955088368 --> 2257955154736
+  2257955088368 --> 2257955175232
+  2257955175232 --> 2257955144976
+  2257955144976 --> 2257954973200
+  2257955144976 --> 2257954940992
+  2257955144976 --> 2257952107760
+  2257955175232 --> 2257955159616
+  2257955088368 --> 2257955161568
+  2257955088368 --> 2257955162544
+  2257955162544 --> 2257955163520
+  2257955163520 --> 2257952104832
+  2257955162544 --> 2257955164496
+  2257955088368 --> 2257955171328
+  2257955088368 --> 2257955166448
+  2257955088368 --> 2257955168400
+  2257955088368 --> 2257955172304
+  2257955172304 --> 2257952113616
+  2257955088368 --> 2257955173280
+  2257955088368 --> 2257954969296
+  2257955088368 --> 2257954957584
+  2257955088368 --> 2257954949776
+  2257955088368 --> 2257954941968
+  2257955088368 --> 2257954944896
+  2257955088368 --> 2257954981984
+  2257955088368 --> 2257954992720
+  2257955088368 --> 2257991178064
+  2257955088368 --> 2257991156592
+  2257955088368 --> 2257952053104
+  2257955088368 --> 2257952110688
+  2257955088368 --> 2257952114592
+  2257955088368 --> 2257952116544
+  2257944740368 --> 2257955097152
+  2257955097152 --> 2257954996624
+  2257955097152 --> 2257994953952
+  2257944740368 --> 2257955149856
+  2257944740368 --> 2257955129360
+  2257944740368 --> 2257955139120
+  2257944740368 --> 2257955131312
+  2257955131312 --> 2257955150832
+  2257955131312 --> 2257954964416
+  2257944740368 --> 2257955165472
+  2257944740368 --> 2257955169376
+  2257944740368 --> 2257955170352
+  2257944740368 --> 2257954960512
+  2257944740368 --> 2257954976128
+  2257944740368 --> 2257952115568
+  2257944740368 --> 2257952108736
+  2257944740368 --> 2257952117520
 ```
