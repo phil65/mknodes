@@ -52,34 +52,49 @@ class LinkProvider:
     def add_inv_file(self, path: str | os.PathLike, base_url: str | None = None):
         self.inv_manager.add_inv_file(path, base_url=base_url)
 
-    def url_for_module(self, mod: types.ModuleType) -> str | None:
+    def url_for_module(
+        self,
+        mod: types.ModuleType,
+        fallback_to_homepage: bool = False,
+    ) -> str | None:
         """Return a url for given module.
 
         Arguments:
             mod: Module to get a url for
+            fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
         dotted_path = mod.__name__
         if dotted_path in self.inv_manager:
             return self.inv_manager[dotted_path]
         module = dotted_path.split(".")[0]
-        return homepage_for_distro(module)
+        return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_module(self, mod: types.ModuleType) -> str:
+    def link_for_module(
+        self,
+        mod: types.ModuleType,
+        fallback_to_homepage: bool = False,
+    ) -> str:
         """Return a markdown link for given module.
 
         Arguments:
             mod: Module to get a link for
+            fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
         dotted_path = mod.__name__
-        if url := self.url_for_module(mod):
+        if url := self.url_for_module(mod, fallback_to_homepage=fallback_to_homepage):
             return linked(url, dotted_path)
         return linked(dotted_path)
 
-    def url_for_klass(self, kls: type) -> str | None:
+    def url_for_klass(
+        self,
+        kls: type,
+        fallback_to_homepage: bool = False,
+    ) -> str | None:
         """Return a url for given class.
 
         Arguments:
             kls: Klass to get a url for
+            fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
         module_path = kls.__module__
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
@@ -88,16 +103,21 @@ class LinkProvider:
         if dotted_path in self.inv_manager:
             return self.inv_manager[dotted_path]
         module = module_path.split(".")[0]
-        return homepage_for_distro(module)
+        return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_klass(self, kls: type) -> str:
+    def link_for_klass(
+        self,
+        kls: type,
+        fallback_to_homepage: bool = False,
+    ) -> str:
         """Return a markdown link for given class.
 
         Arguments:
             kls: Klass to get a link for
+            fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
         qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
-        if url := self.url_for_klass(kls):
+        if url := self.url_for_klass(kls, fallback_to_homepage=fallback_to_homepage):
             return linked(url, qual_name)
         return linked(qual_name)
 
