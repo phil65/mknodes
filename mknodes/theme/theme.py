@@ -41,7 +41,7 @@ class Theme:
         if theme_name == "material":
             from mknodes.theme import materialtheme
 
-            return materialtheme.MaterialTheme(**kwargs)
+            return materialtheme.MaterialTheme(config=config, **kwargs)
         return Theme(theme_name, config=config, **kwargs)
 
     def get_files(self):
