@@ -8,6 +8,7 @@ from typing import Any
 from mkdocs import plugins
 
 from mknodes.basenodes import (
+    _mkdocstrings,
     mkadmonition,
     mkcode,
     mkcontainer,
@@ -54,10 +55,12 @@ Flow = [
 def get_event_section(fn: Callable) -> list[mknode.MkNode]:
     code = mkcode.MkCode.for_object(fn)
     link = mklink.MkLink(MKDOCS_LINK.format(event=fn.__name__), fn.__name__)
+    info = _mkdocstrings.MkDocStrings(f"mkdocs.plugins.BasePlugin.{fn.__name__}")
     return [
         mkheader.MkHeader(link),
         mktext.MkText(inspecthelpers.get_doc(fn)),
         mkadmonition.MkAdmonition(code, collapsible=True, typ="quote", title="Source"),
+        mkadmonition.MkAdmonition(info, collapsible=True, title="Hook info"),
     ]
 
 
