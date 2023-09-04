@@ -7,22 +7,50 @@ import logging
 
 from typing import Any
 
+import jinja2
 import mergedeep
 
 from mknodes import paths, project as project_
 from mknodes.pages import mkpage
-from mknodes.utils import environment, reprhelpers
+from mknodes.utils import reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
 
 
+class LaxUndefined(jinja2.Undefined):
+    """Pass anything wrong as blank."""
+
+    def _fail_with_undefined_error(self, *args, **kwargs):
+        return ""
+
+
+UNDEFINED_BEHAVIOR = {
+    "keep": jinja2.DebugUndefined,
+    "silent": jinja2.Undefined,
+    "strict": jinja2.StrictUndefined,
+    # lax will even pass unknown objects:
+    "lax": LaxUndefined,
+}
+
+
 class InfoCollector(MutableMapping, metaclass=ABCMeta):
     """MkNodes InfoCollector."""
 
-    def __init__(self, data: dict[str, Any] | None = None):
-        self.env = environment.Environment()
-        self.variables = data or {}
+    def __init__(self, undefined: str = "silent", load_templates: bool = False):
+        if load_templates:
+            loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
+        else:
+            loader = None
+        behavior = UNDEFINED_BEHAVIOR[undefined]
+        self.env = jinja2.Environment(undefined=behavior, loader=loader)
+        self.variables: dict[str, Any] = {}
+        filters = {"dump_yaml": yamlhelpers.dump_yaml}
+        import mknodes
+
+        for kls_name in mknodes.__all__:
+            filters[kls_name] = getattr(mknodes, kls_name)
+        self.env.filters.update(filters)
         if util.find_spec("markdown_exec"):
             self.set_markdown_exec_namespace()
 
@@ -54,7 +82,9 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         python._sessions_globals["mknodes"] = self.variables
 
     def get_info_from_project(self, project: project_.Project):
-        self.variables["metadata"] = project.aggregate_info()
+        self.variables["metadata"] = (
+            project.folderinfo.aggregate_info() | project.theme.aggregate_info()
+        )
         self.variables["project"] = project
         if root := project._root:
             js_files = {
@@ -78,8 +108,19 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             )
             self.variables.update(infos)
 
-    def render(self, markdown: str) -> str:
-        return self.env.render(markdown, self.variables)
+    def render(self, markdown: str, variables=None):
+        try:
+            template = self.env.from_string(markdown)
+        except jinja2.exceptions.TemplateSyntaxError as e:
+            logger.warning("Error when loading template: %s", e)
+            return markdown
+        variables = self.variables | (variables or {})
+        return template.render(**variables)
+
+    def render_template(self, template_name: str, variables=None):
+        template = self.env.get_template(template_name)
+        variables = self.variables | (variables or {})
+        return template.render(**variables)
 
     def create_config(self):
         project = self.variables["project"]

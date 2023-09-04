@@ -4,7 +4,6 @@ import logging
 import re
 import textwrap
 
-from mknodes.utils import environment
 from mknodes.pages.metadata import Metadata
 
 
@@ -74,7 +73,7 @@ class ShiftHeaderLevelProcessor(TextProcessor):
 class RenderJinjaProcessor(TextProcessor):
     ID = "render_jinja_templates"
 
-    def __init__(self, env: environment.Environment, variables=None):
+    def __init__(self, env, variables=None):
         self.env = env
         self.variables = variables or {}
 

@@ -14,7 +14,7 @@ from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
 
 from mknodes import mkdocsconfig, project
-from mknodes.plugin import infocollector, linkreplacer, fileseditor
+from mknodes.plugin import linkreplacer, fileseditor
 from mknodes.utils import classhelpers
 from mknodes.theme import theme
 
@@ -38,7 +38,6 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         logger.debug("Creating temporary dir %s", self._dir.name)
         self.link_replacer = linkreplacer.LinkReplacer()
-        self.infocollector = infocollector.InfoCollector()
         logger.debug("Finished initializing plugin")
 
     def on_startup(
@@ -91,8 +90,8 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
             msg = "No root for project created."
             raise RuntimeError(msg)
         cfg = mkdocsconfig.Config(config)
-        info = self.infocollector
-        info.get_info_from_project(self.project)
+        info = self.project.infocollector
+        self.project.aggregate_info()
         info["config"] = config
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             ed.write_files(info["files"])
@@ -126,7 +125,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         return nav
 
     def on_env(self, env: jinja2.Environment, config: MkDocsConfig, files: Files):
-        env.globals["mknodes"] = self.infocollector.variables
+        env.globals["mknodes"] = self.project.infocollector.variables
         logger.debug("Added variables to jinja2 environment.")
 
     def on_pre_page(
@@ -137,7 +136,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> Page | None:
         """During this phase we set the edit paths."""
-        node = self.infocollector["page_mapping"].get(page.file.src_uri)
+        node = self.project.infocollector["page_mapping"].get(page.file.src_uri)
         edit_path = node._edit_path if node else None
         cfg = mkdocsconfig.Config(config)
         if path := cfg.get_edit_url(edit_path):
@@ -153,10 +152,10 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links get replaced and `jinja2` stuff get rendered."""
-        node = self.infocollector["page_mapping"].get(page.file.src_uri)
-        self.infocollector["page"] = page
-        self.infocollector["mkpage"] = node
-        markdown = self.infocollector.render(markdown)
+        node = self.project.infocollector["page_mapping"].get(page.file.src_uri)
+        self.project.infocollector["page"] = page
+        self.project.infocollector["mkpage"] = node
+        markdown = self.project.infocollector.render(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 
     def on_post_build(self, config: MkDocsConfig):

@@ -9,6 +9,7 @@ from typing import Generic, TypeVar
 from mknodes import mknav
 from mknodes.info import folderinfo
 from mknodes.pages import pagetemplate
+from mknodes.plugin import infocollector
 from mknodes.theme import theme as theme_
 from mknodes.utils import helpers, linkprovider, reprhelpers
 
@@ -42,6 +43,7 @@ class Project(Generic[T]):
         else:
             self.folderinfo = folderinfo.FolderInfo(repo_path)
         self._root: mknav.MkNav | None = None
+        self.infocollector = infocollector.InfoCollector(load_templates=True)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
@@ -89,7 +91,7 @@ class Project(Generic[T]):
         return extensions
 
     def aggregate_info(self):
-        return self.folderinfo.aggregate_info() | self.theme.aggregate_info()
+        self.infocollector.get_info_from_project(self)
 
 
 if __name__ == "__main__":
