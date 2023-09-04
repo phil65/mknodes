@@ -6,12 +6,14 @@ import os
 
 from typing import Generic, TypeVar
 
+import mergedeep
+
 from mknodes import mknav
 from mknodes.info import folderinfo
 from mknodes.pages import pagetemplate
 from mknodes.plugin import infocollector
 from mknodes.theme import theme as theme_
-from mknodes.utils import helpers, linkprovider, reprhelpers
+from mknodes.utils import helpers, linkprovider, reprhelpers, requirements
 
 
 logger = logging.getLogger(__name__)
@@ -72,6 +74,17 @@ class Project(Generic[T]):
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
 
+    def get_requirements(self) -> requirements.Requirements:
+        reqs = dict(self._root.get_requirements()) if self._root else {}
+        reqs = mergedeep.merge(reqs, dict(self.theme.get_requirements()))
+        self.theme.adapt_extensions(reqs["markdown_extensions"])
+        reqs["markdown_extensions"]["pymdownx.magiclink"] = dict(
+            repo_url_shorthand=True,
+            user=self.folderinfo.repository_username,
+            repo=self.folderinfo.repository_name,
+        )
+        return requirements.Requirements(**reqs)
+
     def set_root(self, nav: mknav.MkNav):
         self._root = nav
         nav.associated_project = self
@@ -87,7 +100,7 @@ class Project(Generic[T]):
         return css
 
     def all_templates(self) -> list[pagetemplate.PageTemplate]:
-        templates = list(self.theme.templates)
+        templates = self.theme.get_requirements().templates[:]
         if self._root:
             templates.extend(self._root.get_requirements().templates)
         return templates
@@ -110,4 +123,4 @@ class Project(Generic[T]):
 
 if __name__ == "__main__":
     project = Project.for_mknodes()
-    print(project)
+    print(project.get_requirements())
