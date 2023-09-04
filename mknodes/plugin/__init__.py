@@ -91,6 +91,9 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         info = self.project.infocollector
         self.project.aggregate_info()
         info["config"] = config
+        self.project.linkprovider.set_excludes(
+            [pathlib.Path(i).stem for i in self.project.infocollector["filenames"]],
+        )
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             ed.write_files(self.project.all_files())
             for k, v in info["css"].items():
