@@ -48,10 +48,10 @@ class Project(Generic[T]):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
 
     @classmethod
-    def for_mknodes(cls) -> Project:
+    def for_mknodes(cls, config=None) -> Project:
         from mknodes import mkdocsconfig
 
-        config = mkdocsconfig.Config()
+        config = mkdocsconfig.Config(config)
         theme = theme_.Theme.get_theme(config)
         return cls(
             base_url=config.site_url or "",
