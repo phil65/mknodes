@@ -138,9 +138,10 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             "site_description": self.variables["metadata"]["summary"],
             "site_name": self.variables["metadata"]["name"],
             "site_author": project.info.author_name,
-            "markdown_extensions": list(project.all_markdown_extensions().keys()),
+            "markdown_extensions": list(self.variables["markdown_extensions"].keys()),
             "plugins": list(self.variables["plugins"]),
-            "mdx_configs": project.all_markdown_extensions(),
+            # "templates": list(self.variables["templates"].keys()),
+            "mdx_configs": self.variables["markdown_extensions"],
             "extra": dict(social=self.variables["social_info"]),
         }
 

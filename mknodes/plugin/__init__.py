@@ -25,6 +25,8 @@ if TYPE_CHECKING:
 
 logger = get_plugin_logger(__name__)
 
+CommandStr = Literal["build", "serve", "gh-deploy"]
+
 
 class PluginConfig(base.Config):
     path = config_options.Type(str)
@@ -40,11 +42,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self.link_replacer = linkreplacer.LinkReplacer()
         logger.debug("Finished initializing plugin")
 
-    def on_startup(
-        self,
-        command: Literal["build", "gh-deploy", "serve"],
-        dirty: bool = False,
-    ):
+    def on_startup(self, command: CommandStr, dirty: bool = False):
         """Defined to activate new-style MkDocs plugin handling."""
 
     def on_config(self, config: MkDocsConfig):
