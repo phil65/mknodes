@@ -1,9 +1,32 @@
 from __future__ import annotations
 
 import logging
+import pathlib
+
+import mergedeep
 
 
 logger = logging.getLogger(__name__)
+
+
+def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
+    path = pathlib.Path(source)
+    text = path.read_text()
+    result = load_yaml(text, mode=mode)
+    if "INHERIT" in result and resolve_inherit:
+        relpath = result.pop("INHERIT")
+        abspath = path.absolute()
+        if not abspath.exists():
+            msg = f"Inherited config file '{relpath}' does not exist at '{abspath}'."
+            raise FileNotFoundError(msg)
+        logger.debug("Loading inherited configuration file: %s", abspath)
+        parent_cfg = abspath.parent / relpath
+        with parent_cfg.open("rb") as fd:
+            text = fd.read().decode()
+            parent = load_yaml(text, mode)
+        # print(parent, result)
+        result = mergedeep.merge(parent, result)
+    return result
 
 
 def load_yaml(text: str, mode="unsafe"):
@@ -44,5 +67,5 @@ def dump_yaml(yaml_obj) -> str:
 
 
 if __name__ == "__main__":
-    strings = dump_yaml([str(i) for i in range(1000)])
-    print(strings)
+    cfg = load_yaml_file("mkdocs_generic.yml")
+    print(cfg)
