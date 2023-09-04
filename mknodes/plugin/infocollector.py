@@ -12,7 +12,7 @@ import mergedeep
 
 from mknodes import paths, project as project_
 from mknodes.pages import mkpage
-from mknodes.utils import reprhelpers, yamlhelpers
+from mknodes.utils import helpers, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         behavior = UNDEFINED_BEHAVIOR[undefined]
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
         self.variables: dict[str, Any] = {}
-        filters = {"dump_yaml": yamlhelpers.dump_yaml}
+        filters = {"dump_yaml": yamlhelpers.dump_yaml, "styled": helpers.styled}
         import mknodes
 
         for kls_name in mknodes.__all__:
@@ -85,7 +85,11 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         self.variables["metadata"] = (
             project.folderinfo.aggregate_info() | project.theme.aggregate_info()
         )
+        self.variables["files"] = {}
         self.variables["project"] = project
+        self.variables["css"] = project.all_css()
+        self.variables["markdown_extensions"] = project.all_markdown_extensions()
+        self.variables["plugins"] = {}
         if root := project._root:
             js_files = {
                 path: (paths.RESOURCES / path).read_text() for path in root.all_js_files()
@@ -96,17 +100,14 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
                 if isinstance(node, mkpage.MkPage)
             }
             infos = dict(
-                files=project.all_files(),
-                css=root.all_css(),
                 js_files=js_files,
-                theme_css=project.theme.css,
-                markdown_extensions=project.all_markdown_extensions(),
                 plugins=root.all_plugins(),
                 social_info=project.folderinfo.get_social_info(),
                 templates=list(project.templates) + root.all_templates(),
                 page_mapping=page_mapping,
             )
             self.variables.update(infos)
+        self.variables["files"] = project.all_files()
 
     def render(self, markdown: str, variables=None):
         try:
@@ -115,12 +116,20 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             logger.warning("Error when loading template: %s", e)
             return markdown
         variables = self.variables | (variables or {})
-        return template.render(**variables)
+        try:
+            return template.render(**variables)
+        except jinja2.exceptions.UndefinedError as e:
+            logger.warning("Error when rendering template: %s", e)
+            return ""
 
     def render_template(self, template_name: str, variables=None):
         template = self.env.get_template(template_name)
         variables = self.variables | (variables or {})
-        return template.render(**variables)
+        try:
+            return template.render(**variables)
+        except jinja2.exceptions.UndefinedError as e:
+            logger.warning("Error when rendering template: %s", e)
+            return ""
 
     def create_config(self):
         project = self.variables["project"]

@@ -95,13 +95,11 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         info["config"] = config
         with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
             ed.write_files(info["files"])
-            if css := info["css"]:
-                cfg.register_css("mknodes_nodes.css", css)
+            for k, v in info["css"].items():
+                cfg.register_css(k, v)
             if js_files := info["js_files"]:
                 for k, v in js_files.items():
                     cfg.register_js(k, v)
-            if css := info["theme_css"]:
-                cfg.register_css("mknodes_theme.css", str(css))
             if extensions := info["markdown_extensions"]:
                 cfg.register_extensions(extensions)
             if social := info["social_info"]:

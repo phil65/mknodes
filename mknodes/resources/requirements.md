@@ -17,7 +17,7 @@ Standard MkDocs configuration information. Do not try to modify.
 Standard MkDocs configuration information. Do not try to modify.
 
 ````` css
-{{ css | indent(4, first=True) }}
+{{ css | pprint | indent(4, first=True) }}
 `````
 
 ### Markdown extensions
