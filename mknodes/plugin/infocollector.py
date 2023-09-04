@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta
-from collections.abc import MutableMapping
+from collections.abc import Mapping, MutableMapping
 from importlib import util
 import logging
 
@@ -44,7 +44,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
     def __repr__(self):
         return reprhelpers.get_repr(self, self.variables)
 
-    def merge(self, other, additive: bool = False):
+    def merge(self, other: Mapping, additive: bool = False):
         strategy = mergedeep.Strategy.ADDITIVE if additive else mergedeep.Strategy.REPLACE
         self.variables = dict(mergedeep.merge(self.variables, other, strategy=strategy))
 
