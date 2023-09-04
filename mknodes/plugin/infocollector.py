@@ -10,7 +10,7 @@ from typing import Any
 import jinja2
 import mergedeep
 
-from mknodes import paths, project as project_
+from mknodes import project as project_
 from mknodes.pages import mkpage
 from mknodes.utils import helpers, reprhelpers, yamlhelpers
 
@@ -91,22 +91,14 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         python._sessions_globals["mknodes"] = self.variables
 
     def get_info_from_project(self, project: project_.Project):
-        reqs = project.get_requirements()
-        js_files = {path: (paths.RESOURCES / path).read_text() for path in reqs.js_files}
+        metadata = project.folderinfo.aggregate_info() | project.theme.aggregate_info()
         variables = {
-            "metadata": (
-                project.folderinfo.aggregate_info() | project.theme.aggregate_info()
-            ),
+            "metadata": metadata,
             "filenames": {},
             "project": project,
-            "css": reqs.css,
-            "markdown_extensions": reqs.markdown_extensions,
-            "plugins": reqs.plugins,
-            "templates": reqs.templates,
-            "js_files": js_files,
             "social_info": project.folderinfo.get_social_info(),
         }
-
+        variables |= project.get_requirements()
         if root := project._root:
             page_mapping = {
                 node.resolved_file_path: node

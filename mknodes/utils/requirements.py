@@ -15,7 +15,7 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
     markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
     plugins: set[str] = dataclasses.field(default_factory=set)
-    js_files: set[str] = dataclasses.field(default_factory=set)
+    js_files: dict[str, str] = dataclasses.field(default_factory=dict)
 
     def __getitem__(self, value):
         return getattr(self, value)

@@ -237,7 +237,7 @@ class MkNode(node.Node):
                 all_css.add(css)
         return requirements.Requirements(
             templates=all_templates,
-            js_files=all_js_files,
+            js_files={p: (paths.RESOURCES / p).read_text() for p in all_js_files},
             markdown_extensions=mergedeep.merge(*all_extensions),
             plugins=all_plugins,
             css={"mknodes_nodes.css": "\n".join(all_css)},
