@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import contextlib
 import functools
+import io
 import os
 import pathlib
 
@@ -11,6 +13,7 @@ import markdown
 import mergedeep
 
 from mkdocs import config as _config
+from mkdocs.commands import get_deps
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.utils import write_file
@@ -24,7 +27,9 @@ logger = get_plugin_logger(__name__)
 @functools.cache
 def load_config(path: str | os.PathLike | None = None):
     path = None if path is None else str(path)
-    return _config.load_config(path)
+    cfg = _config.load_config(path)
+    logger.info("Loaded config from path '%s'", path or "mkdocs.yml")
+    return cfg
 
 
 class Config:
@@ -35,12 +40,11 @@ class Config:
             case str() | os.PathLike() as file:
                 self._config = load_config(str(file))
             case None:
-                file = helpers.find_file_in_folder_or_parent("mkdocs.yml")
-                if not file:
+                if file := helpers.find_file_in_folder_or_parent("mkdocs.yml"):
+                    self._config = load_config(str(file))
+                else:
                     msg = "Could not find config file"
                     raise FileNotFoundError(msg)
-                self._config = load_config(str(file))
-                logger.info("Loaded config from %s", file)
             case _:
                 raise TypeError(config)
         self.plugin = self._config.plugins["mknodes"]
@@ -167,7 +171,14 @@ class Config:
             rel_path = edit_path
         return parse.urljoin(base_url, rel_path)
 
+    def get_install_candidates(self) -> list[str]:
+        path = "https://raw.githubusercontent.com/mkdocs/catalog/main/projects.yaml"
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            get_deps.get_deps(path, self._config.config_file_path)
+        return [i for i in buffer.getvalue().split("\n") if i]
+
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg.plugin.config.path)
+    print(cfg.get_deps_to_install())
