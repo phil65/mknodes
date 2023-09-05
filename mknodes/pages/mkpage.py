@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import logging
 import os
 import pathlib
@@ -74,6 +75,16 @@ class MkPage(mkcontainer.MkContainer):
         self._edit_path = edit_path
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.virtual = virtual
+        frame = i.f_back.f_back if (i := inspect.currentframe()) else None  # type: ignore[union-attr]  # noqa: E501
+        self.created = (
+            dict(
+                source_filename=frame.f_code.co_filename,
+                source_function=frame.f_code.co_qualname,
+                source_line_no=frame.f_lineno,
+            )
+            if frame
+            else {}
+        )
         self.metadata = metadata.Metadata(
             hide_toc=hide_toc,
             hide_nav=hide_nav,
