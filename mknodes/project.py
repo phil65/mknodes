@@ -63,11 +63,16 @@ class Project(Generic[T]):
     def info(self):
         return self.folderinfo.info
 
+    def set_root(self, nav: mknav.MkNav):
+        self._root = nav
+        nav.associated_project = self
+
     def get_root(self, **kwargs) -> mknav.MkNav:
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
 
     def get_requirements(self) -> requirements.Requirements:
+        """Return requirements for this project based on theme and used nodes."""
         reqs = requirements.Requirements()
         if self._root:
             reqs.merge(self._root.get_requirements())
@@ -79,10 +84,6 @@ class Project(Generic[T]):
             repo=self.folderinfo.repository_name,
         )
         return reqs
-
-    def set_root(self, nav: mknav.MkNav):
-        self._root = nav
-        nav.associated_project = self
 
     def all_files(self) -> dict[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
