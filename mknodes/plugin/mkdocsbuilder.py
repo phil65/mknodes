@@ -5,7 +5,7 @@ import os
 import pathlib
 import shutil
 
-from typing import IO, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
@@ -13,7 +13,6 @@ from mkdocs.structure import files, nav, pages
 import mkdocs_section_index
 
 from mknodes import mkdocsconfig
-from mknodes.plugin import mkdocsbuilder
 
 
 if TYPE_CHECKING:
@@ -34,11 +33,11 @@ def file_sort_key(f: File):
 class MkDocsBuilder:
     def __init__(
         self,
-        files: files.Files,
+        files: files.Files | None = None,
         config: mkdocsconfig.Config | MkDocsConfig | str | os.PathLike | None = None,
         directory: str | os.PathLike | None = None,
     ):
-        files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files}
+        files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files or []}
         self._files: collections.ChainMap[str, File] = collections.ChainMap({}, files_map)
         match config:
             case mkdocsconfig.Config():
@@ -111,37 +110,19 @@ class MkDocsBuilder:
         files_ = sorted(self._files.values(), key=file_sort_key)
         return files.Files(files_)
 
-    def open(  # noqa: A003
-        self,
-        name: str,
-        mode,
-        buffering: int = -1,
-        encoding: str | None = None,
-        **kwargs,
-    ) -> IO:
-        """Open a file under `docs_dir` virtually.
-
-        This function, is just an `open()` which pretends that it is running under
-        [docs_dir](https://www.mkdocs.org/user-guide/configuration/#docs_dir)
-        (*docs/* by default), but write operations don't affect the actual files
-        when running as part of a MkDocs build, but they do become part of the site build.
-        """
-        path = self._get_file(name, new="w" in mode)
-        if encoding is None and "b" not in mode:
-            encoding = "utf-8"
-        return path.open(mode, buffering, encoding, **kwargs)
-
     def write(self, path: str | os.PathLike, content: str | bytes):
         mode = "w" if isinstance(content, str) else "wb"
         logger.info("Writing file to %s", path)
-        with self.open(os.fspath(path), mode) as file:
+        path = self._get_path(os.fspath(path), new="w" in mode)
+        encoding = None if "b" in mode else "utf-8"
+        with path.open(mode=mode, encoding=encoding) as file:
             file.write(content)
 
     def write_files(self, dct: dict[str, str | bytes]):
         for k, v in dct.items():
             self.write(k, v)
 
-    def _get_file(self, name: str, new: bool = False) -> pathlib.Path:
+    def _get_path(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
         new_f = self.get_file(name, src_dir=self.directory)
         normname = pathlib.PurePath(name).as_posix()
