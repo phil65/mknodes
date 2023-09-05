@@ -40,10 +40,17 @@ class MkWebSite(mknav.MkNav):
 
         page = nav.add_page("Module overview")
         page += mknodes.MkModuleOverview(maximum_depth=2)
+        if proj := self.associated_project:
+            if proj.info.get_entry_points("mkdocs.plugins"):
+                page = nav.add_page("Plugin flow")
+                page += mknodes.MkPluginFlow()
 
-        if self.associated_project.info.get_entry_points("mkdocs.plugins"):
-            page = nav.add_page("Plugin flow")
-            page += mknodes.MkPluginFlow()
+            if (
+                proj.info.get_entry_points("console_scripts")
+                and "click" in proj.info.required_package_names
+            ):
+                page = nav.add_page("CLI")
+                page += mknodes.MkClickDoc()
 
         node = mknodes.MkLicense()
         page = nav.add_page("License", hide_toc=True)
