@@ -68,7 +68,10 @@ class FolderInfo:
         import git
 
         directory = tempfile.TemporaryDirectory(prefix="mknodes_repo_")
+        logger.info("Created temporary directory %s", directory.name)
+        logger.info("Cloning %s with depth %s", url, depth)
         repo = git.Repo.clone_from(url, directory.name, depth=depth)
+        logger.info("Finished cloning.")
         kls = cls(repo.working_dir)
         kls._temp_directory = directory
         return kls
