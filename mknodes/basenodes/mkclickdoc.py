@@ -85,7 +85,7 @@ class MkClickDoc(mknode.MkNode):
         md = "::: mkdocs-click"
         option_lines = [f"    :{k}: {v}" for k, v in self.attributes.items() if v]
         option_text = "\n".join(option_lines)
-        return f"{md}\n{option_text}\n"
+        return f"{md}\n{option_text}\n\n"
 
     @staticmethod
     def create_example_page(page):
