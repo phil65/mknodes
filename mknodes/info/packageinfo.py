@@ -96,14 +96,12 @@ def get_package_map() -> Mapping[str, list[str]]:
     return metadata.packages_distributions()
 
 
-def get_info(pkg_name: str) -> PackageInfo:
+def get_info(mod_name: str) -> PackageInfo:
     mapping = get_package_map()
-    if pkg_name in mapping:
-        pkg_name = mapping[pkg_name][0]
-    if pkg_name in registry:
-        return registry[pkg_name]
-    registry[pkg_name] = PackageInfo(pkg_name)
-    return registry[pkg_name]
+    pkg_name = mapping[mod_name][0] if mod_name in mapping else mod_name
+    if mod_name not in registry:
+        registry[mod_name] = PackageInfo(pkg_name)
+    return registry[mod_name]
 
 
 class PackageInfo:
