@@ -23,7 +23,7 @@ class MkFootNote(mkcontainer.MkContainer):
         self,
         num: int,
         content: str | mknode.MkNode,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
