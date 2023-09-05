@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta
-from collections.abc import Mapping, MutableMapping
+from collections.abc import Callable, Mapping, MutableMapping
 from importlib import util
 import logging
 
@@ -32,6 +32,25 @@ UNDEFINED_BEHAVIOR = {
     # lax will even pass unknown objects:
     "lax": LaxUndefined,
 }
+
+
+def get_mknodes_filters(parent=None) -> dict[str, Callable]:
+    import functools
+
+    import mknodes
+
+    filters = {}
+    for kls_name in mknodes.__all__:
+        kls = getattr(mknodes, kls_name)
+        fn = functools.partial(kls, parent=parent) if parent else kls
+        filters[kls_name] = fn
+    return filters
+
+
+def get_mknodes_macros() -> dict[str, Callable]:
+    import mknodes
+
+    return {kls_name: getattr(mknodes, kls_name) for kls_name in mknodes.__all__}
 
 
 class InfoCollector(MutableMapping, metaclass=ABCMeta):
@@ -70,15 +89,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         return reprhelpers.get_repr(self, self.variables)
 
     def set_mknodes_filters(self, parent=None):
-        import functools
-
-        import mknodes
-
-        filters = {}
-        for kls_name in mknodes.__all__:
-            kls = getattr(mknodes, kls_name)
-            fn = functools.partial(kls, parent=parent) if parent else kls
-            filters[kls_name] = fn
+        filters = get_mknodes_filters(parent)
         self.env.filters.update(filters)
 
     def merge(self, other: Mapping, additive: bool = False):

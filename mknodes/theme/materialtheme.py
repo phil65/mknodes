@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import MutableMapping
 import logging
+import pathlib
 
 from typing import Literal
 
@@ -89,6 +90,13 @@ CONTAINER_RULE = """.mdx-container {
     );
     }
 """  # noqa: E501
+
+
+def get_partial_path(partial: str) -> pathlib.Path:
+    import material
+
+    path = pathlib.Path(material.__path__[0])
+    return path / "partials" / f"{partial}.html"
 
 
 class MdxContainerRule(cssclasses.StyleRule):
@@ -286,5 +294,5 @@ class MaterialTheme(theme.Theme):
 
 
 if __name__ == "__main__":
-    theme = MaterialTheme()
-    theme.show_annotation_numbers()
+    theme = get_partial_path("palette")
+    print(theme)
