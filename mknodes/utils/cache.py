@@ -96,7 +96,7 @@ def download_and_cache_url(
         weeks: Amount of weeks the content should be cached.
         comment: The appropriate comment prefix for this file format.
     """
-    logger.info("Getting %s", url)
+    logger.info("Getting file for '%s'", url)
     if parse.urlsplit(url).scheme not in ("http", "https"):
         with pathlib.Path(url).open("rb") as f:
             return f.read()

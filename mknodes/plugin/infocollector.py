@@ -12,7 +12,7 @@ import mergedeep
 
 from mknodes import project as project_
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, reprhelpers, yamlhelpers
+from mknodes.utils import helpers, log, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             loader = None
         behavior = UNDEFINED_BEHAVIOR[undefined]
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
-        self.variables: dict[str, Any] = {}
+        self.variables: dict[str, Any] = {"log": log.log_stream.getvalue}
         filters = {"dump_yaml": yamlhelpers.dump_yaml, "styled": helpers.styled}
         self.env.filters.update(filters)
         self.set_mknodes_filters()

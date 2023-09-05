@@ -109,8 +109,8 @@ def get_info(pkg_name: str) -> PackageInfo:
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
-        logger.info("Loading package info for %s", pkg_name)
         self.distribution = get_distribution(pkg_name)
+        logger.info("Loaded package info: '%s'", pkg_name)
         self.metadata = get_metadata(self.distribution)
         self.urls = {
             v.split(",")[0].strip(): v.split(",")[1].strip()

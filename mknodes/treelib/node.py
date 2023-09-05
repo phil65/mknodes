@@ -50,9 +50,9 @@ class Node:
 
     @parent.setter
     def parent(self, value):
-        if self._parent is not None and self._parent != value:
-            msg = f"{self!r}: parent {self._parent!r} replaced with {value!r}"
-            logger.debug(msg)
+        # if self._parent is not None and self._parent != value:
+        #     msg = f"{self!r}: parent {self._parent!r} replaced with {value!r}"
+        #     logger.debug(msg)
         self._parent = value
 
     def __copy__(self) -> Self:
