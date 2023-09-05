@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import contextlib
+import dataclasses
 import functools
 import importlib
 
 from importlib import metadata
 import logging
+import types
 from typing import Literal
 
 from packaging.markers import Marker
@@ -43,6 +45,16 @@ CLASSIFIERS: list[ClassifierStr] = [
     "Topic",
     "Typing",
 ]
+
+
+@dataclasses.dataclass
+class EntryPoint:
+    """EntryPoint including imported module."""
+
+    name: str
+    dotted_path: str
+    group: str
+    obj: types.ModuleType | type
 
 
 def get_extras(markers: list) -> list[str]:
@@ -269,7 +281,7 @@ class PackageInfo:
                 return i
         raise ValueError(name)
 
-    def get_entry_points(self, group: str | None = None) -> dict[str, type]:
+    def get_entry_points(self, group: str | None = None) -> dict[str, EntryPoint]:
         if not group:
             eps = self.distribution.entry_points
         else:
@@ -279,10 +291,15 @@ class PackageInfo:
             name, dotted_path = ep.name, ep.value
             mod_name, kls_name = dotted_path.split(":")
             mod = importlib.import_module(mod_name)
-            dct[name] = getattr(mod, kls_name)
+            dct[name] = EntryPoint(
+                name=ep.name,
+                dotted_path=ep.value,
+                group=ep.group,
+                obj=getattr(mod, kls_name),
+            )
         return dct
 
 
 if __name__ == "__main__":
-    info = get_info("jinja2")
-    print(info.inventory_url)
+    info = get_info("mknodes")
+    print(info.get_entry_points("console_scripts"))
