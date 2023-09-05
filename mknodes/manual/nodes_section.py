@@ -138,6 +138,7 @@ def create_documentation_nodes_section(nav: mknodes.MkNav):
         mknodes.MkModuleTable,
         mknodes.MkPluginFlow,
         mknodes.MkArgParseHelp,
+        mknodes.MkClickDoc,
     ]
     documentation_nodes_nav = nav.add_nav("Documentation nodes")
     page = documentation_nodes_nav.add_index_page(hide_toc=True)

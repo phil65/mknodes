@@ -44,6 +44,15 @@ def create_plugin_flow_page():
     return page
 
 
+@dev_nav.route("CLI", show_source=True)
+def create_cli_page():
+    """Create the "CLI" MkPage and attach it to given MkNav."""
+    node = mknodes.MkClickDoc()
+    page = mknodes.MkPage("CLI", icon=node.ICON)
+    page += node
+    return page
+
+
 @dev_nav.route("Changelog", show_source=True)
 def create_changelog_page():
     """Create the "Changelog" MkPage and attach it to given MkNav."""
