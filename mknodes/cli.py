@@ -30,13 +30,19 @@ def cli():
 
 @cli.command()
 @click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
-@click.option("-s", "--site-script", help="Path to script used for building website.")
+@click.option(
+    "-s",
+    "--site-script",
+    help="Path to script used for building website.",
+    default="mknodes.mkwebsite:MkWebSite.for_project",
+)
 @click.option("-d", "--site-dir", help="Directory to create the website in.")
 @click.option(
     "-c",
     "--clone-depth",
     help="How many commits to fetch if repository is remote.",
     type=int,
+    default=100,
 )
 @click.option(
     "-v",
@@ -48,9 +54,9 @@ def cli():
 )
 def build(
     repo_url,
-    site_script,
+    site_script: str,
+    clone_depth: int = 1,
     site_dir="site",
-    clone_depth: int = 100,
 ):
     """Create website."""
     print(f"{repo_url=} {site_script=} {site_dir=}")
@@ -71,12 +77,18 @@ def build(
 
 @cli.command()
 @click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
-@click.option("-s", "--site-script", help="Path to script used for building website.")
+@click.option(
+    "-s",
+    "--site-script",
+    help="Path to script used for building website.",
+    default="mknodes.mkwebsite:MkWebSite.for_project",
+)
 @click.option(
     "-c",
     "--clone-depth",
     help="How many commits to fetch if repository is remote.",
     type=int,
+    default=100,
 )
 @click.option(
     "-v",
@@ -86,7 +98,7 @@ def build(
     expose_value=False,
     callback=callback,
 )
-def serve(repo_url, site_script, clone_depth: int = 100):
+def serve(repo_url, site_script: str, clone_depth: int = 1):
     """Create website."""
     cfg = yamlhelpers.load_yaml_file("mkdocs.yml")
     for plugin in cfg["plugins"]:
@@ -99,7 +111,7 @@ def serve(repo_url, site_script, clone_depth: int = 100):
     serve_.serve(config_file=stream, livereload=False)
 
 
-def serve_node(node):
+def serve_node(node, repo_path: str = "."):
     text = f"""
     import mknodes
 
@@ -112,7 +124,7 @@ def serve_node(node):
     """
     p = pathlib.Path("docs/test.py")
     p.write_text(text)
-    serve_page(site_script=p)
+    serve(repo_url=repo_path, site_script=p)
 
 
 if __name__ == "__main__":
