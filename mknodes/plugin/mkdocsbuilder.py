@@ -5,8 +5,6 @@ import os
 import pathlib
 import shutil
 
-from typing import TYPE_CHECKING
-
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files, nav, pages
@@ -15,19 +13,7 @@ import mkdocs_section_index
 from mknodes import mkdocsconfig
 
 
-if TYPE_CHECKING:
-    from mkdocs.structure.files import File
-
-
 logger = get_plugin_logger(__name__)
-
-
-def file_sort_key(f: File):
-    parts = pathlib.PurePath(f.src_path).parts
-    return tuple(
-        chr(f.name != "index" if i == len(parts) - 1 else 2) + p
-        for i, p in enumerate(parts)
-    )
 
 
 class MkDocsBuilder:
@@ -38,7 +24,10 @@ class MkDocsBuilder:
         directory: str | os.PathLike | None = None,
     ):
         files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files or []}
-        self._files: collections.ChainMap[str, File] = collections.ChainMap({}, files_map)
+        self._files: collections.ChainMap[str, files.File] = collections.ChainMap(
+            {},
+            files_map,
+        )
         match config:
             case mkdocsconfig.Config():
                 self._config = config._config
@@ -107,6 +96,14 @@ class MkDocsBuilder:
 
         [Files]: https://github.com/mkdocs/mkdocs/blob/master/mkdocs/structure/files.py
         """
+
+        def file_sort_key(f: files.File):
+            parts = pathlib.PurePath(f.src_path).parts
+            return tuple(
+                chr(f.name != "index" if i == len(parts) - 1 else 2) + p
+                for i, p in enumerate(parts)
+            )
+
         files_ = sorted(self._files.values(), key=file_sort_key)
         return files.Files(files_)
 
