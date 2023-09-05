@@ -25,6 +25,7 @@ def create_internals_section(root_nav: mknodes.MkNav):
     # Each tree item can carry virtual files.
     # Lets dispay all files which are currently attached to the tree:
     create_requirements_page(internals_nav)
+    create_log_page(internals_nav)
     create_complete_code_section(internals_nav)
 
 
@@ -41,6 +42,13 @@ def create_requirements_page(nav: mknodes.MkNav):
     page = nav.add_page("Requirements", hide_toc=True, icon="material/puzzle-edit")
     page += mknodes.MkCode.for_object(create_requirements_page, header=PAGE_CODE)
     page += mknodes.MkJinjaTemplate("requirements.md")
+
+
+def create_log_page(nav: mknodes.MkNav):
+    """Create the "Required extensions" MkPage and attach it to given MkNav."""
+    page = nav.add_page("Build Log", hide_toc=True, icon="material/puzzle-edit")
+    page += mknodes.MkCode.for_object(create_log_page, header=PAGE_CODE)
+    page += mknodes.MkText("log() | MkCode", is_jinja_expression=True)
 
 
 def create_complete_code_section(nav: mknodes.MkNav):

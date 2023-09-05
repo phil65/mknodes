@@ -42,6 +42,7 @@ class MkText(mknode.MkNode):
     def __init__(
         self,
         text: str | mknode.MkNode | None = "",
+        is_jinja_expression: bool = False,
         *,
         header: str = "",
         **kwargs: Any,
@@ -50,14 +51,21 @@ class MkText(mknode.MkNode):
 
         Arguments:
             text: Markup text
+            is_jinja_expression: Whether text is a jinja expression
             header: Section header
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header=header, **kwargs)
         self._text = str(text or "")
+        self.is_jinja_expression = is_jinja_expression
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, text=self.text)
+        return reprhelpers.get_repr(
+            self,
+            text=self.text,
+            is_jinja_expression=self.is_jinja_expression,
+            _filter_false=True,
+        )
 
     def __getitem__(self, section_name: str) -> Self | None:
         markdown = self._to_markdown()
@@ -66,11 +74,25 @@ class MkText(mknode.MkNode):
 
     @property
     def text(self):
-        return self._text
+        if not self.is_jinja_expression:
+            return self._text
+        variables = {"parent": self.parent}
+        self.infoprovider.set_mknodes_filters(parent=self)
+        return self.infoprovider.render(f"{{{{ {self._text} }}}}", variables)
 
     @text.setter
     def text(self, value):
         self._text = value
+
+    @property
+    def infoprovider(self):
+        from mknodes.plugin import infocollector
+
+        if self.associated_project:
+            env = self.associated_project.infocollector
+        else:
+            env = infocollector.InfoCollector(undefined="strict")
+        return env
 
     def _to_markdown(self) -> str:
         return self.text
@@ -104,7 +126,5 @@ class MkText(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    section = MkText.from_url(EXAMPLE_URL)
-    if section:
-        license_section = section["License"]
-    print(section)
+    node = MkText("log", is_jinja_expression=True)
+    print(node)
