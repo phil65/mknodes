@@ -33,7 +33,6 @@ def file_sort_key(f: File):
 
 class FilesEditor:
     _current: ClassVar[FilesEditor | None] = None
-    _default: ClassVar[FilesEditor | None] = None
 
     def __init__(
         self,
@@ -45,33 +44,6 @@ class FilesEditor:
         self._files: collections.ChainMap[str, File] = collections.ChainMap({}, files_map)
         self.config = config
         self.directory = str(directory or config.docs_dir)
-
-    def __enter__(self):
-        FilesEditor._current = self
-        return self
-
-    def __exit__(self, *exc):
-        FilesEditor._current = None
-
-    @classmethod
-    def current(cls) -> FilesEditor:
-        """The instance of FilesEditor associated with the currently ongoing MkDocs build.
-
-        If used as part of a MkDocs build, it's an instance using
-        virtual files that feed back into the build.
-
-        If not, this still tries to load the MkDocs config to find out the *docs_dir*, and
-        then actually performs any file writes that happen via `.open()`.
-
-        This is global (not thread-safe).
-        """
-        if cls._current:
-            return cls._current
-        if not cls._default:
-            config = mkdocsconfig.Config()
-            config.plugins.run_event("config", config._config)
-            cls._default = FilesEditor(Files([]), config)
-        return cls._default
 
     @property
     def files(self) -> Files:

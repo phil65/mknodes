@@ -94,25 +94,25 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self.project.aggregate_info()
         info["config"] = config
         self.project.linkprovider.set_excludes(
-            [pathlib.Path(i).stem for i in self.project.infocollector["filenames"]],
+            [pathlib.Path(i).stem for i in info["filenames"]],
         )
-        with fileseditor.FilesEditor(files, cfg, self._dir.name) as ed:
-            ed.write_files(self.project.all_files())
-            for k, v in info["css"].items():
-                cfg.register_css(k, v)
-            if js_files := info["js_files"]:
-                for k, v in js_files.items():
-                    cfg.register_js(k, v)
-            if extensions := info["markdown_extensions"]:
-                cfg.register_extensions(extensions)
-            if social := info["social_info"]:
-                extra = cfg._config.extra
-                if not extra.get("social"):
-                    extra["social"] = social
-            md = cfg.get_markdown_instance()
-            for template in info["templates"]:
-                if html := template.build_html(md):
-                    cfg.register_template(template.filename, html)
+        ed = fileseditor.FilesEditor(files, cfg, self._dir.name)
+        ed.write_files(self.project.all_files())
+        for k, v in info["css"].items():
+            cfg.register_css(k, v)
+        if js_files := info["js_files"]:
+            for k, v in js_files.items():
+                cfg.register_js(k, v)
+        if extensions := info["markdown_extensions"]:
+            cfg.register_extensions(extensions)
+        if social := info["social_info"]:
+            extra = cfg._config.extra
+            if not extra.get("social"):
+                extra["social"] = social
+        md = cfg.get_markdown_instance()
+        for template in info["templates"]:
+            if html := template.build_html(md):
+                cfg.register_template(template.filename, html)
         return ed.files
 
     def on_nav(
