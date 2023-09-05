@@ -12,6 +12,7 @@ from mkdocs.config import base, config_options
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
+from mkdocs.utils.templates import TemplateContext
 
 from mknodes import mkdocsconfig, project
 from mknodes.plugin import linkreplacer, fileseditor
@@ -157,6 +158,18 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self.project.infocollector.set_mknodes_filters(parent=node)
         markdown = self.project.infocollector.render(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
+
+    def on_page_context(
+        self,
+        context: TemplateContext,
+        *,
+        page: Page,
+        config: MkDocsConfig,
+        nav: Navigation,
+    ) -> TemplateContext | None:
+        """Also add our info stuff to the MkDocs jinja context."""
+        context["mknodes"] = self.project.infocollector.variables
+        return context
 
     def on_post_build(self, config: MkDocsConfig):
         """Delete the temporary template files."""
