@@ -17,8 +17,9 @@ from mkdocs.structure.pages import Page
 
 from mknodes import mkdocsconfig, project
 from mknodes.plugin import linkreplacer, mkdocsbuilder
-from mknodes.utils import classhelpers
+from mknodes.utils import classhelpers, helpers
 from mknodes.theme import theme
+from mknodes.info import folderinfo
 
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
@@ -33,6 +34,7 @@ CommandStr = Literal["build", "serve", "gh-deploy"]
 class PluginConfig(base.Config):
     path = config_options.Type(str)
     repo_path = config_options.Type(str, default=".")
+    clone_depth = config_options.Type(int, default=100)
 
 
 class MkNodesPlugin(BasePlugin[PluginConfig]):
@@ -51,11 +53,18 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         """Create the project based on MkDocs config."""
         cfg = mkdocsconfig.Config(config)
         skin = theme.Theme.get_theme(config=cfg)
+        if helpers.is_url(self.config.repo_path):
+            repo = folderinfo.FolderInfo.clone_from(
+                self.config.repo_path,
+                depth=self.config.clone_depth,
+            )
+        else:
+            repo = self.config.repo_path
         self.project = project.Project[type(skin)](
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=skin,
-            repo_path=self.config.repo_path,
+            repo=repo,
         )
         skin.associated_project = self.project
         project_fn = classhelpers.get_callable_from_path(self.config.path)
@@ -132,6 +141,8 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
     def on_env(self, env: jinja2.Environment, config: MkDocsConfig, files: Files):
         env.globals["mknodes"] = self.project.infocollector.variables
         logger.debug("Added variables to jinja2 environment.")
+        # mknodes_macros = jinjahelpers.get_mknodes_macros()
+        # env.globals["mknodes"].update(mknodes_macros)
 
     def on_pre_page(
         self,

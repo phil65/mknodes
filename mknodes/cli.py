@@ -25,7 +25,13 @@ def cli():
 @click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
 @click.option("-s", "--site-script", help="Path to script used for building website.")
 @click.option("-d", "--site-dir", help="Directory to create the website in.")
-def create(repo_url, site_script, site_dir="site"):
+@click.option(
+    "-c",
+    "--clone-depth",
+    help="How many commits to fetch if repository is remote.",
+    type=int,
+)
+def build(repo_url, site_script, site_dir="site", clone_depth: int = 100):
     """Create website."""
     print(f"{repo_url=} {site_script=} {site_dir=}")
     cfg = yamlhelpers.load_yaml_file("mkdocs_generic.yml")
@@ -33,25 +39,33 @@ def create(repo_url, site_script, site_dir="site"):
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
             plugin["mknodes"]["path"] = site_script
+            plugin["mknodes"]["clone_depth"] = clone_depth
     cfg["site_dir"] = site_dir
     text = yamlhelpers.dump_yaml(cfg)
     buffer = io.StringIO(text)
     config = load_config(buffer)
-    config["plugins"].run_event("startup", command="build", dirty=False)
+    # config["plugins"].run_event("startup", command="build", dirty=False)
     build_.build(config)
-    config["plugins"].run_event("shutdown")
+    # config["plugins"].run_event("shutdown")
 
 
 @cli.command()
 @click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
 @click.option("-s", "--site-script", help="Path to script used for building website.")
-def serve_page(repo_url, site_script):
+@click.option(
+    "-c",
+    "--clone-depth",
+    help="How many commits to fetch if repository is remote.",
+    type=int,
+)
+def serve(repo_url, site_script, clone_depth: int = 100):
     """Create website."""
     cfg = yamlhelpers.load_yaml_file("mkdocs.yml")
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
             plugin["mknodes"]["path"] = site_script
+            plugin["mknodes"]["clone_depth"] = clone_depth
     text = yamlhelpers.dump_yaml(cfg)
     stream = io.StringIO(text)
     serve_.serve(config_file=stream, livereload=False)

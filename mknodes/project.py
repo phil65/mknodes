@@ -27,7 +27,7 @@ class Project(Generic[T]):
         theme: T,
         base_url: str = "",
         use_directory_urls: bool = True,
-        repo_path: str | os.PathLike | None = None,
+        repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
     ):
         self.linkprovider = linkprovider.LinkProvider(
             base_url=base_url,
@@ -37,10 +37,13 @@ class Project(Generic[T]):
         self.theme: T = theme
         self.templates = self.theme.templates
         self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
-        if helpers.is_url(str(repo_path)):
-            self.folderinfo = folderinfo.FolderInfo.clone_from(str(repo_path))
-        else:
-            self.folderinfo = folderinfo.FolderInfo(repo_path)
+        match repo:
+            case folderinfo.FolderInfo():
+                self.folderinfo = repo
+            case _ if helpers.is_url(str(repo)):
+                self.folderinfo = folderinfo.FolderInfo.clone_from(str(repo))
+            case _:
+                self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None
         self.infocollector = infocollector.InfoCollector(load_templates=True)
 
