@@ -63,10 +63,6 @@ class Project(Generic[T]):
     def info(self):
         return self.folderinfo.info
 
-    @property
-    def package_name(self) -> str:
-        return self.folderinfo.package_name
-
     def get_root(self, **kwargs) -> mknav.MkNav:
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
@@ -93,7 +89,25 @@ class Project(Generic[T]):
         return files | self.theme.get_files()
 
     def aggregate_info(self):
-        self.infocollector.get_info_from_project(self)
+        from mknodes.pages import mkpage
+
+        metadata = self.folderinfo.aggregate_info() | self.theme.aggregate_info()
+        variables = {
+            "metadata": metadata,
+            "filenames": {},
+            "project": self,
+            "social_info": self.folderinfo.get_social_info(),
+        }
+        variables |= self.get_requirements()
+        if root := self._root:
+            page_mapping = {
+                node.resolved_file_path: node
+                for _level, node in root.iter_nodes()
+                if isinstance(node, mkpage.MkPage)
+            }
+            variables["page_mapping"] = page_mapping
+            variables["filenames"] = list(page_mapping.keys())
+        self.infocollector.variables |= variables
 
 
 if __name__ == "__main__":

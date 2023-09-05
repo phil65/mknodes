@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta
-from collections.abc import Callable, Mapping, MutableMapping
-from importlib import util
+from collections.abc import Mapping, MutableMapping
 import logging
 
 from typing import Any
@@ -10,65 +9,24 @@ from typing import Any
 import jinja2
 import mergedeep
 
-from mknodes import project as project_
-from mknodes.pages import mkpage
-from mknodes.utils import helpers, log, reprhelpers, yamlhelpers
+from mknodes.utils import helpers, jinjahelpers, log, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
-
-
-class LaxUndefined(jinja2.Undefined):
-    """Pass anything wrong as blank."""
-
-    def _fail_with_undefined_error(self, *args, **kwargs):
-        return ""
-
-
-UNDEFINED_BEHAVIOR = {
-    "keep": jinja2.DebugUndefined,
-    "silent": jinja2.Undefined,
-    "strict": jinja2.StrictUndefined,
-    # lax will even pass unknown objects:
-    "lax": LaxUndefined,
-}
-
-
-def get_mknodes_filters(parent=None) -> dict[str, Callable]:
-    import functools
-
-    import mknodes
-
-    filters = {}
-    for kls_name in mknodes.__all__:
-        kls = getattr(mknodes, kls_name)
-        fn = functools.partial(kls, parent=parent) if parent else kls
-        filters[kls_name] = fn
-    return filters
-
-
-def get_mknodes_macros() -> dict[str, Callable]:
-    import mknodes
-
-    return {kls_name: getattr(mknodes, kls_name) for kls_name in mknodes.__all__}
 
 
 class InfoCollector(MutableMapping, metaclass=ABCMeta):
     """MkNodes InfoCollector."""
 
     def __init__(self, undefined: str = "silent", load_templates: bool = False):
-        if load_templates:
-            loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
-        else:
-            loader = None
-        behavior = UNDEFINED_BEHAVIOR[undefined]
+        loader = jinjahelpers.resource_loader if load_templates else None
+        behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
         self.env = jinja2.Environment(undefined=behavior, loader=loader)
         self.variables: dict[str, Any] = {"log": log.log_stream.getvalue}
         filters = {"dump_yaml": yamlhelpers.dump_yaml, "styled": helpers.styled}
         self.env.filters.update(filters)
         self.set_mknodes_filters()
-        if util.find_spec("markdown_exec"):
-            self.set_markdown_exec_namespace()
+        jinjahelpers.set_markdown_exec_namespace(self.variables)
 
     def __getitem__(self, index):
         return self.variables[index]
@@ -89,36 +47,12 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         return reprhelpers.get_repr(self, self.variables)
 
     def set_mknodes_filters(self, parent=None):
-        filters = get_mknodes_filters(parent)
+        filters = jinjahelpers.get_mknodes_macros(parent)
         self.env.filters.update(filters)
 
     def merge(self, other: Mapping, additive: bool = False):
         strategy = mergedeep.Strategy.ADDITIVE if additive else mergedeep.Strategy.REPLACE
         self.variables = dict(mergedeep.merge(self.variables, other, strategy=strategy))
-
-    def set_markdown_exec_namespace(self):
-        from markdown_exec.formatters import python
-
-        python._sessions_globals["mknodes"] = self.variables
-
-    def get_info_from_project(self, project: project_.Project):
-        metadata = project.folderinfo.aggregate_info() | project.theme.aggregate_info()
-        variables = {
-            "metadata": metadata,
-            "filenames": {},
-            "project": project,
-            "social_info": project.folderinfo.get_social_info(),
-        }
-        variables |= project.get_requirements()
-        if root := project._root:
-            page_mapping = {
-                node.resolved_file_path: node
-                for _level, node in root.iter_nodes()
-                if isinstance(node, mkpage.MkPage)
-            }
-            variables["page_mapping"] = page_mapping
-            variables["filenames"] = list(page_mapping.keys())
-        self.variables |= variables
 
     def render(self, markdown: str, variables=None):
         try:
@@ -143,12 +77,11 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             return ""
 
     def create_config(self):
-        project = self.variables["project"]
         return {
             "repo_url": self.variables["metadata"]["repository_url"],
             "site_description": self.variables["metadata"]["summary"],
             "site_name": self.variables["metadata"]["name"],
-            "site_author": project.info.author_name,
+            "site_author": self.variables["project"].info.author_name,
             "markdown_extensions": list(self.variables["markdown_extensions"].keys()),
             "plugins": list(self.variables["plugins"]),
             # "templates": list(self.variables["templates"].keys()),
@@ -159,5 +92,4 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
 
 if __name__ == "__main__":
     builder = InfoCollector()
-    builder.get_info_from_project(project_.Project.for_mknodes())
     print(dict(builder))

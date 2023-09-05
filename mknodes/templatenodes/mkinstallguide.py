@@ -50,7 +50,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         if self._project:
             return self._project
         if self.associated_project:
-            return self.associated_project.package_name
+            return self.associated_project.folderinfo.package_name
         return None
 
     @project.setter
