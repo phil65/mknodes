@@ -106,6 +106,8 @@ dependencies = [
 ]
 license = "MIT"
 
+[project.scripts]
+mkdocs = "mknodes.cli:cli"
 
 [project.entry-points."mkdocs.plugins"]
 mknodes = "mknodes.plugin:MkNodesPlugin"
