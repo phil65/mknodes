@@ -1,29 +1,19 @@
 from __future__ import annotations
 
 import io
-import os
+import logging
 import pathlib
 import sys
 
 import click
 
-from mkdocs.commands.build import build
-from mkdocs.commands.serve import serve
+from mkdocs.commands import build as build_, serve as serve_
 from mkdocs.config import load_config
 
 from mknodes.utils import yamlhelpers
 
 
-CONTENT = """
-import mknodes
-
-def build(project):
-    root = project.get_root()
-    page = root.add_index_page(hide_toc=True)
-    page += '''{node}'''
-
-
-"""
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
 @click.group()
@@ -48,63 +38,42 @@ def create(repo_url, site_script, site_dir="site"):
     buffer = io.StringIO(text)
     config = load_config(buffer)
     config["plugins"].run_event("startup", command="build", dirty=False)
-    build(config)
+    build_.build(config)
     config["plugins"].run_event("shutdown")
 
 
 @cli.command()
 @click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
 @click.option("-s", "--site-script", help="Path to script used for building website.")
-def serve_page(repo_url, site_script, site_dir="site"):
+def serve_page(repo_url, site_script):
     """Create website."""
-    print(f"{repo_url=} {site_script=} {site_dir=}")
-    cfg = yamlhelpers.load_yaml_file("mkdocs_generic.yml")
+    cfg = yamlhelpers.load_yaml_file("mkdocs.yml")
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
             plugin["mknodes"]["path"] = site_script
     text = yamlhelpers.dump_yaml(cfg)
-    print(text)
-    buffer = io.StringIO(text)
-    # config = load_config(buffer)
-    # config["plugins"].run_event("startup", command="build", dirty=False)
-    serve(buffer)
-    # config["plugins"].run_event("shutdown")
-
-
-def serve_script(script_file: str | os.PathLike):
-    abs_script_file = pathlib.Path(script_file).absolute()
-    script_file = abs_script_file.relative_to(pathlib.Path.cwd())
-    # path = ".".join(abs_script_file.parts).removeprefix(".py")
-    text = pathlib.Path("mkdocs.yml").read_text()
-    config_file = yamlhelpers.load_yaml(text)
-    for plugin in config_file["plugins"]:
-        if isinstance(plugin, dict) and next(iter(plugin.keys())) == "mknodes":
-            plugin["mknodes"]["path"] = str(abs_script_file)  # path
-    output = yamlhelpers.dump_yaml(config_file)
-    stream = io.StringIO(output)
-    serve.serve(
-        config_file=stream,  # type: ignore
-        dev_addr=None,
-        livereload=True,  # type: ignore
-        build_type=None,
-        watch_theme=False,
-        watch=[],
-    )
+    stream = io.StringIO(text)
+    serve_.serve(config_file=stream, livereload=False)
 
 
 def serve_node(node):
-    text = CONTENT.format(node=str(node))
+    text = f"""
+    import mknodes
 
+    def build(project):
+        root = project.get_root()
+        page = root.add_index_page(hide_toc=True)
+        page += '''{node!s}'''
+
+
+    """
     p = pathlib.Path("docs/test.py")
     p.write_text(text)
-    # file = tempfile.NamedTemporaryFile("w")
-    # file.write(text)
-    serve_script(p)
+    serve_page(site_script=p)
 
 
 if __name__ == "__main__":
-    # cli(["build", "--help"])
     cli(sys.argv)
     # cli(
     #     [
