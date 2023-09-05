@@ -7,6 +7,7 @@ import sys
 
 import click
 
+from mkdocs import __main__ as mkdocs
 from mkdocs.commands import build as build_, serve as serve_
 from mkdocs.config import load_config
 
@@ -14,6 +15,12 @@ from mknodes.utils import yamlhelpers
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+
+def callback(ctx, param, value):
+    state = ctx.ensure_object(mkdocs.State)
+    if value:
+        state.stream.setLevel(logging.DEBUG)
 
 
 @click.group()
@@ -31,7 +38,20 @@ def cli():
     help="How many commits to fetch if repository is remote.",
     type=int,
 )
-def build(repo_url, site_script, site_dir="site", clone_depth: int = 100):
+@click.option(
+    "-v",
+    "--verbose",
+    help="Show debug output.",
+    is_flag=True,
+    expose_value=False,
+    callback=callback,
+)
+def build(
+    repo_url,
+    site_script,
+    site_dir="site",
+    clone_depth: int = 100,
+):
     """Create website."""
     print(f"{repo_url=} {site_script=} {site_dir=}")
     cfg = yamlhelpers.load_yaml_file("mkdocs_generic.yml")
@@ -57,6 +77,14 @@ def build(repo_url, site_script, site_dir="site", clone_depth: int = 100):
     "--clone-depth",
     help="How many commits to fetch if repository is remote.",
     type=int,
+)
+@click.option(
+    "-v",
+    "--verbose",
+    help="Show debug output.",
+    is_flag=True,
+    expose_value=False,
+    callback=callback,
 )
 def serve(repo_url, site_script, clone_depth: int = 100):
     """Create website."""
