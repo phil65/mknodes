@@ -53,6 +53,7 @@ class MkWebSite(mknav.MkNav):
     def for_project(cls, project):
         root = cls(project=project)
         project.set_root(root)
+        return root
 
 
 if __name__ == "__main__":
