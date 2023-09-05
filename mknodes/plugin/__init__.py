@@ -16,7 +16,7 @@ from mkdocs.structure.pages import Page
 # from mkdocs.utils.templates import TemplateContext
 
 from mknodes import mkdocsconfig, project
-from mknodes.plugin import linkreplacer, fileseditor
+from mknodes.plugin import linkreplacer, mkdocsbuilder
 from mknodes.utils import classhelpers
 from mknodes.theme import theme
 
@@ -96,8 +96,12 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         self.project.linkprovider.set_excludes(
             [pathlib.Path(i).stem for i in info["filenames"]],
         )
-        ed = fileseditor.FilesEditor(files, cfg, self._dir.name)
-        ed.write_files(self.project.all_files())
+        builder = mkdocsbuilder.MkDocsBuilder(
+            files=files,
+            config=cfg,
+            directory=self._dir.name,
+        )
+        builder.write_files(self.project.all_files())
         for k, v in info["css"].items():
             cfg.register_css(k, v)
         if js_files := info["js_files"]:
@@ -113,7 +117,7 @@ class MkNodesPlugin(BasePlugin[PluginConfig]):
         for template in info["templates"]:
             if html := template.build_html(md):
                 cfg.register_template(template.filename, html)
-        return ed.files
+        return builder.files
 
     def on_nav(
         self,
