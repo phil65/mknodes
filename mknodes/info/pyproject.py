@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import tomllib
 
-from mknodes.data import buildsystems
+from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.utils import cache, helpers
 
 
@@ -51,7 +51,7 @@ class PyProject:
         return self._data.get("tool", {}).get(tool_name)
 
     @property
-    def allowed_commit_types(self) -> list[str]:
+    def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
         return self.mknodes_section.get("allowed-commit-types", [])
 
     @property
@@ -59,7 +59,7 @@ class PyProject:
         return self.mknodes_section.get("extras-descriptions", {})
 
     @property
-    def package_repos(self) -> list[str]:
+    def package_repos(self) -> list[installmethods.InstallMethodStr]:
         return self.mknodes_section.get("package-repositories", ["pip"])
 
 

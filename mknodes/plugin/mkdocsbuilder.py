@@ -9,7 +9,7 @@ import shutil
 
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
-from mkdocs.structure import files, nav, pages
+from mkdocs.structure import files as files_, nav, pages
 
 from mknodes import mkdocsconfig
 
@@ -20,12 +20,12 @@ logger = get_plugin_logger(__name__)
 class MkDocsBuilder:
     def __init__(
         self,
-        files: files.Files | None = None,
+        files: files_.Files | None = None,
         config: mkdocsconfig.Config | MkDocsConfig | str | os.PathLike | None = None,
         directory: str | os.PathLike | None = None,
     ):
         files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files or []}
-        self._files: collections.ChainMap[str, files.File] = collections.ChainMap(
+        self._files: collections.ChainMap[str, files_.File] = collections.ChainMap(
             {},
             files_map,
         )
@@ -43,8 +43,8 @@ class MkDocsBuilder:
         path: str | os.PathLike,
         src_dir: str | os.PathLike | None = None,
         dest_dir: str | os.PathLike | None = None,
-        inclusion_level: files.InclusionLevel = files.InclusionLevel.UNDEFINED,
-    ) -> files.File:
+        inclusion_level: files_.InclusionLevel = files_.InclusionLevel.UNDEFINED,
+    ) -> files_.File:
         """Return a MkDocs File for given path.
 
         Arguments:
@@ -53,7 +53,7 @@ class MkDocsBuilder:
             dest_dir: Target directory. If None, site_dir is used.
             inclusion_level: Inclusion level of new file
         """
-        new_f = files.File(
+        new_f = files_.File(
             str(path),
             src_dir=str(src_dir) if src_dir else self._config.docs_dir,
             dest_dir=str(dest_dir) if dest_dir else self._config.site_dir,
@@ -68,7 +68,7 @@ class MkDocsBuilder:
         title: str,
         path: str | os.PathLike,
         children: list[pages.Page | nav.Section | nav.Link],
-        inclusion_level: files.InclusionLevel = files.InclusionLevel.UNDEFINED,
+        inclusion_level: files_.InclusionLevel = files_.InclusionLevel.UNDEFINED,
     ) -> pages.Page:
         import mkdocs_section_index
 
@@ -84,31 +84,31 @@ class MkDocsBuilder:
         self,
         title: str,
         path: str | os.PathLike,
-        inclusion_level: files.InclusionLevel = files.InclusionLevel.UNDEFINED,
+        inclusion_level: files_.InclusionLevel = files_.InclusionLevel.UNDEFINED,
     ) -> pages.Page:
         file = self.get_file(path, inclusion_level=inclusion_level)
         return pages.Page(title, file, self._config)
 
-    def get_nav(self, file_list: list[files.File]) -> nav.Navigation:
-        files_ = files.Files(file_list)
-        return nav.get_navigation(files_, self._config)
+    def get_nav(self, file_list: list[files_.File]) -> nav.Navigation:
+        files = files_.Files(file_list)
+        return nav.get_navigation(files, self._config)
 
     @property
-    def files(self) -> files.Files:
+    def files(self) -> files_.Files:
         """Access the files as they currently are, as a MkDocs [Files][] collection.
 
         [Files]: https://github.com/mkdocs/mkdocs/blob/master/mkdocs/structure/files.py
         """
 
-        def file_sort_key(f: files.File):
+        def file_sort_key(f: files_.File):
             parts = pathlib.PurePath(f.src_path).parts
             return tuple(
                 chr(f.name != "index" if i == len(parts) - 1 else 2) + p
                 for i, p in enumerate(parts)
             )
 
-        files_ = sorted(self._files.values(), key=file_sort_key)
-        return files.Files(files_)
+        files = sorted(self._files.values(), key=file_sort_key)
+        return files_.Files(files)
 
     def write(self, path: str | os.PathLike, content: str | bytes):
         mode = "w" if isinstance(content, str) else "wb"

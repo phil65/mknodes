@@ -6,7 +6,7 @@ import os
 import pathlib
 import re
 
-from mknodes.data import taskrunners, tools
+from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import gitrepository, packageinfo, pyproject
 from mknodes.utils import helpers, reprhelpers, yamlhelpers
 
@@ -112,11 +112,11 @@ class FolderInfo:
         return self.module.__name__
 
     @property
-    def package_repos(self) -> list[str]:
+    def package_repos(self) -> list[installmethods.InstallMethodStr]:
         return self.pyproject.package_repos
 
     @property
-    def commit_types(self) -> list[str]:
+    def commit_types(self) -> list[commitconventions.CommitTypeStr]:
         return self.pyproject.allowed_commit_types
 
     @property
