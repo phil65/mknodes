@@ -106,9 +106,10 @@ class Config:
             css: file content
         """
         path = (pathlib.Path("assets") / filename).as_posix()
-        logger.info("Creating %s...", path)
         self._config.extra_css.append(path)
-        write_file(css.encode(), str(self.site_dir / path))
+        abs_path = self.site_dir / path
+        logger.info("Registering css file %s...", abs_path)
+        write_file(css.encode(), str(abs_path))
 
     def register_js(self, filename: str | os.PathLike, js: str):
         """Register a javascript file.
@@ -120,9 +121,10 @@ class Config:
             js: file content
         """
         path = (pathlib.Path("assets") / filename).as_posix()
-        logger.info("Creating %s...", path)
         self._config.extra_javascript.append(path)
-        write_file(js.encode(), str(self.site_dir / path))
+        abs_path = self.site_dir / path
+        logger.info("Registering js file %s...", abs_path)
+        write_file(js.encode(), str(abs_path))
 
     def register_template(self, filename: str, content: str):
         """Register a html template.

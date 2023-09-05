@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import collections
+
+from collections.abc import Mapping
 import os
 import pathlib
 import shutil
@@ -8,7 +10,6 @@ import shutil
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files, nav, pages
-import mkdocs_section_index
 
 from mknodes import mkdocsconfig
 
@@ -69,6 +70,8 @@ class MkDocsBuilder:
         children: list[pages.Page | nav.Section | nav.Link],
         inclusion_level: files.InclusionLevel = files.InclusionLevel.UNDEFINED,
     ) -> pages.Page:
+        import mkdocs_section_index
+
         file = self.get_file(path, inclusion_level=inclusion_level)
         return mkdocs_section_index.SectionPage(
             title=title,
@@ -109,13 +112,14 @@ class MkDocsBuilder:
 
     def write(self, path: str | os.PathLike, content: str | bytes):
         mode = "w" if isinstance(content, str) else "wb"
-        logger.info("Writing file to %s", path)
         path = self._get_path(os.fspath(path), new="w" in mode)
         encoding = None if "b" in mode else "utf-8"
+        logger.info("Writing file to %s", path)
         with path.open(mode=mode, encoding=encoding) as file:
             file.write(content)
 
-    def write_files(self, dct: dict[str, str | bytes]):
+    def write_files(self, dct: Mapping[str, str | bytes]):
+        """Write a mapping of {filename: file_content} to build directory."""
         for k, v in dct.items():
             self.write(k, v)
 
