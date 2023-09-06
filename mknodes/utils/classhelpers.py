@@ -72,7 +72,7 @@ def to_module(
                      If False, Exception is thrown.
     """
     match module:
-        case (str(), *_) | str():
+        case (str(), *_) | str():  # type: ignore[attr-defined]
             module_path = module if isinstance(module, str) else ".".join(module)
             try:
                 return importlib.import_module(module_path)
@@ -117,7 +117,7 @@ def to_module_parts(  # type: ignore
         module: A ModuleType, str or sequence.
     """
     match module:
-        case (str(), *_):
+        case (str(), *_):  # type: ignore[attr-defined]
             return tuple(module)
         case str():
             return tuple(module.split("."))
@@ -138,7 +138,7 @@ def to_dotted_path(
         obj: Input to return dotted path for
     """
     match obj:
-        case (str(), *_):
+        case (str(), *_):  # type: ignore[attr-defined]
             return ".".join(obj)
         case str():
             return obj

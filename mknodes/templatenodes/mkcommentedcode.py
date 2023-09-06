@@ -4,7 +4,14 @@ import logging
 
 from typing import Any, Literal
 
-from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mkspeechbubble, mktext
+from mknodes.basenodes import (
+    mkadmonition,
+    mkcode,
+    mkcontainer,
+    mknode,
+    mkspeechbubble,
+    mktext,
+)
 from mknodes.data import datatypes
 from mknodes.utils import inspecthelpers, reprhelpers
 
@@ -90,8 +97,8 @@ class MkCommentedCode(mkcontainer.MkContainer):
     def items(self):
         if not self.code:
             return {}
-        section = []
-        sections = []
+        section: list[str] = []
+        sections: list[mknode.MkNode] = []
         mode = ""
         line_num = self.linenums or 0
         for i, line in enumerate(self.code.split("\n"), start=line_num):

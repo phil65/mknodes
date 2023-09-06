@@ -47,7 +47,7 @@ class Node:
         identifier: str,
         content: str = "",
         shape: str = "normal",
-        sub_nodes: list = None,
+        sub_nodes: list | None = None,
     ):
         sub_nodes = sub_nodes or []
         self.id = identifier  # helpers.to_snake(identifier)
@@ -57,7 +57,7 @@ class Node:
 
         # TODO: verify that content match a working string pattern
 
-    def add_sub_nodes(self, new_nodes: list[Node] = None):
+    def add_sub_nodes(self, new_nodes: list[Node] | None = None):
         if new_nodes is None:
             new_nodes = []
         self.sub_nodes = self.sub_nodes + new_nodes
@@ -106,7 +106,3 @@ class Link:
             f" {self.end.id}",
         ]
         return "".join(elements)
-
-
-if __name__ == "__main__":
-    pass

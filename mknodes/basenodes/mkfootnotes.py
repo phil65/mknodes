@@ -90,7 +90,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         super().__init__(content=items, **kwargs)
 
     def __repr__(self):
-        notes = []
+        notes: list[mknode.MkNode | str] = []
         for item in self.items:
             if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
                 notes.append(str(item.items[0]))

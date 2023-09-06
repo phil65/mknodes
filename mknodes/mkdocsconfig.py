@@ -37,8 +37,8 @@ class Config:
         match config:
             case MkDocsConfig():
                 self._config: MkDocsConfig = config
-            case str() | os.PathLike() as file:
-                self._config = load_config(str(file))
+            case str() | os.PathLike() as path:
+                self._config = load_config(str(path))
             case None:
                 if file := helpers.find_file_in_folder_or_parent("mkdocs.yml"):
                     self._config = load_config(str(file))

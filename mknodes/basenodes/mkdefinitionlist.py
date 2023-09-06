@@ -98,7 +98,9 @@ class MkDefinitionList(mkcontainer.MkContainer):
             case Mapping():
                 self.data = {k: self.to_child_node(v) for k, v in data.items()}
             case list():
-                self.data = {i: self.to_child_node(item) for i, item in enumerate(data)}
+                self.data = {
+                    str(i): self.to_child_node(item) for i, item in enumerate(data)
+                }
             case None:
                 self.data = {}
             case _:

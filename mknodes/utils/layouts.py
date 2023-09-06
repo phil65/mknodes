@@ -132,10 +132,10 @@ class BadgePackageLayout(Layout):
         package_info = dependency[0]
         dep_info = dependency[1]
         if url := package_info.homepage:
-            node = mklink.MkLink(url, package_info.name)
+            link_text = str(mklink.MkLink(url, package_info.name))
         else:
-            node = f"`{package_info.name}`"
-        link = helpers.styled(str(node), size=3, bold=True)
+            link_text = f"`{package_info.name}`"
+        link = helpers.styled(link_text, size=3, bold=True)
         marker = str(dep_info.marker) if dep_info.marker else ""
         marker_str = re.sub(MARKER_RE, r"`\g<1>`", marker)
         summary = helpers.styled(package_info.metadata["Summary"], italic=True)
