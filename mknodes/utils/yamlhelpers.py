@@ -4,9 +4,11 @@ import logging
 import pathlib
 
 import mergedeep
+import yaml
 
 
 logger = logging.getLogger(__name__)
+YAMLError = yaml.YAMLError
 
 
 def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
@@ -30,7 +32,6 @@ def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
 
 
 def load_yaml(text: str, mode="unsafe"):
-    import yaml
     import yaml_env_tag
 
     """Wrap PyYaml's loader so we can extend it to suit our needs."""
@@ -39,10 +40,8 @@ def load_yaml(text: str, mode="unsafe"):
             base_loader_cls: type = yaml.UnsafeLoader
         case "full":
             base_loader_cls = yaml.FullLoader
-        case "safe":
-            base_loader_cls = yaml.SafeLoader
         case _:
-            base_loader_cls = yaml.Loader
+            base_loader_cls = yaml.SafeLoader
 
     class MyLoader(base_loader_cls):
         """Derive from global loader to leave the global loader unaltered."""
@@ -51,18 +50,14 @@ def load_yaml(text: str, mode="unsafe"):
     # See https://github.com/waylan/pyyaml-env-tag
 
     MyLoader.add_constructor("!ENV", yaml_env_tag.construct_env_tag)
-
     # if config is not None:
     #     MyLoader.add_constructor(
     #         "!relative", functools.partial(_construct_dir_placeholder, config)
     #     )
-
     return yaml.load(text, Loader=MyLoader)
 
 
 def dump_yaml(yaml_obj) -> str:
-    import yaml
-
     return yaml.dump(yaml_obj, Dumper=yaml.Dumper, indent=2)
 
 

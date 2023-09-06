@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import importlib
 import logging
 import os
@@ -45,11 +46,13 @@ class FolderInfo:
         self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
         self.git = gitrepository.GitRepository(self.path)
+        self.mkdocs_config = {}
         if (path := self.path / "mkdocs.yml").exists():
             text = path.read_text(encoding="utf-8")
-            self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
-        else:
-            self.mkdocs_config = {}
+            with contextlib.suppress(yamlhelpers.YAMLError):
+                # TODO: cannot load some remote mkdocs configs
+                # (for example from pymdown-extensions)
+                self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
         repo_name = self.git.get_repo_name()
         mod_name = packageinfo.distribution_to_package(repo_name)
         self.module = importlib.import_module(mod_name.replace("-", "_").lower())

@@ -43,7 +43,6 @@ class MkLicense(mktext.MkText):
     def __init__(
         self,
         license_type: str | None = None,
-        header: str = "License",
         **kwargs: Any,
     ):
         """Constructor.
@@ -51,10 +50,9 @@ class MkLicense(mktext.MkText):
         Arguments:
             license_type: License to show (identifier from https://spdx.org/licenses/)
                           If none is set, it will try to get license from Project
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         self.license = license_type
 
     def __repr__(self):
