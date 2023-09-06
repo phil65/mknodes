@@ -53,7 +53,7 @@ class MkWebSite(mknav.MkNav):
         if proj := self.associated_project and proj.info.get_entry_points(
             "mkdocs.plugins",
         ):
-            page = nav.add_page("Plugin flow")
+            page = nav.add_page("MkDocs Plugins")
             page += mknodes.MkPluginFlow()
 
         node = mknodes.MkLicense()
