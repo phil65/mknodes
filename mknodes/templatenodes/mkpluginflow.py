@@ -45,16 +45,16 @@ class MkPluginFlow(mkcontainer.MkContainer):
         return reprhelpers.get_repr(self, plugin=self._plugin, _filter_empty=True)
 
     @property
-    def plugin(self):
+    def plugins(self):
         match self._plugin:
             case None if self.associated_project:
                 info = self.associated_project.info
                 eps = info.get_entry_points("mkdocs.plugins")
-                return next(iter(eps.values())).obj if eps else None
+                return [v.obj for v in eps.values()]
             case None:
-                return None
+                return []
             case _:
-                return self._plugin
+                return [self._plugin]
 
     @property
     def event_plugin(self):
@@ -62,38 +62,41 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
     @property
     def items(self):
-        if not self.plugin:
+        if not self.plugins:
             return []
-        items = [mkheader.MkHeader(self.plugin.__name__, parent=self)]
-        for event in self.event_plugin.flow:
-            if not hasattr(self.plugin, event):
-                continue
-            fn = getattr(self.plugin, event)
-            code = mkcode.MkCode.for_object(fn)
-            fn_name = fn.__name__
-            link = self.event_plugin.help_link.format(event=fn_name)
-            link = mklink.MkLink(link, fn_name)
-            hook_path = self.event_plugin.hook_fn_path.format(event=fn_name)
-            info = _mkdocstrings.MkDocStrings(
-                hook_path,
-                show_source=False,
-                show_root_toc_entry=False,
-            )
-            section = [
-                mkheader.MkHeader(link, level=3),
-                mktext.MkText(inspecthelpers.get_doc(fn)),
-                mkadmonition.MkAdmonition(
-                    code,
-                    collapsible=True,
-                    typ="quote",
-                    title="Source",
-                ),
-                mkadmonition.MkAdmonition(info, collapsible=True, title="Hook info"),
-            ]
-            bubble = mkspeechbubble.MkSpeechBubble(section, parent=self)
-            items.append(bubble)
-        if items:
-            items[-1].arrow = None
+        items = []
+        for plg in self.plugins:
+            section = [mkheader.MkHeader(plg.__name__, parent=self)]
+            for event in self.event_plugin.flow:
+                if not hasattr(plg, event):
+                    continue
+                fn = getattr(plg, event)
+                code = mkcode.MkCode.for_object(fn)
+                fn_name = fn.__name__
+                link = self.event_plugin.help_link.format(event=fn_name)
+                link = mklink.MkLink(link, fn_name)
+                hook_path = self.event_plugin.hook_fn_path.format(event=fn_name)
+                info = _mkdocstrings.MkDocStrings(
+                    hook_path,
+                    show_source=False,
+                    show_root_toc_entry=False,
+                )
+                bubble_content = [
+                    mkheader.MkHeader(link, level=3),
+                    mktext.MkText(inspecthelpers.get_doc(fn)),
+                    mkadmonition.MkAdmonition(
+                        code,
+                        collapsible=True,
+                        typ="quote",
+                        title="Source",
+                    ),
+                    mkadmonition.MkAdmonition(info, collapsible=True, title="Hook info"),
+                ]
+                bubble = mkspeechbubble.MkSpeechBubble(bubble_content, parent=self)
+                section.append(bubble)
+            if section:
+                section[-1].arrow = None
+            items.extend(section)
         return items
 
     @items.setter
