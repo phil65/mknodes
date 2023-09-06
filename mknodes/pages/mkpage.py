@@ -79,8 +79,11 @@ class MkPage(mkcontainer.MkContainer):
         self.created = (
             dict(
                 source_filename=frame.f_code.co_filename,
-                source_function=frame.f_code.co_qualname,
+                source_function=(
+                    qual if (qual := frame.f_code.co_qualname) != "<module>" else None
+                ),
                 source_line_no=frame.f_lineno,
+                # klass=frame.f_locals["self"].__class__.__name__,
             )
             if frame
             else {}
