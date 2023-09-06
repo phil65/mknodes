@@ -115,6 +115,7 @@ class MaterialTheme(theme.Theme):
         self.main_template = self.templates["main.html"]
         self._foreground_color = None
         self.blog = mkblog.MkBlog()
+        self.palette = self.data.get("palette")
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
@@ -142,23 +143,21 @@ class MaterialTheme(theme.Theme):
         return COLORS[color]["color"]
 
     def _get_color(self, color_type: Literal["primary", "accent"], fallback: str) -> str:
-        palette = self.config.theme.get("palette")
-        match palette:
+        match self.palette:
             case list():
-                return palette[0].get(color_type, fallback)
+                return self.palette[0].get(color_type, fallback)
             case dict():
-                return palette.get(color_type, fallback)
+                return self.palette.get(color_type, fallback)
             case _:
                 return fallback
 
     def set_color(self, color_type: Literal["primary", "accent"], value: str):
-        palettes = self.config.theme.get("palette")
-        match palettes:
+        match self.palette:
             case list():
-                for pal in palettes:
+                for pal in self.palette:
                     pal[color_type] = value
             case dict():
-                palettes[color_type] = value
+                self.palette[color_type] = value
             case _:
                 msg = "Could not find palette"
                 raise RuntimeError(msg)

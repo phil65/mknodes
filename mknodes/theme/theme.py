@@ -19,12 +19,12 @@ class Theme:
         self,
         theme_name: str,
         *,
-        config: mkdocsconfig.Config | None = None,
+        data: dict | None = None,
         project: project.Project | None = None,
         template_registry: templateregistry.TemplateRegistry | None = None,
     ):
         self.theme_name = theme_name
-        self.config = config or mkdocsconfig.Config()
+        self.data = data or {}
         self.css = rootcss.RootCSS()
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
@@ -41,8 +41,8 @@ class Theme:
         if theme_name == "material":
             from mknodes.theme import materialtheme
 
-            return materialtheme.MaterialTheme(config=config, **kwargs)
-        return Theme(theme_name, config=config, **kwargs)
+            return materialtheme.MaterialTheme(data=config.theme._vars, **kwargs)
+        return Theme(theme_name, data=config.theme._vars, **kwargs)
 
     def get_files(self):
         return {}
