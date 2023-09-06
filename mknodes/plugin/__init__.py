@@ -41,25 +41,27 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         logger.debug("Finished initializing plugin")
 
     def on_startup(self, command: CommandStr, dirty: bool = False):
-        """Defined to activate new-style MkDocs plugin handling."""
+        """Clone the repo in case it is a remote one.
+
+        Also activates new-style MkDocs plugin lifecycle.
+        """
+        if helpers.is_url(self.config.repo_path):
+            self.folderinfo = folderinfo.FolderInfo.clone_from(
+                self.config.repo_path,
+                depth=self.config.clone_depth,
+            )
+        else:
+            self.folderinfo = self.config.repo_path
 
     def on_config(self, config: MkDocsConfig):
         """Create the project based on MkDocs config."""
         cfg = mkdocsconfig.Config(config)
         skin = theme.Theme.get_theme(config=cfg)
-        if helpers.is_url(self.config.repo_path):
-            repo = folderinfo.FolderInfo.clone_from(
-                self.config.repo_path,
-                depth=self.config.clone_depth,
-            )
-            config.copyright = ""
-        else:
-            repo = self.config.repo_path
         self.project = project.Project(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=skin,
-            repo=repo,
+            repo=self.folderinfo,
         )
         skin.associated_project = self.project
         project_fn = classhelpers.get_callable_from_path(self.config.path)
