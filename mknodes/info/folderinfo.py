@@ -163,6 +163,7 @@ class FolderInfo:
             repository_name=self.repository_name,
             repository_username=self.repository_username,
             repository_url=self.repository_url,
+            social_info=self.get_social_info(),
         )
         infos |= self.info.metadata.json
         if self.mkdocs_config:

@@ -86,7 +86,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
             "plugins": list(self.variables["plugins"]),
             # "templates": list(self.variables["templates"].keys()),
             "mdx_configs": self.variables["markdown_extensions"],
-            "extra": dict(social=self.variables["social_info"]),
+            "extra": dict(social=self.variables["metadata"]["social_info"]),
         }
 
 

@@ -111,7 +111,6 @@ class Project(Generic[T]):
             "metadata": metadata,
             "filenames": {},
             "project": self,
-            "social_info": self.folderinfo.get_social_info(),
         }
         variables |= self.get_requirements()
         if root := self._root:

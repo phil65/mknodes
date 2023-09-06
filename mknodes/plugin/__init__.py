@@ -113,7 +113,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                 cfg.register_js(k, v)
         if extensions := info["markdown_extensions"]:
             cfg.register_extensions(extensions)
-        if social := info["social_info"]:
+        if social := info["metadata"]["social_info"]:
             extra = cfg._config.extra
             if not extra.get("social"):
                 extra["social"] = social
