@@ -55,7 +55,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             config.copyright = ""
         else:
             repo = self.config.repo_path
-        self.project = project.Project[type(skin)](
+        self.project = project.Project(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=skin,
