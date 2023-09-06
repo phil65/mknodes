@@ -13,7 +13,6 @@ QT_MODULE_ATTR = "QT_MODULE"
 
 def build(project: mknodes.Project):
     root_nav = project.get_root()
-    project.module = prettyqt
     page = root_nav.add_index_page("Overview", hide_toc=True, hide_nav=True)
     page += mknodes.MkHeader("Test script: Build the PrettyQt documentation", level=1)
 
