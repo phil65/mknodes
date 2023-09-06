@@ -5,7 +5,7 @@ import pathlib
 import pytest
 
 # from responsemock import utils
-from mknodes import manual, project
+from mknodes import manual, project as project_
 
 
 RESPONSE_1 = """{
@@ -55,8 +55,8 @@ def resources_dir():
 
 
 @pytest.fixture(scope="session")
-def full_tree():
-    proj = project.Project.for_mknodes()
+def project():
+    proj = project_.Project.for_mknodes()
     # with utils.response_mock(
     #     [
     #         (
@@ -77,4 +77,6 @@ def full_tree():
     #         ),
     #     ],
     # ):
-    return manual.build(proj)
+    manual.build(proj)
+    proj.aggregate_info()
+    return proj
