@@ -47,7 +47,7 @@ class PyProject:
     def has_tool(self, tool_name: str) -> bool:
         return tool_name in self._data.get("tool", {})
 
-    def get_tool(self, tool_name: str) -> str | None:
+    def get_tool(self, tool_name: str) -> dict | None:
         return self._data.get("tool", {}).get(tool_name)
 
     @property
@@ -65,4 +65,4 @@ class PyProject:
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info)
+    print(info.get_tool("hatch"))

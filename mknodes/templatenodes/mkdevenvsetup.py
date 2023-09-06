@@ -14,6 +14,7 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.data import buildsystems, tools
+from mknodes.info import folderinfo
 from mknodes.utils import reprhelpers
 
 
@@ -71,11 +72,14 @@ def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.
     ]
 
 
-def get_tool_section(tool: tools.Tool) -> list[mknode.MkNode]:
+def get_tool_section(tool: tools.Tool, folderinfo) -> list[mknode.MkNode]:
+    cfg = tool.get_config(folderinfo)
+    code = mkcode.MkCode(cfg or "")
     return [
         mkheader.MkHeader(tool.title),
         mktext.MkText(tool.description),
         mkcode.MkCode(tool.setup_cmd, language="md"),
+        mkadmonition.MkAdmonition(code, collapsible=True, title="Config", typ="quote"),
         mkadmonition.MkAdmonition(
             [
                 f"To install {tool.identifier}:",
@@ -183,8 +187,13 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         link = mklink.MkLink(self.repo_url, folder_name)
         start_text = START_TEXT.format(link=str(link))
         items = [mktext.MkText(start_text), mkcode.MkCode(code, language="md")]
+        info = (
+            self.associated_project.folderinfo
+            if self.associated_project
+            else folderinfo.FolderInfo()
+        )
         for tool in self.tools:
-            items.extend(get_tool_section(tool))
+            items.extend(get_tool_section(tool, info))
         items.extend(get_build_backend_section(self.build_backend))
         items.extend(get_docs_section(docs_setup=docs_str, project_name=folder_name))
         for item in items:

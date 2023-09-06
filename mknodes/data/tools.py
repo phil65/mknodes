@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Literal
 
+import tomli_w
+
 from mknodes.info import folderinfo
 from mknodes.utils import helpers
 
@@ -75,6 +77,12 @@ class PreCommit(Tool):
         filename = ".pre-commit-config.yaml"
         return bool(helpers.find_file_in_folder_or_parent(filename, str(directory)))
 
+    def get_config(self, folder):
+        directory = folder.path if folder else "."
+        filename = ".pre-commit-config.yaml"
+        path = helpers.find_file_in_folder_or_parent(filename, str(directory))
+        return path.read_text() if path else None
+
 
 class Ruff(Tool):
     identifier = "ruff"
@@ -87,7 +95,7 @@ class Ruff(Tool):
         return folder.pyproject.has_tool("ruff") if folder else False
 
     def get_config(self, folder):
-        folder.pyproject.get_tool("ruff")
+        return tomli_w.dumps(folder.pyproject.get_tool("ruff") or {})
 
 
 class MyPy(Tool):
@@ -101,7 +109,7 @@ class MyPy(Tool):
         return folder.pyproject.has_tool("mypy") if folder else False
 
     def get_config(self, folder):
-        folder.pyproject.get_tool("mypy")
+        return tomli_w.dumps(folder.pyproject.get_tool("mypy") or {})
 
 
 class Coverage(Tool):
@@ -115,7 +123,7 @@ class Coverage(Tool):
         return folder.pyproject.has_tool("coverage") if folder else False
 
     def get_config(self, folder):
-        folder.pyproject.get_tool("coverage")
+        return tomli_w.dumps(folder.pyproject.get_tool("coverage") or {})
 
 
 TOOLS: dict[ToolStr, Tool] = {
