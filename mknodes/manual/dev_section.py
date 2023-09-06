@@ -105,3 +105,12 @@ def create_dev_environment_page():
     page = mknodes.MkPage("Development environment", icon=node.ICON)
     page += node
     return page
+
+
+@dev_nav.route("Dev Tools", show_source=True)
+def create_dev_tools_page():
+    """Create the "Tools" MkPage and attach it to given MkNav."""
+    node = mknodes.MkDevTools()
+    page = mknodes.MkPage("Tools", icon=node.ICON)
+    page += node
+    return page

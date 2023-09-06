@@ -42,6 +42,7 @@ class MkWebSite(mknav.MkNav):
 
         page = nav.add_page("Setting up the environment")
         page += mknodes.MkDevEnvSetup()
+        page += mknodes.MkDevTools(header="Tools")
 
         page = nav.add_page("Dependencies")
         page += mknodes.MkDependencyTable()

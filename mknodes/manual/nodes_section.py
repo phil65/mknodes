@@ -160,6 +160,7 @@ def create_about_nodes_section(nav: mknodes.MkNav):
         mknodes.MkCommitConventions,
         mknodes.MkPullRequestGuidelines,
         mknodes.MkDevEnvSetup,
+        mknodes.MkDevTools,
         mknodes.MkShields,
         mknodes.MkMetadataBadges,
         mknodes.MkModuleOverview,

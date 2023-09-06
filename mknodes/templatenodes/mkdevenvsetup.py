@@ -4,17 +4,8 @@ import logging
 
 from typing import Any
 
-from mknodes.basenodes import (
-    mkadmonition,
-    mkcode,
-    mkcontainer,
-    mkheader,
-    mklink,
-    mknode,
-    mktext,
-)
-from mknodes.data import buildsystems, tools
-from mknodes.info import folderinfo
+from mknodes.basenodes import mkcode, mkcontainer, mkheader, mklink, mknode, mktext
+from mknodes.data import buildsystems
 from mknodes.utils import reprhelpers
 
 
@@ -63,26 +54,6 @@ def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.
     ]
 
 
-def get_tool_section(tool: tools.Tool, folderinfo) -> list[mknode.MkNode]:
-    cfg = tool.get_config(folderinfo)
-    code = mkcode.MkCode(cfg or "", language=tool.config_syntax)
-    return [
-        mkheader.MkHeader(tool.title),
-        mktext.MkText(tool.description),
-        mkcode.MkCode(tool.setup_cmd, language="md"),
-        mkadmonition.MkAdmonition(code, collapsible=True, title="Config", typ="quote"),
-        mkadmonition.MkAdmonition(
-            [
-                f"To install {tool.identifier}:",
-                mkcode.MkCode(f"pip install {tool.identifier}", language="bash"),
-                mklink.MkLink(tool.url, "More information"),
-            ],
-            collapsible=True,
-            title=f"Installing {tool.title}",
-        ),
-    ]
-
-
 class MkDevEnvSetup(mkcontainer.MkContainer):
     """Text node containing Instructions to set up a dev environment."""
 
@@ -93,7 +64,6 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         self,
         *,
         repo_url: str | None = None,
-        tools: list[tools.ToolStr] | None = None,
         build_backend: buildsystems.BuildSystemStr | None = None,
         header: str = "Setting up a development environment",
         **kwargs: Any,
@@ -102,8 +72,6 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
         Arguments:
             repo_url: Repo url to show. If None, it will be pulled from project.
-            tools: Tools to show install / setup instructions for.
-                            If None, tools will be pulled from project.
             build_backend: Build backend to show install instructions for.
                             If None, it will be pulled from project.
             header: Section header
@@ -111,14 +79,12 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         """
         super().__init__(header=header, **kwargs)
         self._repo_url = repo_url
-        self._tools = tools
         self._build_backend = build_backend
 
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
             repo_url=self._repo_url,
-            tools=self._tools,
             build_backend=self._build_backend,
             _filter_empty=True,
         )
@@ -141,18 +107,6 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     @repo_url.setter
     def repo_url(self, value):
         self._repo_url = value
-
-    @property
-    def tools(self) -> list[tools.Tool]:  # type: ignore[return]
-        match self._tools:
-            case list():
-                return [tools.TOOLS[i] for i in self._tools]
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.tools
-            case None:
-                return []
-            case _:
-                raise TypeError(self._tools)
 
     @property
     def build_backend(self) -> buildsystems.BuildSystem:  # type: ignore[return]
@@ -178,13 +132,6 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         link = mklink.MkLink(self.repo_url, folder_name)
         start_text = START_TEXT.format(link=str(link))
         items = [mktext.MkText(start_text), mkcode.MkCode(code, language="md")]
-        info = (
-            self.associated_project.folderinfo
-            if self.associated_project
-            else folderinfo.FolderInfo()
-        )
-        for tool in self.tools:
-            items.extend(get_tool_section(tool, info))
         items.extend(get_build_backend_section(self.build_backend))
         items.extend(get_docs_section(docs_setup=docs_str, project_name=folder_name))
         for item in items:
