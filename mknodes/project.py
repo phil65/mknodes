@@ -118,7 +118,7 @@ class Project(Generic[T]):
             page_mapping = {
                 node.resolved_file_path: node
                 for _level, node in root.iter_nodes()
-                if isinstance(node, mkpage.MkPage)
+                if isinstance(node, mkpage.MkPage | mknav.MkNav)
             }
             variables["page_mapping"] = page_mapping
             variables["filenames"] = list(page_mapping.keys())

@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Literal
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
 from mknodes import mkdocsconfig, project
+from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, mkdocsbuilder, pluginconfig
 from mknodes.utils import classhelpers, helpers
 from mknodes.theme import theme
@@ -146,7 +147,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     ) -> Page | None:
         """During this phase we set the edit paths."""
         node = self.project.infocollector["page_mapping"].get(page.file.src_uri)
-        edit_path = node._edit_path if node else None
+        edit_path = node._edit_path if isinstance(node, mkpage.MkPage) else None
         cfg = mkdocsconfig.Config(config)
         if path := cfg.get_edit_url(edit_path):
             page.edit_url = path
