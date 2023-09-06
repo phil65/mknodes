@@ -56,6 +56,7 @@ class FolderInfo:
         repo_name = self.git.get_repo_name()
         mod_name = packagehelpers.distribution_to_package(repo_name)
         self.module = importlib.import_module(mod_name.replace("-", "_").lower())
+        self._temp_directory = None
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)

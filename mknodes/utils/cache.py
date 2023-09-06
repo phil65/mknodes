@@ -109,8 +109,8 @@ def download_and_cache_url(
         hours=hours,
         weeks=weeks,
     )
-    path = platformdirs.user_cache_dir("mknodes")
-    directory = pathlib.Path(path) / "mknodes_url_cache"
+    cache_path = platformdirs.user_cache_dir("mknodes")
+    directory = pathlib.Path(cache_path) / "mknodes_url_cache"
     name_hash = hashlib.sha256(url.encode()).hexdigest()[:32]
     path = directory / (name_hash + os.path.splitext(url)[1])  # noqa: PTH122
 

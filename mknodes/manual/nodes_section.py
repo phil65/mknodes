@@ -474,11 +474,16 @@ def create_mknodes_section(nav: mknodes.MkNav):
                     title=name,
                 )
                 nodes.append(admonition)
+            source = (
+                node.resolved_file_path
+                if isinstance(node, mknodes.MkPage)
+                else node.__class__.__name__
+            )
             node += mknodes.MkAdmonition(
                 nodes,
                 typ="quote",
                 collapsible=True,
-                title=f"Source code for *{node.resolved_file_path}*",
+                title=f"Source code for *{source}*",
             )
 
         def get_header(self, node):

@@ -87,5 +87,4 @@ class MkWebSite(mknav.MkNav):
 
 if __name__ == "__main__":
     doc = MkWebSite(module="mkdocs")
-    page = doc.add_class_page(MkWebSite)
-    print(page)
+    print(doc)

@@ -16,7 +16,7 @@ class GitRepository(git.Repo):
 
     @cached_property
     def main_branch(self) -> str:
-        has_main_branch = any(branch.name == "main" for branch in self.branches)
+        has_main_branch = any(branch.name == "main" for branch in self.heads)
         return "main" if has_main_branch else "master"
 
     def get_repo_name(self) -> str:

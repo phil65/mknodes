@@ -276,7 +276,7 @@ class MaterialTheme(theme.Theme):
         )
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
-        for k in extensions.copy():
+        for k in dict(extensions).copy():
             if k == "pymdownx.emoji":
                 from materialx import emoji
 

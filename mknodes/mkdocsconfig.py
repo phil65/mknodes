@@ -183,4 +183,4 @@ class Config:
 
 if __name__ == "__main__":
     cfg = Config()
-    print(cfg.get_deps_to_install())
+    print(cfg.theme._vars)

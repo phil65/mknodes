@@ -20,13 +20,13 @@ logger = logging.getLogger(__name__)
 
 
 def iter_subclasses(
-    klass: type,
+    klass: T,
     *,
     recursive: bool = True,
     filter_abstract: bool = False,
     filter_generic: bool = True,
     filter_locals: bool = True,
-) -> typing.Iterator[type]:
+) -> typing.Iterator[T]:
     """Recursively iter all subclasses of given klass.
 
     Arguments:
