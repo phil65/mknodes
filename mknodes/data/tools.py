@@ -48,7 +48,7 @@ class Tool:
         """
         raise NotImplementedError
 
-    def get_config(self, folder) -> str | None:
+    def get_config(self, folder: folderinfo.FolderInfo | None) -> str | None:
         """Return config for given tool.
 
         Arguments:
