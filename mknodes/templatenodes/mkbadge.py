@@ -79,12 +79,9 @@ class MkBadge(mkimage.MkImage):
     @property
     def text_color(self) -> str | None:
         match self._text_color:
-            case None if self.associated_project and self.use_gitlab_style:
-                color = self.associated_project.theme.get_text_color()
-                return f"{color},#fff"
             case None if self.associated_project:
                 color = self.associated_project.theme.get_text_color()
-                return f"#fff,{color}"
+                return f"{color},#fff" if self.use_gitlab_style else f"#fff,{color}"
             case str():
                 return self._text_color
         return None
