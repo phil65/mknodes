@@ -22,6 +22,7 @@ from mknodes.utils import inspecthelpers, reprhelpers
 
 
 MKDOCS_LINK = "https://www.mkdocs.org/dev-guide/plugins/#{event}"
+HOOK_FN_PATH = "mkdocs.plugins.BasePlugin.{event}"
 
 logger = logging.getLogger(__name__)
 
@@ -54,8 +55,9 @@ Flow = [
 
 def get_event_section(fn: Callable) -> list[mknode.MkNode]:
     code = mkcode.MkCode.for_object(fn)
-    link = mklink.MkLink(MKDOCS_LINK.format(event=fn.__name__), fn.__name__)
-    info = _mkdocstrings.MkDocStrings(f"mkdocs.plugins.BasePlugin.{fn.__name__}")
+    fn_name = fn.__name__
+    link = mklink.MkLink(MKDOCS_LINK.format(event=fn_name), fn_name)
+    info = _mkdocstrings.MkDocStrings(HOOK_FN_PATH.format(fn_name), show_source=False)
     return [
         mkheader.MkHeader(link),
         mktext.MkText(inspecthelpers.get_doc(fn)),
