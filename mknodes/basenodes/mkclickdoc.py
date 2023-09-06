@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class MkClickDoc(mknode.MkNode):
-    """Documentation for click CLI apps."""
+    """Documentation for click / typer CLI apps."""
 
     REQUIRED_EXTENSIONS = ["mkdocs-click", "attr_list"]
     ICON = "material/api"
@@ -31,7 +31,7 @@ class MkClickDoc(mknode.MkNode):
         r"""Constructor.
 
         Arguments:
-            target: Dotted path to Click group
+            target: Dotted path to Click command
             prog_name: Program name
             depth: Offset to add when generating headers.
             style: Style for the options section.
@@ -93,7 +93,7 @@ class MkClickDoc(mknode.MkNode):
     def create_example_page(page):
         # import mknodes
 
-        page += "The MkClickDoc node shows DocStrings from mkdocstrings addon."
+        page += "The MkClickDoc node shows DocStrings for Click / Typer."
         page += MkClickDoc(target="mknodes.cli:cli")
         # node = MkClickDoc(module="cli", command="cli")
         # page += mknodes.MkReprRawRendered(node)
