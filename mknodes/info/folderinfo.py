@@ -50,7 +50,8 @@ class FolderInfo:
             self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
         else:
             self.mkdocs_config = {}
-        mod_name = self.git.get_repo_name()
+        repo_name = self.git.get_repo_name()
+        mod_name = packageinfo.distribution_to_package(repo_name)
         self.module = importlib.import_module(mod_name.replace("-", "_").lower())
 
     def __repr__(self):
@@ -109,7 +110,7 @@ class FolderInfo:
 
     @property
     def package_name(self) -> str:
-        return self.module.__name__
+        return self.info.package_name
 
     @property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
