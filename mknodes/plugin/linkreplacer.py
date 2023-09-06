@@ -9,6 +9,8 @@ import urllib.parse
 
 from mkdocs.plugins import get_plugin_logger
 
+from mknodes.utils import helpers
+
 
 logger = get_plugin_logger(__name__)
 
@@ -21,35 +23,6 @@ logger = get_plugin_logger(__name__)
 #       4: File extension e.g. .md, .png, etc.
 #       5. hash anchor e.g. #my-sub-heading-link
 AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
-
-
-def relative_url(url_a: str, url_b: str) -> str:
-    """Compute the relative path from URL A to URL B.
-
-    Arguments:
-        url_a: URL A.
-        url_b: URL B.
-
-    Returns:
-        The relative URL to go from A to B.
-    """
-    parts_a = url_a.split("/")
-    if "#" in url_b:
-        url_b, anchor = url_b.split("#", 1)
-    else:
-        anchor = None
-    parts_b = url_b.split("/")
-
-    # remove common left parts
-    while parts_a and parts_b and parts_a[0] == parts_b[0]:
-        parts_a.pop(0)
-        parts_b.pop(0)
-
-    # go up as many times as remaining a parts' depth
-    levels = len(parts_a) - 1
-    parts_relative = [".."] * levels + parts_b
-    relative = "/".join(parts_relative)
-    return f"{relative}#{anchor}" if anchor else relative
 
 
 class LinkReplacer:
@@ -65,7 +38,7 @@ class LinkReplacer:
         if len(filenames) > 1:
             text = "%s: %s has multiple targets: %s"
             logger.debug(text, self.page_url, match.group(3), filenames)
-        new_link = relative_url(self.page_url, filenames[0])
+        new_link = helpers.relative_url(self.page_url, filenames[0])
         new_text = match.group(0).replace(match.group(2), new_link)
         # new_text = new_text.replace("\\", "/")
         text = "LinkReplacer: %s: %s -> %s"

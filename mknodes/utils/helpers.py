@@ -141,6 +141,35 @@ def is_url(path: str) -> bool:
     return path.startswith(("http:/", "https:/", "www."))
 
 
+def relative_url(url_a: str, url_b: str) -> str:
+    """Compute the relative path from URL A to URL B.
+
+    Arguments:
+        url_a: URL A.
+        url_b: URL B.
+
+    Returns:
+        The relative URL to go from A to B.
+    """
+    parts_a = url_a.split("/")
+    if "#" in url_b:
+        url_b, anchor = url_b.split("#", 1)
+    else:
+        anchor = None
+    parts_b = url_b.split("/")
+
+    # remove common left parts
+    while parts_a and parts_b and parts_a[0] == parts_b[0]:
+        parts_a.pop(0)
+        parts_b.pop(0)
+
+    # go up as many times as remaining a parts' depth
+    levels = len(parts_a) - 1
+    parts_relative = [".."] * levels + parts_b
+    relative = "/".join(parts_relative)
+    return f"{relative}#{anchor}" if anchor else relative
+
+
 if __name__ == "__main__":
     strings = groupby_first_letter([str(i) for i in range(1000)])
     print(strings)
