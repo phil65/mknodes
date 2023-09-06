@@ -33,15 +33,6 @@ git clone {repo_url}
 cd {folder_name}
 """
 
-PRE_COMMIT_CODE = """
-# Setup pre-commit hooks for required formatting
-pre-commit install
-"""
-
-PRE_COMMIT_TEXT = """This project uses `pre-commit` to ensure code quality.
-A .pre-commit-config.yaml configuration file tailored for this project is provided
-in the root folder."""
-
 mkdocs_link = mklink.MkLink("http://www.mkdocs.org", "MkDocs")
 material_link = mklink.MkLink(
     "https://squidfunk.github.io/mkdocs-material/",
