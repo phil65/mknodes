@@ -64,7 +64,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
     def items(self):
         if not self.plugin:
             return []
-        items = []
+        items = [mkheader.MkHeader(self.plugin.__name__, parent=self)]
         for event in self.event_plugin.flow:
             if not hasattr(self.plugin, event):
                 continue
