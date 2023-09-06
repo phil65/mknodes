@@ -6,7 +6,6 @@ import pathlib
 import tempfile
 
 from typing import TYPE_CHECKING, Literal
-import jinja2
 
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
@@ -17,10 +16,12 @@ from mknodes.theme import theme
 from mknodes.info import folderinfo
 
 if TYPE_CHECKING:
+    import jinja2
     from mkdocs.config.defaults import MkDocsConfig
     from mkdocs.structure.files import Files
     from mkdocs.structure.nav import Navigation
     from mkdocs.structure.pages import Page
+
     # from mkdocs.utils.templates import TemplateContext
 
 
