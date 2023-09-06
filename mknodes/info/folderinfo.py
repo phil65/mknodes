@@ -9,7 +9,7 @@ import re
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import gitrepository, packageinfo, pyproject
-from mknodes.utils import helpers, reprhelpers, yamlhelpers
+from mknodes.utils import helpers, packagehelpers, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class FolderInfo:
                 # (for example from pymdown-extensions)
                 self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
         repo_name = self.git.get_repo_name()
-        mod_name = packageinfo.distribution_to_package(repo_name)
+        mod_name = packagehelpers.distribution_to_package(repo_name)
         self.module = importlib.import_module(mod_name.replace("-", "_").lower())
 
     def __repr__(self):

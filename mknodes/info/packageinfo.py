@@ -1,20 +1,18 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 import contextlib
 import dataclasses
 import functools
 import importlib
-
-from importlib import metadata
 import logging
 import types
+
 from typing import Literal
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
 
-from mknodes.utils import reprhelpers
+from mknodes.utils import packagehelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -81,21 +79,6 @@ class Dependency:
 
 
 @functools.cache
-def get_distribution(name: str) -> metadata.Distribution:
-    return metadata.distribution(name)
-
-
-@functools.cache
-def get_metadata(dist: metadata.Distribution):
-    return dist.metadata
-
-
-@functools.cache
-def get_requires(dist: metadata.Distribution) -> list[str]:
-    return dist.requires or []
-
-
-@functools.cache
 def get_dependency(name) -> Dependency:
     return Dependency(name)
 
@@ -103,17 +86,8 @@ def get_dependency(name) -> Dependency:
 registry: dict[str, PackageInfo] = {}
 
 
-@functools.cache
-def get_package_map() -> Mapping[str, list[str]]:
-    return metadata.packages_distributions()
-
-
-def distribution_to_package(dist):
-    return next((k for k, v in get_package_map().items() if dist in v), dist)
-
-
 def get_info(mod_name: str) -> PackageInfo:
-    mapping = get_package_map()
+    mapping = packagehelpers.get_package_map()
     pkg_name = mapping[mod_name][0] if mod_name in mapping else mod_name
     if mod_name not in registry:
         registry[mod_name] = PackageInfo(pkg_name)
@@ -123,9 +97,9 @@ def get_info(mod_name: str) -> PackageInfo:
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
-        self.distribution = get_distribution(pkg_name)
+        self.distribution = packagehelpers.get_distribution(pkg_name)
         logger.info("Loaded package info: '%s'", pkg_name)
-        self.metadata = get_metadata(self.distribution)
+        self.metadata = packagehelpers.get_metadata(self.distribution)
         self.urls = {
             v.split(",")[0].strip(): v.split(",")[1].strip()
             for k, v in self.metadata.items()
@@ -156,7 +130,7 @@ class PackageInfo:
 
     @functools.cached_property
     def required_deps(self) -> list[Dependency]:
-        requires = get_requires(self.distribution)
+        requires = packagehelpers.get_requires(self.distribution)
         return [get_dependency(i) for i in requires] if requires else []
 
     @property
@@ -269,8 +243,8 @@ class PackageInfo:
 
     def get_required_packages(self) -> dict[PackageInfo, Dependency]:
         modules = (
-            {Requirement(i).name for i in get_requires(self.distribution)}
-            if get_requires(self.distribution)
+            {Requirement(i).name for i in packagehelpers.get_requires(self.distribution)}
+            if packagehelpers.get_requires(self.distribution)
             else set()
         )
         packages = {}
