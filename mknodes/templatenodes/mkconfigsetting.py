@@ -100,12 +100,29 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
 
         setting = {"plugins": {"mknodes": {"path": "path.to.module"}}}
         desc = "Some **markdown** to describe the setting"
-        kwargs = dict(setting=setting, description=desc, default="path.to.module")
-        node = MkConfigSetting("path", **kwargs)
+        node = MkConfigSetting(
+            "path",
+            setting=setting,
+            description=desc,
+            default="path.to.module",
+        )
         page += mknodes.MkReprRawRendered(node, header="### YAML")
-        node = MkConfigSetting("path", mode="json", **kwargs)
+        node = MkConfigSetting(
+            "path",
+            mode="json",
+            setting=setting,
+            description=desc,
+            default="path.to.module",
+        )
         page += mknodes.MkReprRawRendered(node, header="### JSON")
-        node = MkConfigSetting("path", mode="toml", version_added="2.1.0", **kwargs)
+        node = MkConfigSetting(
+            "path",
+            mode="toml",
+            version_added="2.1.0",
+            setting=setting,
+            description=desc,
+            default="path.to.module",
+        )
         page += mknodes.MkReprRawRendered(node, header="### TOML")
 
 

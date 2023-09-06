@@ -55,7 +55,7 @@ def relative_url(url_a: str, url_b: str) -> str:
 class LinkReplacer:
     def __init__(self):
         self.mapping = collections.defaultdict(list)
-        self.page_url = None
+        self.page_url = ""
 
     def __call__(self, match):
         filename = urllib.parse.unquote(match.group(3).strip())

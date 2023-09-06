@@ -42,7 +42,7 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
         code_col = [mknodes.MkCode("print('hello world')\nsys.exit()") for _ in range(3)]
         admonitions = [mknodes.MkAdmonition("Admonition inside cell") for _ in range(3)]
         tabs = [mknodes.MkTabbed(dict(A=["Tab a"], B=["Tab b"])) for _ in range(3)]
-        data = dict(Code=code_col, Admonitions=admonitions, Tabs=tabs)
+        data: dict[str, list] = dict(Code=code_col, Admonitions=admonitions, Tabs=tabs)
         page += mknodes.MkReprRawRendered(MkHtmlTable(data))
 
 

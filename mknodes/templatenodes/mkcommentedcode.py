@@ -128,8 +128,8 @@ class MkCommentedCode(mkcontainer.MkContainer):
         elif mode == "comment":
             text = "\n".join(section)
             sections.append(self.comment_class(text))
-        for section in sections:
-            section.parent = self
+        for sect in sections:
+            sect.parent = self
         return sections
 
     @items.setter

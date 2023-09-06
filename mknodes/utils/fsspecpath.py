@@ -56,7 +56,7 @@ class FsSpecPath:
 
     @property
     def name(self):
-        return pathlib.Path(path).name if (path := self.path["name"]) else ""
+        return pathlib.Path(str(path)).name if (path := self.path["name"]) else ""
 
     @property
     def protocol_path(self) -> str:

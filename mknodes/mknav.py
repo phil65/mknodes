@@ -148,7 +148,7 @@ class MkNav(mknode.MkNode):
 
     @property
     def children(self):
-        nodes = [self.index_page] if self.index_page else []
+        nodes: list[mknode.MkNode] = [self.index_page] if self.index_page else []
         nodes += list(self.nav.values())
         return nodes
 

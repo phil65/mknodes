@@ -23,7 +23,7 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        data: Sequence[Sequence[str]] | Sequence[dict] | dict[str, list] | None = None,
+        data: Sequence[Sequence[str]] | Sequence[dict] | Mapping[str, list] | None = None,
         columns: Sequence[str] | None = None,
         *,
         header: str = "",
