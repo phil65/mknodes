@@ -55,7 +55,9 @@ class FolderInfo:
                 self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
         repo_name = self.git.get_repo_name()
         mod_name = packagehelpers.distribution_to_package(repo_name)
-        self.module = importlib.import_module(mod_name.replace("-", "_").lower())
+        mod_name = mod_name.replace("-", "_").lower()
+        # self.module = packagehelpers.install_or_import(mod_name)
+        self.module = importlib.import_module(mod_name)
         self._temp_directory = None
 
     def __repr__(self):

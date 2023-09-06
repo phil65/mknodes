@@ -3,6 +3,7 @@ import mknodes
 from mknodes import paths
 from mknodes.manual import routing
 from mknodes.pages import processors
+from mknodes.project import Project
 
 
 DOC_TEXT = """Now lets create the documentation.
@@ -403,6 +404,14 @@ def create_metadata_page(nav: mknodes.MkNav):
     # page.metadata is a dataclass, we can prettyprint these with MkPrettyPrint.
     page += mknodes.MkPrettyPrint(page.metadata)
     page += mknodes.MkHtmlBlock(str(page))
+
+
+def create_mkwebsite_section(nav: mknodes.MkNav):
+    """Create the "MkWebSite" sub-MkNav and attach it to given nav."""
+    proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
+    proj.aggregate_info()
+    website_nav = mknodes.MkWebSite("MkWebSite", project=proj)
+    nav += website_nav
 
 
 def create_mkdoc_section(nav: mknodes.MkNav):
