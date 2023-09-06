@@ -55,11 +55,22 @@ class Project(Generic[T]):
         from mknodes import mkdocsconfig
 
         config = mkdocsconfig.Config(config)
-        theme = theme_.Theme.get_theme(config)
         return cls(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
-            theme=theme,
+            theme=theme_.Theme.get_theme(config),
+        )
+
+    @classmethod
+    def for_path(cls, path: str, config=None) -> Project:
+        from mknodes import mkdocsconfig
+
+        config = mkdocsconfig.Config(config)
+        return cls(
+            base_url=config.site_url or "",
+            use_directory_urls=config.use_directory_urls,
+            theme=theme_.Theme.get_theme(config),
+            repo=folderinfo.FolderInfo.clone_from(path),
         )
 
     @property
