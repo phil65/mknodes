@@ -69,18 +69,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         project_fn(project=self.project)
         logger.debug("Finished building page.")
 
-    #     if config.nav is None:
-    #         file = File(
-    #             "/mknodes/blogs/index.md",
-    #             src_dir=config.docs_dir,
-    #             dest_dir=config.site_dir,
-    #             use_directory_urls=config.use_directory_urls,
-    #         )
-    #         page = SectionPage("blog", file, config, [])
-    #         section = Section("Blog", [page])
-
-    #         config.nav = Navigation([section], [])
-
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """Create the node tree and write files to build folder.
 
