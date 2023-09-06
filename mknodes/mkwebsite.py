@@ -15,8 +15,10 @@ class MkWebSite(mknav.MkNav):
         super().__init__(*args, **kwargs)
         import mknodes
 
+        self.associated_project.theme.announcement_bar = mknodes.MkMetadataBadges(
+            "classifiers"
+        )
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
-        page += mknodes.MkMetadataBadges("classifiers")
         page += mknodes.MkText(r"{{metadata.description}}")
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
