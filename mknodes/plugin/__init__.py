@@ -8,15 +8,10 @@ import tempfile
 from typing import TYPE_CHECKING, Literal
 import jinja2
 
-from mkdocs.config import base, config_options
 from mkdocs.plugins import BasePlugin, get_plugin_logger
-from mkdocs.structure.nav import Navigation
-from mkdocs.structure.pages import Page
-
-# from mkdocs.utils.templates import TemplateContext
 
 from mknodes import mkdocsconfig, project
-from mknodes.plugin import linkreplacer, mkdocsbuilder
+from mknodes.plugin import linkreplacer, mkdocsbuilder, pluginconfig
 from mknodes.utils import classhelpers, helpers
 from mknodes.theme import theme
 from mknodes.info import folderinfo
@@ -24,6 +19,9 @@ from mknodes.info import folderinfo
 if TYPE_CHECKING:
     from mkdocs.config.defaults import MkDocsConfig
     from mkdocs.structure.files import Files
+    from mkdocs.structure.nav import Navigation
+    from mkdocs.structure.pages import Page
+    # from mkdocs.utils.templates import TemplateContext
 
 
 logger = get_plugin_logger(__name__)
@@ -31,13 +29,7 @@ logger = get_plugin_logger(__name__)
 CommandStr = Literal["build", "serve", "gh-deploy"]
 
 
-class PluginConfig(base.Config):
-    path = config_options.Type(str)
-    repo_path = config_options.Type(str, default=".")
-    clone_depth = config_options.Type(int, default=100)
-
-
-class MkNodesPlugin(BasePlugin[PluginConfig]):
+class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._page_mapping = {}
