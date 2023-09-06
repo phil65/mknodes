@@ -16,12 +16,19 @@ class MkWebSite(mknav.MkNav):
         import mknodes
 
         self.associated_project.theme.announcement_bar = mknodes.MkMetadataBadges(
-            "classifiers",
+            "websites",
         )
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
         page += mknodes.MkText(r"{{metadata.description}}")
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
+        if (proj := self.associated_project) and (
+            proj.info.get_entry_points("console_scripts")
+            and "click" in proj.info.required_package_names
+        ):
+            page = self.add_page("CLI", hide_nav=True)
+            page += mknodes.MkClickDoc()
+
         nav = self.add_nav("Development")
 
         page = nav.add_page("Changelog")
@@ -42,17 +49,12 @@ class MkWebSite(mknav.MkNav):
 
         page = nav.add_page("Module overview")
         page += mknodes.MkModuleOverview(maximum_depth=2)
-        if proj := self.associated_project:
-            if proj.info.get_entry_points("mkdocs.plugins"):
-                page = nav.add_page("Plugin flow")
-                page += mknodes.MkPluginFlow()
 
-            if (
-                proj.info.get_entry_points("console_scripts")
-                and "click" in proj.info.required_package_names
-            ):
-                page = nav.add_page("CLI")
-                page += mknodes.MkClickDoc()
+        if proj := self.associated_project and proj.info.get_entry_points(
+            "mkdocs.plugins",
+        ):
+            page = nav.add_page("Plugin flow")
+            page += mknodes.MkPluginFlow()
 
         node = mknodes.MkLicense()
         page = nav.add_page("License", hide_toc=True)
