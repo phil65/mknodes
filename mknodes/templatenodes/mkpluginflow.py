@@ -76,7 +76,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
             hook_path = self.event_plugin.hook_fn_path.format(event=fn_name)
             info = _mkdocstrings.MkDocStrings(hook_path, show_source=False)
             section = [
-                mkheader.MkHeader(link),
+                mkheader.MkHeader(link, level=3),
                 mktext.MkText(inspecthelpers.get_doc(fn)),
                 mkadmonition.MkAdmonition(
                     code,
