@@ -158,7 +158,10 @@ class FolderInfo:
             repository_username=self.repository_username,
             repository_url=self.repository_url,
         )
-        return infos | self.info.metadata.json
+        infos |= self.info.metadata.json
+        if self.mkdocs_config:
+            infos["name"] = self.mkdocs_config["site_name"]
+        return infos
 
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:

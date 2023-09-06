@@ -25,7 +25,7 @@ def callback(ctx, param, value):
 
 @click.group()
 def cli():
-    """Main entrypoint."""
+    """MkNodes CLI interface."""
 
 
 @cli.command()
@@ -53,7 +53,7 @@ def build(
     site_dir="site",
     **kwargs,
 ):
-    """Create website."""
+    """Create a MkNodes-based website."""
     print(f"{repo_url=} {site_script=} {site_dir=}")
     cfg = yamlhelpers.load_yaml_file("mkdocs_generic.yml")
     for plugin in cfg["plugins"]:
@@ -88,7 +88,7 @@ def build(
 @mkdocs.common_config_options
 @mkdocs.common_options
 def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **kwargs):
-    """Create website."""
+    """Serve a MkNodes-based website."""
     cfg = yamlhelpers.load_yaml_file(config_file or "mkdocs.yml")
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
