@@ -69,6 +69,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
     ICON = "material/dev-to"
     STATUS = "new"
+    REQUIRED_EXTENSIONS = ["md_in_html"]
 
     def __init__(self, plugin: type[plugins.BasePlugin] | None = None, **kwargs: Any):
         """Constructor.
