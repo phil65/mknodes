@@ -74,7 +74,7 @@ def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.
 
 def get_tool_section(tool: tools.Tool, folderinfo) -> list[mknode.MkNode]:
     cfg = tool.get_config(folderinfo)
-    code = mkcode.MkCode(cfg or "")
+    code = mkcode.MkCode(cfg or "", language=tool.config_syntax)
     return [
         mkheader.MkHeader(tool.title),
         mktext.MkText(tool.description),

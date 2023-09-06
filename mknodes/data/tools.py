@@ -47,6 +47,7 @@ class Tool:
     url: str
     description: str
     setup_cmd: str
+    config_syntax: str
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None) -> bool:
         """Return whether tool is used for given directory.
@@ -71,6 +72,7 @@ class PreCommit(Tool):
     url = "https://pre-commit.com"
     description = PRE_COMMIT_TEXT
     setup_cmd = PRE_COMMIT_CODE
+    config_syntax = "yaml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
         directory = folder.path if folder else "."
@@ -90,6 +92,7 @@ class Ruff(Tool):
     url = "https://beta.ruff.rs/"
     description = RUFF_TEXT
     setup_cmd = RUFF_CODE
+    config_syntax = "toml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
         return folder.pyproject.has_tool("ruff") if folder else False
@@ -104,6 +107,7 @@ class MyPy(Tool):
     url = "https://mypy-lang.org"
     description = MYPY_TEXT
     setup_cmd = MYPY_CODE
+    config_syntax = "toml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
         return folder.pyproject.has_tool("mypy") if folder else False
@@ -118,6 +122,7 @@ class Coverage(Tool):
     url = "https://coverage.readthedocs.io/"
     description = COVERAGE_TEXT
     setup_cmd = COVERAGE_CODE
+    config_syntax = "toml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
         return folder.pyproject.has_tool("coverage") if folder else False
