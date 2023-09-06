@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import logging
 
 from typing import Any
@@ -14,56 +13,14 @@ from mknodes.basenodes import (
     mkcontainer,
     mkheader,
     mklink,
-    mknode,
     mkspeechbubble,
     mktext,
 )
+from mknodes.data import eventplugins
 from mknodes.utils import inspecthelpers, reprhelpers
 
 
-MKDOCS_LINK = "https://www.mkdocs.org/dev-guide/plugins/#{event}"
-HOOK_FN_PATH = "mkdocs.plugins.BasePlugin.{event}"
-
 logger = logging.getLogger(__name__)
-
-
-Flow = [
-    "on_startup",
-    "on_shutdown",
-    "on_serve",
-    "on_config",
-    "on_pre_build",
-    "on_files",
-    "on_nav",
-    "on_env",
-    "on_post_build",
-    "on_build_error",
-    "on_pre_template",
-    "on_template_context",
-    "on_post_template",
-    "on_pre_page",
-    "on_page_read_source",
-    "on_page_markdown",
-    "on_page_content",
-    "on_page_context",
-    "on_post_page",
-    "on_post_build",
-    "on_serve",
-    "on_shutdown",
-]
-
-
-def get_event_section(fn: Callable) -> list[mknode.MkNode]:
-    code = mkcode.MkCode.for_object(fn)
-    fn_name = fn.__name__
-    link = mklink.MkLink(MKDOCS_LINK.format(event=fn_name), fn_name)
-    info = _mkdocstrings.MkDocStrings(HOOK_FN_PATH.format(fn_name), show_source=False)
-    return [
-        mkheader.MkHeader(link),
-        mktext.MkText(inspecthelpers.get_doc(fn)),
-        mkadmonition.MkAdmonition(code, collapsible=True, typ="quote", title="Source"),
-        mkadmonition.MkAdmonition(info, collapsible=True, title="Hook info"),
-    ]
 
 
 class MkPluginFlow(mkcontainer.MkContainer):
@@ -100,15 +57,35 @@ class MkPluginFlow(mkcontainer.MkContainer):
                 return self._plugin
 
     @property
+    def event_plugin(self):
+        return eventplugins.mkdocs_plugin
+
+    @property
     def items(self):
         if not self.plugin:
             return []
         items = []
-        for event in Flow:
+        for event in self.event_plugin.flow:
             if not hasattr(self.plugin, event):
                 continue
             fn = getattr(self.plugin, event)
-            section = get_event_section(fn)
+            code = mkcode.MkCode.for_object(fn)
+            fn_name = fn.__name__
+            link = self.event_plugin.help_link.format(event=fn_name)
+            link = mklink.MkLink(link, fn_name)
+            hook_path = self.event_plugin.hook_fn_path.format(event=fn_name)
+            info = _mkdocstrings.MkDocStrings(hook_path, show_source=False)
+            section = [
+                mkheader.MkHeader(link),
+                mktext.MkText(inspecthelpers.get_doc(fn)),
+                mkadmonition.MkAdmonition(
+                    code,
+                    collapsible=True,
+                    typ="quote",
+                    title="Source",
+                ),
+                mkadmonition.MkAdmonition(info, collapsible=True, title="Hook info"),
+            ]
             bubble = mkspeechbubble.MkSpeechBubble(section, parent=self)
             items.append(bubble)
         if items:
