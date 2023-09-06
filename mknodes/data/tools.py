@@ -32,6 +32,12 @@ ruff --help
 RUFF_TEXT = """Ruff is used as a linter. You can find the configuration in the
 pyproject.toml file."""
 
+COVERAGE_CODE = """
+coverage run some_module.py
+"""
+
+COVERAGE_TEXT = """Coverage is used to monitor test coverage."""
+
 
 class Tool:
     identifier: ToolStr
@@ -98,4 +104,20 @@ class MyPy(Tool):
         folder.pyproject.get_tool("mypy")
 
 
-TOOLS: dict[ToolStr, Tool] = {p.identifier: p for p in [PreCommit(), Ruff(), MyPy()]}
+class Coverage(Tool):
+    identifier = "coverage"
+    title = "Coverage"
+    url = "https://coverage.readthedocs.io/"
+    description = COVERAGE_TEXT
+    setup_cmd = COVERAGE_CODE
+
+    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+        return folder.pyproject.has_tool("coverage") if folder else False
+
+    def get_config(self, folder):
+        folder.pyproject.get_tool("coverage")
+
+
+TOOLS: dict[ToolStr, Tool] = {
+    p.identifier: p for p in [PreCommit(), Ruff(), MyPy(), Coverage()]
+}
