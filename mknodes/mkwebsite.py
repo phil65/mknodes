@@ -16,7 +16,7 @@ class MkWebSite(mknav.MkNav):
         import mknodes
 
         self.associated_project.theme.announcement_bar = mknodes.MkMetadataBadges(
-            "classifiers"
+            "classifiers",
         )
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
         page += mknodes.MkText(r"{{metadata.description}}")
