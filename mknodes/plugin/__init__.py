@@ -52,6 +52,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                 self.config.repo_path,
                 depth=self.config.clone_depth,
             )
+            config.copyright = ""
         else:
             repo = self.config.repo_path
         self.project = project.Project[type(skin)](
@@ -116,6 +117,10 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             extra = cfg._config.extra
             if not extra.get("social"):
                 extra["social"] = social
+        cfg._config.repo_url = info["metadata"]["repository_url"]
+        cfg._config.site_description = info["metadata"]["summary"]
+        cfg._config.site_name = info["metadata"]["name"]
+        cfg._config.site_author = info["project"].info.author_name
         md = cfg.get_markdown_instance()
         for template in info["templates"]:
             if html := template.build_html(md):
