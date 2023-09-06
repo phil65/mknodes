@@ -17,12 +17,6 @@ from mknodes.utils import yamlhelpers
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
-def callback(ctx, param, value):
-    state = ctx.ensure_object(mkdocs.State)
-    if value:
-        state.stream.setLevel(logging.DEBUG)
-
-
 @click.group()
 def cli():
     """MkNodes CLI interface."""
