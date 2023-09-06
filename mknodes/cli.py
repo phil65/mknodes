@@ -44,19 +44,14 @@ def cli():
     type=int,
     default=100,
 )
-@click.option(
-    "-v",
-    "--verbose",
-    help="Show debug output.",
-    is_flag=True,
-    expose_value=False,
-    callback=callback,
-)
+@mkdocs.common_config_options
+@mkdocs.common_options
 def build(
     repo_url,
     site_script: str,
     clone_depth: int = 1,
     site_dir="site",
+    **kwargs,
 ):
     """Create website."""
     print(f"{repo_url=} {site_script=} {site_dir=}")
@@ -69,7 +64,7 @@ def build(
     cfg["site_dir"] = site_dir
     text = yamlhelpers.dump_yaml(cfg)
     buffer = io.StringIO(text)
-    config = load_config(buffer)
+    config = load_config(buffer, **kwargs)
     # config["plugins"].run_event("startup", command="build", dirty=False)
     build_.build(config)
     # config["plugins"].run_event("shutdown")
@@ -90,17 +85,11 @@ def build(
     type=int,
     default=100,
 )
-@click.option(
-    "-v",
-    "--verbose",
-    help="Show debug output.",
-    is_flag=True,
-    expose_value=False,
-    callback=callback,
-)
-def serve(repo_url, site_script: str, clone_depth: int = 1):
+@mkdocs.common_config_options
+@mkdocs.common_options
+def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **kwargs):
     """Create website."""
-    cfg = yamlhelpers.load_yaml_file("mkdocs.yml")
+    cfg = yamlhelpers.load_yaml_file(config_file or "mkdocs.yml")
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
@@ -108,7 +97,7 @@ def serve(repo_url, site_script: str, clone_depth: int = 1):
             plugin["mknodes"]["clone_depth"] = clone_depth
     text = yamlhelpers.dump_yaml(cfg)
     stream = io.StringIO(text)
-    serve_.serve(config_file=stream, livereload=False)
+    serve_.serve(config_file=stream, livereload=False, **kwargs)
 
 
 def serve_node(node, repo_path: str = "."):
