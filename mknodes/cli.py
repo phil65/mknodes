@@ -97,7 +97,7 @@ def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **
             plugin["mknodes"]["clone_depth"] = clone_depth
     text = yamlhelpers.dump_yaml(cfg)
     stream = io.StringIO(text)
-    serve_.serve(config_file=stream, livereload=False, **kwargs)
+    serve_.serve(config_file=stream, livereload=False, **kwargs)  # type: ignore[arg-type]
 
 
 def serve_node(node, repo_path: str = "."):
