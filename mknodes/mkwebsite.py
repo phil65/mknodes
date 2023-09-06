@@ -19,7 +19,7 @@ class MkWebSite(mknav.MkNav):
             "websites",
         )
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
-        page += mknodes.MkText(r"{{metadata.description}}")
+        page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
         if (proj := self.associated_project) and (
@@ -59,6 +59,24 @@ class MkWebSite(mknav.MkNav):
         node = mknodes.MkLicense()
         page = nav.add_page("License", hide_toc=True)
         page += node
+
+        internals_nav = self.add_nav("Debug info")
+        page = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
+        page = internals_nav.add_page("Tree", hide_toc=True, icon="material/graph")
+        page += mknodes.MkHeader("Node tree.", level=3)
+        page += mknodes.MkTreeView(nav.root)
+        page = internals_nav.add_page(
+            "Requirements",
+            hide_toc=True,
+            icon="material/puzzle-edit",
+        )
+        page += mknodes.MkJinjaTemplate("requirements.md")
+        page = internals_nav.add_page(
+            "Build Log",
+            hide_toc=True,
+            icon="material/puzzle-edit",
+        )
+        page += mknodes.MkText("log() | MkCode", is_jinja_expression=True)
 
     @classmethod
     def for_project(cls, project):
