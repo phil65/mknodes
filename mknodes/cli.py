@@ -51,11 +51,11 @@ def build(
     site_script: str,
     clone_depth: int = 1,
     site_dir="site",
+    config_file=None,
     **kwargs,
 ):
     """Create a MkNodes-based website."""
-    print(f"{repo_url=} {site_script=} {site_dir=}")
-    cfg = yamlhelpers.load_yaml_file("mkdocs_generic.yml")
+    cfg = yamlhelpers.load_yaml_file("mkdocs_basic.yml")
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
@@ -65,9 +65,9 @@ def build(
     text = yamlhelpers.dump_yaml(cfg)
     buffer = io.StringIO(text)
     config = load_config(buffer, **kwargs)
-    # config["plugins"].run_event("startup", command="build", dirty=False)
+    config["plugins"].run_event("startup", command="build", dirty=False)
     build_.build(config)
-    # config["plugins"].run_event("shutdown")
+    config["plugins"].run_event("shutdown")
 
 
 @cli.command()
@@ -89,7 +89,7 @@ def build(
 @mkdocs.common_options
 def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **kwargs):
     """Serve a MkNodes-based website."""
-    cfg = yamlhelpers.load_yaml_file(config_file or "mkdocs.yml")
+    cfg = yamlhelpers.load_yaml_file(config_file or "mkdocs_basic.yml")
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url

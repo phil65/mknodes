@@ -1,0 +1,74 @@
+site_name: Not set
+site_description: Not set
+repo_url: "https://github.com/phil65/mknodes/"
+site_url: https://phil65.github.io/mknodes/
+edit_uri: edit/main
+use_directory_urls: true
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  icon: material/graph-outline
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: orange
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: orange
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
+  features:
+  - announce.dismiss
+  - content.action.edit
+  - content.code.copy
+  - content.code.select
+  - content.code.annotate
+  - navigation.instant # make things faster
+  - navigation.tracking # update URL based on current item in TOC
+  - navigation.path  # shows breadcrumbs
+  - navigation.tabs # make top level tabs
+  - navigation.prune
+  - navigation.indexes # documents can be directly attached to sections (overview pages)
+  - navigation.footer # next/previous page buttons in footer
+  - navigation.top  # adds back-to-top button
+  - toc.follow  # makes toc follow scrolling
+  - search.highlight
+  - search.suggest
+
+plugins:
+- search
+- section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
+- literate-nav
+- mknodes:
+    path: mknodes.manual.root:build
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        import:
+        - url: https://docs.python.org/3/objects.inv
+          domains: [std, py]
+        options:
+          # https://mkdocstrings.github.io/python/usage/
+          show_docstring_returns: false
+          show_source: true
+          show_signature_annotations: true
+          show_symbol_type_toc: true
+          show_symbol_type_heading: true
+          # merge_init_into_class: true
+          ignore_init_summary: true
+          inherited_members: false
+          signature_crossrefs: true
+          separate_signature: true
+          line_length: 90
+
+markdown_extensions:
+- attr_list
+- pymdownx.emoji
+- toc:
+    permalink: true

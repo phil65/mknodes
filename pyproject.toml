@@ -105,6 +105,9 @@ dependencies = [
     "PyYAML >=5.1",
     "pyyaml_env_tag",
     "click",
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "mkdocs-section-index",
 ]
 license = "MIT"
 
