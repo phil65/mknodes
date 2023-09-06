@@ -107,8 +107,10 @@ registry: dict[str, PackageInfo] = {}
 def get_package_map() -> Mapping[str, list[str]]:
     return metadata.packages_distributions()
 
+
 def distribution_to_package(dist):
     return next((k for k, v in get_package_map().items() if dist in v), dist)
+
 
 def get_info(mod_name: str) -> PackageInfo:
     mapping = get_package_map()
