@@ -24,6 +24,13 @@ class TomlFile:
     def __getitem__(self, value):
         return self._data.__getitem__(value)
 
+    def __getattr__(self, item: str) -> Any:
+        return getattr(self._data, item.replace("-", "_"))
+
+    def __dir__(self) -> Any:
+        additional = [k.replace("-", "_") for k in self._data]
+        return list(super().__dir__()) + additional
+
     def __repr__(self):
         return f"{type(self).__name__}({self.path})"
 
