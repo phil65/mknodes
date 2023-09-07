@@ -50,6 +50,11 @@ lint-check = [
 ]
 docs-serve = "hatch run mkdocs serve"
 docs-build = "hatch run mkdocs build"
+docs-build-test = [
+  "hatch run mkdocs build",
+  "hatch run mknodes build -r https://github.com/mkdocstrings/mkdocstrings.git -d site/mkdocstrings -v",
+  "hatch run mknodes build -r https://github.com/mkdocs/mkdocs.git -d site/mkdocs -v",
+]
 
 [build-system]
 requires = ["hatchling", "hatch-regex-commit"]
