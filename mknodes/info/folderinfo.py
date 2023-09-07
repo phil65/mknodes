@@ -54,12 +54,15 @@ class FolderInfo:
                 # TODO: cannot load some remote mkdocs configs
                 # (for example from pymdown-extensions)
                 self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
+        # self.module = packagehelpers.install_or_import(mod_name)
+        self._temp_directory = None
+
+    @property
+    def module(self):
         repo_name = self.git.get_repo_name()
         mod_name = packagehelpers.distribution_to_package(repo_name)
         mod_name = mod_name.replace("-", "_").lower()
-        # self.module = packagehelpers.install_or_import(mod_name)
-        self.module = importlib.import_module(mod_name)
-        self._temp_directory = None
+        return importlib.import_module(mod_name)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
