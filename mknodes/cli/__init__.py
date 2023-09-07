@@ -5,7 +5,7 @@ import sys
 
 import click
 
-from mkdocs import __main__ as mkdocs
+from mknodes.cli import cli_options
 
 from mknodes.plugin import mkdocshelpers
 
@@ -19,23 +19,11 @@ def cli():
 
 
 @cli.command()
-@click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
-@click.option(
-    "-s",
-    "--site-script",
-    help="Path to script used for building website.",
-    default="mknodes.mkwebsite:MkWebSite.for_project",
-)
-@click.option("-d", "--site-dir", help="Directory to create the website in.")
-@click.option(
-    "-c",
-    "--clone-depth",
-    help="How many commits to fetch if repository is remote.",
-    type=int,
-    default=100,
-)
-@mkdocs.common_config_options
-@mkdocs.common_options
+@cli_options.repo_url_option
+@cli_options.site_script_option
+@cli_options.clone_depth_option
+@cli_options.common_options  # config-file / strict / theme / use-directory-urls
+@cli_options.debug_options  # verbose / quiet
 def build(
     repo_url,
     site_script: str,
@@ -56,22 +44,11 @@ def build(
 
 
 @cli.command()
-@click.option("-r", "--repo-url", help="Repo url of package to create a website for.")
-@click.option(
-    "-s",
-    "--site-script",
-    help="Path to script used for building website.",
-    default="mknodes.mkwebsite:MkWebSite.for_project",
-)
-@click.option(
-    "-c",
-    "--clone-depth",
-    help="How many commits to fetch if repository is remote.",
-    type=int,
-    default=100,
-)
-@mkdocs.common_config_options
-@mkdocs.common_options
+@cli_options.repo_url_option
+@cli_options.site_script_option
+@cli_options.clone_depth_option
+@cli_options.common_options  # config-file / strict / theme / use-directory-urls
+@cli_options.debug_options  # verbose / quiet
 def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **kwargs):
     """Serve a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
@@ -84,32 +61,12 @@ def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **
 
 
 # @cli.command()
-# @click.option("-r", "--repo-url", help="Repo url of package to create a config for.")
-# @click.option(
-#     "-s",
-#     "--site-script",
-#     help="Path where config should get created.",
-#     default="mknodes.yml",
-# )
-# @click.option(
-#     "-p",
-#     "--config-path",
-#     help="Path where config file should get written to.",
-#     default="mknodes.mkwebsite:MkWebSite.for_project",
-# )
-# @click.option(
-#     "-t",
-#     "--theme",
-#     type=click.Choice(mkdocs.theme_choices),
-#     help="Theme to use",
-# )
-# @click.option(
-#     "--use-directory-urls/--no-directory-urls",
-#     is_flag=True,
-#     default=None,
-#     help=mkdocs.use_directory_urls_help,
-# )
-# @mkdocs.common_options
+# @cli_options.repo_url_option
+# @cli_options.site_script_option
+# @cli_options.config_path_option
+# @cli_options.theme_option
+# @cli_options.directory_urls_option
+# @cli_options.debug_options # verbose / quiet
 # def create_config(config_path, repo_url, site_script: str, **kwargs):
 #     """Serve a MkNodes-based website."""
 #     mknodes_plugin = dict(
