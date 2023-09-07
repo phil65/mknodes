@@ -93,7 +93,7 @@ class Ruff(Tool):
     config_syntax = "toml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return folder.pyproject.has_tool("ruff") if folder else False
+        return "ruff" in folder.pyproject.tool if folder else False
 
     def get_config(self, folder):
         return folder.pyproject.get_section_text("tool", "ruff")
@@ -108,7 +108,7 @@ class MyPy(Tool):
     config_syntax = "toml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return folder.pyproject.has_tool("mypy") if folder else False
+        return "mypy" in folder.pyproject.tool if folder else False
 
     def get_config(self, folder):
         return folder.pyproject.get_section_text("tool", "mypy")
@@ -123,7 +123,7 @@ class Coverage(Tool):
     config_syntax = "toml"
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return folder.pyproject.has_tool("coverage") if folder else False
+        return "coverage" in folder.pyproject.tool if folder else False
 
     def get_config(self, folder):
         return folder.pyproject.get_section_text("tool", "coverage")

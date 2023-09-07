@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import pathlib
 
+from typing import Any
+
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.info import tomlfile
 from mknodes.utils import helpers
@@ -25,8 +27,20 @@ class PyProject(tomlfile.TomlFile):
         return f"PyProject({self.name!r})"
 
     @property
+    def name(self) -> str:
+        return self.project["name"]
+
+    @property
+    def tool(self) -> dict[str, Any]:
+        return self._data.get("tool", {})
+
+    @property
+    def project(self) -> dict[str, Any]:
+        return self._data.get("project", {})
+
+    @property
     def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
-        return [p for p in buildsystems.BUILD_SYSTEMS if p in self._data["tool"]]
+        return [p for p in buildsystems.BUILD_SYSTEMS if p in self.tool]
 
     @property
     def build_system(self) -> buildsystems.BuildSystem:
@@ -36,16 +50,6 @@ class PyProject(tomlfile.TomlFile):
                 return p
         msg = "No known build backend"
         raise RuntimeError(msg)
-
-    @property
-    def name(self) -> str:
-        return self.get_section("project", "name")
-
-    def has_tool(self, tool_name: str) -> bool:
-        return tool_name in self._data.get("tool", {})
-
-    def get_tool(self, tool_name: str) -> dict | None:
-        return self.get_section("tool", tool_name)
 
     @property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
