@@ -6,11 +6,16 @@ from collections.abc import Callable
 import logging
 import re
 import types
+from typing import TYPE_CHECKING
 
 from mknodes.basenodes import mkcontainer, mklink, mklist, mknode
-from mknodes.info import packageinfo
 from mknodes.templatenodes import mkmetadatabadges
 from mknodes.utils import classhelpers, helpers, inspecthelpers, linkprovider
+
+
+if TYPE_CHECKING:
+    from mknodes.info import packageinfo
+    from mknodes.utils import packagehelpers
 
 
 logger = logging.getLogger(__name__)
@@ -127,7 +132,7 @@ class ModuleLayout(Layout):
 class BadgePackageLayout(Layout):
     def get_row_for(
         self,
-        dependency: tuple[packageinfo.PackageInfo, packageinfo.Dependency],
+        dependency: tuple[packageinfo.PackageInfo, packagehelpers.Dependency],
     ) -> dict[str, str | mknode.MkNode]:
         package_info = dependency[0]
         dep_info = dependency[1]
@@ -150,7 +155,7 @@ class BadgePackageLayout(Layout):
 class DefaultPackageLayout(Layout):
     def get_row_for(
         self,
-        dependency: tuple[packageinfo.PackageInfo, packageinfo.Dependency],
+        dependency: tuple[packageinfo.PackageInfo, packagehelpers.Dependency],
     ) -> dict[str, str | mknode.MkNode]:
         package_info = dependency[0]
         dep_info = dependency[1]

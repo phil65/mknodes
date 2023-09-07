@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+import dataclasses
 import functools
 import importlib
 
@@ -8,6 +9,8 @@ from importlib import metadata
 import logging
 import types
 
+from packaging.markers import Marker
+from packaging.requirements import Requirement
 import pip._internal as pip
 
 
@@ -46,5 +49,60 @@ def get_package_map() -> Mapping[str, list[str]]:
     return metadata.packages_distributions()
 
 
-def distribution_to_package(dist):
+@functools.cache
+def distribution_to_package(dist: str):
     return next((k for k, v in get_package_map().items() if dist in v), dist)
+
+
+@functools.cache
+def get_marker(marker):
+    return Marker(marker)
+
+
+def get_extras(markers: list) -> list[str]:
+    extras = []
+    for marker in markers:
+        match marker:
+            case list():
+                extras.extend(get_extras(marker))
+            case tuple():
+                if str(marker[0]) == "extra":
+                    extras.append(str(marker[2]))
+    return extras
+
+
+@dataclasses.dataclass
+class EntryPoint:
+    """EntryPoint including imported module."""
+
+    name: str
+    dotted_path: str
+    group: str
+    obj: types.ModuleType | type
+
+
+class Dependency:
+    def __init__(self, name: str):
+        self.req = Requirement(name)
+        self.name = self.req.name
+        self._marker = name
+
+    @property
+    def marker(self):
+        return (
+            get_marker(self._marker.split(";", maxsplit=1)[-1])
+            if ";" in self._marker
+            else None
+        )
+
+    @functools.cached_property
+    def extras(self):
+        return get_extras(self.marker._markers) if self.marker else []
+
+    def __repr__(self):
+        return f"{type(self).__name__}(name={self.name!r})"
+
+
+@functools.cache
+def get_dependency(name) -> Dependency:
+    return Dependency(name)

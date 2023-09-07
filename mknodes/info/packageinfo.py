@@ -1,16 +1,11 @@
 from __future__ import annotations
 
 import contextlib
-import dataclasses
 import functools
 import importlib
 import logging
-import types
 
 from typing import Literal
-
-from packaging.markers import Marker
-from packaging.requirements import Requirement
 
 from mknodes.utils import packagehelpers, reprhelpers
 
@@ -43,44 +38,6 @@ CLASSIFIERS: list[ClassifierStr] = [
     "Topic",
     "Typing",
 ]
-
-
-@dataclasses.dataclass
-class EntryPoint:
-    """EntryPoint including imported module."""
-
-    name: str
-    dotted_path: str
-    group: str
-    obj: types.ModuleType | type
-
-
-def get_extras(markers: list) -> list[str]:
-    extras = []
-    for marker in markers:
-        match marker:
-            case list():
-                extras.extend(get_extras(marker))
-            case tuple():
-                if str(marker[0]) == "extra":
-                    extras.append(str(marker[2]))
-    return extras
-
-
-class Dependency:
-    def __init__(self, name: str):
-        self.req = Requirement(name)
-        self.name = self.req.name
-        self.marker = Marker(name.split(";", maxsplit=1)[-1]) if ";" in name else None
-        self.extras = get_extras(self.marker._markers) if self.marker else []
-
-    def __repr__(self):
-        return f"{type(self).__name__}(name={self.name!r})"
-
-
-@functools.cache
-def get_dependency(name) -> Dependency:
-    return Dependency(name)
 
 
 registry: dict[str, PackageInfo] = {}
@@ -129,9 +86,9 @@ class PackageInfo:
         return None
 
     @functools.cached_property
-    def required_deps(self) -> list[Dependency]:
+    def required_deps(self) -> list[packagehelpers.Dependency]:
         requires = packagehelpers.get_requires(self.distribution)
-        return [get_dependency(i) for i in requires] if requires else []
+        return [packagehelpers.get_dependency(i) for i in requires] if requires else []
 
     @property
     def license_name(self) -> str | None:
@@ -241,9 +198,12 @@ class PackageInfo:
     def required_python_version(self) -> str | None:
         return self.metadata.json.get("requires_python")
 
-    def get_required_packages(self) -> dict[PackageInfo, Dependency]:
+    def get_required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         modules = (
-            {Requirement(i).name for i in packagehelpers.get_requires(self.distribution)}
+            {
+                packagehelpers.get_dependency(i).name
+                for i in packagehelpers.get_requires(self.distribution)
+            }
             if packagehelpers.get_requires(self.distribution)
             else set()
         )
@@ -253,13 +213,16 @@ class PackageInfo:
                 packages[get_info(mod)] = self.get_dep_info(mod)
         return packages
 
-    def get_dep_info(self, name: str) -> Dependency:
+    def get_dep_info(self, name: str) -> packagehelpers.Dependency:
         for i in self.required_deps:
             if i.name == name:
                 return i
         raise ValueError(name)
 
-    def get_entry_points(self, group: str | None = None) -> dict[str, EntryPoint]:
+    def get_entry_points(
+        self,
+        group: str | None = None,
+    ) -> dict[str, packagehelpers.EntryPoint]:
         if not group:
             eps = self.distribution.entry_points
         else:
@@ -269,7 +232,7 @@ class PackageInfo:
             name, dotted_path = ep.name, ep.value
             mod_name, kls_name = dotted_path.split(":")
             mod = importlib.import_module(mod_name)
-            dct[name] = EntryPoint(
+            dct[name] = packagehelpers.EntryPoint(
                 name=ep.name,
                 dotted_path=ep.value,
                 group=ep.group,
