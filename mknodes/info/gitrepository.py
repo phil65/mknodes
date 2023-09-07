@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import cached_property
 import logging
 
+from typing import Self
 from urllib import parse
 
 import git
@@ -18,6 +19,10 @@ class GitRepository(git.Repo):
     def main_branch(self) -> str:
         has_main_branch = any(branch.name == "main" for branch in self.heads)
         return "main" if has_main_branch else "master"
+
+    @classmethod
+    def clone_from(cls, *args, **kwargs) -> Self:
+        return super().clone_from(*args, **kwargs)  # type: ignore[return-value]
 
     def get_repo_name(self) -> str:
         return self.remotes.origin.url.split(".git")[0].split("/")[-1]
