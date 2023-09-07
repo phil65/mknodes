@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from mknodes.info import folderinfo
-from mknodes.utils import helpers
+from mknodes.utils import helpers, yamlhelpers
 
 
 ToolStr = Literal["pre-commit", "ruff", "mypy"]
@@ -38,13 +38,29 @@ coverage run some_module.py
 
 COVERAGE_TEXT = """Coverage is used to monitor test coverage."""
 
+MKDOCS_CODE = """
+# To build the docs
+mkdocs build
+
+# To serve the docs locally at http://127.0.0.1:8000/
+mkdocs serve
+
+# For additional mkdocs help and options:
+mkdocs --help
+"""
+
+MKDOCS_TEXT = """MkDocs is used to create the documentation."""
+
+
+MATERIAL_TEXT = """Material for MkDocs is used as the Website theme."""
+
 
 class Tool:
     identifier: ToolStr
     title: str
     url: str
     description: str
-    setup_cmd: str
+    setup_cmd: str | None
     config_syntax: str
 
     def is_used(self, folder: folderinfo.FolderInfo | None = None) -> bool:
@@ -126,9 +142,50 @@ class Coverage(Tool):
         return "coverage" in folder.pyproject.tool if folder else False
 
     def get_config(self, folder):
-        return folder.pyproject.get_section_text("tool", "coverage")
+        return folder and folder.pyproject.get_section_text("tool", "coverage")
+
+
+class MkDocs(Tool):
+    identifier = "mkdocs"
+    title = "MkDocs"
+    url = "https://mkdocs.org/"
+    description = MKDOCS_TEXT
+    setup_cmd = MKDOCS_CODE
+    config_syntax = "yaml"
+
+    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+        return folder and bool(folder.mkdocs_config)
+
+    def get_config(self, folder):
+        return yamlhelpers.dump_yaml(folder.mkdocs_config)
+
+
+class MkDocsMaterial(Tool):
+    identifier = "mkdocs-material"
+    title = "Material for MkDocs"
+    url = "https://squidfunk.github.io/mkdocs-material/"
+    description = MATERIAL_TEXT
+    setup_cmd = None
+    config_syntax = "yaml"
+
+    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+        if (
+            folder
+            and folder.mkdocs_config
+            and (theme := folder.mkdocs_config.get("theme"))
+        ):
+            return (
+                theme == "material"
+                if isinstance(theme, str)
+                else theme.get("name") == "material"
+            )
+        return False
+
+    def get_config(self, folder):
+        return folder and yamlhelpers.dump_yaml(folder.mkdocs_config.get("theme"))
 
 
 TOOLS: dict[ToolStr, Tool] = {
-    p.identifier: p for p in [PreCommit(), Ruff(), MyPy(), Coverage()]
+    p.identifier: p
+    for p in [PreCommit(), Ruff(), MyPy(), Coverage(), MkDocs(), MkDocsMaterial()]
 }

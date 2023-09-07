@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 import pathlib
 
+from typing import Any
+
 import mergedeep
 import yaml
 
@@ -57,7 +59,7 @@ def load_yaml(text: str, mode="unsafe"):
     return yaml.load(text, Loader=MyLoader)
 
 
-def dump_yaml(yaml_obj) -> str:
+def dump_yaml(yaml_obj: Any) -> str:
     return yaml.dump(yaml_obj, Dumper=yaml.Dumper, indent=2)
 
 

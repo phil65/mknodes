@@ -13,13 +13,6 @@ from mknodes.utils import reprhelpers
 logger = logging.getLogger(__name__)
 
 
-mkdocs_link = mklink.MkLink("http://www.mkdocs.org", "MkDocs")
-material_link = mklink.MkLink(
-    "https://squidfunk.github.io/mkdocs-material/",
-    "Material for MkDocs",
-)
-
-
 class MkDevTools(mkcontainer.MkContainer):
     """Node showing information about used dev tools."""
 
@@ -67,11 +60,11 @@ class MkDevTools(mkcontainer.MkContainer):
         for tool in self.tools:
             cfg = tool.get_config(info)
             code = mkcode.MkCode(cfg or "", language=tool.config_syntax)
+            items.extend([mkheader.MkHeader(tool.title), mktext.MkText(tool.description)])
+            if tool.setup_cmd:
+                items.append(mkcode.MkCode(tool.setup_cmd, language="md"))
             items.extend(
                 [
-                    mkheader.MkHeader(tool.title),
-                    mktext.MkText(tool.description),
-                    mkcode.MkCode(tool.setup_cmd, language="md"),
                     mkadmonition.MkAdmonition(
                         code,
                         collapsible=True,

@@ -24,25 +24,6 @@ git clone {repo_url}
 cd {folder_name}
 """
 
-mkdocs_link = mklink.MkLink("http://www.mkdocs.org", "MkDocs")
-material_link = mklink.MkLink(
-    "https://squidfunk.github.io/mkdocs-material/",
-    "Material for MkDocs",
-)
-
-
-def get_docs_section(project_name: str, docs_setup: str) -> list[mknode.MkNode]:
-    return [
-        mkheader.MkHeader("Docs Development"),
-        mktext.MkText(f"{project_name} uses {docs_setup} to build the docs."),
-        mktext.MkText("To build the docs:"),
-        mkcode.MkCode("mkdocs build", language="bash"),
-        mktext.MkText("To serve the docs locally at http://127.0.0.1:8000/:"),
-        mkcode.MkCode("mkdocs serve", language="bash"),
-        mktext.MkText("For additional mkdocs help and options:"),
-        mkcode.MkCode("mkdocs --help", language="bash"),
-    ]
-
 
 def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.MkNode]:
     backend_name = backend.identifier.capitalize()
@@ -127,13 +108,11 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     @property
     def items(self):
         folder_name = self.repo_url.removesuffix(".git").split("/")[-1]
-        docs_str = " + ".join(str(i) for i in [mkdocs_link, material_link])
         code = CLONE_CODE.format(repo_url=self.repo_url, folder_name=folder_name)
         link = mklink.MkLink(self.repo_url, folder_name)
         start_text = START_TEXT.format(link=str(link))
         items = [mktext.MkText(start_text), mkcode.MkCode(code, language="md")]
         items.extend(get_build_backend_section(self.build_backend))
-        items.extend(get_docs_section(docs_setup=docs_str, project_name=folder_name))
         for item in items:
             item.parent = self
         return items
