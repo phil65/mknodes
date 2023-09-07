@@ -1,11 +1,10 @@
 from __future__ import annotations
 
+import functools
 import html
 import logging
 
 from typing import Any, Literal
-
-import anybadge
 
 from mknodes.basenodes import mkimage
 from mknodes.utils import helpers, reprhelpers
@@ -15,6 +14,32 @@ logger = logging.getLogger(__name__)
 
 
 StyleStr = Literal["default", "gitlab-scoped"]
+
+
+@functools.cache
+def get_badge(
+    label: str = "",
+    value: str = "",
+    font_size: int | None = None,
+    font_name: str | None = None,
+    num_padding_chars: int | None = None,
+    badge_color: str | None = None,
+    text_color: str | None = None,
+    use_gitlab_style: bool = False,
+) -> str:
+    import anybadge
+
+    badge = anybadge.Badge(
+        label=html.escape(label),
+        value=html.escape(value),
+        font_size=font_size,
+        font_name=font_name,
+        num_padding_chars=num_padding_chars,
+        default_color=badge_color,
+        text_color=text_color,
+        style="gitlab-scoped" if use_gitlab_style else "default",
+    )
+    return badge.badge_svg_text
 
 
 class MkBadge(mkimage.MkImage):
@@ -88,17 +113,16 @@ class MkBadge(mkimage.MkImage):
 
     @property
     def data(self):
-        badge = anybadge.Badge(
-            label=html.escape(self.label),
-            value=html.escape(self.value),
+        return get_badge(
+            label=self.label,
+            value=self.value,
             font_size=self.font_size,
             font_name=self.font_name,
             num_padding_chars=self.num_padding_chars,
-            default_color=self.badge_color,
+            badge_color=self.badge_color,
             text_color=self.text_color,
-            style="gitlab-scoped" if self.use_gitlab_style else "default",
+            use_gitlab_style=self.use_gitlab_style,
         )
-        return badge.badge_svg_text
 
     @data.setter
     def data(self, value):
