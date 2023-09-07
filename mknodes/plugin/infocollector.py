@@ -6,10 +6,10 @@ import logging
 
 from typing import Any
 
-import jinja2
 import mergedeep
 
-from mknodes.utils import helpers, jinjahelpers, log, reprhelpers, yamlhelpers
+from mknodes.jinja import environment
+from mknodes.utils import jinjahelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -18,14 +18,12 @@ logger = logging.getLogger(__name__)
 class InfoCollector(MutableMapping, metaclass=ABCMeta):
     """MkNodes InfoCollector."""
 
-    def __init__(self, undefined: str = "silent", load_templates: bool = False):
-        loader = jinjahelpers.resource_loader if load_templates else None
-        behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
-        self.env = jinja2.Environment(undefined=behavior, loader=loader)
-        self.variables: dict[str, Any] = {"log": log.log_stream.getvalue}
-        filters = {"dump_yaml": yamlhelpers.dump_yaml, "styled": helpers.styled}
-        self.env.filters.update(filters)
-        self.set_mknodes_filters()
+    def __init__(self, *, undefined: str = "silent", load_templates: bool = False):
+        self.env = environment.Environment(
+            undefined=undefined,
+            load_templates=load_templates,
+        )
+        self.variables: dict[str, Any] = {}
         jinjahelpers.set_markdown_exec_namespace(self.variables)
 
     def __getitem__(self, index):
@@ -55,26 +53,12 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         self.variables = dict(mergedeep.merge(self.variables, other, strategy=strategy))
 
     def render(self, markdown: str, variables=None):
-        try:
-            template = self.env.from_string(markdown)
-        except jinja2.exceptions.TemplateSyntaxError as e:
-            logger.warning("Error when loading template: %s", e)
-            return markdown
         variables = self.variables | (variables or {})
-        try:
-            return template.render(**variables)
-        except jinja2.exceptions.UndefinedError as e:
-            logger.warning("Error when rendering template: %s", e)
-            return ""
+        return self.env.render_string(markdown, variables)
 
     def render_template(self, template_name: str, variables=None):
-        template = self.env.get_template(template_name)
         variables = self.variables | (variables or {})
-        try:
-            return template.render(**variables)
-        except jinja2.exceptions.UndefinedError as e:
-            logger.warning("Error when rendering template: %s", e)
-            return ""
+        return self.env.render_template(template_name, variables)
 
     def create_config(self):
         return {
