@@ -39,12 +39,12 @@ test = "pytest -vv"
 test-cov-xml = "pytest --cov-report=xml"
 test-cov-html = "pytest --cov-report=html"
 lint = [
-  "black . --preview",
+  "black .",
   "ruff --fix .",
   "mypy mknodes/",
 ]
 lint-check = [
-  "black --check . --preview",
+  "black --check .",
   "ruff .",
   "mypy mknodes/",
 ]
@@ -267,6 +267,7 @@ combine-as-imports = true
 line-length = 90
 target-version = ['py311']
 include = '\.pyi?$'
+preview = true
 exclude = '''
 /(
     \.eggs
