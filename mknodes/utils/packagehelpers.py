@@ -17,8 +17,9 @@ import pip._internal as pip
 logger = logging.getLogger(__name__)
 
 
-def install(package: str):
-    pip.main(["install", package])
+def install(package: str, editable: bool = False):
+    cmd = ["install", "-e", package] if editable else ["install", package]
+    pip.main(cmd)
 
 
 def install_or_import(package: str) -> types.ModuleType:
