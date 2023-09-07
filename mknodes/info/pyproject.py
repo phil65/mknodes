@@ -3,6 +3,10 @@ from __future__ import annotations
 import os
 import tomllib
 
+from typing import Any
+
+import tomli_w
+
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.utils import cache, helpers
 
@@ -42,13 +46,26 @@ class PyProject:
 
     @property
     def name(self) -> str:
-        return self._data.get("project", {}).get("name")
+        return self.get_section("project", "name")
 
     def has_tool(self, tool_name: str) -> bool:
         return tool_name in self._data.get("tool", {})
 
     def get_tool(self, tool_name: str) -> dict | None:
-        return self._data.get("tool", {}).get(tool_name)
+        return self.get_section("tool", tool_name)
+
+    def get_section(self, *sections) -> Any:
+        section = self._data
+        for i in sections:
+            if child := section.get(i):
+                section = child
+            else:
+                return None
+        return section
+
+    def get_section_text(self, *sections) -> str:
+        section = self.get_section(*sections)
+        return "" if section is None else tomli_w.dumps(section)
 
     @property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
@@ -65,4 +82,4 @@ class PyProject:
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.get_tool("hatch"))
+    print(info.get_section_text("tool", "hatch"))

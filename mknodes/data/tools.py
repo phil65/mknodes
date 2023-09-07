@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Literal
 
-import tomli_w
-
 from mknodes.info import folderinfo
 from mknodes.utils import helpers
 
@@ -98,7 +96,7 @@ class Ruff(Tool):
         return folder.pyproject.has_tool("ruff") if folder else False
 
     def get_config(self, folder):
-        return tomli_w.dumps(folder.pyproject.get_tool("ruff") or {})
+        return folder.pyproject.get_section_text("tool", "ruff")
 
 
 class MyPy(Tool):
@@ -113,7 +111,7 @@ class MyPy(Tool):
         return folder.pyproject.has_tool("mypy") if folder else False
 
     def get_config(self, folder):
-        return tomli_w.dumps(folder.pyproject.get_tool("mypy") or {})
+        return folder.pyproject.get_section_text("tool", "mypy")
 
 
 class Coverage(Tool):
@@ -128,7 +126,7 @@ class Coverage(Tool):
         return folder.pyproject.has_tool("coverage") if folder else False
 
     def get_config(self, folder):
-        return tomli_w.dumps(folder.pyproject.get_tool("coverage") or {})
+        return folder.pyproject.get_section_text("tool", "coverage")
 
 
 TOOLS: dict[ToolStr, Tool] = {

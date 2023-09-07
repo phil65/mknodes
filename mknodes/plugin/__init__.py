@@ -93,7 +93,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             config=cfg,
             directory=self._dir.name,
         )
-        builder.write_files(self.project.all_files())
+        builder.write_files(self.project.all_files())  # type: ignore[arg-type]
         for k, v in info["css"].items():
             cfg.register_css(k, v)
         if js_files := info["js_files"]:
