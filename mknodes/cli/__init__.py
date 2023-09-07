@@ -21,6 +21,7 @@ def cli():
 @cli.command()
 @cli_options.repo_url_option
 @cli_options.site_script_option
+@cli_options.site_dir_option
 @cli_options.clone_depth_option
 @cli_options.common_options  # config-file / strict / theme / use-directory-urls
 @cli_options.debug_options  # verbose / quiet
