@@ -6,7 +6,7 @@ from mknodes.info import folderinfo
 from mknodes.utils import helpers, yamlhelpers
 
 
-ToolStr = Literal["pre-commit", "ruff", "mypy"]
+ToolStr = Literal["pre-commit", "ruff", "mypy", "coverage", "mkdocs", "mkdocs-material"]
 
 PRE_COMMIT_CODE = """
 # Setup pre-commit hooks for required formatting
@@ -63,7 +63,7 @@ class Tool:
     setup_cmd: str | None
     config_syntax: str
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None) -> bool:
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         """Return whether tool is used for given directory.
 
         Arguments:
@@ -71,7 +71,7 @@ class Tool:
         """
         raise NotImplementedError
 
-    def get_config(self, folder: folderinfo.FolderInfo | None) -> str | None:
+    def get_config(self, folder: folderinfo.FolderInfo) -> str | None:
         """Return config for given tool.
 
         Arguments:
@@ -88,7 +88,7 @@ class PreCommit(Tool):
     setup_cmd = PRE_COMMIT_CODE
     config_syntax = "yaml"
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+    def is_used(self, folder: folderinfo.FolderInfo):
         directory = folder.path if folder else "."
         filename = ".pre-commit-config.yaml"
         return bool(helpers.find_file_in_folder_or_parent(filename, str(directory)))
@@ -108,8 +108,8 @@ class Ruff(Tool):
     setup_cmd = RUFF_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return "ruff" in folder.pyproject.tool if folder else False
+    def is_used(self, folder: folderinfo.FolderInfo):
+        return "ruff" in folder.pyproject.tool
 
     def get_config(self, folder):
         return folder.pyproject.get_section_text("tool", "ruff")
@@ -123,8 +123,8 @@ class MyPy(Tool):
     setup_cmd = MYPY_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return "mypy" in folder.pyproject.tool if folder else False
+    def is_used(self, folder: folderinfo.FolderInfo):
+        return "mypy" in folder.pyproject.tool
 
     def get_config(self, folder):
         return folder.pyproject.get_section_text("tool", "mypy")
@@ -138,11 +138,16 @@ class Coverage(Tool):
     setup_cmd = COVERAGE_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return "coverage" in folder.pyproject.tool if folder else False
+    def is_used(self, folder: folderinfo.FolderInfo):
+        return (
+            "coverage" in folder.pyproject.tool or (folder.path / ".coveragerc").exists()
+        )
 
     def get_config(self, folder):
-        return folder and folder.pyproject.get_section_text("tool", "coverage")
+        text = folder.pyproject.get_section_text("tool", "coverage")
+        if (path := (folder.path / ".coveragerc")).exists():
+            return f"{text}\n{path.read_text()}"
+        return text
 
 
 class MkDocs(Tool):
@@ -153,8 +158,8 @@ class MkDocs(Tool):
     setup_cmd = MKDOCS_CODE
     config_syntax = "yaml"
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None):
-        return folder and bool(folder.mkdocs_config)
+    def is_used(self, folder: folderinfo.FolderInfo):
+        return bool(folder.mkdocs_config)
 
     def get_config(self, folder):
         return yamlhelpers.dump_yaml(folder.mkdocs_config)
@@ -168,7 +173,7 @@ class MkDocsMaterial(Tool):
     setup_cmd = None
     config_syntax = "yaml"
 
-    def is_used(self, folder: folderinfo.FolderInfo | None = None):
+    def is_used(self, folder: folderinfo.FolderInfo):
         if (
             folder
             and folder.mkdocs_config

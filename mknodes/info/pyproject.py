@@ -21,7 +21,7 @@ class PyProject(tomlfile.TomlFile):
         if path.is_dir():
             path = path / "pyproject.toml"
         super().__init__(path)
-        self.mknodes_section = self.get_section("tool", "mknodes")
+        self.mknodes_section = self.get_section("tool", "mknodes") or {}
 
     def __repr__(self):
         return f"PyProject({self.name!r})"
