@@ -154,6 +154,6 @@ The Original Software is
 
 ______________________________________.
 
-Copyright © <year> Nokia and others. All Rights Reserved.
+Copyright © {{ now().year }} Nokia and others. All Rights Reserved.
 
 Contributor(s): ______________________________________.

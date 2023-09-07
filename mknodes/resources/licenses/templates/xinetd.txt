@@ -16,7 +16,7 @@ The author makes no representations about the suitability of this software for a
 
 Modifications: Version: 2.1.8.7-current Copyright 1998-2001 by Rob Braun
 
-Sensor Addition Version: 2.1.8.9pre14a Copyright 2001 by Steve Grubb
+Sensor Addition Version: 2.1.8.9pre14a Copyright {{ now().year }} by Steve Grubb
 
 This is an exerpt from an email I recieved from the original author, allowing xinetd as maintained by me (Rob Braun), to use the higher version numbers:
 

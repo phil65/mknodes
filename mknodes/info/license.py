@@ -47,34 +47,24 @@ class License:
         self,
         holder: str,
         package_name: str,
-        website: str,
-        email: str,
-        summary: str,
+        website: str = "",
+        email: str = "",
+        summary: str = "",
     ):
         text = self.content
         year = str(datetime.date.today().year)
-        text = text.replace("<year>", year)
-        text = text.replace("[yyyy]", year)
-        text = text.replace("[various years]", year)
-        text = text.replace(" 2001 ", f" {year} ")
-        # some dumb replacing for popular licenses
-        text = text.replace("<copyright holders>", holder)
-        text = text.replace("[name of copyright owner]", holder)
-        text = text.replace("<name of author>", holder)
-        text = text.replace("<owner>", holder)
-        text = text.replace("David Griffin", holder)
-        text = text.replace("James Hacker", holder)
-        text = text.replace("<program>", package_name)
-        text = text.replace("Gnomovision", package_name)
-        text = text.replace("Universidad de Palermo, Argentina", holder)
-        text = text.replace("http://www.palermo.edu/", website)
-        text = text.replace("<phk@FreeBSD.ORG>", email)
-        text = text.replace(
-            "<one line to give the program's name and a brief idea of what it does.>",
-            f"{package_name}: {summary}",
-        )
+        text = text.replace(r"{{ now().year }}", year)
+        text = text.replace(r"{{ metadata.copyright_holder }}", holder)
+        text = text.replace(r"{{ metadata.organization }}", holder)
+        text = text.replace(r"{{ metadata.program_url }}", website)
+        text = text.replace(r"{{ metadata.program_name }}", package_name)
+        text = text.replace(r"{{ metadata.program_version }}", "")
+        desc = f"{package_name}: {summary}"
+        text = text.replace(r"{{ metadata.program_description }}", desc)
         self.content = text
 
 
 if __name__ == "__main__":
-    db = License("Apache License 1.1")
+    db = License("BSD-3-Clause")
+    db.resolve_template(holder="Phil", package_name="test")
+    print(db.content)

@@ -16,7 +16,7 @@ To use this license, the files of your distribution should have an explicit copy
 
 A typical example would be
 
-     %% pig.sty %% Copyright 2001 M. Y. Name
+     %% pig.sty %% Copyright {{ now().year }} M. Y. Name
 
      % This program can redistributed and/or modified under the terms 
      % of the LaTeX Project Public License Distributed from CTAN 
