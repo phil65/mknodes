@@ -56,7 +56,7 @@ class MkDocsBuilder:
             inclusion_level: Inclusion level of new file
         """
         new_f = files_.File(
-            str(path),
+            os.fspath(path),
             src_dir=str(src_dir) if src_dir else self._config.docs_dir,
             dest_dir=str(dest_dir) if dest_dir else self._config.site_dir,
             use_directory_urls=self._config.use_directory_urls,
@@ -114,7 +114,7 @@ class MkDocsBuilder:
 
     def write(self, path: str | os.PathLike, content: str | bytes):
         mode = "w" if isinstance(content, str) else "wb"
-        path = self._get_path(os.fspath(path), new="w" in mode)
+        path = self._get_path(path, new="w" in mode)
         encoding = None if "b" in mode else "utf-8"
         logger.info("Writing file to %s", path)
         with path.open(mode=mode, encoding=encoding) as file:
@@ -130,10 +130,10 @@ class MkDocsBuilder:
             self.write(self.assets_path / k, v)
             self.asset_files.append((self.assets_path / k).as_posix())
 
-    def _get_path(self, name: str, new: bool = False) -> pathlib.Path:
+    def _get_path(self, path: str | os.PathLike, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
-        new_f = self.get_file(name, src_dir=self.directory)
-        normname = pathlib.PurePath(name).as_posix()
+        normname = pathlib.PurePath(path).as_posix()
+        new_f = self.get_file(path, src_dir=self.directory)
         new_path = pathlib.Path(new_f.abs_src_path)
         if new or normname not in self._files:
             new_path.parent.mkdir(exist_ok=True, parents=True)
