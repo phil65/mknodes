@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 import functools
-import importlib
 import logging
 
 from typing import Literal
@@ -223,24 +222,10 @@ class PackageInfo:
         self,
         group: str | None = None,
     ) -> dict[str, packagehelpers.EntryPoint]:
-        if not group:
-            eps = self.distribution.entry_points
-        else:
-            eps = [i for i in self.distribution.entry_points if i.group == group]
-        dct = {}
-        for ep in eps:
-            name, dotted_path = ep.name, ep.value
-            mod_name, kls_name = dotted_path.split(":")
-            mod = importlib.import_module(mod_name)
-            dct[name] = packagehelpers.EntryPoint(
-                name=ep.name,
-                dotted_path=ep.value,
-                group=ep.group,
-                obj=getattr(mod, kls_name),
-            )
-        return dct
+        return packagehelpers.get_entry_points(self.distribution, group=group)
 
 
 if __name__ == "__main__":
     info = get_info("mknodes")
-    print(info.get_entry_points("console_scripts"))
+    print(info.get_entry_points("mkdocs.plugins"))
+    print(info.metadata.json)

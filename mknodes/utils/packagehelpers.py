@@ -81,6 +81,25 @@ class EntryPoint:
     obj: types.ModuleType | type
 
 
+def get_entry_points(dist, group: str | None = None) -> dict[str, EntryPoint]:
+    if not group:
+        eps = dist.entry_points
+    else:
+        eps = [i for i in dist.entry_points if i.group == group]
+    dct = {}
+    for ep in eps:
+        name, dotted_path = ep.name, ep.value
+        mod_name, kls_name = dotted_path.split(":")
+        mod = importlib.import_module(mod_name)
+        dct[name] = EntryPoint(
+            name=ep.name,
+            dotted_path=ep.value,
+            group=ep.group,
+            obj=getattr(mod, kls_name),
+        )
+    return dct
+
+
 class Dependency:
     def __init__(self, name: str):
         self.req = Requirement(name)
