@@ -94,7 +94,7 @@ class MkLicense(mktext.MkText):
         if self.license is not None:
             return self.get_license(self.license)
         if proj := self.associated_project:
-            if license_path := proj.folderinfo.get_license_file_path():
+            if license_path := proj.folderinfo.license_file_path:
                 return license_path.read_text()
             if proj.info.license_name:
                 return self.get_license(proj.info.license_name)

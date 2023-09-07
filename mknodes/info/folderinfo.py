@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import functools
 import importlib
 import logging
 import os
@@ -131,13 +132,14 @@ class FolderInfo:
         """Return a list of build tools used by this package."""
         return [t for t in tools.TOOLS.values() if t.is_used(self)]
 
-    def get_license_file_path(self) -> pathlib.Path | None:
+    @functools.cached_property
+    def license_file_path(self) -> pathlib.Path | None:
         """Return license file path (relative to project root) from metadata."""
         for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
             if (file := self.path / path).exists():
                 return file
         if file := self.info.metadata.json.get("license_file"):
-            return self.path / file
+            return self.path / file if isinstance(file, str) else self.path / file[0]
         return None
 
     def get_social_info(self) -> list[dict[str, str]]:
