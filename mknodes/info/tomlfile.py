@@ -37,13 +37,14 @@ class TomlFile:
     def __repr__(self):
         return f"{type(self).__name__}({self.path})"
 
-    def get_section(self, *sections) -> Any:
+    def get_section(self, *sections, keep_path: bool = False) -> Any:
         """Try to get data[sections[0]][sections[1]]...
 
         If Key path does not exist, return None.
 
         Arguments:
             sections: Sections to dig into
+            keep_path: Return result with original nesting
         """
         section = self._data
         for i in sections:
@@ -51,25 +52,39 @@ class TomlFile:
                 section = child
             else:
                 return None
-        return section
+        if not keep_path:
+            return section
+        result: dict[str, dict] = {}
+        new = result
+        for sect in sections:
+            result[sect] = section if sect == sections[-1] else {}
+            result = result[sect]
+        return new
 
-    def get_section_text(self, *sections, multiline_strings: bool = False) -> str:
+    def get_section_text(
+        self,
+        *sections,
+        keep_path: bool = False,
+        multiline_strings: bool = False,
+    ) -> str:
         """Try to get data[sections[0]][sections[1]]... as text.
 
         If Key path does not exist, return empty string.
 
         Arguments:
             sections: Sections to dig into
+            keep_path: Return result with original nesting
             multiline_strings: Format as multiline
         """
-        section = self.get_section(*sections)
-        return (
-            ""
-            if section is None
-            else tomli_w.dumps(section, multiline_strings=multiline_strings)
-        )
+        if not sections:
+            raise ValueError(sections)
+        section = self.get_section(*sections, keep_path=keep_path)
+        if section is None:
+            return ""
+        return tomli_w.dumps(section, multiline_strings=multiline_strings)
 
 
 if __name__ == "__main__":
     info = TomlFile("pyproject.toml")
-    print(info.get_section_text("tool", "hatch"))
+    text = info.get_section_text("tool", "hatch", keep_path=True)
+    print(text)
