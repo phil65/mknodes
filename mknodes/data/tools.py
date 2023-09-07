@@ -6,8 +6,6 @@ from mknodes.info import folderinfo
 from mknodes.utils import helpers, yamlhelpers
 
 
-ToolStr = Literal["pre-commit", "ruff", "mypy", "coverage", "mkdocs", "mkdocs-material"]
-
 PRE_COMMIT_CODE = """
 # Setup pre-commit hooks for required formatting
 pre-commit install
@@ -30,6 +28,13 @@ ruff --help
 """
 
 RUFF_TEXT = """Ruff is used as a linter. You can find the configuration in the
+pyproject.toml file."""
+
+BLACK_CODE = """
+black .
+"""
+
+BLACK_TEXT = """Black is used as a code formatter. You can find the configuration in the
 pyproject.toml file."""
 
 COVERAGE_CODE = """
@@ -115,6 +120,21 @@ class Ruff(Tool):
         return folder.pyproject.get_section_text("tool", "ruff")
 
 
+class Black(Tool):
+    identifier = "black"
+    title = "Black"
+    url = "https://github.com/psf/black"
+    description = BLACK_TEXT
+    setup_cmd = BLACK_CODE
+    config_syntax = "toml"
+
+    def is_used(self, folder: folderinfo.FolderInfo):
+        return "black" in folder.pyproject.tool
+
+    def get_config(self, folder):
+        return folder.pyproject.get_section_text("tool", "black")
+
+
 class MyPy(Tool):
     identifier = "mypy"
     title = "MyPy"
@@ -190,7 +210,26 @@ class MkDocsMaterial(Tool):
         return folder and yamlhelpers.dump_yaml(folder.mkdocs_config.get("theme"))
 
 
+ToolStr = Literal[
+    "pre-commit",
+    "ruff",
+    "mypy",
+    "coverage",
+    "mkdocs",
+    "mkdocs-material",
+    "black",
+]
+
+
 TOOLS: dict[ToolStr, Tool] = {
     p.identifier: p
-    for p in [PreCommit(), Ruff(), MyPy(), Coverage(), MkDocs(), MkDocsMaterial()]
+    for p in [
+        PreCommit(),
+        Ruff(),
+        Black(),
+        MyPy(),
+        Coverage(),
+        MkDocs(),
+        MkDocsMaterial(),
+    ]
 }
