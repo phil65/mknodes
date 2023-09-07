@@ -37,6 +37,8 @@ class MkDocsBuilder:
             case _:
                 self._config = mkdocsconfig.Config(config)._config
         self.directory = str(directory or self._config.docs_dir)
+        self.assets_path = pathlib.Path(self.directory) / "assets"
+        self.asset_files: list[str] = []
 
     def get_file(
         self,
@@ -118,10 +120,15 @@ class MkDocsBuilder:
         with path.open(mode=mode, encoding=encoding) as file:
             file.write(content)
 
-    def write_files(self, dct: Mapping[str, str | bytes]):
+    def write_files(self, dct: Mapping[str | os.PathLike, str | bytes]):
         """Write a mapping of {filename: file_content} to build directory."""
         for k, v in dct.items():
             self.write(k, v)
+
+    def write_assets(self, dct: Mapping[str, str | bytes]):
+        for k, v in dct.items():
+            self.write(self.assets_path / k, v)
+            self.asset_files.append((self.assets_path / k).as_posix())
 
     def _get_path(self, name: str, new: bool = False) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
@@ -142,6 +149,14 @@ class MkDocsBuilder:
             return new_path
 
         return source_path
+
+    @property
+    def css_files(self):
+        return [i for i in self.asset_files if i.endswith(".css")]
+
+    @property
+    def js_files(self):
+        return [i for i in self.asset_files if i.endswith(".js")]
 
 
 if __name__ == "__main__":

@@ -34,7 +34,6 @@ CommandStr = Literal["build", "serve", "gh-deploy"]
 class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._page_mapping = {}
         self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
         logger.debug("Creating temporary dir %s", self._dir.name)
         self.link_replacer = linkreplacer.LinkReplacer()
@@ -87,9 +86,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         info = self.project.infocollector
         self.project.aggregate_info()
         info["config"] = config
-        self.project.linkprovider.set_excludes(
-            [pathlib.Path(i).stem for i in info["filenames"]],
-        )
+        paths = [pathlib.Path(i).stem for i in info["filenames"]]
+        self.project.linkprovider.set_excludes(paths)
         builder = mkdocsbuilder.MkDocsBuilder(
             files=files,
             config=cfg,
