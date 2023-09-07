@@ -99,7 +99,6 @@ dependencies = [
     "mkdocs >=1.5",
     "mkdocs-literate-nav",
     "git-changelog",
-    "spdx-lookup",
     "fsspec",
     "cssutils",
     "mergedeep",

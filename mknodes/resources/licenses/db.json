@@ -1,0 +1,3595 @@
+{
+  "version": "2.5",
+  "licenses": [
+    {
+      "name": "3dfx Glide License",
+      "id": "Glide",
+      "sources": [
+        "http://www.users.on.net/~triforce/glidexp/COPYING.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Glide.txt"
+    },
+    {
+      "name": "Abstyles License",
+      "id": "Abstyles",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Abstyles"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Abstyles.txt"
+    },
+    {
+      "name": "Academic Free License v1.1",
+      "id": "AFL-1.1",
+      "sources": [
+        "http://opensource.linux-mirror.org/licenses/afl-1.1.txt"
+      ],
+      "notes": "This license has been superseded by later versions.",
+      "osi_approved": true,
+      "header": "Licensed under the Academic Free License version 1.1.",
+      "template": "AFL-1.1.txt"
+    },
+    {
+      "name": "Academic Free License v1.2",
+      "id": "AFL-1.2",
+      "sources": [
+        "http://opensource.linux-mirror.org/licenses/afl-1.2.txt"
+      ],
+      "notes": "This license has been superseded by later versions.",
+      "osi_approved": true,
+      "header": "Licensed under the Academic Free License version 1.2",
+      "template": "AFL-1.2.txt"
+    },
+    {
+      "name": "Academic Free License v2.0",
+      "id": "AFL-2.0",
+      "sources": [
+        "http://opensource.linux-mirror.org/licenses/afl-2.0.txt"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Licensed under the Academic Free License version 2.0",
+      "template": "AFL-2.0.txt"
+    },
+    {
+      "name": "Academic Free License v2.1",
+      "id": "AFL-2.1",
+      "sources": [
+        "http://opensource.linux-mirror.org/licenses/afl-2.1.txt"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Licensed under the Academic Free License version 2.1",
+      "template": "AFL-2.1.txt"
+    },
+    {
+      "name": "Academic Free License v3.0",
+      "id": "AFL-3.0",
+      "sources": [
+        "http://www.rosenlaw.com/AFL3.0.htm",
+        "http://www.opensource.org/licenses/afl-3.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Licensed under the Academic Free License version 3.0",
+      "template": "AFL-3.0.txt"
+    },
+    {
+      "name": "Academy of Motion Picture Arts and Sciences BSD",
+      "id": "AMPAS",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/BSD#AMPASBSD"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "AMPAS.txt"
+    },
+    {
+      "name": "Adaptive Public License 1.0",
+      "id": "APL-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/APL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "<various notices depending on terms chosen for license - see Exhibit A>",
+      "template": "APL-1.0.txt"
+    },
+    {
+      "name": "Adobe Glyph List License",
+      "id": "Adobe-Glyph",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MIT#AdobeGlyph"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Adobe-Glyph.txt"
+    },
+    {
+      "name": "Adobe Postscript AFM License",
+      "id": "APAFML",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/AdobePostscriptAFM"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "APAFML.txt"
+    },
+    {
+      "name": "Adobe Systems Incorporated Source Code License Agreement",
+      "id": "Adobe-2006",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/AdobeLicense"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Adobe-2006.txt"
+    },
+    {
+      "name": "Affero General Public License v1.0",
+      "id": "AGPL-1.0",
+      "sources": [
+        "http://www.affero.org/oagpl.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "AGPL-1.0.txt"
+    },
+    {
+      "name": "Afmparse License",
+      "id": "Afmparse",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Afmparse"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Afmparse.txt"
+    },
+    {
+      "name": "Aladdin Free Public License",
+      "id": "Aladdin",
+      "sources": [
+        "http://pages.cs.wisc.edu/~ghost/doc/AFPL/6.01/Public.htm"
+      ],
+      "notes": "This license was released 18 Nov 1999",
+      "osi_approved": false,
+      "header": null,
+      "template": "Aladdin.txt"
+    },
+    {
+      "name": "Amazon Digital Services License",
+      "id": "ADSL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/AmazonDigitalServicesLicense"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "ADSL.txt"
+    },
+    {
+      "name": "AMD's plpa_map.c License",
+      "id": "AMDPLPA",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/AMD_plpa_map_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "AMDPLPA.txt"
+    },
+    {
+      "name": "ANTLR Software Rights Notice",
+      "id": "ANTLR-PD",
+      "sources": [
+        "http://www.antlr2.org/license.html"
+      ],
+      "notes": "ANTLR used this public domain notice through version 2.7 and then switched to a BSD license for version 3.0 and later.",
+      "osi_approved": false,
+      "header": null,
+      "template": "ANTLR-PD.txt"
+    },
+    {
+      "name": "Apache License 1.0",
+      "id": "Apache-1.0",
+      "sources": [
+        "http://www.apache.org/licenses/LICENSE-1.0"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Apache-1.0.txt"
+    },
+    {
+      "name": "Apache License 1.1",
+      "id": "Apache-1.1",
+      "sources": [
+        "http://apache.org/licenses/LICENSE-1.1",
+        "http://opensource.org/licenses/Apache-1.1"
+      ],
+      "notes": "This license has been superseded by Apache License 2.0",
+      "osi_approved": true,
+      "header": null,
+      "template": "Apache-1.1.txt"
+    },
+    {
+      "name": "Apache License 2.0",
+      "id": "Apache-2.0",
+      "sources": [
+        "http://www.apache.org/licenses/LICENSE-2.0",
+        "http://www.opensource.org/licenses/Apache-2.0"
+      ],
+      "notes": "This license was released January 2004",
+      "osi_approved": true,
+      "header": "Copyright <<var;name=copyright;original=[yyyy] [name of copyright owner];match=.+>>\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.",
+      "template": "Apache-2.0.txt"
+    },
+    {
+      "name": "Apple MIT License",
+      "id": "AML",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Apple_MIT_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "AML.txt"
+    },
+    {
+      "name": "Apple Public Source License 1.0",
+      "id": "APSL-1.0",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Apple_Public_Source_License_1.0"
+      ],
+      "notes": "This license was released 16 March 1999.",
+      "osi_approved": true,
+      "header": "Portions Copyright (c) 1999 Apple Computer, Inc. All Rights Reserved. \n\nThis file contains Original Code and/or Modifications of Original Code as defined in and that are subject to the Apple Public Source License Version 1.0 (the 'License'). You may not use this file except in compliance with the License. Please obtain a copy of the License at http://www.apple.com/publicsource and read it before using this file.\n\nThe Original Code and all software distributed under the License are distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT. Please see the License for the specific language governing rights and limitations under the License.",
+      "template": "APSL-1.0.txt"
+    },
+    {
+      "name": "Apple Public Source License 1.1",
+      "id": "APSL-1.1",
+      "sources": [
+        "http://www.opensource.apple.com/source/IOSerialFamily/IOSerialFamily-7/APPLE_LICENSE"
+      ],
+      "notes": "This license was released 19 April 1999.",
+      "osi_approved": true,
+      "header": "Portions Copyright (c) 1999-2000 Apple Computer, Inc.  All Rights Reserved.  \n\nThis file contains Original Code and/or Modifications of Original Code as defined in and that are subject to the Apple Public Source License Version 1.1 (the \"License\").  You may not use this file except in compliance with the License.  Please obtain a copy of the License at http://www.apple.com/publicsource and read it before using this file.\n\nThe Original Code and all software distributed under the License are distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON- INFRINGEMENT.  Please see the License for the specific language governing rights and limitations under the License.",
+      "template": "APSL-1.1.txt"
+    },
+    {
+      "name": "Apple Public Source License 1.2",
+      "id": "APSL-1.2",
+      "sources": [
+        "http://www.samurajdata.se/opensource/mirror/licenses/apsl.php"
+      ],
+      "notes": "This license was released 4 Jan 2001.",
+      "osi_approved": true,
+      "header": "Portions Copyright (c) 1999-2001 Apple Computer, Inc. All Rights Reserved.\n\nThis file contains Original Code and/or Modifications of Original Code as defined in and that are subject to the Apple Public Source License Version 1.2 (the 'License'). You may not use this file except in compliance with the License. Please obtain a copy of the License at http://www.apple.com/publicsource and read it before using this file.\n\nThe Original Code and all software distributed under the License are distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT. Please see the License for the specific language governing rights and limitations under the License.",
+      "template": "APSL-1.2.txt"
+    },
+    {
+      "name": "Apple Public Source License 2.0",
+      "id": "APSL-2.0",
+      "sources": [
+        "http://www.opensource.apple.com/license/apsl/"
+      ],
+      "notes": "This license was released: 6 August 2003.",
+      "osi_approved": true,
+      "header": "Portions Copyright (c) 1999-2003 Apple Computer, Inc. All Rights Reserved.\n\nThis file contains Original Code and/or Modifications of Original Code as defined in and that are subject to the Apple Public Source License Version 2.0 (the 'License'). You may not use this file except in compliance with the License. Please obtain a copy of the License at http://www.opensource.apple.com/apsl/ and read it before using this file.\n\nThe Original Code and all software distributed under the License are distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT. Please see the License for the specific language governing rights an limitations under the License.\"",
+      "template": "APSL-2.0.txt"
+    },
+    {
+      "name": "Artistic License 1.0",
+      "id": "Artistic-1.0",
+      "sources": [
+        "http://opensource.org/licenses/Artistic-1.0"
+      ],
+      "notes": "This license was superseded by v2.0\nThis is Artistic License 1.0 as found on OSI site, excluding clause 8.",
+      "osi_approved": true,
+      "header": null,
+      "template": "Artistic-1.0.txt"
+    },
+    {
+      "name": "Artistic License 1.0 (Perl)",
+      "id": "Artistic-1.0-Perl",
+      "sources": [
+        "http://dev.perl.org/licenses/artistic.html"
+      ],
+      "notes": "This is the Artistic License 1.0 found on the Perl site, which is different (particularly, clauses 5, 6, 7 and 8) than the Artistic License 1.0 w/clause 8 found on the OSI site.",
+      "osi_approved": true,
+      "header": null,
+      "template": "Artistic-1.0-Perl.txt"
+    },
+    {
+      "name": "Artistic License 1.0 w/clause 8",
+      "id": "Artistic-1.0-cl8",
+      "sources": [
+        "http://opensource.org/licenses/Artistic-1.0"
+      ],
+      "notes": "This license was superseded by v2.0\nThis is Artistic License 1.0 as found on OSI site, including clause 8.",
+      "osi_approved": true,
+      "header": null,
+      "template": "Artistic-1.0-cl8.txt"
+    },
+    {
+      "name": "Artistic License 2.0",
+      "id": "Artistic-2.0",
+      "sources": [
+        "http://www.perlfoundation.org/artistic_license_2_0  ",
+        "http://www.opensource.org/licenses/artistic-license-2.0"
+      ],
+      "notes": "This license was released: 2006",
+      "osi_approved": true,
+      "header": null,
+      "template": "Artistic-2.0.txt"
+    },
+    {
+      "name": "Attribution Assurance License",
+      "id": "AAL",
+      "sources": [
+        "http://www.opensource.org/licenses/attribution"
+      ],
+      "notes": "This license was released: 2002",
+      "osi_approved": true,
+      "header": null,
+      "template": "AAL.txt"
+    },
+    {
+      "name": "Bahyph License",
+      "id": "Bahyph",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Bahyph"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Bahyph.txt"
+    },
+    {
+      "name": "Barr License",
+      "id": "Barr",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Barr"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Barr.txt"
+    },
+    {
+      "name": "Beerware License",
+      "id": "Beerware",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Beerware"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Beerware.txt"
+    },
+    {
+      "name": "BitTorrent Open Source License v1.0",
+      "id": "BitTorrent-1.0",
+      "sources": [
+        "http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/licenses/BitTorrent?r1=1.1&r2=1.1.1.1&diff_format=s"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the BitTorrent Open Source License Version 1.0 (the License).  You may not copy or use this file, in either source code or executable form, except in compliance with the License.  You may obtain a copy of the License at http://www.bittorrent.com/license/. \n  \nSoftware distributed under the License is distributed on an AS IS basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.  See the License for the specific language governing rights and limitations under the License. ",
+      "template": "BitTorrent-1.0.txt"
+    },
+    {
+      "name": "BitTorrent Open Source License v1.1",
+      "id": "BitTorrent-1.1",
+      "sources": [
+        "http://directory.fsf.org/wiki/License:BitTorrentOSL1.1"
+      ],
+      "notes": "Standard header seems to use wrong version number (this is how it appears on all references found.)",
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the BitTorrent Open Source License Version 1.0 (the License). You may not copy or use this file, in either source code or executable form, except in compliance with the License. You may obtain a copy of the License at http://www.bittorrent.com/license/.\n\nSoftware distributed under the License is distributed on an AS IS basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.",
+      "template": "BitTorrent-1.1.txt"
+    },
+    {
+      "name": "Boost Software License 1.0",
+      "id": "BSL-1.0",
+      "sources": [
+        "http://www.boost.org/LICENSE_1_0.txt",
+        "http://www.opensource.org/licenses/BSL-1.0"
+      ],
+      "notes": "This license was released: 17 August 2003",
+      "osi_approved": true,
+      "header": null,
+      "template": "BSL-1.0.txt"
+    },
+    {
+      "name": "Borceux license",
+      "id": "Borceux",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Borceux"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Borceux.txt"
+    },
+    {
+      "name": "BSD 2-clause \"Simplified\" License",
+      "id": "BSD-2-Clause",
+      "sources": [
+        "http://www.opensource.org/licenses/BSD-2-Clause"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "BSD-2-Clause.txt"
+    },
+    {
+      "name": "BSD 2-clause FreeBSD License",
+      "id": "BSD-2-Clause-FreeBSD",
+      "sources": [
+        "http://www.freebsd.org/copyright/freebsd-license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-2-Clause-FreeBSD.txt"
+    },
+    {
+      "name": "BSD 2-clause NetBSD License",
+      "id": "BSD-2-Clause-NetBSD",
+      "sources": [
+        "http://www.netbsd.org/about/redistribution.html#default"
+      ],
+      "notes": "NetBSD adopted this 2-clause license in 2008 for code contributed to NetBSD Foundation.",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-2-Clause-NetBSD.txt"
+    },
+    {
+      "name": "BSD 3-clause \"New\" or \"Revised\" License",
+      "id": "BSD-3-Clause",
+      "sources": [
+        "http://www.opensource.org/licenses/BSD-3-Clause"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "BSD-3-Clause.txt"
+    },
+    {
+      "name": "BSD 3-clause Clear License",
+      "id": "BSD-3-Clause-Clear",
+      "sources": [
+        "http://labs.metacarta.com/license-explanation.html#license"
+      ],
+      "notes": "This is same as BSD-3-Clause but with explicit statement as to no patent rights granted in last paragraph.",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-3-Clause-Clear.txt"
+    },
+    {
+      "name": "BSD 3-Clause No Nuclear License",
+      "id": "BSD-3-Clause-No-Nuclear-License",
+      "sources": [
+        "http://download.oracle.com/otn-pub/java/licenses/bsd.txt?AuthParam=1467140197_43d516ce1776bd08a58235a7785be1cc"
+      ],
+      "notes": "This license has an older Sun copyright notice and is the same license as BSD-3-Clause-No-Nuclear-Warranty, except it specifies that that software is \"not licensed\" for use in a nuclear facility, as opposed to a disclaimer for such use.",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-3-Clause-No-Nuclear-License.txt"
+    },
+    {
+      "name": "BSD 3-Clause No Nuclear License 2014",
+      "id": "BSD-3-Clause-No-Nuclear-License-2014",
+      "sources": [
+        "https://java.net/projects/javaeetutorial/pages/BerkeleyLicense"
+      ],
+      "notes": "This license has a Oracle copyright notice. It is the same license as BSD-3-Clause-No-Nuclear-License, except it has a different entire disclaimer clause that is the same as BSD-3-Clause.",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-3-Clause-No-Nuclear-License-2014.txt"
+    },
+    {
+      "name": "BSD 3-Clause No Nuclear Warranty",
+      "id": "BSD-3-Clause-No-Nuclear-Warranty",
+      "sources": [
+        "https://jogamp.org/git/?p=gluegen.git;a=blob_plain;f=LICENSE.txt"
+      ],
+      "notes": "This license has a Sun copyright notice. It is the same license as BSD-3-Clause-No-Nuclear-License, except it has a disclaimer for nuclear factility use, instead of the software \"not licensed\" for such use.",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-3-Clause-No-Nuclear-Warranty.txt"
+    },
+    {
+      "name": "BSD 4-clause \"Original\" or \"Old\" License",
+      "id": "BSD-4-Clause",
+      "sources": [
+        "http://directory.fsf.org/wiki/License:BSD_4Clause"
+      ],
+      "notes": "This license was rescinded by the author on 22 July 1999.",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-4-Clause.txt"
+    },
+    {
+      "name": "BSD Protection License",
+      "id": "BSD-Protection",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/BSD_Protection_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-Protection.txt"
+    },
+    {
+      "name": "BSD Source Code Attribution",
+      "id": "BSD-Source-Code",
+      "sources": [
+        "https://github.com/robbiehanson/CocoaHTTPServer/blob/master/LICENSE.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-Source-Code.txt"
+    },
+    {
+      "name": "BSD with attribution",
+      "id": "BSD-3-Clause-Attribution",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/BSD_with_Attribution"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-3-Clause-Attribution.txt"
+    },
+    {
+      "name": "BSD Zero Clause License",
+      "id": "0BSD",
+      "sources": [
+        "http://landley.net/toybox/license.html"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "0BSD.txt"
+    },
+    {
+      "name": "BSD-4-Clause (University of California-Specific)",
+      "id": "BSD-4-Clause-UC",
+      "sources": [
+        "http://www.freebsd.org/copyright/license.html"
+      ],
+      "notes": "This is the same license as the BSD-4-Clause, but with a copyright notice for the Regents of the University of California.  Captures the retroactive deletion of the third (advertising) clause of the Original BSD license for BSD-licensed code developed by UC Berkeley and its contributors (see ftp://ftp.cs.berkeley.edu/pub/4bsd/README.Impt.License.Change)",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-4-Clause-UC.txt"
+    },
+    {
+      "name": "bzip2 and libbzip2 License v1.0.5",
+      "id": "bzip2-1.0.5",
+      "sources": [
+        "http://bzip.org/1.0.5/bzip2-manual-1.0.5.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "bzip2-1.0.5.txt"
+    },
+    {
+      "name": "bzip2 and libbzip2 License v1.0.6",
+      "id": "bzip2-1.0.6",
+      "sources": [
+        "https://github.com/asimonov-im/bzip2/blob/master/LICENSE"
+      ],
+      "notes": "The bzip2.org website only shows version 1.0.5 of the license.",
+      "osi_approved": false,
+      "header": null,
+      "template": "bzip2-1.0.6.txt"
+    },
+    {
+      "name": "Caldera License",
+      "id": "Caldera",
+      "sources": [
+        "http://www.lemis.com/grog/UNIX/ancient-source-all.pdf"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Caldera.txt"
+    },
+    {
+      "name": "CeCILL Free Software License Agreement v1.0",
+      "id": "CECILL-1.0",
+      "sources": [
+        "http://www.cecill.info/licences/Licence_CeCILL_V1-fr.html"
+      ],
+      "notes": "English translation can be found here: http://www.cecill.info/licences/Licence_CeCILL_V1-US.html",
+      "osi_approved": false,
+      "header": null,
+      "template": "CECILL-1.0.txt"
+    },
+    {
+      "name": "CeCILL Free Software License Agreement v1.1",
+      "id": "CECILL-1.1",
+      "sources": [
+        "http://www.cecill.info/licences/Licence_CeCILL_V1.1-US.html"
+      ],
+      "notes": "There is only an English version for 1.1, which includes some wording changes from v1.0",
+      "osi_approved": false,
+      "header": null,
+      "template": "CECILL-1.1.txt"
+    },
+    {
+      "name": "CeCILL Free Software License Agreement v2.0",
+      "id": "CECILL-2.0",
+      "sources": [
+        "http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html"
+      ],
+      "notes": "English translation can be found here: http://www.cecill.info/licences/Licence_CeCILL_V2-en.html",
+      "osi_approved": false,
+      "header": null,
+      "template": "CECILL-2.0.txt"
+    },
+    {
+      "name": "CeCILL Free Software License Agreement v2.1",
+      "id": "CECILL-2.1",
+      "sources": [
+        "http://www.cecill.info/licences/Licence_CeCILL_V2.1-fr.html",
+        "http://opensource.org/licenses/CECILL-2.1"
+      ],
+      "notes": "English translation can be found here:  http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html",
+      "osi_approved": true,
+      "header": null,
+      "template": "CECILL-2.1.txt"
+    },
+    {
+      "name": "CeCILL-B Free Software License Agreement",
+      "id": "CECILL-B",
+      "sources": [
+        "http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.html"
+      ],
+      "notes": "English translation can be found here:  http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html",
+      "osi_approved": false,
+      "header": null,
+      "template": "CECILL-B.txt"
+    },
+    {
+      "name": "CeCILL-C Free Software License Agreement",
+      "id": "CECILL-C",
+      "sources": [
+        "http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html"
+      ],
+      "notes": "English translation can be found here: http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html",
+      "osi_approved": false,
+      "header": null,
+      "template": "CECILL-C.txt"
+    },
+    {
+      "name": "Clarified Artistic License",
+      "id": "ClArtistic",
+      "sources": [
+        "http://www.ncftp.com/ncftp/doc/LICENSE.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "ClArtistic.txt"
+    },
+    {
+      "name": "CMU License",
+      "id": "MIT-CMU",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing:MIT?rd=Licensing/MIT#CMU_Style"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "MIT-CMU.txt"
+    },
+    {
+      "name": "CNRI Jython License",
+      "id": "CNRI-Jython",
+      "sources": [
+        "http://www.jython.org/license.html"
+      ],
+      "notes": "This is very similar to CNRI-Python (also on this list), but for an extra clause covering restrictions on trademark and use of the name.",
+      "osi_approved": false,
+      "header": null,
+      "template": "CNRI-Jython.txt"
+    },
+    {
+      "name": "CNRI Python License",
+      "id": "CNRI-Python",
+      "sources": [
+        "http://www.opensource.org/licenses/CNRI-Python"
+      ],
+      "notes": "CNRI portion of the multi-part Python License (Python-2.0)",
+      "osi_approved": true,
+      "header": null,
+      "template": "CNRI-Python.txt"
+    },
+    {
+      "name": "CNRI Python Open Source GPL Compatible License Agreement",
+      "id": "CNRI-Python-GPL-Compatible",
+      "sources": [
+        "http://www.python.org/download/releases/1.6.1/download_win/"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CNRI-Python-GPL-Compatible.txt"
+    },
+    {
+      "name": "Code Project Open License 1.02",
+      "id": "CPOL-1.02",
+      "sources": [
+        "http://www.codeproject.com/info/cpol10.aspx"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CPOL-1.02.txt"
+    },
+    {
+      "name": "Common Development and Distribution License 1.0",
+      "id": "CDDL-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/cddl1"
+      ],
+      "notes": "This license was released: 24 January 2004.",
+      "osi_approved": true,
+      "header": null,
+      "template": "CDDL-1.0.txt"
+    },
+    {
+      "name": "Common Development and Distribution License 1.1",
+      "id": "CDDL-1.1",
+      "sources": [
+        "http://glassfish.java.net/public/CDDL+GPL_1_1.html"
+      ],
+      "notes": "Same as 1.0, but changes name from Sun to Oracle in section 4.1 and adds patent infringement termination clause (section 6.3)",
+      "osi_approved": false,
+      "header": null,
+      "template": "CDDL-1.1.txt"
+    },
+    {
+      "name": "Common Public Attribution License 1.0",
+      "id": "CPAL-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/CPAL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the Common Public Attribution License Version 1.0 (the \u0093License\u0094); you may not use this file except in compliance with the License. You may obtain a copy of the License at _____. The License is based on the Mozilla Public License Version 1.1 but Sections 14 and 15 have been added to cover use of software over a computer network and provide for limited attribution for the Original Developer. In addition, Exhibit A has been modified to be consistent with Exhibit B.\n\nSoftware distributed under the License is distributed on an \u0093AS IS\u0094 basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code is <<var;name=code;original=_____;match=.+>>.\nThe Original Developer is not the Initial Developer and is <<var;name=developer;original=_____;match=.+>>. If left blank, the Original Developer is the Initial Developer.\nThe Initial Developer of the Original Code is <<var;name=InitialDeveloper;original=_____;match=.+>>. All portions of the code written by <<var;name=createdby;original=_____;match=.+>>  are Copyright (c) <<var;name=copyright;original=_____;match=.+>>. All Rights Reserved.\nContributor <<var;name=contributor;original=_____;match=.+>>.\n\nAlternatively, the contents of this file may be used under the terms of the <<var;name=AltLicense;original=_____;match=.+>> license (the <<var;name=licenseName;original=[____];match=.+>> License), in which case the provisions of <<var;name=licenseName;original=[____];match=.+>>  License are applicable instead of those above. If you wish to allow use of your version of this file only under the terms of the <<var;name=licenseName;original=[____];match=.+>> License and not to allow others to use your version of this file under the CPAL, indicate your decision by deleting the provisions above and replace them with the notice and other provisions required by the <<var;name=licenseName;original=[____];match=.+>> License. If you do not delete the provisions above, a recipient may use your version of this file under either the CPAL or the <<var;name=licenseName;original=[____];match=.+>> License.",
+      "template": "CPAL-1.0.txt"
+    },
+    {
+      "name": "Common Public License 1.0",
+      "id": "CPL-1.0",
+      "sources": [
+        "http://opensource.org/licenses/CPL-1.0"
+      ],
+      "notes": "This license was superseded by Eclipse Public License",
+      "osi_approved": true,
+      "header": null,
+      "template": "CPL-1.0.txt"
+    },
+    {
+      "name": "Computer Associates Trusted Open Source License 1.1",
+      "id": "CATOSL-1.1",
+      "sources": [
+        "http://opensource.org/licenses/CATOSL-1.1"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "CATOSL-1.1.txt"
+    },
+    {
+      "name": "Condor Public License v1.1",
+      "id": "Condor-1.1",
+      "sources": [
+        "http://research.cs.wisc.edu/condor/license.html#condor"
+      ],
+      "notes": "This license was released 30 October 2003",
+      "osi_approved": false,
+      "header": null,
+      "template": "Condor-1.1.txt"
+    },
+    {
+      "name": "Creative Commons Attribution 1.0",
+      "id": "CC-BY-1.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-1.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution 2.0",
+      "id": "CC-BY-2.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by/2.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-2.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution 2.5",
+      "id": "CC-BY-2.5",
+      "sources": [
+        "http://creativecommons.org/licenses/by/2.5/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-2.5.txt"
+    },
+    {
+      "name": "Creative Commons Attribution 3.0",
+      "id": "CC-BY-3.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by/3.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-3.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution 4.0",
+      "id": "CC-BY-4.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by/4.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-4.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution No Derivatives 1.0",
+      "id": "CC-BY-ND-1.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nd/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-ND-1.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution No Derivatives 2.0",
+      "id": "CC-BY-ND-2.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nd/2.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-ND-2.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution No Derivatives 2.5",
+      "id": "CC-BY-ND-2.5",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nd/2.5/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-ND-2.5.txt"
+    },
+    {
+      "name": "Creative Commons Attribution No Derivatives 3.0",
+      "id": "CC-BY-ND-3.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nd/3.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-ND-3.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution No Derivatives 4.0",
+      "id": "CC-BY-ND-4.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nd/4.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-ND-4.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial 1.0",
+      "id": "CC-BY-NC-1.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-1.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial 2.0",
+      "id": "CC-BY-NC-2.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc/2.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-2.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial 2.5",
+      "id": "CC-BY-NC-2.5",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc/2.5/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-2.5.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial 3.0",
+      "id": "CC-BY-NC-3.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc/3.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-3.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial 4.0",
+      "id": "CC-BY-NC-4.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-4.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial No Derivatives 1.0",
+      "id": "CC-BY-NC-ND-1.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nd-nc/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-ND-1.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial No Derivatives 2.0",
+      "id": "CC-BY-NC-ND-2.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-nd/2.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-ND-2.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial No Derivatives 2.5",
+      "id": "CC-BY-NC-ND-2.5",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-nd/2.5/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-ND-2.5.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial No Derivatives 3.0",
+      "id": "CC-BY-NC-ND-3.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-nd/3.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-ND-3.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial No Derivatives 4.0",
+      "id": "CC-BY-NC-ND-4.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-ND-4.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial Share Alike 1.0",
+      "id": "CC-BY-NC-SA-1.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-sa/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-SA-1.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial Share Alike 2.0",
+      "id": "CC-BY-NC-SA-2.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-SA-2.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial Share Alike 2.5",
+      "id": "CC-BY-NC-SA-2.5",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-SA-2.5.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial Share Alike 3.0",
+      "id": "CC-BY-NC-SA-3.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-SA-3.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Non Commercial Share Alike 4.0",
+      "id": "CC-BY-NC-SA-4.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-NC-SA-4.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Share Alike 1.0",
+      "id": "CC-BY-SA-1.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-sa/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-SA-1.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Share Alike 2.0",
+      "id": "CC-BY-SA-2.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-sa/2.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-SA-2.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Share Alike 2.5",
+      "id": "CC-BY-SA-2.5",
+      "sources": [
+        "http://creativecommons.org/licenses/by-sa/2.5/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-SA-2.5.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Share Alike 3.0",
+      "id": "CC-BY-SA-3.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-sa/3.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-SA-3.0.txt"
+    },
+    {
+      "name": "Creative Commons Attribution Share Alike 4.0",
+      "id": "CC-BY-SA-4.0",
+      "sources": [
+        "http://creativecommons.org/licenses/by-sa/4.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC-BY-SA-4.0.txt"
+    },
+    {
+      "name": "Creative Commons Zero v1.0 Universal",
+      "id": "CC0-1.0",
+      "sources": [
+        "http://creativecommons.org/publicdomain/zero/1.0/legalcode"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CC0-1.0.txt"
+    },
+    {
+      "name": "Crossword License",
+      "id": "Crossword",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Crossword"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Crossword.txt"
+    },
+    {
+      "name": "CrystalStacker License",
+      "id": "CrystalStacker",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing:CrystalStacker?rd=Licensing/CrystalStacker"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "CrystalStacker.txt"
+    },
+    {
+      "name": "CUA Office Public License v1.0",
+      "id": "CUA-OPL-1.0",
+      "sources": [
+        "http://opensource.org/licenses/CUA-OPL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the CUA Office Public License Version 1.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://cuaoffice.sourceforge.net/\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code is <<var;name=code;original=_____;match=.+>>.\n\nThe Initial Developer of the Original Code is  <<var;name=developer;original=_____;match=.+>>.\nPortions created by  <<var;name=createdby;original=_____;match=.+>> are Copyright (C)  <<var;name=copyright;original=_____;match=.+>>. All Rights Reserved.\n\nContributor(s): <<var;name=contributor;original=_____;match=.+>>.\n\nAlternatively, the contents of this file may be used under the terms of the <<var;name=AltLicense;original=_____;match=.+>> license (the \" <<var;name=licenseName;original=[____];match=.+>> License\"), in which case the provisions of  <<var;name=licenseName;original=[____];match=.+>> License are applicable instead of those above. If you wish to allow use of your version of this file only under the terms of the  <<var;name=licenseName;original=[____];match=.+>> License and not to allow others to use your version of this file under the CUAPL, indicate your decision by deleting the provisions above and replace them with the notice and other provisions required by the <<var;name=licenseName;original=[____];match=.+>> License. If you do not delete the provisions above, a recipient may use your version of this file under either the CUAPL or the <<var;name=licenseName;original=[____];match=.+>> License.\"",
+      "template": "CUA-OPL-1.0.txt"
+    },
+    {
+      "name": "Cube License",
+      "id": "Cube",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Cube"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Cube.txt"
+    },
+    {
+      "name": "curl License",
+      "id": "curl",
+      "sources": [
+        "https://github.com/bagder/curl/blob/master/COPYING"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "curl.txt"
+    },
+    {
+      "name": "Deutsche Freie Software Lizenz",
+      "id": "D-FSL-1.0",
+      "sources": [
+        "http://www.dipp.nrw.de/d-fsl/lizenzen/",
+        "http://www.dipp.nrw.de/d-fsl/index_html/lizenzen/de/D-FSL-1_0_de.txt"
+      ],
+      "notes": "This license was created for and is backed by the German state.  The English translation can be found here: http://www.dipp.nrw.de/d-fsl/index_html/lizenzen/en/D-FSL-1_0_en.txt",
+      "osi_approved": false,
+      "header": "Copyright (C) 20[jj] [Name des Rechtsinhabers]. \n\nDieses Programm kann durch jedermann gem\u00e4\u00df den \nBestimmungen der Deutschen Freien Software Lizenz \ngenutzt werden. \n\nDie Lizenz kann unter <http://www.d-fsl.de> \nabgerufen werden.",
+      "template": "D-FSL-1.0.txt"
+    },
+    {
+      "name": "diffmark license",
+      "id": "diffmark",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/diffmark"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "diffmark.txt"
+    },
+    {
+      "name": "Do What The F*ck You Want To Public License",
+      "id": "WTFPL",
+      "sources": [
+        "http://sam.zoy.org/wtfpl/COPYING"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "WTFPL.txt"
+    },
+    {
+      "name": "DOC License",
+      "id": "DOC",
+      "sources": [
+        "http://www.cs.wustl.edu/~schmidt/ACE-copying.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "DOC.txt"
+    },
+    {
+      "name": "Dotseqn License",
+      "id": "Dotseqn",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Dotseqn"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Dotseqn.txt"
+    },
+    {
+      "name": "DSDP License",
+      "id": "DSDP",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/DSDP"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "DSDP.txt"
+    },
+    {
+      "name": "dvipdfm License",
+      "id": "dvipdfm",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/dvipdfm"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "dvipdfm.txt"
+    },
+    {
+      "name": "Eclipse Public License 1.0",
+      "id": "EPL-1.0",
+      "sources": [
+        "http://www.eclipse.org/legal/epl-v10.html",
+        "http://www.opensource.org/licenses/EPL-1.0"
+      ],
+      "notes": "EPL replaced the CPL on 28 June 2005.",
+      "osi_approved": true,
+      "header": null,
+      "template": "EPL-1.0.txt"
+    },
+    {
+      "name": "Educational Community License v1.0",
+      "id": "ECL-1.0",
+      "sources": [
+        "http://opensource.org/licenses/ECL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Copyright (c) <<var;name=copyright;original=<year> <copyright holders>;match=.+>>\nLicensed under the Educational Community License version 1.0",
+      "template": "ECL-1.0.txt"
+    },
+    {
+      "name": "Educational Community License v2.0",
+      "id": "ECL-2.0",
+      "sources": [
+        "http://opensource.org/licenses/ECL-2.0"
+      ],
+      "notes": "The Educational Community License version 2.0 (\"ECL\") consists of the Apache 2.0 license, modified to change the scope of the patent grant in section 3 to be specific to the needs of the education communities using this license.\n\nThe url included in the boilerplate notice does not work. (15/10/10)",
+      "osi_approved": true,
+      "header": "Copyright <<var;name=copyright;original=[yyyy] [copyright owner];match=.+>>\nLicensed under the Educational Community License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n \n http://www.osedu.org/licenses/ECL-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.",
+      "template": "ECL-2.0.txt"
+    },
+    {
+      "name": "eGenix.com Public License 1.1.0",
+      "id": "eGenix",
+      "sources": [
+        "http://www.egenix.com/products/eGenix.com-Public-License-1.1.0.pdf",
+        "https://fedoraproject.org/wiki/Licensing/eGenix.com_Public_License_1.1.0"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "eGenix.txt"
+    },
+    {
+      "name": "Eiffel Forum License v1.0",
+      "id": "EFL-1.0",
+      "sources": [
+        "http://www.eiffel-nice.org/license/forum.txt",
+        "http://opensource.org/licenses/EFL-1.0"
+      ],
+      "notes": "This license has been superseded by v2.0",
+      "osi_approved": true,
+      "header": null,
+      "template": "EFL-1.0.txt"
+    },
+    {
+      "name": "Eiffel Forum License v2.0",
+      "id": "EFL-2.0",
+      "sources": [
+        "http://www.eiffel-nice.org/license/eiffel-forum-license-2.html",
+        "http://opensource.org/licenses/EFL-2.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "EFL-2.0.txt"
+    },
+    {
+      "name": "Enlightenment License (e16)",
+      "id": "MIT-advertising",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MIT_With_Advertising"
+      ],
+      "notes": "This license is a modified version of the common MIT license, with an additional advertising clause",
+      "osi_approved": false,
+      "header": null,
+      "template": "MIT-advertising.txt"
+    },
+    {
+      "name": "enna License",
+      "id": "MIT-enna",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MIT#enna"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "MIT-enna.txt"
+    },
+    {
+      "name": "Entessa Public License v1.0",
+      "id": "Entessa",
+      "sources": [
+        "http://opensource.org/licenses/Entessa"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Entessa.txt"
+    },
+    {
+      "name": "Erlang Public License v1.1",
+      "id": "ErlPL-1.1",
+      "sources": [
+        "http://www.erlang.org/EPLICENSE"
+      ],
+      "notes": "This Erlang License is a derivative work of the Mozilla Public License, Version 1.0. It contains terms which differ from the Mozilla Public License, Version 1.0.",
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the Erlang Public License, Version 1.1, (the \"License\"); you may not use this file except in compliance with the License. You should have received a copy of the Erlang Public License along with this software. If not, it can be retrieved via the world wide web at http://www.erlang.org/.\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Initial Developer of the Original Code is Ericsson Utvecklings AB.  Portions created by Ericsson are Copyright 1999, Ericsson Utvecklings AB. All Rights Reserved.",
+      "template": "ErlPL-1.1.txt"
+    },
+    {
+      "name": "EU DataGrid Software License",
+      "id": "EUDatagrid",
+      "sources": [
+        "http://eu-datagrid.web.cern.ch/eu-datagrid/license.html",
+        "http://www.opensource.org/licenses/EUDatagrid"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "EUDatagrid.txt"
+    },
+    {
+      "name": "European Union Public License 1.0",
+      "id": "EUPL-1.0",
+      "sources": [
+        "http://ec.europa.eu/idabc/en/document/7330.html",
+        "http://ec.europa.eu/idabc/servlets/Doc027f.pdf?id=31096"
+      ],
+      "notes": "The European Commission has approved the EUPL on 9 January 2007.",
+      "osi_approved": false,
+      "header": null,
+      "template": "EUPL-1.0.txt"
+    },
+    {
+      "name": "European Union Public License 1.1",
+      "id": "EUPL-1.1",
+      "sources": [
+        "https://joinup.ec.europa.eu/software/page/eupl/licence-eupl",
+        "https://joinup.ec.europa.eu/system/files/EN/EUPL%20v.1.1%20-%20Licence.pdf",
+        "http://www.opensource.org/licenses/EUPL-1.1"
+      ],
+      "notes": "This license was released:  16 May 2008\nThis license is available in the 22 official languages of the EU.  The English version is included here.",
+      "osi_approved": true,
+      "header": null,
+      "template": "EUPL-1.1.txt"
+    },
+    {
+      "name": "Eurosym License",
+      "id": "Eurosym",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Eurosym"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Eurosym.txt"
+    },
+    {
+      "name": "Fair License",
+      "id": "Fair",
+      "sources": [
+        "http://www.opensource.org/licenses/Fair"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Fair.txt"
+    },
+    {
+      "name": "feh License",
+      "id": "MIT-feh",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MIT#feh"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "MIT-feh.txt"
+    },
+    {
+      "name": "Frameworx Open License 1.0",
+      "id": "Frameworx-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/Frameworx-1.0"
+      ],
+      "notes": "The url included in the license does not work. (15/10/10)",
+      "osi_approved": true,
+      "header": null,
+      "template": "Frameworx-1.0.txt"
+    },
+    {
+      "name": "FreeImage Public License v1.0",
+      "id": "FreeImage",
+      "sources": [
+        "http://freeimage.sourceforge.net/freeimage-license.txt"
+      ],
+      "notes": "This is similar to MPL-1.0, but for the names, choice of law, and jurisdiction",
+      "osi_approved": false,
+      "header": null,
+      "template": "FreeImage.txt"
+    },
+    {
+      "name": "Freetype Project License",
+      "id": "FTL",
+      "sources": [
+        "http://freetype.fis.uniroma2.it/FTL.TXT"
+      ],
+      "notes": "This license was released 27 Jan 2006",
+      "osi_approved": false,
+      "header": null,
+      "template": "FTL.txt"
+    },
+    {
+      "name": "FSF All Permissive License",
+      "id": "FSFAP",
+      "sources": [
+        "http://www.gnu.org/prep/maintain/html_node/License-Notices-for-Other-Files.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "FSFAP.txt"
+    },
+    {
+      "name": "FSF Unlimited License",
+      "id": "FSFUL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/FSF_Unlimited_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "FSFUL.txt"
+    },
+    {
+      "name": "FSF Unlimited License (with License Retention)",
+      "id": "FSFULLR",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/FSF_Unlimited_License#License_Retention_Variant"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "FSFULLR.txt"
+    },
+    {
+      "name": "Giftware License",
+      "id": "Giftware",
+      "sources": [
+        "http://alleg.sourceforge.net//license.html"
+      ],
+      "notes": "This license may also be known as Allegro 4. The Allegro 5 license shown at the alleg.sourceforge.net URL is the same as zlib",
+      "osi_approved": false,
+      "header": null,
+      "template": "Giftware.txt"
+    },
+    {
+      "name": "GL2PS License",
+      "id": "GL2PS",
+      "sources": [
+        "http://www.geuz.org/gl2ps/COPYING.GL2PS"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "GL2PS.txt"
+    },
+    {
+      "name": "Glulxe License",
+      "id": "Glulxe",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Glulxe"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Glulxe.txt"
+    },
+    {
+      "name": "GNU Affero General Public License v3.0",
+      "id": "AGPL-3.0",
+      "sources": [
+        "http://www.gnu.org/licenses/agpl.txt",
+        "http://www.opensource.org/licenses/AGPL-3.0"
+      ],
+      "notes": "This version was released: 19 November 2007",
+      "osi_approved": true,
+      "header": "Copyright (C) <<var;name=copyright;original=[year]  [name of author];match=.+>>\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.",
+      "template": "AGPL-3.0.txt"
+    },
+    {
+      "name": "GNU Free Documentation License v1.1",
+      "id": "GFDL-1.1",
+      "sources": [
+        "http://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
+      ],
+      "notes": "This license was released March 2000",
+      "osi_approved": false,
+      "header": "Copyright (c) <<var;name=copyright;original=YEAR YOUR NAME;match=.+>>.\n      \nPermission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 or any later version published by the Free Software Foundation; with the Invariant Sections being LIST THEIR TITLES, with the Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.\n      \nA copy of the license is included in the section entitled \"GNU Free Documentation License\".\n",
+      "template": "GFDL-1.1.txt"
+    },
+    {
+      "name": "GNU Free Documentation License v1.2",
+      "id": "GFDL-1.2",
+      "sources": [
+        "http://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
+      ],
+      "notes": "This license was released November 2002",
+      "osi_approved": false,
+      "header": "Copyright (c) <<var;name=copyright;original=YEAR YOUR NAME;match=.+>>.\n      \nPermission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.2 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\n      \nA copy of the license is included in the section entitled \"GNU Free Documentation License\".\n",
+      "template": "GFDL-1.2.txt"
+    },
+    {
+      "name": "GNU Free Documentation License v1.3",
+      "id": "GFDL-1.3",
+      "sources": [
+        "http://www.gnu.org/licenses/fdl-1.3.txt"
+      ],
+      "notes": "This license was released 3 November 2008.",
+      "osi_approved": false,
+      "header": "Copyright (c) <<var;name=copyright;original=YEAR YOUR NAME;match=.+>>.\n      \nPermission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.\n      \nA copy of the license is included in the section entitled \"GNU Free Documentation License\".\n",
+      "template": "GFDL-1.3.txt"
+    },
+    {
+      "name": "GNU General Public License v1.0 only",
+      "id": "GPL-1.0",
+      "sources": [
+        "http://www.gnu.org/licenses/old-licenses/gpl-1.0-standalone.html"
+      ],
+      "notes": "This license was released: February 1989.  \nThis license has been deprecated.\nThis refers to when this GPL 1.0 only is being used (as opposed to \"or later).",
+      "osi_approved": false,
+      "header": "Copyright (C) <<var;name=copyright;original=19xx name of author;match=.+>>\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; version 1.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.",
+      "template": "GPL-1.0.txt"
+    },
+    {
+      "name": "GNU General Public License v2.0 only",
+      "id": "GPL-2.0",
+      "sources": [
+        "http://www.gnu.org/licenses/old-licenses/gpl-2.0-standalone.html",
+        "http://www.opensource.org/licenses/GPL-2.0"
+      ],
+      "notes": "This license was released: June 1991\nThis refers to when this GPL 2.0 only is being used (as opposed to GPLv2 or later).",
+      "osi_approved": true,
+      "header": "Copyright (C) <<var;name=copyright;original=yyyy  name of author;match=.+>>\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; version 2.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.",
+      "template": "GPL-2.0.txt"
+    },
+    {
+      "name": "GNU General Public License v3.0 only",
+      "id": "GPL-3.0",
+      "sources": [
+        "http://www.gnu.org/licenses/gpl-3.0-standalone.html",
+        "http://www.opensource.org/licenses/GPL-3.0"
+      ],
+      "notes": "This license was released: 29 June 2007\nThis refers to when this GPL 3.0 only is being used (as opposed to \"or later).",
+      "osi_approved": true,
+      "header": "Copyright (C) <<var;name=copyright;original=<year>  <name of author>;match=.+>>[year]\n \nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.",
+      "template": "GPL-3.0.txt"
+    },
+    {
+      "name": "GNU Lesser General Public License v2.1 only",
+      "id": "LGPL-2.1",
+      "sources": [
+        "http://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html",
+        "http://www.opensource.org/licenses/LGPL-2.1"
+      ],
+      "notes": "This license was released: February 1999.\nThis refers to when this LGPL 2.1 only is being used (as opposed to \"or later).",
+      "osi_approved": true,
+      "header": "Copyright (C) <<var;name=copyright;original=year  name of author;match=.+>>\n\nThis library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; version 2.1.\n\nThis library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.\n\nYou should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA",
+      "template": "LGPL-2.1.txt"
+    },
+    {
+      "name": "GNU Lesser General Public License v3.0 only",
+      "id": "LGPL-3.0",
+      "sources": [
+        "http://www.gnu.org/licenses/lgpl-3.0-standalone.html",
+        "http://www.opensource.org/licenses/LGPL-3.0"
+      ],
+      "notes": "This license was released: 29 June 2007.\nThis refers to when this LGPL 3.0 only is being used (as opposed to \"or later).",
+      "osi_approved": true,
+      "header": null,
+      "template": "LGPL-3.0.txt"
+    },
+    {
+      "name": "GNU Library General Public License v2 only",
+      "id": "LGPL-2.0",
+      "sources": [
+        "http://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html"
+      ],
+      "notes": "This license was released: June 1991.\nThis license has been superseded by LGPL v2.1\nThis refers to when this LGPL 2.0 only is being used (as opposed to \"or later).",
+      "osi_approved": true,
+      "header": "Copyright (C) <<var;name=copyright;original=year  name of author;match=.+>>\n\nThis library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; version 2.\n\nThis library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.\n\nYou should have received a copy of the GNU Library General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301, USA.",
+      "template": "LGPL-2.0.txt"
+    },
+    {
+      "name": "gnuplot License",
+      "id": "gnuplot",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Gnuplot"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "gnuplot.txt"
+    },
+    {
+      "name": "gSOAP Public License v1.3b",
+      "id": "gSOAP-1.3b",
+      "sources": [
+        "http://www.cs.fsu.edu/~engelen/license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the gSOAP Public License Version 1.3 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.cs.fsu.edu/ engelen/soaplicense.html\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code of the gSOAP Software is: stdsoap.h, stdsoap2.h, stdsoap.c, stdsoap2.c, stdsoap.cpp, stdsoap2.cpp, soapcpp2.h, soapcpp2.c, soapcpp2_lex.l, soapcpp2_yacc.y, error2.h, error2.c, symbol2.c, init2.c, soapdoc2.html, and soapdoc2.pdf, httpget.h, httpget.c, stl.h, stldeque.h, stllist.h, stlvector.h, stlset.h.\n\nThe Initial Developer of the Original Code is Robert A. van Engelen. Portions created by Robert A. van Engelen are Copyright (C) 2001-2004 Robert A. van Engelen, Genivia inc. All Rights Reserved.\nContributor(s):\n\"________________________.\"",
+      "template": "gSOAP-1.3b.txt"
+    },
+    {
+      "name": "Haskell Language Report License",
+      "id": "HaskellReport",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Haskell_Language_Report_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "HaskellReport.txt"
+    },
+    {
+      "name": "Historic Permission Notice and Disclaimer",
+      "id": "HPND",
+      "sources": [
+        "http://www.opensource.org/licenses/HPND"
+      ],
+      "notes": "This license has been voluntarily deprecated by its author.",
+      "osi_approved": true,
+      "header": null,
+      "template": "HPND.txt"
+    },
+    {
+      "name": "IBM PowerPC Initialization and Boot Software",
+      "id": "IBM-pibs",
+      "sources": [
+        "http://git.denx.de/?p=u-boot.git;a=blob;f=arch/powerpc/cpu/ppc4xx/miiphy.c;h=297155fdafa064b955e53e9832de93bfb0cfb85b;hb=9fab4bf4cc077c21e43941866f3f2c196f28670d"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "IBM-pibs.txt"
+    },
+    {
+      "name": "IBM Public License v1.0",
+      "id": "IPL-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/IPL-1.0"
+      ],
+      "notes": "This license was superseded by CPL.",
+      "osi_approved": true,
+      "header": null,
+      "template": "IPL-1.0.txt"
+    },
+    {
+      "name": "ICU License",
+      "id": "ICU",
+      "sources": [
+        "http://source.icu-project.org/repos/icu/icu/trunk/license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "ICU.txt"
+    },
+    {
+      "name": "ImageMagick License",
+      "id": "ImageMagick",
+      "sources": [
+        "http://www.imagemagick.org/script/license.php"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "ImageMagick.txt"
+    },
+    {
+      "name": "iMatix Standard Function Library Agreement",
+      "id": "iMatix",
+      "sources": [
+        "http://legacy.imatix.com/html/sfl/sfl4.htm#license"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "iMatix.txt"
+    },
+    {
+      "name": "Imlib2 License",
+      "id": "Imlib2",
+      "sources": [
+        "http://trac.enlightenment.org/e/browser/trunk/imlib2/COPYING"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Imlib2.txt"
+    },
+    {
+      "name": "Independent JPEG Group License",
+      "id": "IJG",
+      "sources": [
+        "http://dev.w3.org/cvsweb/Amaya/libjpeg/Attic/README?rev=1.2"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "IJG.txt"
+    },
+    {
+      "name": "Info-ZIP License",
+      "id": "Info-ZIP",
+      "sources": [
+        "http://www.info-zip.org/license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Info-ZIP.txt"
+    },
+    {
+      "name": "Intel ACPI Software License Agreement",
+      "id": "Intel-ACPI",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Intel_ACPI_Software_License_Agreement"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Intel-ACPI.txt"
+    },
+    {
+      "name": "Intel Open Source License",
+      "id": "Intel",
+      "sources": [
+        "http://opensource.org/licenses/Intel"
+      ],
+      "notes": "This license has been deprecated.  A note at the top of the OSI license page states, \"The Intel Open Source License for CDSA/CSSM Implementation (BSD License with Export Notice) (Intel has ceased to use or recommend this license)\"",
+      "osi_approved": true,
+      "header": null,
+      "template": "Intel.txt"
+    },
+    {
+      "name": "Interbase Public License v1.0",
+      "id": "Interbase-1.0",
+      "sources": [
+        "https://web.archive.org/web/20060319014854/http://info.borland.com/devsupport/interbase/opensource/IPL.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the Interbase Public License Version 1.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.Interbase.com/IPL.html\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code was created by InterBase Software Corp and its successors.\n\nPortions created by Borland/Inprise are Copyright (C) Borland/Inprise. All Rights Reserved.\n\nContributor(s): ______________________________________.",
+      "template": "Interbase-1.0.txt"
+    },
+    {
+      "name": "IPA Font License",
+      "id": "IPA",
+      "sources": [
+        "http://www.opensource.org/licenses/IPA"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "IPA.txt"
+    },
+    {
+      "name": "ISC License",
+      "id": "ISC",
+      "sources": [
+        "http://www.isc.org/software/license",
+        "http://www.opensource.org/licenses/ISC"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "ISC.txt"
+    },
+    {
+      "name": "JasPer License",
+      "id": "JasPer-2.0",
+      "sources": [
+        "http://www.ece.uvic.ca/~mdadams/jasper/LICENSE"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "JasPer-2.0.txt"
+    },
+    {
+      "name": "JSON License",
+      "id": "JSON",
+      "sources": [
+        "http://www.json.org/license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "JSON.txt"
+    },
+    {
+      "name": "LaTeX Project Public License v1.0",
+      "id": "LPPL-1.0",
+      "sources": [
+        "http://www.latex-project.org/lppl/lppl-1-0.txt"
+      ],
+      "notes": "This license was released 1 Mar 1999",
+      "osi_approved": false,
+      "header": "Copyright <<var;name=copyright;original=2001 M. Y. Name;match=.+>>\n\nThis program can redistributed and/or modified under the terms of the LaTeX Project Public License Distributed from CTAN archives in directory macros/latex/base/lppl.txt; either version 1 of the License, or (at your option) any later version.",
+      "template": "LPPL-1.0.txt"
+    },
+    {
+      "name": "LaTeX Project Public License v1.1",
+      "id": "LPPL-1.1",
+      "sources": [
+        "http://www.latex-project.org/lppl/lppl-1-1.txt"
+      ],
+      "notes": "This license was released 10 July 1999.",
+      "osi_approved": false,
+      "header": "Copyright <<var;name=copyright;original=2001 M. Y. Name;match=.+>>\n \nThis program may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.1 of this license or (at your option) any later version.\n\nThe latest version of this license is in http://www.latex-project.org/lppl.txt\nand version 1.1 or later is part of all distributions of LaTeX version 1999/06/01 or later.\n\nThis program consists of <<var;name=the work;original=the files pig.dtx and pig.ins;match=.+>>",
+      "template": "LPPL-1.1.txt"
+    },
+    {
+      "name": "LaTeX Project Public License v1.2",
+      "id": "LPPL-1.2",
+      "sources": [
+        "http://www.latex-project.org/lppl/lppl-1-2.txt"
+      ],
+      "notes": "This license was released 3 Sept 1999.",
+      "osi_approved": false,
+      "header": "Copyright <<var;name=copyright;original=2001 M. Y. Name;match=.+>>\n\nThis program may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.2 of this license or (at your option) any later version.\n\nThe latest version of this license is in http://www.latex-project.org/lppl.txt and version 1.2 or later is part of all distributions of LaTeX version 1999/12/01 or later.\n\nThis program consists of <<var;name=the work;original=the files pig.dtx and pig.ins;match=.+>>",
+      "template": "LPPL-1.2.txt"
+    },
+    {
+      "name": "LaTeX Project Public License v1.3a",
+      "id": "LPPL-1.3a",
+      "sources": [
+        "http://www.latex-project.org/lppl/lppl-1-3a.txt"
+      ],
+      "notes": "This license was released 1 Oct 2004",
+      "osi_approved": false,
+      "header": "Copyright <<var;name=copyright;original=2003 M. Y. Name;match=.+>>\n\nThis work may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.3 of this license or (at your option) any later version.\n\nThe latest version of this license is in\nhttp://www.latex-project.org/lppl.txt\nand version 1.3 or later is part of all distributions of LaTeX version 2003/12/01 or later.\n\nThis work has the LPPL maintenance status \"maintained\".\n \nThis Current Maintainer of this work is <<var;name=maintainer;original=M. Y. Name;match=.+>>.\n\nThis work consists of <<var;name=the work;original=pig.dtx and pig.ins % and the derived file pig.sty;match=.+>>.",
+      "template": "LPPL-1.3a.txt"
+    },
+    {
+      "name": "LaTeX Project Public License v1.3c",
+      "id": "LPPL-1.3c",
+      "sources": [
+        "http://www.latex-project.org/lppl/lppl-1-3c.txt",
+        "http://www.opensource.org/licenses/LPPL-1.3c"
+      ],
+      "notes": "This license was released: 4 May 2008",
+      "osi_approved": true,
+      "header": "Copyright <<var;name=copyright;original=2005 M. Y. Name;match=.+>>\n \nThis work may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.3 of this license or (at your option) any later version. \n\nThe latest version of this license is in http://www.latex-project.org/lppl.txt\nAnd version 1.3 or later is part of all distributions of LaTeX version 2005/12/01 or later.\n \nThis work has the LPPL maintenance status `maintained'. \n \nThe Current Maintainer of this work is <<var;name=maintainer;original=M. Y. Name;match=.+>>.\n\nThis work consists of the files <<var;name=the work;original=pig.dtx and pig.ins and the derived file pig.sty;match=.+>>.",
+      "template": "LPPL-1.3c.txt"
+    },
+    {
+      "name": "Latex2e License",
+      "id": "Latex2e",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Latex2e"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Latex2e.txt"
+    },
+    {
+      "name": "Lawrence Berkeley National Labs BSD variant license",
+      "id": "BSD-3-Clause-LBNL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/LBNLBSD"
+      ],
+      "notes": "This license is the same as BSD-3-Clause, but with an additional default contribution licensing clause",
+      "osi_approved": false,
+      "header": null,
+      "template": "BSD-3-Clause-LBNL.txt"
+    },
+    {
+      "name": "Leptonica License",
+      "id": "Leptonica",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Leptonica"
+      ],
+      "notes": "This is an older license for Leptonica.  Currently, it uses BSD-2-Clause (see http://www.leptonica.com/about-the-license.html)",
+      "osi_approved": false,
+      "header": null,
+      "template": "Leptonica.txt"
+    },
+    {
+      "name": "Lesser General Public License For Linguistic Resources",
+      "id": "LGPLLR",
+      "sources": [
+        "http://www-igm.univ-mlv.fr/~unitex/lgpllr.html"
+      ],
+      "notes": "Appears to have borrowed some language from the LGPL-2.1.",
+      "osi_approved": false,
+      "header": null,
+      "template": "LGPLLR.txt"
+    },
+    {
+      "name": "libpng License",
+      "id": "Libpng",
+      "sources": [
+        "http://www.libpng.org/pub/png/src/libpng-LICENSE.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Libpng.txt"
+    },
+    {
+      "name": "libtiff License",
+      "id": "libtiff",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/libtiff"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "libtiff.txt"
+    },
+    {
+      "name": "Licence Art Libre 1.2",
+      "id": "LAL-1.2",
+      "sources": [
+        "http://artlibre.org/licence/lal/licence-art-libre-12/"
+      ],
+      "notes": "French is the canonical language for this license. Translations are available in:\nEnglish: http://artlibre.org/licence/lal/licence-art-libre-12/\nItalian: http://artlibre.org/licence/lal/it/\nSpanish: http://artlibre.org/licence/lal/es/",
+      "osi_approved": false,
+      "header": null,
+      "template": "LAL-1.2.txt"
+    },
+    {
+      "name": "Licence Art Libre 1.3",
+      "id": "LAL-1.3",
+      "sources": [
+        "http://artlibre.org/"
+      ],
+      "notes": "French is the canonical language for this license. Translations are available in:\nEnglish:  http://artlibre.org/licence/lal/en/\nPortuguese: http://artlibre.org/licence/lal/pt/\nPolish: http://artlibre.org/licence/lal/pl/",
+      "osi_approved": false,
+      "header": null,
+      "template": "LAL-1.3.txt"
+    },
+    {
+      "name": "Licence Libre du Qu\u00e9bec \u0096 Permissive version 1.1",
+      "id": "LiLiQ-P-1.1",
+      "sources": [
+        "http://opensource.org/licenses/LiLiQ-P-1.1",
+        "https://www.forge.gouv.qc.ca/participez/licence-logicielle/licence-libre-du-quebec-liliq-en-francais/licence-libre-du-quebec-liliq-en-francais-v1-0/licence-libre-du-quebec-reciprocite-liliq-r-v1-0/"
+      ],
+      "notes": "French is the canonical language for this license. An English translation is provided here: https://www.forge.gouv.qc.ca/participez/licence-logicielle/licence-libre-du-quebec-liliq-in-english/quebec-free-and-open-source-licence-%C2%96-permissive-liliq-p-v1-1/",
+      "osi_approved": true,
+      "header": null,
+      "template": "LiLiQ-P-1.1.txt"
+    },
+    {
+      "name": "Licence Libre du Qu\u00e9bec \u0096 R\u00e9ciprocit\u00e9 forte version 1.1",
+      "id": "LiLiQ-Rplus-1.1",
+      "sources": [
+        "http://opensource.org/licenses/LiLiQ-Rplus-1.1",
+        "https://www.forge.gouv.qc.ca/participez/licence-logicielle/licence-libre-du-quebec-liliq-en-francais/licence-libre-du-quebec-reciprocite-forte-liliq-r-v1-1/"
+      ],
+      "notes": "French is the canonical language for this license. An English translation is provided here: https://www.forge.gouv.qc.ca/participez/licence-logicielle/licence-libre-du-quebec-liliq-in-english/quebec-free-and-open-source-licence-strong-reciprocity-liliq-r-v1-1/",
+      "osi_approved": true,
+      "header": null,
+      "template": "LiLiQ-Rplus-1.1.txt"
+    },
+    {
+      "name": "Licence Libre du Qu\u00e9bec \u0096 R\u00e9ciprocit\u00e9 version 1.1",
+      "id": "LiLiQ-R-1.1",
+      "sources": [
+        "http://opensource.org/licenses/LiLiQ-R-1.1",
+        "https://www.forge.gouv.qc.ca/participez/licence-logicielle/licence-libre-du-quebec-liliq-en-francais/licence-libre-du-quebec-reciprocite-liliq-r-v1-1/"
+      ],
+      "notes": "French is the canonical language for this license. An English translation is provided here: https://www.forge.gouv.qc.ca/participez/licence-logicielle/licence-libre-du-quebec-liliq-in-english/quebec-free-and-open-source-licence-reciprocity-liliq-r-v1-1/",
+      "osi_approved": true,
+      "header": null,
+      "template": "LiLiQ-R-1.1.txt"
+    },
+    {
+      "name": "Lucent Public License v1.02",
+      "id": "LPL-1.02",
+      "sources": [
+        "http://plan9.bell-labs.com/plan9/license.html",
+        "http://www.opensource.org/licenses/LPL-1.02"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "LPL-1.02.txt"
+    },
+    {
+      "name": "Lucent Public License Version 1.0",
+      "id": "LPL-1.0",
+      "sources": [
+        "http://opensource.org/licenses/LPL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "LPL-1.0.txt"
+    },
+    {
+      "name": "MakeIndex License",
+      "id": "MakeIndex",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MakeIndex"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "MakeIndex.txt"
+    },
+    {
+      "name": "Matrix Template Library License",
+      "id": "MTLL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Matrix_Template_Library_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "MTLL.txt"
+    },
+    {
+      "name": "Microsoft Public License",
+      "id": "MS-PL",
+      "sources": [
+        "http://www.microsoft.com/opensource/licenses.mspx",
+        "http://www.opensource.org/licenses/MS-PL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "MS-PL.txt"
+    },
+    {
+      "name": "Microsoft Reciprocal License",
+      "id": "MS-RL",
+      "sources": [
+        "http://www.microsoft.com/opensource/licenses.mspx",
+        "http://www.opensource.org/licenses/MS-RL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "MS-RL.txt"
+    },
+    {
+      "name": "MirOS Licence",
+      "id": "MirOS",
+      "sources": [
+        "http://www.opensource.org/licenses/MirOS"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "MirOS.txt"
+    },
+    {
+      "name": "MIT +no-false-attribs license",
+      "id": "MITNFA",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MITNFA"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "MITNFA.txt"
+    },
+    {
+      "name": "MIT License",
+      "id": "MIT",
+      "sources": [
+        "http://www.opensource.org/licenses/MIT"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "MIT.txt"
+    },
+    {
+      "name": "Motosoto License",
+      "id": "Motosoto",
+      "sources": [
+        "http://www.opensource.org/licenses/Motosoto"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "license mentions the inclusion of a notice in Exhibit A, but no example text identified as Exhibit A in the license.",
+      "template": "Motosoto.txt"
+    },
+    {
+      "name": "Mozilla Public License 1.0",
+      "id": "MPL-1.0",
+      "sources": [
+        "http://www.mozilla.org/MPL/MPL-1.0.html",
+        "http://opensource.org/licenses/MPL-1.0"
+      ],
+      "notes": "This license has been superseded by v1.1",
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the Mozilla Public License Version 1.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.mozilla.org/MPL/\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code is <<var;name=code;original=_____;match=.+>>.\n\nThe Initial Developer of the Original Code is <<var;name=InitialDeveloper;original=_____;match=.+>>. Portions created by <<var;name=createdby;original=_____;match=.+>> are Copyright (C) <<var;name=copyright;original=_____;match=.+>>. All Rights Reserved.\n\nContributor(s): <<var;name=contributor;original=_____;match=.+>>.",
+      "template": "MPL-1.0.txt"
+    },
+    {
+      "name": "Mozilla Public License 1.1",
+      "id": "MPL-1.1",
+      "sources": [
+        "http://www.mozilla.org/MPL/MPL-1.1.html",
+        "http://www.opensource.org/licenses/MPL-1.1"
+      ],
+      "notes": "This license has been superseded by v2.0",
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the Mozilla Public License Version 1.1 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.mozilla.org/MPL/\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code is <<var;name=code;original=_____;match=.+>>.\n\nThe Initial Developer of the Original Code is <<var;name=InitialDeveloper;original=_____;match=.+>>. Portions created by <<var;name=createdby;original=_____;match=.+>> are Copyright (C) <<var;name=copyright;original=_____;match=.+>>. All Rights Reserved.\n\nContributor(s): <<var;name=contributor;original=_____;match=.+>>.\n\nAlternatively, the contents of this file may be used under the terms of the <<var;name=AltLicense;original=_____;match=.+>> license (the  \"<<var;name=licenseName;original=[____];match=.+>> License\"), in which case the provisions of <<var;name=licenseName;original=[____];match=.+>> License are applicable instead of those above. If you wish to allow use of your version of this file only under the terms of the <<var;name=licenseName;original=[____];match=.+>> License and not to allow others to use your version of this file under the MPL, indicate your decision by deleting the provisions above and replace them with the notice and other provisions required by the <<var;name=licenseName;original=[____];match=.+>> License. If you do not delete the provisions above, a recipient may use your version of this file under either the MPL or the<<var;name=licenseName;original=[____];match=.+>>] License.\"",
+      "template": "MPL-1.1.txt"
+    },
+    {
+      "name": "Mozilla Public License 2.0",
+      "id": "MPL-2.0",
+      "sources": [
+        "http://www.mozilla.org/MPL/2.0/",
+        "http://opensource.org/licenses/MPL-2.0"
+      ],
+      "notes": "This license was released in January 2012.\nThis license list entry is for use when the standard MPL 2.0 is used, as indicated by the standard header (Exhibit A but no Exhibit B).",
+      "osi_approved": true,
+      "header": "This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.",
+      "template": "MPL-2.0.txt"
+    },
+    {
+      "name": "Mozilla Public License 2.0 (no copyleft exception)",
+      "id": "MPL-2.0-no-copyleft-exception",
+      "sources": [
+        "http://www.mozilla.org/MPL/2.0/",
+        "http://opensource.org/licenses/MPL-2.0"
+      ],
+      "notes": "This license was released in January 2012.\nThis license list entry is for use when the MPL's Exhibit B, which removes the Sec 3.3 copyleft exception.",
+      "osi_approved": true,
+      "header": "This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.\nThis Source Code Form is \u0093Incompatible With Secondary Licenses\u0094, as defined by the Mozilla Public License, v. 2.0.",
+      "template": "MPL-2.0-no-copyleft-exception.txt"
+    },
+    {
+      "name": "mpich2 License",
+      "id": "mpich2",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/MIT"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "mpich2.txt"
+    },
+    {
+      "name": "Multics License",
+      "id": "Multics",
+      "sources": [
+        "http://www.opensource.org/licenses/Multics"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Multics.txt"
+    },
+    {
+      "name": "Mup License",
+      "id": "Mup",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Mup"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Mup.txt"
+    },
+    {
+      "name": "NASA Open Source Agreement 1.3",
+      "id": "NASA-1.3",
+      "sources": [
+        "http://ti.arc.nasa.gov/opensource/nosa/",
+        "http://www.opensource.org/licenses/NASA-1.3"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "NASA-1.3.txt"
+    },
+    {
+      "name": "Naumen Public License",
+      "id": "Naumen",
+      "sources": [
+        "http://www.opensource.org/licenses/Naumen"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Naumen.txt"
+    },
+    {
+      "name": "Net Boolean Public License v1",
+      "id": "NBPL-1.0",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=37b4b3f6cc4bf34e1d3dec61e69914b9819d8894"
+      ],
+      "notes": "This license was released 22 August 1998.\nThis license was issued twice, but only with formatting differences.",
+      "osi_approved": false,
+      "header": null,
+      "template": "NBPL-1.0.txt"
+    },
+    {
+      "name": "NetCDF license",
+      "id": "NetCDF",
+      "sources": [
+        "http://www.unidata.ucar.edu/software/netcdf/copyright.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "NetCDF.txt"
+    },
+    {
+      "name": "Nethack General Public License",
+      "id": "NGPL",
+      "sources": [
+        "http://www.opensource.org/licenses/NGPL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "NGPL.txt"
+    },
+    {
+      "name": "Netizen Open Source License",
+      "id": "NOSL",
+      "sources": [
+        "http://bits.netizen.com.au/licenses/NOSL/nosl.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the Netizen Open Source License Version 1.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://netizen.com.au/licenses/NOPL/ \n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License. \n\nThe Original Code is ______________________________________. \n\nThe Initial Developer of the Original Code is ________________________. Portions created by ______________________ are Copyright (C) ______ _______________________. All Rights Reserved. \n\nContributor(s): ______________________________________. \n\nAlternatively, the contents of this file may be used under the terms of the _____ license (the \"[___] License\"), in which case the provisions of [______] License are applicable instead of those above. If you wish to allow use of your version of this file only under the terms of the [____] License and not to allow others to use your version of this file under the NOSL, indicate your decision by deleting the provisions above and replace them with the notice and other provisions required by the [___] License. If you do not delete the provisions above, a recipient may use your version of this file under either the NOSL or the [___] License.",
+      "template": "NOSL.txt"
+    },
+    {
+      "name": "Netscape Public License v1.0",
+      "id": "NPL-1.0",
+      "sources": [
+        "http://www.mozilla.org/MPL/NPL/1.0/"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "NPL-1.0.txt"
+    },
+    {
+      "name": "Netscape Public License v1.1",
+      "id": "NPL-1.1",
+      "sources": [
+        "http://www.mozilla.org/MPL/NPL/1.1/"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the Netscape Public License Version 1.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.mozilla.org/NPL/\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code is Mozilla Communicator client code, released March 31, 1998.\n\nThe Initial Developer of the Original Code is Netscape Communications Corporation. Portions created by Netscape are Copyright (C) 1998 Netscape Communications Corporation. All Rights Reserved.\nContributor(s): ______________________________________.",
+      "template": "NPL-1.1.txt"
+    },
+    {
+      "name": "Newsletr License",
+      "id": "Newsletr",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Newsletr"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Newsletr.txt"
+    },
+    {
+      "name": "No Limit Public License",
+      "id": "NLPL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/NLPL"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "NLPL.txt"
+    },
+    {
+      "name": "Nokia Open Source License",
+      "id": "Nokia",
+      "sources": [
+        "http://www.opensource.org/licenses/nokia"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Nokia.txt"
+    },
+    {
+      "name": "Non-Profit Open Software License 3.0",
+      "id": "NPOSL-3.0",
+      "sources": [
+        "http://www.opensource.org/licenses/NOSL3.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Licensed under the\u00a0Non-Profit\u00a0Open Software License version 3.0",
+      "template": "NPOSL-3.0.txt"
+    },
+    {
+      "name": "Norwegian Licence for Open Government Data",
+      "id": "NLOD-1.0",
+      "sources": [
+        "http://data.norge.no/nlod/en/1.0"
+      ],
+      "notes": "Norwegian translation available here: http://data.norge.no/nlod/no/1.0",
+      "osi_approved": false,
+      "header": null,
+      "template": "NLOD-1.0.txt"
+    },
+    {
+      "name": "Noweb License",
+      "id": "Noweb",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Noweb"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Noweb.txt"
+    },
+    {
+      "name": "NRL License",
+      "id": "NRL",
+      "sources": [
+        "http://web.mit.edu/network/isakmp/nrllicense.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "NRL.txt"
+    },
+    {
+      "name": "NTP License",
+      "id": "NTP",
+      "sources": [
+        "http://www.opensource.org/licenses/NTP"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "NTP.txt"
+    },
+    {
+      "name": "Nunit License",
+      "id": "Nunit",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Nunit"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Nunit.txt"
+    },
+    {
+      "name": "OCLC Research Public License 2.0",
+      "id": "OCLC-2.0",
+      "sources": [
+        "http://www.oclc.org/research/activities/software/license/v2final.htm",
+        "http://www.opensource.org/licenses/OCLC-2.0"
+      ],
+      "notes": "This license was released: May 2002",
+      "osi_approved": true,
+      "header": "Copyright (c) 2000-<<var;name=year;original=(insert then current year);match=.+>>. OCLC Online Computer Library Center, Inc. and other contributors. All rights reserved. \n\nThe contents of this file, as updated from time to time by the OCLC Office of Research, are subject to OCLC Research Public License Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a current copy of the License at http://purl.oclc.org/oclc/research/ORPL/. Software distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License. This software consists of voluntary contributions made by many individuals on behalf of OCLC Research. For more information on OCLC Research, please see http://www.oclc.org/research/. \n\nThe Original Code is <<var;name=code;original=_____;match=.+>>.. The Initial Developer of the Original Code is <<var;name=InitialDeveloper;original=_____;match=.+>>. Portions created by <<var;name=createdby;original=_____;match=.+>> are Copyright (C)  <<var;name=copyright;original=_____;match=.+>>. All Rights Reserved. \nContributor(s): <<var;name=contributor;original=_____;match=.+>>.",
+      "template": "OCLC-2.0.txt"
+    },
+    {
+      "name": "ODC Open Database License v1.0",
+      "id": "ODbL-1.0",
+      "sources": [
+        "http://www.opendatacommons.org/licenses/odbl/1.0/"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "ODbL-1.0.txt"
+    },
+    {
+      "name": "ODC Public Domain Dedication & License 1.0",
+      "id": "PDDL-1.0",
+      "sources": [
+        "http://opendatacommons.org/licenses/pddl/1.0/"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "PDDL-1.0.txt"
+    },
+    {
+      "name": "Open CASCADE Technology Public License",
+      "id": "OCCT-PL",
+      "sources": [
+        "http://www.opencascade.com/content/occt-public-license"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "OCCT-PL.txt"
+    },
+    {
+      "name": "Open Group Test Suite License",
+      "id": "OGTSL",
+      "sources": [
+        "http://www.opengroup.org/testing/downloads/The_Open_Group_TSL.txt",
+        "http://www.opensource.org/licenses/OGTSL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "OGTSL.txt"
+    },
+    {
+      "name": "Open LDAP Public License  2.2.2",
+      "id": "OLDAP-2.2.2",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=df2cc1e21eb7c160695f5b7cffd6296c151ba188"
+      ],
+      "notes": "This license was released 28 July 2000.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.2.2.txt"
+    },
+    {
+      "name": "Open LDAP Public License v1.1",
+      "id": "OLDAP-1.1",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=806557a5ad59804ef3a44d5abfbe91d706b0791f"
+      ],
+      "notes": "This license was released 25 August 1998.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-1.1.txt"
+    },
+    {
+      "name": "Open LDAP Public License v1.2",
+      "id": "OLDAP-1.2",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=42b0383c50c299977b5893ee695cf4e486fb0dc7"
+      ],
+      "notes": "This license was released 1 September 1998.\nThis license was issued four time, but only with formatting differences.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-1.2.txt"
+    },
+    {
+      "name": "Open LDAP Public License v1.3",
+      "id": "OLDAP-1.3",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=e5f8117f0ce088d0bd7a8e18ddf37eaa40eb09b1"
+      ],
+      "notes": "This license was released 17 January 1999.\nThis license was issued twice in the same day with a minor correction.  This is the corrected (second) version.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-1.3.txt"
+    },
+    {
+      "name": "Open LDAP Public License v1.4",
+      "id": "OLDAP-1.4",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=c9f95c2f3f2ffb5e0ae55fe7388af75547660941"
+      ],
+      "notes": "This license was released 18 January 1999.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-1.4.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.0 (or possibly 2.0A and 2.0B)",
+      "id": "OLDAP-2.0",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=cbf50f4e1185a21abd4c0a54d3f4341fe28f36ea"
+      ],
+      "notes": "This license was released 7 June 1999.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.0.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.0.1",
+      "id": "OLDAP-2.0.1",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=b6d68acd14e51ca3aab4428bf26522aa74873f0e"
+      ],
+      "notes": "This license was released 21 December 1999.\nThis license is the same as 2.0 with the word \"registered\" removed from in front of \"trademark.\"",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.0.1.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.1",
+      "id": "OLDAP-2.1",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=b0d176738e96a0d3b9f85cb51e140a86f21be715"
+      ],
+      "notes": "This license was released 29 February 2000.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.1.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.2",
+      "id": "OLDAP-2.2",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=470b0c18ec67621c85881b2733057fecf4a1acc3"
+      ],
+      "notes": "This license was released 1 March 2000.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.2.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.2.1",
+      "id": "OLDAP-2.2.1",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=4bc786f34b50aa301be6f5600f58a980070f481e"
+      ],
+      "notes": "This license was released 1 March 2000.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.2.1.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.3",
+      "id": "OLDAP-2.3",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=d32cf54a32d581ab475d23c810b0a7fbaf8d63c3"
+      ],
+      "notes": "This license was released 28 July 2000.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.3.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.4",
+      "id": "OLDAP-2.4",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=cd1284c4a91a8a380d904eee68d1583f989ed386"
+      ],
+      "notes": "This license was released 8 December 2000.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.4.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.5",
+      "id": "OLDAP-2.5",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=6852b9d90022e8593c98205413380536b1b5a7cf"
+      ],
+      "notes": "This license was released 11 May 2001.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.5.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.6",
+      "id": "OLDAP-2.6",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=1cae062821881f41b73012ba816434897abf4205"
+      ],
+      "notes": "This license was released 14 June 2001.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.6.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.7",
+      "id": "OLDAP-2.7",
+      "sources": [
+        "http://www.openldap.org/devel/gitweb.cgi?p=openldap.git;a=blob;f=LICENSE;hb=47c2415c1df81556eeb39be6cad458ef87c534a2"
+      ],
+      "notes": "This license was released 7 September 2001.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.7.txt"
+    },
+    {
+      "name": "Open LDAP Public License v2.8",
+      "id": "OLDAP-2.8",
+      "sources": [
+        "http://www.openldap.org/software/release/license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "OLDAP-2.8.txt"
+    },
+    {
+      "name": "Open Market License",
+      "id": "OML",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Open_Market_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "OML.txt"
+    },
+    {
+      "name": "Open Public License v1.0",
+      "id": "OPL-1.0",
+      "sources": [
+        "http://old.koalateam.com/jackaroo/OPL_1_0.TXT",
+        "https://fedoraproject.org/wiki/Licensing/Open_Public_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "OPL-1.0.txt"
+    },
+    {
+      "name": "Open Software License 1.0",
+      "id": "OSL-1.0",
+      "sources": [
+        "http://opensource.org/licenses/OSL-1.0"
+      ],
+      "notes": "This license has been superseded.",
+      "osi_approved": true,
+      "header": null,
+      "template": "OSL-1.0.txt"
+    },
+    {
+      "name": "Open Software License 1.1",
+      "id": "OSL-1.1",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/OSL1.1"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "OSL-1.1.txt"
+    },
+    {
+      "name": "Open Software License 2.0",
+      "id": "OSL-2.0",
+      "sources": [
+        "http://web.archive.org/web/20041020171434/http://www.rosenlaw.com/osl2.0.html"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "OSL-2.0.txt"
+    },
+    {
+      "name": "Open Software License 2.1",
+      "id": "OSL-2.1",
+      "sources": [
+        "http://opensource.org/licenses/OSL-2.1",
+        "http://web.archive.org/web/20050212003940/http://www.rosenlaw.com/osl21.htm"
+      ],
+      "notes": "Same as version 2.0 of this license except with changes to section 10",
+      "osi_approved": true,
+      "header": null,
+      "template": "OSL-2.1.txt"
+    },
+    {
+      "name": "Open Software License 3.0",
+      "id": "OSL-3.0",
+      "sources": [
+        "http://www.rosenlaw.com/OSL3.0.htm",
+        "http://www.opensource.org/licenses/OSL-3.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "OSL-3.0.txt"
+    },
+    {
+      "name": "OpenSSL License",
+      "id": "OpenSSL",
+      "sources": [
+        "http://www.openssl.org/source/license.html"
+      ],
+      "notes": "The OpenSSL toolkit stays under a dual license, i.e. both the conditions of the OpenSSL License and the original SSLeay license apply to the toolkit.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OpenSSL.txt"
+    },
+    {
+      "name": "OSET Public License version 2.1",
+      "id": "OSET-PL-2.1",
+      "sources": [
+        "http://opensource.org/licenses/OPL-2.1",
+        "http://www.osetfoundation.org/public-license/#"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "OSET-PL-2.1.txt"
+    },
+    {
+      "name": "PHP License v3.0",
+      "id": "PHP-3.0",
+      "sources": [
+        "http://www.opensource.org/licenses/PHP-3.0",
+        "http://www.php.net/license/3_0.txt"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "PHP-3.0.txt"
+    },
+    {
+      "name": "PHP License v3.01",
+      "id": "PHP-3.01",
+      "sources": [
+        "http://www.php.net/license/3_01.txt"
+      ],
+      "notes": "The PHP License v3.01 is essentially the same as v3.0, with the exception of a couple word differences and updated url in section 6.",
+      "osi_approved": false,
+      "header": null,
+      "template": "PHP-3.01.txt"
+    },
+    {
+      "name": "Plexus Classworlds License",
+      "id": "Plexus",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Plexus_Classworlds_License"
+      ],
+      "notes": "This same license is used by several other projects: \n- Dom4j, e.g. http://dom4j.sourceforge.net/dom4j-1.6.1/license.html\n- Jaxen, e.g. https://confluence.sakaiproject.org/display/LIC/Jaxen+License+1.3\n- jCharts, e.g. http://jcharts.sourceforge.net/license.html",
+      "osi_approved": false,
+      "header": null,
+      "template": "Plexus.txt"
+    },
+    {
+      "name": "PostgreSQL License",
+      "id": "PostgreSQL",
+      "sources": [
+        "http://www.postgresql.org/about/licence",
+        "http://www.opensource.org/licenses/PostgreSQL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "PostgreSQL.txt"
+    },
+    {
+      "name": "psfrag License",
+      "id": "psfrag",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/psfrag"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "psfrag.txt"
+    },
+    {
+      "name": "psutils License",
+      "id": "psutils",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/psutils"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "psutils.txt"
+    },
+    {
+      "name": "Python License 2.0",
+      "id": "Python-2.0",
+      "sources": [
+        "http://www.opensource.org/licenses/Python-2.0"
+      ],
+      "notes": "overall Python license",
+      "osi_approved": true,
+      "header": null,
+      "template": "Python-2.0.txt"
+    },
+    {
+      "name": "Q Public License 1.0",
+      "id": "QPL-1.0",
+      "sources": [
+        "http://doc.qt.nokia.com/3.3/license.html",
+        "http://www.opensource.org/licenses/QPL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "QPL-1.0.txt"
+    },
+    {
+      "name": "Qhull License",
+      "id": "Qhull",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Qhull"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Qhull.txt"
+    },
+    {
+      "name": "Rdisc License",
+      "id": "Rdisc",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Rdisc_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Rdisc.txt"
+    },
+    {
+      "name": "RealNetworks Public Source License v1.0",
+      "id": "RPSL-1.0",
+      "sources": [
+        "https://helixcommunity.org/content/rpsl",
+        "http://www.opensource.org/licenses/RPSL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Copyright \u00a9 1995-2002 RealNetworks, Inc. and/or its licensors. All Rights Reserved.\n\nThe contents of this file, and the files included with this file, are subject to the current version of the RealNetworks Public Source License Version 1.0 (the \"RPSL\") available at https://www.helixcommunity.org/content/rpsl unless you have licensed the file under the RealNetworks Community Source License Version 1.0 (the \"RCSL\") available at https://www.helixcommunity.org/content/rcsl, in which case the RCSL will apply. You may also obtain the license terms directly from RealNetworks. You may not use this file except in compliance with the RPSL or, if you have a valid RCSL with RealNetworks applicable to this file, the RCSL. Please see the applicable RPSL or RCSL for the rights, obligations and limitations governing use of the contents of the file.\n\nThis file is part of the Helix DNA Technology. RealNetworks is the developer of the Original code and owns the copyrights in the portions it created.\n\nThis file, and the files included with this file, is distributed and made available on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND REALNETWORKS HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.\n\nContributor(s): <<var;name=contributor;original=_____;match=.+>>\n\nTechnology Compatibility Kit Test Suite(s) Location (if licensed under the RCSL):\n<<var;name=testLocation;original=_____;match=.+>>.",
+      "template": "RPSL-1.0.txt"
+    },
+    {
+      "name": "Reciprocal Public License 1.1",
+      "id": "RPL-1.1",
+      "sources": [
+        "http://opensource.org/licenses/RPL-1.1"
+      ],
+      "notes": "This license has been superseded by the Reciprocal Public License, version 1.5",
+      "osi_approved": true,
+      "header": "Copyright (C) 1999-2002 Technical Pursuit Inc., All Rights Reserved. Patent Pending, Technical Pursuit Inc.\n\n    Unless explicitly acquired and licensed from Licensor under the Technical Pursuit License (\"TPL\") Version 1.0 or greater, the contents of this file are subject to the Reciprocal Public License (\"RPL\") Version 1.1, or subsequent versions as allowed by the RPL, and You may not copy or use this file in either source code or executable form, except in compliance with the terms and conditions of the RPL.\n\n    You may obtain a copy of both the TPL and the RPL (the \"Licenses\") from Technical Pursuit Inc. at http://www.technicalpursuit.com.\n\n    All software distributed under the Licenses is provided strictly on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND TECHNICAL PURSUIT INC. HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT, OR NON-INFRINGEMENT. See the Licenses for specific language governing rights and limitations under the Licenses.",
+      "template": "RPL-1.1.txt"
+    },
+    {
+      "name": "Reciprocal Public License 1.5",
+      "id": "RPL-1.5",
+      "sources": [
+        "http://www.opensource.org/licenses/RPL-1.5"
+      ],
+      "notes": "This license was released: 15 July 2007",
+      "osi_approved": true,
+      "header": "Unless explicitly acquired and licensed from Licensor under another license, the contents of this file are subject to the Reciprocal Public License (\"RPL\") Version 1.5, or subsequent versions as allowed by the RPL, and You may not copy or use this file in either source code or executable form, except in compliance with the terms and conditions of the RPL.\n\nAll software distributed under the RPL is provided strictly on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND LICENSOR HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT, OR NON-INFRINGEMENT. See the RPL for specific language governing rights and limitations under the RPL.",
+      "template": "RPL-1.5.txt"
+    },
+    {
+      "name": "Red Hat eCos Public License v1.1",
+      "id": "RHeCos-1.1",
+      "sources": [
+        "http://ecos.sourceware.org/old-license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "RHeCos-1.1.txt"
+    },
+    {
+      "name": "Ricoh Source Code Public License",
+      "id": "RSCPL",
+      "sources": [
+        "http://www.opensource.org/licenses/RSCPL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the Ricoh Source Code Public License Version 1.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.risource.org/RPL\n\nSoftware distributed under the License is distributed on an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThis code was initially developed by Ricoh Silicon Valley, Inc. Portions created by Ricoh Silicon Valley, Inc. are Copyright (C) 1995-1999. All Rights Reserved.\n\nContributor(s): {{---}}.",
+      "template": "RSCPL.txt"
+    },
+    {
+      "name": "RSA Message-Digest License ",
+      "id": "RSA-MD",
+      "sources": [
+        "http://www.faqs.org/rfcs/rfc1321.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "RSA-MD.txt"
+    },
+    {
+      "name": "Ruby License",
+      "id": "Ruby",
+      "sources": [
+        "http://www.ruby-lang.org/en/LICENSE.txt"
+      ],
+      "notes": "Ruby is disjunctively licensed project that allows the choice of this license and another.  The other license choice has changed over time (from GPL originally, to BSD-2-Clause currently), so one needs to be aware of that change.  The Ruby License itself is un-versioned, but has varied a bit over the years, the last substantive variation being in 2002.",
+      "osi_approved": false,
+      "header": null,
+      "template": "Ruby.txt"
+    },
+    {
+      "name": "Sax Public Domain Notice",
+      "id": "SAX-PD",
+      "sources": [
+        "http://www.saxproject.org/copying.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "SAX-PD.txt"
+    },
+    {
+      "name": "Saxpath License",
+      "id": "Saxpath",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Saxpath_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Saxpath.txt"
+    },
+    {
+      "name": "SCEA Shared Source License",
+      "id": "SCEA",
+      "sources": [
+        "http://research.scea.com/scea_shared_source_license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "SCEA.txt"
+    },
+    {
+      "name": "Scheme Widget Library (SWL) Software License Agreement",
+      "id": "SWL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/SWL"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "SWL.txt"
+    },
+    {
+      "name": "Secure Messaging Protocol Public License",
+      "id": "SMPPL",
+      "sources": [
+        "https://github.com/dcblake/SMP/blob/master/Documentation/License.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "SMPPL.txt"
+    },
+    {
+      "name": "Sendmail License",
+      "id": "Sendmail",
+      "sources": [
+        "http://www.sendmail.com/pdfs/open_source/sendmail_license.pdf"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Sendmail.txt"
+    },
+    {
+      "name": "SGI Free Software License B v1.0",
+      "id": "SGI-B-1.0",
+      "sources": [
+        "http://oss.sgi.com/projects/FreeB/SGIFreeSWLicB.1.0.html"
+      ],
+      "notes": "This license was released 25 January 2000",
+      "osi_approved": false,
+      "header": "License Applicability. Except to the extent portions of this file are made subject to an alternative license as permitted in the SGI Free Software License B, Version 1.0 (the \"License\"), the contents of this file are subject only to the provisions of the License. You may not use this file except in compliance with the License. You may obtain a copy of the License at Silicon Graphics, Inc., attn: Legal Services, 1600 Ampitheatre Parkway, Mountain View, CA 94043-1351, or at:\n\nhttp://oss.sgi.com/projects/FreeB\n\nNote that, as provided in the License, the Software is distributed on an \"AS IS\" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.\n\nOriginal Code. The Original Code is: [name of software, version number, and release date], developed by Silicon Graphics, Inc. The Original Code is Copyright (c) [dates of first publication, as appearing in the Notice in the Original Code] Silicon Graphics, Inc. Copyright in any portions created by third parties is as indicated elsewhere herein. All Rights Reserved.",
+      "template": "SGI-B-1.0.txt"
+    },
+    {
+      "name": "SGI Free Software License B v1.1",
+      "id": "SGI-B-1.1",
+      "sources": [
+        "http://oss.sgi.com/projects/FreeB/"
+      ],
+      "notes": "This license was released 22 February 2002",
+      "osi_approved": false,
+      "header": "License Applicability. Except to the extent portions of this file are made subject to an alternative license as permitted in the SGI Free Software License B, Version 1.1 (the \"License\"), the contents of this file are subject only to the provisions of the License. You may not use this file except in compliance with the License. You may obtain a copy of the License at Silicon Graphics, Inc., attn: Legal Services, 1600 Amphitheatre Parkway, Mountain View, CA 94043-1351, or at: \n\nhttp://oss.sgi.com/projects/FreeB\n\nNote that, as provided in the License, the Software is distributed on an \"AS IS\" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.\n\nOriginal Code. The Original Code is: [name of software, version number, and release date], developed by Silicon Graphics, Inc. The Original Code is Copyright (c) [dates of first publication, as appearing in the Notice in the Original Code] Silicon Graphics, Inc. Copyright in any portions created by third parties is as indicated elsewhere herein. All Rights Reserved.",
+      "template": "SGI-B-1.1.txt"
+    },
+    {
+      "name": "SGI Free Software License B v2.0",
+      "id": "SGI-B-2.0",
+      "sources": [
+        "http://oss.sgi.com/projects/FreeB/SGIFreeSWLicB.2.0.pdf"
+      ],
+      "notes": "This license was released 18 Sept 2008",
+      "osi_approved": false,
+      "header": null,
+      "template": "SGI-B-2.0.txt"
+    },
+    {
+      "name": "SIL Open Font License 1.0",
+      "id": "OFL-1.0",
+      "sources": [
+        "http://scripts.sil.org/cms/scripts/page.php?item_id=OFL10_web"
+      ],
+      "notes": "This license has been superseded.\nThis license was released in November 2005.",
+      "osi_approved": false,
+      "header": null,
+      "template": "OFL-1.0.txt"
+    },
+    {
+      "name": "SIL Open Font License 1.1",
+      "id": "OFL-1.1",
+      "sources": [
+        "http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web",
+        "http://www.opensource.org/licenses/OFL-1.1"
+      ],
+      "notes": "This license was released: 26 February 2007.",
+      "osi_approved": true,
+      "header": null,
+      "template": "OFL-1.1.txt"
+    },
+    {
+      "name": "Simple Public License 2.0",
+      "id": "SimPL-2.0",
+      "sources": [
+        "http://www.opensource.org/licenses/SimPL-2.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "SimPL-2.0.txt"
+    },
+    {
+      "name": "Sleepycat License",
+      "id": "Sleepycat",
+      "sources": [
+        "http://www.opensource.org/licenses/Sleepycat"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Sleepycat.txt"
+    },
+    {
+      "name": "SNIA Public License 1.1",
+      "id": "SNIA",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/SNIA_Public_License"
+      ],
+      "notes": "This is MPL-1.1 with some edits.",
+      "osi_approved": false,
+      "header": null,
+      "template": "SNIA.txt"
+    },
+    {
+      "name": "Spencer License 86",
+      "id": "Spencer-86",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Henry_Spencer_Reg-Ex_Library_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Spencer-86.txt"
+    },
+    {
+      "name": "Spencer License 94",
+      "id": "Spencer-94",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Henry_Spencer_Reg-Ex_Library_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Spencer-94.txt"
+    },
+    {
+      "name": "Spencer License 99",
+      "id": "Spencer-99",
+      "sources": [
+        "http://www.opensource.apple.com/source/tcl/tcl-5/tcl/generic/regfronts.c"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Spencer-99.txt"
+    },
+    {
+      "name": "Standard ML of New Jersey License",
+      "id": "SMLNJ",
+      "sources": [
+        "http://www.smlnj.org//license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "SMLNJ.txt"
+    },
+    {
+      "name": "SugarCRM Public License v1.1.3",
+      "id": "SugarCRM-1.1.3",
+      "sources": [
+        "http://www.sugarcrm.com/crm/SPL"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the SugarCRM Public License Version 1.1.3\n(\"License\"); You may not use this file except in compliance with the\nLicense. You may obtain a copy of the License at http://www.sugarcrm.com/SPL\nSoftware distributed under the License is distributed on an \"AS IS\" basis,\nWITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\nthe specific language governing rights and limitations under the License.\n\nThe Original Code is: SugarCRM Open Source\n\nThe Initial Developer of the Original Code is SugarCRM, Inc.\nPortions created by SugarCRM are Copyright (C) 2004 SugarCRM, Inc.;\nAll Rights Reserved.\nContributor(s): _____.",
+      "template": "SugarCRM-1.1.3.txt"
+    },
+    {
+      "name": "Sun Industry Standards Source License v1.1",
+      "id": "SISSL",
+      "sources": [
+        "http://www.openoffice.org/licenses/sissl_license.html",
+        "http://opensource.org/licenses/SISSL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the Sun Standards License Version 1.1 (the \"License\");\nYou may not use this file except in compliance with the\u00a0License. You may obtain a copy of the\nLicense at <<var;name=LicLocation;original=_______;match=.+>>.\n\nSoftware distributed under the License is distributed on\u00a0an \"AS IS\" basis, WITHOUT WARRANTY OF ANY KIND, either\u00a0express or implied. See the License for the specific language governing rights and limitations under the License.\n\nThe Original Code is <<var;name=code;original=_____;match=.+>>.\n\nThe Initial Developer of the Original Code is:\u00a0\nSun Microsystems, Inc..\n\nPortions created by: <<var;name=createdby;original=_____;match=.+>>\n\nare Copyright (C): <<var;name=copyright;original=_____;match=.+>>\n\nAll Rights Reserved.\n\nContributor(s): <<var;name=contributor;original=_____;match=.+>>",
+      "template": "SISSL.txt"
+    },
+    {
+      "name": "Sun Industry Standards Source License v1.2",
+      "id": "SISSL-1.2",
+      "sources": [
+        "http://gridscheduler.sourceforge.net/Gridengine_SISSL_license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": "The contents of this file are subject to the Sun Industry Standards Source License Version 1.2 (the License); You may not use this file except in compliance with the License.\n\nYou may obtain a copy of the License at gridengine.sunsource.net/license.html\n\nSoftware distributed under the License is distributed on an AS IS basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing \nrights and limitations under the License.\n\nThe Original Code is Grid Engine.\n\nThe Initial Developer of the Original Code is: Sun Microsystems, Inc.\n\nPortions created by: Sun Microsystems, Inc. are \nCopyright (C) 2001 Sun Microsystems, Inc.\n\nAll Rights Reserved.\n\n\"Contributor(s): <<var;name=contributor;original=_____;match=.+>>",
+      "template": "SISSL-1.2.txt"
+    },
+    {
+      "name": "Sun Public License v1.0",
+      "id": "SPL-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/SPL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "The contents of this file are subject to the Sun Public License Version 1.0 (the License); you may not use this file except in compliance with the License. A copy of the License is available at http://www.sun.com/ \n\nThe Original Code is <<var;name=code;original=_____;match=.+>>. \nThe Initial Developer of the Original Code is <<var;name=InitialDeveloper;original=_____;match=.+>>. \nPortions created by <<var;name=createdby;original=_____;match=.+>> are Copyright (C) <<var;name=copyright;original=_____;match=.+>>. All Rights Reserved.  \nContributor(s): <<var;name=contributor;original=_____;match=.+>>\n\nAlternatively, the contents of this file may be used under the terms of the <<var;name=AltLicense;original=_____;match=.+>> license (the <<var;name=licenseName;original=[____];match=.+>> License), in which case the provisions of <<var;name=licenseName;original=[____];match=.+>> License are applicable instead of those above. If you wish to allow use of your version of this file only under the terms of the <<var;name=licenseName;original=[____];match=.+>> License and not to allow others to use your version of this file under the SPL, indicate your decision by deleting the provisions above and replace them with the notice and other provisions required by the <<var;name=licenseName;original=[____];match=.+>> License. If you do not delete the provisions above, a recipient may use your version of this file under either the SPL or the <<var;name=licenseName;original=[____];match=.+>> License.",
+      "template": "SPL-1.0.txt"
+    },
+    {
+      "name": "Sybase Open Watcom Public License 1.0",
+      "id": "Watcom-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/Watcom-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": "Portions Copyright (c) 1983-2002 Sybase, Inc. All Rights Reserved.\nThis file contains Original Code and/or Modifications of Original Code as defined in and that are subject to the Sybase Open Watcom Public License version 1.0 (the 'License'). You may not use this file except in compliance with the License. BY USING THIS FILE YOU AGREE TO ALL TERMS AND CONDITIONS OF THE LICENSE. A copy of the License is provided with the Original Code and Modifications, and is also available at www.sybase.com/developer/opensource. \n\nThe Original Code and all software distributed under the License are distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND SYBASE AND ALL CONTRIBUTORS HEREBY DISCLAIM ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT. Please see the License for the specific language governing rights and limitations under the License.\"",
+      "template": "Watcom-1.0.txt"
+    },
+    {
+      "name": "TCL/TK License",
+      "id": "TCL",
+      "sources": [
+        "http://www.tcl.tk/software/tcltk/license.html",
+        "https://fedoraproject.org/wiki/Licensing/TCL"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "TCL.txt"
+    },
+    {
+      "name": "The Unlicense",
+      "id": "Unlicense",
+      "sources": [
+        "http://unlicense.org/"
+      ],
+      "notes": "This is a public domain dedication",
+      "osi_approved": false,
+      "header": null,
+      "template": "Unlicense.txt"
+    },
+    {
+      "name": "TMate Open Source License",
+      "id": "TMate",
+      "sources": [
+        "http://svnkit.com/license.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "TMate.txt"
+    },
+    {
+      "name": "TORQUE v2.5+ Software License v1.1",
+      "id": "TORQUE-1.1",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/TORQUEv1.1"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "TORQUE-1.1.txt"
+    },
+    {
+      "name": "Trusster Open Source License",
+      "id": "TOSL",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/TOSL"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "TOSL.txt"
+    },
+    {
+      "name": "Unicode Terms of Use",
+      "id": "Unicode-TOU",
+      "sources": [
+        "http://www.unicode.org/copyright.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Unicode-TOU.txt"
+    },
+    {
+      "name": "Universal Permissive License v1.0",
+      "id": "UPL-1.0",
+      "sources": [
+        "http://opensource.org/licenses/UPL"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "UPL-1.0.txt"
+    },
+    {
+      "name": "University of Illinois/NCSA Open Source License",
+      "id": "NCSA",
+      "sources": [
+        "http://otm.illinois.edu/uiuc_openSource",
+        "http://www.opensource.org/licenses/NCSA"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "NCSA.txt"
+    },
+    {
+      "name": "Vim License",
+      "id": "Vim",
+      "sources": [
+        "http://vimdoc.sourceforge.net/htmldoc/uganda.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Vim.txt"
+    },
+    {
+      "name": "VOSTROM Public License for Open Source",
+      "id": "VOSTROM",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/VOSTROM"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "VOSTROM.txt"
+    },
+    {
+      "name": "Vovida Software License v1.0",
+      "id": "VSL-1.0",
+      "sources": [
+        "http://www.opensource.org/licenses/VSL-1.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "VSL-1.0.txt"
+    },
+    {
+      "name": "W3C Software Notice and License (1998-07-20)",
+      "id": "W3C-19980720",
+      "sources": [
+        "http://www.w3.org/Consortium/Legal/copyright-software-19980720.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "W3C-19980720.txt"
+    },
+    {
+      "name": "W3C Software Notice and License (2002-12-31)",
+      "id": "W3C",
+      "sources": [
+        "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231.html",
+        "http://www.opensource.org/licenses/W3C"
+      ],
+      "notes": "This license was released: 13 December 2002.\nThe standard header is provided via a link from the original license page.",
+      "osi_approved": true,
+      "header": "Copyright (C) <<var;name=year;original=[$date-of-software];match=.+>> World Wide Web Consortium, (Massachusetts Institute of Technology, European Research Consortium for Informatics and Mathematics, Keio University). All Rights Reserved. This work is distributed under the W3C\u00ae Software License in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+      "template": "W3C.txt"
+    },
+    {
+      "name": "Wsuipa License",
+      "id": "Wsuipa",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Wsuipa"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Wsuipa.txt"
+    },
+    {
+      "name": "X.Net License",
+      "id": "Xnet",
+      "sources": [
+        "http://opensource.org/licenses/Xnet"
+      ],
+      "notes": "This license is the same as MIT, but with a choice of law clause. \nThis License has been voluntarily deprecated by its author.",
+      "osi_approved": true,
+      "header": null,
+      "template": "Xnet.txt"
+    },
+    {
+      "name": "X11 License",
+      "id": "X11",
+      "sources": [
+        "http://www.xfree86.org/3.3.6/COPYRIGHT2.html#3"
+      ],
+      "notes": "This is same as MIT, but with no advertising clause added.",
+      "osi_approved": false,
+      "header": null,
+      "template": "X11.txt"
+    },
+    {
+      "name": "Xerox License",
+      "id": "Xerox",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Xerox"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Xerox.txt"
+    },
+    {
+      "name": "XFree86 License 1.1",
+      "id": "XFree86-1.1",
+      "sources": [
+        "http://www.xfree86.org/current/LICENSE4.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "XFree86-1.1.txt"
+    },
+    {
+      "name": "xinetd License",
+      "id": "xinetd",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Xinetd_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "xinetd.txt"
+    },
+    {
+      "name": "XPP License",
+      "id": "xpp",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/xpp"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "xpp.txt"
+    },
+    {
+      "name": "XSkat License",
+      "id": "XSkat",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/XSkat_License"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "XSkat.txt"
+    },
+    {
+      "name": "Yahoo! Public License v1.0",
+      "id": "YPL-1.0",
+      "sources": [
+        "http://www.zimbra.com/license/yahoo_public_license_1.0.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "YPL-1.0.txt"
+    },
+    {
+      "name": "Yahoo! Public License v1.1",
+      "id": "YPL-1.1",
+      "sources": [
+        "http://www.zimbra.com/license/yahoo_public_license_1.1.html"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "YPL-1.1.txt"
+    },
+    {
+      "name": "Zed License",
+      "id": "Zed",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/Zed"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Zed.txt"
+    },
+    {
+      "name": "Zend License v2.0",
+      "id": "Zend-2.0",
+      "sources": [
+        "https://web.archive.org/web/20130517195954/http://www.zend.com/license/2_00.txt"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Zend-2.0.txt"
+    },
+    {
+      "name": "Zimbra Public License v1.3",
+      "id": "Zimbra-1.3",
+      "sources": null,
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Zimbra-1.3.txt"
+    },
+    {
+      "name": "Zimbra Public License v1.4",
+      "id": "Zimbra-1.4",
+      "sources": [
+        "http://www.zimbra.com/legal/zimbra-public-license-1-4"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "Zimbra-1.4.txt"
+    },
+    {
+      "name": "zlib License",
+      "id": "Zlib",
+      "sources": [
+        "http://www.zlib.net/zlib_license.html",
+        "http://www.opensource.org/licenses/Zlib"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "Zlib.txt"
+    },
+    {
+      "name": "zlib/libpng License with Acknowledgement",
+      "id": "zlib-acknowledgement",
+      "sources": [
+        "https://fedoraproject.org/wiki/Licensing/ZlibWithAcknowledgement"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "zlib-acknowledgement.txt"
+    },
+    {
+      "name": "Zope Public License 1.1",
+      "id": "ZPL-1.1",
+      "sources": [
+        "http://old.zope.org/Resources/License/ZPL-1.1"
+      ],
+      "notes": null,
+      "osi_approved": false,
+      "header": null,
+      "template": "ZPL-1.1.txt"
+    },
+    {
+      "name": "Zope Public License 2.0",
+      "id": "ZPL-2.0",
+      "sources": [
+        "http://old.zope.org/Resources/License/ZPL-2.0",
+        "http://opensource.org/licenses/ZPL-2.0"
+      ],
+      "notes": null,
+      "osi_approved": true,
+      "header": null,
+      "template": "ZPL-2.0.txt"
+    },
+    {
+      "name": "Zope Public License 2.1",
+      "id": "ZPL-2.1",
+      "sources": [
+        "http://old.zope.org/Resources/ZPL/"
+      ],
+      "notes": "This is a generic version of the ZPL 2.0 license",
+      "osi_approved": false,
+      "header": null,
+      "template": "ZPL-2.1.txt"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import pathlib
 import re
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
-from mknodes.info import gitrepository, packageinfo, pyproject
+from mknodes.info import gitrepository, license, packageinfo, pyproject
 from mknodes.utils import helpers, packagehelpers, reprhelpers, yamlhelpers
 
 
@@ -143,6 +143,27 @@ class FolderInfo:
                 return file
         if file := self.info.metadata.json.get("license_file"):
             return self.path / file if isinstance(file, str) else self.path / file[0]
+        return None
+
+    @functools.cached_property
+    def license_text(self) -> str | None:
+        if self.license_file_path:
+            return self.license_file_path.read_text(encoding="utf-8")
+        if license_name := self.info.license_name:
+            holder = self.info.author_name
+            summary = self.info.metadata["Summary"]
+            package_name = self.info.name
+            website = self.repository_url or ""
+            email = self.info.author_email or ""
+            lic = license.License(license_name)
+            lic.resolve_template(
+                holder=holder,
+                summary=summary,
+                package_name=package_name,
+                website=website,
+                email=email,
+            )
+            return lic.content
         return None
 
     def get_social_info(self) -> list[dict[str, str]]:
