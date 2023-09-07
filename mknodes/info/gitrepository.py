@@ -27,8 +27,14 @@ class GitRepository(git.Repo):
     def get_repo_name(self) -> str:
         return self.remotes.origin.url.split(".git")[0].split("/")[-1]
 
-    def get_last_commits(self, num: int):
-        return list(self.iter_commits(self.main_branch, max_count=num))
+    def get_last_commits(self, num: int, branch: str | None = None) -> list[git.Commit]:
+        """Return last x commits.
+
+        Arguments:
+            num: Amount of commits to fetch.
+            branch: Branch to get commits from. Defaults to main / master.
+        """
+        return list(self.iter_commits(branch or self.main_branch, max_count=num))
 
     def get_code_repository(self) -> str:
         repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
