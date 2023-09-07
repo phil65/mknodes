@@ -1,35 +1,28 @@
 from __future__ import annotations
 
 import os
-import tomllib
-
-from typing import Any
-
-import tomli_w
+import pathlib
 
 from mknodes.data import buildsystems, commitconventions, installmethods
-from mknodes.utils import cache, helpers
+from mknodes.info import tomlfile
+from mknodes.utils import helpers
 
 
-class PyProject:
-    def __init__(self, pyproject_path: str | os.PathLike | None = None):
-        if helpers.is_url(str(pyproject_path)):
-            content = cache.download_and_cache_url(str(pyproject_path), days=1).decode()
-            self._data = tomllib.loads(content)
-        else:
-            folder = pyproject_path or "."
-            path = helpers.find_file_in_folder_or_parent("pyproject.toml", folder)
-            if path is None:
-                msg = "Could not find pyproject.toml"
-                raise FileNotFoundError(msg)
-            self._data = tomllib.loads(path.read_text(encoding="utf-8"))
-        self.mknodes_section = self._data.get("tool", {}).get("mknodes", {})
-
-    def __getitem__(self, value):
-        return self._data.__getitem__(value)
+class PyProject(tomlfile.TomlFile):
+    def __init__(self, path: str | os.PathLike | None = None):
+        if path is None:
+            path = helpers.find_file_in_folder_or_parent("pyproject.toml")
+        if path is None:
+            msg = "Could not find pyproject.toml"
+            raise FileNotFoundError(msg)
+        path = pathlib.Path(path)
+        if path.is_dir():
+            path = path / "pyproject.toml"
+        super().__init__(path)
+        self.mknodes_section = self.get_section("tool", "mknodes")
 
     def __repr__(self):
-        return f"PyProject({self._data['project']})"
+        return f"PyProject({self.name!r})"
 
     @property
     def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
@@ -54,19 +47,6 @@ class PyProject:
     def get_tool(self, tool_name: str) -> dict | None:
         return self.get_section("tool", tool_name)
 
-    def get_section(self, *sections) -> Any:
-        section = self._data
-        for i in sections:
-            if child := section.get(i):
-                section = child
-            else:
-                return None
-        return section
-
-    def get_section_text(self, *sections) -> str:
-        section = self.get_section(*sections)
-        return "" if section is None else tomli_w.dumps(section)
-
     @property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
         return self.mknodes_section.get("allowed-commit-types", [])
@@ -82,4 +62,4 @@ class PyProject:
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.get_section_text("tool", "hatch"))
+    print(info)
