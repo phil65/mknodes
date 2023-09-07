@@ -91,8 +91,8 @@ class Project(Generic[T]):
         if self._root:
             reqs.merge(self._root.get_requirements())
         reqs.merge(self.theme.get_requirements())
-        self.theme.adapt_extensions(reqs["markdown_extensions"])
-        reqs["markdown_extensions"]["pymdownx.magiclink"] = dict(
+        self.theme.adapt_extensions(reqs.markdown_extensions)
+        reqs.markdown_extensions["pymdownx.magiclink"] = dict(
             repo_url_shorthand=True,
             user=self.folderinfo.repository_username,
             repo=self.folderinfo.repository_name,

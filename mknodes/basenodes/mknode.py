@@ -234,8 +234,10 @@ class MkNode(node.Node):
                     all_js_files.add(js)
             for p in des.REQUIRED_PLUGINS:
                 all_plugins.add(p)
-            if css := des.get_css():
-                all_css.add(css)
+            if css := des.CSS:
+                file_path = paths.RESOURCES / css
+                text = file_path.read_text()
+                all_css.add(text)
         return requirements.Requirements(
             templates=all_templates,
             js_files={p: (paths.RESOURCES / p).read_text() for p in all_js_files},
@@ -243,13 +245,6 @@ class MkNode(node.Node):
             plugins=all_plugins,
             css={"mknodes_nodes.css": "\n".join(all_css)},
         )
-
-    def get_css(self) -> str | None:
-        """Get css used by this node."""
-        if not self.CSS:
-            return None
-        file_path = paths.RESOURCES / self.CSS
-        return file_path.read_text()
 
     @staticmethod
     def create_example_page(page):
