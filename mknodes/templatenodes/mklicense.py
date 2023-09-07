@@ -19,10 +19,11 @@ logger = logging.getLogger(__name__)
 def get_spdx_license(name: str):
     if lic := spdx_lookup.by_id(name):
         text = lic.template
-    if lic := spdx_lookup.by_name(name):
+    elif lic := spdx_lookup.by_name(name):
         text = lic.template.replace("<year>", str(datetime.date.today().year))
-    if not text:
-        return None
+    else:
+        msg = f"Invalid license name: {name!r}"
+        raise ValueError(msg)
     year = str(datetime.date.today().year)
     text = text.replace("<year>", year)
     text = text.replace("[yyyy]", year)
