@@ -79,12 +79,15 @@ def serve_node(node, repo_path: str = "."):
 
 
 def load_and_patch_config(
-    path,
+    config: str | os.PathLike | dict,
     repo_url: str = ".",
     site_script: str = "",
     clone_depth: int = 1,
 ):
-    cfg = yamlhelpers.load_yaml_file(path or "mkdocs_basic.yml")
+    if isinstance(config, str | os.PathLike):
+        cfg = yamlhelpers.load_yaml_file(config or "mkdocs_basic.yml")
+    else:
+        cfg = config
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
