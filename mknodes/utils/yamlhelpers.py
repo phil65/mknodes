@@ -5,8 +5,9 @@ import pathlib
 
 from typing import Any
 
-import mergedeep
 import yaml
+
+from mknodes.utils import helpers
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
             text = fd.read().decode()
             parent = load_yaml(text, mode)
         # print(parent, result)
-        result = mergedeep.merge(parent, result)
+        result = helpers.merge_dicts(parent, result)
     return result
 
 

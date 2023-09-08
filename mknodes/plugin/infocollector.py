@@ -6,10 +6,8 @@ import logging
 
 from typing import Any
 
-import mergedeep
-
 from mknodes.jinja import environment
-from mknodes.utils import jinjahelpers, reprhelpers
+from mknodes.utils import helpers, jinjahelpers, reprhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -49,8 +47,9 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         self.env.filters.update(filters)
 
     def merge(self, other: Mapping, additive: bool = False):
-        strategy = mergedeep.Strategy.ADDITIVE if additive else mergedeep.Strategy.REPLACE
-        self.variables = dict(mergedeep.merge(self.variables, other, strategy=strategy))
+        strategy = "additive" if additive else "replace"
+        mapping = helpers.merge_dicts(self.variables, other, strategy=strategy)
+        self.variables = dict(mapping)
 
     def render(self, markdown: str, variables=None):
         variables = self.variables | (variables or {})

@@ -5,14 +5,12 @@ import logging
 
 from typing import TYPE_CHECKING
 
-import mergedeep
-
 from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.pages import pagetemplate
 from mknodes.treelib import node
-from mknodes.utils import requirements
+from mknodes.utils import helpers, requirements
 
 
 if TYPE_CHECKING:
@@ -241,7 +239,7 @@ class MkNode(node.Node):
         return requirements.Requirements(
             templates=all_templates,
             js_files={p: (paths.RESOURCES / p).read_text() for p in all_js_files},
-            markdown_extensions=mergedeep.merge(*all_extensions),
+            markdown_extensions=helpers.merge_dicts(*all_extensions),
             plugins=all_plugins,
             css={"mknodes_nodes.css": "\n".join(all_css)},
         )

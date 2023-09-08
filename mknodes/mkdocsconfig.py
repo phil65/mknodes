@@ -10,14 +10,13 @@ from typing import Any
 from urllib import parse
 
 import markdown
-import mergedeep
 
 from mkdocs import config as _config
 from mkdocs.commands import get_deps
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 
-from mknodes.utils import pathhelpers
+from mknodes.utils import helpers, pathhelpers
 
 
 logger = get_plugin_logger(__name__)
@@ -89,10 +88,9 @@ class Config:
             if ext_name not in self.markdown_extensions:
                 logger.info("Adding %s to extensions", ext_name)
                 self.markdown_extensions.append(ext_name)
-        self._config.mdx_configs = mergedeep.merge(
+        self._config.mdx_configs = helpers.merge_dicts(
             self._config.mdx_configs,
             extensions,
-            strategy=mergedeep.Strategy.ADDITIVE,
         )
 
     def register_css(self, filename: str | os.PathLike, css: str):
