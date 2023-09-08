@@ -11,7 +11,17 @@ from mknodes.utils import helpers
 
 
 class PyProject(tomlfile.TomlFile):
+    """Class representing a PyProject config file."""
+
     def __init__(self, path: str | os.PathLike | None = None):
+        """Constructor.
+
+        Arguments:
+            path: Path to the pyproject file.
+                  If None, parent directories are checked, too.
+                  If path points to folder, check that folder for a pyproject.toml
+                  Otherwise, take file from explicit path.
+        """
         if path is None:
             path = helpers.find_file_in_folder_or_parent("pyproject.toml")
         if path is None:
@@ -28,22 +38,27 @@ class PyProject(tomlfile.TomlFile):
 
     @property
     def name(self) -> str:
+        """Project name."""
         return self.project["name"]
 
     @property
     def tool(self) -> dict[str, Any]:
+        """Tool section."""
         return self._data.get("tool", {})
 
     @property
     def project(self) -> dict[str, Any]:
+        """Project section."""
         return self._data.get("project", {})
 
     @property
     def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
+        """Return build systems which have a config in tools section."""
         return [p for p in buildsystems.BUILD_SYSTEMS if p in self.tool]
 
     @property
     def build_system(self) -> buildsystems.BuildSystem:
+        """Return the build system set as build backend."""
         back_end = self._data["build-system"]["build-backend"]
         for p in buildsystems.BUILD_SYSTEMS.values():
             if p.build_backend == back_end:
@@ -53,14 +68,17 @@ class PyProject(tomlfile.TomlFile):
 
     @property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
+        """Return the allowed commit types."""
         return self.mknodes_section.get("allowed-commit-types", [])
 
     @property
     def extras_descriptions(self) -> dict[str, str]:
+        """Return a dictionary with descriptions for dependency extras."""
         return self.mknodes_section.get("extras-descriptions", {})
 
     @property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
+        """Return a list of package repositories the package is available on."""
         return self.mknodes_section.get("package-repositories", ["pip"])
 
 
