@@ -38,7 +38,7 @@ def build(
 ):
     """Create a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
-        config_file,
+        config_file or "mkdocs_basic.yml",
         repo_url=repo_url,
         site_script=site_script,
         clone_depth=clone_depth,
