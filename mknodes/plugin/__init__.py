@@ -12,7 +12,7 @@ from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mknodes import mkdocsconfig, project
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, mkdocsbuilder, pluginconfig
-from mknodes.utils import classhelpers, helpers
+from mknodes.utils import helpers
 from mknodes.theme import theme
 from mknodes.info import folderinfo
 
@@ -61,12 +61,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             use_directory_urls=config.use_directory_urls,
             theme=skin,
             repo=self.folderinfo,
+            build_fn=self.config.path,
         )
-        skin.associated_project = self.project
-        project_fn = classhelpers.get_callable_from_path(self.config.path)
-        logger.debug("Building page...")
-        project_fn(project=self.project)
-        logger.debug("Finished building page.")
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """Create the node tree and write files to build folder.
@@ -79,15 +75,9 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
           - Templates
           - CSS files
         """
-        if not self.project._root:
-            msg = "No root for project created."
-            raise RuntimeError(msg)
         cfg = mkdocsconfig.Config(config)
         info = self.project.infocollector
-        self.project.aggregate_info()
         info["config"] = config
-        paths = [pathlib.Path(i).stem for i in info["filenames"]]
-        self.project.linkprovider.set_excludes(paths)
         builder = mkdocsbuilder.MkDocsBuilder(
             files=files,
             config=cfg,

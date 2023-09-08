@@ -93,7 +93,7 @@ def create_config(repo_url, site_script: str, theme: str | None, **kwargs):
     from mknodes import project
     from mknodes.theme import theme as theme_
     from mknodes.info import folderinfo
-    from mknodes.utils import classhelpers, helpers
+    from mknodes.utils import helpers
 
     if helpers.is_url(repo_url):
         repo = folderinfo.FolderInfo.clone_from(repo_url, depth=1)
@@ -106,12 +106,8 @@ def create_config(repo_url, site_script: str, theme: str | None, **kwargs):
         use_directory_urls=True,
         theme=skin,
         repo=repo,
+        build_fn=site_script,
     )
-    project_fn = classhelpers.get_callable_from_path(site_script)
-    logger.debug("Building page...")
-    project_fn(project=proj)
-    logger.debug("Finished building page.")
-    proj.aggregate_info()
     info = proj.infocollector
     config["markdown_extensions"] = info["markdown_extensions"]
     if social := info["metadata"]["social_info"]:

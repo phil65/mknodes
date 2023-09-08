@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import pathlib
 
 from typing import Generic, TypeVar
 
@@ -10,7 +11,7 @@ from mknodes.info import folderinfo
 from mknodes.pages import pagetemplate
 from mknodes.plugin import infocollector
 from mknodes.theme import theme as theme_
-from mknodes.utils import helpers, linkprovider, reprhelpers, requirements
+from mknodes.utils import classhelpers, helpers, linkprovider, reprhelpers, requirements
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ class Project(Generic[T]):
         base_url: str = "",
         use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
+        build_fn: str = "mknodes.mkwebsite:MkWebSite.for_project",
     ):
         self.linkprovider = linkprovider.LinkProvider(
             base_url=base_url,
@@ -35,6 +37,7 @@ class Project(Generic[T]):
             include_stdlib=True,
         )
         self.theme: T = theme
+        self.theme.associated_project = self
         self.templates = self.theme.templates
         self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
         match repo:
@@ -46,6 +49,16 @@ class Project(Generic[T]):
                 self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None
         self.infocollector = infocollector.InfoCollector(load_templates=True)
+        self.build_fn = classhelpers.get_callable_from_path(build_fn)
+        logger.debug("Building page...")
+        self.build_fn(project=self)
+        logger.debug("Finished building page.")
+        if not self._root:
+            msg = "No root for project created."
+            raise RuntimeError(msg)
+        self.aggregate_info()
+        paths = [pathlib.Path(i).stem for i in self.infocollector["filenames"]]
+        self.linkprovider.set_excludes(paths)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
@@ -59,6 +72,7 @@ class Project(Generic[T]):
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=theme_.Theme.get_theme(config),
+            build_fn=config.plugins["mknodes"].config.path,
         )
 
     @classmethod
