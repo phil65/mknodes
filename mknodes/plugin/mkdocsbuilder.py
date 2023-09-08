@@ -106,12 +106,8 @@ class MkDocsBuilder:
         return files_.Files(files)
 
     def write(self, path: str | os.PathLike, content: str | bytes):
-        mode = "w" if isinstance(content, str) else "wb"
-        path = self._get_path(path, new="w" in mode)
-        encoding = None if "b" in mode else "utf-8"
-        logger.info("Writing file to %s", path)
-        with path.open(mode=mode, encoding=encoding) as file:
-            file.write(content)
+        path = self._get_path(path)
+        pathhelpers.write_file(content, path)
 
     def write_files(self, dct: Mapping[str | os.PathLike, str | bytes]):
         """Write a mapping of {filename: file_content} to build directory."""
@@ -123,12 +119,12 @@ class MkDocsBuilder:
             self.write(self.assets_path / k, v)
             self.asset_files.append((self.assets_path / k).as_posix())
 
-    def _get_path(self, path: str | os.PathLike, new: bool = False) -> pathlib.Path:
+    def _get_path(self, path: str | os.PathLike) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method
         normname = pathlib.PurePath(path).as_posix()
         new_f = self.get_file(path, src_dir=self.directory)
         new_path = pathlib.Path(new_f.abs_src_path)
-        if new or normname not in self._files:
+        if normname not in self._files:
             new_path.parent.mkdir(exist_ok=True, parents=True)
             self._files[normname] = new_f
             return new_path

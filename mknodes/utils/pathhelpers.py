@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 import logging
 import os
 import pathlib
@@ -47,8 +48,20 @@ def write_file(content: str | bytes, output_path: str | os.PathLike):
     output_path = pathlib.Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
-    with output_path.open(mode) as f:
+    encoding = None if "b" in mode else "utf-8"
+    logger.info("Writing file to %s", output_path)
+    with output_path.open(mode=mode, encoding=encoding) as f:
         f.write(content)
+
+
+def write_files(mapping: Mapping[str | os.PathLike, str | bytes]):
+    """Write a mapping of filename-to-content to disk.
+
+    Arguments:
+        mapping: {"path/to/file.ext": b"content", ...} - style mapping
+    """
+    for k, v in mapping.items():
+        write_file(v, k)
 
 
 def find_file_in_folder_or_parent(
