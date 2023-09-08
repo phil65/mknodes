@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import collections
-import os
 import re
 import urllib.parse
 
@@ -44,12 +43,6 @@ class LinkReplacer:
         text = "LinkReplacer: %s: %s -> %s"
         logger.debug(text, self.page_url, match.group(3), new_text)
         return new_text
-
-    def add_files(self, files):
-        for file_ in files:
-            filename = os.path.basename(file_.abs_src_path)  # noqa: PTH119
-            url = urllib.parse.unquote(file_.src_uri)
-            self.mapping[filename].append(url)
 
     def replace(self, markdown: str, uri: str) -> str:
         if uri.endswith("SUMMARY.md"):

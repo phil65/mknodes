@@ -60,19 +60,6 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
         variables = self.variables | (variables or {})
         return self.env.render_template(template_name, variables)
 
-    def create_config(self):
-        return {
-            "repo_url": self.variables["metadata"]["repository_url"],
-            "site_description": self.variables["metadata"]["summary"],
-            "site_name": self.variables["metadata"]["name"],
-            "site_author": self.variables["project"].info.author_name,
-            "markdown_extensions": list(self.variables["markdown_extensions"].keys()),
-            "plugins": list(self.variables["plugins"]),
-            # "templates": list(self.variables["templates"].keys()),
-            "mdx_configs": self.variables["markdown_extensions"],
-            "extra": dict(social=self.variables["metadata"]["social_info"]),
-        }
-
 
 if __name__ == "__main__":
     builder = InfoCollector()

@@ -30,6 +30,7 @@ class Project(Generic[T]):
         use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
         build_fn: str = "mknodes.mkwebsite:MkWebSite.for_project",
+        clone_depth: int = 100,
     ):
         self.linkprovider = linkprovider.LinkProvider(
             base_url=base_url,
@@ -44,7 +45,10 @@ class Project(Generic[T]):
             case folderinfo.FolderInfo():
                 self.folderinfo = repo
             case _ if helpers.is_url(str(repo)):
-                self.folderinfo = folderinfo.FolderInfo.clone_from(str(repo))
+                self.folderinfo = folderinfo.FolderInfo.clone_from(
+                    str(repo),
+                    depth=clone_depth,
+                )
             case _:
                 self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None

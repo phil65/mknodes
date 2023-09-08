@@ -100,6 +100,7 @@ def create_config(repo_url, site_script: str, theme: str | None, **kwargs):
         theme=skin,
         repo=repo_url,
         build_fn=site_script,
+        clone_depth=1,
     )
     info = proj.infocollector
     config["markdown_extensions"] = info["markdown_extensions"]

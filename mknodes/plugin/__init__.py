@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pathlib
 import tempfile
+import urllib.parse
 
 from typing import TYPE_CHECKING, Literal
 
@@ -12,9 +13,7 @@ from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mknodes import mkdocsconfig, project
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, mkdocsbuilder, pluginconfig
-from mknodes.utils import helpers
 from mknodes.theme import theme
-from mknodes.info import folderinfo
 
 if TYPE_CHECKING:
     import jinja2
@@ -40,17 +39,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         logger.debug("Finished initializing plugin")
 
     def on_startup(self, command: CommandStr, dirty: bool = False):
-        """Clone the repo in case it is a remote one.
-
-        Also activates new-style MkDocs plugin lifecycle.
-        """
-        if helpers.is_url(self.config.repo_path):
-            self.folderinfo = folderinfo.FolderInfo.clone_from(
-                self.config.repo_path,
-                depth=self.config.clone_depth,
-            )
-        else:
-            self.folderinfo = self.config.repo_path
+        """Activates new-style MkDocs plugin lifecycle."""
 
     def on_config(self, config: MkDocsConfig):
         """Create the project based on MkDocs config."""
@@ -60,15 +49,15 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=skin,
-            repo=self.folderinfo,
+            repo=self.config.repo_path,
             build_fn=self.config.path,
+            clone_depth=self.config.clone_depth,
         )
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """Create the node tree and write files to build folder.
 
-        In this step we build the node tree by calling the user-set method,
-        and aggregate all files we need to build the website.
+        In this step we aggregate all files and info we need to build the website.
         This includes:
 
           - Markdown pages (MkPages)
@@ -112,7 +101,10 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         config: MkDocsConfig,
     ) -> Navigation | None:
         """Populate LinkReplacer and build path->MkPage mapping for following steps."""
-        self.link_replacer.add_files(files)
+        for file_ in files:
+            filename = pathlib.Path(file_.abs_src_path).name
+            url = urllib.parse.unquote(file_.src_uri)
+            self.link_replacer.mapping[filename].append(url)
         return nav
 
     def on_env(self, env: jinja2.Environment, config: MkDocsConfig, files: Files):
