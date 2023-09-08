@@ -43,7 +43,7 @@ class MkLicense(mktext.MkText):
     @property
     def text(self):
         if self.license:
-            return license.License(self.license).content
+            return license.License.from_name(self.license).content
         if self.associated_project:
             return self.associated_project.folderinfo.license_text or ""
         return None
@@ -67,4 +67,4 @@ if __name__ == "__main__":
     page = nav.add_page("test")
     page += lic
     nav += page
-    print(lic)
+    print(lic.text)

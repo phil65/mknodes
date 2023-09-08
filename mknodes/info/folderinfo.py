@@ -155,7 +155,7 @@ class FolderInfo:
             package_name = self.info.name
             website = self.repository_url or ""
             email = self.info.author_email or ""
-            lic = license.License(license_name)
+            lic = license.License.from_name(license_name)
             lic.resolve_template(
                 holder=holder,
                 summary=summary,
