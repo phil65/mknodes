@@ -44,9 +44,10 @@ registry: dict[str, PackageInfo] = {}
 def get_info(mod_name: str) -> PackageInfo:
     mapping = packagehelpers.get_package_map()
     pkg_name = mapping[mod_name][0] if mod_name in mapping else mod_name
-    if mod_name not in registry:
-        registry[mod_name] = PackageInfo(pkg_name)
-    return registry[mod_name]
+    pkg_name = pkg_name.lower()
+    if pkg_name not in registry:
+        registry[pkg_name] = PackageInfo(pkg_name)
+    return registry[pkg_name]
 
 
 class PackageInfo:
