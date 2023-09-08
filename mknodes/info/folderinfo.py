@@ -59,8 +59,7 @@ class FolderInfo:
 
     @property
     def module(self):
-        repo_name = self.git.get_repo_name()
-        mod_name = packagehelpers.distribution_to_package(repo_name)
+        mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         mod_name = mod_name.replace("-", "_").lower()
         return importlib.import_module(mod_name)
 
@@ -89,15 +88,18 @@ class FolderInfo:
 
     @property
     def info(self):
-        return packageinfo.get_info(self.pyproject.name or self.git.get_repo_name())
+        return packageinfo.get_info(self.pyproject.name or self.git.repo_name)
 
     @property
-    def repository_url(self) -> str | None:
-        return (
-            url
-            if (url := self.mkdocs_config.get("repo_url"))
-            else self.info.repository_url
-        )
+    def repository_url(self) -> str:
+        if url := self.mkdocs_config.get("repo_url"):
+            return url
+        if url := self.git.repo_url:
+            return url
+        if url := self.info.repository_url:
+            return url
+        msg = "Could not find any repository url"
+        raise RuntimeError(msg)
 
     @property
     def repository_username(self) -> str | None:
