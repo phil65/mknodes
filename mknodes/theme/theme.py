@@ -5,6 +5,7 @@ import logging
 
 from mknodes import project
 from mknodes.cssclasses import rootcss
+from mknodes.info import contexts
 from mknodes.pages import templateregistry
 from mknodes.utils import reprhelpers, requirements
 
@@ -57,6 +58,15 @@ class Theme:
 
     def aggregate_info(self) -> dict:
         return dict(
+            primary_color=self.get_primary_color(),
+            text_color=self.get_text_color(),
+        )
+
+    @property
+    def context(self):
+        return contexts.ThemeContext(
+            name=self.theme_name,
+            data=self.data,
             primary_color=self.get_primary_color(),
             text_color=self.get_text_color(),
         )

@@ -8,6 +8,8 @@ from urllib import parse
 
 import git
 
+from mknodes.info import contexts
+
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +59,15 @@ class GitRepository(git.Repo):
                 return "GitLab"
             case _:
                 return repo_host.split(".")[0].title()
+
+    @property
+    def context(self):
+        return contexts.GitContext(
+            main_branch=self.main_branch,
+            repo_hoster=self.code_repository,
+            last_commits=self.get_last_commits(100),
+            repo_name=self.repo_name,
+        )
 
 
 if __name__ == "__main__":

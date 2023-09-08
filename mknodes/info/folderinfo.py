@@ -9,7 +9,7 @@ import pathlib
 import re
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
-from mknodes.info import gitrepository, license, packageinfo, pyproject
+from mknodes.info import contexts, gitrepository, license, packageinfo, pyproject
 from mknodes.utils import packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
 
@@ -201,6 +201,35 @@ class FolderInfo:
         if self.mkdocs_config:
             infos["name"] = self.mkdocs_config["site_name"]
         return infos
+
+    @property
+    def context(self):
+        return contexts.PackageContext(
+            pretty_name=self.mkdocs_config.get("site_name") or self.info.name,
+            distribution_name=self.info.name,
+            author_name=self.info.author_name,
+            author_email=self.info.author_email,
+            authors=self.info.authors,
+            classifiers=self.info.classifiers,
+            classifier_map=self.info.classifier_map,
+            keywords=self.info.keywords,
+            license_name=self.info.license_name,
+            required_python_version=self.info.required_python_version,
+            required_package_names=self.info.required_package_names,
+            extras=self.info.extras,
+            entry_points=self.info.get_entry_points(),
+            mkdocs_config=self.mkdocs_config,
+            social_info=self.social_info,
+            repository_url=self.repository_url,
+            inventory_url=self.inventory_url,
+            task_runners=self.task_runners,
+            build_system=self.pyproject.build_system,
+            configured_build_systems=self.pyproject.configured_build_systems,
+            tools=self.pyproject.tool,
+            commit_types=self.pyproject.allowed_commit_types,
+            extras_descriptions=self.pyproject.extras_descriptions,
+            package_repos=self.pyproject.package_repos,
+        )
 
 
 if __name__ == "__main__":

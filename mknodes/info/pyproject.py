@@ -6,7 +6,7 @@ import pathlib
 from typing import Any
 
 from mknodes.data import buildsystems, commitconventions, installmethods
-from mknodes.info import tomlfile
+from mknodes.info import contexts, tomlfile
 from mknodes.utils import pathhelpers
 
 
@@ -80,6 +80,15 @@ class PyProject(tomlfile.TomlFile):
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         """Return a list of package repositories the package is available on."""
         return self.mknodes_section.get("package-repositories", ["pip"])
+
+    @property
+    def context(self):
+        return contexts.PyProjectContext(
+            info=self.folderinfo.context,
+            extras_descriptions=self.info.extras_descriptions,
+            package_repos=self.package_repos,
+            requirements=self.get_requirements(),
+        )
 
 
 if __name__ == "__main__":
