@@ -76,7 +76,8 @@ def download_and_cache_url(
     minutes: int = 0,
     hours: int = 0,
     weeks: int = 0,
-    comment: bytes = b"# ",
+    comment: str = "# ",
+    headers: dict[str, str] | None = None,
 ) -> bytes:
     """Downloads a file from the URL, stores it under ~/.cache/, and returns its content.
 
@@ -95,6 +96,7 @@ def download_and_cache_url(
         hours: Amount of hours the content should be cached.
         weeks: Amount of weeks the content should be cached.
         comment: The appropriate comment prefix for this file format.
+        headers: Headers to use for the request.
     """
     logger.info("Getting file for '%s'", url)
     if parse.urlsplit(url).scheme not in ("http", "https"):
@@ -115,7 +117,7 @@ def download_and_cache_url(
     path = directory / (name_hash + os.path.splitext(url)[1])  # noqa: PTH122
 
     now = int(datetime.datetime.now(datetime.UTC).timestamp())
-    prefix = b"%s%s downloaded at timestamp " % (comment, url.encode())
+    prefix = b"%s%s downloaded at timestamp " % (comment.encode(), url.encode())
     # Check for cached file and try to return it
     path = pathlib.Path(path)
     if path.is_file():
@@ -133,7 +135,7 @@ def download_and_cache_url(
 
     # Download and cache the file
     logger.debug("Downloading %s to %s", url, path)
-    content = download(url)
+    content = download(url, headers=headers)
     directory.mkdir(exist_ok=True, parents=True)
     with open_atomic(str(path), binary=True) as f:
         f.write(b"%s%d\n" % (prefix, now))
@@ -142,10 +144,19 @@ def download_and_cache_url(
     return content
 
 
-def download(url: str):
+def download(url: str, headers: dict[str, str] | None = None):
+    """Downloads a file from the URL.
+
+    Arguments:
+        url: URL or local path of the file to use.
+        headers: Headers to use for the request.
+    """
     req = request.Request(url)
     if token := os.getenv("GH_TOKEN"):
         req.add_header("Authorization", f"token {token}")
+    if headers:
+        for k, v in headers.items():
+            req.add_header(k, v)
     with request.urlopen(req) as resp:
         return resp.read()
 
