@@ -10,7 +10,7 @@ import re
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import gitrepository, license, packageinfo, pyproject
-from mknodes.utils import helpers, packagehelpers, reprhelpers, yamlhelpers
+from mknodes.utils import packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -192,7 +192,7 @@ class FolderInfo:
             runner
             for runner in taskrunners.TASK_RUNNERS.values()
             if any(
-                helpers.find_file_in_folder_or_parent(i, self.path)
+                pathhelpers.find_file_in_folder_or_parent(i, self.path)
                 for i in runner.filenames
             )
         ]

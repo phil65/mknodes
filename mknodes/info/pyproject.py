@@ -7,7 +7,7 @@ from typing import Any
 
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.info import tomlfile
-from mknodes.utils import helpers
+from mknodes.utils import pathhelpers
 
 
 class PyProject(tomlfile.TomlFile):
@@ -23,7 +23,7 @@ class PyProject(tomlfile.TomlFile):
                   Otherwise, take file from explicit path.
         """
         if path is None:
-            path = helpers.find_file_in_folder_or_parent("pyproject.toml")
+            path = pathhelpers.find_file_in_folder_or_parent("pyproject.toml")
         if path is None:
             msg = "Could not find pyproject.toml"
             raise FileNotFoundError(msg)

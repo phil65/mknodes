@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from mknodes.info import folderinfo
-from mknodes.utils import helpers, yamlhelpers
+from mknodes.utils import pathhelpers, yamlhelpers
 
 
 PRE_COMMIT_CODE = """
@@ -96,12 +96,12 @@ class PreCommit(Tool):
     def is_used(self, folder: folderinfo.FolderInfo):
         directory = folder.path if folder else "."
         filename = ".pre-commit-config.yaml"
-        return bool(helpers.find_file_in_folder_or_parent(filename, str(directory)))
+        return bool(pathhelpers.find_file_in_folder_or_parent(filename, str(directory)))
 
     def get_config(self, folder):
         directory = folder.path if folder else "."
         filename = ".pre-commit-config.yaml"
-        path = helpers.find_file_in_folder_or_parent(filename, str(directory))
+        path = pathhelpers.find_file_in_folder_or_parent(filename, str(directory))
         return path.read_text() if path else None
 
 

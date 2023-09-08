@@ -4,7 +4,6 @@ from collections.abc import Callable, Generator, Iterable
 import itertools
 import logging
 import os
-import pathlib
 import re
 
 from typing import TypeVar
@@ -17,22 +16,6 @@ def to_str_if_textnode(node):
     import mknodes
 
     return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
-
-
-def find_file_in_folder_or_parent(
-    filename: str | pathlib.Path,
-    folder: os.PathLike | str = ".",
-) -> pathlib.Path | None:
-    """Search for a file with given name in folder and its parent folders.
-
-    Arguments:
-        filename: File to search
-        folder: Folder to start searching from
-    """
-    path = pathlib.Path(folder).absolute()
-    while not (path / filename).exists() and len(path.parts) > 1:
-        path = path.parent
-    return file if (file := (path / filename)).exists() else None
 
 
 def escaped(text: str, entity_type: str | None = None) -> str:
@@ -114,13 +97,6 @@ def label_for_class(klass: type) -> str:
     if mod.startswith("prettyqt."):
         return f"{parts[1]}.{klass.__name__}"
     return f"{parts[-1]}.{klass.__name__}"
-
-
-def get_material_icon_path(icon: str) -> pathlib.Path:
-    import material
-
-    path = pathlib.Path(material.__path__[0])
-    return path / ".icons" / f"{icon}.svg"
 
 
 T = TypeVar("T")

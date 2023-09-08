@@ -5,13 +5,13 @@ import collections
 from collections.abc import Mapping
 import os
 import pathlib
-import shutil
 
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_, nav, pages
 
 from mknodes import mkdocsconfig
+from mknodes.utils import pathhelpers
 
 
 logger = get_plugin_logger(__name__)
@@ -143,9 +143,8 @@ class MkDocsBuilder:
         f = self._files[normname]
         source_path = pathlib.Path(f.abs_src_path)
         if source_path != new_path:
-            new_path.parent.mkdir(exist_ok=True, parents=True)
             self._files[normname] = new_f
-            shutil.copyfile(source_path, new_path)
+            pathhelpers.copy_file(source_path, new_path)
             return new_path
 
         return source_path

@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers
+from mknodes.utils import helpers, pathhelpers
 
 
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class MkBinaryImage(mkimage.MkImage):
             icon: Icon to get a MkBinaryImage for (example: material/file-image)
             kwargs: Keyword arguments passed to constructor
         """
-        icon_path = helpers.get_material_icon_path(icon)
+        icon_path = pathhelpers.get_material_icon_path(icon)
         content = icon_path.read_text()
         path = f"{helpers.slugify(icon)}.svg"
         return cls(data=content, path=path, **kwargs)

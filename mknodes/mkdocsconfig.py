@@ -16,9 +16,8 @@ from mkdocs import config as _config
 from mkdocs.commands import get_deps
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
-from mkdocs.utils import write_file
 
-from mknodes.utils import helpers
+from mknodes.utils import pathhelpers
 
 
 logger = get_plugin_logger(__name__)
@@ -40,7 +39,7 @@ class Config:
             case str() | os.PathLike() as path:
                 self._config = load_config(str(path))
             case None:
-                if file := helpers.find_file_in_folder_or_parent("mkdocs.yml"):
+                if file := pathhelpers.find_file_in_folder_or_parent("mkdocs.yml"):
                     self._config = load_config(str(file))
                 else:
                     msg = "Could not find config file"
@@ -109,7 +108,7 @@ class Config:
         self._config.extra_css.append(path)
         abs_path = self.site_dir / path
         logger.info("Registering css file %s...", abs_path)
-        write_file(css.encode(), str(abs_path))
+        pathhelpers.write_file(css, abs_path)
 
     def register_js(self, filename: str | os.PathLike, js: str):
         """Register a javascript file.
@@ -124,7 +123,7 @@ class Config:
         self._config.extra_javascript.append(path)
         abs_path = self.site_dir / path
         logger.info("Registering js file %s...", abs_path)
-        write_file(js.encode(), str(abs_path))
+        pathhelpers.write_file(js, abs_path)
 
     def register_template(self, filename: str, content: str):
         """Register a html template.
@@ -141,7 +140,7 @@ class Config:
         target_path = pathlib.Path(self._config.theme.custom_dir) / filename
         # path = pathlib.Path("overrides") / filename
         logger.info("Creating %s...", target_path.as_posix())
-        write_file(content.encode(), str(target_path))
+        pathhelpers.write_file(content, target_path)
 
     def get_markdown_instance(
         self,
