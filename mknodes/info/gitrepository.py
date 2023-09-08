@@ -32,11 +32,11 @@ class GitRepository(git.Repo):
     def repo_url(self) -> str:
         return self.remotes.origin.url.split(".git")[0] + "/"
 
-    def get_last_commits(  # type: ignore[name-defined]
+    def get_last_commits(
         self,
         num: int,
         branch: str | None = None,
-    ) -> list[git.Commit]:
+    ) -> list[git.Commit]:  # type: ignore[name-defined]
         """Return last x commits.
 
         Arguments:

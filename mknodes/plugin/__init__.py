@@ -42,7 +42,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """Create the project based on MkDocs config."""
         skin = theme.Theme.get_theme(
             theme_name=config.theme.name or "material",
-            data=config.theme._vars,
+            data=config.theme.data,
         )
         self.project = project.Project(
             base_url=config.site_url or "",
