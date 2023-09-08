@@ -3,7 +3,6 @@ from __future__ import annotations
 from contextlib import contextmanager
 import datetime
 import hashlib
-import logging
 import os
 import pathlib
 import tempfile as tmp
@@ -12,8 +11,10 @@ from urllib import parse, request
 
 import platformdirs
 
+from mknodes.utils import log
 
-logger = logging.getLogger(__name__)
+
+logger = log.get_logger(__name__)
 
 
 @contextmanager

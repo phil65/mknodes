@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-import logging
-
 from typing import Self
 from urllib import parse
 
 import git
 
 from mknodes.info import contexts
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class GitRepository(git.Repo):

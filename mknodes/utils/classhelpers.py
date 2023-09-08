@@ -5,18 +5,19 @@ import contextlib
 import importlib
 import importlib.util
 import inspect
-import logging
 import os
 import pathlib
 import sys
 import types
 import typing
 
+from mknodes.utils import log
+
 
 T = typing.TypeVar("T", bound=type)
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 def iter_subclasses(

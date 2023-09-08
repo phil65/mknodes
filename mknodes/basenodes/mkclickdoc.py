@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkClickDoc(mknode.MkNode):

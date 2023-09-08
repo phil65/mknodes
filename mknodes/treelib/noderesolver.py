@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-import logging
 import re
 
 from typing import Any
 
+from mknodes.utils import log
+
 
 _MAXCACHE = 20
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 # based on anyTree resolver, credits to them.

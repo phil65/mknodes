@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import contextlib
 import functools
-import logging
 
 from typing import Literal
 
-from mknodes.utils import packagehelpers, reprhelpers
+from mknodes.utils import log, packagehelpers, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 ClassifierStr = Literal[

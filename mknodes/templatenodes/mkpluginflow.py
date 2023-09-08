@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mkdocs import plugins
@@ -17,10 +15,10 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.data import eventplugins
-from mknodes.utils import inspecthelpers, reprhelpers
+from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkPluginFlow(mkcontainer.MkContainer):

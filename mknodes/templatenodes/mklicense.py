@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mktext
 from mknodes.info import license
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkLicense(mktext.MkText):

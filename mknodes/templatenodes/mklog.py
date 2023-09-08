@@ -6,10 +6,10 @@ import logging
 from typing import Any
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkLog(mkcode.MkCode):
@@ -43,7 +43,7 @@ class MkLog(mkcode.MkCode):
         log_handler = logging.StreamHandler(self.log_stream)
         log_handler.setLevel(log_level)
         log_handler.setFormatter(formatter)
-        logger = logger or logging.getLogger()
+        logger = logger or log.get_logger()
         logger.addHandler(log_handler)
         title = f"Logger: {logger.name}"
         super().__init__(title=title, language="", linenums=1, **kwargs)
@@ -77,7 +77,7 @@ class MkLog(mkcode.MkCode):
     def create_example_page(page):
         import mknodes
 
-        logger = logging.getLogger("test.logger")
+        logger = log.get_logger("test.logger")
         logger.setLevel(logging.DEBUG)
 
         node = MkLog(logger=logger)

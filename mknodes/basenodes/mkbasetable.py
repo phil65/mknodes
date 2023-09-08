@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Mapping, Sequence
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkBaseTable(mkcontainer.MkContainer):

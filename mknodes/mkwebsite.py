@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import logging
-
 from mknodes import mknav
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkWebSite(mknav.MkNav):

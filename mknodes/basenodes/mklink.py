@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import types
 
 from typing import Any
@@ -8,10 +7,10 @@ from typing import Any
 from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import linkprovider, reprhelpers
+from mknodes.utils import linkprovider, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkLink(mknode.MkNode):

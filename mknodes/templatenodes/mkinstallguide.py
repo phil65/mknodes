@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mkheader, mknode, mktext
 from mknodes.data import installmethods
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkInstallGuide(mkcontainer.MkContainer):

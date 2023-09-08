@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 import pathlib
 
@@ -11,10 +10,17 @@ from mknodes.info import folderinfo
 from mknodes.pages import pagetemplate
 from mknodes.plugin import infocollector
 from mknodes.theme import theme as theme_
-from mknodes.utils import classhelpers, helpers, linkprovider, reprhelpers, requirements
+from mknodes.utils import (
+    classhelpers,
+    helpers,
+    linkprovider,
+    log,
+    reprhelpers,
+    requirements,
+)
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 T = TypeVar("T", bound=theme_.Theme)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+from mknodes.utils import log
 import sys
 
 import click
@@ -11,9 +11,7 @@ from mknodes.plugin import mkdocshelpers
 from mknodes.utils import yamlhelpers
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 @click.group()

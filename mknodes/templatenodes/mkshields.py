@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mkimage, mknode
 from mknodes.data import badges
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkShields(mkcontainer.MkContainer):

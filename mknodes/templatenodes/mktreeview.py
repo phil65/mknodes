@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import logging
 import os
 import pathlib
 
@@ -10,10 +9,10 @@ from typing import Any, get_args
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
 from mknodes.data import treestyles
-from mknodes.utils import fsspecpath, reprhelpers
+from mknodes.utils import fsspecpath, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkTreeView(mkcode.MkCode):

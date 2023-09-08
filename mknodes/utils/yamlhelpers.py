@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import logging
 import pathlib
 
 from typing import Any
 
 import yaml
 
-from mknodes.utils import helpers
+from mknodes.utils import helpers, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 YAMLError = yaml.YAMLError
 
 

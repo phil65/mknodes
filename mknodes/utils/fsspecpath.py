@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-import logging
 import os
 import pathlib
 import re
 
 import fsspec
 
+from mknodes.utils import log
 
-logger = logging.getLogger(__name__)
+
+logger = log.get_logger(__name__)
 
 _RFC_3986_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+\-+.]*://")
 

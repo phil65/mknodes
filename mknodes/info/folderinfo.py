@@ -3,7 +3,6 @@ from __future__ import annotations
 import contextlib
 import functools
 import importlib
-import logging
 import os
 import pathlib
 import re
@@ -17,10 +16,10 @@ from mknodes.info import (
     packageinfo,
     pyproject,
 )
-from mknodes.utils import packagehelpers, pathhelpers, reprhelpers, yamlhelpers
+from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 SOCIALS = {

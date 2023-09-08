@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Literal
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkSpeechBubble(mkcontainer.MkContainer):

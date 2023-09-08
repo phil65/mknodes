@@ -5,7 +5,6 @@ import abc
 from collections.abc import Mapping
 import io
 import itertools
-import logging
 import os
 import pathlib
 import posixpath
@@ -13,10 +12,10 @@ import types
 
 from mkdocstrings import inventory
 
-from mknodes.utils import cache, helpers
+from mknodes.utils import cache, helpers, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class Inventory(inventory.Inventory):

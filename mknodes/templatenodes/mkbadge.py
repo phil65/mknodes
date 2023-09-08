@@ -2,15 +2,14 @@ from __future__ import annotations
 
 import functools
 import html
-import logging
 
 from typing import Any, Literal
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 StyleStr = Literal["default", "gitlab-scoped"]

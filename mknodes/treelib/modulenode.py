@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import inspect
-import logging
 import types
 
 from mknodes.treelib import node
-from mknodes.utils import inspecthelpers
+from mknodes.utils import inspecthelpers, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class ModuleNode(node.Node):

@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import logging
 import os
 import types
 
 from typing import Any
 
 from mknodes.pages import mktemplatepage, processors
-from mknodes.utils import classhelpers, reprhelpers
+from mknodes.utils import classhelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkModulePage(mktemplatepage.MkTemplatePage):

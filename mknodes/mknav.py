@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 import itertools
-import logging
 import os
 import pathlib
 import re
@@ -13,7 +12,7 @@ from typing import TYPE_CHECKING, Any, Self
 from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import navbuilder, reprhelpers
+from mknodes.utils import log, navbuilder, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -22,7 +21,7 @@ if TYPE_CHECKING:
 
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*\.md)\)"
 SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"

@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any, Literal
 
 from mknodes.basenodes import mkblock, mknode
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 MarkdownModeStr = Literal["block", "inline", "raw", "auto", "html"]

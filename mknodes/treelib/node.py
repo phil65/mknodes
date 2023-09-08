@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Sequence
 import copy
-import logging
 
 from typing import Self
 
 from mknodes.data import treestyles
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class Node:

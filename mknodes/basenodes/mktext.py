@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-import logging
 import re
 
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import cache, reprhelpers
+from mknodes.utils import cache, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 RESPONSE_CODE_OK = 200
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"

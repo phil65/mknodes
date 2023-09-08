@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import logging
 import os
 import types
 
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import classhelpers, reprhelpers
+from mknodes.utils import classhelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkDocStrings(mknode.MkNode):

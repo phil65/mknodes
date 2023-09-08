@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import logging
-
-from mknodes.utils import connector
+from mknodes.utils import connector, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class NodeConnector(connector.Connector):

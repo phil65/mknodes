@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Literal
 
 from mknodes.basenodes import mktable
 from mknodes.info import packageinfo
-from mknodes.utils import layouts, reprhelpers
+from mknodes.utils import layouts, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 PackageLayoutStr = Literal["default", "badge"]
 

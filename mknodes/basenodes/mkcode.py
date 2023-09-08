@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import inspect
-import logging
 import os
 import pathlib
 import textwrap
@@ -12,10 +11,10 @@ from typing import Any, Self
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, inspecthelpers, reprhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkCode(mkcontainer.MkContainer):

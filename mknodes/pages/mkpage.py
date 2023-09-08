@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import inspect
-import logging
 import os
 import pathlib
 
@@ -10,10 +9,10 @@ from typing import Any, Self
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkPage(mkcontainer.MkContainer):

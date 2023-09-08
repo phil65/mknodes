@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
-import logging
 
 from mknodes import project
 from mknodes.cssclasses import rootcss
 from mknodes.info import contexts
 from mknodes.pages import templateregistry
-from mknodes.utils import reprhelpers, requirements
+from mknodes.utils import log, reprhelpers, requirements
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class Theme:

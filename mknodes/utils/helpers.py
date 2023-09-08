@@ -2,14 +2,15 @@ from __future__ import annotations
 
 from collections.abc import Callable, Generator, Iterable
 import itertools
-import logging
 import os
 import re
 
 from typing import TypeVar
 
+from mknodes.utils import log
 
-logger = logging.getLogger(__name__)
+
+logger = log.get_logger(__name__)
 
 
 def to_str_if_textnode(node):

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+from mknodes.utils import log
 import re
 import textwrap
 
@@ -9,7 +9,7 @@ from mknodes.pages.metadata import Metadata
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class TextProcessor:

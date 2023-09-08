@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import logging
-
 from mknodes.basenodes import mkbasetable
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkHtmlTable(mkbasetable.MkBaseTable):

@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import dataclasses
-import logging
 
 from typing import Any
 
 from mknodes.data import buildsystems, commitconventions, installmethods
+from mknodes.utils import log
 from mknodes.utils.requirements import Requirements
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 @dataclasses.dataclass

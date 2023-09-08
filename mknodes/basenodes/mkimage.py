@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import pathlib
 
 from typing import Any, Literal
@@ -8,10 +7,10 @@ from typing import Any, Literal
 from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, linkprovider, reprhelpers
+from mknodes.utils import helpers, linkprovider, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkImage(mknode.MkNode):

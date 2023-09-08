@@ -4,6 +4,10 @@ import io
 import logging
 
 
+def get_logger(name: str | None = None) -> logging.Logger:
+    return logging.getLogger(f"mkdocs.plugin.{name}" if name else None)
+
+
 log_stream = io.StringIO()
 log_handler = logging.StreamHandler(log_stream)
 log_handler.setLevel(logging.DEBUG)

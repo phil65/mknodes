@@ -3,16 +3,15 @@ from __future__ import annotations
 import collections
 
 from collections.abc import ItemsView, KeysView, ValuesView
-import logging
 import pprint
 from types import MappingProxyType, SimpleNamespace
 from typing import Any, ClassVar, Protocol, runtime_checkable
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 @runtime_checkable

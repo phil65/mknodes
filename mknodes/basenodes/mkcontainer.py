@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-import logging
 import re
 
 from typing import Any
 
 from mknodes.basenodes import mkheader, mknode, mktext
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkContainer(mknode.MkNode):

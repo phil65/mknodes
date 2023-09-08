@@ -6,15 +6,16 @@ import functools
 import importlib
 
 from importlib import metadata
-import logging
 import types
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
 import pip._internal as pip
 
+from mknodes.utils import log
 
-logger = logging.getLogger(__name__)
+
+logger = log.get_logger(__name__)
 
 
 def install(package: str, editable: bool = False):

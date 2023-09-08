@@ -4,16 +4,15 @@ import contextlib
 import functools
 import inspect
 import itertools
-import logging
 import types
 
 from mknodes.data import datatypes
-from mknodes.utils import helpers
+from mknodes.utils import helpers, log
 
 
 RESPONSE_CODE_OK = 200
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 @functools.cache

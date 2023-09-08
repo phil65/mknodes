@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers, pathhelpers
+from mknodes.utils import helpers, log, pathhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkBinaryImage(mkimage.MkImage):

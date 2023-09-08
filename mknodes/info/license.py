@@ -3,7 +3,6 @@ from __future__ import annotations
 import dataclasses
 import functools
 import json
-import logging
 import pathlib
 
 from typing import Any
@@ -11,9 +10,10 @@ from typing import Any
 from mknodes import paths
 from mknodes.info import packageinfo
 from mknodes.jinja import environment
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 @functools.cache

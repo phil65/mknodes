@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
-import logging
 import pathlib
 
 from typing import Literal
@@ -12,10 +11,10 @@ from mknodes.basenodes import mknode
 from mknodes.cssclasses import cssclasses, rootcss
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 RGB_TUPLE_LEN = 3
 
 

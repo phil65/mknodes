@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import logging
 import pathlib
 
 from typing import cast
 
 from mknodes.data import treestyles
 from mknodes.treelib import node
-from mknodes.utils import fsspecpath
+from mknodes.utils import fsspecpath, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class FileTreeNode(node.Node):

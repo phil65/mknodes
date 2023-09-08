@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-import logging
-
 from typing import TYPE_CHECKING
 
 from mknodes import paths
@@ -10,14 +8,14 @@ from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.pages import pagetemplate
 from mknodes.treelib import node
-from mknodes.utils import helpers, requirements
+from mknodes.utils import helpers, log, requirements
 
 
 if TYPE_CHECKING:
     from mknodes import project
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkNode(node.Node):

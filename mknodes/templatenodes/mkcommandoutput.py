@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-import logging
 
 from mknodes.basenodes import mknode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 TEXT = """<div data-terminal>

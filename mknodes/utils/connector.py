@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Hashable
-import logging
 import textwrap
 
+from mknodes.utils import log
 
-logger = logging.getLogger(__name__)
+
+logger = log.get_logger(__name__)
 
 
 class Connector:

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import functools
-import logging
 import os
 
 import github
 
 from mknodes.info import contexts
-from mknodes.utils import cache
+from mknodes.utils import cache, log
 
 
 RAW_URL = "https://raw.githubusercontent.com/"
@@ -16,7 +15,7 @@ token = os.environ.get("GITHUB_ACCESS_TOKEN")
 auth = github.Auth.Token(token) if token else None
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class GitHubRepo:

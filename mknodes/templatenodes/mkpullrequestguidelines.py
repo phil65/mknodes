@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mktext
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 INTRO = """Link to any related issue in the Pull Request message.

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 import pathlib
 
@@ -8,13 +7,13 @@ from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import cache, helpers, reprhelpers
+from mknodes.utils import cache, helpers, log, reprhelpers
 
 
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkInclude(mknode.MkNode):

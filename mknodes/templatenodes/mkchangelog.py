@@ -3,7 +3,6 @@ from __future__ import annotations
 import contextlib
 import functools
 import io
-import logging
 import os
 
 from typing import Any, Literal
@@ -11,10 +10,10 @@ from typing import Any, Literal
 from git_changelog import cli
 
 from mknodes.basenodes import mktext
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 @functools.cache

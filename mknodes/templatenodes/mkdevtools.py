@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mkheader, mklink, mktext
 from mknodes.data import tools
 from mknodes.info import folderinfo
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkDevTools(mkcontainer.MkContainer):

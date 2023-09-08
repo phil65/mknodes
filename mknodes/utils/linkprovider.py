@@ -2,16 +2,15 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from importlib import metadata
-import logging
 import os
 import types
 
 from mknodes import paths
 from mknodes.info import packageinfo
-from mknodes.utils import helpers, inventorymanager
+from mknodes.utils import helpers, inventorymanager, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 def homepage_for_distro(dist_name: str) -> str | None:
@@ -165,5 +164,5 @@ class LinkProvider:
 if __name__ == "__main__":
     provider = LinkProvider()
     provider.add_inv_file("https://docs.python.org/3/objects.inv")
-    link = provider.link_for_klass(logging.LogRecord)
+    link = provider.link_for_klass(LinkProvider)
     print(link)

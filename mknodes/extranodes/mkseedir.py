@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 import pathlib
 
@@ -9,10 +8,10 @@ from typing import Any, Literal, get_args
 import seedir
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 DirectoryTreeStyleStr = Literal["lines", "dash", "arrow", "spaces", "plus"]

@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-import logging
 import os
 import pathlib
 import shutil
 
+from mknodes.utils import log
 
-logger = logging.getLogger(__name__)
+
+logger = log.get_logger(__name__)
 
 
 def copy(

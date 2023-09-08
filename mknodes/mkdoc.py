@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Sequence
 import inspect
-import logging
 import pathlib
 import types
 
@@ -10,10 +9,10 @@ from typing import Any
 
 from mknodes import mknav
 from mknodes.pages import mkclasspage, mkmodulepage
-from mknodes.utils import classhelpers, reprhelpers
+from mknodes.utils import classhelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkDoc(mknav.MkNav):

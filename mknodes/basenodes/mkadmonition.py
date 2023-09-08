@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import logging
 import textwrap
 
 from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkAdmonition(mkcontainer.MkContainer):

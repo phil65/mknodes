@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import logging
+from mknodes.utils import log
 
 from mknodes.basenodes import mkcontainer, _mkdocstrings, mkheader
 from mknodes.templatenodes import mkclassdiagram, mkclasstable, mkmoduletable
 from mknodes.utils import classhelpers, inspecthelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class ContainerProcessor:

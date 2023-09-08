@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import dataclasses
-import logging
+
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 # Link are created following the documentation here :
 # https://mermaid.js.org/syntax/flowchart.html#links-between-nodes

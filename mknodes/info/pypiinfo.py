@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import logging
-
-from mknodes.utils import cache
+from mknodes.utils import cache, log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 URL = "https://pypi.org/pypi/{name}/json"
 

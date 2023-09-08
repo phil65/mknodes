@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mkheader, mklink, mknode, mktext
 from mknodes.data import buildsystems
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 EXAMPLE_URL = "http://www.some-github-provider.com/my-project.git"
 

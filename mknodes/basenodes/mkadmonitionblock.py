@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any, get_args
 
 from mknodes.basenodes import mkblock, mknode
 from mknodes.data import datatypes
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkAdmonitionBlock(mkblock.MkBlock):

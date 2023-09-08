@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import json
-import logging
 
 from typing import Any, Literal
 
 import tomli_w
 
 from mknodes.basenodes import mkcode, mkdefinitionlist, mknode, mktext
-from mknodes.utils import helpers, reprhelpers, yamlhelpers
+from mknodes.utils import helpers, log, reprhelpers, yamlhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkConfigSetting(mkdefinitionlist.MkDefinition):

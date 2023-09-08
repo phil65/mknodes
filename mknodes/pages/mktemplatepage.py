@@ -3,12 +3,12 @@ from __future__ import annotations
 import abc
 
 from collections.abc import Sequence
-import logging
 
 from mknodes.pages import mkpage, processors
+from mknodes.utils import log
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):

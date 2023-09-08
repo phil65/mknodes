@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import pkgutil
 
 from typing import Any, Literal
@@ -9,10 +8,10 @@ from urllib import parse
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.info import packageinfo
 from mknodes.templatenodes import mkbadge
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 MetadataTypeStr = (

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import argparse
-import logging
 
 from mknodes.basenodes import mkcontainer, mkheader, mktext
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkArgParseHelp(mkcontainer.MkContainer):

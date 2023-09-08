@@ -3,14 +3,13 @@ from __future__ import annotations
 import abc
 
 from collections.abc import Callable
-import logging
 import re
 import types
 from typing import TYPE_CHECKING
 
 from mknodes.basenodes import mkcontainer, mklink, mklist, mknode
 from mknodes.templatenodes import mkmetadatabadges
-from mknodes.utils import classhelpers, helpers, inspecthelpers, linkprovider
+from mknodes.utils import classhelpers, helpers, inspecthelpers, linkprovider, log
 
 
 if TYPE_CHECKING:
@@ -18,7 +17,7 @@ if TYPE_CHECKING:
     from mknodes.utils import packagehelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 MARKER_RE = r'([A-Za-z_]* [>|=|<]* ".*?")'
 

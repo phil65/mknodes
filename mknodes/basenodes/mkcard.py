@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -9,10 +7,10 @@ from xml.etree import ElementTree
 from mknodes import mknav
 from mknodes.basenodes import mkbinaryimage, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import linkprovider, reprhelpers
+from mknodes.utils import linkprovider, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 CARD_DEFAULT_SIZE = 200
 

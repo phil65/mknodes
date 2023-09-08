@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 CriticMarkStr = Literal["addition", "deletion", "comment", "highlight"]
 

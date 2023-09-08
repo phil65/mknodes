@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import datetime
-import logging
 
 import jinja2
 
 from mknodes.utils import helpers, jinjahelpers, log, yamlhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 ENVIRONMENT_GLOBALS = {"log": log.log_stream.getvalue, "now": datetime.datetime.now}

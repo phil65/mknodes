@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import logging
-
 from typing import Any, Literal
 
 from mknodes.basenodes import (
@@ -13,10 +11,10 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.data import datatypes
-from mknodes.utils import inspecthelpers, reprhelpers
+from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkCommentedCode(mkcontainer.MkContainer):

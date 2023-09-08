@@ -2,15 +2,13 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import Mapping, MutableMapping
-import logging
-
 from typing import Any
 
 from mknodes.jinja import environment
-from mknodes.utils import helpers, jinjahelpers, reprhelpers
+from mknodes.utils import helpers, jinjahelpers, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class InfoCollector(MutableMapping, metaclass=ABCMeta):

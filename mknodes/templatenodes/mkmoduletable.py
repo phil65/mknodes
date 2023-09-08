@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 import inspect
-import logging
 import types
 
 from mknodes.basenodes import mktable
-from mknodes.utils import classhelpers, helpers, layouts, linkprovider, reprhelpers
+from mknodes.utils import classhelpers, helpers, layouts, linkprovider, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkModuleTable(mktable.MkTable):

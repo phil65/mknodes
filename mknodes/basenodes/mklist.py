@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-import logging
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, linkprovider, reprhelpers
+from mknodes.utils import helpers, linkprovider, log, reprhelpers
 
 
-logger = logging.getLogger(__name__)
+logger = log.get_logger(__name__)
 
 
 class MkList(mkcontainer.MkContainer):
