@@ -128,7 +128,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 ]
                 items.extend(urls)
             case "dependencies":
-                info = self.package_info.get_required_packages()
+                info = self.package_info.required_packages
                 items.extend(
                     (package.name, package.version, package.homepage) for package in info
                 )

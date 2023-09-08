@@ -5,6 +5,7 @@ import collections
 from collections.abc import Mapping
 import os
 import pathlib
+import tempfile
 
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
@@ -37,7 +38,9 @@ class MkDocsBuilder:
                 self._config = config
             case _:
                 self._config = mkdocsconfig.Config(config)._config
-        self.directory = str(directory or self._config.docs_dir)
+        self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
+        self.directory = str(directory or self._dir.name)
+        logger.debug("Creating temporary dir %s", self._dir.name)
         self.assets_path = pathlib.Path(self.directory) / "assets"
         self.asset_files: list[str] = []
 

@@ -125,11 +125,7 @@ class Project(Generic[T]):
         from mknodes.pages import mkpage
 
         metadata = self.folderinfo.aggregate_info() | self.theme.aggregate_info()
-        variables = {
-            "metadata": metadata,
-            "filenames": {},
-            "project": self,
-        }
+        variables = {"metadata": metadata, "filenames": {}}
         variables |= self.get_requirements()
         if root := self._root:
             page_mapping = {

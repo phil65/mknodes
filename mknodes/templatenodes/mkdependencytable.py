@@ -59,7 +59,7 @@ class MkDependencyTable(mktable.MkTable):
     def data(self):
         if not self.package:
             return {}
-        packages = self.package.get_required_packages()
+        packages = self.package.required_packages
         if data := [self.layouter.get_row_for(kls) for kls in packages.items()]:
             return {
                 k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]

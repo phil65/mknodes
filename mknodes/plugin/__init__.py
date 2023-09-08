@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pathlib
-import tempfile
 import urllib.parse
 
 from typing import TYPE_CHECKING, Literal
@@ -33,8 +32,6 @@ CommandStr = Literal["build", "serve", "gh-deploy"]
 class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
-        logger.debug("Creating temporary dir %s", self._dir.name)
         self.link_replacer = linkreplacer.LinkReplacer()
         logger.debug("Finished initializing plugin")
 
@@ -69,12 +66,12 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         cfg = mkdocsconfig.Config(config)
         info = self.project.infocollector
         info["config"] = config
-        builder = mkdocsbuilder.MkDocsBuilder(
+        self.builder = mkdocsbuilder.MkDocsBuilder(
             files=files,
             config=cfg,
-            directory=self._dir.name,
+            directory=self.config.build_folder,
         )
-        builder.write_files(self.project.all_files())  # type: ignore[arg-type]
+        self.builder.write_files(self.project.all_files())  # type: ignore[arg-type]
         reqs = self.project.get_requirements()
         for k, v in reqs.css.items():
             cfg.register_css(k, v)
@@ -89,12 +86,12 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         cfg._config.repo_url = info["metadata"]["repository_url"]
         cfg._config.site_description = info["metadata"]["summary"]
         cfg._config.site_name = info["metadata"]["name"]
-        cfg._config.site_author = info["project"].info.author_name
+        cfg._config.site_author = info["metadata"]["author_name"]
         md = cfg.get_markdown_instance()
         for template in reqs.templates:
             if html := template.build_html(md):
                 cfg.register_template(template.filename, html)
-        return builder.files
+        return self.builder.files
 
     def on_nav(
         self,

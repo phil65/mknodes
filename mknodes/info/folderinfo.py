@@ -155,7 +155,8 @@ class FolderInfo:
             return lic.content
         return None
 
-    def get_social_info(self) -> list[dict[str, str]]:
+    @property
+    def social_info(self) -> list[dict[str, str]]:
         result = []
         if self.repository_url:
             result.append(
@@ -173,18 +174,6 @@ class FolderInfo:
         )
         return result
 
-    def aggregate_info(self) -> dict:
-        infos = dict(
-            repository_name=self.repository_name,
-            repository_username=self.repository_username,
-            repository_url=self.repository_url,
-            social_info=self.get_social_info(),
-        )
-        infos |= self.info.metadata.json
-        if self.mkdocs_config:
-            infos["name"] = self.mkdocs_config["site_name"]
-        return infos
-
     @property
     def task_runners(self) -> list[taskrunners.TaskRunner]:
         """Return list of task runners used by this package."""
@@ -196,6 +185,20 @@ class FolderInfo:
                 for i in runner.filenames
             )
         ]
+
+    def aggregate_info(self) -> dict:
+        infos = dict(
+            repository_name=self.repository_name,
+            repository_username=self.repository_username,
+            repository_url=self.repository_url,
+            social_info=self.social_info,
+            author_name=self.info.author_name,
+            author_email=self.info.author_email,
+        )
+        infos |= self.info.metadata.json
+        if self.mkdocs_config:
+            infos["name"] = self.mkdocs_config["site_name"]
+        return infos
 
 
 if __name__ == "__main__":

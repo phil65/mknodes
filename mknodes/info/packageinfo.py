@@ -85,7 +85,7 @@ class PackageInfo:
         return None
 
     @functools.cached_property
-    def required_deps(self) -> list[packagehelpers.Dependency]:
+    def _required_deps(self) -> list[packagehelpers.Dependency]:
         requires = packagehelpers.get_requires(self.distribution)
         return [packagehelpers.get_dependency(i) for i in requires] if requires else []
 
@@ -152,7 +152,7 @@ class PackageInfo:
     @property
     def required_package_names(self) -> list[str]:
         """Get a list of names from required packages."""
-        return [i.name for i in self.required_deps]
+        return [i.name for i in self._required_deps]
 
     @property
     def author_email(self) -> str:
@@ -185,7 +185,7 @@ class PackageInfo:
     def extras(self) -> dict[str, list[str]]:
         """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
         extras: dict[str, list[str]] = {}
-        for dep in self.required_deps:
+        for dep in self._required_deps:
             for extra in dep.extras:
                 if extra in extras:
                     extras[extra].append(dep.name)
@@ -197,7 +197,8 @@ class PackageInfo:
     def required_python_version(self) -> str | None:
         return self.metadata.json.get("requires_python")
 
-    def get_required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
+    @property
+    def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         modules = (
             {
                 packagehelpers.get_dependency(i).name
@@ -209,11 +210,11 @@ class PackageInfo:
         packages = {}
         for mod in modules:
             with contextlib.suppress(Exception):
-                packages[get_info(mod)] = self.get_dep_info(mod)
+                packages[get_info(mod)] = self._get_dep_info(mod)
         return packages
 
-    def get_dep_info(self, name: str) -> packagehelpers.Dependency:
-        for i in self.required_deps:
+    def _get_dep_info(self, name: str) -> packagehelpers.Dependency:
+        for i in self._required_deps:
             if i.name == name:
                 return i
         raise ValueError(name)
