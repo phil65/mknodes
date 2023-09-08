@@ -69,11 +69,33 @@ class PackageContext:
 
 
 @dataclasses.dataclass
+class GitHubContext:
+    """Information about the GitHub repo / user."""
+
+    default_branch: str = "main"
+    repo_name: str = "mknodes"
+    workflows: list[dict] = dataclasses.field(default_factory=list)
+    avatar_url: str | None = None
+    bio: str | None = None
+    blog: str | None = None
+    company: str | None = None
+    contributions: int | None = None
+    email: str | None = None
+    followers: int = 0
+    gravatar_id: str | None = None
+    hireable: bool = False
+    location: str | None = None
+    name: str | None = None
+    twitter_username: str | None = None
+
+
+@dataclasses.dataclass
 class ProjectContext:
     """All information about a project."""
 
     info: PackageContext = dataclasses.field(default_factory=PackageContext)
     git: GitContext = dataclasses.field(default_factory=GitContext)
+    github: GitHubContext = dataclasses.field(default_factory=GitHubContext)
     theme: ThemeContext = dataclasses.field(default_factory=ThemeContext)
     requirements: Requirements = dataclasses.field(default_factory=Requirements)
 

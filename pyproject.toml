@@ -102,6 +102,7 @@ dependencies = [
     "fsspec",
     "cssutils",
     "mergedeep",
+    "pygithub>=2.0.dev0",
     "coloraide",
     "tomli-w",
     "anybadge",

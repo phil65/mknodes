@@ -9,7 +9,14 @@ import pathlib
 import re
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
-from mknodes.info import contexts, gitrepository, license, packageinfo, pyproject
+from mknodes.info import (
+    contexts,
+    # githubinfo,
+    gitrepository,
+    license,
+    packageinfo,
+    pyproject,
+)
 from mknodes.utils import packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
 
