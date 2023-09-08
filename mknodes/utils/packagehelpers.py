@@ -60,6 +60,11 @@ def get_marker(marker):
     return Marker(marker)
 
 
+@functools.cache
+def _get_entry_points(dist: metadata.Distribution):
+    return dist.entry_points
+
+
 def get_extras(markers: list) -> list[str]:
     extras = []
     for marker in markers:
@@ -82,11 +87,14 @@ class EntryPoint:
     obj: types.ModuleType | type
 
 
-def get_entry_points(dist, group: str | None = None) -> dict[str, EntryPoint]:
+def get_entry_points(
+    dist: metadata.Distribution,
+    group: str | None = None,
+) -> dict[str, EntryPoint]:
     if not group:
-        eps = dist.entry_points
+        eps = _get_entry_points(dist)
     else:
-        eps = [i for i in dist.entry_points if i.group == group]
+        eps = [i for i in _get_entry_points(dist) if i.group == group]
     dct = {}
     for ep in eps:
         name, dotted_path = ep.name, ep.value
