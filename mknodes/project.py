@@ -75,7 +75,7 @@ class Project(Generic[T]):
         return cls(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
-            theme=theme_.Theme.get_theme(config),
+            theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
             build_fn=config.plugins["mknodes"].config.path,
         )
 
@@ -87,7 +87,7 @@ class Project(Generic[T]):
         return cls(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
-            theme=theme_.Theme.get_theme(config),
+            theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
             repo=folderinfo.FolderInfo.clone_from(path),
         )
 

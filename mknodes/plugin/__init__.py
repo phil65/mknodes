@@ -43,8 +43,10 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
 
     def on_config(self, config: MkDocsConfig):
         """Create the project based on MkDocs config."""
-        cfg = mkdocsconfig.Config(config)
-        skin = theme.Theme.get_theme(config=cfg)
+        skin = theme.Theme.get_theme(
+            theme_name=config.theme.name or "material",
+            data=config.theme._vars,
+        )
         self.project = project.Project(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,

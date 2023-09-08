@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import MutableMapping
 import logging
 
-from mknodes import mkdocsconfig, project
+from mknodes import project
 from mknodes.cssclasses import rootcss
 from mknodes.pages import templateregistry
 from mknodes.utils import reprhelpers, requirements
@@ -36,13 +36,12 @@ class Theme:
         )
 
     @classmethod
-    def get_theme(cls, config: mkdocsconfig.Config, **kwargs):
-        theme_name = config.theme.name
+    def get_theme(cls, theme_name: str = "material", data: dict | None = None, **kwargs):
         if theme_name == "material":
             from mknodes.theme import materialtheme
 
-            return materialtheme.MaterialTheme(data=config.theme._vars, **kwargs)
-        return Theme(theme_name, data=config.theme._vars, **kwargs)
+            return materialtheme.MaterialTheme(data=data, **kwargs)
+        return Theme(theme_name, data=data, **kwargs)
 
     def get_files(self):
         return {}
