@@ -280,4 +280,3 @@ if __name__ == "__main__":
 
     section = "pre" >> mknodes.MkText("hello\n# Header\nfdsfds") >> "test" >> "xx"
     print(section)
-    print(section.get_requirements())

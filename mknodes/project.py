@@ -144,5 +144,3 @@ if __name__ == "__main__":
 
     root.build(project)
     project.aggregate_info()
-    reqs = project.get_requirements()
-    print(reqs.keys())
