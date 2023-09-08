@@ -150,19 +150,8 @@ class FolderInfo:
         if self.license_file_path:
             return self.license_file_path.read_text(encoding="utf-8")
         if license_name := self.info.license_name:
-            holder = self.info.author_name
-            summary = self.info.metadata["Summary"]
-            package_name = self.info.name
-            website = self.repository_url or ""
-            email = self.info.author_email or ""
             lic = license.License.from_name(license_name)
-            lic.resolve_template(
-                holder=holder,
-                summary=summary,
-                package_name=package_name,
-                website=website,
-                email=email,
-            )
+            lic.resolve_by_distribution(self.info.name)
             return lic.content
         return None
 

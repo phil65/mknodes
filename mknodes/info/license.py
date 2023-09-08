@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import dataclasses
-import datetime
 import functools
 import json
 import logging
@@ -10,6 +9,8 @@ import pathlib
 from typing import Any
 
 from mknodes import paths
+from mknodes.info import packageinfo
+from mknodes.jinja import environment
 
 
 logger = logging.getLogger(__name__)
@@ -60,28 +61,44 @@ class License:
             identifier=p.name,
         )
 
+    def resolve_by_distribution(self, distribution: str):
+        info = packageinfo.get_info(distribution)
+        env = environment.Environment()
+        env.globals["metadata"] = dict(
+            copyright_holder=info.author_name,
+            organization=info.author_name,
+            program_description=info.metadata["Summary"],
+            program_name=info.name,
+            program_url=info.repository_url or "",
+            program_version=info.metadata["Version"],
+            email=info.author_email,
+        )
+        self.content = env.render_string(self.content)
+
     def resolve_template(
         self,
         holder: str,
         package_name: str,
+        organization: str | None = None,
         website: str = "",
         email: str = "",
         summary: str = "",
+        version: str = "",
     ):
-        text = self.content
-        year = str(datetime.date.today().year)
-        text = text.replace(r"{{ now().year }}", year)
-        text = text.replace(r"{{ metadata.copyright_holder }}", holder)
-        text = text.replace(r"{{ metadata.organization }}", holder)
-        text = text.replace(r"{{ metadata.program_url }}", website)
-        text = text.replace(r"{{ metadata.program_name }}", package_name)
-        text = text.replace(r"{{ metadata.program_version }}", "")
-        desc = f"{package_name}: {summary}"
-        text = text.replace(r"{{ metadata.program_description }}", desc)
-        self.content = text
+        env = environment.Environment()
+        env.globals["metadata"] = dict(
+            copyright_holder=holder,
+            organization=organization or holder,
+            program_description=summary,
+            program_name=package_name,
+            program_url=website,
+            program_version=version,
+            email=email,
+        )
+        self.content = env.render_string(self.content)
 
 
 if __name__ == "__main__":
     db = License.from_name("BSD-3-Clause")
-    db.resolve_template(holder="Phil", package_name="test")
+    db.resolve_by_distribution("mknodes")
     print(db)
