@@ -11,6 +11,7 @@ from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_, nav, pages
 
 from mknodes import mkdocsconfig
+from mknodes.plugin import mkdocshelpers
 from mknodes.utils import pathhelpers
 
 
@@ -101,15 +102,7 @@ class MkDocsBuilder:
 
         [Files]: https://github.com/mkdocs/mkdocs/blob/master/mkdocs/structure/files.py
         """
-
-        def file_sort_key(f: files_.File):
-            parts = pathlib.PurePath(f.src_path).parts
-            return tuple(
-                chr(f.name != "index" if i == len(parts) - 1 else 2) + p
-                for i, p in enumerate(parts)
-            )
-
-        files = sorted(self._files.values(), key=file_sort_key)
+        files = sorted(self._files.values(), key=mkdocshelpers.file_sorter)
         return files_.Files(files)
 
     def write(self, path: str | os.PathLike, content: str | bytes):
@@ -144,7 +137,7 @@ class MkDocsBuilder:
         source_path = pathlib.Path(f.abs_src_path)
         if source_path != new_path:
             self._files[normname] = new_f
-            pathhelpers.copy_file(source_path, new_path)
+            pathhelpers.copy(source_path, new_path)
             return new_path
 
         return source_path

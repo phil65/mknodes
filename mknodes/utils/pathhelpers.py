@@ -9,21 +9,41 @@ import shutil
 logger = logging.getLogger(__name__)
 
 
-def copy_file(source_path: str | os.PathLike, output_path: str | os.PathLike):
+def copy(
+    source_path: str | os.PathLike,
+    output_path: str | os.PathLike,
+    exist_ok: bool = True,
+):
     """Copy source_path to output_path, making sure any parent directories exist.
 
     The output_path may be a directory.
+
+    Arguments:
+        source_path: File to copy
+        output_path: path where file should get copied to.
+        exist_ok: Whether exception should be raised in case stuff would get overwritten
     """
     output_path = pathlib.Path(output_path)
     source_path = pathlib.Path(source_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    if output_path.is_dir():
-        output_path = output_path / source_path.name
-    shutil.copyfile(source_path, output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=exist_ok)
+    if source_path.is_dir():
+        if output_path.is_dir():
+            msg = "Cannot copy folder to file!"
+            raise RuntimeError(msg)
+        shutil.copytree(source_path, output_path, dirs_exist_ok=exist_ok)
+    else:
+        if output_path.is_dir():
+            output_path = output_path / source_path.name
+        shutil.copyfile(source_path, output_path)
 
 
 def write_file(content: str | bytes, output_path: str | os.PathLike):
-    """Write content to output_path, making sure any parent directories exist."""
+    """Write content to output_path, making sure any parent directories exist.
+
+    Arguments:
+        content: Content to write
+        output_path: path where file should get written to.
+    """
     output_path = pathlib.Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
