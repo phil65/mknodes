@@ -130,9 +130,7 @@ class Project(Generic[T]):
     def aggregate_info(self):
         from mknodes.pages import mkpage
 
-        metadata = self.folderinfo.aggregate_info() | self.theme.aggregate_info()
-        variables = {"metadata": metadata, "filenames": {}}
-        variables |= self.get_requirements()
+        variables = self.context.as_dict()
         if root := self._root:
             page_mapping = {
                 node.resolved_file_path: node

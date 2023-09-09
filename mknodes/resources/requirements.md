@@ -10,13 +10,13 @@ All files connected to the node tree:
 
 Plugins used by the tree nodes:
 
-{{ plugins | MkPrettyPrint }}
+{{ requirements.plugins | MkPrettyPrint }}
 
 ### CSS
 
 CSS used by the tree nodes:
 
-{% for filename, content in css.items() %}
+{% for filename, content in requirements.css.items() %}
 
 {{ filename | MkHeader(level=4)}}
 
@@ -28,4 +28,4 @@ CSS used by the tree nodes:
 
 Extensions used by the tree nodes:
 
-{{ markdown_extensions | dump_yaml |  MkCode(language="yaml") }}
+{{ requirements.markdown_extensions | dump_yaml |  MkCode(language="yaml") }}

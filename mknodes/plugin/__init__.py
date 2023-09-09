@@ -72,23 +72,23 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             directory=self.config.build_folder,
         )
         self.builder.write_files(self.project.all_files())  # type: ignore[arg-type]
-        reqs = self.project.get_requirements()
-        for k, v in reqs.css.items():
+        ctx = self.project.context
+        for k, v in ctx.requirements.css.items():
             cfg.register_css(k, v)
-        for k, v in reqs.js_files.items():
+        for k, v in ctx.requirements.js_files.items():
             cfg.register_js(k, v)
-        if extensions := reqs.markdown_extensions:
+        if extensions := ctx.requirements.markdown_extensions:
             cfg.register_extensions(extensions)
-        if social := info["metadata"]["social_info"]:
-            extra = cfg._config.extra
+        if social := ctx.metadata.social_info:
+            extra = config.extra
             if not extra.get("social"):
                 extra["social"] = social
-        cfg._config.repo_url = info["metadata"]["repository_url"]
-        cfg._config.site_description = info["metadata"]["summary"]
-        cfg._config.site_name = info["metadata"]["name"]
-        cfg._config.site_author = info["metadata"]["author_name"]
+        config.repo_url = ctx.metadata.repository_url
+        config.site_description = ctx.metadata.summary
+        config.site_name = ctx.metadata.distribution_name
+        config.site_author = ctx.metadata.author_name
         md = cfg.get_markdown_instance()
-        for template in reqs.templates:
+        for template in ctx.requirements.templates:
             if html := template.build_html(md):
                 cfg.register_template(template.filename, html)
         return self.builder.files

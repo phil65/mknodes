@@ -100,14 +100,15 @@ def create_config(repo_url, site_script: str, theme: str | None, **kwargs):
         build_fn=site_script,
         clone_depth=1,
     )
-    info = proj.infocollector
-    config["markdown_extensions"] = info["markdown_extensions"]
-    if social := info["metadata"]["social_info"]:
+    requirements = proj.context.requirements
+    info = proj.context.info
+    config["markdown_extensions"] = requirements.markdown_extensions
+    if social := info.social_info:
         config["extra"]["social"] = social  # type: ignore[index]
-    config["repo_url"] = info["metadata"]["repository_url"]
-    config["site_description"] = info["metadata"]["summary"]
-    config["site_name"] = info["metadata"]["name"]
-    config["site_author"] = info["project"].info.author_name
+    config["repo_url"] = info.repository_url
+    config["site_description"] = info.summary
+    config["site_name"] = info.distribution_name
+    config["site_author"] = info.author_name
     result = yamlhelpers.dump_yaml(config)
     print(result)
 
