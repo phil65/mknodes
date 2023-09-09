@@ -178,13 +178,15 @@ class MaterialTheme(theme.Theme):
         self.css[":root"]["--md-primary-bg-color--light"] = color_str
         return color_str
 
-    def get_primary_color(self) -> str:
+    @property
+    def primary_color(self) -> str:
         if self._foreground_color:
             return self._foreground_color
         color = self._get_color("primary", fallback="indigo")
         return COLORS[color]["color"]
 
-    def get_text_color(self):
+    @property
+    def _text_color(self):
         color = self._get_color("primary", fallback="indigo")
         return COLORS[color]["text"]
 

@@ -29,6 +29,9 @@ class Theme:
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
 
+    def __repr__(self):
+        return reprhelpers.get_repr(self, theme_name=self.theme_name)
+
     def get_requirements(self):
         return requirements.Requirements(
             css={"mknodes_theme.css": str(self.css)},
@@ -46,22 +49,21 @@ class Theme:
     def get_files(self):
         return {}
 
-    def get_primary_color(self) -> str:
+    @property
+    def primary_color(self) -> str:
         return "#5555BB"
 
-    def get_text_color(self) -> str:
+    @property
+    def text_color(self) -> str:
         return "#000000"
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self, theme_name=self.theme_name)
 
     @property
     def context(self):
         return contexts.ThemeContext(
             name=self.theme_name,
             data=self.data,
-            primary_color=self.get_primary_color(),
-            text_color=self.get_text_color(),
+            primary_color=self.primary_color,
+            text_color=self.text_color,
         )
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
