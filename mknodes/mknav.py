@@ -410,7 +410,8 @@ class MkNav(mknode.MkNode):
         """
         path = pathlib.Path(path)
         if path.is_absolute():
-            path = path.relative_to(pathlib.Path().absolute())
+            path = os.path.relpath(path, pathlib.Path().absolute())
+        path = pathlib.Path(path)
         content = path.read_text()
         return cls._from_text(
             content,
