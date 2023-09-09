@@ -13,7 +13,15 @@ logger = log.get_logger(__name__)
 
 
 @dataclasses.dataclass
-class GitContext:
+class Context:
+    def as_dict(self):
+        return {
+            field.name: getattr(self, field.name) for field in dataclasses.fields(self)
+        }
+
+
+@dataclasses.dataclass
+class GitContext(Context):
     main_branch: str = ""
     repo_name: str = ""
     last_commits: list = dataclasses.field(default_factory=list)
@@ -21,7 +29,7 @@ class GitContext:
 
 
 @dataclasses.dataclass
-class ThemeContext:
+class ThemeContext(Context):
     name: str = ""
     primary_color: str = ""
     text_color: str = ""
@@ -29,7 +37,7 @@ class ThemeContext:
 
 
 @dataclasses.dataclass
-class PackageContext:
+class PackageContext(Context):
     # PackageInfo
     pretty_name: str = ""
     distribution_name: str = ""
@@ -69,7 +77,7 @@ class PackageContext:
 
 
 @dataclasses.dataclass
-class GitHubContext:
+class GitHubContext(Context):
     """Information about the GitHub repo / user."""
 
     default_branch: str = ""
@@ -90,14 +98,22 @@ class GitHubContext:
 
 
 @dataclasses.dataclass
-class ProjectContext:
+class ProjectContext(Context):
     """All information about a project."""
 
-    info: PackageContext = dataclasses.field(default_factory=PackageContext)
+    metadata: PackageContext = dataclasses.field(default_factory=PackageContext)
     git: GitContext = dataclasses.field(default_factory=GitContext)
     github: GitHubContext = dataclasses.field(default_factory=GitHubContext)
     theme: ThemeContext = dataclasses.field(default_factory=ThemeContext)
     requirements: Requirements = dataclasses.field(default_factory=Requirements)
+
+    def as_dict(self):
+        return dict(
+            metadata=self.metadata.as_dict(),
+            requirements=dict(self.requirements),
+            theme=self.theme.as_dict(),
+            git=self.git.as_dict(),
+        )
 
 
 default_package_context = PackageContext(
@@ -135,7 +151,7 @@ default_github_context = GitHubContext(
 
 
 default_project_context = ProjectContext(
-    info=default_package_context,
+    metadata=default_package_context,
     git=default_git_context,
     github=default_github_context,
     theme=default_theme_context,

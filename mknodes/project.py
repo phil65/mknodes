@@ -146,9 +146,9 @@ class Project(Generic[T]):
     @property
     def context(self):
         return contexts.ProjectContext(
-            info=self.folderinfo.context,
+            metadata=self.folderinfo.context,
             git=self.folderinfo.git.context,
-            github=self.folderinfo.github.context,
+            # github=self.folderinfo.github.context,
             theme=self.theme.context,
             requirements=self.get_requirements(),
         )
