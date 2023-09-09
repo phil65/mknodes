@@ -1,25 +1,21 @@
 from __future__ import annotations
 
-import tomllib
-
-import tomli_w
+import json
 
 from mknodes.info import configfile
 
 
-class TomlFile(configfile.ConfigFile):
-    multiline_strings = False
-
+class JsonFile(configfile.ConfigFile):
     @classmethod
     def _dump(cls, data: dict) -> str:
-        return tomli_w.dumps(data, multiline_strings=cls.multiline_strings)
+        return json.dumps(data)
 
     @classmethod
     def _load(cls, data: str) -> dict | list:
-        return tomllib.loads(data)
+        return json.loads(data)
 
 
 if __name__ == "__main__":
-    info = TomlFile("pyproject.toml")
+    info = JsonFile("pyproject.toml")
     text = info.get_section_text("tool", "hatch", keep_path=True)
     print(text)
