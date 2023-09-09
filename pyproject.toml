@@ -24,6 +24,8 @@ dependencies = [
     "mkdocs-coverage",
     "mkdocs-click",
     "pygments",
+    "cairosvg",
+    "pillow",
     # "prettyqt",
     # "PySide6",
 ]

@@ -54,7 +54,8 @@ theme:
 
 plugins:
 - search
-# - social
+- social:
+    enabled: !ENV [CI, false]
 - tags
 - section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
 - markdown-exec
