@@ -8,7 +8,7 @@ from typing import Any
 
 import mknodes
 
-from mknodes.data import buildsystems, commitconventions, installmethods
+from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.utils import log
 from mknodes.utils.requirements import Requirements
 
@@ -83,7 +83,8 @@ class PackageContext(Context):
         default_factory=lambda: buildsystems.hatch,
     )
     configured_build_systems: list = dataclasses.field(default_factory=list)
-    tools: dict[str, Any] = dataclasses.field(default_factory=dict)
+    tools: list[tools.Tool] = dataclasses.field(default_factory=list)
+    tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
         default_factory=list,
     )
