@@ -200,20 +200,6 @@ class FolderInfo:
             )
         ]
 
-    def aggregate_info(self) -> dict:
-        infos = dict(
-            repository_name=self.repository_name,
-            repository_username=self.repository_username,
-            repository_url=self.repository_url,
-            social_info=self.social_info,
-            author_name=self.info.author_name,
-            author_email=self.info.author_email,
-        )
-        infos |= self.info.metadata.json
-        if self.mkdocs_config:
-            infos["name"] = self.mkdocs_config["site_name"]
-        return infos
-
     @property
     def context(self):
         return contexts.PackageContext(

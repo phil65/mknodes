@@ -69,12 +69,9 @@ if __name__ == "__main__":
     import mknodes
 
     proj = mknodes.Project.for_mknodes()
-    proj.get_root()
-    proj.aggregate_info()
     node = MkJinjaTemplate(
         "requirements.md",
         project=proj,
         parent=mknodes.MkCode("test2"),
     )
-    print(node.infoprovider.env.filters)
     print(node)

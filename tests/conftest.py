@@ -78,5 +78,4 @@ def project():
     #     ],
     # ):
     manual.build(proj)
-    proj.aggregate_info()
     return proj

@@ -55,12 +55,6 @@ class Theme:
     def __repr__(self):
         return reprhelpers.get_repr(self, theme_name=self.theme_name)
 
-    def aggregate_info(self) -> dict:
-        return dict(
-            primary_color=self.get_primary_color(),
-            text_color=self.get_text_color(),
-        )
-
     @property
     def context(self):
         return contexts.ThemeContext(
