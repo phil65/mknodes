@@ -71,14 +71,12 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     @property
     def repo_url(self) -> str:
         match self._repo_url:
-            case None if self.associated_project:
-                repo_url = (
-                    self.associated_project.folderinfo.repository_url or EXAMPLE_URL
-                )
+            case None:
+                repo_url = self.ctx.metadata.repository_url
             case str():
                 repo_url = self._repo_url
             case _:
-                repo_url = EXAMPLE_URL
+                raise TypeError(self._repo_url)
         if not repo_url.endswith(".git"):
             repo_url += ".git"
         return repo_url
@@ -89,15 +87,9 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
     @property
     def build_backend(self) -> buildsystems.BuildSystem:  # type: ignore[return]
-        match self._build_backend:
-            case str():
-                return buildsystems.BUILD_SYSTEMS[self._build_backend]
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.pyproject.build_system
-            case None:
-                return buildsystems.setuptools
-            case _:
-                raise TypeError(self._build_backend)
+        if self._build_backend is None:
+            return self.ctx.metadata.build_system or buildsystems.setuptools
+        return buildsystems.BUILD_SYSTEMS[self._build_backend]
 
     @build_backend.setter
     def build_backend(self, value):

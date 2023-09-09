@@ -42,8 +42,8 @@ class MkLicense(mktext.MkText):
     def text(self):
         if self.license:
             text = license.License.from_name(self.license).content
-        if self.associated_project:
-            text = self.associated_project.folderinfo.license_text or ""
+        else:
+            text = self.ctx.metadata.license_text or ""
         return self.env.render_string(text)
 
     @staticmethod

@@ -57,10 +57,8 @@ class MkCodeOfConduct(mktext.MkText):
         match self.contact_email:
             case str():
                 mail = self.contact_email
-            case None if self.associated_project:
-                mail = self.associated_project.info.author_email
             case _:
-                mail = "<MAIL NOT SET>"
+                mail = self.ctx.metadata.author_email or "<MAIL NOT SET>"
         return get_markdown().replace("[INSERT CONTACT METHOD]", mail)
 
     @staticmethod

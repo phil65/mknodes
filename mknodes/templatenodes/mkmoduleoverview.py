@@ -39,12 +39,10 @@ class MkModuleOverview(mktreeview.MkTreeView):
     @property
     def tree(self):
         match self._module:
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.module
             case types.ModuleType():
                 return self._module
             case _:
-                return None
+                return self.ctx.metadata.module
 
     @tree.setter
     def tree(self, value):

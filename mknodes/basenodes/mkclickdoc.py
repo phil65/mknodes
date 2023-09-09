@@ -53,14 +53,15 @@ class MkClickDoc(mknode.MkNode):
 
     @property
     def attributes(self) -> dict[str, str | None]:
+        # sourcery skip: use-named-expression
         dct: dict[str, Any] = {}
         match self._target:
             case str():
                 module, command = self._target.split(":")
                 dct = dict(module=module, command=command, prog_name=self._prog_name)
-            case None if self.associated_project:
-                info = self.associated_project.info
-                eps = info.get_entry_points("console_scripts")
+            case None:
+                eps = self.ctx.metadata.entry_points
+                eps = [i for i in eps.values() if i.group == "console_scripts"]
                 if eps:
                     ep = next(iter(eps.values()))
                     module, command = ep.dotted_path.split(":")
@@ -98,5 +99,5 @@ class MkClickDoc(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc(target="mknodes.cli:cli")
+    docstrings = MkClickDoc()
     print(docstrings)

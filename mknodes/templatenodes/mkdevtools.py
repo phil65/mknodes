@@ -40,10 +40,8 @@ class MkDevTools(mkcontainer.MkContainer):
         match self._tools:
             case list():
                 return [tools.TOOLS[i] for i in self._tools]
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.tools
             case None:
-                return []
+                return self.ctx.metadata.tools
             case _:
                 raise TypeError(self._tools)
 

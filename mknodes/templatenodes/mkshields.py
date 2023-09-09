@@ -53,10 +53,8 @@ class MkShields(mkcontainer.MkContainer):
     @property
     def user(self):
         match self._user:
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.repository_username
             case None:
-                return ""
+                return self.ctx.metadata.repository_username
             case str():
                 return self._user
 
@@ -66,15 +64,9 @@ class MkShields(mkcontainer.MkContainer):
 
     @property
     def project(self):
-        match self._project:
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.repository_name
-            case None:
-                return ""
-            case str():
-                return self._project
-            case _:
-                raise TypeError(self._project)
+        if isinstance(self._project, str):
+            return self._project
+        return self.ctx.metadata.repository_name
 
     @project.setter
     def project(self, value):
@@ -86,15 +78,9 @@ class MkShields(mkcontainer.MkContainer):
 
     @property
     def branch(self):
-        match self._branch:
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.git.main_branch
-            case None:
-                return "main"
-            case str():
-                return self._branch
-            case _:
-                raise TypeError(self._branch)
+        if isinstance(self._branch, str):
+            return self._branch
+        return self.ctx.git.main_branch or "main"
 
     @property
     def items(self) -> list[mknode.MkNode]:

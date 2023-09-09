@@ -39,17 +39,11 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         if self._package_repos:
             return self._package_repos
-        if self.associated_project:
-            return self.associated_project.folderinfo.package_repos
-        return ["pip"]
+        return self.ctx.metadata.package_repos or ["pip"]
 
     @property
     def project(self):
-        if self._project:
-            return self._project
-        if self.associated_project:
-            return self.associated_project.folderinfo.package_name
-        return None
+        return self._project or self.ctx.metadata.distribution_name
 
     @project.setter
     def project(self, value):

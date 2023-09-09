@@ -74,24 +74,22 @@ class MkChangelog(mktext.MkText):
             convention=self.convention,
             template=self.template,
             sections=self.sections,
-            repository=self.repository,
+            repository=str(self.repository),
             _filter_empty=True,
         )
 
     @property
     def repository(self):
         match self._repository:
-            case None if self.associated_project:
-                return str(self.associated_project.folderinfo.path)
             case None:
-                return "."
+                return self.ctx.metadata.repository_path
             case _:
-                return str(self._repository)
+                return self._repository
 
     @property
     def text(self) -> str:
         return get_changelog(
-            repository=self.repository,
+            repository=str(self.repository),
             template=self.template,
             convention=self.convention,
             sections=tuple(self.sections) if self.sections else None,
