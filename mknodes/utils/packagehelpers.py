@@ -88,6 +88,7 @@ class EntryPoint:
     obj: types.ModuleType | type
 
 
+@functools.cache
 def get_entry_points(
     dist: metadata.Distribution,
     group: str | None = None,
@@ -99,13 +100,16 @@ def get_entry_points(
     dct = {}
     for ep in eps:
         name, dotted_path = ep.name, ep.value
-        mod_name, kls_name = dotted_path.split(":")
+        if ":" in dotted_path:
+            mod_name, kls_name = dotted_path.split(":")
+        else:
+            mod_name, kls_name = dotted_path, None
         mod = importlib.import_module(mod_name)
         dct[name] = EntryPoint(
             name=ep.name,
             dotted_path=ep.value,
             group=ep.group,
-            obj=getattr(mod, kls_name),
+            obj=getattr(mod, kls_name) if kls_name else mod,
         )
     return dct
 
