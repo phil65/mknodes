@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import pathlib
 
 from typing import Any
 
@@ -37,6 +38,14 @@ class ThemeContext(Context):
 
 
 @dataclasses.dataclass
+class BuildContext(Context):
+    filenames: list[str] = dataclasses.field(default_factory=list)
+    original_config: dict = dataclasses.field(default_factory=dict)
+    config_override: dict = dataclasses.field(default_factory=dict)
+    final_config: dict[str, str] = dataclasses.field(default_factory=dict)
+
+
+@dataclasses.dataclass
 class PackageContext(Context):
     # PackageInfo
     pretty_name: str = ""
@@ -56,6 +65,7 @@ class PackageContext(Context):
     urls: dict[str, str] = dataclasses.field(default_factory=dict)
     homepage: str = ""
     repository_url: str = ""
+    repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
     mkdocs_config: dict | None = None
     task_runners: list = dataclasses.field(default_factory=list)
     social_info: list[dict[str, str]] = dataclasses.field(default_factory=list)

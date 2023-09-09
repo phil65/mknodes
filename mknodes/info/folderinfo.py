@@ -220,6 +220,7 @@ class FolderInfo:
             entry_points=self.info.get_entry_points(),
             mkdocs_config=self.mkdocs_config,
             social_info=self.social_info,
+            repository_path=self.path,
             repository_url=self.repository_url,
             inventory_url=self.inventory_url,
             task_runners=self.task_runners,
