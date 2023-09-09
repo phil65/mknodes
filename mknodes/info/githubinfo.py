@@ -37,11 +37,11 @@ class GitHubRepo:
             result.append(item)
         return result
 
-    @property
+    @functools.cached_property
     def raw_prefix(self):
         return f"{RAW_URL}{self.username}/{self.repo_name}/"
 
-    @property
+    @functools.cached_property
     def context(self):
         return contexts.GitHubContext(
             default_branch=self.default_branch,

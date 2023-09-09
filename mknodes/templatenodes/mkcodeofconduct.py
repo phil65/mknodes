@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import functools
+
 from typing import Any, Literal
 
 from mknodes import paths
@@ -8,6 +10,14 @@ from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
+
+
+@functools.cache
+def get_markdown():
+    file = paths.RESOURCES / "code_of_conduct_2_1.md"
+    text = file.read_text()
+    # Cut off first lines containing header
+    return "\n".join(text.split("\n")[3:])
 
 
 class MkCodeOfConduct(mktext.MkText):
@@ -44,8 +54,6 @@ class MkCodeOfConduct(mktext.MkText):
 
     @property
     def text(self) -> str:
-        file = paths.RESOURCES / "code_of_conduct_2_1.md"
-        text = file.read_text()
         match self.contact_email:
             case str():
                 mail = self.contact_email
@@ -53,8 +61,7 @@ class MkCodeOfConduct(mktext.MkText):
                 mail = self.associated_project.info.author_email
             case _:
                 mail = "<MAIL NOT SET>"
-        text = text.replace("[INSERT CONTACT METHOD]", mail)
-        return "\n".join(text.split("\n")[3:])
+        return get_markdown().replace("[INSERT CONTACT METHOD]", mail)
 
     @staticmethod
     def create_example_page(page):
