@@ -67,7 +67,7 @@ class FolderInfo:
         # )
         self._temp_directory = None
 
-    @property
+    @functools.cached_property
     def module(self):
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         mod_name = mod_name.replace("-", "_").lower()
@@ -96,11 +96,11 @@ class FolderInfo:
         kls._temp_directory = directory
         return kls
 
-    @property
+    @functools.cached_property
     def info(self):
         return packageinfo.get_info(self.pyproject.name or self.git.repo_name)
 
-    @property
+    @functools.cached_property
     def repository_url(self) -> str:
         if url := self.mkdocs_config.get("repo_url"):
             return url
@@ -111,40 +111,40 @@ class FolderInfo:
         msg = "Could not find any repository url"
         raise RuntimeError(msg)
 
-    @property
+    @functools.cached_property
     def repository_username(self) -> str:
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(1)
         msg = "Could not detect repository username"
         raise RuntimeError(msg)
 
-    @property
+    @functools.cached_property
     def repository_name(self) -> str:
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(2)
         msg = "Could not detect repository name"
         raise RuntimeError(msg)
 
-    @property
+    @functools.cached_property
     def inventory_url(self) -> str | None:
         """Return best guess for a link to an inventory file."""
         if url := self.mkdocs_config.get("site_url"):
             return f"{url.rstrip('/')}/objects.inv"
         return None
 
-    @property
+    @functools.cached_property
     def package_name(self) -> str:
         return self.info.package_name
 
-    @property
+    @functools.cached_property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         return self.pyproject.package_repos
 
-    @property
+    @functools.cached_property
     def commit_types(self) -> list[commitconventions.CommitTypeStr]:
         return self.pyproject.allowed_commit_types
 
-    @property
+    @functools.cached_property
     def tools(self) -> list[tools.Tool]:
         """Return a list of build tools used by this package."""
         return [t for t in tools.TOOLS.values() if t.is_used(self)]
@@ -169,7 +169,7 @@ class FolderInfo:
             return lic.content
         return None
 
-    @property
+    @functools.cached_property
     def social_info(self) -> list[dict[str, str]]:
         result = []
         if self.repository_url:
@@ -188,7 +188,7 @@ class FolderInfo:
         )
         return result
 
-    @property
+    @functools.cached_property
     def task_runners(self) -> list[taskrunners.TaskRunner]:
         """Return list of task runners used by this package."""
         return [
@@ -200,7 +200,7 @@ class FolderInfo:
             )
         ]
 
-    @property
+    @functools.cached_property
     def context(self):
         return contexts.PackageContext(
             pretty_name=self.mkdocs_config.get("site_name") or self.info.name,

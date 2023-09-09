@@ -25,11 +25,11 @@ class GitRepository(git.Repo):
     def clone_from(cls, *args, **kwargs) -> Self:
         return super().clone_from(*args, **kwargs)  # type: ignore[return-value]
 
-    @property
+    @cached_property
     def repo_name(self) -> str:
         return self.remotes.origin.url.split(".git")[0].split("/")[-1]
 
-    @property
+    @cached_property
     def repo_url(self) -> str:
         return self.remotes.origin.url.split(".git")[0] + "/"
 
@@ -46,7 +46,7 @@ class GitRepository(git.Repo):
         """
         return list(self.iter_commits(branch or self.main_branch, max_count=num))
 
-    @property
+    @cached_property
     def code_repository(self) -> str:
         repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
         match repo_host:
@@ -59,7 +59,7 @@ class GitRepository(git.Repo):
             case _:
                 return repo_host.split(".")[0].title()
 
-    @property
+    @cached_property
     def context(self):
         return contexts.GitContext(
             main_branch=self.main_branch,

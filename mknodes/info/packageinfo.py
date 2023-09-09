@@ -74,7 +74,7 @@ class PackageInfo:
     def __hash__(self):
         return hash(self.package_name)
 
-    @property
+    @functools.cached_property
     def inventory_url(self) -> str | None:
         """Return best guess for a link to an inventory file."""
         for v in self.urls.values():
@@ -89,7 +89,7 @@ class PackageInfo:
         requires = packagehelpers.get_requires(self.distribution)
         return [packagehelpers.get_dependency(i) for i in requires] if requires else []
 
-    @property
+    @functools.cached_property
     def license_name(self) -> str | None:
         """Get name of the license."""
         if license_name := self.metadata.get("License-Expression", "").strip():
@@ -103,7 +103,7 @@ class PackageInfo:
             None,
         )
 
-    @property
+    @functools.cached_property
     def repository_url(self) -> str | None:
         """Return repository URL from metadata."""
         return next(
@@ -115,7 +115,7 @@ class PackageInfo:
             None,
         )
 
-    @property
+    @functools.cached_property
     def homepage(self) -> str | None:
         if "Home-page" in self.urls:
             return self.urls["Home-page"]
@@ -125,12 +125,12 @@ class PackageInfo:
             return self.urls["Documentation"]
         return self.repository_url
 
-    @property
+    @functools.cached_property
     def keywords(self) -> list[str]:
         """Return a list of keywords from metadata."""
         return self.metadata.get("Keywords", "").split(",")
 
-    @property
+    @functools.cached_property
     def classifier_map(self) -> dict[str, list[str]]:
         """Return a dict containing the classifier categories and values from metadata.
 
@@ -149,21 +149,21 @@ class PackageInfo:
                     classifiers[category] = [value]
         return classifiers
 
-    @property
+    @functools.cached_property
     def required_package_names(self) -> list[str]:
         """Get a list of names from required packages."""
         return [i.name for i in self._required_deps]
 
-    @property
+    @functools.cached_property
     def author_email(self) -> str:
         mail = self.metadata["Author-email"].split(" ")[-1]
         return mail.replace("<", "").replace(">", "")
 
-    @property
+    @functools.cached_property
     def author_name(self) -> str:
         return self.metadata["Author-email"].rsplit(" ", 1)[0]
 
-    @property
+    @functools.cached_property
     def authors(self) -> dict[str, str]:
         """Return a dict containing the authors.
 
@@ -181,7 +181,7 @@ class PackageInfo:
                 authors[name] = mail
         return authors
 
-    @property
+    @functools.cached_property
     def extras(self) -> dict[str, list[str]]:
         """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
         extras: dict[str, list[str]] = {}
@@ -193,11 +193,11 @@ class PackageInfo:
                     extras[extra] = [dep.name]
         return extras
 
-    @property
+    @functools.cached_property
     def required_python_version(self) -> str | None:
         return self.metadata.json.get("requires_python")
 
-    @property
+    @functools.cached_property
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         modules = (
             {

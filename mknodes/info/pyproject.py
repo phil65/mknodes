@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import os
 import pathlib
 
@@ -36,27 +37,27 @@ class PyProject(tomlfile.TomlFile):
     def __repr__(self):
         return f"PyProject({self.name!r})"
 
-    @property
+    @functools.cached_property
     def name(self) -> str:
         """Project name."""
         return self.project["name"]
 
-    @property
+    @functools.cached_property
     def tool(self) -> dict[str, Any]:
         """Tool section."""
         return self._data.get("tool", {})
 
-    @property
+    @functools.cached_property
     def project(self) -> dict[str, Any]:
         """Project section."""
         return self._data.get("project", {})
 
-    @property
+    @functools.cached_property
     def configured_build_systems(self) -> list[buildsystems.BuildSystemStr]:
         """Return build systems which have a config in tools section."""
         return [p for p in buildsystems.BUILD_SYSTEMS if p in self.tool]
 
-    @property
+    @functools.cached_property
     def build_system(self) -> buildsystems.BuildSystem:
         """Return the build system set as build backend."""
         back_end = self._data["build-system"]["build-backend"]
@@ -66,22 +67,22 @@ class PyProject(tomlfile.TomlFile):
         msg = "No known build backend"
         raise RuntimeError(msg)
 
-    @property
+    @functools.cached_property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
         """Return the allowed commit types."""
         return self.mknodes_section.get("allowed-commit-types", [])
 
-    @property
+    @functools.cached_property
     def extras_descriptions(self) -> dict[str, str]:
         """Return a dictionary with descriptions for dependency extras."""
         return self.mknodes_section.get("extras-descriptions", {})
 
-    @property
+    @functools.cached_property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         """Return a list of package repositories the package is available on."""
         return self.mknodes_section.get("package-repositories", ["pip"])
 
-    @property
+    @functools.cached_property
     def context(self):
         return contexts.PyProjectContext(
             info=self.folderinfo.context,
