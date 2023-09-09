@@ -127,6 +127,21 @@ def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, Non
         yield batch
 
 
+def get_indented_lines(lines: Iterable[str], indent: int | str = 4) -> list[str]:
+    """Return all lines until a line is not indented with given indent.
+
+    Returned lines are unindented.
+
+    Arguments:
+        lines: Lines to check for indented lines
+        indent: Indentation to check
+    """
+    indent_str = indent if isinstance(indent, str) else " " * indent
+    if indented := list(itertools.takewhile(lambda x: x.startswith(indent_str), lines)):
+        return [j[len(indent_str) :] for j in indented]
+    return []
+
+
 def is_url(path: str) -> bool:
     return path.startswith(("http:/", "https:/", "www."))
 

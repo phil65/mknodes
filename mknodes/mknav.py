@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-import itertools
 import os
 import pathlib
 import re
@@ -12,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Self
 from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import log, navbuilder, reprhelpers
+from mknodes.utils import helpers, log, navbuilder, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -459,13 +458,9 @@ class MkNav(mknode.MkNode):
             # If yes, then the path describes an index page.
             # * [Example](example_folder/sub_1.md)
             if match := re.match(SECTION_AND_FILE_REGEX, line):
-                next_lines = lines[i + 1 :]
-                if indented := list(
-                    itertools.takewhile(lambda x: x.startswith("    "), next_lines),
-                ):
-                    unindented = "\n".join(j[4:] for j in indented)
+                if unindented := helpers.get_indented_lines(lines[i + 1 :]):
                     subnav = MkNav._from_text(
-                        unindented,
+                        "\n".join(unindented),
                         section=match[1],
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
@@ -510,11 +505,9 @@ class MkNav(mknode.MkNode):
                 logger.info("Created subsection %s from %s", match[1], file_path)
             # * Example
             elif match := re.match(SECTION_REGEX, line):
-                next_lines = lines[i + 1 :]
-                indented = itertools.takewhile(lambda x: x.startswith("    "), next_lines)
-                unindented = "\n".join(j[4:] for j in indented)
+                unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
                 subnav = MkNav._from_text(
-                    unindented,
+                    "\n".join(unindented),
                     section=match[1],
                     hide_toc=hide_toc,
                     hide_nav=hide_nav,
