@@ -5,7 +5,6 @@ import re
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.jinja import environment
 from mknodes.utils import cache, log, reprhelpers
 
 
@@ -76,21 +75,11 @@ class MkText(mknode.MkNode):
     def text(self):
         if not self.is_jinja_expression:
             return self._text
-        variables = {"parent": self.parent}
-        self.env.set_mknodes_filters(parent=self)
-        return self.env.render_string(f"{{{{ {self._text} }}}}", variables)
+        return self.env.render_string(f"{{{{ {self._text} }}}}")
 
     @text.setter
     def text(self, value):
         self._text = value
-
-    @property
-    def env(self):
-        return (
-            self.associated_project.infocollector.env
-            if self.associated_project
-            else environment.Environment(undefined="strict")
-        )
 
     def _to_markdown(self) -> str:
         return self.text

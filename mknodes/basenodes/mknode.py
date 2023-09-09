@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
+from mknodes.info import contexts
+from mknodes.jinja import environment
 from mknodes.pages import pagetemplate
 from mknodes.treelib import node
 from mknodes.utils import log, mergehelpers, requirements
@@ -40,6 +42,8 @@ class MkNode(node.Node):
     CSS = None
     JS = None
     children: list[MkNode]
+    _context = contexts.ProjectContext()
+    _env = environment.Environment(undefined="strict", load_templates=True)
 
     def __init__(
         self,
@@ -75,6 +79,21 @@ class MkNode(node.Node):
             self.annotations = mkannotations.MkAnnotations(parent=self)
         else:
             self.annotations = None
+
+    @property
+    def ctx(self):
+        if self.associated_project:
+            return self.associated_project.context
+        return self._context
+
+    @property
+    def env(self):
+        if self.associated_project:
+            env = self.associated_project.infocollector.env
+        env = self._env
+        env.globals["parent"] = self.parent
+        env.set_mknodes_filters(parent=self)
+        return env
 
     def __str__(self):
         return self.to_markdown()

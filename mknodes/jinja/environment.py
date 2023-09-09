@@ -23,7 +23,6 @@ class Environment(jinja2.Environment):
         super().__init__(undefined=behavior, loader=loader)
         self.filters.update(ENVIRONMENT_FILTERS)
         self.globals.update(ENVIRONMENT_GLOBALS)
-        self.set_mknodes_filters()
 
     def set_mknodes_filters(self, parent=None):
         filters = jinjahelpers.get_mknodes_macros(parent)

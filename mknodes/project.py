@@ -61,15 +61,37 @@ class Project(Generic[T]):
         self._root: mknav.MkNav | None = None
         self.infocollector = infocollector.InfoCollector(load_templates=True)
         self.build_fn = classhelpers.get_callable_from_path(build_fn)
+        self.build()
+
+    def build(self):
         logger.debug("Building page...")
         self.build_fn(project=self)
         logger.debug("Finished building page.")
         if not self._root:
             msg = "No root for project created."
             raise RuntimeError(msg)
-        self.aggregate_info()
-        paths = [pathlib.Path(i).stem for i in self.infocollector["filenames"]]
+
+        from mknodes.basenodes import mknode
+        from mknodes.pages import mkpage
+
+        page_mapping = {
+            node.resolved_file_path: node
+            for _level, node in self._root.iter_nodes()
+            if isinstance(node, mkpage.MkPage | mknav.MkNav)
+        }
+        filenames = list(page_mapping.keys())
+        paths = [pathlib.Path(i).stem for i in filenames]
         self.linkprovider.set_excludes(paths)
+
+        from mknodes.pages import mkpage
+
+        variables = self.context.as_dict()
+
+        variables["filenames"] = page_mapping
+        variables["page_mapping"] = page_mapping
+        variables["requirements"] = self.get_requirements()
+        mknode.MkNode._env.globals |= variables
+        self.infocollector.variables |= variables
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
@@ -127,20 +149,6 @@ class Project(Generic[T]):
     def all_files(self) -> dict[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
-
-    def aggregate_info(self):
-        from mknodes.pages import mkpage
-
-        variables = self.context.as_dict()
-        if root := self._root:
-            page_mapping = {
-                node.resolved_file_path: node
-                for _level, node in root.iter_nodes()
-                if isinstance(node, mkpage.MkPage | mknav.MkNav)
-            }
-            variables["page_mapping"] = page_mapping
-            variables["filenames"] = list(page_mapping.keys())
-        self.infocollector.variables |= variables
 
     @functools.cached_property
     def context(self):

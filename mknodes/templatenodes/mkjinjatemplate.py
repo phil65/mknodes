@@ -41,17 +41,6 @@ class MkJinjaTemplate(mknode.MkNode):
             _filter_empty=True,
         )
 
-    @property
-    def infoprovider(self):
-        from mknodes.plugin import infocollector
-
-        if self.associated_project:
-            env = self.associated_project.infocollector
-        else:
-            env = infocollector.InfoCollector(undefined="strict", load_templates=True)
-        # env.variables["parent"] = self.parent
-        return env
-
     @staticmethod
     def create_example_page(page):
         import mknodes
@@ -60,9 +49,7 @@ class MkJinjaTemplate(mknode.MkNode):
         page += mknodes.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
-        variables = self.variables | {"parent": self.parent}
-        self.infoprovider.set_mknodes_filters(parent=self)
-        return self.infoprovider.render_template(self.template, variables)
+        return self.env.render_template(self.template)
 
 
 if __name__ == "__main__":
