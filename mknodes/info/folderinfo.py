@@ -210,6 +210,7 @@ class FolderInfo:
             description=self.info.metadata["Description"],
             summary=self.info.metadata["Summary"],
             authors=self.info.authors,
+            module=self.module,
             classifiers=self.info.classifiers,
             classifier_map=self.info.classifier_map,
             keywords=self.info.keywords,

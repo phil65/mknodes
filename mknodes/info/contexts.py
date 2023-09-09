@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import dataclasses
 import pathlib
+import types
 
 from typing import Any
+
+import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.utils import log
@@ -51,6 +54,7 @@ class PackageContext(Context):
     pretty_name: str = ""
     distribution_name: str = ""
     summary: str = ""
+    module: types.ModuleType | None = None
     description: str = ""
     author_name: str = ""
     author_email: str = ""
@@ -139,6 +143,7 @@ default_package_context = PackageContext(
     license_name="MIT",
     required_python_version=">= 3.11",
     homepage="",
+    module=mknodes,
     repository_url="https://github.com/phil65/mknodes/",
     repository_username="phil65",
     repository_name="mknodes",
