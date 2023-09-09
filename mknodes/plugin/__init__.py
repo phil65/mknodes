@@ -79,10 +79,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             cfg.register_js(k, v)
         if extensions := ctx.requirements.markdown_extensions:
             cfg.register_extensions(extensions)
-        if social := ctx.metadata.social_info:
-            extra = config.extra
-            if not extra.get("social"):
-                extra["social"] = social
+        if not config.extra.get("social"):
+            config.extra["social"] = ctx.metadata.social_info
         config.repo_url = ctx.metadata.repository_url
         config.site_description = ctx.metadata.summary
         config.site_name = ctx.metadata.distribution_name

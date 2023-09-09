@@ -65,6 +65,8 @@ class PackageContext(Context):
     urls: dict[str, str] = dataclasses.field(default_factory=dict)
     homepage: str = ""
     repository_url: str = ""
+    repository_username: str = ""
+    repository_name: str = ""
     repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
     mkdocs_config: dict | None = None
     task_runners: list = dataclasses.field(default_factory=list)
@@ -138,6 +140,8 @@ default_package_context = PackageContext(
     required_python_version=">= 3.11",
     homepage="",
     repository_url="https://github.com/phil65/mknodes/",
+    repository_username="phil65",
+    repository_name="mknodes",
     inventory_url="https://github.io/phil65/mknodes/objects.inv",
 )
 

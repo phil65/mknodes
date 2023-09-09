@@ -157,4 +157,3 @@ if __name__ == "__main__":
     from mknodes.manual import root
 
     root.build(project)
-    project.aggregate_info()

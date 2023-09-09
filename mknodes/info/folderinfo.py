@@ -222,6 +222,8 @@ class FolderInfo:
             social_info=self.social_info,
             repository_path=self.path,
             repository_url=self.repository_url,
+            repository_username=self.repository_username,
+            repository_name=self.repository_name,
             inventory_url=self.inventory_url,
             task_runners=self.task_runners,
             build_system=self.pyproject.build_system,
