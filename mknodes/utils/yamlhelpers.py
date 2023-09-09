@@ -6,7 +6,7 @@ from typing import Any
 
 import yaml
 
-from mknodes.utils import helpers, log
+from mknodes.utils import log, mergehelpers
 
 
 logger = log.get_logger(__name__)
@@ -29,7 +29,7 @@ def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
             text = fd.read().decode()
             parent = load_yaml(text, mode)
         # print(parent, result)
-        result = helpers.merge_dicts(parent, result)
+        result = mergehelpers.merge_dicts(parent, result)
     return result
 
 

@@ -95,7 +95,7 @@ dependencies = [
     "git-changelog",
     "fsspec",
     "cssutils",
-    "mergedeep",
+    "deepmerge",
     "pygithub>=2.0.dev0",
     "coloraide",
     "tomli-w",

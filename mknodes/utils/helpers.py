@@ -19,19 +19,6 @@ def to_str_if_textnode(node):
     return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
 
 
-def merge_dicts(*dicts, strategy: str = "additive"):
-    import mergedeep
-
-    strategies = {
-        "additive": mergedeep.Strategy.ADDITIVE,
-        "replace": mergedeep.Strategy.REPLACE,
-        "typesafe_replace": mergedeep.Strategy.TYPESAFE_REPLACE,
-        "typesafe_additive": mergedeep.Strategy.TYPESAFE_ADDITIVE,
-    }
-    strategy_obj = strategies[strategy]
-    return mergedeep.merge(*dicts, strategy=strategy_obj)
-
-
 def escaped(text: str, entity_type: str | None = None) -> str:
     """Helper function to escape markup.
 

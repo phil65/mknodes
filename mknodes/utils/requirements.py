@@ -4,9 +4,8 @@ import abc
 import collections.abc
 import dataclasses
 
-import mergedeep
-
 from mknodes.pages import pagetemplate
+from mknodes.utils import mergehelpers
 
 
 @dataclasses.dataclass
@@ -32,14 +31,10 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     def merge(self, other: collections.abc.Mapping, additive: bool = False):
         self.css |= other["css"]
         self.templates += other["templates"]
-        mergedeep.merge(self.markdown_extensions, other["markdown_extensions"])
+        mergehelpers.merge_dicts(self.markdown_extensions, other["markdown_extensions"])
         self.plugins |= other["plugins"]
         self.js_files |= other["js_files"]
         return self
-        # strat = mergedeep.Strategy.ADDITIVE if additive else mergedeep.Strategy.REPLACE
-        # result = dict(mergedeep.merge(self, other, strategy=strat))
-        # for k, v in result.items():
-        #     self[k] = v
 
 
 if __name__ == "__main__":

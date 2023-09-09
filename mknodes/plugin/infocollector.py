@@ -5,7 +5,7 @@ from collections.abc import Mapping, MutableMapping
 from typing import Any
 
 from mknodes.jinja import environment
-from mknodes.utils import helpers, jinjahelpers, log, reprhelpers
+from mknodes.utils import jinjahelpers, log, mergehelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -46,7 +46,7 @@ class InfoCollector(MutableMapping, metaclass=ABCMeta):
 
     def merge(self, other: Mapping, additive: bool = False):
         strategy = "additive" if additive else "replace"
-        mapping = helpers.merge_dicts(self.variables, other, strategy=strategy)
+        mapping = mergehelpers.merge_dicts(self.variables, other, strategy=strategy)
         self.variables = dict(mapping)
 
     def render(self, markdown: str, variables=None):
