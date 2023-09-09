@@ -36,3 +36,6 @@ docs: ## builds the documentation
 
 serve: ## run html server watching file changes in realtime
 	hatch run docs-serve
+
+update: ## update all packages
+	hatch run pip --disable-pip-version-check list --outdated --format=json | python -c "import json, sys; print('\n'.join([x['name'] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U
