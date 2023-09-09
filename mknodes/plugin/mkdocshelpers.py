@@ -84,7 +84,7 @@ def load_and_patch_config(
     site_script: str = "",
     clone_depth: int = 1,
 ):
-    if isinstance(config, str | os.PathLike):
+    if isinstance(config, str | os.PathLike | None):
         cfg = yamlhelpers.load_yaml_file(config or "mkdocs_basic.yml")
     else:
         cfg = config
