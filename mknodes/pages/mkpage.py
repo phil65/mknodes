@@ -206,7 +206,7 @@ class MkPage(mkcontainer.MkContainer):
             data.hide_nav = hide_nav
         if hide_path is not None:
             data.hide_path = hide_path
-        page = cls(path=str(path), content=text, parent=parent)
+        page = cls(path=path.as_posix(), content=text, parent=parent)
         page.metadata = data
         return page
 
