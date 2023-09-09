@@ -475,7 +475,7 @@ class MkNav(mknode.MkNode):
                         hide_path=hide_path,
                     )
                     page += pathlib.Path(match[2]).read_text()
-                    logger.info(
+                    logger.debug(
                         "Created subsection %s and loaded index page %s",
                         match[1],
                         match[2],
@@ -490,7 +490,7 @@ class MkNav(mknode.MkNode):
                         parent=nav,
                     )
                     nav[match[1]] = page
-                    logger.info("Created page %s from %s", match[1], match[2])
+                    logger.debug("Created page %s from %s", match[1], match[2])
             # * [Example](example_folder/)
             elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 file_path = path.parent / f"{match[2]}/SUMMARY.md"
@@ -503,7 +503,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                 )
                 nav[match[1]] = subnav
-                logger.info("Created subsection %s from %s", match[1], file_path)
+                logger.debug("Created subsection %s from %s", match[1], file_path)
             # * Example
             elif match := re.match(SECTION_REGEX, line):
                 unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
@@ -516,7 +516,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                     path=path,
                 )
-                logger.info("Created subsection %s from text", match[1])
+                logger.debug("Created subsection %s from text", match[1])
                 nav[match[1]] = subnav
         return nav
 
@@ -560,7 +560,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                 )
                 nav += subnav
-                logger.info("Loaded subnav from from %s", path)
+                logger.debug("Loaded subnav from from %s", path)
             elif path.name == "index.md":
                 page = mkpage.MkPage(
                     path=path.name,
@@ -570,7 +570,7 @@ class MkNav(mknode.MkNode):
                     hide_path=hide_path,
                     parent=nav,
                 )
-                logger.info("Loaded index page from %s", path)
+                logger.debug("Loaded index page from %s", path)
                 nav.index_page = page
                 nav.index_title = nav.section or "Home"
             elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
@@ -583,7 +583,7 @@ class MkNav(mknode.MkNode):
                     parent=nav,
                 )
                 nav += page
-                logger.info("Loaded page from from %s", path)
+                logger.debug("Loaded page from from %s", path)
         return nav
 
 

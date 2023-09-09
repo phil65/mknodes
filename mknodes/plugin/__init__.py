@@ -71,7 +71,11 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             config=cfg,
             directory=self.config.build_folder,
         )
-        self.builder.write_files(self.project.all_files())  # type: ignore[arg-type]
+        logger.info("Generating pages...")
+        build_files = self.project.all_files()
+        logger.info("Writing pages to disk...")
+        self.builder.write_files(build_files)  # type: ignore[arg-type]
+        logger.info("Finished writing pages to disk")
         ctx = self.project.context
         requirements = self.project.get_requirements()
         for k, v in requirements.css.items():

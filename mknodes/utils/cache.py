@@ -99,7 +99,7 @@ def download_and_cache_url(
         comment: The appropriate comment prefix for this file format.
         headers: Headers to use for the request.
     """
-    logger.info("Getting file for '%s'", url)
+    logger.debug("Getting file for '%s'", url)
     if parse.urlsplit(url).scheme not in ("http", "https"):
         with pathlib.Path(url).open("rb") as f:
             return f.read()
@@ -141,7 +141,7 @@ def download_and_cache_url(
     with open_atomic(str(path), binary=True) as f:
         f.write(b"%s%d\n" % (prefix, now))
         f.write(content)
-    logger.info("Downloaded %s", url)
+    logger.debug("Downloaded %s", url)
     return content
 
 

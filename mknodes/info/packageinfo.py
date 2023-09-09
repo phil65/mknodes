@@ -54,7 +54,7 @@ class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
         self.distribution = packagehelpers.get_distribution(pkg_name)
-        logger.info("Loaded package info: '%s'", pkg_name)
+        logger.debug("Loaded package info: '%s'", pkg_name)
         self.metadata = packagehelpers.get_metadata(self.distribution)
         self.urls = {
             v.split(",")[0].strip(): v.split(",")[1].strip()

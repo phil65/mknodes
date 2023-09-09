@@ -103,7 +103,7 @@ class MkPage(mkcontainer.MkContainer):
             tags=tags,
         )
         self.template = template
-        logger.info("Created MkPage %s", self.resolved_file_path)
+        logger.debug("Created MkPage %r", self.resolved_file_path)
 
     def __repr__(self):
         meta_kwargs = self.metadata.repr_kwargs()
@@ -113,7 +113,7 @@ class MkPage(mkcontainer.MkContainer):
         return self.to_markdown()
 
     def to_markdown(self) -> str:
-        logger.debug("Resolving %r", self.resolved_file_path)
+        logger.debug("Resolving MkPage %r", self.resolved_file_path)
         return super().to_markdown()
 
     @property
