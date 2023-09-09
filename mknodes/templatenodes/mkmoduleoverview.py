@@ -52,6 +52,8 @@ class MkModuleOverview(mktreeview.MkTreeView):
 
     @property
     def text(self):
+        if not self.tree:
+            return ""
         node = treelib.ModuleNode.from_module(
             self.tree,
             predicate=self.predicate,
