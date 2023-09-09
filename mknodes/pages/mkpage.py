@@ -112,6 +112,10 @@ class MkPage(mkcontainer.MkContainer):
     def __str__(self):
         return self.to_markdown()
 
+    def to_markdown(self) -> str:
+        logger.debug("Resolving %r", self.resolved_file_path)
+        return super().to_markdown()
+
     @property
     def path(self):
         if self._path:
