@@ -42,6 +42,7 @@ class PackageContext(Context):
     pretty_name: str = ""
     distribution_name: str = ""
     summary: str = ""
+    description: str = ""
     author_name: str = ""
     author_email: str = ""
     authors: dict[str, str] = dataclasses.field(default_factory=dict)
@@ -120,6 +121,7 @@ default_package_context = PackageContext(
     pretty_name="MkNodes",
     distribution_name="mknodes",
     summary="Don't write docs. Code them.",
+    description="Long text with description.",
     author_name="Philipp Temminghoff",
     author_email="philipptemminghoff@gmail.com",
     license_name="MIT",

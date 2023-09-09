@@ -221,6 +221,8 @@ class FolderInfo:
             distribution_name=self.info.name,
             author_name=self.info.author_name,
             author_email=self.info.author_email,
+            description=self.info.metadata["Description"],
+            summary=self.info.metadata["Summary"],
             authors=self.info.authors,
             classifiers=self.info.classifiers,
             classifier_map=self.info.classifier_map,

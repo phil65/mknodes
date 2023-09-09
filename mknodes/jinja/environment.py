@@ -53,6 +53,15 @@ class Environment(jinja2.Environment):
 
 
 if __name__ == "__main__":
+    from mknodes.manual import root
+    from mknodes.project import Project
+
     env = Environment()
+    proj = Project.for_mknodes()
+    root.build(proj)
+    proj.aggregate_info()
+    ctx = proj.context.as_dict()
+    print(ctx)
+    env.globals.update(ctx)
     text = env.render_string(r"{{ now().year }}")
     print(text)
