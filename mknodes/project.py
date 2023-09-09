@@ -6,7 +6,7 @@ import pathlib
 from typing import Generic, TypeVar
 
 from mknodes import mknav
-from mknodes.info import folderinfo
+from mknodes.info import contexts, folderinfo
 from mknodes.pages import pagetemplate
 from mknodes.plugin import infocollector
 from mknodes.theme import theme as theme_
@@ -142,6 +142,16 @@ class Project(Generic[T]):
             variables["page_mapping"] = page_mapping
             variables["filenames"] = list(page_mapping.keys())
         self.infocollector.variables |= variables
+
+    @property
+    def context(self):
+        return contexts.ProjectContext(
+            info=self.folderinfo.context,
+            git=self.folderinfo.git.context,
+            github=self.folderinfo.github.context,
+            theme=self.theme.context,
+            requirements=self.get_requirements(),
+        )
 
 
 if __name__ == "__main__":
