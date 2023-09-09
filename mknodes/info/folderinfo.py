@@ -52,6 +52,7 @@ class FolderInfo:
     def __init__(self, path: str | os.PathLike | None = None):
         self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
+        # packagehelpers.install_or_import(mod_name)
         self.git = gitrepository.GitRepository(self.path)
         self.mkdocs_config = {}
         if (path := self.path / "mkdocs.yml").exists():
@@ -60,7 +61,10 @@ class FolderInfo:
                 # TODO: cannot load some remote mkdocs configs
                 # (for example from pymdown-extensions)
                 self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
-        # self.module = packagehelpers.install_or_import(mod_name)
+        # self.github = githubinfo.GitHubRepo(
+        #     self.repository_username,
+        #     self.repository_name,
+        # )
         self._temp_directory = None
 
     @property
@@ -108,16 +112,18 @@ class FolderInfo:
         raise RuntimeError(msg)
 
     @property
-    def repository_username(self) -> str | None:
+    def repository_username(self) -> str:
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(1)
-        return None
+        msg = "Could not detect repository username"
+        raise RuntimeError(msg)
 
     @property
-    def repository_name(self) -> str | None:
+    def repository_name(self) -> str:
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(2)
-        return None
+        msg = "Could not detect repository name"
+        raise RuntimeError(msg)
 
     @property
     def inventory_url(self) -> str | None:
