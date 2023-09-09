@@ -179,7 +179,6 @@ def create_special_nodes_section(nav: mknodes.MkNav):
         mknodes.MkSnippet,
         mknodes.MkInclude,
         mknodes.MkIFrame,
-        mknodes.MkLog,
         mknodes.MkCommandOutput,
         mknodes.MkCallable,
     ]
