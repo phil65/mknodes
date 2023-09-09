@@ -10,7 +10,7 @@ from mknodes.info import contexts
 from mknodes.jinja import environment
 from mknodes.pages import pagetemplate
 from mknodes.treelib import node
-from mknodes.utils import log, mergehelpers, requirements
+from mknodes.utils import jinjahelpers, log, mergehelpers, requirements
 
 
 if TYPE_CHECKING:
@@ -88,12 +88,9 @@ class MkNode(node.Node):
 
     @property
     def env(self):
-        if self.associated_project:
-            env = self.associated_project.infocollector.env
-        env = self._env
-        env.globals["parent"] = self.parent
-        env.set_mknodes_filters(parent=self)
-        return env
+        self._env.globals["parent"] = self.parent
+        self._env.set_mknodes_filters(parent=self)
+        return self._env
 
     def __str__(self):
         return self.to_markdown()
@@ -288,6 +285,9 @@ class MkNode(node.Node):
     @associated_project.setter
     def associated_project(self, value: project.Project):
         self._associated_project = value
+
+
+jinjahelpers.set_markdown_exec_namespace(MkNode._env.globals)
 
 
 if __name__ == "__main__":

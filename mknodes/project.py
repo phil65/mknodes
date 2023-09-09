@@ -9,7 +9,6 @@ from typing import Generic, TypeVar
 from mknodes import mknav
 from mknodes.info import contexts, folderinfo
 from mknodes.pages import pagetemplate
-from mknodes.plugin import infocollector
 from mknodes.theme import theme as theme_
 from mknodes.utils import (
     classhelpers,
@@ -59,7 +58,6 @@ class Project(Generic[T]):
             case _:
                 self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None
-        self.infocollector = infocollector.InfoCollector(load_templates=True)
         self.build_fn = classhelpers.get_callable_from_path(build_fn)
         self.build()
 
@@ -91,7 +89,6 @@ class Project(Generic[T]):
         variables["page_mapping"] = page_mapping
         variables["requirements"] = self.get_requirements()
         mknode.MkNode._env.globals |= variables
-        self.infocollector.variables |= variables
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))

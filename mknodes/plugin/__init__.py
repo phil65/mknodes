@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Literal
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
 from mknodes import mkdocsconfig, project
+from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, mkdocsbuilder, pluginconfig
 from mknodes.theme import theme
@@ -64,8 +65,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
           - CSS files
         """
         cfg = mkdocsconfig.Config(config)
-        info = self.project.infocollector
-        info["config"] = config
         self.builder = mkdocsbuilder.MkDocsBuilder(
             files=files,
             config=cfg,
@@ -73,10 +72,11 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         )
         logger.info("Generating pages...")
         build_files = self.project.all_files()
+
         logger.info("Writing pages to disk...")
         self.builder.write_files(build_files)  # type: ignore[arg-type]
         logger.info("Finished writing pages to disk")
-        ctx = self.project.context
+
         requirements = self.project.get_requirements()
         for k, v in requirements.css.items():
             cfg.register_css(k, v)
@@ -84,16 +84,18 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             cfg.register_js(k, v)
         if extensions := requirements.markdown_extensions:
             cfg.register_extensions(extensions)
+        md = cfg.get_markdown_instance()
+        for template in requirements.templates:
+            if html := template.build_html(md):
+                cfg.register_template(template.filename, html)
+
+        ctx = self.project.context
         if not config.extra.get("social"):
             config.extra["social"] = ctx.metadata.social_info
         config.repo_url = ctx.metadata.repository_url
         config.site_description = ctx.metadata.summary
         config.site_name = ctx.metadata.distribution_name
         config.site_author = ctx.metadata.author_name
-        md = cfg.get_markdown_instance()
-        for template in requirements.templates:
-            if html := template.build_html(md):
-                cfg.register_template(template.filename, html)
         return self.builder.files
 
     def on_nav(
@@ -110,7 +112,9 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         return nav
 
     def on_env(self, env: jinja2.Environment, config: MkDocsConfig, files: Files):
-        env.globals["mknodes"] = self.project.infocollector.variables
+        """Add our own info to the MkDocs environment."""
+        node_env = mknode.MkNode._env
+        env.globals["mknodes"] = node_env.globals
         logger.debug("Added variables to jinja2 environment.")
         # mknodes_macros = jinjahelpers.get_mknodes_macros()
         # env.globals["mknodes"].update(mknodes_macros)
@@ -123,7 +127,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         files: Files,
     ) -> Page | None:
         """During this phase we set the edit paths."""
-        node = self.project.infocollector["page_mapping"].get(page.file.src_uri)
+        mapping = mknode.MkNode._env.globals["page_mapping"]
+        node = mapping.get(page.file.src_uri)  # type: ignore[attr-defined]
         edit_path = node._edit_path if isinstance(node, mkpage.MkPage) else None
         cfg = mkdocsconfig.Config(config)
         if path := cfg.get_edit_url(edit_path):
@@ -139,11 +144,9 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links get replaced and `jinja2` stuff get rendered."""
-        node = self.project.infocollector["page_mapping"].get(page.file.src_uri)
-        self.project.infocollector["page"] = page
-        self.project.infocollector["mkpage"] = node
-        self.project.infocollector.set_mknodes_filters(parent=node)
-        markdown = self.project.infocollector.render(markdown)
+        mapping = mknode.MkNode._env.globals["page_mapping"]
+        node = mapping.get(page.file.src_uri)  # type: ignore[attr-defined]
+        markdown = node.env.render_string(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 
     # def on_page_context(
@@ -155,7 +158,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     #     nav: Navigation,
     # ) -> TemplateContext | None:
     #     """Also add our info stuff to the MkDocs jinja context."""
-    #     context["mknodes"] = self.project.infocollector.variables
     #     return context
 
     def on_post_build(self, config: MkDocsConfig):
