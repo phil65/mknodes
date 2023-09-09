@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 import datetime
 
 import jinja2
 
-from mknodes.utils import helpers, jinjahelpers, log, yamlhelpers
+from mknodes.utils import helpers, jinjahelpers, log, mergehelpers, yamlhelpers
 
 
 logger = log.get_logger(__name__)
@@ -27,6 +28,11 @@ class Environment(jinja2.Environment):
     def set_mknodes_filters(self, parent=None):
         filters = jinjahelpers.get_mknodes_macros(parent)
         self.filters.update(filters)
+
+    def merge_globals(self, other: Mapping, additive: bool = False):
+        strategy = "additive" if additive else "replace"
+        mapping = mergehelpers.merge_dicts(self.variables, other, strategy=strategy)
+        self.variables = dict(mapping)
 
     def render_string(self, markdown: str, variables=None):
         try:
