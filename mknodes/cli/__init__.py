@@ -100,7 +100,7 @@ def create_config(repo_url, site_script: str, theme: str | None, **kwargs):
         build_fn=site_script,
         clone_depth=1,
     )
-    requirements = proj.context.requirements
+    requirements = proj.get_requirements()
     info = proj.context.info
     config["markdown_extensions"] = requirements.markdown_extensions
     if social := info.social_info:

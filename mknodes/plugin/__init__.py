@@ -73,11 +73,12 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         )
         self.builder.write_files(self.project.all_files())  # type: ignore[arg-type]
         ctx = self.project.context
-        for k, v in ctx.requirements.css.items():
+        requirements = self.project.get_requirements()
+        for k, v in requirements.css.items():
             cfg.register_css(k, v)
-        for k, v in ctx.requirements.js_files.items():
+        for k, v in requirements.js_files.items():
             cfg.register_js(k, v)
-        if extensions := ctx.requirements.markdown_extensions:
+        if extensions := requirements.markdown_extensions:
             cfg.register_extensions(extensions)
         if not config.extra.get("social"):
             config.extra["social"] = ctx.metadata.social_info
@@ -86,7 +87,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         config.site_name = ctx.metadata.distribution_name
         config.site_author = ctx.metadata.author_name
         md = cfg.get_markdown_instance()
-        for template in ctx.requirements.templates:
+        for template in requirements.templates:
             if html := template.build_html(md):
                 cfg.register_template(template.filename, html)
         return self.builder.files

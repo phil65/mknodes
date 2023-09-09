@@ -123,7 +123,7 @@ class ProjectContext(Context):
     def as_dict(self):
         return dict(
             metadata=self.metadata.as_dict(),
-            requirements=dict(self.requirements),
+            # requirements=dict(self.requirements),
             theme=self.theme.as_dict(),
             git=self.git.as_dict(),
         )
@@ -171,7 +171,7 @@ default_project_context = ProjectContext(
     git=default_git_context,
     github=default_github_context,
     theme=default_theme_context,
-    requirements=Requirements(),
+    # requirements=Requirements(),
 )
 
 

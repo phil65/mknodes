@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import os
 import pathlib
 
@@ -141,14 +142,14 @@ class Project(Generic[T]):
             variables["filenames"] = list(page_mapping.keys())
         self.infocollector.variables |= variables
 
-    @property
+    @functools.cached_property
     def context(self):
         return contexts.ProjectContext(
             metadata=self.folderinfo.context,
             git=self.folderinfo.git.context,
             # github=self.folderinfo.github.context,
             theme=self.theme.context,
-            requirements=self.get_requirements(),
+            # requirements=self.get_requirements(),
         )
 
 
