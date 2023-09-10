@@ -74,9 +74,13 @@ class PackageContext(Context):
     required_python_version: str | None = ""
     """The required python version for the distribution [Metadata]"""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
+    """The names of the dependencies."""
     extras: dict[str, list[str]] = dataclasses.field(default_factory=dict)
+    """The extras of the distribution."""
     urls: dict[str, str] = dataclasses.field(default_factory=dict)
+    """A set of URLs related to the distribution."""
     homepage: str = ""
+    """The main website of the distribution."""
     license_name: str | None = ""
     """Name of the license"""
     license_text: str | None = ""
@@ -84,14 +88,21 @@ class PackageContext(Context):
     pretty_name: str = ""
     """A pretty name for the distribution (like MkNodes) [MkDocs site name]"""
     repository_url: str = ""
+    """The URL to the remote code repository."""
     repository_username: str = ""
+    """The username for the remote code repository."""
     repository_name: str = ""
+    """The repository name of the distribution."""
     repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
+    """The path to the local git repository."""
     mkdocs_config: dict | None = None
+    """A dictionary containing the MkDocs config."""
     tools: list[tools.Tool] = dataclasses.field(default_factory=list)
     """A list of tools found for the distribution."""
     task_runners: list = dataclasses.field(default_factory=list)
+    """Task runners used by the distribution."""
     social_info: list[dict[str, str]] = dataclasses.field(default_factory=list)
+    """A icon-name -> URL dictionary containing ."""
     inventory_url: str | None = ""
     """A best guess for an inventory URL for the package."""
     entry_points: dict = dataclasses.field(default_factory=dict)
