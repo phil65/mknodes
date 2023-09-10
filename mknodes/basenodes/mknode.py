@@ -258,6 +258,9 @@ class MkNode(node.Node):
             len(all_extensions),
             len(all_css),
         )
+        logger.debug("Merging Extensions...")
+        all_extensions = mergehelpers.merge_extensions(all_extensions)
+        logger.debug("Building Requirements object...")
         return requirements.Requirements(
             templates=all_templates,
             js_files={p: (paths.RESOURCES / p).read_text() for p in all_js_files},

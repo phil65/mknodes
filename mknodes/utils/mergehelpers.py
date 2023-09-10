@@ -35,7 +35,31 @@ def merge_dicts(dct, *dicts, strategy: str = "additive", deepcopy: bool = False)
     return dct
 
 
+def merge_extensions(dicts):
+    seen = set()
+    result = []
+    for dct in dicts:
+        dct = dict(sorted(dct.items()))
+        if (stringed := str(dct)) not in seen:
+            # print(str(dct))
+            seen.add(stringed)
+            result.append(dct)
+    return result
+
+
 if __name__ == "__main__":
-    dct_a = dict(a=[1, 2, 3], b={"test": "content"})
-    dct_b = dict(a=[1, 2, 3], b={"test2": "content"})
-    print(merge_dicts(dct_a, dct_b, strategy="replace"))
+    import mknodes
+
+    from mknodes import manual
+
+    # dct_a = dict(a=[1, 2, 3], b={"test": "content"})
+    # dct_b = dict(a=[1, 2, 3], b={"test2": "content"})
+    # print(merge_dicts(dct_a, dct_b, strategy="additive"))
+    proj = mknodes.Project.for_mknodes()
+    manual.build(proj)
+    reqs = proj.get_requirements()
+    # print(type(reqs.markdown_extensions))
+    result = merge_extensions(reqs.markdown_extensions)
+    # print(result)
+    # print(result)
+    # print(result)

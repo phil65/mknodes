@@ -131,11 +131,15 @@ class Project(Generic[T]):
 
     def get_requirements(self) -> requirements.Requirements:
         """Return requirements for this project based on theme and used nodes."""
-        reqs = requirements.Requirements()
+        logger.debug("Collecting theme requirements...")
+        reqs = self.theme.get_requirements()
         if self._root:
-            reqs.merge(self._root.get_requirements())
-        reqs.merge(self.theme.get_requirements())
+            tree_reqs = self._root.get_requirements()
+            logger.debug("Merging tree and theme requirements...")
+            reqs.merge(tree_reqs)
+        logger.debug("Adapting collected extensions to theme...")
         self.theme.adapt_extensions(reqs.markdown_extensions)
+        logger.debug("Setting default markdown extensions...")
         reqs.markdown_extensions["pymdownx.magiclink"] = dict(
             repo_url_shorthand=True,
             user=self.folderinfo.repository_username,
