@@ -90,9 +90,11 @@ class EntryPoint:
 
 @functools.cache
 def get_entry_points(
-    dist: metadata.Distribution,
+    dist: metadata.Distribution | str,
     group: str | None = None,
 ) -> dict[str, EntryPoint]:
+    if isinstance(dist, str):
+        dist = get_distribution(dist)
     if not group:
         eps = _get_entry_points(dist)
     else:
@@ -139,3 +141,8 @@ class Dependency:
 @functools.cache
 def get_dependency(name) -> Dependency:
     return Dependency(name)
+
+
+if __name__ == "__main__":
+    eps = get_entry_points("mknodes")
+    print(eps)

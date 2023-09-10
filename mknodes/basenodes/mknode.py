@@ -297,6 +297,13 @@ class MkNode(node.Node):
     def associated_project(self, value: project.Project):
         self._associated_project = value
 
+    @classmethod
+    def with_default_context(cls, *args, **kwargs):
+        import mknodes
+
+        proj = mknodes.Project.for_mknodes()
+        return cls(*args, **kwargs, project=proj)
+
 
 jinjahelpers.set_markdown_exec_namespace(MkNode._env.globals)
 

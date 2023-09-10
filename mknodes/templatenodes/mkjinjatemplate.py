@@ -53,12 +53,5 @@ class MkJinjaTemplate(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    import mknodes
-
-    proj = mknodes.Project.for_mknodes()
-    node = MkJinjaTemplate(
-        "requirements.md",
-        project=proj,
-        parent=mknodes.MkCode("test2"),
-    )
+    node = MkJinjaTemplate.with_default_context("requirements.md")
     print(node)

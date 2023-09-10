@@ -57,12 +57,5 @@ class MkLicense(mktext.MkText):
 
 
 if __name__ == "__main__":
-    import mknodes
-
-    proj = mknodes.Project.for_mknodes()
-    nav = proj.get_root()
-    lic = MkLicense("GPL-3.0")
-    page = nav.add_page("test")
-    page += lic
-    nav += page
+    lic = MkLicense.with_default_context("GPL-3.0")
     print(lic.text)

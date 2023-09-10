@@ -17,7 +17,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        project: str | None = None,
+        distribution: str | None = None,
         package_repos: list[installmethods.InstallMethodStr] | None = None,
         header_level: int = 3,
         **kwargs: Any,
@@ -25,13 +25,13 @@ class MkInstallGuide(mkcontainer.MkContainer):
         """Constructor.
 
         Arguments:
-            project: name of the project to install
+            distribution: name of the distribution to install
             package_repos: package repositories the project is available on
             header_level: Header level for each section
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self._project = project
+        self._distribution = distribution
         self.header_level = header_level
         self._package_repos = package_repos
 
@@ -42,19 +42,19 @@ class MkInstallGuide(mkcontainer.MkContainer):
         return self.ctx.metadata.package_repos or ["pip"]
 
     @property
-    def project(self):
-        return self._project or self.ctx.metadata.distribution_name
+    def distribution(self):
+        return self._distribution or self.ctx.metadata.distribution_name
 
-    @project.setter
-    def project(self, value):
-        self._project = value
+    @distribution.setter
+    def distribution(self, value):
+        self._distribution = value
 
     @property
     def items(self) -> list[mknode.MkNode]:
-        if not self.project:
+        if not self.distribution:
             return []
         klasses = [installmethods.InstallMethod.by_id(i) for i in self.package_repos]
-        methods = [i(self.project) for i in klasses]
+        methods = [i(self.distribution) for i in klasses]
         return [self.get_section_for(method) for method in methods]
 
     @items.setter
@@ -70,7 +70,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
             mktext.MkText(method.info_text()),
             mkcode.MkCode(method.install_instructions()),
         ]
-        # proj = self.associated_project
+        # proj = self.associated_distribution
         # if method.ID == "pip" and proj and (extras := proj.info.extras):
         #     extras_str = ",".join(extras)
         #     text = f"{method.install_instructions()}[{extras_str}]"
@@ -81,7 +81,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            project=self._project,
+            distribution=self._distribution,
             package_repos=self._package_repos,
             header_level=self.header_level,
             _filter_empty=True,
@@ -96,16 +96,10 @@ class MkInstallGuide(mkcontainer.MkContainer):
         page += mknodes.MkReprRawRendered(node, header="### From project")
 
         # we can also explicitely define the repositories
-        node = MkInstallGuide(project="mkdocs", package_repos=["pipx"])
+        node = MkInstallGuide("mkdocs", package_repos=["pipx"])
         page += mknodes.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":
-    import mknodes
-
-    project = mknodes.Project.for_mknodes()
-    root = project.get_root()
-    page = root.add_index_page()
-    guide = MkInstallGuide()
-    page += guide
-    print(page)
+    guide = MkInstallGuide.with_default_context()
+    print(guide)
