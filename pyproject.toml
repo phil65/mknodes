@@ -23,6 +23,7 @@ dependencies = [
     "markdown-exec[ansi]",
     "mkdocs-coverage",
     "mkdocs-typer",
+    "mkdocs-click",
     "pygments",
     "cairosvg",
     "pillow",
