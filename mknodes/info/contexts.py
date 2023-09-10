@@ -51,48 +51,71 @@ class BuildContext(Context):
 @dataclasses.dataclass
 class PackageContext(Context):
     # PackageInfo
-    pretty_name: str = ""
-    distribution_name: str = ""
-    summary: str = ""
     module: types.ModuleType | None = None
+    """The module object itself."""
+    distribution_name: str = ""
+    """The name of the distribution [Metadata]"""
+    summary: str = ""
+    """A summary for the distribution [Metadata]"""
     description: str = ""
+    """A description for the distribution [Metadata]"""
     author_name: str = ""
+    """The author name of the distribution [Metadata]"""
     author_email: str = ""
+    """A description for the distribution [Metadata]"""
     authors: dict[str, str] = dataclasses.field(default_factory=dict)
+    """All authors of the distribution [Metadata]"""
     classifiers: list = dataclasses.field(default_factory=list)
+    """Distribution classifiers [Metadata]"""
     classifier_map: dict[str, list[str]] = dataclasses.field(default_factory=dict)
+    """Distribution classifiers, sorted by category [Metadata]"""
     keywords: list[str] = dataclasses.field(default_factory=list)
-    license_name: str | None = ""
-    license_text: str | None = ""
+    """Distribution keywords [Metadata]"""
     required_python_version: str | None = ""
+    """The required python version for the distribution [Metadata]"""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
     extras: dict[str, list[str]] = dataclasses.field(default_factory=dict)
     urls: dict[str, str] = dataclasses.field(default_factory=dict)
     homepage: str = ""
+    license_name: str | None = ""
+    """Name of the license"""
+    license_text: str | None = ""
+    """The complete license text"""
+    pretty_name: str = ""
+    """A pretty name for the distribution (like MkNodes) [MkDocs site name]"""
     repository_url: str = ""
     repository_username: str = ""
     repository_name: str = ""
     repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
     mkdocs_config: dict | None = None
+    tools: list[tools.Tool] = dataclasses.field(default_factory=list)
+    """A list of tools found for the distribution."""
     task_runners: list = dataclasses.field(default_factory=list)
     social_info: list[dict[str, str]] = dataclasses.field(default_factory=list)
     inventory_url: str | None = ""
-    # required_packages: dict[PackageInfo, packagehelpers.Dependency] =
+    """A best guess for an inventory URL for the package."""
     entry_points: dict = dataclasses.field(default_factory=dict)
+    # required_packages: dict[PackageInfo, packagehelpers.Dependency] =
     # pyproject
     build_system: buildsystems.BuildSystem = dataclasses.field(
         default_factory=lambda: buildsystems.hatch,
     )
+    """The build system set as build backend [pyproject.py]"""
     configured_build_systems: list = dataclasses.field(default_factory=list)
-    tools: list[tools.Tool] = dataclasses.field(default_factory=list)
+    """A list of build systems which are configured in pyproject [pyproject.py]"""
     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
+    """The tool section of the pyproject file (as a dict) [pyproject.py]"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
         default_factory=list,
     )
+    """Commit types defined in pyproject mknodes section [pyproject.py]"""
     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
+    """Descriptions for the extras, defined in pyproject mknodes section [pyproject.py]"""
     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
         default_factory=list,
     )
+    """Package repositories the distribution is distributed on.
+    Defined in pyproject mknodes section [pyproject.py]"""
 
 
 @dataclasses.dataclass
