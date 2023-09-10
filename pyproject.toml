@@ -91,24 +91,29 @@ keywords = [
 
 requires-python = ">=3.11"
 dependencies = [
-    # "typing_extensions",
     "mkdocs >=1.5",
     "mkdocs-literate-nav",
-    "git-changelog",
-    "fsspec",
-    "cssutils",
-    "deepmerge",
-    "pygithub>=2.0.dev0",
-    "coloraide",
-    "tomli-w",
-    "anybadge",
-    "gitpython",
-    "PyYAML >=5.1",
-    "pyyaml_env_tag",
-    "click",
     "mkdocs-material",
     "mkdocstrings[python]",
     "mkdocs-section-index",
+
+    "git-changelog",
+    "gitpython",
+    "pygithub>=2.0.dev0",
+
+    "PyYAML >=5.1",
+    "pyyaml_env_tag",
+
+    "rich",
+    "click",
+    "rich-click",
+
+    "fsspec",
+    "cssutils",
+    "deepmerge",
+    "coloraide",
+    "tomli-w",
+    "anybadge",
 ]
 license = "MIT"
 
