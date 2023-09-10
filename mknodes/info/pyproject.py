@@ -38,9 +38,9 @@ class PyProject(tomlfile.TomlFile):
         return f"PyProject({self.name!r})"
 
     @functools.cached_property
-    def name(self) -> str:
+    def name(self) -> str | None:
         """Project name."""
-        return self.project["name"]
+        return self.project.get("name")
 
     @functools.cached_property
     def tool(self) -> dict[str, Any]:
