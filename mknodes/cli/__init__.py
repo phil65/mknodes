@@ -19,7 +19,7 @@ cli = t.Typer(
 
 DEFAULT_FN = "mknodes.mkwebsite:MkWebSite.for_project"
 REPO_URL_HELP = "Repository URL of the target package."
-SCRIPT_HELP = "Path to the build script."
+BUILD_CMD_HELP = "Path to the build script."
 SITE_DIR_HELP = "Path to the build script."
 CLONE_DEPTH_HELP = "Git clone depth in case repository is remote."
 CFG_PATH_HELP = "Path to the config file"
@@ -31,8 +31,8 @@ QUIET_HELP = "Suppress output during build."
 
 
 REPO_URL_CMDS = "-r", "--repo-url"
-SITE_DIR_CMDS = "-b", "--site-dir"
-SITE_SCRIPT_CMDS = "-s", "--site-script"
+SITE_DIR_CMDS = "-d", "--site-dir"
+BUILD_FN_CMDS = "-b", "--build-fn"
 CLONE_DEPTH_CMDS = "-c", "--clone-depth"
 CFG_PATH_CMDS = "-p", "--config-path"
 STRICT_CMDS = "-s", "--strict"
@@ -56,8 +56,8 @@ def quiet(ctx, param, value):
 
 @cli.command()
 def build(
-    repo_url: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    site_script: str = t.Option(DEFAULT_FN, *SITE_SCRIPT_CMDS, help=SCRIPT_HELP),
+    repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
+    build_fn: str = t.Option(DEFAULT_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
     site_dir: str = t.Option("site", *SITE_DIR_CMDS, help=SITE_DIR_HELP),
     clone_depth: int = t.Option(1, *CLONE_DEPTH_CMDS, help=CLONE_DEPTH_HELP),
     config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
@@ -70,8 +70,8 @@ def build(
     """Create a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
         config_path or "mkdocs_basic.yml",
-        repo_url=repo_url,
-        site_script=site_script,
+        repo_url=repo_path,
+        site_script=build_fn,
         clone_depth=clone_depth,
     )
     cfg["site_dir"] = site_dir
@@ -85,8 +85,8 @@ def build(
 
 @cli.command()
 def serve(
-    repo_url: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    site_script: str = t.Option(DEFAULT_FN, *SITE_SCRIPT_CMDS, help=SCRIPT_HELP),
+    repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
+    build_fn: str = t.Option(DEFAULT_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
     clone_depth: int = t.Option(1, *CLONE_DEPTH_CMDS, help=CLONE_DEPTH_HELP),
     config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     strict: bool = t.Option(False, *STRICT_CMDS, help=STRICT_HELP),
@@ -98,8 +98,8 @@ def serve(
     """Serve a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
         config_path,
-        repo_url=repo_url,
-        site_script=site_script,
+        repo_url=repo_path,
+        site_script=build_fn,
         clone_depth=clone_depth,
     )
     mkdocshelpers.serve(
@@ -112,8 +112,8 @@ def serve(
 
 @cli.command()
 def create_config(
-    repo_url: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    site_script: str = t.Option(DEFAULT_FN, *SITE_SCRIPT_CMDS, help=SCRIPT_HELP),
+    repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
+    build_fn: str = t.Option(DEFAULT_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
     # config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
@@ -122,7 +122,7 @@ def create_config(
 ):
     """Create a config based on given script and repository."""
     mknodes_plugin = dict(
-        mknodes={"repo_path": repo_url, "path": site_script},
+        mknodes={"repo_path": repo_path, "path": build_fn},
     )
     theme_name = theme or "material"
     config = {
@@ -147,8 +147,8 @@ def create_config(
         base_url="",
         use_directory_urls=True,
         theme=skin,
-        repo=repo_url,
-        build_fn=site_script,
+        repo=repo_path,
+        build_fn=build_fn,
         clone_depth=1,
     )
     requirements = proj.get_requirements()
@@ -156,7 +156,7 @@ def create_config(
     config["markdown_extensions"] = requirements.markdown_extensions
     if social := info.social_info:
         config["extra"]["social"] = social  # type: ignore[index]
-    config["repo_url"] = info.repository_url
+    config["repo_path"] = info.repository_url
     config["site_description"] = info.summary
     config["site_name"] = info.distribution_name
     config["site_author"] = info.author_name
