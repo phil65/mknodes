@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
+import functools
 import os
 import types
 
@@ -12,12 +14,14 @@ from mknodes.utils import inspecthelpers, log, reprhelpers
 logger = log.get_logger(__name__)
 
 
+@functools.cache
 def get_dependency_svg(
     folder_name: str | os.PathLike,
     max_bacon: int | None = 2,
     max_module_depth: int | None = None,
     only_cycles: bool = False,
-):
+    clusters: bool = False,
+) -> str:
     """Get svg for given folder (like "src/module" or just "module")."""
     from pydeps import cli, colors, dot, py2depgraph
     from pydeps.pydeps import depgraph_to_dotsrc
@@ -31,6 +35,8 @@ def get_dependency_svg(
         cmd.extend(["--max-module-depth", str(max_module_depth)])
     if only_cycles:
         cmd.append("--only-cycles")
+    if clusters:
+        cmd.append("--clusters")
     options = cli.parse_args(cmd)
     colors.START_COLOR = options["start_color"]
     target = Target(options["fname"])
@@ -45,6 +51,13 @@ def get_dependency_svg(
     return svg.replace('fill="white"', 'fill="transparent"')
 
 
+def insert_links(svg: str, link_map: Mapping[str, str]):
+    for k, v in link_map.items():
+        if (title_tag := f'<title>{k.replace(".", "_")}</title>') in svg:
+            svg = svg.replace(title_tag, f'<a href="{v}"><title>{k}</title>')
+    return svg.replace("</text></g>", "</text></a></g>")
+
+
 class MkPyDeps(mknode.MkNode):
     """Node for showing a Dependency graph."""
 
@@ -56,6 +69,7 @@ class MkPyDeps(mknode.MkNode):
         max_bacon: int | None = None,
         max_module_depth: int | None = None,
         only_cycles: bool = False,
+        clusters: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
@@ -65,16 +79,26 @@ class MkPyDeps(mknode.MkNode):
             max_bacon: Max bacon
             max_module_depth: Maximum module depth to display
             only_cycles: Only show import cycles
+            clusters: draw external dependencies as separate clusters
             kwargs: Keyword arguments passed to parent
         """
         self._module = module
         self.max_bacon = max_bacon
         self.max_module_depth = max_module_depth
         self.only_cycles = only_cycles
+        self.clusters = clusters
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, module=self.module, _filter_empty=True)
+        return reprhelpers.get_repr(
+            self,
+            module=self.module,
+            max_bacon=self.max_bacon,
+            max_module_depth=self.max_module_depth,
+            only_cycles=self.only_cycles,
+            clusters=self.clusters,
+            _filter_empty=True,
+        )
 
     @property
     def module(self):
@@ -92,7 +116,11 @@ class MkPyDeps(mknode.MkNode):
             max_bacon=self.max_bacon,
             max_module_depth=self.max_module_depth,
             only_cycles=self.only_cycles,
+            clusters=self.clusters,
         )
+        proj = self.associated_project
+        mapping = proj.linkprovider.inv_manager if proj else {}
+        content = insert_links(content, mapping)
         return f"<body>\n\n{content}\n\n</body>\n"
 
     @staticmethod
@@ -102,5 +130,5 @@ class MkPyDeps(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkPyDeps(mknode, max_bacon=1)
+    node = MkPyDeps.with_default_context("mknodes/utils/inventorymanager.py", max_bacon=1)
     print(node)
