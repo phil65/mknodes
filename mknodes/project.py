@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import functools
 import os
 import pathlib
@@ -35,9 +36,19 @@ class Project(Generic[T]):
         base_url: str = "",
         use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
-        build_fn: str = "mknodes.mkwebsite:MkWebSite.for_project",
+        build_fn: str | Callable = "mknodes.mkwebsite:MkWebSite.for_project",
         clone_depth: int = 100,
     ):
+        """The main project to create a website.
+
+        Arguments:
+            theme: The theme to use
+            base_url: Base url of the website
+            use_directory_urls: Whether urls are in directory-style
+            repo: Path to the git repository
+            build_fn: Callable to create the website with
+            clone_depth: Amount of commits to clone in case repository is remote.
+        """
         self.linkprovider = linkprovider.LinkProvider(
             base_url=base_url,
             use_directory_urls=use_directory_urls,
@@ -58,7 +69,10 @@ class Project(Generic[T]):
             case _:
                 self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None
-        self.build_fn = classhelpers.get_callable_from_path(build_fn)
+        if isinstance(build_fn, str):
+            self.build_fn = classhelpers.get_callable_from_path(build_fn)
+        else:
+            self.build_fn = build_fn
         self.build()
 
     def build(self):
