@@ -15,6 +15,7 @@ from mknodes.info import (
     license,
     packageinfo,
     pyproject,
+    yamlfile,
 )
 from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
@@ -54,13 +55,10 @@ class FolderInfo:
         self.pyproject = pyproject.PyProject(self.path)
         # packagehelpers.install_or_import(mod_name)
         self.git = gitrepository.GitRepository(self.path)
-        self.mkdocs_config = {}
+        self.mkdocs_config = yamlfile.YamlFile()
         if (path := self.path / "mkdocs.yml").exists():
-            text = path.read_text(encoding="utf-8")
             with contextlib.suppress(yamlhelpers.YAMLError):
-                # TODO: cannot load some remote mkdocs configs
-                # (for example from pymdown-extensions)
-                self.mkdocs_config = yamlhelpers.load_yaml(text, mode="unsafe")
+                self.mkdocs_config = yamlfile.YamlFile(path)
         # self.github = githubinfo.GitHubRepo(
         #     self.repository_username,
         #     self.repository_name,
