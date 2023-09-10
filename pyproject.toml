@@ -50,7 +50,7 @@ docs-build = "hatch run mkdocs build"
 docs-build-test = [
   "hatch run mkdocs build -v",
   "hatch run mknodes build -r https://github.com/mkdocstrings/mkdocstrings.git -d site/mkdocstrings -v",
-  "hatch run mknodes build -r https://github.com/mkdocs/mkdocs.git -d site/mkdocs -v",
+  "hatch run mknodes build -r https://github.com/mkdocs/mkdocs.git -d site/mkdocs -p mkdocs_mkdocs.yml -v",
 ]
 
 [build-system]
