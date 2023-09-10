@@ -66,11 +66,7 @@ class MkDoc(mknav.MkNav):
 
     @property
     def module(self):
-        match self._module:
-            case None if self.associated_project:
-                return self.associated_project.folderinfo.module
-            case _:
-                return self._module
+        return self.ctx.metadata.module if self._module is None else self._module
 
     @property
     def module_name(self):
