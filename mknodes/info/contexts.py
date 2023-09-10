@@ -63,6 +63,7 @@ class PackageContext(Context):
     classifier_map: dict[str, list[str]] = dataclasses.field(default_factory=dict)
     keywords: list[str] = dataclasses.field(default_factory=list)
     license_name: str | None = ""
+    license_text: str | None = ""
     required_python_version: str | None = ""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
     extras: dict[str, list[str]] = dataclasses.field(default_factory=dict)

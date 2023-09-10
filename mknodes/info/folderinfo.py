@@ -215,6 +215,7 @@ class FolderInfo:
             classifier_map=self.info.classifier_map,
             keywords=self.info.keywords,
             license_name=self.info.license_name,
+            license_text=self.license_text,
             required_python_version=self.info.required_python_version,
             required_package_names=self.info.required_package_names,
             extras=self.info.extras,
