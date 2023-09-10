@@ -33,9 +33,41 @@ def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
     return result
 
 
-def load_yaml(text: str, mode="unsafe"):
+def get_safe_loader(base_loader_cls):
+    class SafeLoader(base_loader_cls):
+        """Safe Loader."""
+
+    SafeLoader.add_constructor("!relative", lambda loader, node: None)  # type: ignore
+    SafeLoader.add_multi_constructor(
+        "tag:yaml.org,2002:python/name:",
+        lambda loader, suffix, node: None,
+    )
+    SafeLoader.add_multi_constructor(
+        "tag:yaml.org,2002:python/object/apply:",
+        lambda loader, suffix, node: None,
+    )
+    return SafeLoader
+
+
+def get_default_loader(base_loader_cls):
+    # Attach Environment Variable constructor.
+    # See https://github.com/waylan/pyyaml-env-tag
+
     import yaml_env_tag
 
+    class DefaultLoader(base_loader_cls):
+        """Default Loader."""
+
+    DefaultLoader.add_constructor("!ENV", yaml_env_tag.construct_env_tag)
+    # Loader.add_constructor("!ENV", lambda loader, node: None)  # type: ignore
+    # if config is not None:
+    #     Loader.add_constructor(
+    #         "!relative", functools.partial(_construct_dir_placeholder, config)
+    #     )
+    return DefaultLoader
+
+
+def load_yaml(text: str, mode="unsafe"):
     """Wrap PyYaml's loader so we can extend it to suit our needs."""
     match mode:
         case "unsafe":
@@ -45,18 +77,9 @@ def load_yaml(text: str, mode="unsafe"):
         case _:
             base_loader_cls = yaml.SafeLoader
 
-    class MyLoader(base_loader_cls):
-        """Derive from global loader to leave the global loader unaltered."""
-
-    # Attach Environment Variable constructor.
-    # See https://github.com/waylan/pyyaml-env-tag
-
-    MyLoader.add_constructor("!ENV", yaml_env_tag.construct_env_tag)
-    # if config is not None:
-    #     MyLoader.add_constructor(
-    #         "!relative", functools.partial(_construct_dir_placeholder, config)
-    #     )
-    return yaml.load(text, Loader=MyLoader)
+    # Derive from global loader to leave the global loader unaltered.
+    default_loader = get_default_loader(base_loader_cls)
+    return yaml.load(text, Loader=default_loader)
 
 
 def dump_yaml(yaml_obj: Any) -> str:
