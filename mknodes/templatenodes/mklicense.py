@@ -41,10 +41,10 @@ class MkLicense(mktext.MkText):
     @property
     def text(self):
         if self.license:
-            text = license.License.from_name(self.license).content
-        else:
-            text = self.ctx.metadata.license_text or ""
-        return self.env.render_string(text)
+            lic = license.License.from_name(self.license)
+            lic.resolve_by_distribution(self.ctx.metadata.distribution_name)
+            return lic.content
+        return self.ctx.metadata.license_text or ""
 
     @staticmethod
     def create_example_page(page):

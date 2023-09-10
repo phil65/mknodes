@@ -64,37 +64,41 @@ class License:
     def resolve_by_distribution(self, distribution: str):
         info = packageinfo.get_info(distribution)
         env = environment.Environment()
-        env.globals["metadata"] = dict(
-            copyright_holder=info.author_name,
-            organization=info.author_name,
-            program_description=info.metadata["Summary"],
-            program_name=info.name,
-            program_url=info.repository_url or "",
-            program_version=info.metadata["Version"],
-            email=info.author_email,
-        )
+
+        class Ctx:
+            copyright_holder = info.author_name
+            organization = info.author_name
+            program_description = info.metadata["Summary"]
+            program_name = info.name
+            program_url = info.repository_url or ""
+            program_version = info.metadata["Version"]
+            email = info.author_email
+
+        env.globals["metadata"] = Ctx
         self.content = env.render_string(self.content)
 
     def resolve_template(
         self,
         holder: str,
         package_name: str,
-        organization: str | None = None,
+        org: str | None = None,
         website: str = "",
-        email: str = "",
+        mail_address: str = "",
         summary: str = "",
         version: str = "",
     ):
         env = environment.Environment()
-        env.globals["metadata"] = dict(
-            copyright_holder=holder,
-            organization=organization or holder,
-            program_description=summary,
-            program_name=package_name,
-            program_url=website,
-            program_version=version,
-            email=email,
-        )
+
+        class Ctx:
+            copyright_holder = holder
+            organization = org or holder
+            program_description = summary
+            program_name = package_name
+            program_url = website
+            program_version = version
+            email = mail_address
+
+        env.globals["metadata"] = Ctx
         self.content = env.render_string(self.content)
 
 
