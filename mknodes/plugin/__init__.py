@@ -51,6 +51,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             theme=skin,
             repo=self.config.repo_path,
             build_fn=self.config.path,
+            build_kwargs=self.config.kwargs,
             clone_depth=self.config.clone_depth,
         )
 

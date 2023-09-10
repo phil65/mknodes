@@ -5,7 +5,7 @@ import functools
 import os
 import pathlib
 
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar
 
 from mknodes import mknav
 from mknodes.info import contexts, folderinfo
@@ -37,6 +37,7 @@ class Project(Generic[T]):
         use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
         build_fn: str | Callable = "mknodes.mkwebsite:MkWebSite.for_project",
+        build_kwargs: dict[str, Any] | None = None,
         clone_depth: int = 100,
     ):
         """The main project to create a website.
@@ -47,6 +48,7 @@ class Project(Generic[T]):
             use_directory_urls: Whether urls are in directory-style
             repo: Path to the git repository
             build_fn: Callable to create the website with
+            build_kwargs: Keyword arguments for the build function
             clone_depth: Amount of commits to clone in case repository is remote.
         """
         self.linkprovider = linkprovider.LinkProvider(
@@ -73,11 +75,12 @@ class Project(Generic[T]):
             self.build_fn = classhelpers.get_callable_from_path(build_fn)
         else:
             self.build_fn = build_fn
+        self.build_kwargs = build_kwargs or {}
         self.build()
 
     def build(self):
         logger.debug("Building page...")
-        self.build_fn(project=self)
+        self.build_fn(project=self, **self.build_kwargs)
         logger.debug("Finished building page.")
         if not self._root:
             msg = "No root for project created."
