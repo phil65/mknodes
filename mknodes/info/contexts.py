@@ -10,8 +10,7 @@ import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import yamlfile
-from mknodes.utils import log
-from mknodes.utils.requirements import Requirements
+from mknodes.utils import linkprovider, log
 
 
 logger = log.get_logger(__name__)
@@ -172,14 +171,19 @@ class ProjectContext(Context):
     git: GitContext = dataclasses.field(default_factory=GitContext)
     github: GitHubContext = dataclasses.field(default_factory=GitHubContext)
     theme: ThemeContext = dataclasses.field(default_factory=ThemeContext)
-    requirements: Requirements = dataclasses.field(default_factory=Requirements)
+    links: linkprovider.LinkProvider = dataclasses.field(
+        default_factory=linkprovider.LinkProvider,
+    )
+    # requirements: Requirements = dataclasses.field(default_factory=Requirements)
 
     def as_dict(self):
         return dict(
             metadata=self.metadata,
+            git=self.git,
+            # github=self.github,
             # requirements=dict(self.requirements),
             theme=self.theme,
-            git=self.git,
+            links=self.links,
         )
 
 
@@ -226,6 +230,7 @@ default_project_context = ProjectContext(
     git=default_git_context,
     github=default_github_context,
     theme=default_theme_context,
+    links=linkprovider.LinkProvider(),
     # requirements=Requirements(),
 )
 

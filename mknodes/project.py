@@ -176,6 +176,7 @@ class Project(Generic[T]):
             git=self.folderinfo.git.context,
             # github=self.folderinfo.github.context,
             theme=self.theme.context,
+            links=self.linkprovider,
             # requirements=self.get_requirements(),
         )
 

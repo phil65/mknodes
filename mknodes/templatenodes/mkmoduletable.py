@@ -5,7 +5,7 @@ import inspect
 import types
 
 from mknodes.basenodes import mktable
-from mknodes.utils import classhelpers, helpers, layouts, linkprovider, log, reprhelpers
+from mknodes.utils import classhelpers, helpers, layouts, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -28,16 +28,10 @@ class MkModuleTable(mktable.MkTable):
         return reprhelpers.get_repr(self, modules=self.modules)
 
     @property
-    def linkprovider(self):
-        if self.associated_project:
-            return self.associated_project.linkprovider
-        return linkprovider.LinkProvider()
-
-    @property
     def data(self):
         if not self.modules:
             return {}
-        layout = layouts.ModuleLayout(link_provider=self.linkprovider)
+        layout = layouts.ModuleLayout(link_provider=self.ctx.links)
         data = [layout.get_row_for(mod) for mod in self.modules]
         return {
             k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]

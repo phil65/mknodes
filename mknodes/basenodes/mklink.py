@@ -7,7 +7,7 @@ from typing import Any
 from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import linkprovider, log, reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -63,10 +63,8 @@ class MkLink(mknode.MkNode):
         )
 
     @property
-    def url(self) -> str:  # type: ignore[return]
-        if self.associated_project:
-            return self.associated_project.linkprovider.get_url(self.target)
-        return linkprovider.LinkProvider().get_url(self.target)
+    def url(self) -> str:
+        return self.ctx.links.get_url(self.target)
 
     def _to_markdown(self) -> str:
         title = self.target if self.title is None else self.title

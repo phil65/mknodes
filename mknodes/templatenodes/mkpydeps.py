@@ -119,9 +119,7 @@ class MkPyDeps(mknode.MkNode):
             only_cycles=self.only_cycles,
             clusters=self.clusters,
         )
-        proj = self.associated_project
-        mapping = proj.linkprovider.inv_manager if proj else {}
-        content = insert_links(content, mapping)
+        content = insert_links(content, self.ctx.links.inv_manager)
         return f"<body>\n\n{content}\n\n</body>\n"
 
     @staticmethod

@@ -7,7 +7,7 @@ from typing import Any, Literal
 from mknodes import mknav
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, linkprovider, log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -88,11 +88,7 @@ class MkImage(mknode.MkNode):
 
     @property
     def url(self) -> str:
-        if not self.target:
-            return ""
-        if self.associated_project:
-            return self.associated_project.linkprovider.get_url(self.target)
-        return linkprovider.LinkProvider().get_url(self.target)
+        return self.ctx.links.get_url(self.target) if self.target else ""
 
     def _to_markdown(self) -> str:
         if not self.path_dark_mode:

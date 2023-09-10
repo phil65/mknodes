@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from mknodes.basenodes import mktable
-from mknodes.utils import layouts, linkprovider, log, reprhelpers
+from mknodes.utils import layouts, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -29,18 +29,12 @@ class MkClassTable(mktable.MkTable):
         return reprhelpers.get_repr(self, layout=self.layout, klasses=self.klasses)
 
     @property
-    def linkprovider(self):
-        if self.associated_project:
-            return self.associated_project.linkprovider
-        return linkprovider.LinkProvider()
-
-    @property
     def layouter(self):
         match self.layout:
             case "compact":
-                return layouts.CompactClassLayout(link_provider=self.linkprovider)
+                return layouts.CompactClassLayout(link_provider=self.ctx.links)
             case "extended":
-                return layouts.ExtendedClassLayout(link_provider=self.linkprovider)
+                return layouts.ExtendedClassLayout(link_provider=self.ctx.links)
             case layouts.Layout():
                 return self.layout
             case _:
