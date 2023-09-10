@@ -5,11 +5,12 @@ import os
 import pathlib
 
 from typing import Any, Self
+from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import cache, helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -181,6 +182,7 @@ class MkPage(mkcontainer.MkContainer):
     def from_file(
         cls,
         path: str | os.PathLike,
+        title: str | None = None,
         hide_toc: bool | None = None,
         hide_nav: bool | None = None,
         hide_path: bool | None = None,
@@ -192,13 +194,20 @@ class MkPage(mkcontainer.MkContainer):
 
         Arguments:
             path: Path to load file from
+            title: Optional title to use
+                   If None, title will be infered from metadata or filename
             hide_toc: Hide Toc. Overrides parsed metadata if set.
             hide_nav: Hide Navigation. Overrides parsed metadata if set.
             hide_path: Hide Path. Overrides parsed metadata if set.
             parent: Optional parent for new page
         """
-        path = pathlib.Path(path)
-        file_content = path.read_text()
+        if helpers.is_url(url := str(path)):
+            file_content = cache.download_and_cache_url(url).decode()
+            split = parse.urlsplit(url)
+            path = pathlib.Path(pathlib.Path(split.path).name)
+        else:
+            path = pathlib.Path(path)
+            file_content = path.read_text()
         data, text = metadata.Metadata.parse(file_content)
         if hide_toc is not None:
             data.hide_toc = hide_toc
@@ -206,7 +215,7 @@ class MkPage(mkcontainer.MkContainer):
             data.hide_nav = hide_nav
         if hide_path is not None:
             data.hide_path = hide_path
-        page = cls(path=path.as_posix(), content=text, parent=parent)
+        page = cls(path=path.name, content=text, title=title, parent=parent)
         page.metadata = data
         return page
 
@@ -240,6 +249,8 @@ class MkPage(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    doc = MkPage(hide_toc=True, search_boost=2)
+    doc = MkPage.from_file(
+        "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
+    )
     print(doc)
     # print(doc.children)
