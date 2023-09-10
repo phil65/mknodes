@@ -142,6 +142,13 @@ def get_dependency(name) -> Dependency:
     return Dependency(name)
 
 
+@functools.cache
+def list_installed_packages() -> dict[str, str]:
+    import pkg_resources
+
+    return {i.project_name: i.key for i in pkg_resources.working_set}
+
+
 if __name__ == "__main__":
-    eps = get_entry_points("mknodes")
+    eps = list_installed_packages()
     print(eps)
