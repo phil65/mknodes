@@ -6,9 +6,10 @@ import os
 import pathlib
 
 from typing import Any, Generic, TypeVar
+import urllib.error
 
 from mknodes import mknav
-from mknodes.info import contexts, folderinfo
+from mknodes.info import contexts, folderinfo, packageinfo
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
 from mknodes.utils import (
@@ -178,9 +179,23 @@ class Project(Generic[T]):
             # requirements=self.get_requirements(),
         )
 
+    def populate_linkprovider(self):
+        urls = {
+            v.inventory_url
+            for v in packageinfo.registry.values()
+            if v.inventory_url is not None
+        }
+        for url in urls:
+            logger.debug("Downloading %r...", url)
+            try:
+                self.linkprovider.add_inv_file(url)
+            except urllib.error.HTTPError:
+                logger.debug("No file for %r...", url)
+
 
 if __name__ == "__main__":
     project = Project.for_mknodes()
     from mknodes.manual import root
 
     root.build(project)
+    project.populate_linkprovider()
