@@ -70,6 +70,7 @@ from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mkargparsehelp import MkArgParseHelp
 from .templatenodes.mkjinjatemplate import MkJinjaTemplate
+from .templatenodes.mkpydeps import MkPyDeps
 
 from .project import Project
 from .mkwebsite import MkWebSite
@@ -145,6 +146,7 @@ __all__ = [
     "MkSpeechBubble",
     "MkTaskList",
     "MkJinjaTemplate",
+    "MkPyDeps",
 ]
 
 __version__ = "0.34.4"

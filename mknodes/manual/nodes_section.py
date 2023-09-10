@@ -165,6 +165,7 @@ def create_about_nodes_section(nav: mknodes.MkNav):
         mknodes.MkShields,
         mknodes.MkMetadataBadges,
         mknodes.MkModuleOverview,
+        mknodes.MkPyDeps,
     ]
     about_nodes_nav = nav.add_nav("About-the-project nodes")
     page = about_nodes_nav.add_index_page(hide_toc=True)
