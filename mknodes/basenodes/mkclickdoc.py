@@ -63,19 +63,17 @@ class MkClickDoc(mknode.MkNode):
                 eps = self.ctx.metadata.entry_points
                 eps = [i for i in eps.values() if i.group == "console_scripts"]
                 if eps:
-                    ep = next(iter(eps.values()))
-                    module, command = ep.dotted_path.split(":")
-                    dct = dict(module=module, command=command, prog_name=ep.name)
+                    module, command = eps[0].dotted_path.split(":")
+                    dct = dict(module=module, command=command, prog_name=eps[0].name)
         if not dct:
             return {}
-        opts = dict(
+        dct.update(
             depth=self._depth,
             style=self.style,
             remove_ascii_art=self.remove_ascii_art,
             show_hidden=self.show_hidden,
             show_subcommands=self.show_subcommands,
         )
-        dct |= opts
         return dct
 
     def _to_markdown(self) -> str:
@@ -98,5 +96,5 @@ class MkClickDoc(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc()
+    docstrings = MkClickDoc.with_default_context()
     print(docstrings)
