@@ -204,7 +204,8 @@ class MkPage(mkcontainer.MkContainer):
         if helpers.is_url(url := str(path)):
             file_content = cache.download_and_cache_url(url).decode()
             split = parse.urlsplit(url)
-            path = pathlib.Path(pathlib.Path(split.path).name)
+            path = f"{title}.md" if title else pathlib.Path(split.path).name
+            path = pathlib.Path(path)
         else:
             path = pathlib.Path(path)
             file_content = path.read_text()
