@@ -23,15 +23,36 @@ class GitRepository(git.Repo):
 
     @classmethod
     def clone_from(cls, *args, **kwargs) -> Self:
+        """Clone a repository. Overriden for typing."""
         return super().clone_from(*args, **kwargs)  # type: ignore[return-value]
 
     @cached_property
     def repo_name(self) -> str:
+        """Name (aka the last part of the url) of the Git repository."""
         return self.remotes.origin.url.split(".git")[0].split("/")[-1]
 
     @cached_property
     def repo_url(self) -> str:
+        """Url of the remote repository (without .git)."""
         return self.remotes.origin.url.split(".git")[0] + "/"
+
+    @cached_property
+    def commit_to_tag(self) -> dict[git.Commit, str]:
+        """Dictionary mapping git.Commits to tag strings."""
+        return {self.commit(i.commit): i.name for i in self.tags}
+
+    def get_version_for_commit(self, commit: git.Commit | str) -> str | None:
+        """Iterate commit parents to find the associated version of the commit."""
+        if isinstance(commit, str):
+            commit = self.commit(commit)
+        return next(
+            (
+                self.commit_to_tag[c]
+                for c in [commit, *commit.parents]
+                if c in self.commit_to_tag
+            ),
+            None,
+        )
 
     def get_last_commits(
         self,
@@ -48,6 +69,7 @@ class GitRepository(git.Repo):
 
     @cached_property
     def code_repository(self) -> str:
+        """Get the remote code repository name (like "GitHub")."""
         repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
         match repo_host:
             case "github.com":
@@ -60,7 +82,7 @@ class GitRepository(git.Repo):
                 return repo_host.split(".")[0].title()
 
     @cached_property
-    def context(self):
+    def context(self) -> contexts.GitContext:
         return contexts.GitContext(
             main_branch=self.main_branch,
             repo_hoster=self.code_repository,
@@ -71,4 +93,6 @@ class GitRepository(git.Repo):
 
 if __name__ == "__main__":
     repo = GitRepository(".")
-    print(repo.repo_url)
+    # for commit in repo.get_last_commits(100):
+    v = repo.get_version_for_commit("949f6df9cdf49d175bfe2c57d8f51d3882c7fc01")
+    print(v)
