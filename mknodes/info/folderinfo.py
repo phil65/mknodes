@@ -219,6 +219,7 @@ class FolderInfo:
             extras=self.info.extras,
             tools=self.tools,
             entry_points=self.info.get_entry_points(),
+            cli=self.info.cli,
             mkdocs_config=self.mkdocs_config,
             social_info=self.social_info,
             repository_path=self.path,

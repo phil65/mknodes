@@ -219,6 +219,14 @@ class PackageInfo:
                 return i
         raise ValueError(name)
 
+    @functools.cached_property
+    def cli(self) -> str | None:
+        eps = self.get_entry_points("console_scripts")
+        if not eps:
+            return None
+        _name, ep = next(iter(eps.items()))
+        return "typer" if ep.obj.__class__.__qualname__ == "Typer" else "click"
+
     def get_entry_points(
         self,
         group: str | None = None,
@@ -229,4 +237,4 @@ class PackageInfo:
 if __name__ == "__main__":
     info = get_info("mknodes")
     print(info.get_entry_points("mkdocs.plugins"))
-    print(info.metadata.json)
+    print(info.cli)

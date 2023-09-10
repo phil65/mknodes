@@ -22,7 +22,7 @@ dependencies = [
     "mkdocs-glightbox",
     "markdown-exec[ansi]",
     "mkdocs-coverage",
-    "mkdocs-click",
+    "mkdocs-typer",
     "pygments",
     "cairosvg",
     "pillow",
@@ -106,9 +106,7 @@ dependencies = [
     "pyyaml_env_tag",
 
     "rich",
-    "click",
-    "rich-click",
-
+    "typer",
     "fsspec",
     "cssutils",
     "deepmerge",

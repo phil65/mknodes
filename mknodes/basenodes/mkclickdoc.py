@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 class MkClickDoc(mknode.MkNode):
     """Documentation for click / typer CLI apps."""
 
-    REQUIRED_EXTENSIONS = ["mkdocs-click", "attr_list"]
+    REQUIRED_EXTENSIONS = ["mkdocs-typer", "attr_list"]
     ICON = "material/api"
 
     def __init__(
@@ -79,7 +79,9 @@ class MkClickDoc(mknode.MkNode):
     def _to_markdown(self) -> str:
         if not self.attributes:
             return ""
-        app = "typer" if "typer" in self.ctx.metadata.required_package_names else "click"
+        app = self.ctx.metadata.cli
+        if not app:
+            return ""
         md = f"::: mkdocs-{app}"
         option_lines = [f"    :{k}: {v}" for k, v in self.attributes.items() if v]
         option_text = "\n".join(option_lines)

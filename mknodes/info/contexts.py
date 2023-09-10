@@ -9,6 +9,7 @@ from typing import Any
 import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
+from mknodes.info import yamlfile
 from mknodes.utils import log
 from mknodes.utils.requirements import Requirements
 
@@ -103,7 +104,7 @@ class PackageContext(Context):
     """The repository name of the distribution."""
     repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
     """The path to the local git repository."""
-    mkdocs_config: dict | None = None
+    mkdocs_config: yamlfile.YamlFile | None = None
     """A dictionary containing the MkDocs config."""
     tools: list[tools.Tool] = dataclasses.field(default_factory=list)
     """A list of tools found for the distribution."""
@@ -114,7 +115,12 @@ class PackageContext(Context):
     inventory_url: str | None = ""
     """A best guess for an inventory URL for the package."""
     entry_points: dict = dataclasses.field(default_factory=dict)
+    """A dictionary containing the entry points of the distribution."""
+    cli: str | None = None
+    """The cli package used by the distribution."""
+
     # required_packages: dict[PackageInfo, packagehelpers.Dependency] =
+
     # pyproject
     build_system: buildsystems.BuildSystem = dataclasses.field(
         default_factory=lambda: buildsystems.hatch,
