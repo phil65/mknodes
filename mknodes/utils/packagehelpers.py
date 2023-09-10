@@ -101,13 +101,12 @@ def get_entry_points(
         eps = [i for i in _get_entry_points(dist) if i.group == group]
     dct = {}
     for ep in eps:
-        name, dotted_path = ep.name, ep.value
-        if ":" in dotted_path:
-            mod_name, kls_name = dotted_path.split(":")
+        if ":" in ep.value:
+            mod_name, kls_name = ep.value.split(":")
         else:
-            mod_name, kls_name = dotted_path, None
+            mod_name, kls_name = ep.value, None
         mod = importlib.import_module(mod_name)
-        dct[name] = EntryPoint(
+        dct[f"{ep.group}.{ep.name}"] = EntryPoint(
             name=ep.name,
             dotted_path=ep.value,
             group=ep.group,
