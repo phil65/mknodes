@@ -78,6 +78,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         logger.info("Finished writing pages to disk")
 
         requirements = self.project.get_requirements()
+        logger.info("Adding requirements to Config and build...")
         for k, v in requirements.css.items():
             cfg.register_css(k, v)
         for k, v in requirements.js_files.items():
@@ -89,6 +90,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             if html := template.build_html(md):
                 cfg.register_template(template.filename, html)
 
+        logger.info("Updating MkDocs config metadata...")
         ctx = self.project.context
         if not config.extra.get("social"):
             config.extra["social"] = ctx.metadata.social_info
