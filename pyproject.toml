@@ -26,6 +26,7 @@ dependencies = [
     "pygments",
     "cairosvg",
     "pillow",
+    "pydeps",
     # "prettyqt",
     # "PySide6",
 ]
