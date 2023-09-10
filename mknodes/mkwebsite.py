@@ -78,8 +78,8 @@ class MkWebSite(mknav.MkNav):
         page += mknodes.MkText("log() | MkCode", is_jinja_expression=True)
 
     @classmethod
-    def for_project(cls, project):
-        root = cls(project=project)
+    def for_project(cls, project, **kwargs):
+        root = cls(project=project, **kwargs)
         project.set_root(root)
         return root
 

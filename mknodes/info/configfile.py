@@ -123,6 +123,8 @@ class ConfigFile(MutableMapping, metaclass=ABCMeta):
 
 
 if __name__ == "__main__":
-    info = ConfigFile("pyproject.toml")
+    from mknodes.info import tomlfile
+
+    info = tomlfile.TomlFile("pyproject.toml")
     text = info.get_section_text("tool", "hatch", keep_path=True)
     print(text)
