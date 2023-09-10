@@ -81,8 +81,7 @@ class MkClickDoc(mknode.MkNode):
     def _to_markdown(self) -> str:
         if not self.attributes:
             return ""
-        proj = self.associated_project
-        app = "typer" if proj and "typer" in proj.info.required_package_names else "click"
+        app = "typer" if "typer" in self.ctx.metadata.required_package_names else "click"
         md = f"::: mkdocs-{app}"
         option_lines = [f"    :{k}: {v}" for k, v in self.attributes.items() if v]
         option_text = "\n".join(option_lines)
