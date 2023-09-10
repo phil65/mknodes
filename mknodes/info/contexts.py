@@ -162,10 +162,10 @@ class ProjectContext(Context):
 
     def as_dict(self):
         return dict(
-            metadata=self.metadata.as_dict(),
+            metadata=self.metadata,
             # requirements=dict(self.requirements),
-            theme=self.theme.as_dict(),
-            git=self.git.as_dict(),
+            theme=self.theme,
+            git=self.git,
         )
 
 
