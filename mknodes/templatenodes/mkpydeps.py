@@ -98,6 +98,7 @@ class MkPyDeps(mknode.MkNode):
             only_cycles=self.only_cycles,
             clusters=self.clusters,
             _filter_empty=True,
+            _filter_false=True,
         )
 
     @property
@@ -125,8 +126,10 @@ class MkPyDeps(mknode.MkNode):
 
     @staticmethod
     def create_example_page(page):
+        import mknodes
+
         node = MkPyDeps("mknodes/utils/inventorymanager.py", max_bacon=1)
-        page += node
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
