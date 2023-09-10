@@ -26,8 +26,12 @@ def cli():
 @cli_options.site_script_option
 @cli_options.site_dir_option
 @cli_options.clone_depth_option
-@cli_options.common_options  # config-file / strict / theme / use-directory-urls
-@cli_options.debug_options  # verbose / quiet
+@cli_options.config_path_option
+@cli_options.strict_option
+@cli_options.theme_option
+@cli_options.use_directory_urls_option
+@cli_options.verbose_option
+@cli_options.quiet_option
 def build(
     repo_url,
     site_script: str,
@@ -51,8 +55,12 @@ def build(
 @cli_options.repo_url_option
 @cli_options.site_script_option
 @cli_options.clone_depth_option
-@cli_options.common_options  # config-file / strict / theme / use-directory-urls
-@cli_options.debug_options  # verbose / quiet
+@cli_options.config_path_option
+@cli_options.strict_option
+@cli_options.theme_option
+@cli_options.use_directory_urls_option
+@cli_options.verbose_option
+@cli_options.quiet_option
 def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **kwargs):
     """Serve a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
@@ -70,7 +78,8 @@ def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **
 @cli_options.config_path_option
 @cli_options.theme_option
 @cli_options.use_directory_urls_option
-@cli_options.debug_options  # verbose / quiet
+@cli_options.verbose_option
+@cli_options.quiet_option
 def create_config(repo_url: str, site_script: str, theme: str | None, **kwargs):
     """Create a config based on given script and repository."""
     mknodes_plugin = dict(

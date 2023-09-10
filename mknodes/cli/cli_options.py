@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 import click
 
 from mkdocs import __main__ as mkdocs
@@ -52,5 +54,42 @@ use_directory_urls_option = click.option(
     help=mkdocs.use_directory_urls_help,
 )
 
-common_options = mkdocs.common_config_options  # config-file / strict / theme / use-d-urls
-debug_options = mkdocs.common_options  # verbose / quiet
+strict_option = click.option(
+    "-s",
+    "--strict/--no-strict",
+    is_flag=True,
+    default=None,
+    help=mkdocs.strict_help,
+)
+
+
+def verbose_callback(ctx, param, value):
+    state = ctx.ensure_object(mkdocs.State)
+    if value:
+        state.stream.setLevel(logging.DEBUG)
+
+
+def quiet_callback(ctx, param, value):
+    state = ctx.ensure_object(mkdocs.State)
+    if value:
+        state.stream.setLevel(logging.ERROR)
+
+
+verbose_option = click.option(
+    "-v",
+    "--verbose",
+    is_flag=True,
+    expose_value=False,
+    help="Enable verbose output",
+    callback=verbose_callback,
+)
+
+
+quiet_option = click.option(
+    "-q",
+    "--quiet",
+    is_flag=True,
+    expose_value=False,
+    help="Silence warnings",
+    callback=quiet_callback,
+)
