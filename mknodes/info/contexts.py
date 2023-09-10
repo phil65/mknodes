@@ -27,17 +27,25 @@ class Context:
 @dataclasses.dataclass
 class GitContext(Context):
     main_branch: str = ""
+    """Name of the main branch of the repo (master / main)."""
     repo_name: str = ""
+    """Name of the git folder."""
     last_commits: list = dataclasses.field(default_factory=list)
+    """List of last commits (Commit objects from GitPython)."""
     repo_hoster: str = ""
+    """Name of the code hoster (for example GitHub)"""
 
 
 @dataclasses.dataclass
 class ThemeContext(Context):
     name: str = ""
+    """Name of the theme."""
     primary_color: str = ""
+    """Primary color."""
     text_color: str = ""
+    """Primary text color."""
     data: dict[str, str] = dataclasses.field(default_factory=dict)
+    """Additional data of the theme."""
 
 
 @dataclasses.dataclass
