@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from mknodes import mknav
+from mknodes.navs import parsenav
 from mknodes.utils import log
 
 
@@ -10,12 +11,14 @@ logger = log.get_logger(__name__)
 class MkWebSite(mknav.MkNav):
     """Nav for showing a module documenation."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, static_pages=None, **kwargs):
+        super().__init__(**kwargs)
         import mknodes
 
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
         page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
+        static_pages = static_pages or {}
+        parsenav.from_json(static_pages, self)
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
         if proj := self.associated_project:
@@ -85,5 +88,12 @@ class MkWebSite(mknav.MkNav):
 
 
 if __name__ == "__main__":
-    doc = MkWebSite(module="mkdocs")
+    import mknodes
+
+    doc = MkWebSite.for_project(
+        mknodes.Project.for_mknodes(),
+        static_pages={
+            "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
+        },
+    )
     print(doc)
