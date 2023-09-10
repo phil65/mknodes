@@ -3,7 +3,7 @@ from __future__ import annotations
 from mknodes.utils import log
 import sys
 
-import click
+import rich_click as click
 
 from mknodes.cli import cli_options
 
@@ -12,6 +12,8 @@ from mknodes.utils import yamlhelpers
 
 
 logger = log.get_logger(__name__)
+
+click.rich_click.USE_RICH_MARKUP = True
 
 
 @click.group()
@@ -69,8 +71,8 @@ def serve(repo_url, site_script: str, clone_depth: int = 1, config_file=None, **
 @cli_options.theme_option
 @cli_options.use_directory_urls_option
 @cli_options.debug_options  # verbose / quiet
-def create_config(repo_url, site_script: str, theme: str | None, **kwargs):
-    """Serve a MkNodes-based website."""
+def create_config(repo_url: str, site_script: str, theme: str | None, **kwargs):
+    """Create a config based on given script and repository."""
     mknodes_plugin = dict(
         mknodes={"repo_path": repo_url, "path": site_script},
     )
