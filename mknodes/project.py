@@ -180,11 +180,33 @@ class Project(Generic[T]):
         )
 
     def populate_linkprovider(self):
+        if cfg := self.folderinfo.mkdocs_config:
+            invs = cfg.get_section(
+                "plugins",
+                "mkdocstrings",
+                "handlers",
+                "python",
+                "import",
+            )
+        else:
+            invs = []
+        mk_urls = [i["url"] for i in invs]
         urls = {
             v.inventory_url
             for v in packageinfo.registry.values()
-            if v.inventory_url is not None
+            if v.inventory_url is not None and v.inventory_url not in mk_urls
         }
+        for inv in invs:
+            if "url" not in inv:
+                continue
+            logger.debug("Downloading %r...", inv["url"])
+            try:
+                self.linkprovider.add_inv_file(
+                    inv["url"],
+                    base_url=inv.get("base_url"),
+                )
+            except urllib.error.HTTPError:
+                logger.debug("No file for %r...", inv["url"])
         for url in urls:
             logger.debug("Downloading %r...", url)
             try:
@@ -197,5 +219,6 @@ if __name__ == "__main__":
     project = Project.for_mknodes()
     from mknodes.manual import root
 
+    log.basic()
     root.build(project)
     project.populate_linkprovider()
