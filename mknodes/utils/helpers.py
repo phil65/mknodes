@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Generator, Iterable
+import functools
 import itertools
 import os
 import re
@@ -11,6 +12,25 @@ from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
+
+
+@functools.cache
+def get_svg_for_code(
+    text: str,
+    title: str = "",
+    width: int = 80,
+    language: str = "python",
+):
+    from rich.console import Console
+    from rich.padding import Padding
+    from rich.syntax import Syntax
+
+    with open(os.devnull, "w") as devnull:  # noqa: PTH123
+        console = Console(record=True, width=width, file=devnull, markup=False)
+        renderable = Syntax(text, lexer=language, theme="material")
+        renderable = Padding(renderable, (0,), expand=False)
+        console.print(renderable, markup=False)
+    return console.export_svg(title=title)
 
 
 def to_str_if_textnode(node):

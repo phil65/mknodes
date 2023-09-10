@@ -118,6 +118,7 @@ def create_presentation_nodes_section(nav: mknodes.MkNav):
         mknodes.MkTreeView,
         mknodes.MkPrettyPrint,
         mknodes.MkReprRawRendered,
+        mknodes.MkCodeImage,
         mknodes.MkDiagram,
     ]
     presentation_nodes_nav = nav.add_nav("Presentation nodes")

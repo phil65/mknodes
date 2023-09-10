@@ -263,6 +263,21 @@ def get_callable_from_path(path: str) -> Callable:
     return obj
 
 
+def get_code_name(obj) -> str:
+    """Get a title for an object representing code."""
+    match obj:
+        case types.CodeType():
+            return obj.co_name
+        case types.TracebackType():
+            return obj.tb_frame.f_code.co_name
+        case types.FrameType():
+            return obj.f_code.co_name
+        case Callable():
+            return to_dotted_path(obj)
+        case _:
+            return obj.__name__
+
+
 if __name__ == "__main__":
     import mknodes
 

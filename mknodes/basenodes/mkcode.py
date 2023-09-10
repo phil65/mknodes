@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import inspect
 import os
 import pathlib
@@ -201,15 +200,7 @@ class MkCode(mkcontainer.MkContainer):
         else:
             code = inspecthelpers.get_source(obj)
         code = textwrap.dedent(code) if dedent else code
-        match obj:
-            case _ if title is not None:
-                code_title = title
-            case types.TracebackType() | types.FrameType() | types.CodeType():
-                code_title = ""
-            case Callable():
-                code_title = classhelpers.to_dotted_path(obj)
-            case _:
-                code_title = obj.__name__
+        code_title = title if title is not None else classhelpers.get_code_name(obj)
         hl_lines = None
         lines, start_line = inspecthelpers.get_source_lines(obj)
         if isinstance(obj, types.ModuleType):
