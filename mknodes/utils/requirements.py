@@ -11,10 +11,15 @@ from mknodes.utils import mergehelpers
 @dataclasses.dataclass
 class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     css: dict[str, str] = dataclasses.field(default_factory=dict)
+    """A filepath->filecontent dictionary containing the required CSS."""
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
+    """A list of required templates."""
     markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
+    """A extension_name->settings dictionary containing the required md extensions."""
     plugins: set[str] = dataclasses.field(default_factory=set)
+    """A set of required plugins. (Only for info purposes)"""
     js_files: dict[str, str] = dataclasses.field(default_factory=dict)
+    """A filepath->filecontent dictionary containing the required JS files."""
 
     def __getitem__(self, value):
         return getattr(self, value)
