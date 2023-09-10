@@ -37,11 +37,14 @@ class GitRepository(git.Repo):
         return self.remotes.origin.url.split(".git")[0] + "/"
 
     @cached_property
-    def commit_to_tag(self) -> dict[git.Commit, str]:
+    def commit_to_tag(self) -> dict[git.Commit, str]:  # type: ignore[name-defined]
         """Dictionary mapping git.Commits to tag strings."""
         return {self.commit(i.commit): i.name for i in self.tags}
 
-    def get_version_for_commit(self, commit: git.Commit | str) -> str | None:
+    def get_version_for_commit(
+        self,
+        commit: git.Commit | str,  # type: ignore[name-defined]
+    ) -> str | None:
         """Iterate commit parents to find the associated version of the commit."""
         if isinstance(commit, str):
             commit = self.commit(commit)
