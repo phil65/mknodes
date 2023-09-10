@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -13,16 +13,6 @@ TEXT = """<div data-terminal>
   <span data-ty="input">{input}</span>
   <span data-ty>{output}</span>
 </div>"""
-
-
-def get_output_from_call(call: Sequence[str]):
-    import subprocess
-
-    try:
-        return subprocess.check_output(call).decode()
-    except subprocess.CalledProcessError:
-        logger.warning("Executing %s failed", call)
-        return None
 
 
 class MkCommandOutput(mknode.MkNode):
@@ -46,7 +36,7 @@ class MkCommandOutput(mknode.MkNode):
         key = " ".join(self.call)
         if key in self._cache:
             return self._cache[key]
-        if output := get_output_from_call(self.call):
+        if output := helpers.get_output_from_call(self.call):
             self._cache[key] = output.replace("\n", "<br>").replace(" ", "&nbsp;")
             return self._cache[key]
         return "**Command failed**"

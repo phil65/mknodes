@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Generator, Iterable
+from collections.abc import Callable, Generator, Iterable, Sequence
 import functools
 import itertools
 import os
@@ -20,6 +20,7 @@ def get_svg_for_code(
     title: str = "",
     width: int = 80,
     language: str = "python",
+    pygments_style: str = "material",
 ):
     from rich.console import Console
     from rich.padding import Padding
@@ -27,7 +28,7 @@ def get_svg_for_code(
 
     with open(os.devnull, "w") as devnull:  # noqa: PTH123
         console = Console(record=True, width=width, file=devnull, markup=False)
-        renderable = Syntax(text, lexer=language, theme="material")
+        renderable = Syntax(text, lexer=language, theme=pygments_style)
         renderable = Padding(renderable, (0,), expand=False)
         console.print(renderable, markup=False)
     return console.export_svg(title=title)
@@ -180,6 +181,16 @@ def relative_url(url_a: str, url_b: str) -> str:
     parts_relative = [".."] * levels + parts_b
     relative = "/".join(parts_relative)
     return f"{relative}#{anchor}" if anchor else relative
+
+
+def get_output_from_call(call: Sequence[str]):
+    import subprocess
+
+    try:
+        return subprocess.check_output(call).decode()
+    except subprocess.CalledProcessError:
+        logger.warning("Executing %s failed", call)
+        return None
 
 
 if __name__ == "__main__":
