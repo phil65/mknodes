@@ -225,6 +225,7 @@ class MkNode(node.Node):
         all_plugins: set[str] = set()
         all_extensions: list[dict] = [{"pymdownx.emoji": {}}]
         all_css: set[str] = set()
+        logger.debug("Collecting requirements from tree...")
         nodes = [*list(self.descendants), self] if recursive else [self]
         for des in nodes:
             if hasattr(des, "template") and isinstance(
@@ -250,6 +251,13 @@ class MkNode(node.Node):
                 file_path = paths.RESOURCES / css
                 text = file_path.read_text()
                 all_css.add(text)
+        logger.debug(
+            "Collected %s templates, %s js files, %s markdown extensions, %s css blocks",
+            len(all_templates),
+            len(all_js_files),
+            len(all_extensions),
+            len(all_css),
+        )
         return requirements.Requirements(
             templates=all_templates,
             js_files={p: (paths.RESOURCES / p).read_text() for p in all_js_files},
