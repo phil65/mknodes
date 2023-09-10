@@ -53,7 +53,7 @@ class ConfigFile:
 
     def get_section_text(
         self,
-        *sections,
+        *sections: str,
         keep_path: bool = False,
         multiline_strings: bool = False,
     ) -> str:
