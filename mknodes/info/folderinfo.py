@@ -81,6 +81,12 @@ class FolderInfo:
         # path: str | os.PathLike,
         depth: int = 100,
     ):
+        """Create a FolderInfo from a remote repository url.
+
+        Arguments:
+            url: Url of the repository
+            depth: Amount of commits to clone. Useful for changelog generation.
+        """
         import tempfile
 
         import git
@@ -96,10 +102,15 @@ class FolderInfo:
 
     @functools.cached_property
     def info(self):
+        """Return a PackageInfo object for given distribution."""
         return packageinfo.get_info(self.pyproject.name or self.git.repo_name)
 
     @functools.cached_property
     def repository_url(self) -> str:
+        """Return url of the repository by querying multiple sources.
+
+        Checks MkDocs config file, Git repository info and project metadata.
+        """
         if url := self.mkdocs_config.get("repo_url"):
             return url
         if url := self.git.repo_url:
@@ -136,10 +147,12 @@ class FolderInfo:
 
     @functools.cached_property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
+        """Return package repositories this distribution is hosted on."""
         return self.pyproject.package_repos
 
     @functools.cached_property
     def commit_types(self) -> list[commitconventions.CommitTypeStr]:
+        """Return commit types allowed for code commits."""
         return self.pyproject.allowed_commit_types
 
     @functools.cached_property
@@ -159,6 +172,11 @@ class FolderInfo:
 
     @functools.cached_property
     def license_text(self) -> str | None:
+        """Return full license text.
+
+        Text comes either from a local license file or from a template populated with
+        metadata.
+        """
         if self.license_file_path:
             return self.license_file_path.read_text(encoding="utf-8")
         if license_name := self.info.license_name:
