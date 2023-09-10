@@ -28,12 +28,17 @@ theme:
   - content.code.copy
   - content.code.select
   - content.code.annotate
+  - navigation.instant # make things faster
+  - navigation.tracking # update URL based on current item in TOC
+  - navigation.path  # shows breadcrumbs
   - navigation.tabs # make top level tabs
+  - navigation.prune
   - navigation.indexes # documents can be directly attached to sections (overview pages)
   - navigation.footer # next/previous page buttons in footer
   - navigation.top  # adds back-to-top button
   - toc.follow  # makes toc follow scrolling
   - search.highlight
+  - search.suggest
 
 plugins:
 - search
