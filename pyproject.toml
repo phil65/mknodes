@@ -106,6 +106,8 @@ dependencies = [
     "PyYAML >=5.1",
     "pyyaml_env_tag",
 
+    "requests",
+    "requests_cache",
     "rich",
     "typer",
     "fsspec",

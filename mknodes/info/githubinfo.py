@@ -4,15 +4,26 @@ import functools
 import os
 
 import github
+import requests_cache
 
 from mknodes.info import contexts
 from mknodes.utils import cache, log, reprhelpers
 
 
-RAW_URL = "https://raw.githubusercontent.com/"
+requests_cache.install_cache(
+    cache_control=True,
+    backend="filesystem",  # default was "memory", not sure what is more suiting.
+    use_temp=True,
+    urls_expire_after={
+        "*.github.com": 1000,
+        "*": requests_cache.DO_NOT_CACHE,
+    },
+)
 
-token = os.environ.get("GITHUB_TOKEN")
-auth = github.Auth.Token(token) if token else None
+RAW_URL = "https://raw.githubusercontent.com/"
+TOKEN = os.environ.get("GITHUB_TOKEN")
+
+auth = github.Auth.Token(TOKEN) if TOKEN else None
 
 
 logger = log.get_logger(__name__)
@@ -23,7 +34,7 @@ class GitHubRepo:
         self.main = github.Github(auth=auth)
         self.username = username
         self.repo_name = repository
-        self.user = self.main.get_user(username)
+        self.user: github.NamedUser = self.main.get_user(username)  # type: ignore
         self.repo = self.main.get_repo(f"{username}/{repository}")
         self.default_branch = self.repo.default_branch
 
