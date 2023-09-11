@@ -23,7 +23,7 @@ def create_templating_section(root_nav: mknodes.MkNav):
 
     # and then we create the index page (the page you are lookin at right now)
 
-    page = templating_nav.add_index_page(hide_toc=True, icon="material/graph")
+    page = templating_nav.add_index_page(hide_toc=True, icon="simple/jinja")
     page += mknodes.MkCode.for_object(create_templating_section, header=SECTION_CODE)
     page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
 

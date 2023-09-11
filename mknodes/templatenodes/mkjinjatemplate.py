@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 class MkJinjaTemplate(mknode.MkNode):
     """Node representing a jinja template."""
 
-    ICON = "material/function"
+    ICON = "simple/jinja"
     STATUS = "new"
 
     def __init__(
