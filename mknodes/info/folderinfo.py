@@ -68,7 +68,6 @@ class FolderInfo:
     @functools.cached_property
     def module(self):
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
-        mod_name = mod_name.replace("-", "_").lower()
         return importlib.import_module(mod_name)
 
     def __repr__(self):

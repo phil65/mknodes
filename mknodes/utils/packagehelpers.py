@@ -53,7 +53,8 @@ def get_package_map() -> Mapping[str, list[str]]:
 
 @functools.cache
 def distribution_to_package(dist: str):
-    return next((k for k, v in get_package_map().items() if dist in v), dist)
+    result = next((k for k, v in get_package_map().items() if dist in v), dist)
+    return result.replace("-", "_").lower()
 
 
 @functools.cache
