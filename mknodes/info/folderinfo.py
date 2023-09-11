@@ -233,6 +233,7 @@ class FolderInfo:
             license_name=self.info.license_name,
             license_text=self.license_text,
             required_python_version=self.info.required_python_version,
+            required_packages=self.info.required_packages,
             required_package_names=self.info.required_package_names,
             extras=self.info.extras,
             tools=self.tools,

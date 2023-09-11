@@ -83,6 +83,8 @@ class PackageContext(Context):
     """The required python version for the distribution [Metadata]"""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
     """The names of the dependencies."""
+    required_packages: dict = dataclasses.field(default_factory=dict)
+    """PackageInfos for the dependencies."""
     extras: dict[str, list[str]] = dataclasses.field(default_factory=dict)
     """The extras of the distribution."""
     urls: dict[str, str] = dataclasses.field(default_factory=dict)
