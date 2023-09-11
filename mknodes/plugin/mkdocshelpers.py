@@ -41,7 +41,7 @@ def build(config: MkDocsConfig | Mapping[str, Any], **kwargs):
             buffer = io.StringIO(text)
             config = load_config(buffer, **kwargs)
     for k, v in config.items():
-        logger.debug(f"{k}: {v}")
+        logger.debug("%s: %s", k, v)
     config.plugins.run_event("startup", command="build", dirty=False)
     build_.build(config)
     config.plugins.run_event("shutdown")
@@ -60,8 +60,8 @@ def serve(
         case MkDocsConfig():
             cfg = dict(config)
     text = yamlhelpers.dump_yaml(cfg)
-    for k, v in config.items():
-        logger.debug(f"{k}: {v}")
+    for k, v in cfg.items():
+        logger.debug("%s: %s", k, v)
     stream = io.StringIO(text)
     serve_.serve(config_file=stream, livereload=False, **kwargs)  # type: ignore[arg-type]
 

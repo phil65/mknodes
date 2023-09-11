@@ -105,7 +105,7 @@ def serve(
     mkdocshelpers.serve(
         cfg,
         strict=strict,
-        theme=theme,
+        theme=theme if theme != "material" else None,
         use_directory_urls=use_directory_urls,
     )
 
