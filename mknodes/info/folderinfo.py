@@ -13,9 +13,9 @@ from mknodes.info import (
     # githubinfo,
     gitrepository,
     license,
+    mkdocsconfigfile,
     packageinfo,
     pyproject,
-    yamlfile,
 )
 from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
@@ -55,10 +55,10 @@ class FolderInfo:
         self.pyproject = pyproject.PyProject(self.path)
         # packagehelpers.install_or_import(mod_name)
         self.git = gitrepository.GitRepository(self.path)
-        self.mkdocs_config = yamlfile.YamlFile()
+        self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile()
         if (path := self.path / "mkdocs.yml").exists():
             with contextlib.suppress(yamlhelpers.YAMLError):
-                self.mkdocs_config = yamlfile.YamlFile(path)
+                self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile(path)
         # self.github = githubinfo.GitHubRepo(
         #     self.repository_username,
         #     self.repository_name,

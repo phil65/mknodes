@@ -9,7 +9,7 @@ from typing import Any
 import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
-from mknodes.info import yamlfile
+from mknodes.info import mkdocsconfigfile
 from mknodes.utils import linkprovider, log
 
 
@@ -105,7 +105,7 @@ class PackageContext(Context):
     """The repository name of the distribution."""
     repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
     """The path to the local git repository."""
-    mkdocs_config: yamlfile.YamlFile | None = None
+    mkdocs_config: mkdocsconfigfile.MkDocsConfigFile | None = None
     """A dictionary containing the MkDocs config."""
     tools: list[tools.Tool] = dataclasses.field(default_factory=list)
     """A list of tools found for the distribution."""
