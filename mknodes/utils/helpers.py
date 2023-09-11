@@ -193,44 +193,6 @@ def get_output_from_call(call: Sequence[str]):
         return None
 
 
-def get_nested_json(dct, *sections: str, keep_path: bool = False):
-    # sourcery skip: merge-duplicate-blocks
-    """Try to get data[sections[0]][sections[1]]...
-
-    If Key path does not exist, return None.
-
-    Arguments:
-        dct: Dict to dig into
-        sections: Sections to dig into
-        keep_path: Return result with original nesting
-    """
-    section = dct
-    for i in sections:
-        if isinstance(section, dict):
-            if child := section.get(i):
-                section = child
-            else:
-                return None
-        else:
-            for idx in section:
-                if i in idx and isinstance(idx, dict):
-                    section = idx[i]
-                    break
-                if isinstance(idx, str) and idx == i:
-                    section = idx
-                    break
-            else:
-                return None
-    if not keep_path:
-        return section
-    result: dict[str, dict] = {}
-    new = result
-    for sect in sections:
-        result[sect] = section if sect == sections[-1] else {}
-        result = result[sect]
-    return new
-
-
 if __name__ == "__main__":
     strings = groupby_first_letter([str(i) for i in range(1000)])
     print(strings)
