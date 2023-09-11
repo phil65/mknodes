@@ -40,7 +40,7 @@ def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNa
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
     root_nav = project.get_root(append_markdown_to_pages=True)
-    project.theme.announcement_bar = mknodes.MkMetadataBadges("dependencies")
+    project.theme.announcement_bar = mknodes.MkMetadataBadges("websites")
     project.error_page.content = mknodes.MkAdmonition("Page does not exist!")
     project.theme.show_annotation_numbers()
     project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
