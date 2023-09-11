@@ -37,7 +37,7 @@ class Project(Generic[T]):
         base_url: str = "",
         use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
-        build_fn: str | Callable = "mknodes.mkwebsite:MkWebSite.for_project",
+        build_fn: str | Callable = "mknodes.navs.mkwebsite:MkWebSite.for_project",
         build_kwargs: dict[str, Any] | None = None,
         clone_depth: int = 100,
     ):

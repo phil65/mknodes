@@ -17,7 +17,7 @@ cli = t.Typer(
     no_args_is_help=True,
 )
 
-DEFAULT_FN = "mknodes.mkwebsite:MkWebSite.for_project"
+DEFAULT_FN = "mknodes.navs.mkwebsite:MkWebSite.for_project"
 REPO_URL_HELP = "Repository URL of the target package."
 BUILD_CMD_HELP = "Path to the build script."
 SITE_DIR_HELP = "Path to the build script."

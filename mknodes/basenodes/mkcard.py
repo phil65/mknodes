@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from xml.dom import minidom
 from xml.etree import ElementTree
 
 from mknodes.basenodes import mkbinaryimage, mknode
-from mknodes.navs import mknav
-from mknodes.pages import mkpage
 from mknodes.utils import log, reprhelpers
+
+
+if TYPE_CHECKING:
+    from mknodes.navs import mknav
+    from mknodes.pages import mkpage
 
 
 logger = log.get_logger(__name__)
@@ -169,6 +172,8 @@ class MkCard(mknode.MkNode):
 
 
 if __name__ == "__main__":
+    from mknodes.pages import mkpage
+
     page = mkpage.MkPage("test", icon="material/puzzle-edit")
     card = MkCard.for_page(page)
     print(card)

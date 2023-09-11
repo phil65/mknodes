@@ -2,10 +2,15 @@ from __future__ import annotations
 
 import textwrap
 
+from typing import TYPE_CHECKING
+
 from mknodes.basenodes import mkcard, mkcontainer, mknode
-from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.utils import helpers, log, reprhelpers
+
+
+if TYPE_CHECKING:
+    from mknodes.navs import mknav
 
 
 logger = log.get_logger(__name__)

@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import types
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.navs import mknav
-from mknodes.pages import mkpage
 from mknodes.utils import log, reprhelpers
 
+
+if TYPE_CHECKING:
+    from mknodes.navs import mknav
+    from mknodes.pages import mkpage
 
 logger = log.get_logger(__name__)
 
