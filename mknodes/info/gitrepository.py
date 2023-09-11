@@ -18,8 +18,8 @@ class GitRepository(git.Repo):
 
     @cached_property
     def main_branch(self) -> str:
-        has_main_branch = any(branch.name == "main" for branch in self.heads)
-        return "main" if has_main_branch else "master"
+        hast_master_branch = any(branch.name == "master" for branch in self.heads)
+        return "master" if hast_master_branch else "main"
 
     @classmethod
     def clone_from(cls, *args, **kwargs) -> Self:
@@ -68,7 +68,12 @@ class GitRepository(git.Repo):
             num: Amount of commits to fetch.
             branch: Branch to get commits from. Defaults to main / master.
         """
-        return list(self.iter_commits(branch or self.main_branch, max_count=num))
+        rev = branch or self.main_branch
+        try:
+            return list(self.iter_commits(rev, max_count=num))
+        except git.exc.GitCommandError:  # type: ignore[name-defined]
+            logger.warning("Could not fetch commits for %r", rev)
+            return []
 
     @cached_property
     def code_repository(self) -> str:
