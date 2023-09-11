@@ -73,11 +73,11 @@ from .templatenodes.mkjinjatemplate import MkJinjaTemplate
 from .templatenodes.mkpydeps import MkPyDeps
 
 from .project import Project
-from .navs.mkwebsite import MkWebSite
+from .navs.mkdefaultwebsite import MkDefaultWebsite
 
 __all__ = [
     "MkNode",
-    "MkWebSite",
+    "MkDefaultWebsite",
     "MkBlockQuote",
     "MkLink",
     "MkBlock",

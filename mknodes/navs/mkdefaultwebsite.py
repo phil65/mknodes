@@ -7,7 +7,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkWebSite(mknav.MkNav):
+class MkDefaultWebsite(mknav.MkNav):
     """Nav for showing a module documenation."""
 
     def __init__(self, static_pages=None, **kwargs):
@@ -49,7 +49,7 @@ class MkWebSite(mknav.MkNav):
         page += mknodes.MkDependencyTable()
 
         page = nav.add_page("Module overview")
-        page += mknodes.MkModuleOverview(maximum_depth=2)
+        page += mknodes.MkModuleOverview()
 
         if (proj := self.associated_project) and proj.info.get_entry_points(
             "mkdocs.plugins",
@@ -89,7 +89,7 @@ class MkWebSite(mknav.MkNav):
 if __name__ == "__main__":
     import mknodes
 
-    doc = MkWebSite.for_project(
+    doc = MkDefaultWebsite.for_project(
         mknodes.Project.for_mknodes(),
         static_pages={
             "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
