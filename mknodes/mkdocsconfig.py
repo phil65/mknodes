@@ -159,7 +159,7 @@ class Config:
         edit_uri = self.edit_uri or "edit/main/"
         if not edit_uri.startswith(("?", "#")) and not repo_url.endswith("/"):
             repo_url += "/"
-        rel_path = self.plugin.config.path
+        rel_path = self.plugin.config.build_fn
         if not rel_path.endswith(".py"):
             rel_path = rel_path.replace(".", "/")
             rel_path += ".py"

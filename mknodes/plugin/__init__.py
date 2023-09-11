@@ -41,7 +41,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
 
     def on_config(self, config: MkDocsConfig):
         """Create the project based on MkDocs config."""
-        if not self.config.path:
+        if not self.config.build_fn:
             return
         skin = theme.Theme.get_theme(
             theme_name=config.theme.name or "material",
@@ -52,7 +52,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             use_directory_urls=config.use_directory_urls,
             theme=skin,
             repo=self.config.repo_path,
-            build_fn=self.config.path,
+            build_fn=self.config.build_fn,
             build_kwargs=self.config.kwargs,
             clone_depth=self.config.clone_depth,
         )
@@ -67,7 +67,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
           - Templates
           - CSS files
         """
-        if not self.config.path:
+        if not self.config.build_fn:
             return files
         cfg = mkdocsconfig.Config(config)
         self.builder = mkdocsbuilder.MkDocsBuilder(
@@ -171,7 +171,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """Delete the temporary template files."""
         if not config.theme.custom_dir:
             return
-        if not self.config.path:
+        if not self.config.build_fn:
             return
         for template in self.project.templates:
             path = pathlib.Path(config.theme.custom_dir) / template.filename

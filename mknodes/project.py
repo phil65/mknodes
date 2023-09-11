@@ -120,7 +120,7 @@ class Project(Generic[T]):
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
-            build_fn=config.plugins["mknodes"].config.path,
+            build_fn=config.plugins["mknodes"].config.build_fn,
         )
 
     @classmethod

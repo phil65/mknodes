@@ -71,7 +71,7 @@ def build(
     cfg = mkdocshelpers.load_and_patch_config(
         config_path or "mkdocs_basic.yml",
         repo_url=repo_path,
-        site_script=build_fn,
+        build_fn=build_fn,
         clone_depth=clone_depth,
     )
     cfg["site_dir"] = site_dir
@@ -99,7 +99,7 @@ def serve(
     cfg = mkdocshelpers.load_and_patch_config(
         config_path,
         repo_url=repo_path,
-        site_script=build_fn,
+        build_fn=build_fn,
         clone_depth=clone_depth,
     )
     mkdocshelpers.serve(

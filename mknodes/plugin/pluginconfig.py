@@ -6,7 +6,7 @@ from mkdocs.config import base, config_options as c
 
 
 class PluginConfig(base.Config):
-    path = c.Type(str)
+    build_fn = c.Optional(c.Type(str))
     """Path to the build script / callable.
     Must be in format my.module:Class.build or path/to/file.py:build.
     Can also be remote.

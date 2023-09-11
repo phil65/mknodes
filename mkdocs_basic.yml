@@ -45,7 +45,7 @@ plugins:
 - section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
 - literate-nav
 - mknodes:
-    path: mknodes.manual.root:build
+    build_fn: mknodes.manual.root:build
 - mkdocstrings:
     default_handler: python
     handlers:

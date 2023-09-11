@@ -85,7 +85,7 @@ def serve_node(node, repo_path: str = "."):
 def load_and_patch_config(
     config: str | os.PathLike | dict,
     repo_url: str = ".",
-    site_script: str = "",
+    build_fn: str = "",
     clone_depth: int = 1,
 ):
     if isinstance(config, str | os.PathLike | None):
@@ -95,6 +95,6 @@ def load_and_patch_config(
     for plugin in cfg["plugins"]:
         if "mknodes" in plugin:
             plugin["mknodes"]["repo_path"] = repo_url
-            plugin["mknodes"]["path"] = site_script
+            plugin["mknodes"]["build_fn"] = build_fn
             plugin["mknodes"]["clone_depth"] = clone_depth
     return cfg
