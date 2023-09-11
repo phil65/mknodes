@@ -56,31 +56,7 @@ class ConfigFile(MutableMapping, metaclass=ABCMeta):
             sections: Sections to dig into
             keep_path: Return result with original nesting
         """
-        section = self._data
-        for i in sections:
-            if isinstance(section, dict):
-                if child := section.get(i):
-                    section = child
-                else:
-                    return None
-            else:
-                for idx in section:
-                    if i in idx and isinstance(idx, dict):
-                        section = idx[i]
-                        break
-                    if isinstance(idx, str) and idx == i:
-                        section = idx
-                        break
-                else:
-                    return None
-        if not keep_path:
-            return section
-        result: dict[str, dict] = {}
-        new = result
-        for sect in sections:
-            result[sect] = section if sect == sections[-1] else {}
-            result = result[sect]
-        return new
+        return helpers.get_nested_json(self._data)
 
     def get_section_text(
         self,
