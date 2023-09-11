@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
-import json
 import os
 import pathlib
 
@@ -101,7 +100,7 @@ class ConfigFile(MutableMapping, metaclass=ABCMeta):
         if not sections:
             raise ValueError(sections)
         section = self.get_section(*sections, keep_path=keep_path)
-        return "" if section is None else json.dumps(section)
+        return "" if section is None else self._dump(section)
 
     def load_config(self, data: str):
         self._data = self._load(data)
