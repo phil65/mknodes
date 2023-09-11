@@ -33,7 +33,12 @@ def create_macros_nav(nav: mknodes.MkNav):
     page = macros_nav.add_index_page(icon=mknodes.MkClassPage.ICON, hide_toc=True)
     page += mknodes.MkCode.for_object(create_macros_nav, header=PAGE_CODE)
     add_context_doc(page, contexts.ProjectContext)
-    for ctx in [contexts.PackageContext, contexts.ThemeContext, contexts.GitContext]:
+    for ctx in [
+        contexts.PackageContext,
+        contexts.ThemeContext,
+        contexts.GitContext,
+        contexts.GitHubContext,
+    ]:
         page = macros_nav.add_page(ctx.__name__)
         add_context_doc(page, ctx)
 

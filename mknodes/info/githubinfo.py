@@ -69,7 +69,7 @@ class GitHubRepo:
             bio=self.user.bio,
             blog=self.user.blog,
             company=self.user.company,
-            contributions=self.user.contributions,
+            # contributions=self.user.contributions,
             email=self.user.email,
             followers=self.user.followers,
             gravatar_id=self.user.gravatar_id,

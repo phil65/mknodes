@@ -192,20 +192,33 @@ class GitHubContext(Context):
     """Information about the GitHub repo / user."""
 
     default_branch: str = ""
+    """The default branch of the repository."""
     repo_name: str = ""
+    """The repository name."""
     workflows: list[dict] = dataclasses.field(default_factory=list)
+    """A dictionary (workflow-name -> workflow-yaml) containing workflows."""
     avatar_url: str | None = None
+    """The url of the GitHub avatar."""
     bio: str | None = None
+    """The user biography."""
     blog: str | None = None
+    """The user blog URL."""
     company: str | None = None
-    contributions: int | None = None
+    """The company associated with the user."""
     email: str | None = None
+    """The user email address."""
     followers: int = 0
+    """The follower count of the user."""
     gravatar_id: str | None = None
+    """The gravatar id associated with the user."""
     hireable: bool = False
+    """Whether the user is hireable."""
     location: str | None = None
+    """The user location, as set on GitHub."""
     name: str | None = None
+    """The GitHub username."""
     twitter_username: str | None = None
+    """The twitter username."""
 
 
 @dataclasses.dataclass
@@ -228,7 +241,7 @@ class ProjectContext(Context):
         return dict(
             metadata=self.metadata,
             git=self.git,
-            # github=self.github,
+            github=self.github,
             # requirements=dict(self.requirements),
             theme=self.theme,
             links=self.links,
