@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import datetime
+from typing import Any
 
 import jinja2
 
@@ -47,8 +48,13 @@ class Environment(jinja2.Environment):
             logger.warning("Error when rendering template: %s", e)
             return ""
 
-    def render_template(self, template_name: str, variables=None):
-        template = self.get_template(template_name)
+    def render_template(
+        self,
+        template_name: str,
+        variables: dict[str, Any] | None = None,
+        parent_template: str | None = None,
+    ):
+        template = self.get_template(template_name, parent=parent_template)
         variables = variables or {}
         try:
             return template.render(**variables)

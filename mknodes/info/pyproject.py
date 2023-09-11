@@ -101,9 +101,13 @@ class PyProject(tomlfile.TomlFile):
     # def context(self):
     #     return contexts.PyProjectContext(
     #         extras_descriptions=self.extras_descriptions,
+    #         configured_build_systems=self.configured_build_systems,
+    #         build_system=self.build_system,
     #         package_repos=self.package_repos,
+    #         commit_types=self.allowed_commit_types,
     #         docstring_style=self.docstring_style,
     #         line_length=self.line_length,
+    #         tool_section=self.tool,
     #     )
 
 

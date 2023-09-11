@@ -25,6 +25,10 @@ class Context:
             field.name: getattr(self, field.name) for field in dataclasses.fields(self)
         }
 
+    @property
+    def fields(self) -> list[str]:
+        return [i.name for i in dataclasses.fields(self)]
+
 
 @dataclasses.dataclass
 class GitContext(Context):
@@ -247,4 +251,4 @@ default_project_context = ProjectContext(
 
 if __name__ == "__main__":
     info = PackageContext()
-    print(info)
+    print(info.fields)
