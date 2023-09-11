@@ -6,12 +6,12 @@ import os
 import github
 
 from mknodes.info import contexts
-from mknodes.utils import cache, log
+from mknodes.utils import cache, log, reprhelpers
 
 
 RAW_URL = "https://raw.githubusercontent.com/"
 
-token = os.environ.get("GITHUB_ACCESS_TOKEN")
+token = os.environ.get("GITHUB_TOKEN")
 auth = github.Auth.Token(token) if token else None
 
 
@@ -23,9 +23,16 @@ class GitHubRepo:
         self.main = github.Github(auth=auth)
         self.username = username
         self.repo_name = repository
-        self.user = self.main.search_users(username)[0]
+        self.user = self.main.get_user(username)
         self.repo = self.main.get_repo(f"{username}/{repository}")
         self.default_branch = self.repo.default_branch
+
+    def __repr__(self):
+        return reprhelpers.get_repr(
+            self,
+            username=self.username,
+            repository=self.repo_name,
+        )
 
     @functools.cached_property
     def workflows(self):
@@ -64,4 +71,4 @@ class GitHubRepo:
 
 if __name__ == "__main__":
     g = GitHubRepo("phil65", "mknodes")
-    print(g)
+    print(g.context)
