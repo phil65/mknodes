@@ -35,9 +35,6 @@ class PyProject(tomlfile.TomlFile):
         super().__init__(path)
         self.mknodes_section = self.get_section("tool", "mknodes") or {}
 
-    def __repr__(self):
-        return f"PyProject({self.name!r})"
-
     @property
     def name(self) -> str | None:
         """Project name."""
