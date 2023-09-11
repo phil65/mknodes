@@ -45,12 +45,9 @@ class MkPluginFlow(mkcontainer.MkContainer):
     @property
     def plugins(self):
         match self._plugin:
-            case None if self.associated_project:
-                info = self.associated_project.info
-                eps = info.get_entry_points("mkdocs.plugins")
-                return [v.obj for v in eps.values()]
             case None:
-                return []
+                eps = self.ctx.metadata.entry_points
+                return [i.obj for i in eps.values() if i.group == "mkdocs.plugins"]
             case _:
                 return [self._plugin]
 
@@ -127,6 +124,5 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    from mknodes import plugin
-
-    setup_text = MkPluginFlow(plugin.MkNodesPlugin)
+    node = MkPluginFlow.with_default_context()
+    print(node)

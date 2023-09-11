@@ -95,10 +95,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         match self._package:
             case str():
                 return packageinfo.get_info(self._package)
-            case None if self.associated_project:
-                return self.associated_project.info
             case None:
-                return None
+                return self.ctx.metadata
             case _:
                 raise TypeError(self._package)
 
