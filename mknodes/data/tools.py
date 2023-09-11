@@ -17,41 +17,41 @@ in the root folder."""
 
 
 MYPY_CODE = """
-mypy --help
+{{metadata.build_system.run_prefix}}mypy --help
 """
 
 MYPY_TEXT = """MyPy is used for type checking. You can find the configuration in the
 pyproject.toml file."""
 
 RUFF_CODE = """
-ruff --help
+{{metadata.build_system.run_prefix}}ruff --help
 """
 
 RUFF_TEXT = """Ruff is used as a linter. You can find the configuration in the
 pyproject.toml file."""
 
 BLACK_CODE = """
-black .
+{{metadata.build_system.run_prefix}}black .
 """
 
 BLACK_TEXT = """Black is used as a code formatter. You can find the configuration in the
 pyproject.toml file."""
 
 COVERAGE_CODE = """
-coverage run some_module.py
+{{metadata.build_system.run_prefix}}coverage run some_module.py
 """
 
 COVERAGE_TEXT = """Coverage is used to monitor test coverage."""
 
 MKDOCS_CODE = """
 # To build the docs
-mkdocs build
+{{metadata.build_system.run_prefix}}mkdocs build
 
 # To serve the docs locally at http://127.0.0.1:8000/
-mkdocs serve
+{{metadata.build_system.run_prefix}}mkdocs serve
 
 # For additional mkdocs help and options:
-mkdocs --help
+{{metadata.build_system.run_prefix}}mkdocs --help
 """
 
 MKDOCS_TEXT = """MkDocs is used to create the documentation."""

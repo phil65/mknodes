@@ -16,6 +16,7 @@ class BuildSystem:
     build_backend: str
     url: str
     env_setup_cmd: str | None
+    run_prefix: str = ""
     install_url: str | None = None
 
 
@@ -24,6 +25,7 @@ hatch = BuildSystem(
     build_backend="hatchling.build",
     url="https://hatch.pypa.io",
     env_setup_cmd="hatch env create",
+    run_prefix="hatch run ",
     install_url=f"{RAW_GITHUB}/pypa/hatch/master/docs/install.md",
 )
 flit = BuildSystem(
@@ -37,6 +39,7 @@ poetry = BuildSystem(
     build_backend="poetry.core.masonry.api",
     url="https://python-poetry.org",
     env_setup_cmd="poetry install",
+    run_prefix="poetry run ",
 )
 setuptools = BuildSystem(
     identifier="setuptools",
@@ -49,6 +52,7 @@ pdm = BuildSystem(
     build_backend="pdm.backend",
     url="https://pdm.fming.dev/",
     env_setup_cmd="pdm install",
+    run_prefix="pdm run ",
     install_url=f"{RAW_GITHUB}/pdm-project/pdm/main/docs/docs/index.md#Installation",
 )
 mesonpy = BuildSystem(
