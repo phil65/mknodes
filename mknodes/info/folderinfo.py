@@ -7,6 +7,9 @@ import os
 import pathlib
 import re
 
+from griffe.enumerations import Parser
+from griffe.loader import GriffeLoader
+
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
@@ -69,6 +72,13 @@ class FolderInfo:
     def module(self):
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         return importlib.import_module(mod_name)
+
+    @functools.cached_property
+    def griffe_module(self):
+        mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
+        parser = Parser(self.docstring_style or "google")
+        griffe = GriffeLoader(docstring_parser=parser)
+        return griffe.load_module(mod_name)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
@@ -234,6 +244,7 @@ class FolderInfo:
             summary=self.info.metadata["Summary"],
             authors=self.info.authors,
             module=self.module,
+            griffe_module=self.griffe_module,
             classifiers=self.info.classifiers,
             classifier_map=self.info.classifier_map,
             keywords=self.info.keywords,
@@ -265,5 +276,6 @@ class FolderInfo:
 
 
 if __name__ == "__main__":
-    info = FolderInfo.clone_from("https://github.com/mkdocs/mkdocs.git")
-    print(info.inventory_url)
+    info = FolderInfo()
+    log.basic()
+    logger.warning(info.griffe_module.as_json())

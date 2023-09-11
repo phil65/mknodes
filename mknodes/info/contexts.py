@@ -6,6 +6,8 @@ import types
 
 from typing import Any
 
+from griffe.dataclasses import Module
+
 import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
@@ -60,6 +62,8 @@ class BuildContext(Context):
 class PackageContext(Context):
     # PackageInfo
     module: types.ModuleType | None = None
+    """The module object itself."""
+    griffe_module: Module | None = None
     """The module object itself."""
     docstring_style: str | None = None
     """The style used for DocStrings."""
