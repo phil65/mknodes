@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
-from mknodes.navs import navbuilder
+from mknodes.navs import navbuilder, parsenav
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import helpers, log, reprhelpers
 
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 logger = log.get_logger(__name__)
 
-SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*\.md)\)"
+SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*)\)"
 SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"
 SECTION_REGEX = r"^\* (.*)"
 
@@ -459,7 +459,19 @@ class MkNav(mknode.MkNode):
             # for first case we need to check whether following lines are indented.
             # If yes, then the path describes an index page.
             # * [Example](example_folder/sub_1.md)
-            if match := re.match(SECTION_AND_FILE_REGEX, line):
+            if match := re.match(SECTION_AND_FOLDER_REGEX, line):
+                file_path = path.parent / f"{match[2]}/SUMMARY.md"
+                subnav = MkNav.from_file(
+                    file_path,
+                    section=match[1],
+                    hide_toc=hide_toc,
+                    hide_nav=hide_nav,
+                    hide_path=hide_path,
+                    parent=nav,
+                )
+                nav[match[1]] = subnav
+                logger.debug("Created subsection %s from %s", match[1], file_path)
+            elif match := re.match(SECTION_AND_FILE_REGEX, line):
                 if unindented := helpers.get_indented_lines(lines[i + 1 :]):
                     subnav = MkNav._from_text(
                         "\n".join(unindented),
@@ -476,15 +488,13 @@ class MkNav(mknode.MkNode):
                         hide_path=hide_path,
                     )
                     page += pathlib.Path(match[2]).read_text()
-                    logger.debug(
-                        "Created subsection %s and loaded index page %s",
-                        match[1],
-                        match[2],
-                    )
+                    msg = "Created subsection %s and loaded index page %s"
+                    logger.debug(msg, match[1], match[2])
                     nav += subnav
                 else:
-                    page = mkpage.MkPage.from_file(
-                        path=path.parent / match[2],
+                    p = match[2] if match[2].startswith("->") else path.parent / match[2]
+                    page = parsenav.add_page(
+                        path=p,
                         hide_toc=hide_toc,
                         hide_nav=hide_nav,
                         hide_path=hide_path,
@@ -492,20 +502,6 @@ class MkNav(mknode.MkNode):
                     )
                     nav[match[1]] = page
                     logger.debug("Created page %s from %s", match[1], match[2])
-            # * [Example](example_folder/)
-            elif match := re.match(SECTION_AND_FOLDER_REGEX, line):
-                file_path = path.parent / f"{match[2]}/SUMMARY.md"
-                subnav = MkNav.from_file(
-                    file_path,
-                    section=match[1],
-                    hide_toc=hide_toc,
-                    hide_nav=hide_nav,
-                    hide_path=hide_path,
-                    parent=nav,
-                )
-                nav[match[1]] = subnav
-                logger.debug("Created subsection %s from %s", match[1], file_path)
-            # * Example
             elif match := re.match(SECTION_REGEX, line):
                 unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
                 subnav = MkNav._from_text(
@@ -590,7 +586,7 @@ class MkNav(mknode.MkNode):
 
 if __name__ == "__main__":
     docs = MkNav()
-    nav_tree_path = pathlib.Path(__file__).parent.parent / "tests/data/nav_tree/"
+    nav_tree_path = pathlib.Path(__file__).parent.parent.parent / "tests/data/nav_tree/"
     nav_file = nav_tree_path / "SUMMARY.md"
     nav = MkNav.from_file(nav_file)
     print(nav)

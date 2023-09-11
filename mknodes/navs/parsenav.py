@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import pathlib
 import re
 
@@ -20,14 +21,12 @@ SECTION_REGEX = r"^\* (.*)"
 ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 
 if TYPE_CHECKING:
-    import os
-
     import mknodes
 
 logger = log.get_logger(__name__)
 
 
-def add_page(name: str | None, path: str | os.PathLike, **kwargs):
+def add_page(path: str | os.PathLike, name: str | None = None, **kwargs):
     import mknodes
 
     path = os.fspath(path)
@@ -56,7 +55,7 @@ def from_list(
                         logger.debug("Adding nav %r", name)
                         from_dict(val, nav.add_nav(name))
                     case str():
-                        nav += add_page(name, val)
+                        nav += add_page(path=val, name=name)
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
@@ -75,7 +74,7 @@ def from_dict(
     for k, v in dct.items():
         match v:
             case str():
-                nav += add_page(k, v)
+                nav += add_page(path=v, name=k)
             case dict():
                 logger.debug("Adding nav %r", k)
                 from_dict(v, nav.add_nav(k))
