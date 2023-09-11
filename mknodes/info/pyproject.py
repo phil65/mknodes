@@ -88,7 +88,7 @@ class PyProject(tomlfile.TomlFile):
     @property
     def line_length(self) -> int | None:
         # sourcery skip: assign-if-exp, reintroduce-else
-        """Return the line length (taken from black or ruff)."""
+        """Return the line length (taken from black / ruff / isort config)."""
         if length := self.tool["ruff"].get("line-length"):
             return int(length)
         if length := self.tool["isort"].get("line_length"):
