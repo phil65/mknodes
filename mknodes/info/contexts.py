@@ -61,6 +61,8 @@ class PackageContext(Context):
     # PackageInfo
     module: types.ModuleType | None = None
     """The module object itself."""
+    docstring_style: str | None = None
+    """The style used for DocStrings."""
     distribution_name: str = ""
     """The name of the distribution [Metadata]"""
     summary: str = ""

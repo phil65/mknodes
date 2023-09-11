@@ -295,3 +295,4 @@ allowed-commit-types = [
     "chore",
 ]
 extras-descriptions = {seedir = "MkSeeDir node"}
+docstring-style = "google"

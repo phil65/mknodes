@@ -160,6 +160,13 @@ class FolderInfo:
         return [t for t in tools.TOOLS.values() if t.is_used(self)]
 
     @functools.cached_property
+    def docstring_style(self):
+        if style := self.pyproject.docstring_style:
+            return style
+        section = self.mkdocs_config.mkdocstrings_config
+        return section.get("options", {}).get("docstring_style")
+
+    @functools.cached_property
     def license_file_path(self) -> pathlib.Path | None:
         """Return license file path (relative to project root) from metadata."""
         for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
@@ -222,6 +229,7 @@ class FolderInfo:
             distribution_name=self.info.name,
             author_name=self.info.author_name,
             author_email=self.info.author_email,
+            docstring_style=self.docstring_style,
             description=self.info.metadata["Description"],
             summary=self.info.metadata["Summary"],
             authors=self.info.authors,

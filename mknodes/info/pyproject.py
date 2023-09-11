@@ -37,17 +37,17 @@ class PyProject(tomlfile.TomlFile):
     def __repr__(self):
         return f"PyProject({self.name!r})"
 
-    @functools.cached_property
+    @property
     def name(self) -> str | None:
         """Project name."""
         return self.project.get("name")
 
-    @functools.cached_property
+    @property
     def tool(self) -> dict[str, Any]:
         """Tool section."""
         return self._data.get("tool", {})
 
-    @functools.cached_property
+    @property
     def project(self) -> dict[str, Any]:
         """Project section."""
         return self._data.get("project", {})
@@ -67,20 +67,25 @@ class PyProject(tomlfile.TomlFile):
         msg = "No known build backend"
         raise RuntimeError(msg)
 
-    @functools.cached_property
+    @property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:
         """Return the allowed commit types."""
         return self.mknodes_section.get("allowed-commit-types", [])
 
-    @functools.cached_property
+    @property
     def extras_descriptions(self) -> dict[str, str]:
         """Return a dictionary with descriptions for dependency extras."""
         return self.mknodes_section.get("extras-descriptions", {})
 
-    @functools.cached_property
+    @property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         """Return a list of package repositories the package is available on."""
         return self.mknodes_section.get("package-repositories", ["pip"])
+
+    @property
+    def docstring_style(self) -> str | None:
+        """Return the style used for docstring."""
+        return self.mknodes_section.get("docstring-style")
 
     @functools.cached_property
     def context(self):
