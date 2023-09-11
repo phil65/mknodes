@@ -27,19 +27,20 @@ if TYPE_CHECKING:
 logger = log.get_logger(__name__)
 
 
-def add_page(name: str, path: str):
+def add_page(name: str | None, path: str | os.PathLike, **kwargs):
     import mknodes
 
-    logger.debug("Adding file %r", name)
+    path = os.fspath(path)
+    logger.debug("Adding file %r", path)
     node_cls_name = path.removeprefix("->").split("(")[0]
     if path.startswith("->") and node_cls_name in mknodes.__all__:
         node_cls = getattr(mknodes, node_cls_name)
-        page = mknodes.MkPage(name)
+        page = mknodes.MkPage(name, **kwargs)
         # TODO: use something more sophisticated and secure
         match = re.match(ARGS_KWARGS_RE, path)
         page += node_cls(**eval(f"dict({match[1]})")) if match else node_cls()
         return page
-    return mkpage.MkPage.from_file(path, title=name)
+    return mkpage.MkPage.from_file(path, title=name, **kwargs)
 
 
 def from_list(
