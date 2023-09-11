@@ -51,12 +51,10 @@ plugins:
           - Getting started: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md
           - Configuration: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/configuration.md
           # - Customizing your theme: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/customizing-your-theme.md
-          - https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/deploying-your-docs.md:
-            - https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/deploying-your-docs.md
-            - Deploying your docs: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/deploying-your-docs.md
-            - Installation: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/installation.md
-            - Localizing your Theme: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/localizing-your-theme.md
-            - Writing your docs: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/writing-your-docs.md
+          - Deploying your docs: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/deploying-your-docs.md
+          - Installation: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/installation.md
+          - Localizing your Theme: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/localizing-your-theme.md
+          - Writing your docs: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/writing-your-docs.md
     build_folder: .markdown/
     path: mknodes.mkwebsite:MkWebSite.for_project
 
