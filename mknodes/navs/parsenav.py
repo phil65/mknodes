@@ -17,6 +17,7 @@ SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*\.md)\)"
 SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"
 SECTION_REGEX = r"^\* (.*)"
 
+ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 
 if TYPE_CHECKING:
     import os
@@ -24,6 +25,21 @@ if TYPE_CHECKING:
     import mknodes
 
 logger = log.get_logger(__name__)
+
+
+def add_page(name: str, path: str):
+    import mknodes
+
+    logger.debug("Adding file %r", name)
+    node_cls_name = path.removeprefix("->").split("(")[0]
+    if path.startswith("->") and node_cls_name in mknodes.__all__:
+        node_cls = getattr(mknodes, node_cls_name)
+        page = mknodes.MkPage(name)
+        # TODO: use something more sophisticated and secure
+        match = re.match(ARGS_KWARGS_RE, path)
+        page += node_cls(**eval(f"dict({match[1]})")) if match else node_cls()
+        return page
+    return mkpage.MkPage.from_file(path, title=name)
 
 
 def from_list(
@@ -37,18 +53,14 @@ def from_list(
                 match val:
                     case dict():
                         logger.debug("Adding nav %r", name)
-                        subnav = nav.add_nav(name)
-                        from_dict(val, subnav)
+                        from_dict(val, nav.add_nav(name))
                     case str():
-                        logger.debug("Adding file %r", name)
-                        page = mkpage.MkPage.from_file(val, title=name)
-                        nav += page
+                        nav += add_page(name, val)
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
                             name = pathlib.Path(parse.urlsplit(name).path).name
-                        subnav = nav.add_nav(name)
-                        from_list(val, subnav)
+                        from_list(val, nav.add_nav(name))
             case str():
                 page = mkpage.MkPage.from_file(item)
                 logger.debug("Adding page %s", item)
@@ -62,17 +74,13 @@ def from_dict(
     for k, v in dct.items():
         match v:
             case str():
-                page = mkpage.MkPage.from_file(v, title=k)
-                logger.debug("Adding file %r", k)
-                nav += page
+                nav += add_page(k, v)
             case dict():
-                subnav = nav.add_nav(k)
                 logger.debug("Adding nav %r", k)
-                from_dict(v, subnav)
+                from_dict(v, nav.add_nav(k))
             case list():
-                subnav = nav.add_nav(k)
                 logger.debug("Adding nav %r", k)
-                from_list(v, subnav)
+                from_list(v, nav.add_nav(k))
 
 
 def from_json(
