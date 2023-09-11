@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import pkgutil
 
 from typing import Any, Literal
@@ -116,7 +117,9 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     (keyword, "", None) for keyword in self.package_info.keywords
                 )
             case "keywords_combined":
-                items.append(("Keywords", " | ".join(self.package_info.keywords), None))
+                items.append(
+                    ("Keywords", " | ".join(self.package_info.keywords), None),
+                )
             case "required_python":
                 string = self.package_info.required_python_version
                 items.append(("Python", string, "https://www.python.org"))
@@ -136,11 +139,9 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 for mod in pkgutil.iter_modules():
                     if not mod.ispkg:
                         continue
-                    try:
+                    with contextlib.suppress(Exception):
                         dist = packageinfo.get_info(mod.name)
                         pkgs.append(dist)
-                    except Exception:  # noqa: BLE001
-                        pass
                 items.extend(
                     (package.name, package.version, package.homepage) for package in pkgs
                 )
