@@ -11,7 +11,7 @@ from griffe.dataclasses import Module
 import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
-from mknodes.info import mkdocsconfigfile
+from mknodes.info import mkdocsconfigfile, pyproject
 from mknodes.utils import linkprovider, log
 
 
@@ -52,6 +52,33 @@ class ThemeContext(Context):
     """Primary text color."""
     data: dict[str, str] = dataclasses.field(default_factory=dict)
     """Additional data of the theme."""
+
+
+# @dataclasses.dataclass
+# class PyProjectContext(Context):
+#     # pyproject
+#     build_system: buildsystems.BuildSystem = dataclasses.field(
+#         default_factory=lambda: buildsystems.hatch,
+#     )
+#     """The build system set as build backend [pyproject.py]"""
+#     configured_build_systems: list = dataclasses.field(default_factory=list)
+#     """A list of build systems which are configured in pyproject [pyproject.py]"""
+#     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
+#     """The tool section of the pyproject file (as a dict) [pyproject.py]"""
+#     line_length: int | None = None
+#     """The line length, if defined by any popular tool [pyproject.py]"""
+#     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
+#         default_factory=list,
+#     )
+#     """Commit types defined in pyproject mknodes section [pyproject.py]"""
+#     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
+#     """Descriptions for extras, defined in pyproject mknodes section [pyproject.py]"""
+#     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
+#         default_factory=list,
+#     )
+#     """Package repositories the distribution is distributed on."""
+#     docstring_style: str | None = None
+#     """Defined in pyproject mknodes section [pyproject.py]"""
 
 
 @dataclasses.dataclass
@@ -116,7 +143,11 @@ class PackageContext(Context):
     repository_path: pathlib.Path = dataclasses.field(default_factory=pathlib.Path)
     """The path to the local git repository."""
     mkdocs_config: mkdocsconfigfile.MkDocsConfigFile | None = None
-    """A dictionary containing the MkDocs config."""
+    """A dict-like File containing the MkDocs config."""
+    pyproject_file: pyproject.PyProject = dataclasses.field(
+        default_factory=pyproject.PyProject,
+    )
+    """A dict-like File containing the PyProject data."""
     tools: list[tools.Tool] = dataclasses.field(default_factory=list)
     """A list of tools found for the distribution."""
     task_runners: list = dataclasses.field(default_factory=list)
@@ -189,6 +220,9 @@ class ProjectContext(Context):
         default_factory=linkprovider.LinkProvider,
     )
     # requirements: Requirements = dataclasses.field(default_factory=Requirements)
+    # pyproject: pyproject.PyProject = dataclasses.field(
+    #     default_factory=pyproject.PyProject,
+    # )
 
     def as_dict(self):
         return dict(

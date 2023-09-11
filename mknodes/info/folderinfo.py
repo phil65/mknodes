@@ -258,6 +258,7 @@ class FolderInfo:
             entry_points=self.info.get_entry_points(),
             cli=self.info.cli,
             mkdocs_config=self.mkdocs_config,
+            pyproject_file=self.pyproject,
             social_info=self.social_info,
             repository_path=self.path,
             repository_url=self.repository_url,
