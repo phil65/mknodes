@@ -5,6 +5,7 @@ from typing import Literal
 from mknodes.basenodes import mktable
 from mknodes.info import packageinfo
 from mknodes.utils import layouts, log, reprhelpers
+from mknodes.utils.packagehelpers import Dependency
 
 
 logger = log.get_logger(__name__)
@@ -24,7 +25,7 @@ class MkDependencyTable(mktable.MkTable):
         layout: PackageLayoutStr = "default",
         **kwargs,
     ):
-        self._package = package
+        self.package = package
         match layout:
             case "default":
                 self.layouter = layouts.DefaultPackageLayout()
@@ -35,29 +36,25 @@ class MkDependencyTable(mktable.MkTable):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, package=self._package, _filter_empty=True)
+        return reprhelpers.get_repr(self, package=self.package, _filter_empty=True)
 
     @property
-    def package(self) -> packageinfo.PackageInfo | None:  # type: ignore[return]
-        match self._package:
-            case None if self.associated_project:
-                return self.associated_project.info
+    def required_packages(self) -> dict[packageinfo.PackageInfo, Dependency] | None:
+        match self.package:
+            case None:
+                return self.ctx.metadata.required_packages
             case str():
-                return packageinfo.get_info(self._package)
+                return packageinfo.get_info(self.package).required_packages
             case packageinfo.PackageInfo():
-                return self._package
+                return self.package.required_packages
             case _:
                 return None
 
-    @package.setter
-    def package(self, value):
-        self._package = value
-
     @property
     def data(self):
-        if not self.package:
+        if not self.required_packages:
             return {}
-        packages = self.package.required_packages
+        packages = self.required_packages
         if data := [self.layouter.get_row_for(kls) for kls in packages.items()]:
             return {
                 k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
