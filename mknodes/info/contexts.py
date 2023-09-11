@@ -133,6 +133,8 @@ class PackageContext(Context):
     """A list of build systems which are configured in pyproject [pyproject.py]"""
     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
     """The tool section of the pyproject file (as a dict) [pyproject.py]"""
+    line_length: int | None = None
+    """The line length, if defined by any popular tool [pyproject.py]"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
         default_factory=list,
     )

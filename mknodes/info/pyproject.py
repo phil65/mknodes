@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 import functools
 import os
 import pathlib
@@ -7,7 +8,7 @@ import pathlib
 from typing import Any
 
 from mknodes.data import buildsystems, commitconventions, installmethods
-from mknodes.info import contexts, tomlfile
+from mknodes.info import tomlfile
 from mknodes.utils import pathhelpers
 
 
@@ -45,7 +46,7 @@ class PyProject(tomlfile.TomlFile):
     @property
     def tool(self) -> dict[str, Any]:
         """Tool section."""
-        return self._data.get("tool", {})
+        return collections.defaultdict(dict, self._data.get("tool", {}))
 
     @property
     def project(self) -> dict[str, Any]:
@@ -87,16 +88,28 @@ class PyProject(tomlfile.TomlFile):
         """Return the style used for docstring."""
         return self.mknodes_section.get("docstring-style")
 
-    @functools.cached_property
-    def context(self):
-        return contexts.PyProjectContext(
-            info=self.folderinfo.context,
-            extras_descriptions=self.info.extras_descriptions,
-            package_repos=self.package_repos,
-            requirements=self.get_requirements(),
-        )
+    @property
+    def line_length(self) -> int | None:
+        # sourcery skip: assign-if-exp, reintroduce-else
+        """Return the line length (taken from black or ruff)."""
+        if length := self.tool["ruff"].get("line-length"):
+            return int(length)
+        if length := self.tool["isort"].get("line_length"):
+            return int(length)
+        if length := self.tool["black"].get("line-length"):
+            return int(length)
+        return None
+
+    # @functools.cached_property
+    # def context(self):
+    #     return contexts.PyProjectContext(
+    #         extras_descriptions=self.extras_descriptions,
+    #         package_repos=self.package_repos,
+    #         docstring_style=self.docstring_style,
+    #         line_length=self.line_length,
+    #     )
 
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info)
+    print(info.tool["isort"])
