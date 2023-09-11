@@ -7,7 +7,7 @@ import types
 
 from typing import Any
 
-from mknodes import mknav
+from mknodes.navs import mknav
 from mknodes.pages import mkclasspage, mkmodulepage
 from mknodes.utils import classhelpers, log, reprhelpers
 

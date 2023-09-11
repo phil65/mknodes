@@ -10,12 +10,13 @@ from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.basenodes import mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
+from mknodes.navs import navbuilder
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import helpers, log, navbuilder, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from mknodes import mkdoc, mknav
+    from mknodes.navs import mkdoc, mknav
     from mknodes.pages import mkclasspage, mkmodulepage
 
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
@@ -357,7 +358,7 @@ class MkNav(mknode.MkNode):
             module_page: Override for the default ModulePage
             flatten_nav: Whether classes should be put into top-level of the nav
         """
-        from mknodes import mkdoc
+        from mknodes.navs import mkdoc
 
         nav = mkdoc.MkDoc(
             module=module,

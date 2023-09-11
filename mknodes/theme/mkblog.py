@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mknodes import mknav
+from mknodes.navs import mknav
 from mknodes.pages import mkpage
 
 

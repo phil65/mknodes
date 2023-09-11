@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import textwrap
 
-from mknodes import mknav
 from mknodes.basenodes import mkcard, mkcontainer, mknode
+from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.utils import helpers, log, reprhelpers
 

@@ -160,7 +160,7 @@ class MkNode(node.Node):
     @property
     def resolved_parts(self) -> tuple[str, ...]:
         """Return a tuple containing all section names."""
-        from mknodes import mknav
+        from mknodes.navs import mknav
 
         node = self
         parts = [self.section] if isinstance(self, mknav.MkNav) and self.section else []
@@ -180,7 +180,7 @@ class MkNode(node.Node):
     @property
     def resolved_virtual_files(self) -> dict[str, str | bytes]:
         """Return a dict containing all virtual files with resolved file paths."""
-        from mknodes import mknav
+        from mknodes.navs import mknav
 
         sections = [i.section for i in self.ancestors if isinstance(i, mknav.MkNav)]
         section = "/".join(i for i in reversed(sections) if i is not None)

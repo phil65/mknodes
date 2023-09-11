@@ -8,8 +8,8 @@ import pathlib
 from typing import Any, Generic, TypeVar
 import urllib.error
 
-from mknodes import mknav
 from mknodes.info import contexts, folderinfo, packageinfo
+from mknodes.navs import mknav
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
 from mknodes.utils import (

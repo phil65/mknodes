@@ -8,7 +8,7 @@ import re
 from typing import TYPE_CHECKING
 from urllib import parse
 
-from mknodes import mknav
+from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.utils import helpers, log
 
@@ -295,7 +295,7 @@ if __name__ == "__main__":
     from mknodes import mkdocsconfig
 
     cfg = mkdocsconfig.Config()
-    nav = mknodes.mknav.MkNav()
+    nav = mknodes.MkNav()
     dct = cfg.plugins["mknodes"].config.kwargs
     from_json(dct, nav)
     print(list(nav.descendants))

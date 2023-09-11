@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from mknodes import mknav
-from mknodes.navs import parsenav
+from mknodes.navs import mknav, parsenav
 from mknodes.utils import log
 
 

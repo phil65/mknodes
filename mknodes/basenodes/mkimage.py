@@ -4,8 +4,8 @@ import pathlib
 
 from typing import Any, Literal
 
-from mknodes import mknav
 from mknodes.basenodes import mknode
+from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.utils import helpers, log, reprhelpers
 

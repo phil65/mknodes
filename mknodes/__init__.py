@@ -40,8 +40,8 @@ from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
 from .pages.mkmodulepage import MkModulePage
 
-from .mknav import MkNav
-from .mkdoc import MkDoc
+from .navs.mknav import MkNav
+from .navs.mkdoc import MkDoc
 
 from .templatenodes.mkinclude import MkInclude
 from .templatenodes.mkshields import MkShields
