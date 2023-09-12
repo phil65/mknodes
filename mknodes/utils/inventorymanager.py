@@ -9,11 +9,10 @@ import os
 import pathlib
 import posixpath
 import types
-import urllib.error
 
 from mkdocstrings import inventory
 
-from mknodes.utils import cache, helpers, log
+from mknodes.utils import helpers, log
 
 
 logger = log.get_logger(__name__)
@@ -50,6 +49,8 @@ class Inventory(inventory.Inventory):
         base_url: str | None = None,
         domains: list[str] | None = None,
     ):
+        from mknodes.utils import cache
+
         data = cache.download_and_cache_url(url, days=1)
         buffer = io.BytesIO(data)
         if base_url is None:
@@ -73,6 +74,8 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
         base_url: str | None = None,
         domains: list[str] | None = None,
     ):
+        import urllib.error
+
         path = str(path)
         if helpers.is_url(path):
             logger.debug("Downloading %r...", path)

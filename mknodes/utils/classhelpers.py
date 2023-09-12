@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Sequence
 import contextlib
+import functools
 import importlib
 import importlib.util
 import inspect
@@ -62,6 +63,7 @@ def to_module(
 ) -> types.ModuleType | None: ...
 
 
+@functools.cache
 def to_module(
     module: str | Sequence[str] | types.ModuleType,
     return_none: bool = True,
@@ -89,6 +91,7 @@ def to_module(
             raise TypeError(module)
 
 
+@functools.cache
 def to_class(klass: type | str | tuple[str, ...] | list[str]):
     """Convert given input to a class.
 
@@ -152,6 +155,7 @@ def to_dotted_path(
             raise TypeError(obj)
 
 
+@functools.cache
 def iter_classes(
     module: types.ModuleType | str | tuple[str, ...],
     *,
@@ -194,6 +198,7 @@ def iter_classes(
         yield kls
 
 
+@functools.cache
 def get_topmost_module_path(obj: Callable) -> str:
     """Return path of topmost module containing given class.
 
@@ -218,6 +223,7 @@ def get_topmost_module_path(obj: Callable) -> str:
     return path
 
 
+@functools.cache
 def get_submodules(
     module: types.ModuleType | str | tuple[str, ...],
 ) -> list[types.ModuleType]:
@@ -234,6 +240,7 @@ def get_submodules(
     ]
 
 
+@functools.cache
 def import_file(path: str | os.PathLike) -> types.ModuleType:
     """Import a module based on a file path.
 
@@ -250,6 +257,7 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
     return module
 
 
+@functools.cache
 def get_callable_from_path(path: str) -> Callable:
     modname, _qualname_separator, qualname = path.partition(":")
     if modname.endswith(".py"):
