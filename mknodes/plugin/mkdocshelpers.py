@@ -35,11 +35,9 @@ def merge_files(*files: Files) -> Files:
 
 
 def build(config: MkDocsConfig | Mapping[str, Any], **kwargs):
-    match config:
-        case Mapping():
-            text = yamlhelpers.dump_yaml(dict(config))
-            buffer = io.StringIO(text)
-            config = load_config(buffer, **kwargs)
+    text = yamlhelpers.dump_yaml(dict(config))
+    buffer = io.StringIO(text)
+    config = load_config(buffer, **kwargs)
     for k, v in config.items():
         logger.debug("%s: %s", k, v)
     config.plugins.run_event("startup", command="build", dirty=False)
@@ -54,14 +52,9 @@ def serve(
     """Serve a MkNodes-based website."""
     match config:
         case str() | os.PathLike():
-            cfg = yamlhelpers.load_yaml_file(config)
-        case dict():
-            cfg = config
-        case MkDocsConfig():
-            cfg = dict(config)
-    text = yamlhelpers.dump_yaml(cfg)
-    for k, v in cfg.items():
-        logger.debug("%s: %s", k, v)
+            text = pathlib.Path(config).read_text(encoding="utf-8")
+        case _:
+            text = yamlhelpers.dump_yaml(dict(config))
     stream = io.StringIO(text)
     serve_.serve(config_file=stream, livereload=False, **kwargs)  # type: ignore[arg-type]
 
