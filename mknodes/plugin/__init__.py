@@ -43,10 +43,9 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """Create the project based on MkDocs config."""
         if not self.config.build_fn:
             return
-        skin = theme.Theme.get_theme(
-            theme_name=config.theme.name or "material",
-            data=config.theme._vars,  # type: ignore[attr-defined]
-        )
+        data = config.theme._vars  # type: ignore[attr-defined]
+        theme_name = config.theme.name or "material"
+        skin = theme.Theme.get_theme(theme_name=theme_name, data=data)
         self.project = project.Project(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
