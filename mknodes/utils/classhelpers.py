@@ -79,7 +79,7 @@ def to_module(
         case (str(), *_) | str():  # type: ignore[attr-defined]
             module_path = module if isinstance(module, str) else ".".join(module)
             try:
-                return importlib.import_module(module_path)
+                return import_module(module_path)
             except (ImportError, AttributeError) as e:
                 logger.warning("Could not import %s", module_path)
                 if return_none:
@@ -102,10 +102,10 @@ def to_class(klass: type | str | tuple[str, ...] | list[str]):
             return klass
         case str():
             parts = klass.split(".")
-            mod = importlib.import_module(".".join(parts[:-1]))
+            mod = import_module(".".join(parts[:-1]))
             return getattr(mod, parts[-1])
         case tuple() | list():
-            mod = importlib.import_module(".".join(klass[:-1]))
+            mod = import_module(".".join(klass[:-1]))
             return getattr(mod, klass[-1])
         case _:
             raise TypeError(klass)
@@ -178,7 +178,7 @@ def iter_classes(
     if not mod:
         return []
     if recursive:
-        for _name, submod in inspect.getmembers(mod, inspect.ismodule):
+        for _name, submod in get_members(mod, inspect.ismodule):
             if submod.__name__.startswith(module_filter or ""):
                 yield from iter_classes(
                     submod,
@@ -187,7 +187,7 @@ def iter_classes(
                     filter_by___all__=filter_by___all__,
                     recursive=True,
                 )
-    for klass_name, kls in inspect.getmembers(mod, inspect.isclass):
+    for klass_name, kls in get_members(mod, inspect.isclass):
         has_all = hasattr(mod, "__all__")
         if filter_by___all__ and (not has_all or klass_name not in mod.__all__):
             continue
@@ -215,8 +215,8 @@ def get_topmost_module_path(obj: Callable) -> str:
     while parts:
         with contextlib.suppress(TypeError):
             new_path = ".".join(parts)
-            mod = importlib.import_module(new_path)
-            objs = [i for _i_name, i in inspect.getmembers(mod)]
+            mod = import_module(new_path)
+            objs = [i for _i_name, i in get_members(mod)]
             if to_search_for in objs:
                 path = new_path
         parts = parts[:-1]
@@ -235,9 +235,19 @@ def get_submodules(
     module = to_module(module)
     return [
         mod
-        for name, mod in inspect.getmembers(module, inspect.ismodule)
+        for name, mod in get_members(module, inspect.ismodule)
         if name.startswith(module.__name__)
     ]
+
+
+@functools.cache
+def import_module(mod: str):
+    return importlib.import_module(mod)
+
+
+@functools.cache
+def get_members(module, predicate=None):
+    return inspect.getmembers(module, predicate)
 
 
 @functools.cache
@@ -260,10 +270,7 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
 @functools.cache
 def get_callable_from_path(path: str) -> Callable:
     modname, _qualname_separator, qualname = path.partition(":")
-    if modname.endswith(".py"):
-        obj = import_file(modname)
-    else:
-        obj = importlib.import_module(modname)
+    obj = import_file(modname) if modname.endswith(".py") else import_module(modname)
     for attr in qualname.split("."):
         obj = getattr(obj, attr)
     if not callable(obj):

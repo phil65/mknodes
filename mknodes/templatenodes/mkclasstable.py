@@ -44,7 +44,8 @@ class MkClassTable(mktable.MkTable):
     def data(self):
         if not self.klasses:
             return {}
-        data = [self.layouter.get_row_for(kls) for kls in self.klasses]
+        layouter = self.layouter
+        data = [layouter.get_row_for(kls) for kls in self.klasses]
         return {
             k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
             for k in data[0]

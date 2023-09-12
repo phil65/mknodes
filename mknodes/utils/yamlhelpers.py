@@ -72,11 +72,11 @@ def load_yaml(text: str, mode="unsafe"):
     """Wrap PyYaml's loader so we can extend it to suit our needs."""
     match mode:
         case "unsafe":
-            base_loader_cls: type = yaml.UnsafeLoader
+            base_loader_cls: type = yaml.CUnsafeLoader
         case "full":
-            base_loader_cls = yaml.FullLoader
+            base_loader_cls = yaml.CFullLoader
         case _:
-            base_loader_cls = yaml.SafeLoader
+            base_loader_cls = yaml.CSafeLoader
 
     # Derive from global loader to leave the global loader unaltered.
     default_loader = get_default_loader(base_loader_cls)
