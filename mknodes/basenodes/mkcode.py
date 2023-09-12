@@ -127,6 +127,7 @@ class MkCode(mkcontainer.MkContainer):
         linenums: bool = True,
         highlight_caller: bool = True,
         title: str | None = None,
+        language: str | None = None,
         **kwargs: Any,
     ):
         """Create a MkCode node based on a code file.
@@ -141,6 +142,7 @@ class MkCode(mkcontainer.MkContainer):
             highlight_caller: Whether we want to try to highlight the line which called
                               this method.
             title: title to use for the code box. If None is set, filename will be used.
+            language: Syntax highlighting language. If None, try to infer from extension.
             kwargs: Keyword arguments passed to MkCode ctor
         """
         path = pathlib.Path(path)
@@ -155,11 +157,14 @@ class MkCode(mkcontainer.MkContainer):
                 hl_lines = [line] if 0 <= line <= line_count else None
         start_line = 1 if linenums else None
         title = path.name if title is None else title
+        if language is None:
+            language = datatypes.EXT_TO_PYGMENTS_STYLE.get(path.suffix, "")
         return cls(
             content,
             linenums=start_line,
             title=title,
             highlight_lines=hl_lines,
+            language=language,
             **kwargs,
         )
 

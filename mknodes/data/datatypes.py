@@ -47,6 +47,13 @@ CLASSIFIERS: list[ClassifierStr] = [
     "Typing",
 ]
 
+EXT_TO_PYGMENTS_STYLE = {
+    ".py": "py",
+    ".yml": "yaml",
+    ".yaml": "yaml",
+    ".toml": "toml",
+    ".md": "md",
+}
 
 MetadataTypeStr = (
     Literal[

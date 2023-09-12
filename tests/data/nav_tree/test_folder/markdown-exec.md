@@ -8,7 +8,7 @@ snippets into your existing documentation."""
 
 header = mknodes.MkHeader("Markdown for this page")
 path = paths.TEST_RESOURCES / "nav_tree/test_folder/markdown-exec.md"
-code_block = mknodes.MkCode.for_file(path, language="md")
+code_block = mknodes.MkCode.for_file(path)
 info = mknodes.MkAdmonition(INFO, title="Markdown-Exec rocks!")
 
 print(header)
