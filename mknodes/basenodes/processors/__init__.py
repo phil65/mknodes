@@ -120,27 +120,6 @@ class PrependHeaderProcessor(TextProcessor):
         return f"{header}\n\n{text}"
 
 
-class GeneratedMarkdownProcessor(TextProcessor):
-    ID = "append_generated_markdown"
-
-    def __init__(self, node):
-        self.node = node
-
-    def run(self, text: str) -> str:
-        import mknodes
-
-        code = f'\n\n<pre>\n{textwrap.indent(text, "    ")}\n</pre>\n\n'
-        admonition = mknodes.MkAdmonition(
-            code,
-            collapsible=True,
-            typ="quote",
-            title=f"Generated Markdown for *{self.node.resolved_file_path}*",
-        )
-        text += "\n"
-        text += str(admonition)
-        return text
-
-
 if __name__ == "__main__":
     text = "## test"
     processor = ShiftHeaderLevelProcessor(3)

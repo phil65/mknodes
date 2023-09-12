@@ -39,13 +39,11 @@ def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNa
     # Let us start with building the page.
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
-    root_nav = project.get_root(append_markdown_to_pages=True)
+    root_nav = project.get_root()
     project.theme.announcement_bar = mknodes.MkMetadataBadges("websites")
     project.error_page.content = mknodes.MkAdmonition("Page does not exist!")
     project.theme.show_annotation_numbers()
     project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
-    # By using append_markdown_to_pages, every page will have a expandable Admonition
-    # attached at the bottom. You can see the generated Markdown there for every page.
     annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)
 
     # now we will create the nav sections and its pages one by one.

@@ -225,20 +225,11 @@ class MkPage(mkcontainer.MkContainer):
         return dct | super().virtual_files()
 
     def get_processors(self):
-        import mknodes
-
-        procs = [
+        return [
             processors.PrependMetadataProcessor(self.metadata),
             processors.FootNotesProcessor(self),
             processors.AnnotationProcessor(self),
         ]
-        if any(
-            isinstance(node, mknodes.MkNav) and node.append_markdown_to_pages
-            for node in self.ancestors
-        ):
-            proc = processors.GeneratedMarkdownProcessor(self)
-            procs.append(proc)
-        return procs
 
     def add_newlines(self, num: int):
         """Add line separators to the page.
