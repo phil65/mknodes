@@ -15,7 +15,7 @@ use_cases_nav = mknodes.MkNav("Use cases")
 def create_use_cases_section(root_nav: mknodes.MkNav):
     """Create the "Development" sub-MkNav."""
     root_nav += use_cases_nav
-    page = use_cases_nav.add_index_page(hide_toc=True)
+    page = use_cases_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/flask")
     page += mknodes.MkCode.for_object(create_use_cases_section, header=SECTION_CODE)
     page += mknodes.MkAdmonitionBlock(INTRO_TEXT)
 
