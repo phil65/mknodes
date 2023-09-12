@@ -104,7 +104,6 @@ class Project(Generic[T]):
 
         variables = self.context.as_dict()
 
-        variables["filenames"] = page_mapping
         variables["page_mapping"] = page_mapping
         variables["requirements"] = self.get_requirements()
         mknode.MkNode._env.globals |= variables

@@ -4,7 +4,7 @@
 
 All files connected to the node tree:
 
-{{ filenames | MkPrettyPrint }}
+{{ page_mapping | MkPrettyPrint }}
 
 ### Plugins
 
