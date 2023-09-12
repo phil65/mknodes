@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import os
 import pathlib
 import re
@@ -35,9 +36,16 @@ def add_page(path: str | os.PathLike, name: str | None = None, **kwargs):
     if path.startswith("->") and node_cls_name in mknodes.__all__:
         node_cls = getattr(mknodes, node_cls_name)
         page = mknodes.MkPage(name, **kwargs)
-        # TODO: use something more sophisticated and secure
-        match = re.match(ARGS_KWARGS_RE, path)
-        page += node_cls(**eval(f"dict({match[1]})")) if match else node_cls()
+        if match := re.match(ARGS_KWARGS_RE, path):
+            parts = match[1].split(",")
+            args = [ast.literal_eval(i.strip()) for i in parts if "=" not in i]
+            kwargs_iter = (i.strip().split("=", maxsplit=1) for i in parts if "=" in i)
+            kwargs = {i[0]: ast.literal_eval(i[1]) for i in kwargs_iter}
+            msg = "Parsed: Node: %s, args: %s, kwargs: %s"
+            logger.debug(msg, node_cls.__name__, args, kwargs)
+            page += node_cls(*args, **kwargs)
+        else:
+            page += node_cls()
         return page
     return mkpage.MkPage.from_file(path, title=name, **kwargs)
 
