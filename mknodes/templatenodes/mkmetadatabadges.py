@@ -145,6 +145,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 items.extend(
                     (package.name, package.version, package.homepage) for package in pkgs
                 )
+            case str():
+                raise ValueError(self._typ)
             case _ if self._typ in packageinfo.CLASSIFIERS:
                 labels = self.package_info.classifier_map.get(self._typ, [])
                 items.extend([(i, self._typ, None) for i in labels])
