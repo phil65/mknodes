@@ -17,6 +17,7 @@ def homepage_for_distro(dist_name: str) -> str | None:
     try:
         dist = packageregistry.get_info(dist_name)
     except metadata.PackageNotFoundError:
+        logger.debug("Could not get package info for %s", dist_name)
         return None
     else:
         return dist.homepage

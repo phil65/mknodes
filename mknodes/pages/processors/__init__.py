@@ -129,8 +129,8 @@ class MkDocStringContainerProcessor(ContainerProcessor):
 
     def append_block(self, node: mkcontainer.MkContainer):
         path = classhelpers.to_dotted_path(self.item)
-        diagram = _mkdocstrings.MkDocStrings(path, show_root_toc_entry=False)
-        node += diagram
+        docstrings = _mkdocstrings.MkDocStrings(path, show_root_toc_entry=False)
+        node += docstrings
 
     def get_default_header(self, node: mkcontainer.MkContainer):
         return "🛈 DocStrings"

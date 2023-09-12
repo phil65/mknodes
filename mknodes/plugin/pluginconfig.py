@@ -8,7 +8,8 @@ from mkdocs.config import base, config_options as c
 class PluginConfig(base.Config):
     build_fn = c.Optional(c.Type(str))
     """Path to the build script / callable.
-    Must be in format my.module:Class.build or path/to/file.py:build.
+
+    Must be in format `my.module:Class.build` or `path/to/file.py:build`.
     Can also be remote.
     The targeted callable gets the project instance as an argument and optionally
     keyword arguments from setting below.
@@ -19,8 +20,10 @@ class PluginConfig(base.Config):
     Build scripts may have keyword arguments. You can set them by using this setting.
     """
     repo_path = c.Type(str, default=".")
-    """Path to the repository to create a website for. (http://....my_project.git)"""
+    """Path to the repository to create a website for. (`http://....my_project.git`)"""
     clone_depth = c.Type(int, default=100)
-    """Clone depth in case the repository is remote. (Required for git-changelog)."""
+    """Clone depth in case the repository is remote. (Required for `git-changelog`)."""
     build_folder = c.Optional(c.Type(str))
-    """Folder to create the Markdown files in. (Default: Temporary dir)"""
+    """Folder to create the Markdown files in.
+
+    If no folder is set, **MkNodes** will generate a temporary dir."""

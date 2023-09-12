@@ -33,13 +33,13 @@ class Context:
 @dataclasses.dataclass
 class GitContext(Context):
     main_branch: str = ""
-    """Name of the main branch of the repo (master / main)."""
+    """Name of the main branch of the repo (`master` / `main`)."""
     repo_name: str = ""
     """Name of the git folder."""
     last_commits: list = dataclasses.field(default_factory=list)
-    """List of last commits (Commit objects from GitPython)."""
+    """List of last commits (Commit objects from `GitPython`)."""
     repo_hoster: str = ""
-    """Name of the code hoster (for example GitHub)"""
+    """Name of the code hoster (for example `GitHub`)"""
 
 
 @dataclasses.dataclass
@@ -60,25 +60,25 @@ class ThemeContext(Context):
 #     build_system: buildsystems.BuildSystem = dataclasses.field(
 #         default_factory=lambda: buildsystems.hatch,
 #     )
-#     """The build system set as build backend [pyproject.py]"""
+#     """The build system set as build backend *[pyproject.py]*"""
 #     configured_build_systems: list = dataclasses.field(default_factory=list)
-#     """A list of build systems which are configured in pyproject [pyproject.py]"""
+#     """A list of build systems which are configured in pyproject *[pyproject.py]*"""
 #     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
-#     """The tool section of the pyproject file (as a dict) [pyproject.py]"""
+#     """The tool section of the pyproject file (as a dict) *[pyproject.py]*"""
 #     line_length: int | None = None
-#     """The line length, if defined by any popular tool [pyproject.py]"""
+#     """The line length, if defined by any popular tool *[pyproject.py]*"""
 #     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
 #         default_factory=list,
 #     )
-#     """Commit types defined in pyproject mknodes section [pyproject.py]"""
+#     """Commit types defined in pyproject mknodes section *[pyproject.py]*"""
 #     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
-#     """Descriptions for extras, defined in pyproject mknodes section [pyproject.py]"""
+#     """Descriptions for extras, defined in pyproject mknodes section *[pyproject.py]*"""
 #     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
 #         default_factory=list,
 #     )
 #     """Package repositories the distribution is distributed on."""
 #     docstring_style: str | None = None
-#     """Defined in pyproject mknodes section [pyproject.py]"""
+#     """Defined in pyproject mknodes section *[pyproject.py]*"""
 
 
 @dataclasses.dataclass
@@ -113,25 +113,25 @@ class PackageContext(Context):
     docstring_style: str | None = None
     """The style used for DocStrings."""
     distribution_name: str = ""
-    """The name of the distribution [Metadata]"""
+    """The name of the distribution *[Metadata]*"""
     summary: str = ""
-    """A summary for the distribution [Metadata]"""
+    """A summary for the distribution *[Metadata]*"""
     description: str = ""
-    """A description for the distribution [Metadata]"""
+    """A description for the distribution *[Metadata]*"""
     author_name: str = ""
-    """The author name of the distribution [Metadata]"""
+    """The author name of the distribution *[Metadata]*"""
     author_email: str = ""
-    """A description for the distribution [Metadata]"""
+    """A description for the distribution *[Metadata]*"""
     authors: dict[str, str] = dataclasses.field(default_factory=dict)
-    """All authors of the distribution [Metadata]"""
+    """All authors of the distribution *[Metadata]*"""
     classifiers: list = dataclasses.field(default_factory=list)
-    """Distribution classifiers [Metadata]"""
+    """Distribution classifiers *[Metadata]*"""
     classifier_map: dict[str, list[str]] = dataclasses.field(default_factory=dict)
-    """Distribution classifiers, sorted by category [Metadata]"""
+    """Distribution classifiers, sorted by category *[Metadata]*"""
     keywords: list[str] = dataclasses.field(default_factory=list)
-    """Distribution keywords [Metadata]"""
+    """Distribution keywords *[Metadata]*"""
     required_python_version: str | None = ""
-    """The required python version for the distribution [Metadata]"""
+    """The required python version for the distribution *[Metadata]*"""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
     """The names of the dependencies."""
     required_packages: dict = dataclasses.field(default_factory=dict)
@@ -147,7 +147,7 @@ class PackageContext(Context):
     license_text: str | None = ""
     """The complete license text"""
     pretty_name: str = ""
-    """A pretty name for the distribution (like MkNodes) [MkDocs site name]"""
+    """A pretty name for the distribution (like **MkNodes**) *[MkDocs site name]*"""
     repository_url: str = ""
     """The URL to the remote code repository."""
     repository_username: str = ""
@@ -181,24 +181,24 @@ class PackageContext(Context):
     build_system: buildsystems.BuildSystem = dataclasses.field(
         default_factory=lambda: buildsystems.hatch,
     )
-    """The build system set as build backend [pyproject.py]"""
+    """The build system set as build backend *[pyproject.py]*"""
     configured_build_systems: list = dataclasses.field(default_factory=list)
-    """A list of build systems which are configured in pyproject [pyproject.py]"""
+    """A list of build systems which are configured in pyproject *[pyproject.py]*"""
     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
-    """The tool section of the pyproject file (as a dict) [pyproject.py]"""
+    """The tool section of the pyproject file (as a dict) *[pyproject.py]*"""
     line_length: int | None = None
-    """The line length, if defined by any popular tool [pyproject.py]"""
+    """The line length, if defined by any popular tool *[pyproject.py]*"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
         default_factory=list,
     )
-    """Commit types defined in pyproject mknodes section [pyproject.py]"""
+    """Commit types defined in pyproject mknodes section *[pyproject.py]*"""
     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
-    """Descriptions for the extras, defined in pyproject mknodes section [pyproject.py]"""
+    """Descriptions for the extras, defined in pyproject mknodes section *[pyproject.py]*"""
     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
         default_factory=list,
     )
     """Package repositories the distribution is distributed on.
-    Defined in pyproject mknodes section [pyproject.py]"""
+    Defined in pyproject mknodes section *[pyproject.py]*"""
 
 
 @dataclasses.dataclass
