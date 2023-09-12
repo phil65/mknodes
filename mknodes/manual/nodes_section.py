@@ -1,3 +1,5 @@
+import os
+
 import mknodes
 
 from mknodes import paths
@@ -165,8 +167,9 @@ def create_about_nodes_section(nav: mknodes.MkNav):
         mknodes.MkShields,
         mknodes.MkMetadataBadges,
         mknodes.MkModuleOverview,
-        mknodes.MkPyDeps,
     ]
+    if os.environ.get("CI"):
+        klasses.append(mknodes.MkPyDeps)
     about_nodes_nav = nav.add_nav("About-the-project nodes")
     page = about_nodes_nav.add_index_page(hide_toc=True)
     page += mknodes.MkHeader(SECTION_CODE)
