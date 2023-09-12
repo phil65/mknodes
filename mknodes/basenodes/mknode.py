@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+import time
+
 from typing import TYPE_CHECKING
 
 from mknodes import paths
@@ -72,6 +74,7 @@ class MkNode(node.Node):
         self._files: dict[str, str | bytes] = {}
         self._css_classes: set[str] = set(css_classes or [])
         self._associated_project = project
+        self.stats = contexts.NodeBuildStats()
         # ugly, but convenient.
         from mknodes.basenodes import mkannotations
 
@@ -132,9 +135,12 @@ class MkNode(node.Node):
 
     def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
+        now = time.perf_counter()
         text = self._to_markdown()
         for proc in self.get_processors():
             text = proc.run(text)
+        self.stats.render_duration = now - time.perf_counter()
+        self.stats.render_count += 1
         return text
 
     def get_processors(self) -> list[processors.TextProcessor]:

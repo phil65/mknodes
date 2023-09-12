@@ -12,7 +12,7 @@ import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import mkdocsconfigfile, pyproject
-from mknodes.utils import linkprovider, log
+from mknodes.utils import linkprovider, log, requirements
 
 
 logger = log.get_logger(__name__)
@@ -82,11 +82,25 @@ class ThemeContext(Context):
 
 
 @dataclasses.dataclass
+class NodeBuildStats:
+    render_duration: float = 0
+    render_count: int = 0
+
+
+@dataclasses.dataclass
 class BuildContext(Context):
-    filenames: list[str] = dataclasses.field(default_factory=list)
-    original_config: dict = dataclasses.field(default_factory=dict)
-    config_override: dict = dataclasses.field(default_factory=dict)
-    final_config: dict[str, str] = dataclasses.field(default_factory=dict)
+    page_mapping: dict = dataclasses.field(default_factory=dict)
+    """A dictionary mapping all page filenames to the corresponding MkPages."""
+    requirements: requirements.Requirements = dataclasses.field(
+        default_factory=requirements.Requirements,
+    )
+    """All requirements (JS, CSS, extensions) inferred from the build."""
+    node_stats: list[NodeBuildStats] = dataclasses.field(default_factory=list)
+    """Some stats about nodes construction."""
+
+    # original_config: dict = dataclasses.field(default_factory=dict)
+    # config_override: dict = dataclasses.field(default_factory=dict)
+    # final_config: dict[str, str] = dataclasses.field(default_factory=dict)
 
 
 @dataclasses.dataclass
