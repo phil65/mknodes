@@ -4,6 +4,7 @@ import logging
 import typer as t
 from mkdocs import __main__ as mkdocs
 
+from mknodes import paths
 from mknodes.info import mkdocsconfigfile
 from mknodes.plugin import mkdocshelpers
 from mknodes.utils import log, yamlhelpers
@@ -77,7 +78,7 @@ def build(
     build_fn: str = t.Option(None, *BUILD_CMS, help=BUILD_HELP, show_default=False),
     site_dir: str = t.Option("site", *SITE_DIR_CMDS, help=SITE_DIR_HELP),
     clone_depth: int = t.Option(None, *DEPTH_CMDS, help=DEPTH_HELP, show_default=False),
-    config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
+    config_path: str = t.Option(paths.CFG_DEFAULT, *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     strict: bool = t.Option(False, *STRICT_CMDS, help=STRICT_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
@@ -105,7 +106,7 @@ def serve(
     repo_path: str = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
     build_fn: str = t.Option(None, *BUILD_CMS, help=BUILD_HELP, show_default=False),
     clone_depth: int = t.Option(None, *DEPTH_CMDS, help=DEPTH_HELP, show_default=False),
-    config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
+    config_path: str = t.Option(paths.CFG_DEFAULT, *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     strict: bool = t.Option(False, *STRICT_CMDS, help=STRICT_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
@@ -131,7 +132,7 @@ def serve(
 def create_config(
     repo_path: str = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
     build_fn: str = t.Option(None, *BUILD_CMS, help=BUILD_HELP, show_default=False),
-    # config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
+    # config_path: str = t.Option(paths.CFG_DEFAULT, *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
     _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),

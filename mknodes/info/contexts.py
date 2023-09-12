@@ -60,25 +60,25 @@ class ThemeContext(Context):
 #     build_system: buildsystems.BuildSystem = dataclasses.field(
 #         default_factory=lambda: buildsystems.hatch,
 #     )
-#     """The build system set as build backend *[pyproject.py]*"""
+#     """The build system set as build backend *[pyproject]*"""
 #     configured_build_systems: list = dataclasses.field(default_factory=list)
-#     """A list of build systems which are configured in pyproject *[pyproject.py]*"""
+#     """A list of build systems which are configured in pyproject *[pyproject]*"""
 #     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
-#     """The tool section of the pyproject file (as a dict) *[pyproject.py]*"""
+#     """The tool section of the pyproject file (as a dict) *[pyproject]*"""
 #     line_length: int | None = None
-#     """The line length, if defined by any popular tool *[pyproject.py]*"""
+#     """The line length, if defined by any popular tool *[pyproject]*"""
 #     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
 #         default_factory=list,
 #     )
-#     """Commit types defined in pyproject mknodes section *[pyproject.py]*"""
+#     """Commit types defined in pyproject mknodes section *[pyproject]*"""
 #     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
-#     """Descriptions for extras, defined in pyproject mknodes section *[pyproject.py]*"""
+#     """Descriptions for extras, defined in pyproject mknodes section *[pyproject]*"""
 #     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
 #         default_factory=list,
 #     )
 #     """Package repositories the distribution is distributed on."""
 #     docstring_style: str | None = None
-#     """Defined in pyproject mknodes section *[pyproject.py]*"""
+#     """Defined in pyproject mknodes section *[pyproject]*"""
 
 
 @dataclasses.dataclass
@@ -181,24 +181,24 @@ class PackageContext(Context):
     build_system: buildsystems.BuildSystem = dataclasses.field(
         default_factory=lambda: buildsystems.hatch,
     )
-    """The build system set as build backend *[pyproject.py]*"""
+    """The build system set as build backend *[pyproject]*"""
     configured_build_systems: list = dataclasses.field(default_factory=list)
-    """A list of build systems which are configured in pyproject *[pyproject.py]*"""
+    """A list of build systems which are configured in pyproject *[pyproject]*"""
     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
-    """The tool section of the pyproject file (as a dict) *[pyproject.py]*"""
+    """The tool section of the pyproject file (as a dict) *[pyproject]*"""
     line_length: int | None = None
-    """The line length, if defined by any popular tool *[pyproject.py]*"""
+    """The line length, if defined by any popular tool *[pyproject]*"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
         default_factory=list,
     )
-    """Commit types defined in pyproject mknodes section *[pyproject.py]*"""
+    """Commit types defined in pyproject mknodes section *[pyproject]*"""
     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
-    """Descriptions for the extras, defined in pyproject mknodes section *[pyproject.py]*"""
+    """Descriptions for the extras, defined in pyproject mknodes section *[pyproject]*"""
     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
         default_factory=list,
     )
     """Package repositories the distribution is distributed on.
-    Defined in pyproject mknodes section *[pyproject.py]*"""
+    Defined in pyproject mknodes section *[pyproject]*"""
 
 
 @dataclasses.dataclass

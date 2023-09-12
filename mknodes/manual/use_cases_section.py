@@ -25,7 +25,7 @@ def create_default_website_section():
     """Create the "Creating a sample website" MkPage."""
     page = mknodes.MkPage("Creating a sample website", hide_toc=True)
     page += mknodes.MkText("The following config...")
-    page += mknodes.MkCode.for_file("docs/mkdocs_mkdocs.yml")
+    page += mknodes.MkCode.for_file("configs/mkdocs_mkdocs.yml")
     page += mknodes.MkText("Combined with this CLI call...")
     page += mknodes.MkCode("mknodes build", language="terminal")
     page += mknodes.MkText("Will create this website:")
@@ -39,7 +39,7 @@ def create_custom_website_by_config():
     """Create the "Creating a sample website via config" MkPage."""
     page = mknodes.MkPage("Creating a sample website via config", hide_toc=True)
     page += mknodes.MkText("The following config...")
-    page += mknodes.MkCode.for_file("docs/mkdocs_mkdocstrings.yml")
+    page += mknodes.MkCode.for_file("configs/mkdocs_mkdocstrings.yml")
     page += mknodes.MkText("Combined with this CLI call...")
     page += mknodes.MkCode("mknodes build", language="terminal")
     page += mknodes.MkText("Will create this website:")

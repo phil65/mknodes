@@ -15,6 +15,7 @@ from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure.files import File, Files
 
+from mknodes import paths
 from mknodes.utils import yamlhelpers
 
 
@@ -46,7 +47,7 @@ def build(config: MkDocsConfig | Mapping[str, Any], **kwargs):
 
 
 def serve(
-    config: str | os.PathLike | MkDocsConfig | Mapping[str, Any] = "mkdocs_basic.yml",
+    config: str | os.PathLike | MkDocsConfig | Mapping[str, Any] = paths.CFG_DEFAULT,
     **kwargs,
 ):
     """Serve a MkNodes-based website."""
