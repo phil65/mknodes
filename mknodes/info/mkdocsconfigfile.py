@@ -1,6 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+from mkdocs.config import load_config
+
 from mknodes.info import yamlfile
+
+
+if TYPE_CHECKING:
+    from mkdocs.config.defaults import MkDocsConfig
 
 
 class MkDocsConfigFile(yamlfile.YamlFile):
@@ -23,6 +31,9 @@ class MkDocsConfigFile(yamlfile.YamlFile):
     @property
     def mkdocstrings_config(self):
         return self.get_section("plugins", "mkdocstrings", "handlers", "python")
+
+    def to_mkdocsconfig(self, **kwargs) -> MkDocsConfig:
+        return load_config(self.serialize("yaml"), **kwargs)
 
     def update_mknodes_section(
         self,
