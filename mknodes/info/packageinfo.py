@@ -38,18 +38,6 @@ CLASSIFIERS: list[ClassifierStr] = [
 ]
 
 
-registry: dict[str, PackageInfo] = {}
-
-
-def get_info(mod_name: str) -> PackageInfo:
-    mapping = packagehelpers.get_package_map()
-    pkg_name = mapping[mod_name][0] if mod_name in mapping else mod_name
-    pkg_name = pkg_name.lower()
-    if pkg_name not in registry:
-        registry[pkg_name] = PackageInfo(pkg_name)
-    return registry[pkg_name]
-
-
 class PackageInfo:
     def __init__(self, pkg_name: str):
         self.package_name = pkg_name
@@ -199,6 +187,8 @@ class PackageInfo:
 
     @functools.cached_property
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
+        from mknodes.info import packageregistry
+
         modules = (
             {
                 packagehelpers.get_dependency(i).name
@@ -210,7 +200,7 @@ class PackageInfo:
         packages = {}
         for mod in modules:
             with contextlib.suppress(Exception):
-                packages[get_info(mod)] = self._get_dep_info(mod)
+                packages[packageregistry.get_info(mod)] = self._get_dep_info(mod)
         return packages
 
     def _get_dep_info(self, name: str) -> packagehelpers.Dependency:
@@ -235,6 +225,6 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = get_info("mknodes")
+    info = PackageInfo("mknodes")
     print(info.get_entry_points("mkdocs.plugins"))
     print(info.cli)

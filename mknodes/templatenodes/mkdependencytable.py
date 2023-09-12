@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from mknodes.basenodes import mktable
-from mknodes.info import packageinfo
+from mknodes.info import packageinfo, packageregistry
 from mknodes.utils import layouts, log, reprhelpers
 from mknodes.utils.packagehelpers import Dependency
 
@@ -44,7 +44,7 @@ class MkDependencyTable(mktable.MkTable):
             case None:
                 return self.ctx.metadata.required_packages
             case str():
-                return packageinfo.get_info(self.package).required_packages
+                return packageregistry.get_info(self.package).required_packages
             case packageinfo.PackageInfo():
                 return self.package.required_packages
             case _:

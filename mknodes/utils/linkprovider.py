@@ -6,7 +6,7 @@ import os
 import types
 
 from mknodes import paths
-from mknodes.info import packageinfo
+from mknodes.info import packageregistry
 from mknodes.utils import helpers, inventorymanager, log
 
 
@@ -15,7 +15,7 @@ logger = log.get_logger(__name__)
 
 def homepage_for_distro(dist_name: str) -> str | None:
     try:
-        dist = packageinfo.get_info(dist_name)
+        dist = packageregistry.get_info(dist_name)
     except metadata.PackageNotFoundError:
         return None
     else:

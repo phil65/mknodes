@@ -7,7 +7,7 @@ from typing import Any, Literal
 from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.info import packageinfo
+from mknodes.info import packageinfo, packageregistry
 from mknodes.templatenodes import mkbadge
 from mknodes.utils import log, reprhelpers
 
@@ -94,7 +94,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def package_info(self):
         match self._package:
             case str():
-                return packageinfo.get_info(self._package)
+                return packageregistry.get_info(self._package)
             case None if self.associated_project:
                 return self.associated_project.info
             case None:
@@ -140,7 +140,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     if not mod.ispkg:
                         continue
                     with contextlib.suppress(Exception):
-                        dist = packageinfo.get_info(mod.name)
+                        dist = packageregistry.get_info(mod.name)
                         pkgs.append(dist)
                 items.extend(
                     (package.name, package.version, package.homepage) for package in pkgs

@@ -8,7 +8,7 @@ import pathlib
 from typing import Any
 
 from mknodes import paths
-from mknodes.info import packageinfo
+from mknodes.info import packageregistry
 from mknodes.jinja import environment
 from mknodes.utils import log
 
@@ -62,7 +62,7 @@ class License:
         )
 
     def resolve_by_distribution(self, distribution: str):
-        info = packageinfo.get_info(distribution)
+        info = packageregistry.get_info(distribution)
         env = environment.Environment()
 
         class Ctx:

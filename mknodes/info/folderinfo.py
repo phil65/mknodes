@@ -17,7 +17,7 @@ from mknodes.info import (
     gitrepository,
     license,
     mkdocsconfigfile,
-    packageinfo,
+    packageregistry,
     pyproject,
 )
 from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
@@ -112,7 +112,7 @@ class FolderInfo:
     @functools.cached_property
     def info(self):
         """Return a PackageInfo object for given distribution."""
-        return packageinfo.get_info(self.pyproject.name or self.git.repo_name)
+        return packageregistry.get_info(self.pyproject.name or self.git.repo_name)
 
     @functools.cached_property
     def repository_url(self) -> str:
