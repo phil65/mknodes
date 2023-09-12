@@ -9,7 +9,7 @@ from typing import Any, Generic, TypeVar
 import urllib.error
 
 from mknodes import paths
-from mknodes.info import contexts, folderinfo, packageinfo
+from mknodes.info import contexts, folderinfo, packageregistry
 from mknodes.navs import mknav
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
@@ -181,33 +181,20 @@ class Project(Generic[T]):
         )
 
     def populate_linkprovider(self):
-        if cfg := self.folderinfo.mkdocs_config:
-            invs = cfg.get_section(
-                "plugins",
-                "mkdocstrings",
-                "handlers",
-                "python",
-                "import",
-            )
-        else:
-            invs = []
+        cfg = self.folderinfo.mkdocs_config
+        invs = cfg.get_section("handlers", "python", "import") or []
         mk_urls = [i["url"] for i in invs]
-        urls = {
-            v.inventory_url
-            for v in packageinfo.registry.values()
-            if v.inventory_url is not None and v.inventory_url not in mk_urls
-        }
         for inv in invs:
             if "url" not in inv:
                 continue
-            logger.debug("Downloading %r...", inv["url"])
+            url = inv["url"]
+            base = inv.get("base_url")
+            logger.debug("Downloading %r...", url)
             try:
-                self.linkprovider.add_inv_file(
-                    inv["url"],
-                    base_url=inv.get("base_url"),
-                )
+                self.linkprovider.add_inv_file(url, base_url=base)
             except urllib.error.HTTPError:
-                logger.debug("No file for %r...", inv["url"])
+                logger.debug("No file for %r...", url)
+        urls = {i for i in packageregistry.registry.inventory_urls if i not in mk_urls}
         for url in urls:
             logger.debug("Downloading %r...", url)
             try:

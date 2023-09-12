@@ -12,6 +12,20 @@ from mknodes.utils import helpers, log, reprhelpers, yamlhelpers
 
 logger = log.get_logger(__name__)
 
+MarkupTypeStr = Literal["yaml", "json", "toml"]
+
+
+def dumps(data, markup_type: MarkupTypeStr | None):
+    match markup_type:
+        case None | "yaml":
+            return yamlhelpers.dump_yaml(data)
+        case "json":
+            return json.dumps(data, indent=4)
+        case "toml" if isinstance(data, dict):
+            return tomli_w.dumps(data)
+        case _:
+            raise TypeError(markup_type)
+
 
 class MkConfigSetting(mkdefinitionlist.MkDefinition):
     """Node for describing a config setting."""
@@ -26,7 +40,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         default: str | int | None = None,
         version_added: str | None = None,
         optional: bool | None = None,
-        mode: Literal["yaml", "json", "toml"] | None = None,
+        mode: MarkupTypeStr | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -75,16 +89,8 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             text += f"Required: `{required}`\n\n"
         text += f"{self.description}\n"
         items: list[mknode.MkNode] = [mktext.MkText(text, parent=self)]
+        code = dumps(self.setting, self.mode)
         if self.setting:
-            match self.mode:
-                case None | "yaml":
-                    code = yamlhelpers.dump_yaml(self.setting)
-                case "json":
-                    code = json.dumps(self.setting, indent=4)
-                case "toml" if isinstance(self.setting, dict):
-                    code = tomli_w.dumps(self.setting)
-                case _:
-                    raise TypeError(self.mode)
             code_node = mkcode.MkCode(code, parent=self, language=self.mode or "yaml")
             items.append(code_node)
         return items

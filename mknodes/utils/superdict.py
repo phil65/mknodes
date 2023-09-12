@@ -57,13 +57,13 @@ class SuperDict(MutableMapping, metaclass=ABCMeta):
                 else:
                     return None
         if not keep_path:
-            return section
+            return SuperDict(section) if isinstance(section, dict) else section
         result: dict[str, dict] = {}
         new = result
         for sect in sections:
             result[sect] = section if sect == sections[-1] else {}
             result = result[sect]
-        return new
+        return SuperDict(new) if isinstance(new, dict) else new
 
 
 if __name__ == "__main__":

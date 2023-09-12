@@ -44,6 +44,10 @@ class PackageRegistry(MutableMapping, metaclass=ABCMeta):
             self._packages[pkg_name] = packageinfo.PackageInfo(pkg_name)
         return self._packages[pkg_name]
 
+    @property
+    def inventory_urls(self):
+        return {v.inventory_url for v in self.values() if v.inventory_url is not None}
+
 
 registry = PackageRegistry()
 
