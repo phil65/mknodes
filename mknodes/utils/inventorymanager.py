@@ -9,6 +9,7 @@ import os
 import pathlib
 import posixpath
 import types
+import urllib.error
 
 from mkdocstrings import inventory
 
@@ -74,13 +75,19 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
     ):
         path = str(path)
         if helpers.is_url(path):
-            inv = Inventory.from_url(path, base_url=base_url, domains=domains)
+            logger.debug("Downloading %r...", path)
+            try:
+                inv = Inventory.from_url(path, base_url=base_url, domains=domains)
+            except urllib.error.HTTPError:
+                logger.debug("No file for %r...", path)
+                return
         elif base_url:
             inv = Inventory.from_file(path, domains=domains, base_url=base_url)
         else:
             msg = "Base URL needed for loading from file."
             raise ValueError(msg)
-        self.inv_files.append(inv)
+        if inv:
+            self.inv_files.append(inv)
 
     def __getitem__(self, name: str | type | types.FunctionType | types.MethodType):
         match name:

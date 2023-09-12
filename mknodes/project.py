@@ -6,7 +6,6 @@ import os
 import pathlib
 
 from typing import Any, Generic, TypeVar
-import urllib.error
 
 from mknodes import paths
 from mknodes.info import contexts, folderinfo, packageregistry
@@ -35,22 +34,22 @@ class Project(Generic[T]):
     def __init__(
         self,
         theme: T,
-        base_url: str = "",
-        use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
         build_fn: str | Callable = paths.DEFAULT_BUILD_FN,
         build_kwargs: dict[str, Any] | None = None,
+        base_url: str = "",
+        use_directory_urls: bool = True,
         clone_depth: int = 100,
     ):
         """The main project to create a website.
 
         Arguments:
             theme: The theme to use
-            base_url: Base url of the website
-            use_directory_urls: Whether urls are in directory-style
             repo: Path to the git repository
             build_fn: Callable to create the website with
             build_kwargs: Keyword arguments for the build function
+            base_url: Base url of the website
+            use_directory_urls: Whether urls are in directory-style
             clone_depth: Amount of commits to clone in case repository is remote.
         """
         self.linkprovider = linkprovider.LinkProvider(
@@ -170,6 +169,13 @@ class Project(Generic[T]):
         return files | self.theme.get_files()
 
     @functools.cached_property
+    def build_context(self):
+        return contexts.BuildContext(
+            page_mapping=self.folderinfo.git.context,
+            requirements=self.get_requirements(),
+        )
+
+    @functools.cached_property
     def context(self):
         return contexts.ProjectContext(
             metadata=self.folderinfo.context,
@@ -183,24 +189,12 @@ class Project(Generic[T]):
     def populate_linkprovider(self):
         cfg = self.folderinfo.mkdocs_config
         invs = cfg.get_section("handlers", "python", "import") or []
-        mk_urls = [i["url"] for i in invs]
-        for inv in invs:
-            if "url" not in inv:
-                continue
-            url = inv["url"]
-            base = inv.get("base_url")
-            logger.debug("Downloading %r...", url)
-            try:
-                self.linkprovider.add_inv_file(url, base_url=base)
-            except urllib.error.HTTPError:
-                logger.debug("No file for %r...", url)
-        urls = {i for i in packageregistry.registry.inventory_urls if i not in mk_urls}
-        for url in urls:
-            logger.debug("Downloading %r...", url)
-            try:
+        mk_urls = {i["url"]: i.get("base_url") for i in invs if "url" in i}
+        for url, base_url in mk_urls.items():
+            self.linkprovider.add_inv_file(url, base_url=base_url)
+        for url in packageregistry.registry.inventory_urls:
+            if url not in mk_urls:
                 self.linkprovider.add_inv_file(url)
-            except urllib.error.HTTPError:
-                logger.debug("No file for %r...", url)
 
 
 if __name__ == "__main__":
