@@ -32,7 +32,7 @@ def add_page(path: str | os.PathLike, name: str | None = None, **kwargs):
 
     path = os.fspath(path)
     logger.debug("Adding file %r", path)
-    node_cls_name = path.removeprefix("->").split("(")[0]
+    node_cls_name = path.removeprefix("->").strip().split("(")[0]
     if path.startswith("->") and node_cls_name in mknodes.__all__:
         node_cls = getattr(mknodes, node_cls_name)
         page = mknodes.MkPage(name, **kwargs)
