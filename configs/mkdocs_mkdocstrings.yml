@@ -25,7 +25,6 @@ plugins:
 - mkdocstrings
 - mknodes:
     repo_path: https://github.com/mkdocstrings/mkdocstrings.git
-    build_folder: .markdown/
     build_fn: mknodes.navs.mkemptywebsite:MkEmptyWebsite.for_project
     clone_depth: 100
     kwargs:

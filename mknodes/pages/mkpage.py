@@ -104,7 +104,7 @@ class MkPage(mkcontainer.MkContainer):
             tags=tags,
         )
         self.template = template
-        logger.debug("Created MkPage %r", self.resolved_file_path)
+        logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self):
         meta_kwargs = self.metadata.repr_kwargs()
@@ -114,13 +114,13 @@ class MkPage(mkcontainer.MkContainer):
         return self.to_markdown()
 
     def to_markdown(self) -> str:
-        logger.debug("Resolving MkPage %r", self.resolved_file_path)
+        # logger.debug("Resolving %s %r", type(self).__name__,  self.resolved_file_path)
         return super().to_markdown()
 
     @property
     def path(self):
         if self._path:
-            return self._path if self._path.endswith(".md") else f"{self._path}.md"
+            return self._path.removesuffix(".md") + ".md"
         return f"{self.title}.md"
 
     @path.setter
