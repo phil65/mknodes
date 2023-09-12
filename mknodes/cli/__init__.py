@@ -53,6 +53,24 @@ def quiet(ctx, param, value):
         state.stream.setLevel(logging.ERROR)
 
 
+class State:
+    """Maintain logging level."""
+
+    def __init__(self, log_name="mkdocs", level=logging.INFO):
+        from rich.logging import RichHandler
+
+        self.logger = logging.getLogger(log_name)
+        # Don't restrict level on logger; use handler
+        self.logger.setLevel(1)
+        self.logger.propagate = False
+        self.stream = RichHandler(level, markup=False, rich_tracebacks=True)
+        self.stream.name = "MkNodesStreamHandler"
+        self.logger.addHandler(self.stream)
+
+    def __del__(self):
+        self.logger.removeHandler(self.stream)
+
+
 @cli.command()
 def build(
     repo_path: str = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
