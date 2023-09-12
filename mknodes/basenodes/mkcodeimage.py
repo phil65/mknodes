@@ -8,7 +8,7 @@ from typing import Any, Self
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, helpers, inspecthelpers, log, reprhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers, richhelpers
 
 
 logger = log.get_logger(__name__)
@@ -58,7 +58,7 @@ class MkCodeImage(mknode.MkNode):
                 return inspecthelpers.get_source(self._code)
 
     def _to_markdown(self) -> str:
-        content = helpers.get_svg_for_code(
+        content = richhelpers.get_svg_for_code(
             self.code,
             language=self.language,
             title=self.title,
