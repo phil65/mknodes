@@ -37,7 +37,7 @@ def merge_files(*files: Files) -> Files:
 def build(config: MkDocsConfig | Mapping[str, Any], **kwargs):
     match config:
         case Mapping():
-            text = yamlhelpers.dump_yaml(config)
+            text = yamlhelpers.dump_yaml(dict(config))
             buffer = io.StringIO(text)
             config = load_config(buffer, **kwargs)
     for k, v in config.items():
