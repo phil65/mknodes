@@ -1,11 +1,13 @@
 """The Mkdocs Plugin."""
 
 from __future__ import annotations
+from collections.abc import Callable
 
 import pathlib
 import urllib.parse
 
 from typing import TYPE_CHECKING, Literal
+from mkdocs import livereload
 
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
@@ -121,7 +123,11 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """Add our own info to the MkDocs environment."""
         node_env = mknode.MkNode._env
         env.globals["mknodes"] = node_env.globals
-        logger.debug("Added variables to jinja2 environment.")
+        env.filters["rstrip"] = str.rstrip
+        env.filters["lstrip"] = str.lstrip
+        env.filters["removeprefix"] = str.removeprefix
+        env.filters["removeprefix"] = str.removeprefix
+        logger.debug("Added macros / filters to MkDocs jinja2 environment.")
         # mknodes_macros = jinjahelpers.get_mknodes_macros()
         # env.globals["mknodes"].update(mknodes_macros)
 
@@ -177,3 +183,13 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         for template in self.project.templates:
             path = pathlib.Path(config.theme.custom_dir) / template.filename
             path.unlink(missing_ok=True)
+
+    def on_serve(
+        self,
+        server: livereload.LiveReloadServer,
+        config: MkDocsConfig,
+        builder: Callable,
+    ):
+        """Remove all watched paths in case MkNodes is used to build the website."""
+        if self.config.build_fn:
+            server._watched_paths = {}

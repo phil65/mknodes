@@ -109,8 +109,10 @@ class MkDocsBuilder:
         return files_.Files(files)
 
     def write(self, path: str | os.PathLike, content: str | bytes):
-        path = self._get_path(path)
-        pathhelpers.write_file(content, path)
+        src_path = self._get_path(path)
+        pathhelpers.write_file(content, src_path)
+        md_path = (pathlib.Path("src") / path).with_suffix(".original")
+        pathhelpers.write_file(content, self._config.site_dir / md_path)
 
     def write_files(self, dct: Mapping[str | os.PathLike, str | bytes]):
         """Write a mapping of {filename: file_content} to build directory."""
