@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import logging
-from mknodes.utils import log
 import typer as t
 from mkdocs import __main__ as mkdocs
 
+from mknodes.info import mkdocsconfigfile
 from mknodes.plugin import mkdocshelpers
-from mknodes.utils import yamlhelpers
+from mknodes.utils import log, yamlhelpers
+
 
 logger = log.get_logger(__name__)
 
@@ -66,8 +67,8 @@ def build(
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
     """Create a MkNodes-based website."""
-    cfg = mkdocshelpers.load_and_patch_config(
-        config_path or "mkdocs_basic.yml",
+    cfg = mkdocsconfigfile.MkDocsConfigFile(config_path)
+    cfg.update_mknodes_section(
         repo_url=repo_path,
         build_fn=build_fn,
         clone_depth=clone_depth,
@@ -94,8 +95,8 @@ def serve(
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
     """Serve a MkNodes-based website."""
-    cfg = mkdocshelpers.load_and_patch_config(
-        config_path,
+    cfg = mkdocsconfigfile.MkDocsConfigFile(config_path)
+    cfg.update_mknodes_section(
         repo_url=repo_path,
         build_fn=build_fn,
         clone_depth=clone_depth,

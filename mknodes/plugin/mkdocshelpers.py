@@ -80,24 +80,3 @@ def serve_node(node, repo_path: str = "."):
     p = pathlib.Path("docs/test.py")
     p.write_text(text)
     serve(repo_url=repo_path, site_script=p)
-
-
-def load_and_patch_config(
-    config: str | os.PathLike | dict,
-    repo_url: str | None = None,
-    build_fn: str | None = None,
-    clone_depth: int | None = None,
-):
-    if isinstance(config, str | os.PathLike | None):
-        cfg = yamlhelpers.load_yaml_file(config or "mkdocs_basic.yml")
-    else:
-        cfg = config
-    for plugin in cfg["plugins"]:
-        if "mknodes" in plugin:
-            if repo_url is not None:
-                plugin["mknodes"]["repo_path"] = repo_url
-            if build_fn is not None:
-                plugin["mknodes"]["build_fn"] = build_fn
-            if clone_depth is not None:
-                plugin["mknodes"]["clone_depth"] = clone_depth
-    return cfg
