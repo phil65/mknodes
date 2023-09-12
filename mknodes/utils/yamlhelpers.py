@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import collections
 import contextlib
-import pathlib
 
 from typing import Any
 
 import yaml
 
-from mknodes.utils import log, mergehelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -33,26 +32,6 @@ def patch_pyyaml_to_not_order_dicts():
 
 
 # patch_pyyaml_to_not_order_dicts()
-
-
-def load_yaml_file(source, mode="unsafe", resolve_inherit: bool = True):
-    path = pathlib.Path(source)
-    text = path.read_text()
-    result = load_yaml(text, mode=mode)
-    if "INHERIT" in result and resolve_inherit:
-        relpath = result.pop("INHERIT")
-        abspath = path.absolute()
-        if not abspath.exists():
-            msg = f"Inherited config file '{relpath}' does not exist at '{abspath}'."
-            raise FileNotFoundError(msg)
-        logger.debug("Loading inherited configuration file: %s", abspath)
-        parent_cfg = abspath.parent / relpath
-        with parent_cfg.open("rb") as fd:
-            text = fd.read().decode()
-            parent = load_yaml(text, mode)
-        # print(parent, result)
-        result = mergehelpers.merge_dicts(parent, result)
-    return result
 
 
 def get_safe_loader(base_loader_cls):
@@ -109,5 +88,5 @@ def dump_yaml(yaml_obj: Any) -> str:
 
 
 if __name__ == "__main__":
-    cfg = load_yaml_file("mkdocs_generic.yml")
+    cfg = load_yaml("- test")
     print(cfg)
