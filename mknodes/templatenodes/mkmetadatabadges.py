@@ -7,26 +7,13 @@ from typing import Any, Literal
 from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.info import packageinfo, packageregistry
+from mknodes.data import datatypes
+from mknodes.info import packageregistry
 from mknodes.templatenodes import mkbadge
 from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
-
-
-MetadataTypeStr = (
-    Literal[
-        "classifiers",
-        "keywords",
-        "keywords_combined",
-        "websites",
-        "dependencies",
-        "required_python",
-        "installed_packages",
-    ]
-    | packageinfo.ClassifierStr
-)
 
 
 class MkMetadataBadges(mkcontainer.MkContainer):
@@ -40,7 +27,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        typ: MetadataTypeStr,
+        typ: datatypes.MetadataTypeStr,
         *,
         package: str | None = None,
         font_size: Literal[10, 11, 12] | None = None,
@@ -147,7 +134,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 )
             case str():
                 raise ValueError(self._typ)
-            case _ if self._typ in packageinfo.CLASSIFIERS:
+            case _ if self._typ in datatypes.CLASSIFIERS:
                 labels = self.package_info.classifier_map.get(self._typ, [])
                 items.extend([(i, self._typ, None) for i in labels])
         return items

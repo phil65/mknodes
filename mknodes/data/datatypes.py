@@ -21,6 +21,47 @@ AdmonitionTypeStr = Literal[
     "quote",
 ]
 
+ClassifierStr = Literal[
+    "Development Status",
+    "Environment",
+    "Framework",
+    "Intended Audience",
+    "License",
+    "Natural Language",
+    "Operating System",
+    "Programming Language",
+    "Topic",
+    "Typing",
+]
+
+CLASSIFIERS: list[ClassifierStr] = [
+    "Development Status",
+    "Environment",
+    "Framework",
+    "Intended Audience",
+    "License",
+    "Natural Language",
+    "Operating System",
+    "Programming Language",
+    "Topic",
+    "Typing",
+]
+
+
+MetadataTypeStr = (
+    Literal[
+        "classifiers",
+        "keywords",
+        "keywords_combined",
+        "websites",
+        "dependencies",
+        "required_python",
+        "installed_packages",
+    ]
+    | ClassifierStr
+)
+
+
 PageStatusStr = Literal["new", "deprecated", "encrypted"]
 
 RGBColorType = tuple[int, int, int] | str

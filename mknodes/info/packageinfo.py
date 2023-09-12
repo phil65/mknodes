@@ -3,39 +3,10 @@ from __future__ import annotations
 import contextlib
 import functools
 
-from typing import Literal
-
 from mknodes.utils import log, packagehelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
-
-
-ClassifierStr = Literal[
-    "Development Status",
-    "Environment",
-    "Framework",
-    "Intended Audience",
-    "License",
-    "Natural Language",
-    "Operating System",
-    "Programming Language",
-    "Topic",
-    "Typing",
-]
-
-CLASSIFIERS: list[ClassifierStr] = [
-    "Development Status",
-    "Environment",
-    "Framework",
-    "Intended Audience",
-    "License",
-    "Natural Language",
-    "Operating System",
-    "Programming Language",
-    "Topic",
-    "Typing",
-]
 
 
 class PackageInfo:
