@@ -84,9 +84,9 @@ def serve_node(node, repo_path: str = "."):
 
 def load_and_patch_config(
     config: str | os.PathLike | dict,
-    repo_url: str | None = ".",
-    build_fn: str | None = "",
-    clone_depth: int | None = 1,
+    repo_url: str | None = None,
+    build_fn: str | None = None,
+    clone_depth: int | None = None,
 ):
     if isinstance(config, str | os.PathLike | None):
         cfg = yamlhelpers.load_yaml_file(config or "mkdocs_basic.yml")

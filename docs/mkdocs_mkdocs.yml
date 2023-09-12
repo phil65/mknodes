@@ -27,7 +27,7 @@ plugins:
     repo_path: https://github.com/mkdocs/mkdocs.git
     clone_depth: 100
     build_folder: .markdown/
-    build_fn: mknodes.navs.mkwebsite:MkWebSite.for_project
+    build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
     kwargs:
       show_debug_section: True
       static_pages:

@@ -5,8 +5,6 @@ from mknodes.utils import log
 import typer as t
 from mkdocs import __main__ as mkdocs
 
-
-from mknodes import paths
 from mknodes.plugin import mkdocshelpers
 from mknodes.utils import yamlhelpers
 
@@ -18,10 +16,10 @@ cli = t.Typer(
     no_args_is_help=True,
 )
 
-REPO_URL_HELP = "Repository URL of the target package."
-BUILD_CMD_HELP = "Path to the build script."
+REPO_HELP = "Repository URL of the target package."
+BUILD_HELP = "Path to the build script."
 SITE_DIR_HELP = "Path to the build script."
-CLONE_DEPTH_HELP = "Git clone depth in case repository is remote."
+DEPTH_HELP = "Git clone depth in case repository is remote."
 CFG_PATH_HELP = "Path to the config file"
 STRICT_HELP = "Strict mode (fails on warnings)"
 THEME_HELP = "Theme to use for the build."
@@ -30,10 +28,10 @@ VERBOSE_HELP = "Enable verbose output."
 QUIET_HELP = "Suppress output during build."
 
 
-REPO_URL_CMDS = "-r", "--repo-url"
+REPO_CMDS = "-r", "--repo-url"
 SITE_DIR_CMDS = "-d", "--site-dir"
-BUILD_FN_CMDS = "-b", "--build-fn"
-CLONE_DEPTH_CMDS = "-c", "--clone-depth"
+BUILD_CMS = "-b", "--build-fn"
+DEPTH_CMDS = "-c", "--clone-depth"
 CFG_PATH_CMDS = "-p", "--config-path"
 STRICT_CMDS = "-s", "--strict"
 THEME_CMDS = "-t", "--theme"
@@ -56,16 +54,16 @@ def quiet(ctx, param, value):
 
 @cli.command()
 def build(
-    repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    build_fn: str = t.Option(paths.DEFAULT_BUILD_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
+    repo_path: str = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
+    build_fn: str = t.Option(None, *BUILD_CMS, help=BUILD_HELP, show_default=False),
     site_dir: str = t.Option("site", *SITE_DIR_CMDS, help=SITE_DIR_HELP),
-    clone_depth: int = t.Option(1, *CLONE_DEPTH_CMDS, help=CLONE_DEPTH_HELP),
+    clone_depth: int = t.Option(None, *DEPTH_CMDS, help=DEPTH_HELP, show_default=False),
     config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     strict: bool = t.Option(False, *STRICT_CMDS, help=STRICT_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
-    verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
-    quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
+    _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
+    _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
     """Create a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
@@ -85,15 +83,15 @@ def build(
 
 @cli.command()
 def serve(
-    repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    build_fn: str = t.Option(paths.DEFAULT_BUILD_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
-    clone_depth: int = t.Option(1, *CLONE_DEPTH_CMDS, help=CLONE_DEPTH_HELP),
+    repo_path: str = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
+    build_fn: str = t.Option(None, *BUILD_CMS, help=BUILD_HELP, show_default=False),
+    clone_depth: int = t.Option(None, *DEPTH_CMDS, help=DEPTH_HELP, show_default=False),
     config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     strict: bool = t.Option(False, *STRICT_CMDS, help=STRICT_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
-    verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
-    quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
+    _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
+    _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
     """Serve a MkNodes-based website."""
     cfg = mkdocshelpers.load_and_patch_config(
@@ -112,13 +110,13 @@ def serve(
 
 @cli.command()
 def create_config(
-    repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    build_fn: str = t.Option(paths.DEFAULT_BUILD_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
+    repo_path: str = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
+    build_fn: str = t.Option(None, *BUILD_CMS, help=BUILD_HELP, show_default=False),
     # config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),
-    verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
-    quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
+    _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
+    _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
     """Create a config based on given script and repository."""
     mknodes_plugin = dict(
