@@ -6,6 +6,7 @@ import typer as t
 from mkdocs import __main__ as mkdocs
 
 
+from mknodes import paths
 from mknodes.plugin import mkdocshelpers
 from mknodes.utils import yamlhelpers
 
@@ -17,7 +18,6 @@ cli = t.Typer(
     no_args_is_help=True,
 )
 
-DEFAULT_FN = "mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project"
 REPO_URL_HELP = "Repository URL of the target package."
 BUILD_CMD_HELP = "Path to the build script."
 SITE_DIR_HELP = "Path to the build script."
@@ -57,7 +57,7 @@ def quiet(ctx, param, value):
 @cli.command()
 def build(
     repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    build_fn: str = t.Option(DEFAULT_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
+    build_fn: str = t.Option(paths.DEFAULT_BUILD_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
     site_dir: str = t.Option("site", *SITE_DIR_CMDS, help=SITE_DIR_HELP),
     clone_depth: int = t.Option(1, *CLONE_DEPTH_CMDS, help=CLONE_DEPTH_HELP),
     config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
@@ -86,7 +86,7 @@ def build(
 @cli.command()
 def serve(
     repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    build_fn: str = t.Option(DEFAULT_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
+    build_fn: str = t.Option(paths.DEFAULT_BUILD_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
     clone_depth: int = t.Option(1, *CLONE_DEPTH_CMDS, help=CLONE_DEPTH_HELP),
     config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     strict: bool = t.Option(False, *STRICT_CMDS, help=STRICT_HELP),
@@ -113,7 +113,7 @@ def serve(
 @cli.command()
 def create_config(
     repo_path: str = t.Option(".", *REPO_URL_CMDS, help=REPO_URL_HELP),
-    build_fn: str = t.Option(DEFAULT_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
+    build_fn: str = t.Option(paths.DEFAULT_BUILD_FN, *BUILD_FN_CMDS, help=BUILD_CMD_HELP),
     # config_path: str = t.Option("mkdocs_basic.yml", *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     theme: str = t.Option("material", *THEME_CMDS, help=THEME_HELP),
     use_directory_urls: bool = t.Option(True, *USE_DIR_URLS_CMDS, help=USE_DIR_URLS_HELP),

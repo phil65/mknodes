@@ -8,6 +8,7 @@ import pathlib
 from typing import Any, Generic, TypeVar
 import urllib.error
 
+from mknodes import paths
 from mknodes.info import contexts, folderinfo, packageinfo
 from mknodes.navs import mknav
 from mknodes.pages import pagetemplate
@@ -37,7 +38,7 @@ class Project(Generic[T]):
         base_url: str = "",
         use_directory_urls: bool = True,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
-        build_fn: str | Callable = "mknodes.navs.mkwebsite:MkWebSite.for_project",
+        build_fn: str | Callable = paths.DEFAULT_BUILD_FN,
         build_kwargs: dict[str, Any] | None = None,
         clone_depth: int = 100,
     ):

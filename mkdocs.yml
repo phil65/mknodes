@@ -63,7 +63,7 @@ plugins:
 - mknodes:
     build_fn: mknodes.manual.root:build
     build_folder: .markdown/
-    # build_fn: mknodes.navs.mkwebsite:MkWebSite.for_project
+    # build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
     # repo_path: https://github.com/pallets/jinja2.git
 - mkdocstrings:
     default_handler: python

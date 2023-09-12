@@ -1,0 +1,79 @@
+site_name: MkDocs
+site_description: Test
+repo_url: "https://github.com/mkdocs/mkdocs/"
+site_url: https://mkdocs.github.io/mkdocs/
+edit_uri: edit/main
+use_directory_urls: true
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  icon: material/graph-outline
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: orange
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: orange
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
+  features:
+  - announce.dismiss
+  - content.action.edit
+  - content.code.copy
+  - content.code.select
+  - content.code.annotate
+  - navigation.instant # make things faster
+  - navigation.tracking # update URL based on current item in TOC
+  - navigation.path  # shows breadcrumbs
+  - navigation.tabs # make top level tabs
+  - navigation.prune
+  - navigation.indexes # documents can be directly attached to sections (overview pages)
+  - navigation.footer # next/previous page buttons in footer
+  - navigation.top  # adds back-to-top button
+  - toc.follow  # makes toc follow scrolling
+  - search.highlight
+  - search.suggest
+
+plugins:
+- search
+- section-index
+- literate-nav
+- mknodes:
+    kwargs:
+      static_pages:
+        Development:
+          - Changelog: ->MkChangelog
+          - Code of conduct: ->MkCodeOfConduct
+          - Commit conventions: ->MkCommitConventions
+          - Pull requests: ->MkPullRequestGuidelines
+          - Development environment: ->MkDevEnvSetup
+          - Tools: ->MkDevTools
+          - Dependencies: ->MkDependencyTable
+          - Module overview: ->MkModuleOverview
+          - Plugin flow: ->MkPluginFlow
+          - License: ->MkLicense
+        Debug:
+          - Requirements: ->MkJinjaTemplate("requirements.md")
+          # - Log: ->MkText("log() | MkCode", is_jinja_expression=True)
+    build_folder: .markdown/
+    build_fn: mknodes.navs.mkemptywebsite:MkEmptyWebsite.for_project
+
+    repo_path: https://github.com/mkdocs/mkdocs.git
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        import:
+        - url: https://docs.python.org/3/objects.inv
+          domains: [std, py]
+
+markdown_extensions:
+- pymdownx.emoji
+- toc:
+    permalink: true
