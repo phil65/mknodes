@@ -47,7 +47,6 @@ class ConfigFile(MutableMapping, metaclass=ABCMeta):
         return len(self._data)
 
     def get_section(self, *sections: str, keep_path: bool = False) -> Any:
-        # sourcery skip: merge-duplicate-blocks
         """Try to get data[sections[0]][sections[1]]...
 
         If Key path does not exist, return None.
@@ -86,7 +85,6 @@ class ConfigFile(MutableMapping, metaclass=ABCMeta):
         self,
         *sections: str,
         keep_path: bool = False,
-        multiline_strings: bool = False,
     ) -> str:
         """Try to get data[sections[0]][sections[1]]... as text.
 
@@ -95,7 +93,6 @@ class ConfigFile(MutableMapping, metaclass=ABCMeta):
         Arguments:
             sections: Sections to dig into
             keep_path: Return result with original nesting
-            multiline_strings: Format as multiline
         """
         if not sections:
             raise ValueError(sections)
