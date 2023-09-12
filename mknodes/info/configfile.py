@@ -44,21 +44,34 @@ class ConfigFile(superdict.SuperDict):
         return "" if section is None else self._dump(section)
 
     def load_config(self, data: str):
+        """Load a string with loader of given file type.
+
+        Arguments:
+            data: String with markup of type as config file
+        """
         self._data = self._load(data)
 
     def dump_config(self) -> str:
+        """Dump to string with dumper of given file type."""
         return self._dump(self._data)
 
     def load_file(self, path: str | os.PathLike):
+        """Load a file with loader of given file type.
+
+        Arguments:
+            path: Path to the config file
+        """
         text = pathlib.Path(path).read_text(encoding="utf-8")
         self.load_config(text)
 
     @classmethod
     def _dump(cls, data: dict) -> str:
+        """Needs to be reimplemented by subclasses."""
         raise NotImplementedError
 
     @classmethod
     def _load(cls, data: str) -> dict | list:
+        """Needs to be reimplemented by subclasses."""
         raise NotImplementedError
 
 

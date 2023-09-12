@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
-from typing import Any
+from typing import Any, Literal
+
+
+MarkupTypeStr = Literal["yaml", "json", "toml"]
 
 
 class SuperDict(MutableMapping, metaclass=ABCMeta):
@@ -64,6 +67,23 @@ class SuperDict(MutableMapping, metaclass=ABCMeta):
             result[sect] = section if sect == sections[-1] else {}
             result = result[sect]
         return SuperDict(new) if isinstance(new, dict) else new
+
+    def serialize(self, mode: MarkupTypeStr | None):
+        match mode:
+            case None | "yaml":
+                from mknodes.utils import yamlhelpers
+
+                return yamlhelpers.dump_yaml(self._data)
+            case "json":
+                import json
+
+                return json.dumps(self._data, indent=4)
+            case "toml" if isinstance(self._data, dict):
+                import tomli_w
+
+                return tomli_w.dumps(self._data)
+            case _:
+                raise TypeError(mode)
 
 
 if __name__ == "__main__":

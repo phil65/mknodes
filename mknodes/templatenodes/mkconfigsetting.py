@@ -1,30 +1,12 @@
 from __future__ import annotations
 
-import json
-
-from typing import Any, Literal
-
-import tomli_w
+from typing import Any
 
 from mknodes.basenodes import mkcode, mkdefinitionlist, mknode, mktext
-from mknodes.utils import helpers, log, reprhelpers, yamlhelpers
+from mknodes.utils import helpers, log, reprhelpers, superdict
 
 
 logger = log.get_logger(__name__)
-
-MarkupTypeStr = Literal["yaml", "json", "toml"]
-
-
-def dumps(data, markup_type: MarkupTypeStr | None):
-    match markup_type:
-        case None | "yaml":
-            return yamlhelpers.dump_yaml(data)
-        case "json":
-            return json.dumps(data, indent=4)
-        case "toml" if isinstance(data, dict):
-            return tomli_w.dumps(data)
-        case _:
-            raise TypeError(markup_type)
 
 
 class MkConfigSetting(mkdefinitionlist.MkDefinition):
@@ -40,7 +22,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         default: str | int | None = None,
         version_added: str | None = None,
         optional: bool | None = None,
-        mode: MarkupTypeStr | None = None,
+        mode: superdict.MarkupTypeStr | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -89,7 +71,10 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             text += f"Required: `{required}`\n\n"
         text += f"{self.description}\n"
         items: list[mknode.MkNode] = [mktext.MkText(text, parent=self)]
-        code = dumps(self.setting, self.mode)
+        if isinstance(self.setting, dict):
+            code = superdict.SuperDict(self.setting).serialize(mode=self.mode)
+        else:
+            code = self.setting
         if self.setting:
             code_node = mkcode.MkCode(code, parent=self, language=self.mode or "yaml")
             items.append(code_node)
