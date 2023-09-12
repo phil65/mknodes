@@ -1,50 +1,32 @@
 site_name: MkDocs
-site_description: Test
+site_description: A MkDocs page created by MkNodes
 repo_url: "https://github.com/mkdocs/mkdocs/"
 site_url: https://mkdocs.github.io/mkdocs/
 edit_uri: edit/main
-use_directory_urls: true
 
 theme:
   name: material
   custom_dir: docs/overrides
-  icon: material/graph-outline
   palette:
-  - media: "(prefers-color-scheme: light)"
-    scheme: default
-    primary: orange
-    toggle:
-      icon: material/brightness-7
-      name: Switch to dark mode
-  - media: "(prefers-color-scheme: dark)"
     scheme: slate
-    primary: orange
-    toggle:
-      icon: material/brightness-4
-      name: Switch to light mode
+    primary: deep orange
   features:
   - announce.dismiss
-  - content.action.edit
-  - content.code.copy
-  - content.code.select
-  - content.code.annotate
-  - navigation.instant # make things faster
-  - navigation.tracking # update URL based on current item in TOC
-  - navigation.path  # shows breadcrumbs
   - navigation.tabs # make top level tabs
-  - navigation.prune
   - navigation.indexes # documents can be directly attached to sections (overview pages)
   - navigation.footer # next/previous page buttons in footer
   - navigation.top  # adds back-to-top button
   - toc.follow  # makes toc follow scrolling
-  - search.highlight
-  - search.suggest
 
 plugins:
 - search
-- section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
+- section-index
 - literate-nav
+- mkdocstrings
 - mknodes:
+    repo_path: https://github.com/mkdocs/mkdocs.git
+    build_folder: .markdown/
+    build_fn: mknodes.navs.mkwebsite:MkWebSite.for_project
     kwargs:
       static_pages:
         Usage:
@@ -55,17 +37,6 @@ plugins:
           - Installation: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/installation.md
           - Localizing your Theme: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/localizing-your-theme.md
           - Writing your docs: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/user-guide/writing-your-docs.md
-    build_folder: .markdown/
-    build_fn: mknodes.navs.mkwebsite:MkWebSite.for_project
-
-    repo_path: https://github.com/mkdocs/mkdocs.git
-- mkdocstrings:
-    default_handler: python
-    handlers:
-      python:
-        import:
-        - url: https://docs.python.org/3/objects.inv
-          domains: [std, py]
 
 markdown_extensions:
 - mkdocs-click

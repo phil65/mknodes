@@ -56,6 +56,7 @@ def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNa
     manual.create_templating_section(root_nav)
     manual.create_internals_section(root_nav)
     manual.create_development_section(root_nav)
+    manual.create_use_cases_section(root_nav)
     annotations[5] = str(root_nav)  # This is the root nav after it was modified: (5)
 
     # Lets begin with the start page (aka the root index.md).
