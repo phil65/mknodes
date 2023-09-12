@@ -149,4 +149,4 @@ __all__ = [
     "MkPyDeps",
 ]
 
-__version__ = "0.35.2"
+__version__ = "0.36.0"
