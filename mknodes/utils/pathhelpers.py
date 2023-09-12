@@ -88,6 +88,27 @@ def get_material_icon_path(icon: str) -> pathlib.Path:
     return path / ".icons" / f"{icon}.svg"
 
 
+def download_from_github(
+    org: str,
+    repo: str,
+    path: str | os.PathLike,
+    destination: str | os.PathLike,
+    username=None,
+    token=None,
+    recursive: bool = False,
+):
+    import fsspec
+
+    token = token or os.environ.get("GITHUB_TOKEN")
+    if token and not username:
+        token = None
+    destination = pathlib.Path(destination)
+    destination.mkdir(exist_ok=True, parents=True)
+    fs = fsspec.filesystem("github", org=org, repo=repo)
+    logger.info("Copying files from Github: %s", path)
+    fs.get(fs.ls(str(path)), destination.as_posix(), recursive=recursive)
+
+
 if __name__ == "__main__":
-    file = find_file_in_folder_or_parent("pyproject.toml")
+    file = download_from_github("phil65", "mknodes", "mknodes", "testus/")
     print(file)

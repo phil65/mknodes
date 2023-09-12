@@ -7,7 +7,7 @@ import github
 import requests_cache
 
 from mknodes.info import contexts
-from mknodes.utils import cache, log, reprhelpers
+from mknodes.utils import cache, log, pathhelpers, reprhelpers
 
 
 requests_cache.install_cache(
@@ -43,6 +43,23 @@ class GitHubRepo:
             self,
             username=self.username,
             repository=self.repo_name,
+        )
+
+    def download_from_path(
+        self,
+        path: str | os.PathLike,
+        destination: str | os.PathLike,
+        recursive: bool = False,
+    ):
+        user_name = self.main.get_user().login if TOKEN else None
+        return pathhelpers.download_from_github(
+            org=self.username,
+            repo=self.repo_name,
+            path=path,
+            destination=destination,
+            username=user_name,
+            token=TOKEN,
+            recursive=recursive,
         )
 
     @functools.cached_property
@@ -82,4 +99,7 @@ class GitHubRepo:
 
 if __name__ == "__main__":
     g = GitHubRepo("phil65", "mknodes")
-    print(g.context)
+    import rich
+
+    node = g.main.get_user()
+    rich.inspect(node)
