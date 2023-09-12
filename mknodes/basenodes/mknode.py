@@ -46,12 +46,14 @@ class MkNode(node.Node):
     children: list[MkNode]
     _context = contexts.ProjectContext()
     _env = environment.Environment(undefined="strict", load_templates=True)
+    _name_registry: dict[str, MkNode] = dict()
 
     def __init__(
         self,
         *,
         header: str = "",
         indent: str = "",
+        name: str | None = None,
         shift_header_levels: int = 0,
         css_classes: Iterable[str] | None = None,
         project: project.Project | None = None,
@@ -62,6 +64,7 @@ class MkNode(node.Node):
         Arguments:
             header: Optional header for contained Markup
             indent: Indentation of given Markup (unused ATM)
+            name: An optional unique identifier (allows getting node via MkNode.get_node)
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
             css_classes: A sequence of css class names to use for this node
             project: Project this Nav is connected to.
@@ -74,6 +77,9 @@ class MkNode(node.Node):
         self._files: dict[str, str | bytes] = {}
         self._css_classes: set[str] = set(css_classes or [])
         self._associated_project = project
+        self._node_name = name
+        if name is not None:
+            self._name_registry[name] = self
         self.stats = contexts.NodeBuildStats()
         # ugly, but convenient.
         from mknodes.basenodes import mkannotations
@@ -82,18 +88,6 @@ class MkNode(node.Node):
             self.annotations = mkannotations.MkAnnotations(parent=self)
         else:
             self.annotations = None
-
-    @property
-    def ctx(self):
-        if self.associated_project:
-            return self.associated_project.context
-        return self._context
-
-    @property
-    def env(self):
-        self._env.globals["parent"] = self.parent
-        self._env.set_mknodes_filters(parent=self)
-        return self._env
 
     def __str__(self):
         return self.to_markdown()
@@ -129,6 +123,22 @@ class MkNode(node.Node):
 
     def __rrshift__(self, other):
         return self.__rshift__(other, inverse=True)
+
+    @property
+    def ctx(self):
+        if self.associated_project:
+            return self.associated_project.context
+        return self._context
+
+    @property
+    def env(self):
+        self._env.globals["parent"] = self.parent
+        self._env.set_mknodes_filters(parent=self)
+        return self._env
+
+    @classmethod
+    def get_node(cls, name: str):
+        return cls._name_registry[name]
 
     def _to_markdown(self) -> str:
         return NotImplemented
