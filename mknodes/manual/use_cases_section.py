@@ -28,8 +28,7 @@ def create_default_website_section():
     page += mknodes.MkCode.for_file("docs/mkdocs_mkdocs.yml")
     page += mknodes.MkText("Combined with this CLI call...")
     page += mknodes.MkCode(
-        "hatch run mknodes build -r https://github.com/mkdocs/mkdocs.git -d site/mkdocs"
-        " -p docs/mkdocs_mkdocs.yml -v",
+        "hatch run mknodes build -r https://github.com/mkdocs/mkdocs.git",
         language="terminal",
     )
     page += mknodes.MkText("Will create this website:")

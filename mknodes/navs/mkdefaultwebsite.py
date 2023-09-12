@@ -1,18 +1,24 @@
 from __future__ import annotations
 
-from mknodes.navs import mknav, parsenav
+import mknodes
+
+from mknodes.navs import parsenav
 from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
 
 
-class MkDefaultWebsite(mknav.MkNav):
+class MkDefaultWebsite(mknodes.MkNav):
     """Nav for showing a module documenation."""
 
-    def __init__(self, static_pages=None, **kwargs):
+    def __init__(
+        self,
+        static_pages: dict[str, str | dict | list] | None = None,
+        show_debug_section: bool = False,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
-        import mknodes
 
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
         page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
@@ -60,12 +66,15 @@ class MkDefaultWebsite(mknav.MkNav):
         node = mknodes.MkLicense()
         page = nav.add_page("License", hide_toc=True)
         page += node
+        if show_debug_section:
+            self.add_debug_nav()
 
+    def add_debug_nav(self):
         internals_nav = self.add_nav("Debug info")
         page = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
         page = internals_nav.add_page("Tree", hide_toc=True, icon="material/graph")
         page += mknodes.MkHeader("Node tree.", level=3)
-        page += mknodes.MkTreeView(nav.root)
+        page += mknodes.MkTreeView(self.root)
         page = internals_nav.add_page(
             "Requirements",
             hide_toc=True,

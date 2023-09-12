@@ -1,7 +1,7 @@
 site_name: MkDocs
 site_description: A MkDocs page created by MkNodes
 repo_url: "https://github.com/mkdocs/mkdocs/"
-site_url: https://mkdocs.github.io/mkdocs/
+site_url: https://phil65.github.io/mknodes/mkdocs/
 edit_uri: edit/main
 
 theme:
@@ -28,6 +28,7 @@ plugins:
     build_folder: .markdown/
     build_fn: mknodes.navs.mkwebsite:MkWebSite.for_project
     kwargs:
+      show_debug_section: True
       static_pages:
         Usage:
           - Getting started: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md
@@ -40,6 +41,3 @@ plugins:
 
 markdown_extensions:
 - mkdocs-click
-- pymdownx.emoji
-- toc:
-    permalink: true
