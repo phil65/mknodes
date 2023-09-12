@@ -11,23 +11,32 @@ path = "mknodes/__init__.py"
 [tool.hatch.envs.default]
 python = "3.11"
 dependencies = [
+    # Linting
     "black",
     "mypy",
     "ruff",
-    "pytest-responsemock",
+
+    # Testing
     "pytest",
     "pytest-cov",
+    "pytest-responsemock",
+
+    # Docs
     "pymdown-extensions",
-    "pyreadline3",
-    "mkdocs-glightbox",
     "markdown-exec[ansi]",
-    "mkdocs-coverage",
     "mkdocs-typer",
     "mkdocs-click",
     "pygments",
+    "pydeps",
+
+    # Material Social addon
     "cairosvg",
     "pillow",
-    "pydeps",
+
+    # Debugging
+    "pyreadline3",
+    "pyinstrument",
+
     # "prettyqt",
     # "PySide6",
 ]
@@ -93,28 +102,38 @@ keywords = [
 
 requires-python = ">=3.11"
 dependencies = [
+    # MkDocs
     "mkdocs >=1.5",
     "mkdocs-literate-nav",
     "mkdocs-material",
     "mkdocstrings[python]",
     "mkdocs-section-index",
 
+    # Git(Hub)
     "git-changelog",
     "gitpython",
     "pygithub>=2.0.dev0",
 
+    # Serialization
     "PyYAML >=5.1",
     "pyyaml_env_tag",
+    "tomli-w",
 
+    # HTTP
     "requests",
     "requests_cache",
+
+    # CLI
     "rich",
     "typer",
+
+    # Tools
+    "jinja2",
+    "griffe",
     "fsspec",
     "cssutils",
     "deepmerge",
     "coloraide",
-    "tomli-w",
     "anybadge",
 ]
 license = "MIT"
