@@ -126,10 +126,10 @@ class MkPyDeps(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        node = MkPyDeps("mknodes/utils/inventorymanager.py", max_bacon=1)
+        node = MkPyDeps("mknodes/utils/helpers.py", max_bacon=1)
         page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    node = MkPyDeps.with_default_context("mknodes/utils/inventorymanager.py", max_bacon=1)
+    node = MkPyDeps.with_default_context("mknodes/utils/helpers.py", max_bacon=1)
     print(node)
