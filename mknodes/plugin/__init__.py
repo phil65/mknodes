@@ -153,6 +153,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """During this phase links get replaced and `jinja2` stuff get rendered."""
         mapping = mknode.MkNode._env.globals["page_mapping"]
         node = mapping.get(page.file.src_uri)  # type: ignore[attr-defined]
+        if node is None:
+            return markdown
         markdown = node.env.render_string(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
 
