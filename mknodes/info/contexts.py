@@ -11,8 +11,8 @@ from griffe.dataclasses import Module
 import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
-from mknodes.info import mkdocsconfigfile, pyproject
-from mknodes.utils import linkprovider, log, requirements
+from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
+from mknodes.utils import log, requirements
 
 
 logger = log.get_logger(__name__)

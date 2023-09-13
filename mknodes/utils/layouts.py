@@ -8,8 +8,9 @@ import types
 from typing import TYPE_CHECKING
 
 from mknodes.basenodes import mkcontainer, mklink, mklist, mknode
+from mknodes.info import linkprovider
 from mknodes.templatenodes import mkmetadatabadges
-from mknodes.utils import classhelpers, helpers, inspecthelpers, linkprovider, log
+from mknodes.utils import classhelpers, helpers, inspecthelpers, log
 
 
 if TYPE_CHECKING:

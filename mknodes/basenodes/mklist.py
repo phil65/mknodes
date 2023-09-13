@@ -3,7 +3,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, linkprovider, log, reprhelpers
+from mknodes.info import linkprovider
+from mknodes.utils import helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
