@@ -59,9 +59,9 @@ class FolderInfo:
         # packagehelpers.install_or_import(mod_name)
         self.git = gitrepository.GitRepository(self.path)
         self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile()
-        if (path := self.path / "mkdocs.yml").exists():
+        if (mk_path := self.path / "mkdocs.yml").exists():
             with contextlib.suppress(yamlhelpers.YAMLError):
-                self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile(path)
+                self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile(mk_path)
         # self.github = githubinfo.GitHubRepo(
         #     self.repository_username,
         #     self.repository_name,

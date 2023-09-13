@@ -72,10 +72,7 @@ class Project(Generic[T]):
             case _:
                 self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None
-        if isinstance(build_fn, str):
-            self.build_fn = classhelpers.get_callable_from_path(build_fn)
-        else:
-            self.build_fn = build_fn
+        self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
         self.build()
 

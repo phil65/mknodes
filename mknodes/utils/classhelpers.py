@@ -268,7 +268,9 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
 
 
 @functools.cache
-def get_callable_from_path(path: str) -> Callable:
+def to_callable(path: str | Callable) -> Callable:
+    if callable(path):
+        return path
     modname, _qualname_separator, qualname = path.partition(":")
     obj = import_file(modname) if modname.endswith(".py") else import_module(modname)
     for attr in qualname.split("."):
