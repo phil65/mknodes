@@ -1,33 +1,15 @@
 from __future__ import annotations
 
-import re
-
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import downloadhelpers, log, reprhelpers
+from mknodes.utils import downloadhelpers, helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
 
 RESPONSE_CODE_OK = 200
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
-
-
-def extract_header_section(markdown: str, section_name: str) -> str | None:
-    """Extract block with given header from markdown."""
-    header_pattern = re.compile(f"^(#+) {section_name}$", re.MULTILINE)
-    header_match = header_pattern.search(markdown)
-    if header_match is None:
-        return None
-    section_level = len(header_match[1])
-    start_index = header_match.span()[1] + 1
-    end_pattern = re.compile(f"^#{{2,{section_level}}} ", re.MULTILINE)
-    end_match = end_pattern.search(markdown[start_index:])
-    if end_match is None:
-        return markdown[start_index:]
-    end_index = end_match.span()[0]
-    return markdown[start_index : end_index + start_index]
 
 
 class MkText(mknode.MkNode):
@@ -68,7 +50,7 @@ class MkText(mknode.MkNode):
 
     def __getitem__(self, section_name: str) -> Self | None:
         markdown = self._to_markdown()
-        section_text = extract_header_section(markdown, section_name)
+        section_text = helpers.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
     @property
@@ -106,7 +88,7 @@ class MkText(mknode.MkNode):
         if "#" in url:
             url, section = url.split("#")
             text = downloadhelpers.download(url).decode()
-            text = extract_header_section(text, section)
+            text = helpers.extract_header_section(text, section)
         else:
             text = downloadhelpers.download(url).decode()
         return cls(text) if text is not None else None

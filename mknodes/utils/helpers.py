@@ -13,6 +13,22 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
+def extract_header_section(markdown: str, section_name: str) -> str | None:
+    """Extract block with given header from markdown."""
+    header_pattern = re.compile(f"^(#+) {section_name}$", re.MULTILINE)
+    header_match = header_pattern.search(markdown)
+    if header_match is None:
+        return None
+    section_level = len(header_match[1])
+    start_index = header_match.span()[1] + 1
+    end_pattern = re.compile(f"^#{{2,{section_level}}} ", re.MULTILINE)
+    end_match = end_pattern.search(markdown[start_index:])
+    if end_match is None:
+        return markdown[start_index:]
+    end_index = end_match.span()[0]
+    return markdown[start_index : end_index + start_index]
+
+
 def to_str_if_textnode(node):
     import mknodes
 
