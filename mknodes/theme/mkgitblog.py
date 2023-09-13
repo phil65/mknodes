@@ -77,12 +77,18 @@ class MkGitBlog(mkblog.MkBlog):
                     description=c.author_email,
                     avatar=c.author_avatar,
                 )
+            if c.committer_login not in self.authors:
+                self.authors[c.committer_login] = mkblog.Author(
+                    name=c.committer_login,
+                    description=c.committer_email,
+                    avatar=c.committer_avatar,
+                )
             self.add_post(
                 date=c.author_date,
-                authors=list({c.author_name, c.committer_name}),
+                authors=list({c.author_login, c.committer_login}),
                 text=c.message,
                 draft=False,
-                path=f"{c.sha}.md",
+                path=f"{c.sha[6:]}.md",
             )
 
 
