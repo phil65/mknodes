@@ -129,7 +129,7 @@ def download_and_cache_url(
                     line = line[len(prefix) :]
                     timestamp = int(line)
                     if datetime.timedelta(seconds=(now - timestamp)) <= cache_duration:
-                        logger.debug("Using cached '%s' for '%s'", path, url)
+                        logger.debug("Using cached file for %r", url)
                         return f.read()
         except (OSError, ValueError) as e:
             logger.debug("%s: %s", type(e).__name__, e)

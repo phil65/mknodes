@@ -173,8 +173,9 @@ class FolderInfo:
     def docstring_style(self):
         if style := self.pyproject.docstring_style:
             return style
-        section = self.mkdocs_config.mkdocstrings_config
-        return section.get("options", {}).get("docstring_style")
+        if section := self.mkdocs_config.mkdocstrings_config:
+            return section.get("options", {}).get("docstring_style")
+        return None
 
     @functools.cached_property
     def license_file_path(self) -> pathlib.Path | None:
