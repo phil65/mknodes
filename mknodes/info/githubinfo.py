@@ -7,21 +7,10 @@ import os
 import github
 
 from github import Commit
-import requests_cache
 
 from mknodes.info import contexts
-from mknodes.utils import cache, log, pathhelpers, reprhelpers
+from mknodes.utils import downloadhelpers, log, pathhelpers, reprhelpers
 
-
-requests_cache.install_cache(
-    cache_control=True,
-    backend="filesystem",  # default was "memory", not sure what is more suiting.
-    use_temp=True,
-    urls_expire_after={
-        # "*.github.com": 1000,
-        "*": 1000,
-    },
-)
 
 RAW_URL = "https://raw.githubusercontent.com/"
 TOKEN = os.environ.get("GITHUB_TOKEN")
@@ -70,7 +59,7 @@ class GitHubRepo:
         result = []
         for wf in self.repo.get_workflows():
             url = f"{self.raw_prefix}{self.default_branch}/{wf.path}"
-            data = cache.download_and_cache_url(url)
+            data = downloadhelpers.download(url)
             item = dict(name=wf.name, workflow=data.decode(), badge_url=wf.badge_url)
             result.append(item)
         return result

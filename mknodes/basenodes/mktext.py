@@ -5,7 +5,7 @@ import re
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import cache, log, reprhelpers
+from mknodes.utils import downloadhelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -105,10 +105,10 @@ class MkText(mknode.MkNode):
         """
         if "#" in url:
             url, section = url.split("#")
-            text = cache.download_and_cache_url(url, days=1).decode()
+            text = downloadhelpers.download(url).decode()
             text = extract_header_section(text, section)
         else:
-            text = cache.download_and_cache_url(url, days=1).decode()
+            text = downloadhelpers.download(url).decode()
         return cls(text) if text is not None else None
 
 

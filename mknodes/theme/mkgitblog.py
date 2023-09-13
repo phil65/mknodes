@@ -8,7 +8,7 @@ import os
 import dateutil.parser
 
 from mknodes.theme import mkblog
-from mknodes.utils import cache
+from mknodes.utils import downloadhelpers
 
 
 @dataclasses.dataclass(frozen=True)
@@ -34,7 +34,7 @@ class Commit:
 
 def get_latest_commits(owner: str, repo: str, page: int = 1):
     url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=100&page={page}"
-    response = cache.download_and_cache_url(url)
+    response = downloadhelpers.download(url)
     commits = json.loads(response.decode())
     return [
         Commit(

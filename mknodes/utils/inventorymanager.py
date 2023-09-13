@@ -12,7 +12,7 @@ import types
 
 from mkdocstrings import inventory
 
-from mknodes.utils import helpers, log
+from mknodes.utils import downloadhelpers, helpers, log
 
 
 logger = log.get_logger(__name__)
@@ -49,9 +49,7 @@ class Inventory(inventory.Inventory):
         base_url: str | None = None,
         domains: list[str] | None = None,
     ):
-        from mknodes.utils import cache
-
-        data = cache.download_and_cache_url(url, days=1)
+        data = downloadhelpers.download(url)
         buffer = io.BytesIO(data)
         if base_url is None:
             base_url = os.path.dirname(url)  # noqa: PTH120

@@ -10,7 +10,7 @@ from urllib import parse
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import cache, helpers, log, reprhelpers
+from mknodes.utils import downloadhelpers, helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -202,7 +202,7 @@ class MkPage(mkcontainer.MkContainer):
             parent: Optional parent for new page
         """
         if helpers.is_url(url := str(path)):
-            file_content = cache.download_and_cache_url(url).decode()
+            file_content = downloadhelpers.download(url).decode()
             split = parse.urlsplit(url)
             path = f"{title}.md" if title else pathlib.Path(split.path).name
             path = pathlib.Path(path)

@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import pathlib
 
-from mknodes.utils import cache, helpers, superdict
+from mknodes.utils import downloadhelpers, helpers, superdict
 
 
 class ConfigFile(superdict.SuperDict):
@@ -14,7 +14,7 @@ class ConfigFile(superdict.SuperDict):
             return
         self.path = str(path)
         if helpers.is_url(self.path):
-            content = cache.download_and_cache_url(self.path, days=1)
+            content = downloadhelpers.download(self.path)
             self.load_config(content.decode())
         else:
             self.load_file(self.path)

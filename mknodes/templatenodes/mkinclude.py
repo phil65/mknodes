@@ -7,7 +7,7 @@ from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.utils import cache, helpers, log, reprhelpers
+from mknodes.utils import downloadhelpers, helpers, log, reprhelpers
 
 
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
@@ -46,7 +46,7 @@ class MkInclude(mknode.MkNode):
     def _to_markdown(self) -> str:  # type: ignore[return]
         match self.target:
             case str() if helpers.is_url(self.target):
-                return cache.download_and_cache_url(self.target, days=1).decode()
+                return downloadhelpers.download(self.target).decode()
             case os.PathLike() | str():
                 return pathlib.Path(self.target).read_text()
             case mknode.MkNode():
