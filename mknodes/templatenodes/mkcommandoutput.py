@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+import os
 
 from mknodes.basenodes import mknode
 from mknodes.utils import helpers, log, reprhelpers
@@ -37,7 +38,7 @@ class MkCommandOutput(mknode.MkNode):
         if key in self._cache:
             return self._cache[key]
         if output := helpers.get_output_from_call(self.call):
-            self._cache[key] = output.replace("\n", "<br>").replace(" ", "&nbsp;")
+            self._cache[key] = output  # .replace("\n", "<br>").replace(" ", "&nbsp;")
             return self._cache[key]
         return "**Command failed**"
 
@@ -49,8 +50,14 @@ class MkCommandOutput(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        node = MkCommandOutput(["make", "help"])
-        page += mknodes.MkReprRawRendered(node)
+        if os.environ.get("CI"):
+            node = MkCommandOutput(["make", "help"])
+            node = mknodes.MkReprRawRendered(node)
+        else:
+            node = mknodes.MkHeader(
+                "Sadly breaks log output ATM, so only triggered in CI",
+            )
+        page += node
 
 
 if __name__ == "__main__":
