@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import typer as t
-from mkdocs import __main__ as mkdocs
 
 from mknodes import paths
 from mknodes.info import mkdocsconfigfile
@@ -42,18 +41,6 @@ VERBOSE_CMDS = "-v", "--verbose"
 QUIET_CMDS = "-q", "--quiet"
 
 
-def verbose(ctx, param, value):
-    state = ctx.ensure_object(mkdocs.State)
-    if value:
-        state.stream.setLevel(logging.DEBUG)
-
-
-def quiet(ctx, param, value):
-    state = ctx.ensure_object(mkdocs.State)
-    if value:
-        state.stream.setLevel(logging.ERROR)
-
-
 class State:
     """Maintain logging level."""
 
@@ -70,6 +57,18 @@ class State:
 
     def __del__(self):
         self.logger.removeHandler(self.stream)
+
+
+def verbose(ctx, param, value):
+    state = ctx.ensure_object(State)
+    if value:
+        state.stream.setLevel(logging.DEBUG)
+
+
+def quiet(ctx, param, value):
+    state = ctx.ensure_object(State)
+    if value:
+        state.stream.setLevel(logging.ERROR)
 
 
 @cli.command()
