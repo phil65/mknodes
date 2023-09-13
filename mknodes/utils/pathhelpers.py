@@ -50,7 +50,6 @@ def write_file(content: str | bytes, output_path: str | os.PathLike):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
     encoding = None if "b" in mode else "utf-8"
-    logger.debug("Writing file to %r", str(output_path))
     with output_path.open(mode=mode, encoding=encoding) as f:
         f.write(content)
 

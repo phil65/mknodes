@@ -6,6 +6,7 @@ from collections.abc import Callable
 import pathlib
 import urllib.parse
 
+import tempfile
 from typing import TYPE_CHECKING, Literal
 from mkdocs import livereload
 
@@ -14,7 +15,7 @@ from mkdocs.plugins import BasePlugin, get_plugin_logger
 from mknodes import mkdocsconfig, project
 from mknodes.basenodes import mknode
 from mknodes.pages import mkpage
-from mknodes.plugin import linkreplacer, mkdocsbuilder, pluginconfig
+from mknodes.plugin import linkreplacer, markdownbackend, mkdocsbackend, pluginconfig
 from mknodes.theme import theme
 
 if TYPE_CHECKING:
@@ -40,6 +41,12 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
 
     def on_startup(self, command: CommandStr, dirty: bool = False):
         """Activates new-style MkDocs plugin lifecycle."""
+        if self.config.build_folder:
+            self.build_folder = pathlib.Path(self.config.build_folder)
+        else:
+            self._dir = tempfile.TemporaryDirectory(prefix="mknodes_")
+            self.build_folder = pathlib.Path(self._dir.name)
+            logger.debug("Creating temporary dir %s", self._dir.name)
 
     def on_config(self, config: MkDocsConfig):
         """Create the project based on MkDocs config."""
@@ -79,13 +86,22 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
 
         # now we add our stuff to the MkDocs build environment
         cfg = mkdocsconfig.Config(config)
-        self.builder = mkdocsbuilder.MkDocsBuilder(
+        self.mkdocs_backend = mkdocsbackend.MkDocsBackend(
             files=files,
             config=cfg,
-            directory=self.config.build_folder,
+            directory=self.build_folder,
         )
-        logger.info("Writing pages to disk...")
-        self.builder.write_files(build_files)  # type: ignore[arg-type]
+        logger.info("Writing Markdown and assets to MkDocs environment...")
+        self.mkdocs_backend.write_files(build_files)  # type: ignore[arg-type]
+        self.markdown_backend = markdownbackend.MarkdownBackend(
+            directory=self.build_folder / "src",
+            extension=".original",
+        )
+        logger.info("Writing markdown pages to disk...")
+        # We also write the markdown files into the MkDocs environment since we are
+        # linking to them in the material theme actions button section
+        self.markdown_backend.write_files(build_files)  # type: ignore[arg-type]
+
         logger.info("Finished writing pages to disk")
         logger.info("Adding requirements to Config and build...")
         for k, v in requirements.css.items():
@@ -100,7 +116,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                 cfg.register_template(template.filename, html)
         logger.info("Updating MkDocs config metadata...")
         cfg.update_from_context(ctx)
-        return self.builder.files
+        return self.mkdocs_backend.files
 
     def on_nav(
         self,

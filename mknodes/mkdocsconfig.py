@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 import contextlib
 import functools
 import io
@@ -32,10 +33,12 @@ def load_config(path: str | os.PathLike | None = None):
 
 
 class Config:
-    def __init__(self, config: MkDocsConfig | str | os.PathLike | None = None):
+    def __init__(self, config: Mapping | str | os.PathLike | None = None):
         match config:
             case MkDocsConfig():
                 self._config: MkDocsConfig = config
+            case Mapping():
+                self._config = load_config(config)
             case str() | os.PathLike() as path:
                 self._config = load_config(str(path))
             case None:
