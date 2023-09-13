@@ -18,8 +18,8 @@ requests_cache.install_cache(
     backend="filesystem",  # default was "memory", not sure what is more suiting.
     use_temp=True,
     urls_expire_after={
-        "*.github.com": 1000,
-        "*": requests_cache.DO_NOT_CACHE,
+        # "*.github.com": 1000,
+        "*": 1000,
     },
 )
 
