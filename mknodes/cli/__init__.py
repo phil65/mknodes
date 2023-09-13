@@ -6,7 +6,7 @@ import typer as t
 from mknodes import paths
 from mknodes.info import mkdocsconfigfile
 from mknodes.plugin import mkdocshelpers
-from mknodes.utils import log, yamlhelpers
+from mknodes.utils import log, richhelpers, yamlhelpers
 
 
 logger = log.get_logger(__name__)
@@ -46,37 +46,14 @@ VERBOSE_CMDS = "-v", "--verbose"
 QUIET_CMDS = "-q", "--quiet"
 
 
-class State:
-    """Maintain logging level."""
-
-    def __init__(self, log_name="mkdocs", level=logging.INFO):
-        from rich.logging import RichHandler
-
-        self.logger = logging.getLogger(log_name)
-        # Don't restrict level on logger; use handler
-        self.logger.setLevel(1)
-        self.logger.propagate = False
-        self.stream = RichHandler(
-            level,
-            markup=False,
-            rich_tracebacks=True,
-            omit_repeated_times=False,
-        )
-        self.stream.name = "MkNodesStreamHandler"
-        self.logger.addHandler(self.stream)
-
-    def __del__(self):
-        self.logger.removeHandler(self.stream)
-
-
 def verbose(ctx, param, value):
-    state = ctx.ensure_object(State)
+    state = ctx.ensure_object(richhelpers.RichState)
     if value:
         state.stream.setLevel(logging.DEBUG)
 
 
 def quiet(ctx, param, value):
-    state = ctx.ensure_object(State)
+    state = ctx.ensure_object(richhelpers.RichState)
     if value:
         state.stream.setLevel(logging.ERROR)
 
