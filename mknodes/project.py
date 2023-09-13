@@ -85,22 +85,12 @@ class Project(Generic[T]):
             raise RuntimeError(msg)
 
         from mknodes.basenodes import mknode
-        from mknodes.pages import mkpage
 
-        page_mapping = {
-            node.resolved_file_path: node
-            for _level, node in self._root.iter_nodes()
-            if isinstance(node, mkpage.MkPage | mknav.MkNav)
-        }
-        filenames = list(page_mapping.keys())
-        paths = [pathlib.Path(i).stem for i in filenames]
+        paths = [pathlib.Path(i).stem for i in self._root.page_mapping]
         self.linkprovider.set_excludes(paths)
 
-        from mknodes.pages import mkpage
-
         variables = self.context.as_dict()
-
-        variables["page_mapping"] = page_mapping
+        variables["page_mapping"] = self._root.page_mapping
         variables["requirements"] = self.get_requirements()
         mknode.MkNode._env.globals |= variables
 
