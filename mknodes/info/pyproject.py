@@ -97,6 +97,20 @@ class PyProject(tomlfile.TomlFile):
             return int(length)
         return None
 
+    @property
+    def min_tool_python_version(self) -> tuple[int, int] | None:
+        """Return python target version of the tools.
+
+        Taken from black / ruff / mypy config.
+        """
+        if version := self.tool["mypy"].get("python_version"):
+            return (3, int(version[-2:]))
+        if version := self.tool["black"].get("target-version"):
+            return (3, int(version[-2:]))
+        if version := self.tool["ruff"].get("target-version"):
+            return (3, int(version[-2:]))
+        return None
+
     # @functools.cached_property
     # def context(self):
     #     return contexts.PyProjectContext(
@@ -113,4 +127,4 @@ class PyProject(tomlfile.TomlFile):
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.tool["isort"])
+    print(info.min_tool_python_version)
