@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
+import os
+
 from typing import Any, Literal
+
+from mknodes.utils import pathhelpers
 
 
 MarkupTypeStr = Literal["yaml", "json", "toml"]
@@ -84,6 +88,10 @@ class SuperDict(MutableMapping, metaclass=ABCMeta):
                 return tomli_w.dumps(self._data)
             case _:
                 raise TypeError(mode)
+
+    def write(self, path: str | os.PathLike, mode: MarkupTypeStr | None = None):
+        text = self.serialize(mode)
+        pathhelpers.write_file(text, path)
 
 
 if __name__ == "__main__":
