@@ -4,6 +4,8 @@ import io
 import logging
 import sys
 
+from mkdocs.plugins import get_plugin_logger
+
 
 class Logger:
     def __init__(self, logger: logging.Logger):
@@ -18,7 +20,7 @@ class Logger:
 
 
 def get_logger(name: str | None = None) -> logging.Logger:
-    return logging.getLogger(f"mkdocs.plugin.{name}" if name else None)
+    return get_plugin_logger("mknodes")
 
 
 def basic():
