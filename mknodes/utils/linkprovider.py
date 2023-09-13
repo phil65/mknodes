@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from importlib import metadata
 import os
+import sys
 import types
 
 from mknodes import paths
@@ -14,6 +15,8 @@ logger = log.get_logger(__name__)
 
 
 def homepage_for_distro(dist_name: str) -> str | None:
+    if dist_name in sys.stdlib_module_names:
+        return None
     try:
         dist = packageregistry.get_info(dist_name)
     except metadata.PackageNotFoundError:
