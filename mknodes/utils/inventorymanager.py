@@ -79,16 +79,16 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
             logger.debug("Downloading %r...", path)
             try:
                 inv = Inventory.from_url(path, base_url=base_url, domains=domains)
+                self.inv_files.append(inv)
             except urllib.error.HTTPError:
                 logger.debug("No file for %r...", path)
                 return
         elif base_url:
             inv = Inventory.from_file(path, domains=domains, base_url=base_url)
+            self.inv_files.append(inv)
         else:
             msg = "Base URL needed for loading from file."
             raise ValueError(msg)
-        if inv:
-            self.inv_files.append(inv)
 
     def __getitem__(self, name: str | type | types.FunctionType | types.MethodType):
         match name:
