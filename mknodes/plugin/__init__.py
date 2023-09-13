@@ -70,20 +70,23 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """
         if not self.config.build_fn:
             return files
+        # First we gather all required information
+        logger.info("Generating pages...")
+        build_files = self.project.all_files()
+        logger.info("Fetching requirements from tree...")
+        requirements = self.project.get_requirements()
+        ctx = self.project.context
+
+        # now we add our stuff to the MkDocs build environment
         cfg = mkdocsconfig.Config(config)
         self.builder = mkdocsbuilder.MkDocsBuilder(
             files=files,
             config=cfg,
             directory=self.config.build_folder,
         )
-        logger.info("Generating pages...")
-        build_files = self.project.all_files()
-
         logger.info("Writing pages to disk...")
         self.builder.write_files(build_files)  # type: ignore[arg-type]
         logger.info("Finished writing pages to disk")
-
-        requirements = self.project.get_requirements()
         logger.info("Adding requirements to Config and build...")
         for k, v in requirements.css.items():
             cfg.register_css(k, v)
@@ -95,15 +98,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         for template in requirements.templates:
             if html := template.build_html(md):
                 cfg.register_template(template.filename, html)
-
         logger.info("Updating MkDocs config metadata...")
-        ctx = self.project.context
-        if not config.extra.get("social"):
-            config.extra["social"] = ctx.metadata.social_info
-        config.repo_url = ctx.metadata.repository_url
-        config.site_description = ctx.metadata.summary
-        config.site_name = ctx.metadata.distribution_name
-        config.site_author = ctx.metadata.author_name
+        cfg.update_from_context(ctx)
         return self.builder.files
 
     def on_nav(

@@ -16,6 +16,7 @@ from mkdocs.commands import get_deps
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 
+from mknodes.info import contexts
 from mknodes.utils import mergehelpers, pathhelpers
 
 
@@ -74,6 +75,14 @@ class Config:
             return mkdocstrings_cfg.config["handlers"]["python"]["import"]
         except KeyError:
             return []
+
+    def update_from_context(self, context: contexts.ProjectContext):
+        if not self._config.extra.get("social"):
+            self._config.extra["social"] = context.metadata.social_info
+        self._config.repo_url = context.metadata.repository_url
+        self._config.site_description = context.metadata.summary
+        self._config.site_name = context.metadata.distribution_name
+        self._config.site_author = context.metadata.author_name
 
     @property
     def docs_dir(self) -> pathlib.Path:
