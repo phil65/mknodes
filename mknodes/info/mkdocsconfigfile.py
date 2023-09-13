@@ -50,6 +50,13 @@ class MkDocsConfigFile(yamlfile.YamlFile):
                 if clone_depth is not None:
                     plugin["mknodes"]["clone_depth"] = clone_depth
 
+    def get_inventory_infos(self) -> list[dict]:
+        """Returns list of dicts containing inventory info.
+
+        Shape: [{"url": inventory_url, "domains": ["std", "py"]}, ...]
+        """
+        return self.mkdocstrings_config.get("import") or []
+
 
 if __name__ == "__main__":
     info = MkDocsConfigFile("mkdocs.yml")

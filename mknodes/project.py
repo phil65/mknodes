@@ -167,8 +167,7 @@ class Project(Generic[T]):
         )
 
     def populate_linkprovider(self):
-        cfg = self.folderinfo.mkdocs_config
-        invs = cfg.get_section("handlers", "python", "import") or []
+        invs = self.folderinfo.mkdocs_config.get_inventory_infos()
         mk_urls = {i["url"]: i.get("base_url") for i in invs if "url" in i}
         for url, base_url in mk_urls.items():
             self.linkprovider.add_inv_file(url, base_url=base_url)
