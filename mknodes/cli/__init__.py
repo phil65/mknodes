@@ -13,19 +13,24 @@ logger = log.get_logger(__name__)
 
 cli = t.Typer(
     name="MkNodes",
-    help="MkNodes CLI interface. Build websites from command line!",
+    help=(
+        " 🚀🚀🚀 MkNodes CLI interface. Build websites from command line! 🚀🚀🚀\n\n"
+        "Check out https://phil65.github.io/mknodes/ !"
+    ),
     no_args_is_help=True,
 )
 
-REPO_HELP = "Repository URL of the target package."
-BUILD_HELP = "Path to the build script."
-SITE_DIR_HELP = "Path to the build script."
-DEPTH_HELP = "Git clone depth in case repository is remote."
-CFG_PATH_HELP = "Path to the config file"
+REPO_HELP = "Repository URL of the target package. Can be remote or local."
+BUILD_HELP = "Path to the build script. (form: `path.to.module:function` )"
+SITE_DIR_HELP = "Path to the folder where the HTML should get written."
+DEPTH_HELP = (
+    "Git clone depth in case repository is remote. Important for changelog generation."
+)
+CFG_PATH_HELP = "Path to the config file."
 STRICT_HELP = "Strict mode (fails on warnings)"
-THEME_HELP = "Theme to use for the build."
-USE_DIR_URLS_HELP = "Use directory URLs."
-VERBOSE_HELP = "Enable verbose output."
+THEME_HELP = "Theme to use for the build. Overrides config setting."
+USE_DIR_URLS_HELP = "Use directory-style URLs."
+VERBOSE_HELP = "Enable verbose output. (`DEBUG` level)"
 QUIET_HELP = "Suppress output during build."
 
 
@@ -51,7 +56,12 @@ class State:
         # Don't restrict level on logger; use handler
         self.logger.setLevel(1)
         self.logger.propagate = False
-        self.stream = RichHandler(level, markup=False, rich_tracebacks=True)
+        self.stream = RichHandler(
+            level,
+            markup=False,
+            rich_tracebacks=True,
+            omit_repeated_times=False,
+        )
         self.stream.name = "MkNodesStreamHandler"
         self.logger.addHandler(self.stream)
 
@@ -84,7 +94,13 @@ def build(
     _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
-    """Create a MkNodes-based website."""
+    """Create a MkNodes-based website, locally or remotely.
+
+    Runs the build script on given repository (either locally or a hosted one), adapts
+    the config file automatically and creates the HTML website in given site dir.
+
+    Further info here: https://phil65.github.io/mknodes/Development/CLI/
+    """
     cfg = mkdocsconfigfile.MkDocsConfigFile(config_path)
     cfg.update_mknodes_section(
         repo_url=repo_path,
@@ -112,7 +128,13 @@ def serve(
     _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
-    """Serve a MkNodes-based website."""
+    """Serve a MkNodes-based website, locally or remotely.
+
+    Runs the build script on given repository (either locally or a hosted one), adapts
+    the config file automatically and serves a webpage on http://127.0.0.1/8000/.
+
+    Further info here: https://phil65.github.io/mknodes/Development/CLI/
+    """
     cfg = mkdocsconfigfile.MkDocsConfigFile(config_path)
     cfg.update_mknodes_section(
         repo_url=repo_path,
@@ -137,7 +159,14 @@ def create_config(
     _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose),
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet),
 ):
-    """Create a config based on given script and repository."""
+    """Create a config based on a given build setup.
+
+    Runs the build script on given repository (either locally or a hosted one),
+    infers the requirements (CSS / JS / Md extensions) as well as metadata
+    and creates a MkDocs config file.
+
+    Further info here: https://phil65.github.io/mknodes/Development/CLI/
+    """
     mknodes_plugin = dict(
         mknodes={"repo_path": repo_path, "path": build_fn},
     )

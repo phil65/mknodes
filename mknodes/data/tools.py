@@ -92,16 +92,13 @@ class PreCommit(Tool):
     description = PRE_COMMIT_TEXT
     setup_cmd = PRE_COMMIT_CODE
     config_syntax = "yaml"
+    cfg_file = ".pre-commit-config.yaml"
 
     def is_used(self, folder: folderinfo.FolderInfo):
-        directory = folder.path if folder else "."
-        filename = ".pre-commit-config.yaml"
-        return bool(pathhelpers.find_file_in_folder_or_parent(filename, str(directory)))
+        return bool(pathhelpers.find_file_in_folder_or_parent(self.cfg_file, folder.path))
 
     def get_config(self, folder):
-        directory = folder.path if folder else "."
-        filename = ".pre-commit-config.yaml"
-        path = pathhelpers.find_file_in_folder_or_parent(filename, str(directory))
+        path = pathhelpers.find_file_in_folder_or_parent(self.cfg_file, folder.path)
         return path.read_text() if path else None
 
 
