@@ -9,7 +9,12 @@ class PluginConfig(base.Config):
     build_fn = c.Optional(c.Type(str))
     """Path to the build script / callable.
 
-    Must be in format `my.module:Class.build` or `path/to/file.py:build`.
+    Possible formats:
+
+      - `my.module:Class.build_fn` (must be a classmethod / staticmethod)
+      - `my.module:build_fn`
+      - `path/to/file.py:build_fn`
+
     Can also be remote.
     The targeted callable gets the project instance as an argument and optionally
     keyword arguments from setting below.

@@ -23,5 +23,6 @@ plugins:
 - section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
 - literate-nav
 - mknodes:
-    build_fn: mknodes.manual.root:build
+    build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
+    clone_depth: 100
 - mkdocstrings

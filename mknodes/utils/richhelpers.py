@@ -14,7 +14,7 @@ logger = log.get_logger(__name__)
 class RichState:
     """Maintain logging level."""
 
-    def __init__(self, log_name="mknodes", level=logging.INFO):
+    def __init__(self, log_name: str = "mknodes", level: int = logging.INFO):
         from rich.logging import RichHandler
 
         self.logger = logging.getLogger(log_name)
@@ -73,7 +73,7 @@ def get_folder_tree_svg(
     directory: str | os.PathLike,
     width: int = 80,
     title: str = "",
-):
+) -> str:
     from rich.console import Console
     from rich.tree import Tree
 
@@ -97,7 +97,7 @@ def get_svg_for_code(
     width: int = 80,
     language: str = "python",
     pygments_style: str = "material",
-):
+) -> str:
     from rich.console import Console
     from rich.padding import Padding
     from rich.syntax import Syntax
