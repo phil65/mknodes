@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import datetime
 import functools
 import os
 
 import github
+
+from github import Commit
 import requests_cache
 
 from mknodes.info import contexts
@@ -75,6 +78,21 @@ class GitHubRepo:
     @functools.cached_property
     def raw_prefix(self):
         return f"{RAW_URL}{self.username}/{self.repo_name}/"
+
+    def get_last_commits(
+        self,
+        branch: str | None = None,
+        since: datetime.datetime | None = None,
+    ) -> list[Commit.Commit]:  # type: ignore[valid-type]
+        """Return last x commits.
+
+        Arguments:
+            since: Amount of commits to fetch.
+            branch: Branch to get commits from. Defaults to main / master.
+        """
+        rev = branch or self.default_branch
+        kwargs = dict(since=since) if since else {}
+        return self.repo.get_commits(rev, **kwargs)  # type: ignore[arg-type]
 
     @functools.cached_property
     def context(self):
