@@ -60,8 +60,6 @@ class MkDocsBackend(buildbackend.BuildBackend):
     def _write_file(self, path: str | os.PathLike, content: str | bytes):
         src_path = self._get_path(path)
         pathhelpers.write_file(content, src_path)
-        md_path = (pathlib.Path("src") / path).with_suffix(".original")
-        pathhelpers.write_file(content, self._config.site_dir / md_path)
 
     def _get_path(self, path: str | os.PathLike) -> pathlib.Path:
         # sourcery skip: extract-duplicate-method

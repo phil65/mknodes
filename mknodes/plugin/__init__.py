@@ -94,7 +94,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         logger.info("Writing Markdown and assets to MkDocs environment...")
         self.mkdocs_backend.write_files(build_files)  # type: ignore[arg-type]
         self.markdown_backend = markdownbackend.MarkdownBackend(
-            directory=self.build_folder / "src",
+            directory=cfg.site_dir / "src",
             extension=".original",
         )
         logger.info("Writing markdown pages to disk...")
