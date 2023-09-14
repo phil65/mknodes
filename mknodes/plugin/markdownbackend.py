@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import os
 
-import mknodes
-
 from mknodes.plugin import buildbackend
-from mknodes.utils import pathhelpers
+from mknodes.utils import pathhelpers, requirements
 
 
 class MarkdownBackend(buildbackend.BuildBackend):
@@ -21,11 +19,8 @@ class MarkdownBackend(buildbackend.BuildBackend):
         target_path = (self.directory / path).with_suffix(self.extension)
         pathhelpers.write_file(content, target_path)
 
-    def collect_from_root(self, node: mknodes.MkNode):
-        all_files: dict[str, str | bytes] = node.resolved_virtual_files
-        for des in node.descendants:
-            all_files |= des.resolved_virtual_files
-        self.write_files(all_files)
+    def on_collect(self, files: dict[str, str | bytes], reqs: requirements.Requirements):
+        self.write_files(files)
 
 
 if __name__ == "__main__":

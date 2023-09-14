@@ -79,31 +79,36 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             return files
         # First we gather all required information
         logger.info("Generating pages...")
-        build_files = self.project.all_files()
         logger.info("Fetching requirements from tree...")
 
         # now we add our stuff to the MkDocs build environment
         cfg = mkdocsconfig.Config(config)
-        self.mkdocs_backend = mkdocsbackend.MkDocsBackend(
+        mkdocs_backend = mkdocsbackend.MkDocsBackend(
             files=files,
             config=cfg,
             directory=self.build_folder,
         )
 
         logger.info("Writing Markdown and assets to MkDocs environment...")
-        self.mkdocs_backend.write_files(build_files)  # type: ignore[arg-type]
-        self.markdown_backend = markdownbackend.MarkdownBackend(
+        markdown_backend = markdownbackend.MarkdownBackend(
             directory=cfg.site_dir / "src",
             extension=".original",
         )
-        if root := self.project._root:
-            self.markdown_backend.collect_from_root(root)
-            self.mkdocs_backend.collect_from_root(root)
+        self.backends = [mkdocs_backend, markdown_backend]
+
+        all_files = self.project._root.all_virtual_files() if self.project._root else {}
+        build_files = all_files | self.project.theme.get_files()
+        # self.markdown_backend.on_write_files(build_files, requirements)
+        # self.mkdocs_backend.on_write_files(build_files, requirements)
+
+        requirements = self.project.get_requirements()
+        for backend in self.backends:
+            backend.on_collect(build_files, requirements)
 
         logger.info("Updating MkDocs config metadata...")
         ctx = self.project.context
         cfg.update_from_context(ctx)
-        return self.mkdocs_backend.files
+        return mkdocs_backend.files
 
     def on_nav(
         self,

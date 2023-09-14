@@ -10,12 +10,10 @@ from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_
 
-import mknodes
-
 from mknodes import mkdocsconfig
 from mknodes.pages import pagetemplate
 from mknodes.plugin import buildbackend, mkdocsbuilder, mkdocshelpers
-from mknodes.utils import mergehelpers, pathhelpers
+from mknodes.utils import mergehelpers, pathhelpers, requirements
 
 
 logger = get_plugin_logger(__name__)
@@ -59,15 +57,11 @@ class MkDocsBackend(buildbackend.BuildBackend):
         files = sorted(self._mk_files.values(), key=mkdocshelpers.file_sorter)
         return files_.Files(files)
 
-    def collect_from_root(self, node: mknodes.MkNode):
-        all_files: dict[str, str | bytes] = node.resolved_virtual_files
-        for des in node.descendants:
-            all_files |= des.resolved_virtual_files
-        self.write_files(all_files)
+    def on_collect(self, files: dict[str, str | bytes], reqs: requirements.Requirements):
+        logger.info("Finished writing pages to disk")
+        self.write_files(files)
         logger.info("Finished writing pages to disk")
         logger.info("Adding requirements to Config and build...")
-
-        reqs = node.get_requirements()
         for k, v in reqs.css.items():
             self.add_css_file(k, v)
         for k, v in reqs.js_files.items():
@@ -78,27 +72,22 @@ class MkDocsBackend(buildbackend.BuildBackend):
             self.add_template(template)
 
     def _write_file(self, path: str | os.PathLike, content: str | bytes):
-        src_path = self._get_path(path)
-        pathhelpers.write_file(content, src_path)
-
-    def _get_path(self, path: str | os.PathLike) -> pathlib.Path:
-        # sourcery skip: extract-duplicate-method
-        normname = pathlib.PurePath(path).as_posix()
-        new_f = self.builder.get_file(path, src_dir=self.directory)
-        new_path = pathlib.Path(new_f.abs_src_path)
-        if normname not in self._mk_files:
+        path = pathlib.PurePath(path).as_posix()
+        file_for_path = self.builder.get_file(path, src_dir=self.directory)
+        new_path = pathlib.Path(file_for_path.abs_src_path)
+        target_path = None
+        if path not in self._mk_files:
             new_path.parent.mkdir(exist_ok=True, parents=True)
-            self._mk_files[normname] = new_f
-            return new_path
+            self._mk_files[path] = file_for_path
+            target_path = new_path
 
-        f = self._mk_files[normname]
+        f = self._mk_files[path]
         source_path = pathlib.Path(f.abs_src_path)
         if source_path != new_path:
-            self._mk_files[normname] = new_f
+            self._mk_files[path] = file_for_path
             pathhelpers.copy(source_path, new_path)
-            return new_path
-
-        return source_path
+            target_path = new_path
+        pathhelpers.write_file(content, target_path or source_path)
 
     def register_extensions(self, extensions: dict[str, dict]):
         for ext_name in extensions:
@@ -175,6 +164,8 @@ if __name__ == "__main__":
         clone_depth=1,
     )
     reqs = proj.get_requirements()
+    all_files = proj._root.all_virtual_files() if proj._root else {}
+    build_files = all_files | proj.theme.get_files()
     for k, v in reqs.css.items():
         backend.add_css_file(k, v)
     for k, v in reqs.js_files.items():
@@ -183,6 +174,5 @@ if __name__ == "__main__":
         backend.register_extensions(extensions)
     for template in reqs.templates:
         backend.add_template(template)
-    build_files = proj.all_files()
     backend.write_files(build_files)  # type: ignore[arg-type]
     print(backend._files)

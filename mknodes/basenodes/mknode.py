@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, MutableMapping
+from collections.abc import Iterable
 import functools
 import time
 
@@ -222,7 +222,7 @@ class MkNode(node.Node):
         """
         self._css_classes.add(class_name)
 
-    def all_virtual_files(self) -> MutableMapping[str, str | bytes]:
+    def all_virtual_files(self) -> dict[str, str | bytes]:
         """Return a dictionary containing all virtual files of itself and all children.
 
         Dict key contains the filename, dict value contains the file content.

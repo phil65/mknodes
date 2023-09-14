@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, MutableMapping
+from collections.abc import Callable
 import functools
 import os
 import pathlib
@@ -139,10 +139,6 @@ class Project(Generic[T]):
             repo=self.folderinfo.repository_name,
         )
         return reqs
-
-    def all_files(self) -> MutableMapping[str, str | bytes]:
-        files = self._root.all_virtual_files() if self._root else {}
-        return files | self.theme.get_files()
 
     @functools.cached_property
     def build_context(self):
