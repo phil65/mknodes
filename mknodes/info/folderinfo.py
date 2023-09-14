@@ -68,6 +68,9 @@ class FolderInfo:
         # )
         self._temp_directory = None
 
+    def __fspath__(self):
+        return str(self.path)
+
     @functools.cached_property
     def module(self):
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
