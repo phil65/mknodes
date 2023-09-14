@@ -12,7 +12,7 @@ from mknodes.info import contexts, folderinfo, linkprovider, packageregistry
 from mknodes.navs import mknav
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
-from mknodes.utils import classhelpers, helpers, log, reprhelpers, requirements
+from mknodes.utils import classhelpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -54,16 +54,7 @@ class Project(Generic[T]):
         self.theme.associated_project = self
         self.templates = self.theme.templates
         self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
-        match repo:
-            case folderinfo.FolderInfo():
-                self.folderinfo = repo
-            case _ if helpers.is_url(str(repo)):
-                self.folderinfo = folderinfo.FolderInfo.clone_from(
-                    str(repo),
-                    depth=clone_depth,
-                )
-            case _:
-                self.folderinfo = folderinfo.FolderInfo(repo)
+        self.folderinfo = folderinfo.FolderInfo(repo)
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
@@ -111,7 +102,7 @@ class Project(Generic[T]):
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
-            repo=folderinfo.FolderInfo.clone_from(path),
+            repo=path,
         )
 
     @property

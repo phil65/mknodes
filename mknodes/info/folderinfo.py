@@ -6,6 +6,7 @@ import importlib
 import os
 import pathlib
 import re
+import tempfile
 
 from griffe.enumerations import Parser
 from griffe.loader import GriffeLoader
@@ -20,7 +21,14 @@ from mknodes.info import (
     packageregistry,
     pyproject,
 )
-from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
+from mknodes.utils import (
+    helpers,
+    log,
+    packagehelpers,
+    pathhelpers,
+    reprhelpers,
+    yamlhelpers,
+)
 
 
 logger = log.get_logger(__name__)
@@ -53,11 +61,28 @@ GITHUB_REGEX = re.compile(
 class FolderInfo:
     """Aggregates information about a working dir."""
 
-    def __init__(self, path: str | os.PathLike | None = None):
-        self.path = pathlib.Path(path or ".")
+    def __init__(self, path: str | os.PathLike | None = None, clone_depth: int = 1):
+        match path:
+            case FolderInfo():
+                self.path = path.path
+                self.git = gitrepository.GitRepository(self.path)
+            case _ if helpers.is_url(str(path)):
+                directory = tempfile.TemporaryDirectory(prefix="mknodes_repo_")
+                logger.info("Created temporary directory %s", directory.name)
+                logger.info("Cloning %s with depth %s", path, clone_depth)
+                self.git = gitrepository.GitRepository.clone_from(
+                    path,
+                    directory.name,
+                    depth=clone_depth,
+                )
+                logger.info("Finished cloning.")
+                self.path = pathlib.Path(self.git.working_dir)
+                self._temp_directory = directory
+            case _:
+                self.path = pathlib.Path(path or ".")
+                self.git = gitrepository.GitRepository(self.path)
         self.pyproject = pyproject.PyProject(self.path)
         # packagehelpers.install_or_import(mod_name)
-        self.git = gitrepository.GitRepository(self.path)
         self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile()
         if (mk_path := self.path / "mkdocs.yml").exists():
             with contextlib.suppress(yamlhelpers.YAMLError):
@@ -67,6 +92,9 @@ class FolderInfo:
         #     self.repository_name,
         # )
         self._temp_directory = None
+
+    def __fspath__(self):
+        return str(self.path)
 
     @functools.cached_property
     def module(self):
@@ -82,32 +110,6 @@ class FolderInfo:
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
-
-    @classmethod
-    def clone_from(
-        cls,
-        url: str,
-        # path: str | os.PathLike,
-        depth: int = 100,
-    ):
-        """Create a FolderInfo from a remote repository url.
-
-        Arguments:
-            url: Url of the repository
-            depth: Amount of commits to clone. Useful for changelog generation.
-        """
-        import tempfile
-
-        import git
-
-        directory = tempfile.TemporaryDirectory(prefix="mknodes_repo_")
-        logger.info("Created temporary directory %s", directory.name)
-        logger.info("Cloning %s with depth %s", url, depth)
-        repo = git.Repo.clone_from(url, directory.name, depth=depth)
-        logger.info("Finished cloning.")
-        kls = cls(repo.working_dir)
-        kls._temp_directory = directory
-        return kls
 
     @functools.cached_property
     def info(self):
