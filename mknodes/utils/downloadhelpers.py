@@ -45,9 +45,3 @@ def download(url: str, headers: dict[str, str] | None = None) -> bytes:
     req = requests.get(url, headers=gh_header | (headers or {}))
     logger.debug("Downloaded %s", url)
     return req.content
-
-
-if __name__ == "__main__":
-    from requests_cache import get_cache
-
-    print("\n".join(get_cache().urls()))
