@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-from xml.dom import minidom
 from xml.etree import ElementTree
 
 from mknodes.basenodes import mkbinaryimage, mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, xmlhelpers
 
 
 if TYPE_CHECKING:
@@ -57,11 +56,7 @@ def build_html_card(
     p = ElementTree.SubElement(card_div, "p")
     button = ElementTree.SubElement(p, "button")
     button.text = title
-    return (
-        minidom.parseString(ElementTree.tostring(root))
-        .childNodes[0]
-        .toprettyxml(indent="   ")
-    )
+    return xmlhelpers.pformat(root)
     # return ElementTree.tostring(root, encoding="unicode")
 
 
