@@ -29,8 +29,8 @@ class MkDefaultWebsite(mknodes.MkNav):
         if proj := self.associated_project:
             proj.theme.announcement_bar = mknodes.MkMetadataBadges("websites")
             if (
-                proj.info.get_entry_points("console_scripts")
-                and "click" in proj.info.required_package_names
+                proj.folderinfo.info.get_entry_points("console_scripts")
+                and "click" in proj.folderinfo.info.required_package_names
             ):
                 page = self.add_page("CLI", hide_nav=True)
                 page += mknodes.MkClickDoc()
@@ -57,7 +57,7 @@ class MkDefaultWebsite(mknodes.MkNav):
         page = nav.add_page("Module overview")
         page += mknodes.MkModuleOverview()
 
-        if (proj := self.associated_project) and proj.info.get_entry_points(
+        if (proj := self.associated_project) and proj.folderinfo.info.get_entry_points(
             "mkdocs.plugins",
         ):
             page = nav.add_page("MkDocs Plugins")

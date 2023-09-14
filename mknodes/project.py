@@ -114,10 +114,6 @@ class Project(Generic[T]):
             repo=folderinfo.FolderInfo.clone_from(path),
         )
 
-    @property
-    def info(self):
-        return self.folderinfo.info
-
     def set_root(self, nav: mknav.MkNav):
         self._root = nav
         nav.associated_project = self
