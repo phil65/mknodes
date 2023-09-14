@@ -19,7 +19,7 @@ class Logger:
             self.logger.log(level, "%s: %s", k, v)
 
 
-def get_logger(name: str | None = None) -> logging.Logger:
+def get_logger(name: str | None = None):
     return get_plugin_logger("mknodes")
 
 

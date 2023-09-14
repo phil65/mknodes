@@ -81,7 +81,7 @@ class GitHubRepo:
         """
         rev = branch or self.default_branch
         kwargs = dict(since=since) if since else {}
-        return self.repo.get_commits(rev, **kwargs)  # type: ignore[arg-type]
+        return self.repo.get_commits(rev, **kwargs)  # type: ignore
 
     @functools.cached_property
     def context(self):
