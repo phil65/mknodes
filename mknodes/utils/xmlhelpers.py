@@ -16,12 +16,12 @@ def get_material_icon_svg(icon: str):
 
 
 def pformat(str_or_elem):
-    from xml.dom import minidom
     from xml.etree import ElementTree
 
-    if isinstance(str_or_elem, ElementTree.Element):
-        str_or_elem = ElementTree.tostring(str_or_elem)
-    return minidom.parseString(str_or_elem).childNodes[0].toprettyxml(indent="  ")
+    if isinstance(str_or_elem, str):
+        str_or_elem = ElementTree.fromstring(str_or_elem)
+    ElementTree.indent(str_or_elem)
+    return ElementTree.tostring(str_or_elem, encoding="unicode")
 
 
 if __name__ == "__main__":
