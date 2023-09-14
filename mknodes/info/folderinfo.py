@@ -249,6 +249,7 @@ class FolderInfo:
             authors=self.info.authors,
             module=self.module,
             griffe_module=self.griffe_module,
+            urls=self.info.urls,
             classifiers=self.info.classifiers,
             classifier_map=self.info.classifier_map,
             keywords=self.info.keywords,

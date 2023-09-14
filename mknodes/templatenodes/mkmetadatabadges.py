@@ -78,46 +78,32 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         )
 
     @property
-    def package_info(self):
-        match self._package:
-            case str():
-                return packageregistry.get_info(self._package)
-            case None if self.associated_project:
-                return self.associated_project.info
-            case None:
-                return None
-            case _:
-                raise TypeError(self._package)
-
-    @property
     def badge_content(self) -> list[tuple]:
         items: list[tuple] = []
-        if not self.package_info:
-            return items
         match self._typ:
             case "classifiers":
-                dct = self.package_info.classifier_map
+                dct = self.ctx.metadata.classifier_map
                 for category, labels in dct.items():
                     items.extend([(i, category, None) for i in labels])
             case "keywords":
                 items.extend(
-                    (keyword, "", None) for keyword in self.package_info.keywords
+                    (keyword, "", None) for keyword in self.ctx.metadata.keywords
                 )
             case "keywords_combined":
                 items.append(
-                    ("Keywords", " | ".join(self.package_info.keywords), None),
+                    ("Keywords", " | ".join(self.ctx.metadata.keywords), None),
                 )
             case "required_python":
-                string = self.package_info.required_python_version
+                string = self.ctx.metadata.required_python_version
                 items.append(("Python", string, "https://www.python.org"))
             case "websites":
                 urls = [
                     (name, parse.urlparse(url).netloc, url)
-                    for name, url in self.package_info.urls.items()
+                    for name, url in self.ctx.metadata.urls.items()
                 ]
                 items.extend(urls)
             case "dependencies":
-                info = self.package_info.required_packages
+                info = self.ctx.metadata.required_packages
                 items.extend(
                     (package.name, package.version, package.homepage) for package in info
                 )
@@ -135,7 +121,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             case str():
                 raise ValueError(self._typ)
             case _ if self._typ in datatypes.CLASSIFIERS:
-                labels = self.package_info.classifier_map.get(self._typ, [])
+                labels = self.ctx.metadata.classifier_map.get(self._typ, [])
                 items.extend([(i, self._typ, None) for i in labels])
         return items
 
@@ -187,5 +173,5 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    node = MkMetadataBadges.with_default_context("installed_packages")
+    node = MkMetadataBadges.with_default_context("websites")
     print(node)
