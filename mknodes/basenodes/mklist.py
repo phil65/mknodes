@@ -42,9 +42,6 @@ class MkList(mkcontainer.MkContainer):
         self.as_links = as_links
         super().__init__(content=list(items), header=header)
 
-    def __str__(self):
-        return self.to_markdown()
-
     def __len__(self):
         return len(self.items)
 

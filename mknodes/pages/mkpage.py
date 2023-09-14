@@ -110,13 +110,6 @@ class MkPage(mkcontainer.MkContainer):
         meta_kwargs = self.metadata.repr_kwargs()
         return reprhelpers.get_repr(self, path=str(self.path), **meta_kwargs)
 
-    def __str__(self):
-        return self.to_markdown()
-
-    def to_markdown(self) -> str:
-        # logger.debug("Resolving %s %r", type(self).__name__,  self.resolved_file_path)
-        return super().to_markdown()
-
     @property
     def path(self):
         if self._path:
