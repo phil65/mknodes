@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from abc import ABCMeta
-from collections.abc import MutableMapping
+from collections.abc import Iterator, MutableMapping
 import os
 
-from typing import Any, Literal
+from typing import Any, Literal, TypeVar
 
 from mknodes.utils import pathhelpers
 
@@ -12,26 +12,29 @@ from mknodes.utils import pathhelpers
 MarkupTypeStr = Literal["yaml", "json", "toml"]
 
 
-class SuperDict(MutableMapping, metaclass=ABCMeta):
+V = TypeVar("V")
+
+
+class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
     def __init__(self, data: dict | None = None, **kwargs):
-        self._data: dict[str, Any] = data or {}
+        self._data: dict[str, V] = data or {}
         self._data |= kwargs
 
-    def __getitem__(self, value):
+    def __getitem__(self, value: str) -> V:
         if isinstance(value, str):
             return self._data.__getitem__(value)
         return self.get_section(value)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: str, value: V):
         self._data[index] = value
 
-    def __delitem__(self, index):
+    def __delitem__(self, index: str):
         del self._data[index]
 
     def __bool__(self):
         return bool(self._data)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self._data.keys())
 
     def __len__(self):
@@ -95,6 +98,6 @@ class SuperDict(MutableMapping, metaclass=ABCMeta):
 
 
 if __name__ == "__main__":
-    dct = SuperDict(a=dict(b="c"))
+    dct = SuperDict(a=dict(b="c"))  # type: ignore[var-annotated]
     text = dct.get_section("a", "b", keep_path=False)
     print(text)
