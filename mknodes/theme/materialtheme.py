@@ -11,6 +11,7 @@ from mknodes.basenodes import mknode
 from mknodes.cssclasses import cssclasses, rootcss
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
+from mknodes.theme.material import palette
 from mknodes.utils import log, reprhelpers
 
 
@@ -114,10 +115,27 @@ class MaterialTheme(theme.Theme):
         self.main_template = self.templates["main.html"]
         self._foreground_color = None
         self.blog = mkblog.MkBlog()
-        self.palette = self.data.get("palette")
+        self.features = self.data.get("features")
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
+
+    @property
+    def palettes(self):
+        data = self.data.get("palette", [])
+        if isinstance(data, dict):
+            data = [data]
+        return [
+            palette.Palette(
+                primary=pal.get("primary", "indigo"),
+                accent=pal.get("accent", "indigo"),
+                scheme=pal.get("scheme", "default"),
+                media=pal.get("media"),
+                toggle_name=pal.get("toggle", {}).get("name"),
+                toggle_icon=pal.get("toggle", {}).get("icon"),
+            )
+            for pal in data
+        ]
 
     def get_files(self):
         if isinstance(self.announcement_bar, mknode.MkNode):
@@ -142,21 +160,23 @@ class MaterialTheme(theme.Theme):
         return COLORS[color]["color"]
 
     def _get_color(self, color_type: Literal["primary", "accent"], fallback: str) -> str:
-        match self.palette:
+        data = self.data.get("palette")
+        match data:
             case list():
-                return self.palette[0].get(color_type, fallback)
+                return data[0].get(color_type, fallback)
             case dict():
-                return self.palette.get(color_type, fallback)
+                return data.get(color_type, fallback)
             case _:
                 return fallback
 
     def set_color(self, color_type: Literal["primary", "accent"], value: str):
-        match self.palette:
+        data = self.data.get("palette")
+        match data:
             case list():
-                for pal in self.palette:
+                for pal in data:
                     pal[color_type] = value
             case dict():
-                self.palette[color_type] = value
+                data[color_type] = value
             case _:
                 msg = "Could not find palette"
                 raise RuntimeError(msg)

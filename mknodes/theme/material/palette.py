@@ -22,6 +22,7 @@ class Palette:
     scheme: str = "default"
     primary: str = "indigo"
     accent: str = "indigo"
+    media: str | None = None
 
 
 default_palette = Palette(
