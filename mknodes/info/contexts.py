@@ -12,7 +12,7 @@ import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
-from mknodes.utils import log, requirements
+from mknodes.utils import log, requirements, superdict
 
 
 logger = log.get_logger(__name__)
@@ -184,8 +184,12 @@ class PackageContext(Context):
     """The build system set as build backend *[pyproject]*"""
     configured_build_systems: list = dataclasses.field(default_factory=list)
     """A list of build systems which are configured in pyproject *[pyproject]*"""
-    tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
-    """The tool section of the pyproject file (as a dict) *[pyproject]*"""
+    tool_section: superdict.SuperDict[Any] = dataclasses.field(
+        default_factory=superdict.SuperDict,
+    )
+    """The tool section of the pyproject file.
+
+    Comes as a SuperDict. (A Mutable mapping with extended capabilities) *[pyproject]*"""
     line_length: int | None = None
     """The line length, if defined by any popular tool *[pyproject]*"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(

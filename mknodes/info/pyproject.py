@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import collections
 import functools
 import os
 import pathlib
@@ -9,7 +8,7 @@ from typing import Any
 
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.info import tomlfile
-from mknodes.utils import pathhelpers
+from mknodes.utils import pathhelpers, superdict
 
 
 class PyProject(tomlfile.TomlFile):
@@ -41,9 +40,9 @@ class PyProject(tomlfile.TomlFile):
         return self.project.get("name")
 
     @property
-    def tool(self) -> dict[str, Any]:
+    def tool(self) -> superdict.SuperDict[Any]:
         """Tool section."""
-        return collections.defaultdict(dict, self._data.get("tool", {}))
+        return superdict.SuperDict(self._data.get("tool", {}))
 
     @property
     def project(self) -> dict[str, Any]:
