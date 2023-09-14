@@ -11,6 +11,7 @@ from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_
 
 from mknodes import mkdocsconfig
+from mknodes.pages import pagetemplate
 from mknodes.plugin import buildbackend, mkdocsbuilder, mkdocshelpers
 from mknodes.utils import mergehelpers, pathhelpers
 
@@ -121,7 +122,7 @@ class MkDocsBackend(buildbackend.BuildBackend):
         logger.info("Registering js file %s...", abs_path)
         pathhelpers.write_file(js, abs_path)
 
-    def add_template(self, template):
+    def add_template(self, template: pagetemplate.PageTemplate):
         """Register a html template.
 
         Writes file to build custom_dir folder
