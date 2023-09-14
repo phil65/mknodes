@@ -58,8 +58,7 @@ lint-check = [
   "ruff .",
   "mypy mknodes/",
 ]
-docs-serve = "hatch run mkdocs serve"
-docs-build = "hatch run mkdocs build"
+
 docs-build-test = [
   "hatch run mkdocs build -v",
   "hatch run mknodes build -d site/mkdocstrings -p configs/mkdocs_mkdocstrings.yml -v --clone-depth 100",

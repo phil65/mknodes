@@ -32,10 +32,10 @@ mypy: ## run mypy type checking
 	hatch run lint-check
 
 docs: ## builds the documentation
-	hatch run docs-build
+	hatch run mkdocs build
 
 serve: ## run html server watching file changes in realtime
-	hatch run docs-serve
+	hatch run mkdocs serve
 
 update: ## update all packages
 	hatch run pip --disable-pip-version-check list --outdated --format=json | python -c "import json, sys; print('\n'.join([x['name'] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U
