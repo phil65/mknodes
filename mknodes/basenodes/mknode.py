@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, MutableMapping
+import functools
 import time
 
 from typing import TYPE_CHECKING
@@ -193,7 +194,7 @@ class MkNode(node.Node):
         """
         return self._files
 
-    @property
+    @functools.cached_property
     def resolved_virtual_files(self) -> dict[str, str | bytes]:
         """Return a dict containing all virtual files with resolved file paths."""
         from mknodes.navs import mknav
@@ -221,7 +222,7 @@ class MkNode(node.Node):
         """
         self._css_classes.add(class_name)
 
-    def all_virtual_files(self, only_children: bool = False) -> dict[str, str | bytes]:
+    def all_virtual_files(self) -> MutableMapping[str, str | bytes]:
         """Return a dictionary containing all virtual files of itself and all children.
 
         Dict key contains the filename, dict value contains the file content.
@@ -231,8 +232,7 @@ class MkNode(node.Node):
         all_files: dict[str, str | bytes] = {}
         for des in self.descendants:
             all_files |= des.resolved_virtual_files
-        if not only_children:
-            all_files |= self.resolved_virtual_files
+        all_files |= self.resolved_virtual_files
         return all_files
 
     def get_requirements(self, recursive: bool = True) -> requirements.Requirements:

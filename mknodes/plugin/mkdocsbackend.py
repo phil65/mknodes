@@ -10,6 +10,8 @@ from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_
 
+import mknodes
+
 from mknodes import mkdocsconfig
 from mknodes.pages import pagetemplate
 from mknodes.plugin import buildbackend, mkdocsbuilder, mkdocshelpers
@@ -56,6 +58,24 @@ class MkDocsBackend(buildbackend.BuildBackend):
         """
         files = sorted(self._mk_files.values(), key=mkdocshelpers.file_sorter)
         return files_.Files(files)
+
+    def collect_from_root(self, node: mknodes.MkNode):
+        all_files: dict[str, str | bytes] = node.resolved_virtual_files
+        for des in node.descendants:
+            all_files |= des.resolved_virtual_files
+        self.write_files(all_files)
+        logger.info("Finished writing pages to disk")
+        logger.info("Adding requirements to Config and build...")
+
+        reqs = node.get_requirements()
+        for k, v in reqs.css.items():
+            self.add_css_file(k, v)
+        for k, v in reqs.js_files.items():
+            self.add_js_file(k, v)
+        if extensions := reqs.markdown_extensions:
+            self.register_extensions(extensions)
+        for template in reqs.templates:
+            self.add_template(template)
 
     def _write_file(self, path: str | os.PathLike, content: str | bytes):
         src_path = self._get_path(path)
@@ -141,3 +161,28 @@ class MkDocsBackend(buildbackend.BuildBackend):
 
 if __name__ == "__main__":
     backend = MkDocsBackend()
+
+    from mknodes import paths, project
+    from mknodes.theme import theme as theme_
+
+    skin = theme_.Theme("material")
+    proj = project.Project(
+        base_url="",
+        use_directory_urls=True,
+        theme=skin,
+        repo=".",
+        build_fn=paths.DEFAULT_BUILD_FN,
+        clone_depth=1,
+    )
+    reqs = proj.get_requirements()
+    for k, v in reqs.css.items():
+        backend.add_css_file(k, v)
+    for k, v in reqs.js_files.items():
+        backend.add_js_file(k, v)
+    if extensions := reqs.markdown_extensions:
+        backend.register_extensions(extensions)
+    for template in reqs.templates:
+        backend.add_template(template)
+    build_files = proj.all_files()
+    backend.write_files(build_files)  # type: ignore[arg-type]
+    print(backend._files)

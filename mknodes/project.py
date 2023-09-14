@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, MutableMapping
 import functools
 import os
 import pathlib
@@ -140,7 +140,7 @@ class Project(Generic[T]):
         )
         return reqs
 
-    def all_files(self) -> dict[str, str | bytes]:
+    def all_files(self) -> MutableMapping[str, str | bytes]:
         files = self._root.all_virtual_files() if self._root else {}
         return files | self.theme.get_files()
 

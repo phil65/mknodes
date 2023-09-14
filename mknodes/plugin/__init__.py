@@ -81,8 +81,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         logger.info("Generating pages...")
         build_files = self.project.all_files()
         logger.info("Fetching requirements from tree...")
-        requirements = self.project.get_requirements()
-        ctx = self.project.context
 
         # now we add our stuff to the MkDocs build environment
         cfg = mkdocsconfig.Config(config)
@@ -91,29 +89,19 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             config=cfg,
             directory=self.build_folder,
         )
+
         logger.info("Writing Markdown and assets to MkDocs environment...")
         self.mkdocs_backend.write_files(build_files)  # type: ignore[arg-type]
         self.markdown_backend = markdownbackend.MarkdownBackend(
             directory=cfg.site_dir / "src",
             extension=".original",
         )
-        logger.info("Writing markdown pages to disk...")
-        # We also write the markdown files into the MkDocs environment since we are
-        # linking to them in the material theme actions button section.
-        # They are not part of Files though.
-        self.markdown_backend.write_files(build_files)  # type: ignore[arg-type]
+        if root := self.project._root:
+            self.markdown_backend.collect_from_root(root)
+            self.mkdocs_backend.collect_from_root(root)
 
-        logger.info("Finished writing pages to disk")
-        logger.info("Adding requirements to Config and build...")
-        for k, v in requirements.css.items():
-            self.mkdocs_backend.add_css_file(k, v)
-        for k, v in requirements.js_files.items():
-            self.mkdocs_backend.add_js_file(k, v)
-        if extensions := requirements.markdown_extensions:
-            self.mkdocs_backend.register_extensions(extensions)
-        for template in requirements.templates:
-            self.mkdocs_backend.add_template(template)
         logger.info("Updating MkDocs config metadata...")
+        ctx = self.project.context
         cfg.update_from_context(ctx)
         return self.mkdocs_backend.files
 

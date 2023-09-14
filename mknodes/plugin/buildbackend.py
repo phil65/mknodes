@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 import os
 import pathlib
 
@@ -28,12 +27,12 @@ class BuildBackend:
         self._files[pathlib.Path(path).as_posix()] = content
         self._write_file(path, content)
 
-    def write_files(self, dct: Mapping[str | os.PathLike, str | bytes]):
+    def write_files(self, dct: dict[str, str | bytes]):
         """Write a mapping of {filename: file_content} to build directory."""
         for k, v in dct.items():
             self.write_file(k, v)
 
-    def write_assets(self, dct: Mapping[str, str | bytes]):
+    def write_assets(self, dct: dict[str, str | bytes]):
         for k, v in dct.items():
             logger.debug("%s: Writing asset to %r", type(self).__name__, str(v))
             self.asset_files[(self.assets_path / k).as_posix()] = v
