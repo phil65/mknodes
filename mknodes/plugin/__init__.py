@@ -99,21 +99,20 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         )
         logger.info("Writing markdown pages to disk...")
         # We also write the markdown files into the MkDocs environment since we are
-        # linking to them in the material theme actions button section
+        # linking to them in the material theme actions button section.
+        # They are not part of Files though.
         self.markdown_backend.write_files(build_files)  # type: ignore[arg-type]
 
         logger.info("Finished writing pages to disk")
         logger.info("Adding requirements to Config and build...")
         for k, v in requirements.css.items():
-            cfg.register_css(k, v)
+            self.mkdocs_backend.add_css_file(k, v)
         for k, v in requirements.js_files.items():
-            cfg.register_js(k, v)
+            self.mkdocs_backend.add_js_file(k, v)
         if extensions := requirements.markdown_extensions:
-            cfg.register_extensions(extensions)
-        md = cfg.get_markdown_instance()
+            self.mkdocs_backend.register_extensions(extensions)
         for template in requirements.templates:
-            if html := template.build_html(md):
-                cfg.register_template(template.filename, html)
+            self.mkdocs_backend.add_template(template)
         logger.info("Updating MkDocs config metadata...")
         cfg.update_from_context(ctx)
         return self.mkdocs_backend.files

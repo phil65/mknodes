@@ -18,7 +18,7 @@ from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 
 from mknodes.info import contexts
-from mknodes.utils import mergehelpers, pathhelpers
+from mknodes.utils import pathhelpers
 
 
 logger = get_plugin_logger(__name__)
@@ -61,32 +61,6 @@ class Config:
             return ""
         return url if url.endswith("/") else f"{url}/"
 
-    def get_path(self, path: str) -> str:
-        return (
-            path
-            if self._config.use_directory_urls
-            else f"{self._config.site_name}/{path}"
-        )
-
-    def get_inventory_info(self) -> list[dict]:
-        """Returns list of dicts containing inventory info.
-
-        Shape: [{"url": inventory_url, "domains": ["std", "py"]}, ...]
-        """
-        try:
-            mkdocstrings_cfg = self._config.plugins["mkdocstrings"]
-            return mkdocstrings_cfg.config["handlers"]["python"]["import"]
-        except KeyError:
-            return []
-
-    def update_from_context(self, context: contexts.ProjectContext):
-        if not self._config.extra.get("social"):
-            self._config.extra["social"] = context.metadata.social_info
-        self._config.repo_url = context.metadata.repository_url
-        self._config.site_description = context.metadata.summary
-        self._config.site_name = context.metadata.distribution_name
-        self._config.site_author = context.metadata.author_name
-
     @property
     def docs_dir(self) -> pathlib.Path:
         return pathlib.Path(self._config.docs_dir)
@@ -95,62 +69,13 @@ class Config:
     def site_dir(self) -> pathlib.Path:
         return pathlib.Path(self._config.site_dir)
 
-    def register_extensions(self, extensions: dict[str, dict]):
-        for ext_name in extensions:
-            if ext_name not in self.markdown_extensions:
-                logger.info("Adding %s to extensions", ext_name)
-                self.markdown_extensions.append(ext_name)
-        self._config.mdx_configs = mergehelpers.merge_dicts(
-            self._config.mdx_configs,
-            extensions,
-        )
-
-    def register_css(self, filename: str | os.PathLike, css: str):
-        """Register a css file.
-
-        Writes file to build assets folder and registers extra_css in config
-
-        Arguments:
-            filename: Filename to write
-            css: file content
-        """
-        path = (pathlib.Path("assets") / filename).as_posix()
-        self._config.extra_css.append(path)
-        abs_path = self.site_dir / path
-        logger.info("Registering css file %s...", abs_path)
-        pathhelpers.write_file(css, abs_path)
-
-    def register_js(self, filename: str | os.PathLike, js: str):
-        """Register a javascript file.
-
-        Writes file to build assets folder and registers extra_javascript in config
-
-        Arguments:
-            filename: Filename to write
-            js: file content
-        """
-        path = (pathlib.Path("assets") / filename).as_posix()
-        self._config.extra_javascript.append(path)
-        abs_path = self.site_dir / path
-        logger.info("Registering js file %s...", abs_path)
-        pathhelpers.write_file(js, abs_path)
-
-    def register_template(self, filename: str, content: str):
-        """Register a html template.
-
-        Writes file to build custom_dir folder
-
-        Arguments:
-            filename: Filename to write
-            content: file content
-        """
-        if not self._config.theme.custom_dir:
-            logger.warning("Cannot write %s. No custom_dir set in config.", filename)
-            return
-        target_path = pathlib.Path(self._config.theme.custom_dir) / filename
-        # path = pathlib.Path("overrides") / filename
-        logger.info("Creating %s...", target_path.as_posix())
-        pathhelpers.write_file(content, target_path)
+    def update_from_context(self, context: contexts.ProjectContext):
+        if not self._config.extra.get("social"):
+            self._config.extra["social"] = context.metadata.social_info
+        self._config.repo_url = context.metadata.repository_url
+        self._config.site_description = context.metadata.summary
+        self._config.site_name = context.metadata.distribution_name
+        self._config.site_author = context.metadata.author_name
 
     def get_markdown_instance(
         self,
