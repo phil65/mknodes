@@ -46,13 +46,15 @@ VERBOSE_CMDS = "-v", "--verbose"
 QUIET_CMDS = "-q", "--quiet"
 
 
-def verbose(ctx, param, value):
+def verbose(ctx: t.Context, param: t.CallbackParam, value: bool):
+    # sourcery skip: move-assign
     state = ctx.ensure_object(richhelpers.RichState)
     if value:
         state.stream.setLevel(logging.DEBUG)
 
 
-def quiet(ctx, param, value):
+def quiet(ctx: t.Context, param: t.CallbackParam, value: bool):
+    # sourcery skip: move-assign
     state = ctx.ensure_object(richhelpers.RichState)
     if value:
         state.stream.setLevel(logging.ERROR)

@@ -14,10 +14,12 @@ logger = log.get_logger(__name__)
 class RichState:
     """Maintain logging level."""
 
-    def __init__(self, log_name: str = "mknodes", level: int = logging.INFO):
+    LOG_NAME = "mkdocs"
+
+    def __init__(self, log_name: str | None = None, level: int = logging.INFO):
         from rich.logging import RichHandler
 
-        self.logger = logging.getLogger(log_name)
+        self.logger = logging.getLogger(log_name or self.LOG_NAME)
         # Don't restrict level on logger; use handler
         self.logger.setLevel(1)
         self.logger.propagate = False
