@@ -8,6 +8,9 @@ source = "regex_commit"
 commit_extra_args = ["-e"]
 path = "mknodes/__init__.py"
 
+[too.hatch.dirs.env]
+virtual = ".hatch"
+
 [tool.hatch.envs.default]
 python = "3.11"
 dependencies = [
