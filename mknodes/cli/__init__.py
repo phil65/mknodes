@@ -146,6 +146,7 @@ def create_config(
 
     Further info here: https://phil65.github.io/mknodes/Development/CLI/
     """
+    build_fn = build_fn or paths.DEFAULT_BUILD_FN
     mknodes_plugin = dict(
         mknodes={"repo_path": repo_path, "path": build_fn},
     )
