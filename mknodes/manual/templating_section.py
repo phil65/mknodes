@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 from mknodes.info import contexts
 
@@ -14,21 +14,21 @@ SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
 
 
-nav = mknodes.MkNav("Templating")
+nav = mk.MkNav("Templating")
 
 
-def create_templating_section(root_nav: mknodes.MkNav):
+def create_templating_section(root_nav: mk.MkNav):
     """Add the complete "Templating" section to given MkNav."""
     root_nav += nav
     page = nav.add_index_page(hide_toc=True, icon="simple/jinja")
-    page += mknodes.MkCode.for_object(create_templating_section, header=SECTION_CODE)
-    page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
+    page += mk.MkCode.for_object(create_templating_section, header=SECTION_CODE)
+    page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
 
 
 @nav.route.nav("Jinja macros", show_source=True)
-def create_macros_nav(nav: mknodes.MkNav):
+def create_macros_nav(nav: mk.MkNav):
     def add_context_doc(container, context):
-        container += mknodes.MkDocStrings(
+        container += mk.MkDocStrings(
             context,
             show_root_toc_entry=False,
             show_if_no_docstring=True,
@@ -37,7 +37,7 @@ def create_macros_nav(nav: mknodes.MkNav):
             show_source=False,
         )
 
-    page = nav.add_index_page(icon=mknodes.MkClassPage.ICON, hide_toc=True)
+    page = nav.add_index_page(icon=mk.MkClassPage.ICON, hide_toc=True)
     add_context_doc(page, contexts.ProjectContext)
     for ctx in [
         contexts.PackageContext,

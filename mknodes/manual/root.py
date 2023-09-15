@@ -1,4 +1,4 @@
-import mknodes
+import mknodes as mk
 
 from mknodes import manual
 from mknodes.theme import materialtheme
@@ -22,27 +22,27 @@ It will be a quite inception-ish experience.
 """
 
 
-def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNav:
+def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     # We will use annotations to explain things a bit.
-    annotations = mknodes.MkAnnotations()  # Our first node! DocStrings: # (1)
-    annotations[1] = mknodes.MkDocStrings(mknodes.MkAnnotations)
+    annotations = mk.MkAnnotations()  # Our first node! DocStrings: # (1)
+    annotations[1] = mk.MkDocStrings(mk.MkAnnotations)
 
     # MkDocStrings is based on "mkdocstrings" and, well... it can display docstrings.
     # Who would have guessed that? Here are the docstrings for MkDocStrings:
 
-    doc_node = mknodes.MkDocStrings(mknodes.MkDocStrings)  # (2)
+    doc_node = mk.MkDocStrings(mk.MkDocStrings)  # (2)
     annotations[2] = doc_node
-    annotations[3] = mknodes.MkAdmonition(DOCSTRING_INFO)  # (3)
+    annotations[3] = mk.MkAdmonition(DOCSTRING_INFO)  # (3)
 
     # Let us start with building the page.
     # this Nav is basically the root of everything. It corresponds to your root
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
     root_nav = project.get_root()
-    project.theme.announcement_bar = mknodes.MkMetadataBadges("websites")
-    project.error_page.content = mknodes.MkAdmonition("Page does not exist!")
+    project.theme.announcement_bar = mk.MkMetadataBadges("websites")
+    project.error_page.content = mk.MkAdmonition("Page does not exist!")
     project.theme.show_annotation_numbers()
     project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
-    annotations[4] = mknodes.MkDocStrings(mknodes.MkNav)  # (4)
+    annotations[4] = mk.MkDocStrings(mk.MkNav)  # (4)
 
     # now we will create the nav sections and its pages one by one.
     # For demonstration purposes, this process is split up into several functions.
@@ -60,21 +60,21 @@ def build(project: mknodes.Project[materialtheme.MaterialTheme]) -> mknodes.MkNa
     page = root_nav.add_index_page(hide_toc=True, hide_nav=True, icon="octicons/home-24")
 
     # A MkPage can contain MkNodes which represent Markdown text.
-    page += mknodes.MkHeader(HEADER, level=3)
-    admonition = mknodes.MkAdmonition(INFO, typ="info", title="Built with MkNodes")
+    page += mk.MkHeader(HEADER, level=3)
+    admonition = mk.MkAdmonition(INFO, typ="info", title="Built with MkNodes")
     page += admonition  # This adds (6) to the page.
 
     # Now we add the MkNode you are looking at right now.
     # We will use MkCode.for_object quite a lot in the next sections.
     # DocStrings for for_object: (7)
-    page += mknodes.MkCode.for_object(build)
+    page += mk.MkCode.for_object(build)
     page += annotations  # here we add the (invisible) annotations block to the page.
 
     # We can still add more annotations, things only get written at the very end:
     annotations[6] = admonition
-    annotations[7] = mknodes.MkDocStrings(mknodes.MkCode.for_object)
-    admonition = mknodes.MkAdmonition(mknodes.MkCode(str(annotations)))
+    annotations[7] = mk.MkDocStrings(mk.MkCode.for_object)
+    admonition = mk.MkAdmonition(mk.MkCode(str(annotations)))
     annotations[8] = admonition  # annotations in raw text: (8)
 
-    page += mknodes.MkAdmonition(FOOTER, typ="success")
+    page += mk.MkAdmonition(FOOTER, typ="success")
     return root_nav

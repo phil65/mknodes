@@ -1,6 +1,6 @@
 import os
 
-import mknodes
+import mknodes as mk
 
 from mknodes import paths
 from mknodes.manual import routing
@@ -29,7 +29,7 @@ ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* no
 is displayed by the MkCode node, we use that one.)"""
 
 
-def create_nodes_section(root_nav: mknodes.MkNav):
+def create_nodes_section(root_nav: mk.MkNav):
     """Add the complete "The Nodes" section to given MkNav."""
     # Basic structure: Theres one root MkNav, MkNavs can contain MkPages and other MkNavs,
     # MkPages contain more atomic MkNodes, like MkText, MkTable, and MkDiagrams.
@@ -53,171 +53,160 @@ def create_nodes_section(root_nav: mknodes.MkNav):
     # and then we create the index page (the page you are lookin at right now)
 
     page = the_nodes_nav.add_index_page(hide_toc=True, icon="graph")
-    page += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
-    page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
-    page += mknodes.MkHeader("All the nodes")
-    page += mknodes.MkClassDiagram(
-        mknodes.MkNode,
-        mode="subclasses",
-        direction="LR",
-        max_depth=3,
-    )
+    page += mk.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
+    page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
+    page += mk.MkHeader("All the nodes")
+    page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR", max_depth=3)
 
 
-def create_basic_nodes_section(nav: mknodes.MkNav):
+def create_basic_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all base node pages to given MkNav."""
     klasses = [
-        mknodes.MkNode,
-        mknodes.MkText,
-        mknodes.MkHeader,
-        mknodes.MkCritic,
-        mknodes.MkLink,
-        mknodes.MkKeys,
-        mknodes.MkProgressBar,
-        mknodes.MkImage,
-        mknodes.MkBadge,
-        mknodes.MkBinaryImage,
-        mknodes.MkCard,
-        mknodes.MkSpeechBubble,
-        mknodes.MkJinjaTemplate,
+        mk.MkNode,
+        mk.MkText,
+        mk.MkHeader,
+        mk.MkCritic,
+        mk.MkLink,
+        mk.MkKeys,
+        mk.MkProgressBar,
+        mk.MkImage,
+        mk.MkBadge,
+        mk.MkBinaryImage,
+        mk.MkCard,
+        mk.MkSpeechBubble,
+        mk.MkJinjaTemplate,
     ]
     base_nodes_nav = nav.add_nav("Base nodes")
     page = base_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkCode.for_object(create_basic_nodes_section, header=SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkCode.for_object(create_basic_nodes_section, header=SECTION_CODE)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(base_nodes_nav, klasses)
 
 
-def create_container_nodes_section(nav: mknodes.MkNav):
+def create_container_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
-        mknodes.MkBlockQuote,
-        mknodes.MkAdmonition,
-        mknodes.MkContainer,
-        mknodes.MkGrid,
-        mknodes.MkCode,
-        mknodes.MkList,
-        mknodes.MkTable,
-        mknodes.MkHtmlTable,
-        mknodes.MkDefinitionList,
-        # mknodes.MkTab,
-        mknodes.MkTabbed,
-        mknodes.MkAnnotations,
-        mknodes.MkFootNotes,
-        mknodes.MkShowcase,
-        mknodes.MkTaskList,
+        mk.MkBlockQuote,
+        mk.MkAdmonition,
+        mk.MkContainer,
+        mk.MkGrid,
+        mk.MkCode,
+        mk.MkList,
+        mk.MkTable,
+        mk.MkHtmlTable,
+        mk.MkDefinitionList,
+        # mk.MkTab,
+        mk.MkTabbed,
+        mk.MkAnnotations,
+        mk.MkFootNotes,
+        mk.MkShowcase,
+        mk.MkTaskList,
     ]
     container_nodes_nav = nav.add_nav("Container nodes")
     page = container_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkCode.for_object(create_container_nodes_section, header=SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkCode.for_object(create_container_nodes_section, header=SECTION_CODE)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(container_nodes_nav, klasses)
 
 
-def create_presentation_nodes_section(nav: mknodes.MkNav):
+def create_presentation_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
-        mknodes.MkTreeView,
-        mknodes.MkPrettyPrint,
-        mknodes.MkReprRawRendered,
-        mknodes.MkCodeImage,
-        mknodes.MkDiagram,
+        mk.MkTreeView,
+        mk.MkPrettyPrint,
+        mk.MkReprRawRendered,
+        mk.MkCodeImage,
+        mk.MkDiagram,
     ]
     presentation_nodes_nav = nav.add_nav("Presentation nodes")
     page = presentation_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkHeader(SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_presentation_nodes_section)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkHeader(SECTION_CODE)
+    page += mk.MkCode.for_object(create_presentation_nodes_section)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(presentation_nodes_nav, klasses)
 
 
-def create_documentation_nodes_section(nav: mknodes.MkNav):
+def create_documentation_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
-        mknodes.MkClassDiagram,
-        mknodes.MkDocStrings,
-        mknodes.MkCommentedCode,
-        mknodes.MkConfigSetting,
-        mknodes.MkClassTable,
-        mknodes.MkModuleTable,
-        mknodes.MkPluginFlow,
-        mknodes.MkArgParseHelp,
-        mknodes.MkClickDoc,
+        mk.MkClassDiagram,
+        mk.MkDocStrings,
+        mk.MkCommentedCode,
+        mk.MkConfigSetting,
+        mk.MkClassTable,
+        mk.MkModuleTable,
+        mk.MkPluginFlow,
+        mk.MkArgParseHelp,
+        mk.MkClickDoc,
     ]
     documentation_nodes_nav = nav.add_nav("Documentation nodes")
     page = documentation_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkHeader(SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_documentation_nodes_section)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkHeader(SECTION_CODE)
+    page += mk.MkCode.for_object(create_documentation_nodes_section)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(documentation_nodes_nav, klasses)
 
 
-def create_about_nodes_section(nav: mknodes.MkNav):
+def create_about_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
-        mknodes.MkChangelog,
-        mknodes.MkCodeOfConduct,
-        mknodes.MkLicense,
-        mknodes.MkDependencyTable,
-        mknodes.MkInstallGuide,
-        mknodes.MkCommitConventions,
-        mknodes.MkPullRequestGuidelines,
-        mknodes.MkDevEnvSetup,
-        mknodes.MkDevTools,
-        mknodes.MkShields,
-        mknodes.MkMetadataBadges,
-        mknodes.MkModuleOverview,
+        mk.MkChangelog,
+        mk.MkCodeOfConduct,
+        mk.MkLicense,
+        mk.MkDependencyTable,
+        mk.MkInstallGuide,
+        mk.MkCommitConventions,
+        mk.MkPullRequestGuidelines,
+        mk.MkDevEnvSetup,
+        mk.MkDevTools,
+        mk.MkShields,
+        mk.MkMetadataBadges,
+        mk.MkModuleOverview,
     ]
     if os.environ.get("CI"):
-        klasses.append(mknodes.MkPyDeps)
+        klasses.append(mk.MkPyDeps)
     about_nodes_nav = nav.add_nav("About-the-project nodes")
     page = about_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkHeader(SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_about_nodes_section)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkHeader(SECTION_CODE)
+    page += mk.MkCode.for_object(create_about_nodes_section)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(about_nodes_nav, klasses)
 
 
-def create_special_nodes_section(nav: mknodes.MkNav):
+def create_special_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
-    klasses = [
-        mknodes.MkSnippet,
-        mknodes.MkInclude,
-        mknodes.MkIFrame,
-        mknodes.MkCommandOutput,
-        mknodes.MkCallable,
-    ]
+    klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
     special_nodes_nav = nav.add_nav("Special nodes")
     page = special_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkHeader(SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_special_nodes_section)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkHeader(SECTION_CODE)
+    page += mk.MkCode.for_object(create_special_nodes_section)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(special_nodes_nav, klasses)
 
 
-def create_block_nodes_section(nav: mknodes.MkNav):
+def create_block_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
-        mknodes.MkBlock,
-        mknodes.MkAdmonitionBlock,
-        mknodes.MkDetailsBlock,
-        mknodes.MkHtmlBlock,
-        mknodes.MkTabbedBlocks,
+        mk.MkBlock,
+        mk.MkAdmonitionBlock,
+        mk.MkDetailsBlock,
+        mk.MkHtmlBlock,
+        mk.MkTabbedBlocks,
     ]
     block_nodes_nav = nav.add_nav("Block nodes")
     page = block_nodes_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkHeader(SECTION_CODE)
-    page += mknodes.MkCode.for_object(create_block_nodes_section)
-    page += mknodes.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkHeader(SECTION_CODE)
+    page += mk.MkCode.for_object(create_block_nodes_section)
+    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(block_nodes_nav, klasses)
 
 
 def create_section_for_nodes(
-    nav: mknodes.MkNav,
-    klasses: list[type[mknodes.MkNode]],
-) -> mknodes.MkTable:
+    nav: mk.MkNav,
+    klasses: list[type[mk.MkNode]],
+) -> mk.MkTable:
     """Add a MkPage to the MkNav for each class, create a index MkTable and return it."""
-    table = mknodes.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
+    table = mk.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
         # iter_subclasses just calls __subclasses__ recursively.
         if "create_example_page" in kls.__dict__:
@@ -225,28 +214,28 @@ def create_section_for_nodes(
             # We can use that for building the docs.
             page = nav.add_page(kls.__name__, icon=kls.ICON)
             create_class_page(kls, page)
-            link = mknodes.MkLink(page, kls.__name__, icon=kls.ICON)
+            link = mk.MkLink(page, kls.__name__, icon=kls.ICON)
             extensions = ", ".join(f"`{i}`" for i in kls.REQUIRED_EXTENSIONS)
             table.add_row((link, kls.__doc__, extensions))
     return table
 
 
-def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
+def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     """Create a MkPage with example code for given klass."""
     # Each example page will begin by displaying the code used to create the page.
-    code = mknodes.MkCode.for_object(
+    code = mk.MkCode.for_object(
         create_class_page,
         extract_body=True,
     )
-    admonition = mknodes.MkDetailsBlock(
+    admonition = mk.MkDetailsBlock(
         code,
         typ="quote",
         title=code.title,
         header=PAGE_CODE,
     )
     page += admonition
-    page += mknodes.MkCode.for_object(kls.create_example_page, extract_body=True)
-    # page += mknodes.MkHeader(kls.__doc__.split("\n")[0])
+    page += mk.MkCode.for_object(kls.create_example_page, extract_body=True)
+    # page += mk.MkHeader(kls.__doc__.split("\n")[0])
     page += "## Examples"
     if kls.STATUS == "new":  # some classes are marked as "new"
         page.status = "new"  # we use that info to display an icon in the menu.
@@ -254,11 +243,11 @@ def create_class_page(kls: type[mknodes.MkNode], page: mknodes.MkPage):
     if kls.CSS:
         path = paths.RESOURCES / kls.CSS
         text = path.read_text()
-        css_code = mknodes.MkCode(text, language="css")
-        page += mknodes.MkDetailsBlock(css_code, title="Required CSS")
+        css_code = mk.MkCode(text, language="css")
+        page += mk.MkDetailsBlock(css_code, title="Required CSS")
 
 
-def create_mknav_section(nav: mknodes.MkNav):
+def create_mknav_section(nav: mk.MkNav):
     """Add the sub-MkNav "MkNav" to given MkNav."""
     nav_section = nav.add_nav("MkNav")
 
@@ -279,15 +268,15 @@ def create_mknav_section(nav: mknodes.MkNav):
     # Index pages get inserted first into the menu, so that the `mkdocs-section-index`
     # plugin can be utizilized.
     page = nav_section.add_index_page(hide_toc=True)
-    code = mknodes.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
+    code = mk.MkCode.for_object(create_mknav_section, header=SECTION_CODE)
     page += code
     # A nav section corresponds to a `SUMMARY.md`. You can see that when stringifying it.
     text = str(nav_section)
     text = text.replace("](", "] (")  ##
-    page += mknodes.MkCode(text, header="The resulting MkNav")
+    page += mk.MkCode(text, header="The resulting MkNav")
 
 
-def create_from_file_section(nav: mknodes.MkNav):
+def create_from_file_section(nav: mk.MkNav):
     """Load an existing SUMMARY.md and attach it to given MkNav."""
     # We will now demonstate loading an existing Nav tree.
 
@@ -296,7 +285,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     summary_file = folder / "SUMMARY.md"  # File content: # (2)
 
     # We will load it as an MkNav...
-    from_file_nav = mknodes.MkNav.from_file(
+    from_file_nav = mk.MkNav.from_file(
         summary_file,
         section="From file",
         hide_toc=True,
@@ -308,7 +297,7 @@ def create_from_file_section(nav: mknodes.MkNav):
 
     # Finally, the page you are seeing right now.
     page = from_file_nav.add_index_page(hide_toc=True, icon="file")
-    code = mknodes.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
+    code = mk.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
     page += code
 
     text = summary_file.read_text()
@@ -316,10 +305,10 @@ def create_from_file_section(nav: mknodes.MkNav):
     # we are wrapping some annotations with Admonitions, that seems to help
     # with nesting / escaping issues in some cases (and it looks nice!).
     path = paths.TEST_RESOURCES / "nav_tree/"
-    tree_node = mknodes.MkTreeView(path, header="Directory tree")
-    code.annotations[1] = mknodes.MkAdmonition(tree_node)
-    file_content_node = mknodes.MkCode(text, header="SUMMARY.md content")
-    code.annotations[2] = mknodes.MkAdmonition(file_content_node)
+    tree_node = mk.MkTreeView(path, header="Directory tree")
+    code.annotations[1] = mk.MkAdmonition(tree_node)
+    file_content_node = mk.MkCode(text, header="SUMMARY.md content")
+    code.annotations[2] = mk.MkAdmonition(file_content_node)
     code.annotations[3] = ANNOTATIONS_INFO  # (3)
 
     # we could also add the annotiation nodes to the page of course:
@@ -327,13 +316,13 @@ def create_from_file_section(nav: mknodes.MkNav):
     page += file_content_node
 
 
-def create_from_folder_section(nav: mknodes.MkNav):
+def create_from_folder_section(nav: mk.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
 
     # First, we create the MkNav based on folder content (DocStrings for from_folder: (1))
-    from_folder_nav = mknodes.MkNav.from_folder(folder, parent=nav, hide_toc=True)
+    from_folder_nav = mk.MkNav.from_folder(folder, parent=nav, hide_toc=True)
 
     # ... and then attach that sub-tree to our main tree.
     nav["From folder"] = from_folder_nav
@@ -342,60 +331,60 @@ def create_from_folder_section(nav: mknodes.MkNav):
     # the menu entries are labelled using the filenames in this case.
 
     # Finally, create the index page.
-    code = mknodes.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
+    code = mk.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
     page = from_folder_nav.add_index_page(hide_toc=True, icon="folder")
     page += code
-    page += mknodes.MkTreeView(folder)  # DocStrings: (2)
-    folder_docs = mknodes.MkDocStrings(mknodes.MkNav.from_folder)
-    node_docs = mknodes.MkDocStrings(mknodes.MkTreeView)
+    page += mk.MkTreeView(folder)  # DocStrings: (2)
+    folder_docs = mk.MkDocStrings(mk.MkNav.from_folder)
+    node_docs = mk.MkDocStrings(mk.MkTreeView)
     code.annotations[1] = folder_docs
     code.annotations[2] = node_docs
 
 
-def create_mkpage_section(nav: mknodes.MkNav):
+def create_mkpage_section(nav: mk.MkNav):
     """Create "MkPage" sub-MkNav and attach it to given MkNav."""
     mkpage_nav = nav.add_nav("MkPage")
     page = mkpage_nav.add_index_page(hide_toc=True)
-    page += mknodes.MkCode.for_object(create_mkpage_section, header=SECTION_CODE)
-    page += mknodes.MkAdmonition(MKPAGE_TIP, typ="tip")
+    page += mk.MkCode.for_object(create_mkpage_section, header=SECTION_CODE)
+    page += mk.MkAdmonition(MKPAGE_TIP, typ="tip")
     create_adding_to_mkpages_page(mkpage_nav)
     create_metadata_page(mkpage_nav)
     create_mkclasspage_page(mkpage_nav)
     create_mkmodulepage_page(mkpage_nav)
 
 
-def create_mkclasspage_page(nav: mknodes.MkNav):
-    page = nav.add_page("MkClassPage", icon=mknodes.MkClassPage.ICON)
-    page += mknodes.MkCode.for_object(create_mkclasspage_page, header=PAGE_CODE)
-    class_page = mknodes.MkClassPage(mknodes.MkCode, inclusion_level=False)
-    page += mknodes.MkReprRawRendered(class_page)
+def create_mkclasspage_page(nav: mk.MkNav):
+    page = nav.add_page("MkClassPage", icon=mk.MkClassPage.ICON)
+    page += mk.MkCode.for_object(create_mkclasspage_page, header=PAGE_CODE)
+    class_page = mk.MkClassPage(mk.MkCode, inclusion_level=False)
+    page += mk.MkReprRawRendered(class_page)
 
 
-def create_mkmodulepage_page(nav: mknodes.MkNav):
-    page = nav.add_page("MkModulePage", icon=mknodes.MkModulePage.ICON)
-    page += mknodes.MkCode.for_object(create_mkmodulepage_page, header=PAGE_CODE)
-    module_page = mknodes.MkModulePage(mknodes, inclusion_level=False)
-    page += mknodes.MkReprRawRendered(module_page)
+def create_mkmodulepage_page(nav: mk.MkNav):
+    page = nav.add_page("MkModulePage", icon=mk.MkModulePage.ICON)
+    page += mk.MkCode.for_object(create_mkmodulepage_page, header=PAGE_CODE)
+    module_page = mk.MkModulePage(mk, inclusion_level=False)
+    page += mk.MkReprRawRendered(module_page)
 
 
-def create_adding_to_mkpages_page(nav: mknodes.MkNav):
+def create_adding_to_mkpages_page(nav: mk.MkNav):
     """Create the "Adding to MkPages" MkPage and attach it to given MkNav."""
     page = nav.add_page(
         "Adding to MkPages",
         hide_toc=True,  # you can set all kinds of metadata for your pages
         hide_path=True,
-        icon=mknodes.MkPage.ICON,
+        icon=mk.MkPage.ICON,
         status="new",
     )
-    page += mknodes.MkCode.for_object(create_adding_to_mkpages_page, header=PAGE_CODE)
-    page += mknodes.MkAdmonition("You can add other MkNodes to a page sequentially.")
+    page += mk.MkCode.for_object(create_adding_to_mkpages_page, header=PAGE_CODE)
+    page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
     page += "Adding strings also works, they get converted to MkText nodes."
     page += "### ...and text starting with # will become a MkHeader."
     page += "Every MkPage has a MkFootNotes node built-in[^1]."
     page.footnotes[1] = "Super cool, right?"
 
 
-def create_metadata_page(nav: mknodes.MkNav):
+def create_metadata_page(nav: mk.MkNav):
     """Create the "Metadata" MkPage and attach it to given nav."""
     page = nav.add_page(
         title="Metadata",
@@ -405,26 +394,26 @@ def create_metadata_page(nav: mknodes.MkNav):
         subtitle="Subtitle",
         description="Description",
     )
-    page += mknodes.MkCode.for_object(create_metadata_page, header=PAGE_CODE)
+    page += mk.MkCode.for_object(create_metadata_page, header=PAGE_CODE)
     # page.metadata is a dataclass, we can prettyprint these with MkPrettyPrint.
-    page += mknodes.MkPrettyPrint(page.metadata)
-    page += mknodes.MkHtmlBlock(str(page))
+    page += mk.MkPrettyPrint(page.metadata)
+    page += mk.MkHtmlBlock(str(page))
 
 
-def create_mkdefaultwebsite_section(nav: mknodes.MkNav):
+def create_mkdefaultwebsite_section(nav: mk.MkNav):
     """Create the "MkDefaultWebsite" sub-MkNav and attach it to given nav."""
     proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
-    website_nav = mknodes.MkDefaultWebsite(project=proj)
+    website_nav = mk.MkDefaultWebsite(project=proj)
     nav += website_nav
 
 
-def create_mkdoc_section(nav: mknodes.MkNav):
+def create_mkdoc_section(nav: mk.MkNav):
     """Create the "Metadata" sub-MkNav and attach it to given nav."""
     mkdoc_nav = nav.add_nav("MkDoc")
 
     page = mkdoc_nav.add_index_page(hide_toc=True, icon="api")
-    page += mknodes.MkCode.for_object(create_mkdoc_section, header=SECTION_CODE)
-    page += mknodes.MkAdmonition(DOC_TEXT, typ="tip")
+    page += mk.MkCode.for_object(create_mkdoc_section, header=SECTION_CODE)
+    page += mk.MkAdmonition(DOC_TEXT, typ="tip")
     create_mknodes_section(mkdoc_nav)
 
     # We could also filter specific subclasses,
@@ -441,7 +430,7 @@ def create_mkdoc_section(nav: mknodes.MkNav):
     # addon_docs.collect_classes(recursive=True)
 
 
-def create_mknodes_section(nav: mknodes.MkNav):
+def create_mknodes_section(nav: mk.MkNav):
     # lets create the documentation for our module.
     # For that, we can use the MkDoc node, which will generate docs for us.
     # Usually, this can be done with 2 or 3 lines of code, but
@@ -463,10 +452,10 @@ def create_mknodes_section(nav: mknodes.MkNav):
             super().__init__(*args, **kwargs)
             self.processors = processors or []
 
-        def append_block(self, node: mknodes.MkContainer):
-            code = mknodes.MkCode.for_object(self.append_block)
-            nodes: list[mknodes.MkAdmonition] = []
-            admonition = mknodes.MkAdmonition(
+        def append_block(self, node: mk.MkContainer):
+            code = mk.MkCode.for_object(self.append_block)
+            nodes: list[mk.MkAdmonition] = []
+            admonition = mk.MkAdmonition(
                 code,
                 collapsible=True,
                 typ="quote",
@@ -478,9 +467,9 @@ def create_mknodes_section(nav: mknodes.MkNav):
                 # If yes, we attach a code block.
                 if not processor.check_if_apply(node):
                     continue
-                code = mknodes.MkCode.for_object(processor.append_block)
+                code = mk.MkCode.for_object(processor.append_block)
                 name = processor.__class__.__name__
-                admonition = mknodes.MkAdmonition(
+                admonition = mk.MkAdmonition(
                     code,
                     collapsible=True,
                     typ="quote",
@@ -489,10 +478,10 @@ def create_mknodes_section(nav: mknodes.MkNav):
                 nodes.append(admonition)
             source = (
                 node.resolved_file_path
-                if isinstance(node, mknodes.MkPage)
+                if isinstance(node, mk.MkPage)
                 else node.__class__.__name__
             )
-            node += mknodes.MkAdmonition(
+            node += mk.MkAdmonition(
                 nodes,
                 typ="quote",
                 collapsible=True,
@@ -508,18 +497,18 @@ def create_mknodes_section(nav: mknodes.MkNav):
     class ExtensionInfoProcessor(processors.ContainerProcessor):
         ID = "extension_info"
 
-        def append_block(self, node: mknodes.MkContainer):
+        def append_block(self, node: mk.MkContainer):
             extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
-            node += mknodes.MkAdmonition(extensions, title="Required extensions")
+            node += mk.MkAdmonition(extensions, title="Required extensions")
 
-        def check_if_apply(self, node: mknodes.MkContainer):
+        def check_if_apply(self, node: mk.MkContainer):
             # only add this section for MkNodes which have required extensions
-            return issubclass(self.item, mknodes.MkNode) and self.item.REQUIRED_EXTENSIONS
+            return issubclass(self.item, mk.MkNode) and self.item.REQUIRED_EXTENSIONS
 
     # Now, we write a custom page template which
     # overrides get_processors and includes our new processors.
 
-    class CustomClassPage(mknodes.MkClassPage):
+    class CustomClassPage(mk.MkClassPage):
         def get_pageprocessors(self):
             processors = super().get_pageprocessors()
             code_processor = ShowProcessorCodeProcessor(self.klass, processors=processors)
@@ -534,10 +523,10 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # last step: a custom module page. Thats basically the index.md for a
     # documentation section. We will also insert the source code there.
 
-    class CustomModulePage(mknodes.MkModulePage):
+    class CustomModulePage(mk.MkModulePage):
         def get_pageprocessors(self):
             procs = super().get_pageprocessors()
-            code_block = mknodes.MkCode.for_object(create_mknodes_section)
+            code_block = mk.MkCode.for_object(create_mknodes_section)
             header = "Code for this section"
             fn_processor = processors.StaticBlockProcessor(code_block, header=header)
             proc_processor = ShowProcessorCodeProcessor(
@@ -549,7 +538,7 @@ def create_mknodes_section(nav: mknodes.MkNav):
     # Now that we have our custom ClassPage, we can create the documentation.
     # In our case, we only want to document stuff which is listed in "__all__".
     mknodes_docs = nav.add_doc(
-        module=mknodes,
+        module=mk,
         filter_by___all__=True,
         class_page=CustomClassPage,
         module_page=CustomModulePage,
