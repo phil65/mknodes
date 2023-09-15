@@ -75,7 +75,7 @@ class MkDefaultWebsite(mknodes.MkNav):
         page = internals_nav.add_page("Tree", hide_toc=True, icon="graph")
         page += mknodes.MkHeader("Node tree.", level=3)
         text = self.root.get_tree_repr(detailed=False)
-        page += mknodes.MkCode(text)
+        page += mknodes.MkCode(text, language="")
         page = internals_nav.add_page("Requirements", hide_toc=True, icon="puzzle-edit")
         page += mknodes.MkJinjaTemplate("requirements.md")
         page = internals_nav.add_page("Build Log", hide_toc=True, icon="puzzle-edit")
