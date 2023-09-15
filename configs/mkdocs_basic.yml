@@ -24,5 +24,7 @@ plugins:
 - literate-nav
 - mknodes:
     build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
+    kwargs:
+      show_debug_section: true
     clone_depth: 100
 - mkdocstrings

@@ -79,13 +79,16 @@ class Project(Generic[T]):
 
         from mknodes.basenodes import mknode
 
-        paths = [pathlib.Path(i).stem for i in self._root.page_mapping]
+        mapping = self._root.page_mapping
+
+        paths = [pathlib.Path(i).stem for i in mapping]
         self.linkprovider.set_excludes(paths)
 
         variables = self.context.as_dict()
-        variables["page_mapping"] = self._root.page_mapping
-        variables["requirements"] = self.get_requirements()
-        mknode.MkNode._env.globals |= variables
+        reqs = self.get_requirements()
+        ctx = contexts.BuildContext(page_mapping=mapping, requirements=reqs)
+        mknode.MkNode._env.globals |= variables | ctx.as_dict()
+        return ctx
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
@@ -139,13 +142,6 @@ class Project(Generic[T]):
             repo=self.folderinfo.repository_name,
         )
         return reqs
-
-    @functools.cached_property
-    def build_context(self):
-        return contexts.BuildContext(
-            page_mapping=self.folderinfo.git.context,
-            requirements=self.get_requirements(),
-        )
 
     @functools.cached_property
     def context(self):
