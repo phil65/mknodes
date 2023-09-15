@@ -34,7 +34,8 @@ def create_tree_page(nav: mknodes.MkNav):
     page = nav.add_page("Tree", hide_toc=True, icon="material/graph")
     page += mknodes.MkCode.for_object(create_tree_page, header=PAGE_CODE)
     page += mknodes.MkHeader("This is the tree we built up to now.", level=3)
-    page += mknodes.MkTreeView(nav.root)
+    tree = nav.root.get_tree_repr(detailed=False)
+    page += mknodes.MkCode(tree)
 
 
 def create_requirements_page(nav: mknodes.MkNav):

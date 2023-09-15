@@ -192,15 +192,19 @@ class Node:
         self,
         max_depth: int | None = None,
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] | None = None,
+        detailed: bool = True,
     ) -> str:
+        def formatter(x) -> str:
+            return repr(x) if detailed else x.__class__.__name__
+
         lines = [
-            f"{pre_str}{fill_str}{_node!r}"
+            f"{pre_str}{fill_str}{formatter(_node)}"
             for pre_str, fill_str, _node in self.yield_tree(
                 max_depth=max_depth,
                 style=style or "ascii",
             )
         ]
-        return repr(self) + "\n" + "\n".join(lines[1:])
+        return formatter(self) + "\n" + "\n".join(lines[1:])
 
     def yield_tree(
         self,

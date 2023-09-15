@@ -74,7 +74,8 @@ class MkDefaultWebsite(mknodes.MkNav):
         page = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
         page = internals_nav.add_page("Tree", hide_toc=True, icon="material/graph")
         page += mknodes.MkHeader("Node tree.", level=3)
-        page += mknodes.MkTreeView(self.root)
+        text = self.root.get_tree_repr(detailed=False)
+        page += mknodes.MkCode(text)
         page = internals_nav.add_page(
             "Requirements",
             hide_toc=True,
