@@ -8,7 +8,7 @@ import types
 
 from typing import TYPE_CHECKING, Any, Self
 
-from mknodes.basenodes import mkcode, mklink, mknode
+from mknodes.basenodes import mkadmonition, mkcode, mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navbuilder, parsenav
 from mknodes.pages import metadata, mkpage
@@ -169,13 +169,20 @@ class MkNav(mknode.MkNode):
             node = fn()
             node.parent = self
             if show_source and isinstance(node, mkpage.MkPage):
+                node.created_by = fn
                 code = mkcode.MkCode.for_object(fn, header="Code for this page")
                 code.parent = node
                 node.items.insert(0, code)
             elif show_source and isinstance(node, MkNav) and node.index_page:
-                code = mkcode.MkCode.for_object(fn, header="Code for this section")
-                code.parent = node.index_page
-                node.index_page.items.insert(0, code)
+                code = mkcode.MkCode.for_object(fn)
+                details = mkadmonition.MkAdmonition(
+                    code,
+                    title="Code for this section",
+                    collapsible=True,
+                    typ="quote",
+                )
+                details.parent = node.index_page
+                node.index_page.items.append(details)
             self.nav[path] = node
             return fn
 

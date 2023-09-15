@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import inspect
 import os
 import pathlib
@@ -88,6 +89,7 @@ class MkPage(mkcontainer.MkContainer):
             if frame
             else {}
         )
+        self.created_by: Callable | None = None
         self.metadata = metadata.Metadata(
             hide_toc=hide_toc,
             hide_nav=hide_nav,
