@@ -383,7 +383,7 @@ class MkNav(mknode.MkNode):
         path: str | os.PathLike,
         section: str | None = None,
         parent: MkNav | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Load an existing SUMMARY.md style file.
 
@@ -420,7 +420,7 @@ class MkNav(mknode.MkNode):
         *,
         section: str | None = None,
         parent: MkNav | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Create a nav based on a SUMMARY.md-style list, given as text.
 
@@ -488,7 +488,7 @@ class MkNav(mknode.MkNode):
         *,
         recursive: bool = True,
         parent: MkNav | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Load a MkNav tree from Folder.
 
