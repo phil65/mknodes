@@ -20,7 +20,7 @@ MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 
 SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
-
+NODE_PAGE_TEXT = "Code for each MkNode page"
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
@@ -69,17 +69,6 @@ def create_section_for_nodes(
 def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     """Create a MkPage with example code for given klass."""
     # Each example page will begin by displaying the code used to create the page.
-    code = mk.MkCode.for_object(
-        create_class_page,
-        extract_body=True,
-    )
-    admonition = mk.MkDetailsBlock(
-        code,
-        typ="quote",
-        title=code.title,
-        header=PAGE_CODE,
-    )
-    page += admonition
     page += mk.MkCode.for_object(kls.create_example_page, extract_body=True)
     # page += mk.MkHeader(kls.__doc__.split("\n")[0])
     page += "## Examples"
@@ -91,6 +80,17 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
         text = path.read_text()
         css_code = mk.MkCode(text, language="css")
         page += mk.MkDetailsBlock(css_code, title="Required CSS")
+    code = mk.MkCode.for_object(
+        create_class_page,
+        extract_body=True,
+    )
+    admonition = mk.MkDetailsBlock(
+        code,
+        typ="quote",
+        title=code.title,
+        header="Code for the subsections",
+    )
+    page += admonition
 
 
 @nav.route.nav("Base nodes", show_source=True)
@@ -113,6 +113,8 @@ def create_basic_nodes_section(nav: mk.MkNav):
     ]
     page = nav.add_index_page(hide_toc=True)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
 @nav.route.nav("Container nodes", show_source=True)
@@ -136,8 +138,9 @@ def create_container_nodes_section(nav: mk.MkNav):
         mk.MkTaskList,
     ]
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
 @nav.route.nav("Presentation nodes", show_source=True)
@@ -151,9 +154,9 @@ def create_presentation_nodes_section(nav: mk.MkNav):
         mk.MkDiagram,
     ]
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkHeader(SECTION_CODE)
-    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
 @nav.route.nav("Documentation nodes", show_source=True)
@@ -171,9 +174,9 @@ def create_documentation_nodes_section(nav: mk.MkNav):
         mk.MkClickDoc,
     ]
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkHeader(SECTION_CODE)
-    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
 @nav.route.nav("About-the-project nodes", show_source=True)
@@ -196,9 +199,9 @@ def create_about_nodes_section(nav: mk.MkNav):
     if os.environ.get("CI"):
         klasses.append(mk.MkPyDeps)
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkHeader(SECTION_CODE)
-    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
 @nav.route.nav("Special nodes", show_source=True)
@@ -206,9 +209,9 @@ def create_special_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkHeader(SECTION_CODE)
-    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
 @nav.route.nav("Block nodes", show_source=True)
@@ -222,6 +225,6 @@ def create_block_nodes_section(nav: mk.MkNav):
         mk.MkTabbedBlocks,
     ]
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkHeader(SECTION_CODE)
-    page += mk.MkCode.for_object(create_section_for_nodes)
     page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
