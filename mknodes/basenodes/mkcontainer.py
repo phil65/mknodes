@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+import contextlib
 import re
 
 from typing import Any
@@ -63,6 +64,20 @@ class MkContainer(mknode.MkNode):
         content = [helpers.to_str_if_textnode(i) for i in self.items]
         return reprhelpers.get_repr(self, content=content)
 
+    @contextlib.contextmanager
+    def in_html_tag(self, tag_name, **attributes):
+        if attributes:
+            attr_txt = " " + " ".join(f"{k!r}={v!r}" for k, v in attributes.items())
+        else:
+            attr_txt = ""
+        text = f"<{tag_name}{attr_txt}>"
+        self.append(text)
+        container = MkContainer(parent=self)
+        yield container
+        for item in container:
+            self.append(item)
+        self.append(f"</{tag_name}>")
+
     @staticmethod
     def create_example_page(page):
         import mknodes
@@ -108,4 +123,6 @@ class MkContainer(mknode.MkNode):
 
 if __name__ == "__main__":
     section = MkContainer(header="fff")
+    with section.in_html_tag("ab", c="e"):
+        section += "hello"
     print(section)
