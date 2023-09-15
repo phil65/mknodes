@@ -1,7 +1,7 @@
 .speech {
    font-size: 1.1em;
   color: var(--md-primary-fg-color);
-  background: var(--md-primary-bg-color);
+  background: var(--md-primary-bg-color--light);
   border-color: var(--md-primary-fg-color);
   position: relative;
   padding: 20px;
