@@ -382,11 +382,8 @@ class MkNav(mknode.MkNode):
         cls,
         path: str | os.PathLike,
         section: str | None = None,
-        *,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
         parent: MkNav | None = None,
+        **kwargs,
     ) -> Self:
         """Load an existing SUMMARY.md style file.
 
@@ -397,25 +394,20 @@ class MkNav(mknode.MkNode):
         Arguments:
             path: Path to the file
             section: Section name of new nav
-            hide_toc: Hide table of contents for all pages
-            hide_nav: Hide navigation menu for all pages
-            hide_path: Hide breadcrumbs path for all pages
             parent: Optional parent item if the SUMMARY.md shouldnt be used as root nav.
-
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
         """
         path = pathlib.Path(path)
         if path.is_absolute():
             path = os.path.relpath(path, pathlib.Path().absolute())
         path = pathlib.Path(path)
-        content = path.read_text()
         return cls._from_text(
-            content,
+            path.read_text(),
             section=section,
-            hide_toc=hide_toc,
-            hide_nav=hide_nav,
-            hide_path=hide_path,
             parent=parent,
             path=path,
+            **kwargs,
         )
         # max_indent = max(len(line) - len(line.lstrip()) for line in content.split("\n"))
         # content = [line.lstrip() for line in content.split("\n")]
@@ -427,10 +419,8 @@ class MkNav(mknode.MkNode):
         path: pathlib.Path,
         *,
         section: str | None = None,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
         parent: MkNav | None = None,
+        **kwargs,
     ) -> Self:
         """Create a nav based on a SUMMARY.md-style list, given as text.
 
@@ -441,11 +431,10 @@ class MkNav(mknode.MkNode):
         Arguments:
             text: Text to parse
             section: Section name for the nav
-            hide_toc: Hide table of contents for all pages
-            hide_nav: Hide navigation menu for all pages
-            hide_path: Hide breadcrumbs path for all pages
             parent: Optional parent-nav in case the new nav shouldnt become the root nav.
             path: path of the file containing the text.
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
         """
         nav = cls(section, parent=parent)
         lines = text.split("\n")
@@ -455,60 +444,41 @@ class MkNav(mknode.MkNode):
             # * [Example](example_folder/sub_1.md)
             if match := re.match(SECTION_AND_FOLDER_REGEX, line):
                 file_path = path.parent / f"{match[2]}/SUMMARY.md"
-                subnav = MkNav.from_file(
+                nav[match[1]] = MkNav.from_file(
                     file_path,
                     section=match[1],
-                    hide_toc=hide_toc,
-                    hide_nav=hide_nav,
-                    hide_path=hide_path,
                     parent=nav,
+                    **kwargs,
                 )
-                nav[match[1]] = subnav
                 logger.debug("Created subsection %s from %s", match[1], file_path)
             elif match := re.match(SECTION_AND_FILE_REGEX, line):
                 if unindented := helpers.get_indented_lines(lines[i + 1 :]):
                     subnav = MkNav._from_text(
                         "\n".join(unindented),
                         section=match[1],
-                        hide_toc=hide_toc,
-                        hide_nav=hide_nav,
-                        hide_path=hide_path,
                         parent=nav,
                         path=path,
+                        **kwargs,
                     )
-                    page = subnav.add_index_page(
-                        hide_toc=hide_toc,
-                        hide_nav=hide_nav,
-                        hide_path=hide_path,
-                    )
+                    page = subnav.add_index_page(**kwargs)
                     page += pathlib.Path(match[2]).read_text()
                     msg = "Created subsection %s and loaded index page %s"
                     logger.debug(msg, match[1], match[2])
                     nav += subnav
                 else:
                     p = match[2] if match[2].startswith("->") else path.parent / match[2]
-                    page = parsenav.add_page(
-                        path=p,
-                        hide_toc=hide_toc,
-                        hide_nav=hide_nav,
-                        hide_path=hide_path,
-                        parent=nav,
-                    )
-                    nav[match[1]] = page
+                    nav[match[1]] = parsenav.add_page(path=p, parent=nav, **kwargs)
                     logger.debug("Created page %s from %s", match[1], match[2])
             elif match := re.match(SECTION_REGEX, line):
                 unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
-                subnav = MkNav._from_text(
+                logger.debug("Created subsection %s from text", match[1])
+                nav[match[1]] = MkNav._from_text(
                     "\n".join(unindented),
                     section=match[1],
-                    hide_toc=hide_toc,
-                    hide_nav=hide_nav,
-                    hide_path=hide_path,
                     parent=nav,
                     path=path,
+                    **kwargs,
                 )
-                logger.debug("Created subsection %s from text", match[1])
-                nav[match[1]] = subnav
         return nav
 
     @classmethod
@@ -517,10 +487,8 @@ class MkNav(mknode.MkNode):
         folder: str | os.PathLike,
         *,
         recursive: bool = True,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
         parent: MkNav | None = None,
+        **kwargs,
     ) -> Self:
         """Load a MkNav tree from Folder.
 
@@ -533,47 +501,33 @@ class MkNav(mknode.MkNode):
         Arguments:
             folder: Folder to load .md files from
             recursive: Whether all .md files should be included recursively.
-            hide_toc: Whether to hide the toc for all pages
-            hide_nav: Whether to hide the nav for all pages
-            hide_path: Whether to hide the path for all pages
             parent: Optional parent-nav in case the new nav shouldnt become the root nav.
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
         """
         folder = pathlib.Path(folder)
         nav = cls(folder.name if parent else None, parent=parent)
         for path in folder.iterdir():
             if path.is_dir() and recursive and any(path.iterdir()):
                 path = folder / path.parts[-1]
-                subnav = cls.from_folder(
-                    folder=path,
-                    hide_toc=hide_toc,
-                    hide_nav=hide_nav,
-                    hide_path=hide_path,
-                    parent=nav,
-                )
-                nav += subnav
+                nav += cls.from_folder(folder=path, parent=nav, **kwargs)
                 logger.debug("Loaded subnav from from %s", path)
             elif path.name == "index.md":
-                page = mkpage.MkPage(
+                logger.debug("Loaded index page from %s", path)
+                nav.index_page = mkpage.MkPage(
                     path=path.name,
                     content=path.read_text(),
-                    hide_toc=hide_toc,
-                    hide_nav=hide_nav,
-                    hide_path=hide_path,
                     parent=nav,
+                    **kwargs,
                 )
-                logger.debug("Loaded index page from %s", path)
-                nav.index_page = page
                 nav.index_title = nav.section or "Home"
             elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
-                page = mkpage.MkPage(
+                nav += mkpage.MkPage(
                     path=path.relative_to(folder),
                     content=path.read_text(),
-                    hide_toc=hide_toc,
-                    hide_nav=hide_nav,
-                    hide_path=hide_path,
                     parent=nav,
+                    **kwargs,
                 )
-                nav += page
                 logger.debug("Loaded page from from %s", path)
         return nav
 
