@@ -14,6 +14,7 @@ from mkdocs.plugins import BasePlugin, get_plugin_logger
 
 from mknodes import mkdocsconfig, project
 from mknodes.basenodes import mknode
+from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, markdownbackend, mkdocsbackend, pluginconfig
 from mknodes.theme import theme
@@ -95,11 +96,24 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             extension=".original",
         )
         self.backends = [mkdocs_backend, markdown_backend]
-
-        all_files = self.project._root.all_virtual_files() if self.project._root else {}
-        build_files = all_files | self.project.theme.get_files()
-        # self.markdown_backend.on_write_files(build_files, requirements)
-        # self.mkdocs_backend.on_write_files(build_files, requirements)
+        node_files: dict[str, str | bytes] = {}
+        extra_files: dict[str, str | bytes] = {}
+        if root := self.project._root:
+            for _, node in root.iter_nodes():
+                extra_files |= node._files
+                match node:
+                    case mkpage.MkPage():
+                        if node.inclusion_level:
+                            path, md = node.resolved_file_path, node.to_markdown()
+                            node_files[path] = md
+                    case mknav.MkNav():
+                        path, md = node.resolved_file_path, node.to_markdown()
+                        node_files[path] = md
+                        if node.metadata:
+                            extra_files[node.metadata_file] = str(node.metadata)
+                    case _:
+                        node_files |= node.resolved_virtual_files
+        build_files = node_files | self.project.theme.get_files() | extra_files
 
         requirements = self.project.get_requirements()
         for backend in self.backends:
@@ -135,7 +149,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     def on_pre_page(
         self,
         page: Page,
-        *,
         config: MkDocsConfig,
         files: Files,
     ) -> Page | None:
@@ -151,7 +164,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
     def on_page_markdown(
         self,
         markdown: str,
-        *,
         page: Page,
         config: MkDocsConfig,
         files: Files,

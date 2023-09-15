@@ -57,5 +57,5 @@ def add_context_doc(container, context):
 def create_filters_page(nav: mknodes.MkNav):
     page = nav.add_page("Jinja macros", icon=mknodes.MkClassPage.ICON)
     page += mknodes.MkCode.for_object(create_filters_page, header=PAGE_CODE)
-    class_page = mknodes.MkClassPage(mknodes.MkCode, virtual=True)
+    class_page = mknodes.MkClassPage(mknodes.MkCode, inclusion_level=False)
     page += mknodes.MkReprRawRendered(class_page)

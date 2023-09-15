@@ -41,7 +41,7 @@ class MkPage(mkcontainer.MkContainer):
         subtitle: str | None = None,
         description: str | None = None,
         template: str | pagetemplate.PageTemplate | None = None,
-        virtual: bool = False,
+        inclusion_level: bool | None = True,
         tags: list[str] | None = None,
         edit_path: str | None = None,
         **kwargs: Any,
@@ -63,7 +63,7 @@ class MkPage(mkcontainer.MkContainer):
             description: Page description
             template: Page template (filename relative to `overrides` directory or
                        PageTemplate object)
-            virtual: Whether the Page should result in a file. Mainly for testing purposes
+            inclusion_level: Inclusion level of the page
             tags: tags to show above the main headline and within the search preview
             edit_path: Custom edit path for this page
             kwargs: Keyword arguments passed to parent
@@ -74,7 +74,7 @@ class MkPage(mkcontainer.MkContainer):
         # self._edit_path = pathlib.Path(inspect.currentframe().f_back.f_code.co_filename)
         self._edit_path = edit_path
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
-        self.virtual = virtual
+        self.inclusion_level = inclusion_level
         frame = i.f_back.f_back if (i := inspect.currentframe()) else None  # type: ignore[union-attr]  # noqa: E501
         self.created = (
             dict(
@@ -214,7 +214,7 @@ class MkPage(mkcontainer.MkContainer):
         return page
 
     def virtual_files(self) -> dict[str, str | bytes]:
-        dct = {} if self.virtual else {self.path: self.to_markdown()}
+        dct = {} if self.inclusion_level else {self.path: self.to_markdown()}
         return dct | super().virtual_files()
 
     def get_processors(self):

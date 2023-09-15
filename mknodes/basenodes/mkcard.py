@@ -128,15 +128,13 @@ class MkCard(mknode.MkNode):
     @classmethod
     def for_page(cls, page):
         image = mkbinaryimage.MkBinaryImage.for_icon(page.icon)
-        files = image.virtual_files()
-        path, data = next(iter(files.items()))
         card = MkCard(
             page.title,
-            image=path,
+            image=image.path,
             caption=page.subtitle or "",
             target=page,
         )
-        card.add_file(path, data)
+        card.add_file(image.path, image.data)
         return card
 
     @staticmethod

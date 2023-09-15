@@ -367,14 +367,14 @@ def create_mkpage_section(nav: mknodes.MkNav):
 def create_mkclasspage_page(nav: mknodes.MkNav):
     page = nav.add_page("MkClassPage", icon=mknodes.MkClassPage.ICON)
     page += mknodes.MkCode.for_object(create_mkclasspage_page, header=PAGE_CODE)
-    class_page = mknodes.MkClassPage(mknodes.MkCode, virtual=True)
+    class_page = mknodes.MkClassPage(mknodes.MkCode, inclusion_level=False)
     page += mknodes.MkReprRawRendered(class_page)
 
 
 def create_mkmodulepage_page(nav: mknodes.MkNav):
     page = nav.add_page("MkModulePage", icon=mknodes.MkModulePage.ICON)
     page += mknodes.MkCode.for_object(create_mkmodulepage_page, header=PAGE_CODE)
-    module_page = mknodes.MkModulePage(mknodes, virtual=True)
+    module_page = mknodes.MkModulePage(mknodes, inclusion_level=False)
     page += mknodes.MkReprRawRendered(module_page)
 
 

@@ -68,7 +68,7 @@ class MkCallable(mknode.MkNode):
         import mknodes
 
         def make_page():
-            page = mknodes.MkPage("MkCallable Page", virtual=True)
+            page = mknodes.MkPage("MkCallable Page", inclusion_level=False)
             page += "Content!"
             page += MkCallable(lambda: mknodes.MkAdmonition("Nested!"))
             return page
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     import mknodes
 
     def make_page():
-        page = mknodes.MkPage("test", hide_toc=True, virtual=True)
+        page = mknodes.MkPage("test", hide_toc=True, inclusion_level=False)
         page += "Some content"
         return page
 
