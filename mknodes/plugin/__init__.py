@@ -108,6 +108,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                 case mkpage.MkPage():
                     if node.inclusion_level:
                         path, md = node.resolved_file_path, node.to_markdown()
+                        md = node.env.render_string(md)
                         node_files[path] = md
                 case mknav.MkNav():
                     path, md = node.resolved_file_path, node.to_markdown()
@@ -169,23 +170,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links get replaced and `jinja2` stuff get rendered."""
-        mapping = mknode.MkNode._env.globals["page_mapping"]
-        node = mapping.get(page.file.src_uri)  # type: ignore[attr-defined]
-        if node is None:
-            return markdown
-        markdown = node.env.render_string(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
-
-    # def on_page_context(
-    #     self,
-    #     context: TemplateContext,
-    #     *,
-    #     page: Page,
-    #     config: MkDocsConfig,
-    #     nav: Navigation,
-    # ) -> TemplateContext | None:
-    #     """Also add our info stuff to the MkDocs jinja context."""
-    #     return context
 
     def on_post_build(self, config: MkDocsConfig):
         """Delete the temporary template files."""
