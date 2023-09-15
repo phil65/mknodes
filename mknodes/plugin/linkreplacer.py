@@ -38,11 +38,10 @@ class LinkReplacer:
             text = "%s: %s has %s targets"
             logger.debug(text, self.page_url, len(filenames), match.group(3))
         new_link = helpers.relative_url(self.page_url, filenames[0])
-        new_text = match.group(0).replace(match.group(2), new_link)
+        return match.group(0).replace(match.group(2), new_link)
         # new_text = new_text.replace("\\", "/")
-        text = "LinkReplacer: : %s -> %s"
-        logger.debug(text, match.group(3), new_text)
-        return new_text
+        # text = "LinkReplacer: : %s -> %s"
+        # logger.debug(text, match.group(3), new_text)
 
     def replace(self, markdown: str, uri: str) -> str:
         if uri.endswith("SUMMARY.md"):
