@@ -46,14 +46,14 @@ class Environment(jinja2.Environment):
     def render_string(self, markdown: str, variables=None):
         try:
             template = self.from_string(markdown)
-        except jinja2.exceptions.TemplateSyntaxError as e:
-            logger.warning("Error when loading template: %s", e)
+        except jinja2.exceptions.TemplateSyntaxError:
+            logger.exception("Error when loading template.")
             return markdown
         variables = variables or {}
         try:
             return template.render(**variables)
-        except jinja2.exceptions.UndefinedError as e:
-            logger.warning("Error when rendering template: %s", e)
+        except jinja2.exceptions.UndefinedError:
+            logger.exception("Error when rendering template.")
             return ""
 
     def render_template(
@@ -66,8 +66,8 @@ class Environment(jinja2.Environment):
         variables = variables or {}
         try:
             return template.render(**variables)
-        except jinja2.exceptions.UndefinedError as e:
-            logger.warning("Error when rendering template: %s", e)
+        except jinja2.exceptions.UndefinedError:
+            logger.exception("Error when rendering template.")
             return ""
 
 
