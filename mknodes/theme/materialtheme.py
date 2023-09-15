@@ -116,13 +116,15 @@ class MaterialTheme(theme.Theme):
         self._foreground_color = None
         self.blog = mkblog.MkBlog()
         self.features = self.data.get("features")
+        self.palettes = self.load_palettes()
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
 
-    @property
-    def palettes(self):
-        data = self.data.get("palette", [])
+    def load_palettes(self):
+        data = self.data.get("palette")
+        if not data:
+            return [palette.Palette()]
         if isinstance(data, dict):
             data = [data]
         return [
@@ -160,26 +162,20 @@ class MaterialTheme(theme.Theme):
         return COLORS[color]["color"]
 
     def _get_color(self, color_type: Literal["primary", "accent"], fallback: str) -> str:
-        data = self.data.get("palette")
-        match data:
-            case list():
-                return data[0].get(color_type, fallback)
-            case dict():
-                return data.get(color_type, fallback)
-            case _:
-                return fallback
+        pal = self.palettes[0]
+        match color_type:
+            case "primary":
+                return pal.primary or fallback
+            case "accent":
+                return pal.accent or fallback
 
     def set_color(self, color_type: Literal["primary", "accent"], value: str):
-        data = self.data.get("palette")
-        match data:
-            case list():
-                for pal in data:
-                    pal[color_type] = value
-            case dict():
-                data[color_type] = value
-            case _:
-                msg = "Could not find palette"
-                raise RuntimeError(msg)
+        pal = self.palettes[0]
+        match color_type:
+            case "primary":
+                pal.primary = value
+            case "accent":
+                pal.accent = value
 
     def set_accent_foreground_color(self, color: datatypes.RGBColorType):
         color_str = get_color_str(color)

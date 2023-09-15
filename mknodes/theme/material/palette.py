@@ -17,20 +17,12 @@ SCRIPT = """
 
 @dataclasses.dataclass
 class Palette:
-    toggle_name: str
-    toggle_icon: str
     scheme: str = "default"
     primary: str = "indigo"
     accent: str = "indigo"
     media: str | None = None
-
-
-default_palette = Palette(
-    "Switch to dark mode",
-    "material/brightness-7",
-    scheme="default",
-)
-dark_palette = Palette("Switch to light mode", "material/brightness-4", scheme="slate")
+    toggle_name: str | None = None
+    toggle_icon: str | None = None
 
 
 def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
@@ -66,7 +58,9 @@ def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
                 "hidden": "hidden",
             }
             label = ElementTree.SubElement(el_input, "label", attrs)
-            el = xmlhelpers.get_material_icon_svg(pal.toggle_icon)
+            el = xmlhelpers.get_material_icon_svg(
+                pal.toggle_icon or "material/brightness-4",
+            )
             label.append(el)
     # script = ElementTree.SubElement(body, "script")
     # script.text = SCRIPT
@@ -74,6 +68,12 @@ def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
 
 
 if __name__ == "__main__":
+    default_palette = Palette()
+    dark_palette = Palette(
+        toggle_name="Switch to light mode",
+        toggle_icon="material/brightness-4",
+        scheme="slate",
+    )
     root = build_toggle([default_palette, dark_palette])
     xml_string = xmlhelpers.pformat(root)
     print(xml_string)
