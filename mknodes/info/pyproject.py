@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 import functools
 import os
 import pathlib
@@ -42,7 +43,9 @@ class PyProject(tomlfile.TomlFile):
     @property
     def tool(self) -> superdict.SuperDict[Any]:
         """Tool section."""
-        return superdict.SuperDict(self._data.get("tool", {}))
+        dct: collections.defaultdict[str, dict] = collections.defaultdict(dict)
+        dct.update(self._data.get("tool", {}))
+        return superdict.SuperDict(dct)
 
     @property
     def project(self) -> dict[str, Any]:
