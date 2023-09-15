@@ -252,6 +252,7 @@ class MkNode(node.Node):
         )
         logger.debug("Merging Extensions...")
         all_extensions = mergehelpers.merge_extensions(all_extensions)
+        logger.debug("Resulting extensions: %s", len(all_extensions))
         logger.debug("Building Requirements object...")
         return requirements.Requirements(
             templates=all_templates,
