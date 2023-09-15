@@ -71,22 +71,14 @@ class MkDefaultWebsite(mknodes.MkNav):
 
     def add_debug_nav(self):
         internals_nav = self.add_nav("Debug info")
-        page = internals_nav.add_index_page(hide_toc=True, icon="material/magnify")
-        page = internals_nav.add_page("Tree", hide_toc=True, icon="material/graph")
+        page = internals_nav.add_index_page(hide_toc=True, icon="magnify")
+        page = internals_nav.add_page("Tree", hide_toc=True, icon="graph")
         page += mknodes.MkHeader("Node tree.", level=3)
         text = self.root.get_tree_repr(detailed=False)
         page += mknodes.MkCode(text)
-        page = internals_nav.add_page(
-            "Requirements",
-            hide_toc=True,
-            icon="material/puzzle-edit",
-        )
+        page = internals_nav.add_page("Requirements", hide_toc=True, icon="puzzle-edit")
         page += mknodes.MkJinjaTemplate("requirements.md")
-        page = internals_nav.add_page(
-            "Build Log",
-            hide_toc=True,
-            icon="material/puzzle-edit",
-        )
+        page = internals_nav.add_page("Build Log", hide_toc=True, icon="puzzle-edit")
         page += mknodes.MkText("log() | MkCode", is_jinja_expression=True)
 
     @classmethod

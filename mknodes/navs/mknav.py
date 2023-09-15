@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 import os
 import pathlib
 import re
@@ -8,9 +8,9 @@ import types
 
 from typing import TYPE_CHECKING, Any, Self
 
-from mknodes.basenodes import mkadmonition, mkcode, mklink, mknode
+from mknodes.basenodes import mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
-from mknodes.navs import navbuilder, parsenav
+from mknodes.navs import navbuilder, navrouter, parsenav
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import helpers, log, reprhelpers
 
@@ -56,6 +56,7 @@ class MkNav(mknode.MkNode):
         self.section = section  # helpers.slugify(section)
         self.filename = filename
         self.nav: dict[tuple | str | None, NavSubType] = {}
+        self.route = navrouter.NavRouter(self)
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
         self.metadata = metadata.Metadata()
@@ -148,45 +149,6 @@ class MkNav(mknode.MkNode):
     @children.setter
     def children(self, items):
         self.nav = dict(items)
-
-    def route(
-        self,
-        *path: str,
-        show_source: bool = False,
-    ) -> Callable[[Callable], Callable]:
-        """Decorator method to use for routing.
-
-        The decorated functions need to return either a MkPage or an MkNav.
-        They will get registered to the router-MkNav then.
-
-        Arguments:
-            path: The section path for the returned MkNav / MkPage
-            show_source: If True, a section containing the code will be inserted
-                         at the start of the page (or index page if node is a Nav)
-        """
-
-        def decorator(fn: Callable[..., NavSubType], path=path) -> Callable:
-            node = fn()
-            node.parent = self
-            if show_source and isinstance(node, mkpage.MkPage):
-                node.created_by = fn
-                code = mkcode.MkCode.for_object(fn, header="Code for this page")
-                code.parent = node
-                node.items.insert(0, code)
-            elif show_source and isinstance(node, MkNav) and node.index_page:
-                code = mkcode.MkCode.for_object(fn)
-                details = mkadmonition.MkAdmonition(
-                    code,
-                    title="Code for this section",
-                    collapsible=True,
-                    typ="quote",
-                )
-                details.parent = node.index_page
-                node.index_page.items.append(details)
-            self.nav[path] = node
-            return fn
-
-        return decorator
 
     def add_nav(self, section: str) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.

@@ -52,7 +52,7 @@ def create_nodes_section(root_nav: mknodes.MkNav):
 
     # and then we create the index page (the page you are lookin at right now)
 
-    page = the_nodes_nav.add_index_page(hide_toc=True, icon="material/graph")
+    page = the_nodes_nav.add_index_page(hide_toc=True, icon="graph")
     page += mknodes.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
     page += mknodes.MkDetailsBlock(INTRO_TEXT, expand=True)
     page += mknodes.MkHeader("All the nodes")
@@ -307,7 +307,7 @@ def create_from_file_section(nav: mknodes.MkNav):
     nav["From file"] = from_file_nav
 
     # Finally, the page you are seeing right now.
-    page = from_file_nav.add_index_page(hide_toc=True, icon="material/file")
+    page = from_file_nav.add_index_page(hide_toc=True, icon="file")
     code = mknodes.MkCode.for_object(create_from_file_section, header=SECTION_CODE)
     page += code
 
@@ -343,7 +343,7 @@ def create_from_folder_section(nav: mknodes.MkNav):
 
     # Finally, create the index page.
     code = mknodes.MkCode.for_object(create_from_folder_section, header=SECTION_CODE)
-    page = from_folder_nav.add_index_page(hide_toc=True, icon="material/folder")
+    page = from_folder_nav.add_index_page(hide_toc=True, icon="folder")
     page += code
     page += mknodes.MkTreeView(folder)  # DocStrings: (2)
     folder_docs = mknodes.MkDocStrings(mknodes.MkNav.from_folder)
@@ -422,7 +422,7 @@ def create_mkdoc_section(nav: mknodes.MkNav):
     """Create the "Metadata" sub-MkNav and attach it to given nav."""
     mkdoc_nav = nav.add_nav("MkDoc")
 
-    page = mkdoc_nav.add_index_page(hide_toc=True, icon="material/api")
+    page = mkdoc_nav.add_index_page(hide_toc=True, icon="api")
     page += mknodes.MkCode.for_object(create_mkdoc_section, header=SECTION_CODE)
     page += mknodes.MkAdmonition(DOC_TEXT, typ="tip")
     create_mknodes_section(mkdoc_nav)

@@ -30,6 +30,10 @@ class Metadata:
     template: str | None = None
     tags: list[str] | None = None
 
+    def __post_init__(self):
+        if self.icon and "/" not in self.icon:
+            self.icon = f"material/{self.icon}"
+
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
         dct = {}

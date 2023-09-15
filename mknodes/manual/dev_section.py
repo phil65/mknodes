@@ -9,7 +9,7 @@ SECTION_CODE = "Code for this section"
 PAGE_CODE = "Code for this page"
 
 # this is the nav we will populate via decorators.
-dev_nav = mknodes.MkNav("Development")
+nav = mknodes.MkNav("Development")
 
 
 def create_development_section(root_nav: mknodes.MkNav):
@@ -20,97 +20,68 @@ def create_development_section(root_nav: mknodes.MkNav):
     # dynamically populated depending on the project the tree is connected to.
     # This means that this section could be imported by other packages and be
     # used without any further adaptation.
-    root_nav += dev_nav
-    page = dev_nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
+    root_nav += nav
+    page = nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
     page += mknodes.MkCode.for_object(create_development_section, header=SECTION_CODE)
     page += mknodes.MkAdmonitionBlock(INTRO_TEXT)
 
 
-@dev_nav.route("Module overview", show_source=True)
-def create_module_overview_page():
+@nav.route.page("Module overview", show_source=True, icon="file-tree-outline")
+def create_module_overview_page(page: mknodes.MkPage):
     """Create the "Module overview" MkPage and attach it to given MkNav."""
-    node = mknodes.MkModuleOverview(maximum_depth=2)
-    page = mknodes.MkPage("Module overview", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkModuleOverview(maximum_depth=2)
 
 
-@dev_nav.route("Plugin flow", show_source=True)
-def create_plugin_flow_page():
+@nav.route.page("Plugin flow", show_source=True, icon="dev-to")
+def create_plugin_flow_page(page: mknodes.MkPage):
     """Create the "Plugin flow" MkPage and attach it to given MkNav."""
-    node = mknodes.MkPluginFlow()
-    page = mknodes.MkPage("Plugin flow", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkPluginFlow()
 
 
-@dev_nav.route("CLI", show_source=True)
-def create_cli_page():
+@nav.route.page("CLI", show_source=True, icon="api")
+def create_cli_page(page: mknodes.MkPage):
     """Create the "CLI" MkPage and attach it to given MkNav."""
-    node = mknodes.MkClickDoc()
-    page = mknodes.MkPage("CLI", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkClickDoc()
 
 
-@dev_nav.route("Changelog", show_source=True)
-def create_changelog_page():
+@nav.route.page("Changelog", show_source=True, icon="format-list-group")
+def create_changelog_page(page: mknodes.MkPage):
     """Create the "Changelog" MkPage and attach it to given MkNav."""
-    node = mknodes.MkChangelog()  # based on "git-changelog" package
-    page = mknodes.MkPage("Changelog", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkChangelog()  # based on "git-changelog" package
 
 
-@dev_nav.route("Code of conduct", show_source=True)
-def create_coc_page():
+@nav.route.page("Code of conduct", show_source=True, icon="octicons/code-of-conduct-24")
+def create_coc_page(page: mknodes.MkPage):
     """Create the "Code of conduct" MkPage and attach it to given MkNav."""
-    node = mknodes.MkCodeOfConduct()
-    page = mknodes.MkPage("Code of conduct", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkCodeOfConduct()
 
 
-@dev_nav.route("Contributing", show_source=True)
-def create_contribute_page():
+@nav.route.page("Contributing", show_source=True, icon="help")
+def create_contribute_page(page: mknodes.MkPage):
     """Create the "Contributing" MkPage and attach it to given MkNav."""
-    page = mknodes.MkPage("Contributing", icon="material/help")
     page += mknodes.MkCommitConventions()
     page += mknodes.MkPullRequestGuidelines()
-    return page
 
 
-@dev_nav.route("License", show_source=True)
-def create_license_page():
+@nav.route.page("License", show_source=True, hide_toc=True, icon="license")
+def create_license_page(page: mknodes.MkPage):
     """Create the "License" MkPage and attach it to given MkNav."""
-    node = mknodes.MkLicense()
-    page = mknodes.MkPage("License", icon=node.ICON, hide_toc=True)
-    page += node
-    return page
+    page += mknodes.MkLicense()
 
 
-@dev_nav.route("Dependencies", show_source=True)
-def create_dependencies_page():
+@nav.route.page("Dependencies", show_source=True, hide_toc=True, icon="database")
+def create_dependencies_page(page: mknodes.MkPage):
     """Create the "Dependencies" MkPage and attach it to given MkNav."""
-    node = mknodes.MkDependencyTable()
-    page = mknodes.MkPage("Dependencies", icon=node.ICON, hide_toc=True)
-    page += node
-    return page
+    page += mknodes.MkDependencyTable()
 
 
-@dev_nav.route("Development environment", show_source=True)
-def create_dev_environment_page():
+@nav.route.page("Development environment", show_source=True, icon="dev-to")
+def create_dev_environment_page(page: mknodes.MkPage):
     """Create the "Development environment" MkPage and attach it to given MkNav."""
-    node = mknodes.MkDevEnvSetup()
-    page = mknodes.MkPage("Development environment", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkDevEnvSetup()
 
 
-@dev_nav.route("Dev Tools", show_source=True)
-def create_dev_tools_page():
+@nav.route.page("Dev Tools", show_source=True, icon="wrench")
+def create_dev_tools_page(page: mknodes.MkPage):
     """Create the "Tools" MkPage and attach it to given MkNav."""
-    node = mknodes.MkDevTools()
-    page = mknodes.MkPage("Tools", icon=node.ICON)
-    page += node
-    return page
+    page += mknodes.MkDevTools()

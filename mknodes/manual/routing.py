@@ -6,6 +6,8 @@ decorated functions need to return either an MkPage or another MkNav.
 
 import mknodes
 
+from mknodes.navs import navrouter
+
 
 NAV_TEXT = """You can also use decorators to attach MkNavs. These navs then can continue
 to build the tree without using decorators (by adding sub-navs).
@@ -20,7 +22,7 @@ def create_routing_section(nav: mknodes.MkNav):
     nav += route_nav
     page = route_nav.add_index_page(icon="material/call-split", hide_toc=True)
     page += mknodes.MkCode.for_file(__file__, header="Code for this section")
-    page += mknodes.MkDocStrings(mknodes.MkNav.route, header="MkNav.route Docstrings")
+    page += mknodes.MkDocStrings(navrouter.NavRouter, header="MkNav.route Docstrings")
 
 
 @route_nav.route("Routed page", show_source=True)
