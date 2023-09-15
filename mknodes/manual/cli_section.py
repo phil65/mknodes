@@ -36,6 +36,7 @@ def create_cli_section(root_nav: mk.MkNav):
     root_nav += nav
     page = nav.add_index_page(hide_toc=True, icon="octicons/command-palette-16")
     page += mk.MkCode.for_object(create_cli_section, header=SECTION_CODE)
+    page += mk.MkBinaryImage.for_file("docs/assets/cli.gif")
     page += INTRO_TEXT
 
 

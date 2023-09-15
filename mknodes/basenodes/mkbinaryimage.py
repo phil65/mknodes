@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from typing import Any
+import os
+import pathlib
+
+from typing import Any, Self
 
 from mknodes.basenodes import mkimage
 from mknodes.utils import helpers, log, pathhelpers
@@ -57,7 +60,7 @@ class MkBinaryImage(mkimage.MkImage):
         page += mknodes.MkReprRawRendered(node)
 
     @classmethod
-    def for_icon(cls, icon: str, **kwargs: Any):
+    def for_icon(cls, icon: str, **kwargs: Any) -> Self:
         """Return a MkBinaryImage with data for given icon.
 
         Arguments:
@@ -69,7 +72,20 @@ class MkBinaryImage(mkimage.MkImage):
         path = f"{helpers.slugify(icon)}.svg"
         return cls(data=content, path=path, **kwargs)
 
+    @classmethod
+    def for_file(cls, path: str | os.PathLike, **kwargs: Any) -> Self:
+        """Return a MkBinaryImage with data for given icon.
+
+        Arguments:
+            path: Icon to get a MkBinaryImage for (example: material/file-image)
+            kwargs: Keyword arguments passed to constructor
+        """
+        path = pathlib.Path(path)
+        content = path.read_bytes()
+        path = path.name
+        return cls(data=content, path=path, **kwargs)
+
 
 if __name__ == "__main__":
-    node = MkBinaryImage.for_icon(MkBinaryImage.ICON)
+    node = MkBinaryImage.for_file("assets/cli.gif")
     print(node.data)
