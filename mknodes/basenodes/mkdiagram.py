@@ -46,7 +46,7 @@ class MkDiagram(mkcode.MkCode):
         connections: list[tuple] | None = None,
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         attributes: dict[str, str] | None = None,
-        header: str = "",
+        **kwargs,
     ):
         """Constructor.
 
@@ -56,9 +56,9 @@ class MkDiagram(mkcode.MkCode):
             connections: tuples indicating the connections of the items
             direction: diagram direction
             attributes: Optional attributes for the items
-            header: Section header
+            kwargs: Keyword arguments passed to parent
         """
-        super().__init__(language="mermaid", header=header)
+        super().__init__(language="mermaid", **kwargs)
         self._graph_type = graph_type
         self._direction = direction
         self.names = set(items or [])

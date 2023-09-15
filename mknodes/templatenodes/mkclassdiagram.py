@@ -73,16 +73,12 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         mode: DiagramModeStr = "baseclasses",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,
-        header: str = "",
+        **kwargs,
     ):
         self.klass = klass
         self.mode = mode
         self._max_depth = max_depth
-        super().__init__(
-            graph_type="flow",
-            direction=direction,
-            header=header,
-        )
+        super().__init__(graph_type="flow", direction=direction, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(
