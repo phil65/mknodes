@@ -75,6 +75,15 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         max_depth: int | None = None,
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            klass: Klass to show a diagram for
+            mode: What kind of diagram to display
+            direction: diagram direction
+            max_depth: Maxium depth to display
+            kwargs: Keyword arguments passed to parent
+        """
         self.klass = klass
         self.mode = mode
         self._max_depth = max_depth
