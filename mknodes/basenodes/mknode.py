@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-import functools
 import time
 
 from typing import TYPE_CHECKING
@@ -194,17 +193,6 @@ class MkNode(node.Node):
         """
         return self._files
 
-    @functools.cached_property
-    def resolved_virtual_files(self) -> dict[str, str | bytes]:
-        """Return a dict containing all virtual files with resolved file paths."""
-        from mknodes.navs import mknav
-
-        sections = [i.section for i in self.ancestors if isinstance(i, mknav.MkNav)]
-        section = "/".join(i for i in reversed(sections) if i is not None)
-        if section:
-            section += "/"
-        return {f"{section}{k}": v for k, v in self.virtual_files().items()}
-
     def add_file(self, filename: str, data: str | bytes):
         """Add a static file as data to this node.
 
@@ -221,19 +209,6 @@ class MkNode(node.Node):
             class_name: CSS class to wrap the node with
         """
         self._css_classes.add(class_name)
-
-    def all_virtual_files(self) -> dict[str, str | bytes]:
-        """Return a dictionary containing all virtual files of itself and all children.
-
-        Dict key contains the filename, dict value contains the file content.
-
-        The resulting filepath is determined based on the tree hierarchy.
-        """
-        all_files: dict[str, str | bytes] = {}
-        for des in self.descendants:
-            all_files |= des.resolved_virtual_files
-        all_files |= self.resolved_virtual_files
-        return all_files
 
     def get_requirements(self, recursive: bool = True) -> requirements.Requirements:
         all_templates: list[pagetemplate.PageTemplate] = []

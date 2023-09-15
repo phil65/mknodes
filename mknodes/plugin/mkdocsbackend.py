@@ -164,15 +164,3 @@ if __name__ == "__main__":
         clone_depth=1,
     )
     reqs = proj.get_requirements()
-    all_files = proj._root.all_virtual_files() if proj._root else {}
-    build_files = all_files | proj.theme.get_files()
-    for k, v in reqs.css.items():
-        backend.add_css_file(k, v)
-    for k, v in reqs.js_files.items():
-        backend.add_js_file(k, v)
-    if extensions := reqs.markdown_extensions:
-        backend.register_extensions(extensions)
-    for template in reqs.templates:
-        backend.add_template(template)
-    backend.write_files(build_files)  # type: ignore[arg-type]
-    print(backend._files)

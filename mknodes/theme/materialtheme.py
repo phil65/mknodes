@@ -139,10 +139,9 @@ class MaterialTheme(theme.Theme):
             for pal in data
         ]
 
-    def get_files(self):
+    def iter_nodes(self):
         if isinstance(self.announcement_bar, mknode.MkNode):
-            return self.announcement_bar.all_virtual_files()
-        return {}
+            yield 0, self.announcement_bar
 
     @property
     def announcement_bar(self):

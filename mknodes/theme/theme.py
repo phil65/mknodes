@@ -46,8 +46,8 @@ class Theme:
             return materialtheme.MaterialTheme(data=data, **kwargs)
         return Theme(theme_name, data=data, **kwargs)
 
-    def get_files(self):
-        return {}
+    def iter_nodes(self):
+        yield from ()
 
     @property
     def primary_color(self) -> str:
