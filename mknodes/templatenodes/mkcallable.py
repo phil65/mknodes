@@ -59,21 +59,16 @@ class MkCallable(mknode.MkNode):
             _filter_empty=True,
         )
 
-    def virtual_files(self):
+    @property
+    def files(self):
         node = self.__call__()
-        return node.virtual_files() | super().virtual_files()
+        return node.files
 
     @staticmethod
     def create_example_page(page):
         import mknodes
 
-        def make_page():
-            page = mknodes.MkPage("MkCallable Page", inclusion_level=False)
-            page += "Content!"
-            page += MkCallable(lambda: mknodes.MkAdmonition("Nested!"))
-            return page
-
-        node = MkCallable(fn=make_page)
+        node = MkCallable(lambda: mknodes.MkAdmonition("Nested!"))
         page += mknodes.MkReprRawRendered(node)
 
     def to_markdown(self) -> str:

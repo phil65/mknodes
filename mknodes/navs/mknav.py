@@ -245,13 +245,6 @@ class MkNav(mknode.MkNode):
         self.index_title = title or self.section or "Home"
         return page
 
-    def virtual_files(self) -> dict[str, str | bytes]:
-        """Override for MkNode.virtual_files."""
-        dct = {self.path: self.to_markdown()}
-        if self.metadata:
-            dct[self.metadata_file] = str(self.metadata)
-        return dct | super().virtual_files()
-
     def to_markdown(self) -> str:
         nav = navbuilder.NavBuilder()
         # In a nav, the first inserted item becomes the index page in case

@@ -213,10 +213,6 @@ class MkPage(mkcontainer.MkContainer):
         page.metadata = data
         return page
 
-    def virtual_files(self) -> dict[str, str | bytes]:
-        dct = {} if self.inclusion_level else {self.path: self.to_markdown()}
-        return dct | super().virtual_files()
-
     def get_processors(self):
         return [
             processors.PrependMetadataProcessor(self.metadata),

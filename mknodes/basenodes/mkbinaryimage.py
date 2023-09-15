@@ -30,8 +30,10 @@ class MkBinaryImage(mkimage.MkImage):
         super().__init__(path=path, **kwargs)
         self.data = data
 
-    def virtual_files(self):
-        return {self.path: self.data} | super().virtual_files()
+    @property
+    def files(self):
+        path = "/".join(self.resolved_parts) + "/" + self.path
+        return {path: self.data} | self._files
 
     @staticmethod
     def create_example_page(page):

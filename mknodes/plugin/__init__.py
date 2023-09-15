@@ -104,7 +104,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                 root.iter_nodes(),
                 self.project.theme.iter_nodes(),
             ):
-                extra_files |= node._files
+                extra_files |= node.files
                 match node:
                     case mkpage.MkPage():
                         if node.inclusion_level:
@@ -115,13 +115,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                         node_files[path] = md
                         if node.metadata:
                             extra_files[node.metadata_file] = str(node.metadata)
-                    case _:
-                        section = "/".join(node.resolved_parts)
-                        if section:
-                            section += "/"
-                        node_files |= {
-                            f"{section}{k}": v for k, v in node.virtual_files().items()
-                        }
         build_files = node_files | extra_files
 
         requirements = self.project.get_requirements()

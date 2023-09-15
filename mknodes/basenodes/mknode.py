@@ -185,7 +185,8 @@ class MkNode(node.Node):
                 parts.append(node.section)
         return tuple(reversed(parts))
 
-    def virtual_files(self):
+    @property
+    def files(self):
         """Return a dict containing the virtual files attached to this tree element.
 
         This can be overridden by nodes if they want files to be included dynamically.
