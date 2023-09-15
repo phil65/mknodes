@@ -5,7 +5,7 @@ import itertools
 from typing import Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import connector, helpers, reprhelpers
+from mknodes.utils import classhelpers, connector, helpers, reprhelpers
 
 
 DiagramModeStr = Literal["baseclasses", "subclasses", "mro"]
@@ -69,7 +69,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 
     def __init__(
         self,
-        klass: type,
+        klass: type | str,
         mode: DiagramModeStr = "baseclasses",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,
@@ -114,15 +114,16 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 
     @property
     def mermaid_code(self) -> str:
+        klass = classhelpers.to_class(self.klass)
         match self.mode:
             case "subclasses":
-                builder = SubclassConnector(self.klass, max_depth=self._max_depth)
+                builder = SubclassConnector(klass, max_depth=self._max_depth)
                 return builder.get_graph_connection_text()
             case "baseclasses":
-                builder = ParentClassConnector(self.klass, max_depth=self._max_depth)
+                builder = ParentClassConnector(klass, max_depth=self._max_depth)
                 return builder.get_graph_connection_text()
             case "mro":
-                builder = MroConnector(self.klass, max_depth=self._max_depth)
+                builder = MroConnector(klass, max_depth=self._max_depth)
                 return builder.get_graph_connection_text()
             case _:
                 raise ValueError(self.mode)
