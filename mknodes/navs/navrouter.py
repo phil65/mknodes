@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkadmonition, mkcode, mklink
 from mknodes.navs import mknav
@@ -73,13 +73,17 @@ class NavRouter:
         self,
         *path: str,
         show_source: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing Navs.
 
         The decorated functions will get passed an MkNav as an argument which can be
         modified then.
         They will get registered to the router-MkNav afterwards.
+
+        There is also the possibility to create a new MkNav and return it in the
+        decorated method, that MkNav takes preference then over the modified one.
+
 
         Arguments:
             path: The section path for the returned MkNav
@@ -89,12 +93,13 @@ class NavRouter:
         """
 
         def decorator(
-            fn: Callable[..., NavSubType],
+            fn: Callable[..., mknav.MkNav],
             path=path,
             kwargs=kwargs,
         ) -> Callable:
             node = mknav.MkNav(path[-1], parent=self._nav, **kwargs)
-            fn(node)
+            node = fn(node) or node
+            node.parent = self._nav  # in case a new MkPage was generated
             if show_source and node.index_page:
                 code = mkcode.MkCode.for_object(fn)
                 details = mkadmonition.MkAdmonition(
@@ -113,13 +118,16 @@ class NavRouter:
         self,
         *path: str,
         show_source: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing Pages.
 
         The decorated functions will get passed an MkPage as an argument which can be
         modified then.
-        They will get registered to the router-MkNav afterwards.
+        The resulting page will get registered to the router-MkNav afterwards.
+
+        There is also the possibility to create a new MkPage and return it in the
+        decorated method, that MkPage takes preference then over the modified one.
 
         Arguments:
             path: The section path for the returned MkPage
@@ -129,12 +137,13 @@ class NavRouter:
         """
 
         def decorator(
-            fn: Callable[..., NavSubType],
+            fn: Callable[..., mkpage.MkPage],
             path=path,
             kwargs=kwargs,
         ) -> Callable:
             node = mkpage.MkPage(path[-1], parent=self._nav, **kwargs)
-            fn(node)
+            node = fn(node) or node
+            node.parent = self._nav  # in case a new MkPage was generated
             if show_source:
                 node.created_by = fn
                 code = mkcode.MkCode.for_object(fn)
