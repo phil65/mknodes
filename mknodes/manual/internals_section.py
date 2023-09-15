@@ -25,7 +25,7 @@ def create_internals_section(root_nav: mk.MkNav):
 def create_tree_page(page: mk.MkPage):
     """Create the "Tree" MkPage and attach it to given MkNav."""
     page += mk.MkHeader("This is the tree we built up to now.", level=3)
-    tree = page.root.get_tree_repr(detailed=False)
+    tree = page.root.get_tree_repr(detailed=False, max_depth=3)
     page += mk.MkCode(tree, language="")
 
 

@@ -51,7 +51,14 @@ def get_repr(
             continue
         if _filter_false and v is False:
             continue
-        name = my_repr(v)
+
+        import mknodes
+
+        match v:
+            case (mknodes.MkNode(), *_):
+                name = "[...]"
+            case _:
+                name = my_repr(v)
         kw_parts.append(f"{k}={name}")
     sig = ", ".join(parts + kw_parts)
     return f"{classname}({sig})"
