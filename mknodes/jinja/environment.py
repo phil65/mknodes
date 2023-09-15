@@ -14,7 +14,14 @@ logger = log.get_logger(__name__)
 
 
 ENVIRONMENT_GLOBALS = {"log": log.log_stream.getvalue, "now": datetime.datetime.now}
-ENVIRONMENT_FILTERS = {"dump_yaml": yamlhelpers.dump_yaml, "styled": helpers.styled}
+ENVIRONMENT_FILTERS = {
+    "dump_yaml": yamlhelpers.dump_yaml,
+    "styled": helpers.styled,
+    "rstrip": str.rstrip,
+    "lstrip": str.lstrip,
+    "removesuffix": str.removesuffix,
+    "removeprefix": str.removeprefix,
+}
 
 
 class Environment(jinja2.Environment):

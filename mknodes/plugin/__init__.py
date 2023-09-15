@@ -134,10 +134,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """Add our own info to the MkDocs environment."""
         node_env = mknode.MkNode._env
         env.globals["mknodes"] = node_env.globals
-        env.filters["rstrip"] = str.rstrip
-        env.filters["lstrip"] = str.lstrip
-        env.filters["removeprefix"] = str.removeprefix
-        env.filters["removeprefix"] = str.removeprefix
+        env.filters |= node_env.filters
         logger.debug("Added macros / filters to MkDocs jinja2 environment.")
         # mknodes_macros = jinjahelpers.get_mknodes_macros()
         # env.globals["mknodes"].update(mknodes_macros)
