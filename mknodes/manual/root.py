@@ -30,8 +30,7 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     # MkDocStrings is based on "mkdocstrings" and, well... it can display docstrings.
     # Who would have guessed that? Here are the docstrings for MkDocStrings:
 
-    doc_node = mk.MkDocStrings(mk.MkDocStrings)  # (2)
-    annotations[2] = doc_node
+    annotations[2] = mk.MkDocStrings(mk.MkDocStrings)  # (2)
     annotations[3] = mk.MkAdmonition(DOCSTRING_INFO)  # (3)
 
     # Let us start with building the page.
@@ -41,6 +40,8 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     project.theme.announcement_bar = mk.MkMetadataBadges("websites")
     project.error_page.content = mk.MkAdmonition("Page does not exist!")
     project.theme.show_annotation_numbers()
+    project.theme.set_content_area_width(1300)
+    project.theme.set_tooltip_width(800)
     project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
     annotations[4] = mk.MkDocStrings(mk.MkNav)  # (4)
 
@@ -48,11 +49,13 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     # For demonstration purposes, this process is split up into several functions.
     # Each function here adds another Menu item to the root nav (aka the tabs at the top).
     # We will get there later.
+    manual.create_use_cases_section(root_nav)
+    manual.create_navs_section(root_nav)
     manual.create_nodes_section(root_nav)
+    manual.create_cli_section(root_nav)
     manual.create_templating_section(root_nav)
     manual.create_internals_section(root_nav)
     manual.create_development_section(root_nav)
-    manual.create_use_cases_section(root_nav)
     annotations[5] = str(root_nav)  # This is the root nav after it was modified: (5)
 
     # Lets begin with the start page (aka the root index.md).

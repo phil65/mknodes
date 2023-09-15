@@ -24,9 +24,6 @@ def create_templating_section(root_nav: mk.MkNav):
     page += mk.MkCode.for_object(create_templating_section, header=SECTION_CODE)
     page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
 
-
-@nav.route.nav("Jinja macros", show_source=True)
-def create_macros_nav(nav: mk.MkNav):
     def add_context_doc(container, context):
         container += mk.MkDocStrings(
             context,
