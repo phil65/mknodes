@@ -9,6 +9,7 @@ import os
 import pathlib
 import posixpath
 import types
+import zlib
 
 from mkdocstrings import inventory
 
@@ -37,7 +38,11 @@ class Inventory(inventory.Inventory):
         else:
             file = pathlib.Path(path).open("rb")  # noqa: SIM115
         with file:
-            inv_dict = inventory.Inventory.parse_sphinx(file, domain_filter=domains)
+            try:
+                inv_dict = inventory.Inventory.parse_sphinx(file, domain_filter=domains)
+            except zlib.error as e:
+                logger.warning("Error when parsing Inventory file: %s", e)
+                return inv
         inv.update(inv_dict)
         return inv
 
