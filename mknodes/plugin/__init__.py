@@ -99,31 +99,29 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         self.backends = [mkdocs_backend, markdown_backend]
         node_files: dict[str, str | bytes] = {}
         extra_files: dict[str, str | bytes] = {}
+        iterator = self.project.theme.iter_nodes()
         if root := self.project._root:
-            for _, node in itertools.chain(
-                root.iter_nodes(),
-                self.project.theme.iter_nodes(),
-            ):
-                extra_files |= node.files
-                match node:
-                    case mkpage.MkPage():
-                        if node.inclusion_level:
-                            path, md = node.resolved_file_path, node.to_markdown()
-                            node_files[path] = md
-                    case mknav.MkNav():
+            iterator = itertools.chain(iterator, root.iter_nodes())
+        for _, node in iterator:
+            extra_files |= node.files
+            match node:
+                case mkpage.MkPage():
+                    if node.inclusion_level:
                         path, md = node.resolved_file_path, node.to_markdown()
                         node_files[path] = md
-                        if node.metadata:
-                            extra_files[node.metadata_file] = str(node.metadata)
-        build_files = node_files | extra_files
+                case mknav.MkNav():
+                    path, md = node.resolved_file_path, node.to_markdown()
+                    node_files[path] = md
+                    if node.metadata:
+                        extra_files[node.metadata_file] = str(node.metadata)
 
+        build_files = node_files | extra_files
         requirements = self.project.get_requirements()
         for backend in self.backends:
             backend.on_collect(build_files, requirements)
 
         logger.info("Updating MkDocs config metadata...")
-        ctx = self.project.context
-        cfg.update_from_context(ctx)
+        cfg.update_from_context(self.project.context)
         return mkdocs_backend.files
 
     def on_nav(
