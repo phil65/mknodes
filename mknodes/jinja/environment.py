@@ -14,7 +14,11 @@ from mknodes.utils import helpers, jinjahelpers, log, mergehelpers, yamlhelpers
 logger = log.get_logger(__name__)
 
 
-ENVIRONMENT_GLOBALS = {"log": log.log_stream.getvalue, "now": datetime.datetime.now}
+ENVIRONMENT_GLOBALS = {
+    "log": log.log_stream.getvalue,
+    "now": datetime.datetime.now,
+    "str": str,
+}
 ENVIRONMENT_FILTERS = {
     "dump_yaml": yamlhelpers.dump_yaml,
     "styled": helpers.styled,
@@ -22,6 +26,8 @@ ENVIRONMENT_FILTERS = {
     "lstrip": str.lstrip,
     "removesuffix": str.removesuffix,
     "removeprefix": str.removeprefix,
+    "issubclass": issubclass,
+    "isinstance": isinstance,
 }
 
 
@@ -83,5 +89,5 @@ if __name__ == "__main__":
     proj = Project.for_mknodes()
     ctx = proj.context.as_dict()
     env.globals.update(ctx)
-    text = env.render_string(r"{{ metadata.description }}")
+    text = env.render_string("{{ 'TTset' | isinstance(str) }}")
     print(text)
