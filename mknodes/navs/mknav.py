@@ -263,8 +263,8 @@ class MkNav(mknode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
-        class_page: type[mkclasspage.MkClassPage] | None = None,
-        module_page: type[mkmodulepage.MkModulePage] | None = None,
+        class_page: type[mkclasspage.MkClassPage] | str | None = None,
+        module_page: type[mkmodulepage.MkModulePage] | str | None = None,
         flatten_nav: bool = False,
     ) -> mkdoc.MkDoc:
         """Add a module documentation to the Nav.

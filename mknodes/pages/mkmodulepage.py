@@ -5,9 +5,11 @@ import types
 
 from typing import Any
 
-from mknodes.pages import mktemplatepage, processors
+from mknodes.pages import mktemplatepage
 from mknodes.utils import classhelpers, log, reprhelpers
 
+
+DEFAULT_TPL = "modulepage.md"
 
 logger = log.get_logger(__name__)
 
@@ -20,50 +22,42 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         module: tuple[str, ...] | str | types.ModuleType,
         *,
         klasses: list[type] | set[type] | None = None,
-        path: str | os.PathLike = "index.md",
-        docstrings: bool = False,
-        show_class_table: bool = True,
-        show_module_table: bool = False,
+        path: str | os.PathLike | None = None,
+        template_name: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             module: ModuleType or path to model to show info for.
-            path: Some path for the file. Default is index.md
             klasses: klasses to use
-            docstrings: Whether to show docstrings for given module.
-            show_class_table: Whether to show a table with classes part of the module
-            show_module_table: Whether to show a table with submodules
+            path: Filename/path for the Module page. defaults to [modulename].md
             kwargs: further keyword arguments passed to parent
+            template_name: Name of the template to load
         """
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
-        self.docstrings = docstrings
         self.klasses = klasses or list(
             classhelpers.iter_classes(module=self.parts, module_filter=self.parts[0]),
         )
-        self.show_class_table = show_class_table
-        self.show_module_table = show_module_table
-        super().__init__(path=path, **kwargs)
+        tpl_name = template_name or DEFAULT_TPL
+        super().__init__(
+            template_name=tpl_name,
+            template_parent=DEFAULT_TPL if tpl_name != DEFAULT_TPL else None,
+            path=path or f"{self.parts[-1]}.md",
+            **kwargs,
+        )
 
     def __repr__(self):
         return reprhelpers.get_repr(self, module=self.module, path=str(self.path))
 
-    def get_pageprocessors(self) -> list:
-        procs: list[processors.ContainerProcessor] = [
-            processors.DocContainerProcessor(self.module),
-        ]
-        if self.show_class_table:
-            proc = processors.ClassTableContainerProcessor(self.klasses)
-            procs.append(proc)
-        if self.show_module_table:
-            proc = processors.ModuleTableContainerProcessor(self.module)
-            procs.append(proc)
-        if self.docstrings:
-            proc = processors.MkDocStringContainerProcessor(self.module)
-            procs.append(proc)
-        return procs
+    @property
+    def extra_variables(self):
+        variables = dict(module=self.module, klasses=self.klasses)
+        if mod := self.ctx.metadata.griffe_module:
+            path = ".".join(self.module.__name__.split(".")[1:])
+            variables["griffe_obj"] = mod[path] if path else mod
+        return variables
 
 
 if __name__ == "__main__":

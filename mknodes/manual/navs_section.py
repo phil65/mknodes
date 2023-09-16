@@ -2,7 +2,6 @@ import mknodes as mk
 
 from mknodes import paths
 from mknodes.manual import routing
-from mknodes.pages import processors
 from mknodes.project import Project
 
 
@@ -219,119 +218,20 @@ def create_mkdoc_section(nav: mk.MkNav):
     # addon_docs.collect_classes(recursive=True)
 
 
+# class ExtensionInfoProcessor(processors.ContainerProcessor):
+#     ID = "extension_info"
+
+#     def append_block(self, node: mk.MkContainer):
+#         extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
+#         node += mk.MkAdmonition(extensions, title="Required extensions")
+
+#     def check_if_apply(self, node: mk.MkContainer):
+#         # only add this section for MkNodes which have required extensions
+#         return issubclass(self.item, mk.MkNode) and self.item.REQUIRED_EXTENSIONS
+
+
 def create_mknodes_section(nav: mk.MkNav):
-    # lets create the documentation for our module.
-    # For that, we can use the MkDoc node, which will generate docs for us.
-    # Usually, this can be done with 2 or 3 lines of code, but
-    # since our aim is to always show the code which generated the site, we will have to
-    # do some extra steps and adjust the default page template.
-    # So lets subclass MkClassPage and extend it.
-    # First, we write a custom processor which fetches the page-building code from the
-    # existing processors, puts them into code blocks and adds them to the page.
-
-    class ShowProcessorCodeProcessor(processors.ContainerProcessor):
-        ID = "show_processor_code"
-
-        def __init__(
-            self,
-            *args,
-            processors: list[processors.ContainerProcessor] | None = None,
-            **kwargs,
-        ):
-            super().__init__(*args, **kwargs)
-            self.processors = processors or []
-
-        def append_block(self, node: mk.MkContainer):
-            code = mk.MkCode.for_object(self.append_block)
-            nodes: list[mk.MkAdmonition] = []
-            admonition = mk.MkAdmonition(
-                code,
-                collapsible=True,
-                typ="quote",
-                title=self.__class__.__name__,
-            )
-            nodes.append(admonition)
-            for processor in self.processors:
-                # First, we check if the processor gets applied.
-                # If yes, we attach a code block.
-                if not processor.check_if_apply(node):
-                    continue
-                code = mk.MkCode.for_object(processor.append_block)
-                name = processor.__class__.__name__
-                admonition = mk.MkAdmonition(
-                    code,
-                    collapsible=True,
-                    typ="quote",
-                    title=name,
-                )
-                nodes.append(admonition)
-            source = (
-                node.resolved_file_path
-                if isinstance(node, mk.MkPage)
-                else node.__class__.__name__
-            )
-            node += mk.MkAdmonition(
-                nodes,
-                typ="quote",
-                collapsible=True,
-                title=f"Source code for *{source}*",
-            )
-
-        def get_header(self, node):
-            return "Code for the processors"
-
-    # .. and while we are at it, we will also write another processor to add
-    # the required extensions to the page:
-
-    class ExtensionInfoProcessor(processors.ContainerProcessor):
-        ID = "extension_info"
-
-        def append_block(self, node: mk.MkContainer):
-            extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
-            node += mk.MkAdmonition(extensions, title="Required extensions")
-
-        def check_if_apply(self, node: mk.MkContainer):
-            # only add this section for MkNodes which have required extensions
-            return issubclass(self.item, mk.MkNode) and self.item.REQUIRED_EXTENSIONS
-
-    # Now, we write a custom page template which
-    # overrides get_processors and includes our new processors.
-
-    class CustomClassPage(mk.MkClassPage):
-        def get_pageprocessors(self):
-            processors = super().get_pageprocessors()
-            code_processor = ShowProcessorCodeProcessor(self.klass, processors=processors)
-            extensions_processor = ExtensionInfoProcessor(self.klass)
-            # we will add the code at the top and the Extension infobox at the end.
-            return [code_processor, *processors, extensions_processor]
-
-    # Of course it would also be possible to write a processor for the Examples section
-    # we did earlier.
-    # Since we are just demonstrating all functionality, we will skip that though.
-
-    # last step: a custom module page. Thats basically the index.md for a
-    # documentation section. We will also insert the source code there.
-
-    class CustomModulePage(mk.MkModulePage):
-        def get_pageprocessors(self):
-            procs = super().get_pageprocessors()
-            code_block = mk.MkCode.for_object(create_mknodes_section)
-            header = "Code for this section"
-            fn_processor = processors.StaticBlockProcessor(code_block, header=header)
-            proc_processor = ShowProcessorCodeProcessor(
-                self.module,
-                processors=procs,
-            )
-            return [fn_processor, proc_processor, *procs]
-
-    # Now that we have our custom ClassPage, we can create the documentation.
-    # In our case, we only want to document stuff which is listed in "__all__".
-    mknodes_docs = nav.add_doc(
-        module=mk,
-        filter_by___all__=True,
-        class_page=CustomClassPage,
-        module_page=CustomModulePage,
-    )
+    mknodes_docs = nav.add_doc(module=mk, filter_by___all__=True)
 
     # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)

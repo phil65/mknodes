@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+import contextlib
 import datetime
 
 from typing import Any
@@ -64,11 +65,14 @@ class Environment(jinja2.Environment):
     ):
         template = self.get_template(template_name, parent=parent_template)
         variables = variables or {}
-        try:
-            return template.render(**variables)
-        except jinja2.exceptions.UndefinedError:
-            logger.exception("Error when rendering template.")
-            return ""
+        return template.render(**variables)
+
+    @contextlib.contextmanager
+    def with_globals(self, **kwargs):
+        self.globals.update(kwargs)
+        yield
+        for k in kwargs:
+            del self.globals[k]
 
 
 if __name__ == "__main__":

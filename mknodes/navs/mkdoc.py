@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Sequence
 import inspect
-import pathlib
 import types
 
 from typing import Any
@@ -25,8 +24,8 @@ class MkDoc(mknav.MkNav):
         filter_by___all__: bool = False,
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
-        class_page: type[mkclasspage.MkClassPage] | None = None,
-        module_page: type[mkmodulepage.MkModulePage] | None = None,
+        class_page: type[mkclasspage.MkClassPage] | str | None = None,
+        module_page: type[mkmodulepage.MkModulePage] | str | None = None,
         flatten_nav: bool = False,
         **kwargs: Any,
     ):
@@ -88,7 +87,13 @@ class MkDoc(mknav.MkNav):
         for klass in self.klasses:
             self.add_class_page(klass=klass, flatten=self.flatten_nav)
         for submod in self.submodules:
-            self.add_doc(submod, class_page=self.ClassPage, flatten_nav=self.flatten_nav)
+            self.add_doc(
+                submod,
+                class_page=self.ClassPage,
+                filter_by___all__=self.filter_by___all__,
+                module_page=self.ModulePage,
+                flatten_nav=self.flatten_nav,
+            )
         self._create_index_page()
 
     def iter_classes(
@@ -202,13 +207,21 @@ class MkDoc(mknav.MkNav):
             parts = classhelpers.get_topmost_module_path(klass).split(".")
         else:
             parts = klass.__module__.split(".")
-        page = self.ClassPage(
-            klass=klass,
-            module_path=tuple(parts),
-            path=pathlib.Path(f"{klass.__name__}.md"),
-            parent=self,
-            **kwargs,
-        )
+        if isinstance(self.ClassPage, str):
+            page = mkclasspage.MkClassPage(
+                klass=klass,
+                template_name=self.ClassPage,
+                module_path=tuple(parts),
+                parent=self,
+                **kwargs,
+            )
+        else:
+            page = self.ClassPage(
+                klass=klass,
+                module_path=tuple(parts),
+                parent=self,
+                **kwargs,
+            )
         section = (klass.__name__,) if flatten else (*parts[1:], klass.__name__)
         self.nav[section] = page
         return page
@@ -224,16 +237,25 @@ class MkDoc(mknav.MkNav):
             title: Override title for the section.
             kwargs: kwargs passed to MkModulePage.
         """
-        page = self.ModulePage(
-            hide_toc=True,
-            module=self.module,
-            klasses=self.klasses,
-            path="index.md" if title is None else f"{title}.md",
-            parent=self,
-            **kwargs,
-        )
-        self.index_title = title or self.module_name
+        if isinstance(self.ModulePage, str):
+            page = mkmodulepage.MkModulePage(
+                module=self.module,
+                klasses=self.klasses,
+                template_name=self.ModulePage,
+                path="index.md" if title is None else f"{title}.md",
+                parent=self,
+                **kwargs,
+            )
+        else:
+            page = self.ModulePage(
+                module=self.module,
+                klasses=self.klasses,
+                path="index.md" if title is None else f"{title}.md",
+                parent=self,
+                **kwargs,
+            )
         self.index_page = page
+        self.index_title = title or self.module_name
         return page
 
 

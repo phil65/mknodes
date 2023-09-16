@@ -5,11 +5,16 @@ import pathlib
 
 from typing import Any
 
-from mknodes.pages import mktemplatepage, processors
+from mknodes.jinja import environment
+from mknodes.pages import mktemplatepage
+from mknodes.project import Project
 from mknodes.utils import classhelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
+
+
+DEFAULT_TPL = "classpage.md"
 
 
 class MkClassPage(mktemplatepage.MkTemplatePage):
@@ -19,8 +24,9 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         self,
         klass: type,
         *,
+        path: str | os.PathLike | None = None,
         module_path: tuple[str, ...] | str | None = None,
-        path: str | os.PathLike = "",
+        template_name: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -30,31 +36,41 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
             module_path: If given, overrides module returned by class.__module__
                          This can be useful if you want to link to an aliased class
                          (for example a class imported to __init__.py)
-            path: some path for the file.
+            template_name: Name of the template to load
+            path: Filename/path for the class page. defaults to [classname].md
             kwargs: keyword arguments passed to base class
         """
         # TODO: should path be settable?
-        path = pathlib.Path(f"{klass.__name__}.md")
         self.klass = klass
         match module_path:
             case None:
                 self.parts = klass.__module__.split(".")
             case _:
                 self.parts = classhelpers.to_module_parts(module_path)
-        super().__init__(path=path, **kwargs)
+        # if user chooses custom template, we make default the parent
+        tpl = template_name or DEFAULT_TPL
+        super().__init__(
+            path=path or pathlib.Path(f"{klass.__name__}.md"),
+            template_name=tpl,
+            template_parent=DEFAULT_TPL if tpl != DEFAULT_TPL else None,
+            **kwargs,
+        )
 
     def __repr__(self):
         return reprhelpers.get_repr(self, klass=self.klass, path=str(self.path))
 
-    def get_pageprocessors(self):
-        return [
-            processors.BaseClassTableContainerProcessor(self.klass),
-            processors.SubClassTableContainerProcessor(self.klass),
-            processors.InheritanceDiagramContainerProcessor(self.klass),
-            processors.MkDocStringContainerProcessor(self.klass),
-        ]
+    @property
+    def extra_variables(self):
+        # right now, we inject the cls and the griffe Class into jinja namespace.
+        variables = dict(cls=self.klass)
+        if self.ctx.metadata.griffe_module:
+            path = ".".join(self.parts[1:]) + "." + self.klass.__qualname__
+            path = path.lstrip(".")
+            variables["griffe_obj"] = self.ctx.metadata.griffe_module[path]
+        return variables
 
 
 if __name__ == "__main__":
-    doc = MkClassPage(MkClassPage)
-    print(doc)
+    proj = Project.for_mknodes()
+    doc = MkClassPage(environment.Environment, project=proj)
+    print(doc.to_markdown())
