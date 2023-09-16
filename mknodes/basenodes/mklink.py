@@ -45,8 +45,7 @@ class MkLink(mknode.MkNode):
         self.title = title
         self.as_button = as_button
         self.primary_color = primary_color
-        icon = icon or ""
-        self.icon = icon
+        self._icon = icon or ""
         if as_button:
             self.add_css_class("md-button")
         if primary_color:
@@ -57,7 +56,7 @@ class MkLink(mknode.MkNode):
             self,
             target=self.target,
             title=self.title,
-            icon=self.icon,
+            icon=self._icon,
             as_button=self.as_button,
             primary_color=self.primary_color,
             _filter_empty=True,
@@ -65,17 +64,19 @@ class MkLink(mknode.MkNode):
         )
 
     @property
+    def icon(self):
+        if not self._icon or self._icon.startswith(":"):
+            return self._icon
+        icon = self._icon if "/" in self._icon else f"material/{self._icon}"
+        return f':{icon.replace("/", "-")}:'
+
+    @property
     def url(self) -> str:
         return self.ctx.links.get_url(self.target)
 
     def _to_markdown(self) -> str:
         title = self.target if self.title is None else self.title
-        icon = (
-            self.icon
-            if not self.icon or self.icon.startswith(":")
-            else f':{self.icon.replace("/", "-")}:'
-        )
-        prefix = f"{icon} " if self.icon else ""
+        prefix = f"{self.icon} " if self.icon else ""
         return f"[{prefix}{title}]({self.url})"
 
     @staticmethod

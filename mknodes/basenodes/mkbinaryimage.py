@@ -55,7 +55,7 @@ class MkBinaryImage(mkimage.MkImage):
         node = MkBinaryImage(data, path="some_image.svg", caption="A simple cross")
         page += mknodes.MkHeader("From data", level=3)
         page += mknodes.MkReprRawRendered(node)
-        node = MkBinaryImage.for_icon("material/file-image", width=200)
+        node = MkBinaryImage.for_icon("file-image", width=200)
         page += mknodes.MkHeader("From icon", level=3)
         page += mknodes.MkReprRawRendered(node)
 
@@ -67,6 +67,8 @@ class MkBinaryImage(mkimage.MkImage):
             icon: Icon to get a MkBinaryImage for (example: material/file-image)
             kwargs: Keyword arguments passed to constructor
         """
+        if "/" not in icon:
+            icon = f"material/{icon}"
         icon_path = pathhelpers.get_material_icon_path(icon)
         content = icon_path.read_text()
         path = f"{helpers.slugify(icon)}.svg"
