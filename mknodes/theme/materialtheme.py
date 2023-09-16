@@ -5,18 +5,15 @@ import pathlib
 
 from typing import Literal
 
-import coloraide
-
 from mknodes.basenodes import mknode
 from mknodes.cssclasses import cssclasses, rootcss
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
 from mknodes.theme.material import palette
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
-RGB_TUPLE_LEN = 3
 
 
 COLORS = {
@@ -64,18 +61,15 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
 )
 
 
-def get_color_str(data: str | tuple) -> str:  # type: ignore[return]
-    match data:
-        case str():
-            return coloraide.Color(data).to_string()
-        case tuple() if len(data) == RGB_TUPLE_LEN:
-            color = coloraide.Color("srgb", [i / 255 for i in data])
-            return color.to_string(comma=True)
-        case tuple():
-            color = coloraide.Color("srgb", [i / 255 for i in data[:3]], data[3])
-            return color.to_string(comma=True)
-        case _:
-            raise TypeError(data)
+def build_badge(icon: str, text: str = "", typ: str = ""):
+    classes = f"mdx-badge mdx-badge--{typ}" if typ else "mdx-badge"
+    lines = [f'<span class="{classes}">']
+    if icon:
+        lines.append(f'<span class="mdx-badge__icon">{icon}</span>')
+    if text:
+        lines.append(f'<span class="mdx-badge__icon">{text}</span>')
+    lines.append("</span>")
+    return "".join(lines)
 
 
 CONTAINER_RULE = """.mdx-container {
@@ -177,7 +171,7 @@ class MaterialTheme(theme.Theme):
                 pal.accent = value
 
     def set_accent_foreground_color(self, color: datatypes.RGBColorType):
-        color_str = get_color_str(color)
+        color_str = helpers.get_color_str(color)
         self.css[":root"]["--md-accent-fg-color"] = color_str
         self.css[":root"]["--md-accent-fg-color--transparent"] = color_str
         self.set_color("accent", "custom")
@@ -188,7 +182,7 @@ class MaterialTheme(theme.Theme):
         color: datatypes.RGBColorType,
     ):
         self.set_color("primary", "custom")
-        color_str = get_color_str(color)
+        color_str = helpers.get_color_str(color)
         self.css[":root"]["--md-primary-bg-color"] = color_str
         self.css[":root"]["--md-primary-bg-color--light"] = color_str
         return color_str
@@ -226,9 +220,9 @@ class MaterialTheme(theme.Theme):
         border_color: datatypes.ColorType | None = None,
     ):
         self.css[":root"][f"--md-admonition-icon--{name}"] = self.css.wrap_svg(data)
-        header_color_str = get_color_str(header_color)
-        icon_color_str = get_color_str(icon_color or (255, 255, 255))
-        border_color_str = get_color_str(border_color or (255, 255, 255))
+        header_color_str = helpers.get_color_str(header_color)
+        icon_color_str = helpers.get_color_str(icon_color or (255, 255, 255))
+        border_color_str = helpers.get_color_str(border_color or (255, 255, 255))
         self.css.add_rule(
             f".md-typeset .admonition.{name}, .md-typeset details.{name}",
             {
@@ -261,10 +255,14 @@ class MaterialTheme(theme.Theme):
             light_shade = color
         if dark_shade is None:
             dark_shade = color
-        color_str = get_color_str(color)
+        color_str = helpers.get_color_str(color)
         self.css[":root"]["--md-primary-fg-color"] = color_str
-        self.css[":root"]["--md-primary-fg-color--light"] = get_color_str(light_shade)
-        self.css[":root"]["--md-primary-fg-color--dark"] = get_color_str(dark_shade)
+        self.css[":root"]["--md-primary-fg-color--light"] = helpers.get_color_str(
+            light_shade,
+        )
+        self.css[":root"]["--md-primary-fg-color--dark"] = helpers.get_color_str(
+            dark_shade,
+        )
         return color_str
 
     def set_default_icon(self, icon_type: IconTypeStr, data: str):
@@ -309,5 +307,5 @@ class MaterialTheme(theme.Theme):
 
 
 if __name__ == "__main__":
-    theme = get_partial_path("palette")
+    theme = build_badge("palette", "tst")
     print(theme)

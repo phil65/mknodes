@@ -13,6 +13,24 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
+def get_color_str(data: str | tuple) -> str:  # type: ignore[return]
+    import coloraide
+
+    rgb_tuple_len = 3
+
+    match data:
+        case str():
+            return coloraide.Color(data).to_string()
+        case tuple() if len(data) == rgb_tuple_len:
+            color = coloraide.Color("srgb", [i / 255 for i in data])
+            return color.to_string(comma=True)
+        case tuple():
+            color = coloraide.Color("srgb", [i / 255 for i in data[:3]], data[3])
+            return color.to_string(comma=True)
+        case _:
+            raise TypeError(data)
+
+
 def extract_header_section(markdown: str, section_name: str) -> str | None:
     """Extract block with given header from markdown."""
     header_pattern = re.compile(f"^(#+) {section_name}$", re.MULTILINE)
