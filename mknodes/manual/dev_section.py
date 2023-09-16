@@ -21,7 +21,7 @@ def create_development_section(root_nav: mk.MkNav):
     # This means that this section could be imported by other packages and be
     # used without any further adaptation.
     root_nav += nav
-    page = nav.add_index_page(hide_toc=True, icon="fontawesome/solid/layer-group")
+    page = nav.add_index_page(hide_toc=True)
     page += mk.MkCode.for_object(create_development_section, header=SECTION_CODE)
     page += mk.MkAdmonitionBlock(INTRO_TEXT)
 

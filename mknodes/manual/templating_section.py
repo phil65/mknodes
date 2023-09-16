@@ -51,7 +51,7 @@ nav = mk.MkNav("Templating")
 def create_templating_section(root_nav: mk.MkNav):
     """Add the complete "Templating" section to given MkNav."""
     root_nav += nav
-    page = nav.add_index_page(hide_toc=True, icon="simple/jinja")
+    page = nav.add_index_page(hide_toc=True)
     page += mk.MkText(INTRO_TEXT)
     page += mk.MkDetailsBlock(ADDITIONAL_INFO_TEXT, expand=True)
     page += "### These are the availabe namespaces:"

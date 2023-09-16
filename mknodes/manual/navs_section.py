@@ -59,7 +59,7 @@ def create_navs_section(root_nav: mk.MkNav):
 
     # and then we create the index page (the page you are lookin at right now)
 
-    page = nav.add_index_page(hide_toc=True, icon="fontawesome/solid/folder-tree")
+    page = nav.add_index_page(hide_toc=True)
     page += mk.MkCommentedCode(create_navs_section, header=SECTION_CODE)
     page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
     page += mk.MkHeader("All the navs")

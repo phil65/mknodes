@@ -40,7 +40,7 @@ def create_nodes_section(root_nav: mk.MkNav):
     root_nav += nav
     # and then we create the index page (the page you are lookin at right now)
 
-    page = nav.add_index_page(hide_toc=True, icon="graph")
+    page = nav.add_index_page(hide_toc=True)
     page += mk.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
     page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
     page += mk.MkHeader("All the nodes")
