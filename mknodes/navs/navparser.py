@@ -16,9 +16,9 @@ from mknodes.utils import helpers, log
 logger = log.get_logger(__name__)
 
 # for SUMMARY.md parsing
-SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*)\)"
-SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"
-SECTION_REGEX = r"^\* (.*)"
+SECTION_AND_FILE_RE = r"^\* \[(.*)\]\((.*)\)"
+SECTION_AND_FOLDER_RE = r"^\* \[(.*)\]\((.*)\/\)"
+SECTION_RE = r"^\* (.*)"
 
 # for ->MkNode parsing
 ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
@@ -185,7 +185,7 @@ class NavParser:
         for i, line in enumerate(lines):
             # * [Example](example_folder/)
 
-            if match := re.match(SECTION_AND_FOLDER_REGEX, line):
+            if match := re.match(SECTION_AND_FOLDER_RE, line):
                 file_path = path.parent / f"{match[2]}/SUMMARY.md"
                 subnav = mknav.MkNav(match[1], parent=self._nav)
                 subnav.parse.file(file_path, **kwargs)
@@ -194,7 +194,7 @@ class NavParser:
 
             # * [Example](example_folder/sub_1.md)
 
-            elif match := re.match(SECTION_AND_FILE_REGEX, line):
+            elif match := re.match(SECTION_AND_FILE_RE, line):
                 # if following section indented, it is a nav with an index page:
                 if unindented := helpers.get_indented_lines(lines[i + 1 :]):
                     subnav = mknav.MkNav(match[1], parent=self._nav)
@@ -214,7 +214,7 @@ class NavParser:
 
             # * Section/
 
-            elif match := re.match(SECTION_REGEX, line):
+            elif match := re.match(SECTION_RE, line):
                 unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
                 logger.debug("Created subsection %s from text", match[1])
                 subnav = mknav.MkNav(match[1], parent=self._nav)
