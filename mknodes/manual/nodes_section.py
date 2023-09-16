@@ -41,10 +41,11 @@ def create_nodes_section(root_nav: mk.MkNav):
     # and then we create the index page (the page you are lookin at right now)
 
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkCode.for_object(create_nodes_section, header=SECTION_CODE)
-    page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
+    page += INTRO_TEXT
     page += mk.MkHeader("All the nodes")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR", max_depth=3)
+    code = mk.MkCode.for_object(create_nodes_section)
+    page += mk.MkDetailsBlock(code, title=SECTION_CODE)
 
 
 def create_section_for_nodes(
