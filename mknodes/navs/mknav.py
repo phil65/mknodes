@@ -62,23 +62,17 @@ class MkNav(mknode.MkNode):
         return reprhelpers.get_repr(self, section=section, filename=self.filename)
 
     def __setitem__(self, index: tuple | str, node: NavSubType):
-        if isinstance(index, str):
-            index = tuple(index.split("."))
         self.nav[index] = node
 
     def __getitem__(self, index: tuple | str) -> NavSubType:
-        if isinstance(index, str):
-            index = tuple(index.split("."))
         return self.nav[index]
 
     def __delitem__(self, index: tuple | str):
-        if isinstance(index, str):
-            index = tuple(index.split("."))
         del self.nav[index]
 
     def __add__(self, other: NavSubType):
         other.parent = self
-        self._register(other)
+        self.nav.register(other)
         return self
 
     # def __len__(self):
@@ -121,7 +115,7 @@ class MkNav(mknode.MkNode):
 
     @children.setter
     def children(self, items):
-        self.nav = dict(items)
+        self.nav = navigation.Navigation(items)
 
     def add_nav(self, section: str) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.
@@ -130,7 +124,7 @@ class MkNav(mknode.MkNode):
             section: Name of the new nav.
         """
         navi = MkNav(section=section, parent=self)
-        self._register(navi)
+        self.nav.register(navi)
         return navi
 
     def add_index_page(
@@ -264,7 +258,7 @@ class MkNav(mknode.MkNode):
             self.index_page = page
             self.index_title = title or self.section or "Home"
         else:
-            self._register(page)
+            self.nav.register(page)
         return page
 
     def add_doc(
@@ -298,19 +292,8 @@ class MkNav(mknode.MkNode):
             module_page=module_page,
             flatten_nav=flatten_nav,
         )
-        self._register(nav)
+        self.nav.register(nav)
         return nav
-
-    def _register(self, node: NavSubType):
-        match node:
-            case MkNav():
-                self.nav[(node.section,)] = node
-            case mkpage.MkPage():
-                self.nav[node.path.removesuffix(".md")] = node
-            case mklink.MkLink():
-                self.nav[node.title] = node
-            case _:
-                raise TypeError(node)
 
     @property
     def page_mapping(self):
