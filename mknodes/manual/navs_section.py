@@ -79,12 +79,8 @@ def create_from_file_section(nav: mk.MkNav):
     summary_file = folder / "SUMMARY.md"  # File content: # (2)
 
     # We will load it as an MkNav...
-    from_file_nav = mk.MkNav.from_file(
-        summary_file,
-        section="From file",
-        hide_toc=True,
-        parent=nav,
-    )
+    from_file_nav = mk.MkNav("From file", parent=nav)
+    from_file_nav.parse.file(summary_file, hide_toc=True)
 
     # ... and attach that sub-tree to our main tree.
     nav["From file"] = from_file_nav
@@ -115,8 +111,9 @@ def create_from_folder_section(nav: mk.MkNav):
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
 
-    # First, we create the MkNav based on folder content (DocStrings for from_folder: (1))
-    from_folder_nav = mk.MkNav.from_folder(folder, parent=nav, hide_toc=True)
+    # First, we create the MkNav based on folder content
+    from_folder_nav = mk.MkNav(folder.name, parent=nav)
+    from_folder_nav.parse.folder(folder, hide_toc=True)
 
     # ... and then attach that sub-tree to our main tree.
     nav["From folder"] = from_folder_nav
@@ -129,9 +126,7 @@ def create_from_folder_section(nav: mk.MkNav):
     page = from_folder_nav.add_index_page(hide_toc=True, icon="folder")
     page += code
     page += mk.MkTreeView(folder)  # DocStrings: (2)
-    folder_docs = mk.MkDocStrings(mk.MkNav.from_folder)
     node_docs = mk.MkDocStrings(mk.MkTreeView)
-    code.annotations[1] = folder_docs
     code.annotations[2] = node_docs
 
 

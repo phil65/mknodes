@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import mknodes
 
-from mknodes.navs import parsenav
 from mknodes.utils import log
 
 
@@ -23,7 +22,7 @@ class MkDefaultWebsite(mknodes.MkNav):
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
         page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
         static_pages = static_pages or {}
-        parsenav.from_json(static_pages, self)
+        self.parse.json(static_pages)
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
         if proj := self.associated_project:

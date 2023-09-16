@@ -1,18 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-import os
 import pathlib
-import re
 import types
 
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
-from mknodes.navs import navbuilder, navrouter, parsenav
+from mknodes.navs import navbuilder, navparser, navrouter
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -22,10 +20,6 @@ if TYPE_CHECKING:
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 logger = log.get_logger(__name__)
-
-SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*)\)"
-SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"
-SECTION_REGEX = r"^\* (.*)"
 
 
 class MkNav(mknode.MkNode):
@@ -57,6 +51,7 @@ class MkNav(mknode.MkNode):
         self.filename = filename
         self.nav: dict[tuple | str | None, NavSubType] = {}
         self.route = navrouter.NavRouter(self)
+        self.parse = navparser.NavParser(self)
         self.index_page: mkpage.MkPage | None = None
         self.index_title: str | None = None
         self.metadata = metadata.Metadata()
@@ -339,160 +334,6 @@ class MkNav(mknode.MkNode):
             case _:
                 raise TypeError(node)
 
-    @classmethod
-    def from_file(
-        cls,
-        path: str | os.PathLike,
-        section: str | None = None,
-        parent: MkNav | None = None,
-        **kwargs: Any,
-    ) -> Self:
-        """Load an existing SUMMARY.md style file.
-
-        For each indentation level in SUMMARY.md, a new sub-nav is created.
-
-        Should support all SUMMARY.md options except wildcards.
-
-        Arguments:
-            path: Path to the file
-            section: Section name of new nav
-            parent: Optional parent item if the SUMMARY.md shouldnt be used as root nav.
-            kwargs: Keyword arguments passed to the pages to create.
-                    Can be used to hide the TOC for all pages for example.
-        """
-        path = pathlib.Path(path)
-        if path.is_absolute():
-            path = os.path.relpath(path, pathlib.Path().absolute())
-        path = pathlib.Path(path)
-        return cls._from_text(
-            path.read_text(),
-            section=section,
-            parent=parent,
-            path=path,
-            **kwargs,
-        )
-        # max_indent = max(len(line) - len(line.lstrip()) for line in content.split("\n"))
-        # content = [line.lstrip() for line in content.split("\n")]
-
-    @classmethod
-    def _from_text(
-        cls,
-        text: str,
-        path: pathlib.Path,
-        *,
-        section: str | None = None,
-        parent: MkNav | None = None,
-        **kwargs: Any,
-    ) -> Self:
-        """Create a nav based on a SUMMARY.md-style list, given as text.
-
-        For each indentation level, a new sub-nav is created.
-
-        Should support all SUMMARY.md options except wildcards.
-
-        Arguments:
-            text: Text to parse
-            section: Section name for the nav
-            parent: Optional parent-nav in case the new nav shouldnt become the root nav.
-            path: path of the file containing the text.
-            kwargs: Keyword arguments passed to the pages to create.
-                    Can be used to hide the TOC for all pages for example.
-        """
-        nav = cls(section, parent=parent)
-        lines = text.split("\n")
-        for i, line in enumerate(lines):
-            # for first case we need to check whether following lines are indented.
-            # If yes, then the path describes an index page.
-            # * [Example](example_folder/sub_1.md)
-            if match := re.match(SECTION_AND_FOLDER_REGEX, line):
-                file_path = path.parent / f"{match[2]}/SUMMARY.md"
-                nav[match[1]] = MkNav.from_file(
-                    file_path,
-                    section=match[1],
-                    parent=nav,
-                    **kwargs,
-                )
-                logger.debug("Created subsection %s from %s", match[1], file_path)
-            elif match := re.match(SECTION_AND_FILE_REGEX, line):
-                if unindented := helpers.get_indented_lines(lines[i + 1 :]):
-                    subnav = MkNav._from_text(
-                        "\n".join(unindented),
-                        section=match[1],
-                        parent=nav,
-                        path=path,
-                        **kwargs,
-                    )
-                    page = subnav.add_index_page(**kwargs)
-                    page += pathlib.Path(match[2]).read_text()
-                    msg = "Created subsection %s and loaded index page %s"
-                    logger.debug(msg, match[1], match[2])
-                    nav += subnav
-                else:
-                    p = match[2] if match[2].startswith("->") else path.parent / match[2]
-                    nav[match[1]] = parsenav.add_page(path=p, parent=nav, **kwargs)
-                    logger.debug("Created page %s from %s", match[1], match[2])
-            elif match := re.match(SECTION_REGEX, line):
-                unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
-                logger.debug("Created subsection %s from text", match[1])
-                nav[match[1]] = MkNav._from_text(
-                    "\n".join(unindented),
-                    section=match[1],
-                    parent=nav,
-                    path=path,
-                    **kwargs,
-                )
-        return nav
-
-    @classmethod
-    def from_folder(
-        cls,
-        folder: str | os.PathLike,
-        *,
-        recursive: bool = True,
-        parent: MkNav | None = None,
-        **kwargs: Any,
-    ) -> Self:
-        """Load a MkNav tree from Folder.
-
-        SUMMARY.mds are ignored.
-        index.md files become index pages.
-
-        To override the default behavior of using filenames as menu titles,
-        the pages can set a title by using page metadata.
-
-        Arguments:
-            folder: Folder to load .md files from
-            recursive: Whether all .md files should be included recursively.
-            parent: Optional parent-nav in case the new nav shouldnt become the root nav.
-            kwargs: Keyword arguments passed to the pages to create.
-                    Can be used to hide the TOC for all pages for example.
-        """
-        folder = pathlib.Path(folder)
-        nav = cls(folder.name if parent else None, parent=parent)
-        for path in folder.iterdir():
-            if path.is_dir() and recursive and any(path.iterdir()):
-                path = folder / path.parts[-1]
-                nav += cls.from_folder(folder=path, parent=nav, **kwargs)
-                logger.debug("Loaded subnav from from %s", path)
-            elif path.name == "index.md":
-                logger.debug("Loaded index page from %s", path)
-                nav.index_page = mkpage.MkPage(
-                    path=path.name,
-                    content=path.read_text(),
-                    parent=nav,
-                    **kwargs,
-                )
-                nav.index_title = nav.section or "Home"
-            elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
-                nav += mkpage.MkPage(
-                    path=path.relative_to(folder),
-                    content=path.read_text(),
-                    parent=nav,
-                    **kwargs,
-                )
-                logger.debug("Loaded page from from %s", path)
-        return nav
-
     @property
     def page_mapping(self):
         return {
@@ -506,5 +347,6 @@ if __name__ == "__main__":
     docs = MkNav()
     nav_tree_path = pathlib.Path(__file__).parent.parent.parent / "tests/data/nav_tree/"
     nav_file = nav_tree_path / "SUMMARY.md"
-    nav = MkNav.from_file(nav_file)
+    nav = MkNav()
+    nav.parse.file(nav_file)
     print(nav)

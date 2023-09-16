@@ -1,0 +1,280 @@
+from __future__ import annotations
+
+import ast
+import os
+import pathlib
+import re
+
+from typing import Any
+from urllib import parse
+
+from mknodes.navs import mknav
+from mknodes.pages import mkpage
+from mknodes.utils import helpers, log
+
+
+logger = log.get_logger(__name__)
+
+# for SUMMARY.md parsing
+SECTION_AND_FILE_REGEX = r"^\* \[(.*)\]\((.*)\)"
+SECTION_AND_FOLDER_REGEX = r"^\* \[(.*)\]\((.*)\/\)"
+SECTION_REGEX = r"^\* (.*)"
+
+# for ->MkNode parsing
+ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
+
+
+def add_page(path: str | os.PathLike, name: str | None = None, **kwargs) -> mkpage.MkPage:
+    """Parse given path, check for our -> syntax, and return a MkPage.
+
+    If -> is detected, return a MkPage containing given MkNode. Otherwise
+    open / download the markdown file from given path and put that into an MkPage.
+
+    Arguments:
+        path: Path to build a MkPage for
+        name: Name for given MkPage
+        kwargs: Keyword arguments passed to MkPage
+    """
+    import mknodes
+
+    path = os.fspath(path)
+    logger.debug("Adding file %r", path)
+    node_cls_name = path.removeprefix("->").strip().split("(")[0]
+    if path.startswith("->") and node_cls_name in mknodes.__all__:
+        node_cls = getattr(mknodes, node_cls_name)
+        page = mknodes.MkPage(name, **kwargs)
+        if match := re.match(ARGS_KWARGS_RE, path):
+            parts = match[1].split(",")
+            args = [ast.literal_eval(i.strip()) for i in parts if "=" not in i]
+            kwargs_iter = (i.strip().split("=", maxsplit=1) for i in parts if "=" in i)
+            kwargs = {i[0]: ast.literal_eval(i[1]) for i in kwargs_iter}
+            msg = "Parsed: Node: %s, args: %s, kwargs: %s"
+            logger.debug(msg, node_cls.__name__, args, kwargs)
+            page += node_cls(*args, **kwargs)
+        else:
+            page += node_cls()
+        return page
+    return mkpage.MkPage.from_file(path, title=name, **kwargs)
+
+
+def from_list(
+    ls: list,
+    nav: mknav.MkNav,
+):
+    """Parse given list recursively and add found content to given MkNav.
+
+    Arguments:
+        ls: List to parse
+        nav: MkNav to attach found stuff to
+    """
+    for item in ls:
+        match item:
+            case dict():
+                name, val = next(iter(item.items()))
+                match val:
+                    case dict():
+                        logger.debug("Adding nav %r", name)
+                        from_dict(val, nav.add_nav(name))
+                    case str():
+                        nav += add_page(path=val, name=name)
+                    case list():
+                        logger.debug("Adding nav %r", name)
+                        if helpers.is_url(name):
+                            name = pathlib.Path(parse.urlsplit(name).path).name
+                        from_list(val, nav.add_nav(name))
+            case str():
+                page = mkpage.MkPage.from_file(item)
+                logger.debug("Adding page %s", item)
+                nav += page
+
+
+def from_dict(
+    dct: dict[str, str | list | dict],
+    nav: mknav.MkNav,
+):
+    """Parse given dict recursively and add found content to given MkNav.
+
+    Arguments:
+        dct: Dictionary to parse
+        nav: MkNav to attach found stuff to
+    """
+    for k, v in dct.items():
+        match v:
+            case str():
+                nav += add_page(path=v, name=k)
+            case dict():
+                logger.debug("Adding nav %r", k)
+                from_dict(v, nav.add_nav(k))
+            case list():
+                logger.debug("Adding nav %r", k)
+                from_list(v, nav.add_nav(k))
+
+
+class NavParser:
+    """Class used for constructing MkNavs."""
+
+    def __init__(self, nav: mknav.MkNav):
+        """Constructor.
+
+        Arguments:
+            nav: MkNav to use for routing
+        """
+        self._nav = nav
+
+    def json(
+        self,
+        obj: list | dict[str, str | list | dict],
+    ):
+        """Parse given list or dict and attach it to given MkNav.
+
+        If no Nav is given, create a new one
+        Arguments:
+            obj: Dictionary / List to parse
+        """
+        match obj:
+            case dict():
+                from_dict(obj, self._nav)
+            case list():
+                from_list(obj, self._nav)
+
+    def file(
+        self,
+        path: str | os.PathLike,
+        **kwargs: Any,
+    ) -> mknav.MkNav:
+        """Load an existing SUMMARY.md style file.
+
+        For each indentation level in SUMMARY.md, a new sub-nav is created.
+
+        Should support all SUMMARY.md options except wildcards.
+
+        Arguments:
+            path: Path to the file
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
+        """
+        path = pathlib.Path(path)
+        if path.is_absolute():
+            path = os.path.relpath(path, pathlib.Path().absolute())
+        path = pathlib.Path(path)
+        return self.text(
+            path.read_text(),
+            path=path,
+            **kwargs,
+        )
+
+    def text(
+        self,
+        text: str,
+        path: pathlib.Path,
+        **kwargs: Any,
+    ) -> mknav.MkNav:
+        """Create a nav based on a SUMMARY.md-style list, given as text.
+
+        For each indentation level, a new sub-nav is created.
+
+        Should support all SUMMARY.md options except wildcards.
+
+        Arguments:
+            text: Text to parse
+            path: path of the file containing the text.
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
+        """
+        lines = text.splitlines()
+        for i, line in enumerate(lines):
+            # * [Example](example_folder/)
+
+            if match := re.match(SECTION_AND_FOLDER_REGEX, line):
+                file_path = path.parent / f"{match[2]}/SUMMARY.md"
+                subnav = mknav.MkNav(match[1], parent=self._nav)
+                subnav.parse.file(file_path, **kwargs)
+                self._nav[match[1]] = subnav
+                logger.debug("Created subsection %s from %s", match[1], file_path)
+
+            # * [Example](example_folder/sub_1.md)
+
+            elif match := re.match(SECTION_AND_FILE_REGEX, line):
+                # if following section indented, it is a nav with an index page:
+                if unindented := helpers.get_indented_lines(lines[i + 1 :]):
+                    subnav = mknav.MkNav(match[1], parent=self._nav)
+                    subnav.parse.text("\n".join(unindented), path=path, **kwargs)
+                    page = subnav.add_index_page(**kwargs)
+                    page += pathlib.Path(match[2]).read_text()
+                    msg = "Created subsection %s and loaded index page %s"
+                    logger.debug(msg, match[1], match[2])
+                    self._nav += subnav
+
+                # if not, add as regular page:
+                else:
+                    p = match[2] if match[2].startswith("->") else path.parent / match[2]
+                    page = add_page(path=p, name=match[1], parent=self._nav, **kwargs)
+                    self._nav[match[1]] = page
+                    logger.debug("Created page %s from %s", match[1], match[2])
+
+            # * Section/
+
+            elif match := re.match(SECTION_REGEX, line):
+                unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
+                logger.debug("Created subsection %s from text", match[1])
+                subnav = mknav.MkNav(match[1], parent=self._nav)
+                subnav.parse.text("\n".join(unindented), path=path, **kwargs)
+                self._nav[match[1]] = subnav
+        return self._nav
+
+    def folder(
+        self,
+        folder: str | os.PathLike,
+        *,
+        recursive: bool = True,
+        **kwargs: Any,
+    ) -> mknav.MkNav:
+        """Load a MkNav tree from Folder.
+
+        SUMMARY.mds are ignored.
+        index.md files become index pages.
+
+        To override the default behavior of using filenames as menu titles,
+        the pages can set a title by using page metadata.
+
+        Arguments:
+            folder: Folder to load .md files from
+            recursive: Whether all .md files should be included recursively.
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
+        """
+        folder = pathlib.Path(folder)
+        for path in folder.iterdir():
+            if path.is_dir() and recursive and any(path.iterdir()):
+                path = folder / path.parts[-1]
+                subnav = mknav.MkNav(path.name)
+                subnav.parse.folder(folder=path, **kwargs)
+                self._nav += subnav
+                logger.debug("Loaded subnav from from %s", path)
+            elif path.name == "index.md":
+                logger.debug("Loaded index page from %s", path)
+                self._nav.index_page = mkpage.MkPage(
+                    path=path.name,
+                    content=path.read_text(),
+                    parent=self._nav,
+                    **kwargs,
+                )
+                self._nav.index_title = self._nav.section or "Home"
+            elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
+                self._nav += mkpage.MkPage(
+                    path=path.relative_to(folder),
+                    content=path.read_text(),
+                    parent=self._nav,
+                    **kwargs,
+                )
+                logger.debug("Loaded page from from %s", path)
+        return self._nav
+
+
+if __name__ == "__main__":
+    log.basic()
+    nav = mknav.MkNav()
+    nav_tree_path = pathlib.Path(__file__).parent.parent.parent / "tests/data/nav_tree/"
+    nav_file = nav_tree_path / "SUMMARY.md"
+    nav.parse.file(nav_file)
+    print(list(nav.iter_nodes()))

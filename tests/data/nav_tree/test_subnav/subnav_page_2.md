@@ -46,7 +46,7 @@ Finally a break to write some **regular** markdown!
     * **MkNodes** can be used to create the complete website (like it is done with this page)
 
 * Load existing websites and extend it
-    * By using `MkNav.from_folder` / `from_file` as well as `MkPage.from_file`,
+    * By using `MkNav.parse.folder` / `MkNav.parse.file` as well as `MkPage.from_file`,
       the existing Markdown pages can become part of our tree
       (which we can extend programatically)
 

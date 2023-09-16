@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mknodes.navs import mknav, parsenav
+from mknodes.navs import mknav
 from mknodes.utils import log
 
 
@@ -17,7 +17,7 @@ class MkEmptyWebsite(mknav.MkNav):
         page = self.add_index_page("Overview", hide_toc=True)
         page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
         static_pages = static_pages or {}
-        parsenav.from_json(static_pages, self)
+        self.parse.json(static_pages)
 
     @classmethod
     def for_project(cls, project, **kwargs):
