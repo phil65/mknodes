@@ -58,6 +58,9 @@ class MkNav(mknode.MkNode):
         section = self.section or "<root>"
         return reprhelpers.get_repr(self, section=section, filename=self.filename)
 
+    # The child items are managed by the Navigation object. We forward relevant calls
+    # to the Navigation instance.
+
     def __setitem__(self, index: tuple | str, node: navigation.NavSubType):
         self.nav[index] = node
 
@@ -67,18 +70,11 @@ class MkNav(mknode.MkNode):
     def __delitem__(self, index: tuple | str):
         del self.nav[index]
 
-    def __add__(self, other: navigation.NavSubType):
-        other.parent = self
-        self.nav.register(other)
-        return self
-
     # def __len__(self):
-    #     return len(self.nav) + (1 if self.index_page else 0)
+    #     return len(self.nav.all_items)
 
     def __iter__(self):
-        if self.index_page:
-            yield self.index_page
-        yield from self.nav.values()
+        yield from self.nav.all_items
 
     @property
     def index_page(self):
@@ -95,6 +91,12 @@ class MkNav(mknode.MkNode):
     @index_title.setter
     def index_title(self, value):
         self.nav.index_title = value
+
+    def __add__(self, other: navigation.NavSubType):
+        """Use this to to register MkNodes."""
+        other.parent = self
+        self.nav.register(other)
+        return self
 
     @property
     def path(self) -> str:
@@ -122,9 +124,7 @@ class MkNav(mknode.MkNode):
 
     @property
     def children(self):
-        nodes: list[mknode.MkNode] = [self.index_page] if self.index_page else []
-        nodes += list(self.nav.values())
-        return nodes
+        return self.nav.all_items
 
     @children.setter
     def children(self, items):

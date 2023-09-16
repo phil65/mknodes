@@ -18,6 +18,8 @@ class Navigation(dict):
 
     The dict data consists of a mapping of a path-tuple -> NavSubType.
     It can contain navs, which in turn have their own navigation object.
+
+    A special item is the index page. It can be accessed via the corresponding attributes.
     """
 
     def __init__(self, *args, **kwargs):
@@ -55,6 +57,12 @@ class Navigation(dict):
                 self[node.title or node.url] = node
             case _:
                 raise TypeError(node)
+
+    @property
+    def all_items(self):
+        nodes = [self.index_page] if self.index_page else []
+        nodes += list(self.values())
+        return nodes
 
     @property
     def navs(self) -> list[mknav.MkNav]:
