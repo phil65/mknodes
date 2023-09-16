@@ -112,6 +112,6 @@ class MkBlogPost(mkpage.MkPage):
 if __name__ == "__main__":
     blog = MkBlog()
     blog.add_post("Hello", "2020-01-01", "more")
-    page = blog.pages[0]
+    page = blog.nav.pages[0]
     print(page.metadata)
     print(blog)

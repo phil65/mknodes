@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
-from mknodes.navs import navbuilder, navparser, navrouter
+from mknodes.navs import navbuilder, navigation, navparser, navrouter
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import log, reprhelpers
 
@@ -49,7 +49,7 @@ class MkNav(mknode.MkNode):
         """
         self.section = section  # helpers.slugify(section)
         self.filename = filename
-        self.nav: dict[tuple | str | None, NavSubType] = {}
+        self.nav = navigation.Navigation()
         self.route = navrouter.NavRouter(self)
         self.parse = navparser.NavParser(self)
         self.index_page: mkpage.MkPage | None = None
@@ -112,21 +112,6 @@ class MkNav(mknode.MkNode):
         """Returns the resulting section/subsection/../filename.xyz path."""
         path = "/".join(self.resolved_parts) + "/" + self.filename
         return path.lstrip("/")
-
-    @property
-    def navs(self) -> list[MkNav]:
-        """Return all registered navs."""
-        return [node for node in self.nav.values() if isinstance(node, MkNav)]
-
-    @property
-    def pages(self) -> list[mkpage.MkPage]:
-        """Return all registered pages."""
-        return [node for node in self.nav.values() if isinstance(node, mkpage.MkPage)]
-
-    @property
-    def links(self) -> list[mklink.MkLink]:
-        """Return all registered links."""
-        return [node for node in self.nav.values() if isinstance(node, mklink.MkLink)]
 
     @property
     def children(self):
