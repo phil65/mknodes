@@ -35,9 +35,10 @@ def create_cli_section(root_nav: mk.MkNav):
     # used without any further adaptation.
     root_nav += nav
     page = nav.add_index_page(hide_toc=True, icon="octicons/command-palette-16")
-    page += mk.MkCode.for_object(create_cli_section, header=SECTION_CODE)
     page += mk.MkBinaryImage.for_file("docs/assets/cli.gif")
     page += INTRO_TEXT
+    code = mk.MkCode.for_object(create_cli_section)
+    page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True, typ="quote")
 
 
 @nav.route.page("build", show_source=True, icon="wrench")

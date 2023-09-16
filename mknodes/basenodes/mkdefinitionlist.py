@@ -66,7 +66,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        data: Mapping[str | mknode.MkNode, str | mknode.MkNode] | None = None,
+        data: Mapping | None = None,
         *,
         header: str = "",
         **kwargs: Any,
