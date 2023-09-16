@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import textwrap
 
-from typing import Literal
+from typing import Any, Literal
 
 from pymdownx import superfences
 
@@ -46,7 +46,7 @@ class MkDiagram(mkcode.MkCode):
         connections: list[tuple] | None = None,
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         attributes: dict[str, str] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import itertools
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes.basenodes import mkdiagram
 from mknodes.utils import classhelpers, connector, helpers, reprhelpers
@@ -73,7 +73,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         mode: DiagramModeStr = "baseclasses",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
