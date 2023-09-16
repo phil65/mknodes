@@ -17,8 +17,8 @@ def create_internals_section(root_nav: mk.MkNav):
     """Create the "Internals" Sub-MkNav and attach it to given MkNav."""
     root_nav += nav
     page = nav.add_index_page(hide_toc=True)
+    page += INTRO_TEXT
     page += mk.MkCode.for_object(create_internals_section, header=SECTION_CODE)
-    page += mk.MkAdmonition(INTRO_TEXT)
 
 
 @nav.route.page("Tree", show_source=True, hide_toc=True, icon="graph")

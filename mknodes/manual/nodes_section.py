@@ -45,7 +45,7 @@ def create_nodes_section(root_nav: mk.MkNav):
     page += mk.MkHeader("All the nodes")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR", max_depth=3)
     code = mk.MkCode.for_object(create_nodes_section)
-    page += mk.MkDetailsBlock(code, title=SECTION_CODE)
+    page += mk.MkDetailsBlock(code, title=SECTION_CODE, typ="quote")
 
 
 def create_section_for_nodes(
