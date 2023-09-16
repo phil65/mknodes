@@ -11,6 +11,8 @@ from mknodes.pages import metadata, mkpage
 
 @dataclasses.dataclass(frozen=True)
 class Author:
+    """A blog post author."""
+
     name: str
     description: str | None = None
     avatar: str | None = None
@@ -18,6 +20,8 @@ class Author:
 
 @dataclasses.dataclass
 class BlogMetadata(metadata.Metadata):
+    """Extended Metadata class for blog posts."""
+
     date: str = ""
     draft: bool = True
     categories: list[str] = dataclasses.field(default_factory=list)
@@ -33,6 +37,8 @@ class BlogMetadata(metadata.Metadata):
 
 
 class MkBlog(mknav.MkNav):
+    """Class representing the blog provided by the MkDocs-Material blog plugin."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.authors: dict[str, Author] = {}
@@ -48,6 +54,7 @@ class MkBlog(mknav.MkNav):
         self.authors[username] = author
 
     def write_authors_yml(self):
+        """Write the authors yaml file to disk."""
         authors_file = yamlfile.YamlFile()
         authors_file._data = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
         # authors_file.write("docs/blog/.authors.yml", mode="yaml")
@@ -62,11 +69,22 @@ class MkBlog(mknav.MkNav):
         date: datetime.datetime | str,
         more_text: str | None = None,
         *,
-        categories: list[str] | None = None,
-        authors: list[str] | None = None,
+        categories: list[str] | str | None = None,
+        authors: list[str] | str | None = None,
         draft: bool = False,
         **kwargs,
     ):
+        """Add a post to the blog.
+
+        Arguments:
+            text: Blog post text
+            date: Time/Date of the post
+            more_text: Text hidden behint the more button.
+            categories: A list of categories this post is linked to
+            authors: A list of authors of the post
+            draft: Whether post is a draft
+            kwargs: Keyword arguments passed to parent
+        """
         page = MkBlogPost(
             date=date,
             draft=draft,
@@ -82,6 +100,8 @@ class MkBlog(mknav.MkNav):
 
 
 class MkBlogPost(mkpage.MkPage):
+    """Class representing a MkDocs-Material blog post."""
+
     DATE_FORMAT = "%Y-%m-%d"
 
     def __init__(
@@ -89,11 +109,15 @@ class MkBlogPost(mkpage.MkPage):
         date: str | datetime.datetime,
         *,
         draft: bool = True,
-        categories: list[str] | None = None,
-        authors: list[str] | None = None,
+        categories: list[str] | str | None = None,
+        authors: list[str] | str | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
+        if isinstance(authors, str):
+            authors = [authors]
+        if isinstance(categories, str):
+            categories = [categories]
         self.metadata = BlogMetadata(
             **dataclasses.asdict(self.metadata),
             date=(
