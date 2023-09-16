@@ -58,17 +58,10 @@ class MkNav(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            section=self.section or "<root>",
-            filename=self.filename,
-        )
+        section = self.section or "<root>"
+        return reprhelpers.get_repr(self, section=section, filename=self.filename)
 
-    def __setitem__(
-        self,
-        index: tuple | str,
-        node: NavSubType,
-    ):
+    def __setitem__(self, index: tuple | str, node: NavSubType):
         if isinstance(index, str):
             index = tuple(index.split("."))
         self.nav[index] = node
