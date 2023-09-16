@@ -2,10 +2,14 @@ import mknodes as mk
 
 
 INTRO_TEXT = """MkNodes offers a CLI interface in order to build projects based on
-Callables. The CLI is closely aligned to the MkDocs CLI to simplify the usage.
+Callables. The CLI is closely aligned to the MkDocs CLI to simplify the usage. Most
+arguments have the same name.
+"""
 
-MkNodes CLI is based on Typer and uses a RichHandler for log output.
+INFO_BOX = """The biggest technical difference compared to MkDocs CLI:
+MkNodes CLI is based on `Typer` and uses a log handler from `rich` for log output."""
 
+EXPLANATION_TEXT = """
 There are 3 diffent commands right now:
 
 - `mknodes build`: Closely aligned to `mkdocs build`, but with the option to point
@@ -37,6 +41,8 @@ def create_cli_section(root_nav: mk.MkNav):
     page = nav.add_index_page(hide_toc=True, icon="octicons/command-palette-16")
     page += mk.MkBinaryImage.for_file("docs/assets/cli.gif")
     page += INTRO_TEXT
+    page += mk.MkAdmonition(INFO_BOX)
+    page += EXPLANATION_TEXT
     code = mk.MkCode.for_object(create_cli_section)
     page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True, typ="quote")
 
