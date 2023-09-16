@@ -92,6 +92,14 @@ class MkNav(mknode.MkNode):
     def index_title(self, value):
         self.nav.index_title = value
 
+    @property
+    def children(self):
+        return self.nav.all_items
+
+    @children.setter
+    def children(self, items):
+        self.nav = navigation.Navigation(items)
+
     def __add__(self, other: navigation.NavSubType):
         """Use this to to register MkNodes."""
         other.parent = self
@@ -121,14 +129,6 @@ class MkNav(mknode.MkNode):
         """Returns the resulting section/subsection/../filename.xyz path."""
         path = "/".join(self.resolved_parts) + "/" + self.filename
         return path.lstrip("/")
-
-    @property
-    def children(self):
-        return self.nav.all_items
-
-    @children.setter
-    def children(self, items):
-        self.nav = navigation.Navigation(items)
 
     def add_nav(self, section: str) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.

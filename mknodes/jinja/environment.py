@@ -38,6 +38,7 @@ class Environment(jinja2.Environment):
     def set_mknodes_filters(self, parent=None):
         filters = jinjahelpers.get_mknodes_macros(parent)
         self.filters.update(filters)
+        # self.globals.update(filters)
 
     def merge_globals(self, other: Mapping, additive: bool = False):
         strategy = "additive" if additive else "replace"

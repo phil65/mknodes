@@ -7,6 +7,7 @@ import os
 import pathlib
 import re
 
+from griffe import Module
 from griffe.enumerations import Parser
 from griffe.loader import GriffeLoader
 
@@ -77,7 +78,7 @@ class FolderInfo:
         return importlib.import_module(mod_name)
 
     @functools.cached_property
-    def griffe_module(self):
+    def griffe_module(self) -> Module:
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         parser = Parser(self.docstring_style or "google")
         griffe = GriffeLoader(docstring_parser=parser)

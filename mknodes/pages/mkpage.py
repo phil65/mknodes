@@ -77,18 +77,15 @@ class MkPage(mkcontainer.MkContainer):
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.inclusion_level = inclusion_level
         frame = i.f_back.f_back if (i := inspect.currentframe()) else None  # type: ignore[union-attr]  # noqa: E501
-        self.created = (
-            dict(
+        self.created = {}
+        if frame:
+            fn_name = qual if (qual := frame.f_code.co_qualname) != "<module>" else None
+            self.created = dict(
                 source_filename=frame.f_code.co_filename,
-                source_function=(
-                    qual if (qual := frame.f_code.co_qualname) != "<module>" else None
-                ),
+                source_function=fn_name,
                 source_line_no=frame.f_lineno,
                 # klass=frame.f_locals["self"].__class__.__name__,
             )
-            if frame
-            else {}
-        )
         self.created_by: Callable | None = None
         self.metadata = metadata.Metadata(
             hide_toc=hide_toc,

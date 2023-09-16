@@ -40,7 +40,6 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
             path: Filename/path for the class page. defaults to [classname].md
             kwargs: keyword arguments passed to base class
         """
-        # TODO: should path be settable?
         self.klass = klass
         match module_path:
             case None:

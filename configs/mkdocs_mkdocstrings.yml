@@ -1,8 +1,6 @@
 site_name: MkDocstrings
-site_description: A MkDocstrings page created by MkNodes
 repo_url: "https://github.com/mkdocstrings/mkdocstrings/"
 site_url: https://phil65.github.io/mknodes/mkdocstrings/
-edit_uri: edit/main
 
 theme:
   name: material
