@@ -6,7 +6,7 @@ import types
 
 from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mklink, mknode
+from mknodes.basenodes import mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata, mkpage
@@ -14,10 +14,9 @@ from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from mknodes.navs import mkdoc, mknav
+    from mknodes.navs import mkdoc
     from mknodes.pages import mkclasspage, mkmodulepage
 
-    NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 logger = log.get_logger(__name__)
 
@@ -59,16 +58,16 @@ class MkNav(mknode.MkNode):
         section = self.section or "<root>"
         return reprhelpers.get_repr(self, section=section, filename=self.filename)
 
-    def __setitem__(self, index: tuple | str, node: NavSubType):
+    def __setitem__(self, index: tuple | str, node: navigation.NavSubType):
         self.nav[index] = node
 
-    def __getitem__(self, index: tuple | str) -> NavSubType:
+    def __getitem__(self, index: tuple | str) -> navigation.NavSubType:
         return self.nav[index]
 
     def __delitem__(self, index: tuple | str):
         del self.nav[index]
 
-    def __add__(self, other: NavSubType):
+    def __add__(self, other: navigation.NavSubType):
         other.parent = self
         self.nav.register(other)
         return self
