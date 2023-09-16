@@ -98,5 +98,5 @@ class MkClickDoc(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc.with_default_context()
+    docstrings = MkClickDoc.with_default_context("mknodes.cli:cli", prog_name="sth")
     print(docstrings)

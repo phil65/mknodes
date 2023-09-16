@@ -11,7 +11,7 @@ import jinja2
 
 resource_loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
 
-material_partials_loader = jinja2.PackageLoader("material", "partials")
+# material_partials_loader = jinja2.PackageLoader("material", "partials")
 
 
 class LaxUndefined(jinja2.Undefined):

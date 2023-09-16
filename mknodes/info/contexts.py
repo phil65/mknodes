@@ -276,6 +276,7 @@ default_package_context = PackageContext(
     license_name="MIT",
     required_python_version=">= 3.11",
     homepage="",
+    cli="typer",
     module=mknodes,
     repository_url="https://github.com/phil65/mknodes/",
     repository_username="phil65",
