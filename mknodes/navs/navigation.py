@@ -14,7 +14,11 @@ if TYPE_CHECKING:
 
 
 class Navigation(dict):
-    """An object representing MkDocs navigation."""
+    """An object representing A Website structure.
+
+    The dict data consists of a mapping of a path-tuple -> NavSubType.
+    It can contain navs, which in turn have their own navigation object.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,18 +26,23 @@ class Navigation(dict):
         self.index_title: str | None = None
 
     def __setitem__(self, index: tuple | str, node: NavSubType):
+        """Put a Navigation-type instance into the registry.
+
+        Index must be a unique path / title for this navigation object.
+        If given a tuple, it is considered a nested path.
+        """
         if isinstance(index, str):
-            index = tuple(index.split("."))
+            index = (index,)
         super().__setitem__(index, node)
 
     def __getitem__(self, index: tuple | str) -> NavSubType:
         if isinstance(index, str):
-            index = tuple(index.split("."))
+            index = (index,)
         return super().__getitem__(index)
 
     def __delitem__(self, index: tuple | str):
         if isinstance(index, str):
-            index = tuple(index.split("."))
+            index = (index,)
         super().__delitem__(index)
 
     def register(self, node: NavSubType):
@@ -61,6 +70,14 @@ class Navigation(dict):
     def links(self) -> list[mklink.MkLink]:
         """Return all registered links."""
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
+
+    @property
+    def page_mapping(self):
+        return {
+            node.resolved_file_path: node
+            for _level, node in self.iter_nodes()
+            if hasattr(node, "resolved_file_path")
+        }
 
     def to_literate_nav(self):
         nav = navbuilder.NavBuilder()

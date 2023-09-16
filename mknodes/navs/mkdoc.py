@@ -202,7 +202,6 @@ class MkDoc(mknav.MkNav):
             parts = classhelpers.get_topmost_module_path(klass).split(".")
         else:
             parts = klass.__module__.split(".")
-        # parts = klass.__module__.split(".")
         page = self.ClassPage(
             klass=klass,
             module_path=tuple(parts),
