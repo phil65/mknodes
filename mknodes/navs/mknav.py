@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mklink, mknode
 from mknodes.data.datatypes import PageStatusStr
-from mknodes.navs import navbuilder, navigation, navparser, navrouter
+from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import log, reprhelpers
 
@@ -52,8 +52,6 @@ class MkNav(mknode.MkNode):
         self.nav = navigation.Navigation()
         self.route = navrouter.NavRouter(self)
         self.parse = navparser.NavParser(self)
-        self.index_page: mkpage.MkPage | None = None
-        self.index_title: str | None = None
         self.metadata = metadata.Metadata()
         super().__init__(**kwargs)
 
@@ -82,6 +80,22 @@ class MkNav(mknode.MkNode):
         if self.index_page:
             yield self.index_page
         yield from self.nav.values()
+
+    @property
+    def index_page(self):
+        return self.nav.index_page
+
+    @index_page.setter
+    def index_page(self, value):
+        self.nav.index_page = value
+
+    @property
+    def index_title(self):
+        return self.nav.index_title
+
+    @index_title.setter
+    def index_title(self, value):
+        self.nav.index_title = value
 
     @property
     def path(self) -> str:
@@ -177,29 +191,12 @@ class MkNav(mknode.MkNode):
             tags=tags,
             parent=self,
         )
-        self.index_page = page
-        self.index_title = title or self.section or "Home"
+        self.nav.index_page = page
+        self.nav.index_title = title or self.section or "Home"
         return page
 
     def to_markdown(self) -> str:
-        nav = navbuilder.NavBuilder()
-        # In a nav, the first inserted item becomes the index page in case
-        # the section-index plugin is used, so we add it first.
-        if self.index_page and self.index_title:
-            nav[self.index_title] = pathlib.Path(self.index_page.path).as_posix()
-        for path, item in self.nav.items():
-            if path is None:  # this check is just to make mypy happy
-                continue
-            match item:
-                case mkpage.MkPage():
-                    nav[path] = pathlib.Path(item.path).as_posix()
-                case MkNav():
-                    nav[path] = f"{item.section}/"
-                case mklink.MkLink():
-                    nav[path] = str(item.target)
-                case _:
-                    raise TypeError(item)
-        return "".join(nav.build_literate_nav())
+        return self.nav.to_literate_nav()
 
     def add_page(
         self,

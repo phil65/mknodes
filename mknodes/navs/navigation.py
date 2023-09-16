@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import pathlib
+
 from git import TYPE_CHECKING
 
 from mknodes.basenodes import mklink
-from mknodes.navs import mknav
+from mknodes.navs import mknav, navbuilder
 from mknodes.pages import mkpage
 
 
@@ -13,6 +15,11 @@ if TYPE_CHECKING:
 
 class Navigation(dict):
     """An object representing MkDocs navigation."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.index_page: mkpage.MkPage | None = None
+        self.index_title: str | None = None
 
     def __setitem__(self, index: tuple | str, node: NavSubType):
         if isinstance(index, str):
@@ -54,3 +61,23 @@ class Navigation(dict):
     def links(self) -> list[mklink.MkLink]:
         """Return all registered links."""
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
+
+    def to_literate_nav(self):
+        nav = navbuilder.NavBuilder()
+        # In a nav, the first inserted item becomes the index page in case
+        # the section-index plugin is used, so we add it first.
+        if self.index_page and self.index_title:
+            nav[self.index_title] = pathlib.Path(self.index_page.path).as_posix()
+        for path, item in self.items():
+            if path is None:  # this check is just to make mypy happy
+                continue
+            match item:
+                case mkpage.MkPage():
+                    nav[path] = pathlib.Path(item.path).as_posix()
+                case mknav.MkNav():
+                    nav[path] = f"{item.section}/"
+                case mklink.MkLink():
+                    nav[path] = str(item.target)
+                case _:
+                    raise TypeError(item)
+        return "".join(nav.build_literate_nav())
