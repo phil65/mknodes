@@ -1,8 +1,35 @@
 import mknodes as mk
 
 
-INTRO_TEXT = """There are a lot of different ways MkNodes can be used to generate
-websites. This section will highlight some of them."""
+INTRO_TEXT = """
+There are a lot of different ways MkNodes can be used to generate
+websites. This section will highlight some of them.
+
+
+**MkNodes** can be used in many different ways
+
+* Create complete websites
+    * **MkNodes** can be used to create a whole website (like it is done with this page)
+
+* Load existing websites and extend it
+    * By using `MkNav.parse.folder` / `MkNav.parse.file` as well as `MkPage.from_file`,
+      the existing Markdown pages can become part of our tree
+      (which we can then extend programatically)
+
+* Create a subsection with **MkNodes** and reference it from your "static" page.
+    * You can also set a section name for your root `MkNav` and reference that from your
+      `nav:` section in mkdocs.yml
+
+* Create single static pages / blocks for your page
+    You can also just use **MkNodes** to create some Nodes, stringify them and include
+    the markdown in your static pages
+
+* Using `Markdown-Exec` or similar inline execution plugins
+    You can also embed **MkNodes** code directly by using various plug-ins
+    (personal recommendation: `Markdown-Exec`)
+
+
+"""
 
 
 SECTION_CODE = "Code for this section"
@@ -16,8 +43,9 @@ def create_use_cases_section(root_nav: mk.MkNav):
     """Create the "Development" sub-MkNav."""
     root_nav += nav
     page = nav.add_index_page(hide_toc=True)
-    page += mk.MkCode.for_object(create_use_cases_section, header=SECTION_CODE)
-    page += mk.MkAdmonitionBlock(INTRO_TEXT)
+    page += INTRO_TEXT
+    code = mk.MkCode.for_object(create_use_cases_section)
+    page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True)
 
 
 @nav.route.page("Creating a sample website", show_source=True, hide_toc=True)
