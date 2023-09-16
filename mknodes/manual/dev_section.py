@@ -38,12 +38,6 @@ def create_plugin_flow_page(page: mk.MkPage):
     page += mk.MkPluginFlow()
 
 
-@nav.route.page("CLI", show_source=True, icon="api")
-def create_cli_page(page: mk.MkPage):
-    """Create the "CLI" MkPage and attach it to given MkNav."""
-    page += mk.MkClickDoc()
-
-
 @nav.route.page("Changelog", show_source=True, icon="format-list-group")
 def create_changelog_page(page: mk.MkPage):
     """Create the "Changelog" MkPage and attach it to given MkNav."""

@@ -16,6 +16,9 @@ class CommandInfo:
     options: str
     subcommands: dict[str, CommandInfo] = dataclasses.field(default_factory=dict)
 
+    def __getitem__(self, name):
+        return self.subcommands[name]
+
 
 def get_typer_info(typer_instance: typer.Typer) -> CommandInfo:
     cmd = get_command(typer_instance)

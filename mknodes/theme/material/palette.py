@@ -17,6 +17,8 @@ SCRIPT = """
 
 @dataclasses.dataclass
 class Palette:
+    """Class representing a MkDocs-Material palette."""
+
     scheme: str = "default"
     primary: str = "indigo"
     accent: str = "indigo"
@@ -26,6 +28,7 @@ class Palette:
 
 
 def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
+    """Builds the XML equivalent to the content of "palette.html" partial."""
     # body = ElementTree.Element("body")
     # form = ElementTree.SubElement(
     # body,

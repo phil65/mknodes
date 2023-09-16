@@ -33,7 +33,10 @@ class PyProject(tomlfile.TomlFile):
         if path.is_dir():
             path = path / "pyproject.toml"
         super().__init__(path)
-        self.mknodes_section = self.get_section("tool", "mknodes") or {}
+
+    @property
+    def mknodes_section(self):
+        return self.get_section("tool", "mknodes") or {}
 
     @property
     def name(self) -> str | None:
