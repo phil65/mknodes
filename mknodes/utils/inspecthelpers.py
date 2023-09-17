@@ -4,6 +4,7 @@ import contextlib
 import functools
 import inspect
 import itertools
+import pathlib
 import types
 
 from mknodes.data import datatypes
@@ -95,12 +96,12 @@ def get_source_lines(obj: datatypes.HasCodeType) -> tuple[list[str], int]:
 
 
 @functools.cache
-def get_file(obj: datatypes.HasCodeType) -> str | None:
+def get_file(obj: datatypes.HasCodeType) -> pathlib.Path | None:
     """Cached wrapper for inspect.getfile.
 
     Arguments:
         obj: Object to get file for
     """
     with contextlib.suppress(TypeError):
-        return inspect.getfile(obj)
+        return pathlib.Path(inspect.getfile(obj))
     return None
