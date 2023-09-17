@@ -25,6 +25,7 @@ class MkDocsBuilder(buildbackend.BuildBackend):
                 self._config = config
             case _:
                 self._config = mkdocsconfig.Config(config)._config
+        self.mk_files = files_.Files([])
 
     def get_file(
         self,
@@ -73,13 +74,39 @@ class MkDocsBuilder(buildbackend.BuildBackend):
         title: str,
         path: str | os.PathLike,
         inclusion_level: files_.InclusionLevel = files_.InclusionLevel.UNDEFINED,
+        run_event_hooks: bool = False,
     ) -> pages.Page:
         file = self.get_file(path, inclusion_level=inclusion_level)
-        return pages.Page(title, file, self._config)
+        page = pages.Page(title, file, self._config)
 
-    def get_nav(self, file_list: list[files_.File]) -> nav.Navigation:
-        files = files_.Files(file_list)
-        return nav.get_navigation(files, self._config)
+        if run_event_hooks:
+            self._config._current_page = page
+            page = self._config.plugins.on_pre_page(
+                page,
+                config=self._config,
+                files=self.mk_files,
+            )
+            page.read_source(self._config)
+            page.markdown = self._config.plugins.on_page_markdown(
+                page.markdown or "",
+                page=page,
+                config=self._config,
+                files=self.mk_files,
+            )
+            page.render(self._config, self.mk_files)
+            page.content = self._config.plugins.on_page_content(
+                page.content,
+                page=page,
+                config=self._config,
+                files=self.mk_files,
+            )
+
+            self._config._current_page = None
+
+        return page
+
+    def get_nav(self) -> nav.Navigation:
+        return nav.get_navigation(self.mk_files, self._config)
 
 
 if __name__ == "__main__":

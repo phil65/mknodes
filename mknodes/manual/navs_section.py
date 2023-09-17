@@ -157,7 +157,7 @@ def create_metadata_page(page: mk.MkPage):
 def create_mkdefaultwebsite_section(nav: mk.MkNav):
     """Create the "MkDefaultWebsite" sub-MkNav and attach it to given nav."""
     proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
-    website_nav = mk.MkDefaultWebsite(project=proj)
+    website_nav = mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
     nav += website_nav
 
 
