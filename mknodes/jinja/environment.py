@@ -11,7 +11,15 @@ from typing import Any
 
 import jinja2
 
-from mknodes.utils import helpers, jinjahelpers, log, mergehelpers, yamlhelpers
+from mknodes import paths
+from mknodes.utils import (
+    helpers,
+    inspecthelpers,
+    jinjahelpers,
+    log,
+    mergehelpers,
+    yamlhelpers,
+)
 
 
 logger = log.get_logger(__name__)
@@ -19,13 +27,15 @@ logger = log.get_logger(__name__)
 
 @functools.cache
 def load_file(path: str | os.PathLike) -> str:
-    return pathlib.Path(path).read_text()
+    return pathlib.Path(path).read_text(encoding="utf-8")
 
 
 ENVIRONMENT_GLOBALS = {
     "log": log.log_stream.getvalue,
     "now": datetime.datetime.now,
     "str": str,
+    "inspecthelpers": inspecthelpers,
+    "resources_dir": paths.RESOURCES,
 }
 ENVIRONMENT_FILTERS = {
     "dump_yaml": yamlhelpers.dump_yaml,
@@ -37,6 +47,8 @@ ENVIRONMENT_FILTERS = {
     "issubclass": issubclass,
     "isinstance": isinstance,
     "hasattr": hasattr,
+    "load_file": load_file,
+    "path_join": os.path.join,
 }
 
 
