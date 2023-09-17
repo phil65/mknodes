@@ -3,8 +3,9 @@ from __future__ import annotations
 import ast
 import os
 import pathlib
-import re
 
+from posixpath import join as urljoin
+import re
 from typing import Any
 from urllib import parse
 
@@ -24,7 +25,11 @@ SECTION_RE = r"^\* (.*)"
 ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 
 
-def add_page(path: str | os.PathLike, name: str | None = None, **kwargs) -> mkpage.MkPage:
+def add_page(
+    path: str | os.PathLike,
+    name: str | None = None,
+    **kwargs,
+) -> mkpage.MkPage:
     """Parse given path, check for our -> syntax, and return a MkPage.
 
     If -> is detected, return a MkPage containing given MkNode. Otherwise
@@ -60,12 +65,14 @@ def add_page(path: str | os.PathLike, name: str | None = None, **kwargs) -> mkpa
 def from_list(
     ls: list,
     nav: mknav.MkNav,
+    base_path: str = "",
 ):
     """Parse given list recursively and add found content to given MkNav.
 
     Arguments:
         ls: List to parse
         nav: MkNav to attach found stuff to
+        base_path: All found paths will be relative to this one if given.
     """
     for item in ls:
         match item:
@@ -74,40 +81,46 @@ def from_list(
                 match val:
                     case dict():
                         logger.debug("Adding nav %r", name)
-                        from_dict(val, nav.add_nav(name))
+                        from_dict(val, nav.add_nav(name), base_path=base_path)
                     case str():
-                        nav += add_page(path=val, name=name)
+                        path = urljoin(base_path, val)
+                        nav += add_page(path=path, name=name)
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
                             name = pathlib.Path(parse.urlsplit(name).path).name
-                        from_list(val, nav.add_nav(name))
+                        from_list(val, nav.add_nav(name), base_path=base_path)
             case str():
-                page = mkpage.MkPage.from_file(item)
-                logger.debug("Adding page %s", item)
+                path = urljoin(base_path, item)
+                page = mkpage.MkPage.from_file(path)
+                logger.debug("Adding page %s", path)
                 nav += page
 
 
 def from_dict(
     dct: dict[str, str | list | dict],
     nav: mknav.MkNav,
+    base_path: str = "",
 ):
     """Parse given dict recursively and add found content to given MkNav.
 
     Arguments:
         dct: Dictionary to parse
         nav: MkNav to attach found stuff to
+        base_path: All found paths will be relative to this one if given.
     """
+    base_path = base_path.replace("\\", "/")
     for k, v in dct.items():
         match v:
             case str():
-                nav += add_page(path=v, name=k)
+                path = urljoin(base_path, v)
+                nav += add_page(path=path, name=k)
             case dict():
                 logger.debug("Adding nav %r", k)
-                from_dict(v, nav.add_nav(k))
+                from_dict(v, nav.add_nav(k), base_path=base_path)
             case list():
                 logger.debug("Adding nav %r", k)
-                from_list(v, nav.add_nav(k))
+                from_list(v, nav.add_nav(k), base_path=base_path)
 
 
 class NavParser:
