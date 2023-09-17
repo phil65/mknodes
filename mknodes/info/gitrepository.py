@@ -89,6 +89,17 @@ class GitRepository(git.Repo):
             case _:
                 return repo_host.split(".")[0].title()
 
+    @property
+    def edit_uri(self) -> str | None:
+        repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
+        match repo_host:
+            case "github.com" | "gitlab.com":
+                return f"edit/{self.main_branch}/"
+            case "bitbucket.org":
+                return "src/default/"
+            case _:
+                return None
+
     @cached_property
     def context(self) -> contexts.GitContext:
         return contexts.GitContext(
@@ -96,6 +107,7 @@ class GitRepository(git.Repo):
             repo_hoster=self.code_repository,
             last_commits=self.get_last_commits(100),
             repo_name=self.repo_name,
+            edit_uri=self.edit_uri,
         )
 
 

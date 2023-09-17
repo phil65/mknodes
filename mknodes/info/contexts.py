@@ -40,6 +40,8 @@ class GitContext(Context):
     """List of last commits (Commit objects from `GitPython`)."""
     repo_hoster: str = ""
     """Name of the code hoster (for example `GitHub`)"""
+    edit_uri: str | None = None
+    """Edit uri (depends on code hoster)."""
 
 
 @dataclasses.dataclass
@@ -289,6 +291,7 @@ default_git_context = GitContext(
     main_branch="main",
     repo_name="mknodes",
     repo_hoster="GitHub",
+    edit_uri="edit/main/docs/",
 )
 
 
