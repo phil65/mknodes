@@ -77,6 +77,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
                 repo_url = self._repo_url
             case _:
                 raise TypeError(self._repo_url)
+        repo_url = repo_url.rstrip("/")
         if not repo_url.endswith(".git"):
             repo_url += ".git"
         return repo_url

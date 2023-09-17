@@ -20,7 +20,7 @@ class MkDefaultWebsite(mknodes.MkNav):
         super().__init__(**kwargs)
 
         page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
-        page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
+        page += mknodes.MkText(page.ctx.metadata.description)
         static_pages = static_pages or {}
         self.parse.json(static_pages)
         docs = self.add_doc(section_name="API")
