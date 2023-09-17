@@ -210,7 +210,7 @@ class MkDoc(mknav.MkNav):
         if isinstance(self.ClassPage, str):
             page = mkclasspage.MkClassPage(
                 klass=klass,
-                template_name=self.ClassPage,
+                template=self.ClassPage,
                 module_path=tuple(parts),
                 parent=self,
                 **kwargs,

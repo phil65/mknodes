@@ -1,0 +1,17 @@
+{% extends "classpage.md" %}
+{% block content %}
+
+{% if cls | hasattr("REQUIRED_EXTENSIONS") %}
+#### Required Extensions:
+
+{% for i in cls.REQUIRED_EXTENSIONS %}
+
+{{ i | styled(code=True) }}
+
+{% endfor %}
+
+{% endif %}
+
+{{ super() }}
+
+{% endblock %}

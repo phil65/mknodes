@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import abc
+import os
 
 from mknodes.pages import mkpage
 from mknodes.utils import log
@@ -15,12 +16,12 @@ class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
     def __init__(
         self,
         *args,
-        template_name: str,
+        template: str | os.PathLike,
         template_parent: str | None = None,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
-        self.template_name = template_name
+        self.template_main = template
         self.template_parent = template_parent
 
     @property
@@ -29,7 +30,12 @@ class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
 
     def to_markdown(self) -> str:
         with self._env.with_globals(**self.extra_variables):
+            if isinstance(self.template_main, os.PathLike):
+                return self.env.render_file(
+                    self.template_main,
+                    parent_template=self.template_parent,
+                )
             return self.env.render_template(
-                self.template_name,
+                self.template_main,
                 parent_template=self.template_parent,
             )

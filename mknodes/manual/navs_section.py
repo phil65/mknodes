@@ -202,38 +202,11 @@ def create_mkdoc_section(nav: mk.MkNav):
     page = mkdoc_nav.add_index_page(hide_toc=True, icon="api")
     page += mk.MkCode.for_object(create_mkdoc_section, header=SECTION_CODE)
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
-    create_mknodes_section(mkdoc_nav)
-
-    # We could also filter specific subclasses,
-    # or do other fancy stuff to generate a customized, automated documentation
-    # like changing the default class page ("MkClassPage") of our docs,
-    # (The default contains MkDocStrings, a table for base classes,  eventual subclasses
-    # and an inheritance graph.)
-
-    # There is also an extension available for this module which offers tools and
-    # new nodes based on PySide6 / PyQt6. We can add its documentation easily:
-    # from prettyqt import prettyqtmarkdown
-
-    # addon_docs = nav.add_doc(module=prettyqtmarkdown, flatten_nav=True)
-    # addon_docs.collect_classes(recursive=True)
-
-
-# class ExtensionInfoProcessor(processors.ContainerProcessor):
-#     ID = "extension_info"
-
-#     def append_block(self, node: mk.MkContainer):
-#         extensions = ", ".join(f"`{i}`" for i in self.item.REQUIRED_EXTENSIONS)
-#         node += mk.MkAdmonition(extensions, title="Required extensions")
-
-#     def check_if_apply(self, node: mk.MkContainer):
-#         # only add this section for MkNodes which have required extensions
-#         return issubclass(self.item, mk.MkNode) and self.item.REQUIRED_EXTENSIONS
-
-
-def create_mknodes_section(nav: mk.MkNav):
-    mknodes_docs = nav.add_doc(module=mk, filter_by___all__=True)
-
+    page.env.add_template("docs/classpage_custom.jinja")
+    mknodes_docs = mkdoc_nav.add_doc(
+        module=mk,
+        filter_by___all__=True,
+        class_page="docs/classpage_custom.jinja",
+    )
     # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)
-
-    # We are done. Creating the files will be done when the tree is written in the end.

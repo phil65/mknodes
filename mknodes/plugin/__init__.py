@@ -144,8 +144,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         env.globals["mknodes"] = node_env.globals
         env.filters |= node_env.filters
         logger.debug("Added macros / filters to MkDocs jinja2 environment.")
-        # mknodes_macros = jinjahelpers.get_mknodes_macros()
-        # env.globals["mknodes"].update(mknodes_macros)
 
     def on_pre_page(
         self,

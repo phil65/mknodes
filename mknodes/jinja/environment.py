@@ -36,6 +36,7 @@ ENVIRONMENT_FILTERS = {
     "removeprefix": str.removeprefix,
     "issubclass": issubclass,
     "isinstance": isinstance,
+    "hasattr": hasattr,
 }
 
 

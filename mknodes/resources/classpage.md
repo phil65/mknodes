@@ -1,3 +1,5 @@
+{% block content %}
+
 {% if cls.__subclasses__() %}
 ### Sub classes
 {{ cls.__subclasses__() | MkClassTable }}
@@ -13,3 +15,5 @@
 ### 🛈 DocStrings
 
 {{ cls | MkDocStrings }}
+
+{% endblock %}
