@@ -54,6 +54,7 @@ class NavRouter:
                 code.parent = node
                 node.items.insert(0, code)
             elif show_source and isinstance(node, mknav.MkNav) and node.index_page:
+                node.index_page.created_by = fn
                 code = mkcode.MkCode.for_object(fn)
                 details = mkadmonition.MkAdmonition(
                     code,
@@ -104,6 +105,7 @@ class NavRouter:
             node = fn(node) or node
             node.parent = self._nav  # in case a new MkPage was generated
             if show_source and node.index_page:
+                node.index_page.created_by = fn
                 code = mkcode.MkCode.for_object(fn)
                 details = mkadmonition.MkAdmonition(
                     code,
