@@ -5,6 +5,16 @@ import dataclasses
 import os
 
 
+MD_ESCAPE_CHARS = tuple("!#()*+-[\\]_`{}")
+
+
+@dataclasses.dataclass
+class Item:
+    level: int
+    title: str
+    filename: str | None
+
+
 class NavBuilder:
     """An object representing MkDocs navigation.
 
@@ -41,12 +51,6 @@ class NavBuilder:
             cur = cur.setdefault(key, {})
         cur[None] = os.fspath(value)
 
-    @dataclasses.dataclass
-    class Item:
-        level: int
-        title: str
-        filename: str | None
-
     def items(self) -> Iterable[Item]:
         return self._items(self._data, 0)
 
@@ -54,10 +58,8 @@ class NavBuilder:
     def _items(cls, data: Mapping, level: int) -> Iterable[Item]:
         for key, value in data.items():
             if key is not None:
-                yield cls.Item(level=level, title=key, filename=value.get(None))
+                yield Item(level=level, title=key, filename=value.get(None))
                 yield from cls._items(value, level + 1)
-
-    _markdown_escape_chars = tuple("!#()*+-[\\]_`{}")
 
     def build_literate_nav(self, indentation: int | str = "") -> Iterable[str]:
         """Convert data to a literate-nav formatted markdown list.
@@ -69,7 +71,7 @@ class NavBuilder:
             indentation = " " * indentation
         for item in self.items():
             line = item.title
-            if line.startswith(self._markdown_escape_chars):
+            if line.startswith(MD_ESCAPE_CHARS):
                 line = "\\" + line
             if item.filename is not None:
                 line = f"[{line}]({item.filename})"

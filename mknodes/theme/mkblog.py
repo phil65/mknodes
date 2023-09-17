@@ -39,8 +39,8 @@ class BlogMetadata(metadata.Metadata):
 class MkBlog(mknav.MkNav):
     """Class representing the blog provided by the MkDocs-Material blog plugin."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, section: str | None = "Blog", **kwargs):
+        super().__init__(section=section, **kwargs)
         self.authors: dict[str, Author] = {}
 
     def add_author(
