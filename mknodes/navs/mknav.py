@@ -26,7 +26,7 @@ class MkNav(mknode.MkNode):
 
     A nav is named (exception is the root nav, which has section name = None),
     has an associated virtual file (in general a SUMMARY.md),
-    an optional index page and can contain other navs as well as pages.
+    an optional index page and can contain other navs as well as pages and links.
     """
 
     ICON = "material/navigation-outline"
@@ -49,9 +49,13 @@ class MkNav(mknode.MkNode):
         self.section = section  # helpers.slugify(section)
         self.filename = filename
         self.nav = navigation.Navigation()
+        """Navigation object containing all child items."""
         self.route = navrouter.NavRouter(self)
+        """Router used for decorator routing."""
         self.parse = navparser.NavParser(self)
+        """Parser object used to build Navs from different data / directory structures."""
         self.metadata = metadata.Metadata()
+        """Page Metadata, in form of a dataclass."""
         super().__init__(**kwargs)
 
     def __repr__(self):

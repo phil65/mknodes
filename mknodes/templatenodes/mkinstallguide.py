@@ -11,7 +11,7 @@ logger = log.get_logger(__name__)
 
 
 class MkInstallGuide(mkcontainer.MkContainer):
-    """Node to display an install guide (currently PyPi only)."""
+    """Node to display an install guide."""
 
     ICON = "material/help"
 

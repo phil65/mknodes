@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 
 
 class MkProgressBar(mknode.MkNode):
-    """Node to include other MkPages / Md files."""
+    """Node to display a CSS-based progress bar."""
 
     REQUIRED_EXTENSIONS = ["pymdownx.progressbar"]
     ICON = "fontawesome/solid/bars-progress"

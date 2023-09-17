@@ -10,7 +10,7 @@ HTML = '<iframe frameborder="0" width="{width}" height="{height}" src="{url}"></
 
 
 class MkIFrame(mknode.MkNode):
-    """Node for showing a formatted list."""
+    """Node for embedding an IFrame."""
 
     ICON = "material/web-box"
 

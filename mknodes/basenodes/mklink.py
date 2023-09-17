@@ -16,7 +16,7 @@ logger = log.get_logger(__name__)
 
 
 class MkLink(mknode.MkNode):
-    """A simple Link."""
+    """A simple Link (with optional icon and option to show up as a button)."""
 
     ICON = "octicons/link-24"
     REQUIRED_EXTENSIONS = ["attr_list"]  # for buttons

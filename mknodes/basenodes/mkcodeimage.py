@@ -15,7 +15,7 @@ logger = log.get_logger(__name__)
 
 
 class MkCodeImage(mknode.MkNode):
-    """Class representing a Code block."""
+    """Node to display a code block as an SVG image."""
 
     ICON = "material/code-json"
 

@@ -22,7 +22,7 @@ logger = log.get_logger(__name__)
 
 
 class MkPluginFlow(mkcontainer.MkContainer):
-    """Text node containing Instructions to set up a dev environment."""
+    """Node showing info about the different stages of an MkDocs plugin."""
 
     ICON = "material/dev-to"
     STATUS = "new"

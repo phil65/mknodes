@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 
 
 class MkTask(mkcontainer.MkContainer):
-    """Node for a single definition."""
+    """Node for a single task listitem."""
 
     REQUIRED_EXTENSIONS = ["pymdownx.tasklist"]
     ICON = "material/library"
@@ -43,7 +43,7 @@ class MkTask(mkcontainer.MkContainer):
 
 
 class MkTaskList(mkcontainer.MkContainer):
-    """Node for definition lists."""
+    """Node for task lists."""
 
     REQUIRED_EXTENSIONS = ["pymdownx.tasklist"]
     ICON = "material/library"

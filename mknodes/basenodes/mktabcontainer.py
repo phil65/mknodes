@@ -11,6 +11,8 @@ logger = log.get_logger(__name__)
 
 
 class MkTabContainer(mkcontainer.MkContainer):
+    """Base class for nodes containing tabs."""
+
     items: list[mktabs.MkTab | mktabs.MkTabBlock]
     Tab: type[mktabs.MkTab | mktabs.MkTabBlock]
     ICON = "material/tab"

@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 
 
 class MkKeys(mknode.MkNode):
-    """Node to include other MkPages / Md files."""
+    """Node to display Keyboard shortcuts."""
 
     REQUIRED_EXTENSIONS = ["pymdownx.keys"]
     ICON = "fontawesome/regular/keyboard"
