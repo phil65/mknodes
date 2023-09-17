@@ -66,6 +66,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             build_kwargs=self.config.kwargs,
             clone_depth=self.config.clone_depth,
         )
+        self.build_info = self.project.build()
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """Create the node tree and write files to build folder.
@@ -153,8 +154,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         files: Files,
     ) -> Page | None:
         """During this phase we set the edit paths."""
-        mapping = mknode.MkNode._env.globals["page_mapping"]
-        node = mapping.get(page.file.src_uri)  # type: ignore[attr-defined]
+        node = self.build_info.page_mapping.get(page.file.src_uri)
         edit_path = node._edit_path if isinstance(node, mkpage.MkPage) else None
         cfg = mkdocsconfig.Config(config)
         if path := cfg.get_edit_url(edit_path):
@@ -169,8 +169,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         files: Files,
     ) -> str | None:
         """During this phase links get replaced and `jinja2` stuff get rendered."""
-        mapping = mknode.MkNode._env.globals["page_mapping"]
-        node = mapping.get(page.file.src_uri)  # type: ignore[attr-defined]
+        node = self.build_info.page_mapping.get(page.file.src_uri)
         if node is None:
             return markdown
         markdown = node.env.render_string(markdown)

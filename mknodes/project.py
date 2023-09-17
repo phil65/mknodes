@@ -67,7 +67,6 @@ class Project(Generic[T]):
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
-        self.build()
 
     def build(self):
         logger.debug("Building page...")
@@ -79,7 +78,11 @@ class Project(Generic[T]):
 
         from mknodes.basenodes import mknode
 
-        mapping = self._root.page_mapping
+        mapping = {
+            node.resolved_file_path: node
+            for _level, node in self._root.iter_nodes()
+            if hasattr(node, "resolved_file_path")
+        }
 
         paths = [pathlib.Path(i).stem for i in mapping]
         self.linkprovider.set_excludes(paths)

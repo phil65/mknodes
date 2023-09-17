@@ -291,14 +291,6 @@ class MkNav(mknode.MkNode):
         self.nav.register(nav)
         return nav
 
-    @property
-    def page_mapping(self):
-        return {
-            node.resolved_file_path: node
-            for _level, node in self.iter_nodes()
-            if hasattr(node, "resolved_file_path")
-        }
-
 
 if __name__ == "__main__":
     docs = MkNav()

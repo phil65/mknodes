@@ -79,14 +79,6 @@ class Navigation(dict):
         """Return all registered links."""
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
 
-    @property
-    def page_mapping(self):
-        return {
-            node.resolved_file_path: node
-            for _level, node in self.iter_nodes()
-            if hasattr(node, "resolved_file_path")
-        }
-
     def to_literate_nav(self):
         nav = navbuilder.NavBuilder()
         # In a nav, the first inserted item becomes the index page in case
