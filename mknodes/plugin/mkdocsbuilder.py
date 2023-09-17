@@ -95,7 +95,7 @@ class MkDocsBuilder(buildbackend.BuildBackend):
             )
             page.render(self._config, self.mk_files)
             page.content = self._config.plugins.on_page_content(
-                page.content,
+                page.content or "",
                 page=page,
                 config=self._config,
                 files=self.mk_files,
