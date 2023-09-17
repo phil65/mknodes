@@ -44,13 +44,13 @@ nav = mk.MkNav("Use cases")
 def create_use_cases_section(root_nav: mk.MkNav):
     """Create the "Development" sub-MkNav."""
     root_nav += nav
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += INTRO_TEXT
     code = mk.MkCode.for_object(create_use_cases_section)
     page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True)
 
 
-@nav.route.page("Creating a sample website", show_source=True, hide_toc=True)
+@nav.route.page("Creating a sample website", show_source=True, hide="toc")
 def create_default_website_section(page: mk.MkPage):
     """Create the "Creating a sample website" MkPage."""
     page += mk.MkText("The following config...")
@@ -64,7 +64,7 @@ def create_default_website_section(page: mk.MkPage):
     page += mk.MkLink(url, as_button=True, icon="material/web")
 
 
-@nav.route.page("Creating a website via config", show_source=True, hide_toc=True)
+@nav.route.page("Creating a website via config", show_source=True, hide="toc")
 def create_custom_website_by_config(page: mk.MkPage):
     """Create the "Creating a sample website via config" MkPage."""
     page += mk.MkText("The following config...")

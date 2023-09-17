@@ -60,7 +60,7 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
 
     # Lets begin with the start page (aka the root index.md).
     # This is the page you are lookin at right now.)
-    page = root_nav.add_index_page(hide_toc=True, hide_nav=True)
+    page = root_nav.add_index_page(hide="toc,nav")
 
     # A MkPage can contain MkNodes which represent Markdown text.
     page += mk.MkHeader(HEADER, level=3)

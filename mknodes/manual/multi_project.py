@@ -5,7 +5,7 @@ from mknodes.theme import materialtheme
 
 def build(project: mk.Project[materialtheme.MaterialTheme]):
     nav = project.get_root()
-    index_page = nav.add_index_page(hide_toc=True)
+    index_page = nav.add_index_page(hide="toc")
     index_page += "## Sub-Pages"
     websites = dict(
         ruff="https://github.com/astral-sh/ruff.git",

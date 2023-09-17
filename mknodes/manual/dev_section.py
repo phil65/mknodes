@@ -21,7 +21,7 @@ def create_development_section(root_nav: mk.MkNav):
     # This means that this section could be imported by other packages and be
     # used without any further adaptation.
     root_nav += nav
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += INTRO_TEXT
     page += mk.MkCode.for_object(
         create_development_section,
@@ -60,13 +60,13 @@ def create_contribute_page(page: mk.MkPage):
     page += mk.MkPullRequestGuidelines()
 
 
-@nav.route.page("License", show_source=True, hide_toc=True, icon="license")
+@nav.route.page("License", show_source=True, hide="toc", icon="license")
 def create_license_page(page: mk.MkPage):
     """Create the "License" MkPage and attach it to given MkNav."""
     page += mk.MkLicense()
 
 
-@nav.route.page("Dependencies", show_source=True, hide_toc=True, icon="database")
+@nav.route.page("Dependencies", show_source=True, hide="toc", icon="database")
 def create_dependencies_page(page: mk.MkPage):
     """Create the "Dependencies" MkPage and attach it to given MkNav."""
     page += mk.MkDependencyTable()

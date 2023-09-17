@@ -19,7 +19,7 @@ nav = mk.MkNav("Using decorators")
 def create_routing_section(root_nav: mk.MkNav):
     """Attaches the router nav to given nav."""
     root_nav += nav
-    page = nav.add_index_page(icon="material/call-split", hide_toc=True)
+    page = nav.add_index_page(icon="material/call-split", hide="toc")
     page += mk.MkCode.for_file(__file__, header="Code for this section")
     page += mk.MkDocStrings(navrouter.NavRouter, header="MkNav.route Docstrings")
 

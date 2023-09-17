@@ -27,9 +27,7 @@ title: Some title
 
 def test_metadata():
     page = mknodes.MkPage(
-        hide_toc=True,
-        hide_nav=False,
-        hide_path=True,
+        hide="toc,path",
         search_boost=2.0,
         exclude_from_search=False,
         icon="material/emoticon-happy",

@@ -80,7 +80,7 @@ if __name__ == "__main__":
     import mknodes
 
     def make_page():
-        page = mknodes.MkPage("test", hide_toc=True, inclusion_level=False)
+        page = mknodes.MkPage("test", hide="toc", inclusion_level=False)
         page += "Some content"
         return page
 

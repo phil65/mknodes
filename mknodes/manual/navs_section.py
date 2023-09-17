@@ -49,12 +49,12 @@ def create_navs_section(root_nav: mk.MkNav):
     routing.create_routing_section(nav)
 
     # Navs contain also contain pages. This section provides some info how to use MkPages.
-    page = pages_nav.add_index_page(hide_toc=True)
+    page = pages_nav.add_index_page(hide="toc")
     page += mk.MkAdmonition(MKPAGE_TIP, typ="tip")
 
     # and then we create the index page (the page you are lookin at right now)
 
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += mk.MkCommentedCode(create_navs_section, header=SECTION_CODE)
     page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
     page += mk.MkHeader("All the navs")
@@ -75,10 +75,10 @@ def create_from_file_section(nav: mk.MkNav):
     summary_file = folder / "SUMMARY.md"  # File content: # (2)
 
     # We will load it as an MkNav...
-    nav.parse.file(summary_file, hide_toc=True)
+    nav.parse.file(summary_file, hide="toc")
 
     # Finally, the page you are seeing right now.
-    page = nav.add_index_page(hide_toc=True, icon="file")
+    page = nav.add_index_page(hide="toc", icon="file")
 
     text = summary_file.read_text()
     text = text.replace("](", "] (")  ##
@@ -101,10 +101,10 @@ def create_from_folder_section(nav: mk.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
-    nav.parse.folder(folder, hide_toc=True)
+    nav.parse.folder(folder, hide="toc")
 
     # Finally, create the index page.
-    page = nav.add_index_page(hide_toc=True, icon="folder")
+    page = nav.add_index_page(hide="toc", icon="folder")
     page += mk.MkTreeView(folder)
     page += mk.MkDocStrings(mk.MkTreeView)
 
@@ -125,8 +125,7 @@ def create_mkmodulepage_page(page: mk.MkPage):
 
 @pages_nav.route.page(
     "Adding to MkPages",
-    hide_toc=True,
-    hide_nav=True,
+    hide="toc, nav",
     status="new",
     show_source=True,
 )
@@ -166,7 +165,7 @@ def create_mkdoc_section(nav: mk.MkNav):
     """Create the "Metadata" sub-MkNav and attach it to given nav."""
     nav = nav.add_nav("MkDoc")
 
-    page = nav.add_index_page(hide_toc=True, icon="api")
+    page = nav.add_index_page(hide="toc", icon="api")
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
     page.env.add_template("docs/classpage_custom.jinja")
     mknodes_docs = nav.add_doc(

@@ -66,7 +66,7 @@ def serve_node(node, repo_path: str = "."):
 
     def build(project):
         root = project.get_root()
-        page = root.add_index_page(hide_toc=True)
+        page = root.add_index_page(hide="toc")
         page += '''{node!s}'''
 
 

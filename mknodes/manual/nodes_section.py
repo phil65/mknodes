@@ -40,7 +40,7 @@ def create_nodes_section(root_nav: mk.MkNav):
     root_nav += nav
     # and then we create the index page (the page you are lookin at right now)
 
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += INTRO_TEXT
     page += mk.MkHeader("All the nodes")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR", max_depth=3)
@@ -112,7 +112,7 @@ def create_basic_nodes_section(nav: mk.MkNav):
         mk.MkSpeechBubble,
         mk.MkJinjaTemplate,
     ]
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
@@ -138,7 +138,7 @@ def create_container_nodes_section(nav: mk.MkNav):
         mk.MkShowcase,
         mk.MkTaskList,
     ]
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
@@ -154,7 +154,7 @@ def create_presentation_nodes_section(nav: mk.MkNav):
         mk.MkCodeImage,
         mk.MkDiagram,
     ]
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
@@ -174,7 +174,7 @@ def create_documentation_nodes_section(nav: mk.MkNav):
         mk.MkArgParseHelp,
         mk.MkClickDoc,
     ]
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
@@ -200,7 +200,7 @@ def create_about_nodes_section(nav: mk.MkNav):
     ]
     if os.environ.get("CI"):
         klasses.append(mk.MkPyDeps)
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
@@ -210,7 +210,7 @@ def create_about_nodes_section(nav: mk.MkNav):
 def create_special_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
@@ -226,7 +226,7 @@ def create_block_nodes_section(nav: mk.MkNav):
         mk.MkHtmlBlock,
         mk.MkTabbedBlocks,
     ]
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
     code = mk.MkCode.for_object(create_section_for_nodes)
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")

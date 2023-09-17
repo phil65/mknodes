@@ -148,9 +148,7 @@ class MkNav(mknode.MkNode):
         self,
         title: str | None = None,
         *,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
+        hide: str | list[str] | None = None,
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
@@ -165,9 +163,7 @@ class MkNav(mknode.MkNode):
 
         Arguments:
             title: Title of the index page
-            hide_toc: Hide table of contents
-            hide_nav: Hide navigation menu
-            hide_path: Hide breadcrumbs path
+            hide: Hide parts of the website ("toc", "nav", "path")
             search_boost: multiplier for search ranking
             exclude_from_search: Exclude page from search index
             icon: optional page icon
@@ -180,9 +176,7 @@ class MkNav(mknode.MkNode):
         """
         page = mkpage.MkPage(
             path=path or "index.md",
-            hide_toc=hide_toc,
-            hide_nav=hide_nav,
-            hide_path=hide_path,
+            hide=hide,
             search_boost=search_boost,
             exclude_from_search=exclude_from_search,
             icon=icon,
@@ -207,9 +201,7 @@ class MkNav(mknode.MkNode):
         *,
         as_index: bool = False,
         path: str | None = None,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
+        hide: list[str] | str | None = None,
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
@@ -225,9 +217,7 @@ class MkNav(mknode.MkNode):
             title: Page title
             as_index: Whether the page should become the index page.
             path: optional path override
-            hide_toc: Hide table of contents
-            hide_nav: Hide navigation menu
-            hide_path: Hide breadcrumbs path
+            hide: Hide parts of the page ("toc", "nav", "path")
             search_boost: multiplier for search ranking
             exclude_from_search: Exclude page from search index
             icon: optional page icon
@@ -242,9 +232,7 @@ class MkNav(mknode.MkNode):
             title=title,
             path=path,
             parent=self,
-            hide_toc=hide_toc,
-            hide_nav=hide_nav,
-            hide_path=hide_path,
+            hide=hide,
             search_boost=search_boost,
             exclude_from_search=exclude_from_search,
             icon=icon,

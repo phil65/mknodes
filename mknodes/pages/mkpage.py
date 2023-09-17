@@ -30,10 +30,7 @@ class MkPage(mkcontainer.MkContainer):
         self,
         title: str | None = None,
         *,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
-        hide_tags: bool | None = None,
+        hide: list[str] | str | None = None,
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
@@ -51,10 +48,7 @@ class MkPage(mkcontainer.MkContainer):
 
         Arguments:
             path: Page path
-            hide_toc: Whether TOC should be shown when this page is displayed.
-            hide_nav: Whether Nav should be shown when this page is displayed.
-            hide_path: Whether Breadcrumbs should be shown when this page is displayed.
-            hide_tags: Whether tags should be shown when this page is displayed.
+            hide: Hide parts of the website ("toc", "nav", "path", "tags").
             search_boost: Factor to modify search ranking
             exclude_from_search: Whether to exclude this page from search listings
             icon: Optional page icon
@@ -88,10 +82,7 @@ class MkPage(mkcontainer.MkContainer):
             )
         self.created_by: Callable | None = None
         self.metadata = metadata.Metadata(
-            hide_toc=hide_toc,
-            hide_nav=hide_nav,
-            hide_path=hide_path,
-            hide_tags=hide_tags,
+            hide=hide,
             search_boost=search_boost,
             exclude_from_search=exclude_from_search,
             icon=icon,
@@ -175,9 +166,7 @@ class MkPage(mkcontainer.MkContainer):
         cls,
         path: str | os.PathLike,
         title: str | None = None,
-        hide_toc: bool | None = None,
-        hide_nav: bool | None = None,
-        hide_path: bool | None = None,
+        hide: str | list[str] | None = None,
         parent: mknode.MkNode | None = None,
     ) -> Self:
         """Reads file content and creates an MkPage.
@@ -188,9 +177,7 @@ class MkPage(mkcontainer.MkContainer):
             path: Path to load file from
             title: Optional title to use
                    If None, title will be infered from metadata or filename
-            hide_toc: Hide Toc. Overrides parsed metadata if set.
-            hide_nav: Hide Navigation. Overrides parsed metadata if set.
-            hide_path: Hide Path. Overrides parsed metadata if set.
+            hide: Hide parts of the page ("toc", "nav", "tags", "path")
             parent: Optional parent for new page
         """
         if helpers.is_url(url := str(path)):
@@ -202,12 +189,8 @@ class MkPage(mkcontainer.MkContainer):
             path = pathlib.Path(path)
             file_content = path.read_text()
         data, text = metadata.Metadata.parse(file_content)
-        if hide_toc is not None:
-            data.hide_toc = hide_toc
-        if hide_nav is not None:
-            data.hide_nav = hide_nav
-        if hide_path is not None:
-            data.hide_path = hide_path
+        if hide is not None:
+            data.hide = hide
         page = cls(path=path.name, content=text, title=title, parent=parent)
         page.metadata = data
         return page

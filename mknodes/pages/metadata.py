@@ -15,10 +15,7 @@ HEADER = "---\n{options}---\n"
 
 @dataclasses.dataclass
 class Metadata:
-    hide_toc: bool | None = None
-    hide_nav: bool | None = None
-    hide_path: bool | None = None
-    hide_tags: bool | None = None
+    hide: list[str] | str | None = None
     search_boost: float | None = None
     exclude_from_search: bool | None = None
     icon: str | None = None
@@ -32,15 +29,16 @@ class Metadata:
     def __post_init__(self):
         if self.icon and "/" not in self.icon:
             self.icon = f"material/{self.icon}"
+        if isinstance(self.hide, str):
+            self.hide = [i.strip() for i in self.hide.split(",")]
+        if self.hide is not None:
+            self.hide = [i if i != "nav" else "navigation" for i in self.hide or []]
 
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
         text, metadata = meta.get_data(text)
-        if hide := metadata.pop("hide", None):
-            metadata["hide_toc"] = "toc" in hide
-            metadata["hide_nav"] = "navigation" in hide
-            metadata["hide_path"] = "path" in hide
-            metadata["hide_tags"] = "tags" in hide
+        if (hide := metadata.pop("hide", None)) is not None:
+            metadata["hide"] = hide
         if search := metadata.pop("search", None):
             metadata["search_boost"] = search.get("boost")
             metadata["exclude_from_search"] = search.get("exclude")
@@ -68,19 +66,6 @@ class Metadata:
     def as_page_header(self) -> str:
         text = str(self)
         return HEADER.format(options=text) if text else ""
-
-    @property
-    def hide(self):
-        hide_list = []
-        if self.hide_nav:
-            hide_list.append("navigation")
-        if self.hide_toc:
-            hide_list.append("toc")
-        if self.hide_path:
-            hide_list.append("path")
-        if self.hide_tags:
-            hide_list.append("tags")
-        return hide_list or None
 
     @property
     def search(self):
@@ -111,6 +96,6 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata = Metadata(hide_toc=True, search_boost=2)
+    metadata = Metadata(hide="toc", search_boost=2)
     print(metadata.as_dict())
     print(metadata.repr_kwargs())

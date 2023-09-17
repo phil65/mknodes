@@ -19,7 +19,7 @@ class MkDefaultWebsite(mknodes.MkNav):
     ):
         super().__init__(**kwargs)
 
-        page = self.add_index_page("Overview", hide_toc=True)
+        page = self.add_index_page("Overview", hide="toc")
         page += mknodes.MkText(page.ctx.metadata.description)
         static_pages = static_pages or {}
         self.parse.json(static_pages)
@@ -31,7 +31,7 @@ class MkDefaultWebsite(mknodes.MkNav):
                 proj.folderinfo.info.get_entry_points("console_scripts")
                 and "click" in proj.folderinfo.info.required_package_names
             ):
-                page = self.add_page("CLI", hide_nav=True)
+                page = self.add_page("CLI", hide="nav")
                 page += mknodes.MkClickDoc()
 
         nav = self.add_nav("Development")
@@ -64,21 +64,21 @@ class MkDefaultWebsite(mknodes.MkNav):
             page += mknodes.MkPluginFlow()
 
         node = mknodes.MkLicense()
-        page = nav.add_page("License", hide_toc=True)
+        page = nav.add_page("License", hide="toc")
         page += node
         if show_debug_section:
             self.add_debug_nav()
 
     def add_debug_nav(self):
         internals_nav = self.add_nav("Debug info")
-        page = internals_nav.add_index_page(hide_toc=True, icon="magnify")
-        page = internals_nav.add_page("Tree", hide_toc=True, icon="graph")
+        page = internals_nav.add_index_page(hide="toc", icon="magnify")
+        page = internals_nav.add_page("Tree", hide="toc", icon="graph")
         # page += mknodes.MkHeader("Node tree.", level=3)
         # text = self.root.get_tree_repr(detailed=False)
         # page += mknodes.MkCode(text, language="")
-        page = internals_nav.add_page("Requirements", hide_toc=True, icon="puzzle-edit")
+        page = internals_nav.add_page("Requirements", hide="toc", icon="puzzle-edit")
         page += mknodes.MkJinjaTemplate("requirements.md")
-        page = internals_nav.add_page("Build Log", hide_toc=True, icon="puzzle-edit")
+        page = internals_nav.add_page("Build Log", hide="toc", icon="puzzle-edit")
         page += mknodes.MkText("log() | MkCode", is_jinja_expression=True)
 
     @classmethod

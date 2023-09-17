@@ -14,7 +14,7 @@ class MkEmptyWebsite(mknav.MkNav):
         super().__init__(**kwargs)
         import mknodes
 
-        page = self.add_index_page("Overview", hide_toc=True)
+        page = self.add_index_page("Overview", hide="toc")
         page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
         static_pages = static_pages or {}
         self.parse.json(static_pages)

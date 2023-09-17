@@ -33,7 +33,7 @@ nav = mk.MkNav("Templating")
 def create_templating_section(root_nav: mk.MkNav):
     """Add the complete "Templating" section to given MkNav."""
     root_nav += nav
-    page = nav.add_index_page(hide_toc=True)
+    page = nav.add_index_page(hide="toc")
     page += mk.MkJinjaTemplate("template_index.jinja")
     page += mk.MkDetailsBlock(ADDITIONAL_INFO_TEXT, expand=True)
     page += "### These are the availabe namespaces:"
@@ -61,7 +61,7 @@ def create_jinja_namespace_section(nav: mk.MkNav):
 
 # @nav.route.nav("Templates for documentation pages")
 # def create_documentation_templates_section(nav: mk.MkNav):
-#     page = nav.add_index_page(hide_toc=True)
+#     page = nav.add_index_page(hide="toc")
 #     page += mk.MkAdmonition("This is the default Jinja template for class pages")
 #     text = pathlib.Path(paths.RESOURCES / "classpage.md").read_text(encoding="utf-8")
 #     text = text.replace(r"{{", "{ {").replace(r"}}", "} }")
