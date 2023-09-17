@@ -49,14 +49,14 @@ test = "pytest -vv"
 test-cov-xml = "pytest --cov-report=xml"
 test-cov-html = "pytest --cov-report=html"
 lint = [
-  "black .",
-  "ruff --fix .",
-  "mypy mknodes/",
+  "hatch run black .",
+  "hatch run ruff --fix .",
+  "hatch run mypy mknodes/",
 ]
 lint-check = [
-  "black --check .",
-  "ruff .",
-  "mypy mknodes/",
+  "hatch run black --check .",
+  "hatch run ruff .",
+  "hatch run mypy mknodes/",
 ]
 
 docs-build-test = [
@@ -293,8 +293,9 @@ line-length = 90
 target-version = ['py311']
 include = '\.pyi?$'
 preview = true
-exclude = '''
+extend-exclude = '''
 /(
+    \.hatch
     \.eggs
   | \.git
   | \.hg
