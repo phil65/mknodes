@@ -7,7 +7,15 @@ from typing import Literal
 
 RAW_GITHUB = "https://raw.githubusercontent.com"
 
-BuildSystemStr = Literal["hatch", "flit", "poetry", "setuptools", "pdm", "meson_python"]
+BuildSystemStr = Literal[
+    "hatch",
+    "flit",
+    "poetry",
+    "setuptools",
+    "pdm",
+    "meson_python",
+    "maturin",
+]
 
 
 @dataclasses.dataclass
@@ -65,6 +73,14 @@ mesonpy = BuildSystem(
     ),
 )
 
+maturin = BuildSystem(
+    identifier="maturin",
+    build_backend="maturin",
+    url="https://www.maturin.rs",
+    env_setup_cmd=None,
+    install_url="https://www.maturin.rs/installation",
+)
+
 BUILD_SYSTEMS: dict[BuildSystemStr, BuildSystem] = {
-    p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm, mesonpy]
+    p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm, mesonpy, maturin]
 }
