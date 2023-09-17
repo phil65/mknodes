@@ -158,7 +158,7 @@ class MkPage(mkcontainer.MkContainer):
         self.metadata.icon = value
 
     @property
-    def template(self):
+    def template(self) -> pagetemplate.PageTemplate | None:
         return self._template
 
     @template.setter
@@ -213,19 +213,12 @@ class MkPage(mkcontainer.MkContainer):
         return page
 
     def get_processors(self):
+        """Override base MkNode processors."""
         return [
             processors.PrependMetadataProcessor(self.metadata),
             processors.FootNotesProcessor(self),
             processors.AnnotationProcessor(self),
         ]
-
-    def add_newlines(self, num: int):
-        """Add line separators to the page.
-
-        Arguments:
-            num: Amount of newlines to add.
-        """
-        self.append("<br>" * num)
 
 
 if __name__ == "__main__":
