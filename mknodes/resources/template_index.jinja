@@ -1,0 +1,15 @@
+MkNodes contains an expansive Jinja2 Environment. It is comparable to
+the `MkDocs` macros plugin. It has less settings (you can modify the environment
+via code of course though), but has a much larger built-in set of macros and filters.
+
+The main features of the environment are 2 things:
+
+* All MkNodes can be used as a filter, as well as a macro:
+
+    * Example for use as a filter: `{ { "classifiers" | MkMetadataBadges } }`
+    * Example for use as a macro: `{ { mk.MkHeader("some header") } }`
+
+* Project metadata is also available in the Jinja environment namespace.
+  You can see all available info in the subsections of this page.
+
+    * Example: `{ { metadata.license_name } }`

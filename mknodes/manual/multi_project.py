@@ -4,7 +4,6 @@ from mknodes.theme import materialtheme
 
 
 def build(project: mk.Project[materialtheme.MaterialTheme]):
-    # We will use annotations to explain things a bit.
     nav = project.get_root()
     index_page = nav.add_index_page(hide_toc=True)
     index_page += "## Sub-Pages"

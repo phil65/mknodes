@@ -89,7 +89,8 @@ def from_list(
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
-                            name = pathlib.Path(parse.urlsplit(name).path).name
+                            path = parse.urlsplit(name).path
+                            name = pathlib.Path(path).name
                         from_list(val, nav.add_nav(name), base_path=base_path)
             case str():
                 path = urljoin(base_path, item)
@@ -199,41 +200,43 @@ class NavParser:
         for i, line in enumerate(lines):
             # * [Example](example_folder/)
 
-            if match := re.match(SECTION_AND_FOLDER_RE, line):
-                file_path = path.parent / f"{match[2]}/SUMMARY.md"
-                subnav = mknav.MkNav(match[1], parent=self._nav)
+            if m := re.match(SECTION_AND_FOLDER_RE, line):
+                file_path = path.parent / f"{m[2]}/SUMMARY.md"
+                subnav = mknav.MkNav(m[1], parent=self._nav)
                 subnav.parse.file(file_path, **kwargs)
-                self._nav[match[1]] = subnav
-                logger.debug("Created subsection %s from %s", match[1], file_path)
+                self._nav[m[1]] = subnav
+                logger.debug("Created subsection %s from %s", m[1], file_path)
 
             # * [Example](example_folder/sub_1.md)
 
-            elif match := re.match(SECTION_AND_FILE_RE, line):
+            elif m := re.match(SECTION_AND_FILE_RE, line):
                 # if following section indented, it is a nav with an index page:
                 if unindented := helpers.get_indented_lines(lines[i + 1 :]):
-                    subnav = mknav.MkNav(match[1], parent=self._nav)
-                    subnav.parse.text("\n".join(unindented), path=path, **kwargs)
+                    subnav = mknav.MkNav(m[1], parent=self._nav)
+                    text = "\n".join(unindented)
+                    subnav.parse.text(text, path=path, **kwargs)
                     page = subnav.add_index_page(**kwargs)
-                    page += pathlib.Path(match[2]).read_text()
+                    page += pathlib.Path(m[2]).read_text()
                     msg = "Created subsection %s and loaded index page %s"
-                    logger.debug(msg, match[1], match[2])
+                    logger.debug(msg, m[1], m[2])
                     self._nav += subnav
 
                 # if not, add as regular page:
                 else:
-                    p = match[2] if match[2].startswith("->") else path.parent / match[2]
-                    page = add_page(path=p, name=match[1], parent=self._nav, **kwargs)
-                    self._nav[match[1]] = page
-                    logger.debug("Created page %s from %s", match[1], match[2])
+                    p = m[2] if m[2].startswith("->") else path.parent / m[2]
+                    page = add_page(path=p, name=m[1], parent=self._nav, **kwargs)
+                    self._nav[m[1]] = page
+                    logger.debug("Created page %s from %s", m[1], m[2])
 
             # * Section/
 
-            elif match := re.match(SECTION_RE, line):
+            elif m := re.match(SECTION_RE, line):
                 unindented = helpers.get_indented_lines(lines[i + 1 :]) or []
-                logger.debug("Created subsection %s from text", match[1])
-                subnav = mknav.MkNav(match[1], parent=self._nav)
-                subnav.parse.text("\n".join(unindented), path=path, **kwargs)
-                self._nav[match[1]] = subnav
+                logger.debug("Created subsection %s from text", m[1])
+                subnav = mknav.MkNav(m[1], parent=self._nav)
+                text = "\n".join(unindented)
+                subnav.parse.text(text, path=path, **kwargs)
+                self._nav[m[1]] = subnav
         return self._nav
 
     def folder(
@@ -274,7 +277,7 @@ class NavParser:
                 logger.debug("Loaded index page from %s", path)
                 self._nav.index_page = mkpage.MkPage(
                     path=path.name,
-                    content=path.read_text(),
+                    content=path.read_text(encoding="utf-8"),
                     parent=self._nav,
                     **kwargs,
                 )
