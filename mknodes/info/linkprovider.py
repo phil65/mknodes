@@ -124,10 +124,7 @@ class LinkProvider:
     def url_for_nav(self, nav) -> str:
         if nav.index_page:
             path = nav.index_page.resolved_file_path
-            if self.use_directory_urls:
-                path = path.replace(".md", "/")
-            else:
-                path = path.replace(".md", ".html")
+            path = path.replace(".md", ".html")
         else:
             path = nav.resolved_file_path
         return self.base_url + path
