@@ -15,6 +15,13 @@ logger = log.get_logger(__name__)
 
 
 def homepage_for_distro(dist_name: str) -> str | None:
+    """Return a link for given distribution from metadata.
+
+    Used if no better link was found.
+
+    Arguments:
+        dist_name: Name of the distribution to get a link for
+    """
     if dist_name in sys.stdlib_module_names:
         return None
     try:
@@ -44,6 +51,13 @@ class LinkProvider:
         use_directory_urls: bool = True,
         include_stdlib: bool = False,
     ):
+        """Constructor.
+
+        Arguments:
+            base_url: Base URL of the website
+            use_directory_urls: Use directory-style URLS
+            include_stdlib: Load the stdlib inventory file on init
+        """
         self.inv_manager = inventorymanager.InventoryManager()
         self.base_url = base_url
         self.excludes: set[str] = set()
@@ -55,9 +69,19 @@ class LinkProvider:
             )
 
     def set_excludes(self, excludes: Sequence[str]):
+        """Set terms which should not get picked up by the linkprovider.
+
+        That way handling of linking can be done by Markdown extensions.
+        """
         self.excludes.update(excludes)
 
     def add_inv_file(self, path: str | os.PathLike, base_url: str | None = None):
+        """Add an inventory file to the inventory manager.
+
+        Arguments:
+            path: Path or URL to the inventory file
+            base_url: Base URL (required when inventory file is local)
+        """
         self.inv_manager.add_inv_file(path, base_url=base_url)
 
     def url_for_module(
@@ -122,6 +146,11 @@ class LinkProvider:
         return linked(qual_name)
 
     def url_for_nav(self, nav) -> str:
+        """Return the final URL for given MkNav.
+
+        Arguments:
+            nav: The Nav to link to
+        """
         if nav.index_page:
             path = nav.index_page.resolved_file_path
             path = path.replace(".md", ".html")
@@ -130,6 +159,11 @@ class LinkProvider:
         return self.base_url + path
 
     def url_for_page(self, page) -> str:
+        """Return the final URL for given MkPage.
+
+        Arguments:
+            page: The Page to link to
+        """
         path = page.resolved_file_path
         if self.use_directory_urls:
             path = path.replace(".md", "/")
@@ -138,9 +172,25 @@ class LinkProvider:
         return self.base_url + path
 
     def get_link(self, target, title: str | None = None):
-        return linked(self.get_url(target), title)
+        """Return a markdown link for given target.
+
+        Target can be a class, a module, a MkPage, MkNav or a string.
+
+        Arguments:
+            target: The thing to link to
+            title: The title to use for the link
+        """
+        url = self.get_url(target)
+        return linked(url, title)
 
     def get_url(self, target) -> str:  # type: ignore[return]  # noqa: PLR0911
+        """Get a url for given target.
+
+        Target can be a class, a module, a MkPage, MkNav or a string.
+
+        Arguments:
+            target: The thing to link to
+        """
         import mknodes
 
         match target:

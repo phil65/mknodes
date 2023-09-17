@@ -50,6 +50,16 @@ class MkBlog(mknav.MkNav):
         description: str | None = None,
         avatar: str | None = None,
     ):
+        """Add an author to the blog.
+
+        Authors get linked to the blog post authors to show extended information.
+
+        Arguments:
+            username: Username / slug of the author
+            name: Full name of the author
+            description: Short description of the author
+            avatar: Url to an image used as avatar
+        """
         author = Author(name=name, description=description, avatar=avatar)
         self.authors[username] = author
 
@@ -113,6 +123,15 @@ class MkBlogPost(mkpage.MkPage):
         authors: list[str] | str | None = None,
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            date: Time/Date of the post
+            draft: Whether post is a draft
+            categories: A list of categories this post is linked to
+            authors: A list of authors of the post
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         if isinstance(authors, str):
             authors = [authors]
