@@ -34,6 +34,7 @@ SOCIALS = {
     "docker.com": "fontawesome/brands/docker",
     "fosstodon.org": "fontawesome/brands/mastodon",
     "discord.gg": "fontawesome/brands/discord",
+    "discord.com": "fontawesome/brands/discord",
     "linkedin.com": "fontawesome/brands/linkedin",
     "dev.to": "fontawesome/brands/dev",
     "medium.to": "fontawesome/brands/medium",

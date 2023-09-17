@@ -39,7 +39,6 @@ class NavRouter:
         In comparison to `page()` and `nav()`, it is not required to know in advance what
         will be returned.
 
-
         Arguments:
             path: The section path for the returned `MkNav` / `MkPage`
             show_source: If True, a section containing the code will be inserted
@@ -84,6 +83,10 @@ class NavRouter:
         There is also the possibility to create a new MkNav and return it in the
         decorated method, that MkNav takes preference then over the modified one.
 
+        Examples:
+            @nav.route.nav("Routed nav")
+            def _(nav: mk.MkNav):
+                nav += ...
 
         Arguments:
             path: The section path for the returned MkNav
@@ -128,6 +131,11 @@ class NavRouter:
 
         There is also the possibility to create a new MkPage and return it in the
         decorated method, that MkPage takes preference then over the modified one.
+
+        Examples:
+            @nav.route.page("Routed page", icon=...)
+            def _(page: mk.MkPage):
+                page += ...
 
         Arguments:
             path: The section path for the returned MkPage
