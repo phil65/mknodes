@@ -37,7 +37,9 @@ def get_mermaid(
     exclude_list = set(exclude.split(",")) if exclude else None
     if show_only is not None or exclude_list is not None:
         tree = tree.filter_nodes(show_only, exclude_list)
-    return render_mermaid(tree)
+    tree = [tree] if isinstance(tree, str) else tree
+    text = render_mermaid(tree)
+    return "\n".join(text.splitlines()[1:])
 
 
 class MkPipDepTree(mkdiagram.MkDiagram):
@@ -97,12 +99,11 @@ class MkPipDepTree(mkdiagram.MkDiagram):
 
     @property
     def mermaid_code(self) -> str:
-        mm = get_mermaid(
-            package=self.package,
+        return get_mermaid(
+            self.package,
             local_only=self.local_only,
             user_only=self.user_only,
         )
-        return "\n".join(mm.splitlines()[1:])
 
 
 if __name__ == "__main__":

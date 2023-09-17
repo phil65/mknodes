@@ -95,6 +95,6 @@ class MkGitBlog(mkblog.MkBlog):
 if __name__ == "__main__":
     blog = MkGitBlog("phil65", "mknodes", "blog/posts")
     blog.add_commits()
-    page = blog.pages[1]
+    page = blog.nav.pages[1]
 
     print(page)
