@@ -66,6 +66,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             build_kwargs=self.config.kwargs,
             clone_depth=self.config.clone_depth,
         )
+        logger.info("Generating pages...")
         self.build_info = self.project.build()
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
@@ -80,11 +81,9 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """
         if not self.config.build_fn:
             return files
-        # First we gather all required information
-        logger.info("Generating pages...")
-        logger.info("Fetching requirements from tree...")
 
         # now we add our stuff to the MkDocs build environment
+        logger.info("Setting up build backends...")
         cfg = mkdocsconfig.Config(config)
         mkdocs_backend = mkdocsbackend.MkDocsBackend(
             files=files,
@@ -92,12 +91,13 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             directory=self.build_folder,
         )
 
-        logger.info("Writing Markdown and assets to MkDocs environment...")
         markdown_backend = markdownbackend.MarkdownBackend(
             directory=cfg.site_dir / "src",
             extension=".original",
         )
         self.backends = [mkdocs_backend, markdown_backend]
+
+        logger.info("Writing Markdown and assets to MkDocs environment...")
         node_files: dict[str, str | bytes] = {}
         extra_files: dict[str, str | bytes] = {}
         iterator = self.project.theme.iter_nodes()
@@ -111,12 +111,14 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                         path, md = node.resolved_file_path, node.to_markdown()
                         node_files[path] = md
                 case mknav.MkNav():
+                    logger.info("Processing section %r...", node.section)
                     path, md = node.resolved_file_path, node.to_markdown()
                     node_files[path] = md
                     if node.metadata:
                         extra_files[node.metadata_file] = str(node.metadata)
 
         build_files = node_files | extra_files
+        logger.info("Fetching requirements from tree...")
         requirements = self.project.get_requirements()
         for backend in self.backends:
             backend.on_collect(build_files, requirements)
