@@ -91,6 +91,7 @@ class GitRepository(git.Repo):
 
     @property
     def edit_uri(self) -> str | None:
+        """The URL part needed to get to the edit page of the code hoster."""
         repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
         match repo_host:
             case "github.com" | "gitlab.com":

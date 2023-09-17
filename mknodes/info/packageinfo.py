@@ -15,13 +15,6 @@ class PackageInfo:
         self.distribution = packagehelpers.get_distribution(pkg_name)
         logger.debug("Loaded package info: '%s'", pkg_name)
         self.metadata = packagehelpers.get_metadata(self.distribution)
-        self.urls = {
-            v.split(",")[0].strip(): v.split(",")[1].strip()
-            for k, v in self.metadata.items()
-            if k == "Project-URL"
-        }
-        if "Home-page" in self.metadata:
-            self.urls["Home-page"] = self.metadata["Home-page"].strip()
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
         self.version = self.metadata["Version"]
         self.metadata_version = self.metadata["Metadata-Version"]
@@ -32,6 +25,17 @@ class PackageInfo:
 
     def __hash__(self):
         return hash(self.package_name)
+
+    @functools.cached_property
+    def urls(self) -> dict[str, str]:
+        urls = {
+            v.split(",")[0].strip(): v.split(",")[1].strip()
+            for k, v in self.metadata.items()
+            if k == "Project-URL"
+        }
+        if "Home-page" in self.metadata:
+            urls["Home-page"] = self.metadata["Home-page"].strip()
+        return urls
 
     @functools.cached_property
     def inventory_url(self) -> str | None:
@@ -154,6 +158,7 @@ class PackageInfo:
 
     @functools.cached_property
     def required_python_version(self) -> str | None:
+        """The minimum required python version for this package."""
         return self.metadata.json.get("requires_python")
 
     @functools.cached_property

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import collections
+
 from collections.abc import Callable
 import functools
 import os
 import pathlib
-
 from typing import Any, Generic, TypeVar
 
 from mknodes import paths
@@ -83,13 +84,17 @@ class Project(Generic[T]):
             for _level, node in self._root.iter_nodes()
             if hasattr(node, "resolved_file_path")
         }
-
+        for_stats = [node.__class__.__name__ for _level, node in self._root.iter_nodes()]
         paths = [pathlib.Path(i).stem for i in mapping]
         self.linkprovider.set_excludes(paths)
 
         variables = self.context.as_dict()
         reqs = self.get_requirements()
-        ctx = contexts.BuildContext(page_mapping=mapping, requirements=reqs)
+        ctx = contexts.BuildContext(
+            page_mapping=mapping,
+            requirements=reqs,
+            node_counter=collections.Counter(for_stats),
+        )
         mknode.MkNode._env.globals |= variables | ctx.as_dict()
         return ctx
 

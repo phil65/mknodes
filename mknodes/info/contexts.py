@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 import dataclasses
 import pathlib
 import types
@@ -99,6 +100,10 @@ class BuildContext(Context):
     """All requirements (JS, CSS, extensions) inferred from the build."""
     node_stats: list[NodeBuildStats] = dataclasses.field(default_factory=list)
     """Some stats about nodes construction."""
+    node_counter: collections.Counter = dataclasses.field(
+        default_factory=collections.Counter,
+    )
+    """Counter containing the amount of creations for each node class."""
 
     # original_config: dict = dataclasses.field(default_factory=dict)
     # config_override: dict = dataclasses.field(default_factory=dict)
