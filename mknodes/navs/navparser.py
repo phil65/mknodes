@@ -9,6 +9,7 @@ import re
 from typing import Any
 from urllib import parse
 
+from mknodes.basenodes import mkcode
 from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.utils import helpers, log
@@ -258,7 +259,12 @@ class NavParser:
         """
         folder = pathlib.Path(folder)
         for path in folder.iterdir():
-            if path.is_dir() and recursive and any(path.iterdir()):
+            if (
+                recursive
+                and path.is_dir()
+                and not path.name.startswith(("_", "."))
+                and any(path.iterdir())
+            ):
                 path = folder / path.parts[-1]
                 subnav = mknav.MkNav(path.name)
                 subnav.parse.folder(folder=path, **kwargs)
@@ -276,10 +282,53 @@ class NavParser:
             elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
                 self._nav += mkpage.MkPage(
                     path=path.relative_to(folder),
-                    content=path.read_text(),
+                    content=path.read_text(encoding="utf-8"),
                     parent=self._nav,
                     **kwargs,
                 )
+                logger.debug("Loaded page from from %s", path)
+        return self._nav
+
+    def module(
+        self,
+        module: str | os.PathLike,
+        *,
+        recursive: bool = True,
+        **kwargs: Any,
+    ) -> mknav.MkNav:
+        """Load a MkNav tree from a Module.
+
+        Will add a page for each module showing the code in a code box.
+
+        Arguments:
+            module: Module to load code files for
+            recursive: Whether all .md files should be included recursively.
+            kwargs: Keyword arguments passed to the pages to create.
+                    Can be used to hide the TOC for all pages for example.
+        """
+        # if isinstance(module, types.ModuleType):
+        #     module = inspecthelpers.get_file(module)
+        for path in pathlib.Path(module).iterdir():
+            if (
+                recursive
+                and path.is_dir()
+                and not path.name.startswith(("_", "."))
+                and any(path.iterdir())
+            ):
+                subnav = mknav.MkNav(path.name)
+                subnav.parse.folder(folder=path, **kwargs)
+                self._nav += subnav
+                logger.debug("Loaded subnav from from %s", path)
+            elif path.suffix in [".py"]:
+                page = mkpage.MkPage(
+                    path=path.name,
+                    title=path.name,
+                    parent=self._nav,
+                    **kwargs,
+                )
+                content = path.read_text(encoding="utf-8")
+                page += mkcode.MkCode(content, language="py", linenums=1)
+                self._nav += page
                 logger.debug("Loaded page from from %s", path)
         return self._nav
 
@@ -287,7 +336,5 @@ class NavParser:
 if __name__ == "__main__":
     log.basic()
     nav = mknav.MkNav()
-    nav_tree_path = pathlib.Path(__file__).parent.parent.parent / "tests/data/nav_tree/"
-    nav_file = nav_tree_path / "SUMMARY.md"
-    nav.parse.file(nav_file)
-    print(list(nav.iter_nodes()))
+    nav.parse.module("mknodes/manual/")
+    print(nav)

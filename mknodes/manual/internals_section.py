@@ -1,8 +1,4 @@
-import inspect
-
 import mknodes as mk
-
-from mknodes.utils import classhelpers
 
 
 INTRO_TEXT = """In this section you will find some information about the tree of nodes
@@ -44,17 +40,4 @@ def create_log_page(page: mk.MkPage):
 @nav.route.nav("Complete code", show_source=True)
 def create_complete_code_section(nav: mk.MkNav):
     """Create the "Complete code" sub-MkNav and attach it to given MkNav."""
-    from mknodes import manual
-
-    nav.add_index_page(hide_toc=True, icon="octicons/code-24")
-    for _module_name, module in inspect.getmembers(manual, inspect.ismodule):
-        filename = module.__name__.split(".")[-1] + ".py"
-        page = nav.add_page(filename, hide_toc=True)
-        page += mk.MkCode.for_object(module, title=filename)
-    example_page = nav.add_page("create_example_page methods")
-    for kls in classhelpers.iter_subclasses(mk.MkNode):
-        # iter_subclasses just calls __subclasses__ recursively.
-        if "create_example_page" not in kls.__dict__:
-            continue
-        header = kls.__name__
-        example_page += mk.MkCode.for_object(kls.create_example_page, header=header)
+    nav.parse.module("mknodes/manual/", hide_toc=True)
