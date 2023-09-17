@@ -189,7 +189,7 @@ select = [
     "C4",   # flake8-comprehensions
     # "C90",  # MCCabe
     "COM",  #  Flake8-commas
-    "CPY",  #  Copyright-related rules
+    # "CPY",  #  Copyright-related rules
     "D",    # PyDocStyle
     # "DTZ",  # Flake8- Datetimez
     "E",    # PyCodeStyle Error
@@ -243,7 +243,7 @@ ignore = [
     "C408",  # Unnecessary {obj_type} call (rewrite as a literal)
     "B905",  # zip() without an explicit strict= parameter
     "C901",  # {name} is too complex ({complexity} > {max_complexity})
-    "CPY001", # Missing copyright notice at top of file
+    # "CPY001", # Missing copyright notice at top of file
     "D100",  # Missing docstring in public module
     "D101",  # Missing docstring in public class
     "D102",  # Missing docstring in public method
