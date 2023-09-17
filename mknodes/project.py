@@ -101,24 +101,28 @@ class Project(Generic[T]):
         from mknodes import mkdocsconfig
 
         config = mkdocsconfig.Config(config)
-        return cls(
+        kls = cls(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
             build_fn=config.plugins["mknodes"].config.build_fn,
         )
+        kls.build()
+        return kls
 
     @classmethod
     def for_path(cls, path: str, config=None) -> Project:
         from mknodes import mkdocsconfig
 
         config = mkdocsconfig.Config(config)
-        return cls(
+        kls = cls(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
             theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
             repo=folderinfo.FolderInfo.clone_from(path),
         )
+        kls.build()
+        return kls
 
     def set_root(self, nav: mknav.MkNav):
         self._root = nav

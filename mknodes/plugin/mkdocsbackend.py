@@ -163,4 +163,5 @@ if __name__ == "__main__":
         build_fn=paths.DEFAULT_BUILD_FN,
         clone_depth=1,
     )
+    proj.build()
     reqs = proj.get_requirements()
