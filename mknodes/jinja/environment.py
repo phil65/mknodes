@@ -45,6 +45,7 @@ class Environment(jinja2.Environment):
     def __init__(self, *, undefined: str = "silent", load_templates: bool = False):
         loader = jinjahelpers.resource_loader if load_templates else None
         behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
+        self.extra_files: set[str] = set()
         super().__init__(undefined=behavior, loader=loader)
         self.filters.update(ENVIRONMENT_FILTERS)
         self.globals.update(ENVIRONMENT_GLOBALS)
@@ -91,6 +92,32 @@ class Environment(jinja2.Environment):
             logger.exception("Error when rendering template.")
             return ""
 
+    def add_template(self, file: str | os.PathLike):
+        """Add a new template during runtime.
+
+        Will create a new DictLoader and inject it into the existing loaders.
+
+        Useful since render_string/render_file does not allow to use a parent template.
+        Using this, render_template can be used.
+
+        Arguments:
+            file: File to add as a template
+        """
+        # we keep track of already added extra files to not add things multiple times.
+        file = str(file)
+        if file in self.extra_files:
+            return
+        self.extra_files.add(file)
+        content = load_file(file)
+        new_loader = jinja2.DictLoader({file: content})
+        match self.loader:
+            case jinja2.ChoiceLoader():
+                self.loader.loaders = [new_loader, *self.loader.loaders]
+            case None:
+                self.loader = new_loader
+            case _:
+                self.loader = jinja2.ChoiceLoader(loaders=[new_loader, self.loader])
+
     def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
         """Helper to directly render a template from filesystem.
 
@@ -134,11 +161,15 @@ class Environment(jinja2.Environment):
 
 
 if __name__ == "__main__":
-    from mknodes.project import Project
+    # from mknodes.project import Project
 
     env = Environment()
-    proj = Project.for_mknodes()
-    ctx = proj.context.as_dict()
-    env.globals.update(ctx)
-    text = env.render_string("{{ 'TTset' | isinstance(str) }}")
-    print(text)
+    env.set_mknodes_filters()
+    print(env.loader)
+    env.add_template("mknodes/resources/requirements.md")
+    env.get_template("mknodes/resources/requirements.md")
+    # proj = Project.for_mknodes()
+    # ctx = proj.context.as_dict()
+    # env.globals.update(ctx)
+    # text = env.render_string("{{ 'TTset' | isinstance(str) }}")
+    # print(text)
