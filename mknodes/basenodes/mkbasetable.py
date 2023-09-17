@@ -127,7 +127,7 @@ class MkBaseTable(mkcontainer.MkContainer):
         ls = [{k: v(item) for k, v in columns.items()} for item in items]
         return cls(ls)
 
-    def width_for_column(self, column: str | int):
+    def width_for_column(self, column: str | int) -> int:
         """Returns the minimum width needed for given column.
 
         Arguments:
@@ -135,8 +135,6 @@ class MkBaseTable(mkcontainer.MkContainer):
         """
         data = self.data  # property
         col_name = list(data.keys())[column] if isinstance(column, int) else column
-        max_len = max(
-            (len(str(i).replace("\n", "<br>")) for i in data[col_name]),
-            default=0,
-        )
+        col = data[col_name]
+        max_len = max((len(str(i).replace("\n", "<br>")) for i in col), default=0)
         return max(len(col_name), max_len)
