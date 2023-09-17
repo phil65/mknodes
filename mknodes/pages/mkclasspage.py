@@ -62,7 +62,8 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self):
         # right now, we inject the cls and the griffe Class into jinja namespace.
-        variables = dict(cls=self.klass)
+        subclasses = list(classhelpers.iter_subclasses(self.klass, recursive=False))
+        variables = dict(cls=self.klass, subclasses=subclasses)
         if mod := self.ctx.metadata.griffe_module:
             path = ".".join(self.parts[1:]) + "." + self.klass.__qualname__
             path = path.lstrip(".")

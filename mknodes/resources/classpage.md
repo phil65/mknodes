@@ -1,8 +1,8 @@
 {% block content %}
 
-{% if cls.__subclasses__() %}
+{% if subclasses %}
 ### Sub classes
-{{ cls.__subclasses__() | MkClassTable }}
+{{ subclasses | MkClassTable }}
 {% endif %}
 
 {% if cls.mro() | length > 2 %}
