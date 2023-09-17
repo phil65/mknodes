@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import dataclasses
-import re
 
 from typing import Self
+
+from mkdocs.utils import meta
 
 from mknodes.data import datatypes
 from mknodes.utils import yamlhelpers
 
 
 HEADER = "---\n{options}---\n"
-
-HEADER_RE = re.compile(r"\A-{3}\n([\S\s]*)^-{3}(\n|$)", re.MULTILINE)
 
 
 @dataclasses.dataclass
@@ -36,21 +35,16 @@ class Metadata:
 
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
-        dct = {}
-        if match := HEADER_RE.match(text):
-            content = match[1]
-            dct = yamlhelpers.load_yaml(content)
-            if hide := dct.pop("hide", None):
-                dct["hide_toc"] = "toc" in hide
-                dct["hide_nav"] = "navigation" in hide
-                dct["hide_path"] = "path" in hide
-                dct["hide_tags"] = "tags" in hide
-            if search := dct.pop("search", None):
-                dct["search_boost"] = search.get("boost")
-                dct["exclude_from_search"] = search.get("exclude")
-            text = text[match.span()[1] :]
-        # TODO: right now, additional metadata would lead to an exception
-        return cls(**dct), text
+        text, metadata = meta.get_data(text)
+        if hide := metadata.pop("hide", None):
+            metadata["hide_toc"] = "toc" in hide
+            metadata["hide_nav"] = "navigation" in hide
+            metadata["hide_path"] = "path" in hide
+            metadata["hide_tags"] = "tags" in hide
+        if search := metadata.pop("search", None):
+            metadata["search_boost"] = search.get("boost")
+            metadata["exclude_from_search"] = search.get("exclude")
+        return cls(**metadata), text
 
     def __getitem__(self, index: str):
         return dataclasses.asdict(self)[index]
