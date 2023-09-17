@@ -125,10 +125,19 @@ class Project(Generic[T]):
         return kls
 
     def set_root(self, nav: mknav.MkNav):
+        """Set the root MkNav."""
         self._root = nav
         nav.associated_project = self
 
     def get_root(self, **kwargs) -> mknav.MkNav:
+        """Return the root MkNav.
+
+        This MkNav should get populated in order to build
+        the website.
+
+        Arguments:
+            kwargs: Keyword arguments passed to MkNav constructor.
+        """
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
 

@@ -74,11 +74,14 @@ class FolderInfo:
 
     @functools.cached_property
     def module(self):
+        """Return the module itself."""
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         return importlib.import_module(mod_name)
 
     @functools.cached_property
     def griffe_module(self) -> Module:
+        """Return a griffe Module containing information about the module."""
+        # Long-term ideally we would pull all information from here.
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         parser = Parser(self.docstring_style or "google")
         griffe = GriffeLoader(docstring_parser=parser)
@@ -135,6 +138,7 @@ class FolderInfo:
 
     @functools.cached_property
     def repository_username(self) -> str:
+        """Return the username for the remote repository."""
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(1)
         msg = "Could not detect repository username"
@@ -142,6 +146,7 @@ class FolderInfo:
 
     @functools.cached_property
     def repository_name(self) -> str:
+        """Return the name of the remote repository."""
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(2)
         msg = "Could not detect repository name"
@@ -156,6 +161,7 @@ class FolderInfo:
 
     @functools.cached_property
     def package_name(self) -> str:
+        """Return name of the package."""
         return self.info.package_name
 
     @functools.cached_property
@@ -175,6 +181,7 @@ class FolderInfo:
 
     @functools.cached_property
     def docstring_style(self):
+        """Return docstring style (google / numpy)."""
         if style := self.pyproject.docstring_style:
             return style
         if section := self.mkdocs_config.mkdocstrings_config:
@@ -209,9 +216,9 @@ class FolderInfo:
     @functools.cached_property
     def social_info(self) -> list[dict[str, str]]:
         result = []
-        if self.repository_url:
+        if url := self.repository_url:
             result.append(
-                dict(icon="fontawesome/brands/github", link=self.repository_url),
+                dict(icon="fontawesome/brands/github", link=url),
             )
         for link in self.info.urls.values():
             result.extend(
