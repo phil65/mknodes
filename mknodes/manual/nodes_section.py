@@ -196,6 +196,7 @@ def create_about_nodes_section(nav: mk.MkNav):
         mk.MkShields,
         mk.MkMetadataBadges,
         mk.MkModuleOverview,
+        mk.MkPipDepTree,
     ]
     if os.environ.get("CI"):
         klasses.append(mk.MkPyDeps)

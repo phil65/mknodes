@@ -71,6 +71,7 @@ from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mkargparsehelp import MkArgParseHelp
 from .templatenodes.mkjinjatemplate import MkJinjaTemplate
 from .templatenodes.mkpydeps import MkPyDeps
+from .templatenodes.mkpipdeptree import MkPipDepTree
 
 from .project import Project
 from .navs.mkdefaultwebsite import MkDefaultWebsite
@@ -147,6 +148,7 @@ __all__ = [
     "MkTaskList",
     "MkJinjaTemplate",
     "MkPyDeps",
+    "MkPipDepTree",
 ]
 
 __version__ = "0.37.0"
