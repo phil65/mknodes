@@ -19,7 +19,7 @@ class MkDefaultWebsite(mknodes.MkNav):
     ):
         super().__init__(**kwargs)
 
-        page = self.add_index_page("Overview", hide_toc=True, hide_nav=True)
+        page = self.add_index_page("Overview", hide_toc=True)
         page += mknodes.MkText(page.ctx.metadata.description)
         static_pages = static_pages or {}
         self.parse.json(static_pages)
@@ -52,6 +52,7 @@ class MkDefaultWebsite(mknodes.MkNav):
 
         page = nav.add_page("Dependencies")
         page += mknodes.MkDependencyTable()
+        page += mknodes.MkPipDepTree(direction="LR")
 
         page = nav.add_page("Module overview")
         page += mknodes.MkModuleOverview()
