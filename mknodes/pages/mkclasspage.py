@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import os
 import pathlib
 
@@ -62,10 +63,11 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     def extra_variables(self):
         # right now, we inject the cls and the griffe Class into jinja namespace.
         variables = dict(cls=self.klass)
-        if self.ctx.metadata.griffe_module:
+        if mod := self.ctx.metadata.griffe_module:
             path = ".".join(self.parts[1:]) + "." + self.klass.__qualname__
             path = path.lstrip(".")
-            variables["griffe_obj"] = self.ctx.metadata.griffe_module[path]
+            with contextlib.suppress(KeyError):
+                variables["griffe_obj"] = mod[path]
         return variables
 
 

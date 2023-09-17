@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import os
 import types
 
@@ -56,7 +57,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         variables = dict(module=self.module, klasses=self.klasses)
         if mod := self.ctx.metadata.griffe_module:
             path = ".".join(self.module.__name__.split(".")[1:])
-            variables["griffe_obj"] = mod[path] if path else mod
+            with contextlib.suppress(KeyError):
+                variables["griffe_obj"] = mod[path]
         return variables
 
 
