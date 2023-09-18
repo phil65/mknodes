@@ -17,11 +17,11 @@ def create_internals_section(root_nav: mk.MkNav):
     page += mk.MkCode.for_object(create_internals_section, header=SECTION_CODE)
 
 
-@nav.route.page("Tree", show_source=True, hide="toc", icon="graph")
-def create_tree_page(page: mk.MkPage):
-    page += mk.MkHeader("This is the tree we built up to now.", level=3)
-    tree = page.root.get_tree_repr(detailed=False, max_depth=3)
-    page += mk.MkCode(tree, language="")
+# @nav.route.page("Tree", show_source=True, hide="toc", icon="graph")
+# def create_tree_page(page: mk.MkPage):
+#     page += mk.MkHeader("This is the tree we built up to now.", level=3)
+#     tree = page.root.get_tree_repr(detailed=False, max_depth=3)
+#     page += mk.MkCode(tree, language="")
 
 
 @nav.route.page("Requirements", hide="toc", icon="puzzle-edit", show_source=True)
