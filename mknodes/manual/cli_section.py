@@ -49,17 +49,14 @@ def create_cli_section(root_nav: mk.MkNav):
 
 @nav.route.page("build", show_source=True, icon="wrench")
 def create_build_page(page: mk.MkPage):
-    """Create the "CLI" MkPage and attach it to given MkNav."""
     page += mk.MkClickDoc("mknodes.cli:cli", prog_name="build")
 
 
 @nav.route.page("serve", show_source=True, icon="web")
 def create_changelog_page(page: mk.MkPage):
-    """Create the "Changelog" MkPage and attach it to given MkNav."""
     page += mk.MkClickDoc("mknodes.cli:cli", prog_name="serve")
 
 
 @nav.route.page("create-config", show_source=True, icon="folder-wrench")
 def create_coc_page(page: mk.MkPage):
-    """Create the "Code of conduct" MkPage and attach it to given MkNav."""
     page += mk.MkClickDoc("mknodes.cli:cli", prog_name="create-config")
