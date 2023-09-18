@@ -45,7 +45,11 @@ class GitRepository(git.Repo):
         self,
         commit: git.Commit | str,  # type: ignore[name-defined]
     ) -> str | None:
-        """Iterate commit parents to find the associated version of the commit."""
+        """Iterate commit parents to find the associated version of the commit.
+
+        Arguments:
+            commit: Commit to get a version for.
+        """
         if isinstance(commit, str):
             commit = self.commit(commit)
         return next(

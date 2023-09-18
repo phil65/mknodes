@@ -43,6 +43,13 @@ class GitHubRepo:
         destination: str | os.PathLike,
         recursive: bool = False,
     ):
+        """Download a file from this github repository.
+
+        Arguments:
+            path: Path to the file we want to download.
+            destination: Path where file should be saved.
+            recursive: Download all files from a folder (and subfolders).
+        """
         user_name = self.main.get_user().login if TOKEN else None
         return pathhelpers.download_from_github(
             org=self.username,
@@ -55,7 +62,7 @@ class GitHubRepo:
         )
 
     @functools.cached_property
-    def workflows(self):
+    def workflows(self) -> list[dict[str, str]]:
         result = []
         for wf in self.repo.get_workflows():
             url = f"{self.raw_prefix}{self.default_branch}/{wf.path}"
@@ -65,7 +72,7 @@ class GitHubRepo:
         return result
 
     @functools.cached_property
-    def raw_prefix(self):
+    def raw_prefix(self) -> str:
         return f"{RAW_URL}{self.username}/{self.repo_name}/"
 
     def get_last_commits(

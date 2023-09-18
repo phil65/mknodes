@@ -27,7 +27,8 @@ class BuildBackend:
 
     def write_file(self, path: str | os.PathLike, content: str | bytes):
         logger.debug("%s: Writing file to %r", type(self).__name__, str(path))
-        self._files[pathlib.Path(path).as_posix()] = content
+        path = pathlib.Path(path).as_posix()
+        self._files[path] = content
         self._write_file(path, content)
 
     def write_files(self, dct: dict[str, str | bytes]):
