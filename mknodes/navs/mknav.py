@@ -120,15 +120,6 @@ class MkNav(mknode.MkNode):
         ).as_posix()
 
     @property
-    def metadata_file(self) -> str:
-        """Get path to metadata file."""
-        return (
-            pathlib.Path(self.section) / ".meta.yml"
-            if self.section
-            else pathlib.Path(".meta.yml")
-        ).as_posix()
-
-    @property
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
         path = "/".join(self.resolved_parts) + "/" + self.filename

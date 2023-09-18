@@ -10,6 +10,7 @@ from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
+from mknodes.navs import mknav
 from mknodes.pages import metadata, pagetemplate
 from mknodes.utils import downloadhelpers, helpers, log, reprhelpers
 
@@ -81,7 +82,7 @@ class MkPage(mkcontainer.MkContainer):
                 # klass=frame.f_locals["self"].__class__.__name__,
             )
         self.created_by: Callable | None = None
-        self.metadata = metadata.Metadata(
+        self._metadata = metadata.Metadata(
             hide=hide,
             search_boost=search_boost,
             exclude_from_search=exclude_from_search,
@@ -97,8 +98,20 @@ class MkPage(mkcontainer.MkContainer):
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self):
-        meta_kwargs = self.metadata.repr_kwargs()
-        return reprhelpers.get_repr(self, path=str(self.path), **meta_kwargs)
+        return reprhelpers.get_repr(self, path=str(self.path), **self._metadata)
+
+    @property
+    def metadata(self) -> metadata.Metadata:
+        meta = metadata.Metadata()
+        navs = [i for i in self.ancestors if isinstance(i, mknav.MkNav)]
+        for nav in reversed(navs):
+            meta.update(nav.metadata)
+        meta.update(self._metadata)
+        return meta
+
+    @metadata.setter
+    def metadata(self, val: metadata.Metadata):
+        self._metadata = val
 
     @property
     def path(self):
@@ -122,7 +135,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @status.setter
     def status(self, value: datatypes.PageStatusStr):
-        self.metadata.status = value
+        self._metadata.status = value
 
     @property
     def title(self) -> str | None:
@@ -130,7 +143,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @title.setter
     def title(self, value: str):
-        self.metadata.title = value
+        self._metadata.title = value
 
     @property
     def subtitle(self) -> str | None:
@@ -138,7 +151,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @subtitle.setter
     def subtitle(self, value: str):
-        self.metadata.subtitle = value
+        self._metadata.subtitle = value
 
     @property
     def icon(self) -> str | None:
@@ -146,7 +159,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @icon.setter
     def icon(self, value: str):
-        self.metadata.icon = value
+        self._metadata.icon = value
 
     @property
     def template(self) -> pagetemplate.PageTemplate | None:
@@ -155,10 +168,10 @@ class MkPage(mkcontainer.MkContainer):
     @template.setter
     def template(self, value: str | pagetemplate.PageTemplate | None):
         if isinstance(value, pagetemplate.PageTemplate):
-            self.metadata.template = value.filename
+            self._metadata.template = value.filename
             self._template = value
         else:
-            self.metadata.template = value
+            self._metadata.template = value
             self._template = None
 
     @classmethod

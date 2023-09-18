@@ -18,22 +18,40 @@ class Author:
     avatar: str | None = None
 
 
-@dataclasses.dataclass
 class BlogMetadata(metadata.Metadata):
     """Extended Metadata class for blog posts."""
 
-    date: str = ""
-    draft: bool = True
-    categories: list[str] = dataclasses.field(default_factory=list)
-    authors: list[str] = dataclasses.field(default_factory=list)
+    @property
+    def date(self) -> str | None:
+        return self.get("date")
 
-    def as_dict(self):
-        dct = super().as_dict()
-        dct["date"] = self.date
-        dct["draft"] = self.draft
-        dct["categories"] = self.categories
-        dct["authors"] = self.authors
-        return dct
+    @date.setter
+    def date(self, val: str | None):
+        self["date"] = val
+
+    @property
+    def draft(self) -> bool | None:
+        return self.get("draft")
+
+    @draft.setter
+    def draft(self, val: bool | None):
+        self["draft"] = val
+
+    @property
+    def categories(self) -> list[str] | None:
+        return self.get("categories")
+
+    @categories.setter
+    def categories(self, val: list[str] | None):
+        self["categories"] = val
+
+    @property
+    def authors(self) -> list[str] | None:
+        return self.get("authors")
+
+    @authors.setter
+    def authors(self, val: list[str] | None):
+        self["authors"] = val
 
 
 class MkBlog(mknav.MkNav):
@@ -138,7 +156,7 @@ class MkBlogPost(mkpage.MkPage):
         if isinstance(categories, str):
             categories = [categories]
         self.metadata = BlogMetadata(
-            **dataclasses.asdict(self.metadata),
+            **self.metadata,
             date=(
                 date
                 if isinstance(date, str)

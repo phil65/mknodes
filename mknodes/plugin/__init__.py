@@ -113,8 +113,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                     logger.info("Processing section %r...", node.section)
                     path, md = node.resolved_file_path, node.to_markdown()
                     node_files[path] = md
-                    if node.metadata:
-                        extra_files[node.metadata_file] = str(node.metadata)
 
         build_files = node_files | extra_files
         logger.info("Fetching requirements from tree...")
