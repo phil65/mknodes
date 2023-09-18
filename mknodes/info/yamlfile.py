@@ -22,6 +22,12 @@ class YamlFile(configfile.ConfigFile):
             self.resolve_inherit_tag(inherit_from, mode)
 
     def resolve_inherit_tag(self, parent_path: str | os.PathLike, mode: str = "unsafe"):
+        """Merge the current data with data of of given parent_path file.
+
+        Arguments:
+            parent_path: The path of the file which this file should inherit from.
+            mode: The Yaml loader type
+        """
         if "INHERIT" not in self._data:
             return
         relpath = self._data.pop("INHERIT")

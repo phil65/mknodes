@@ -28,6 +28,10 @@ class PackageInfo:
 
     @functools.cached_property
     def urls(self) -> dict[str, str]:
+        """A dictionary containing the type of URL and and URL itself.
+
+        Example: {"Documentation": "http://github.io/...", ...}
+        """
         urls = {
             v.split(",")[0].strip(): v.split(",")[1].strip()
             for k, v in self.metadata.items()
@@ -80,6 +84,7 @@ class PackageInfo:
 
     @functools.cached_property
     def homepage(self) -> str | None:
+        """The URL of the homepage associated to this package."""
         if "Home-page" in self.urls:
             return self.urls["Home-page"]
         if "Homepage" in self.urls:
@@ -119,11 +124,13 @@ class PackageInfo:
 
     @functools.cached_property
     def author_email(self) -> str:
+        """The first found package author email address."""
         mail = self.metadata["Author-email"].split(" ")[-1]
         return mail.replace("<", "").replace(">", "")
 
     @functools.cached_property
     def author_name(self) -> str:
+        """The first found package author name."""
         return self.metadata["Author-email"].rsplit(" ", 1)[0]
 
     @functools.cached_property
@@ -187,6 +194,7 @@ class PackageInfo:
 
     @functools.cached_property
     def cli(self) -> str | None:
+        """Get the name of the CLI package being used."""
         eps = self.get_entry_points("console_scripts")
         if not eps:
             return None
@@ -197,6 +205,7 @@ class PackageInfo:
         self,
         group: str | None = None,
     ) -> dict[str, packagehelpers.EntryPoint]:
+        """Get entry points for this package."""
         return packagehelpers.get_entry_points(self.distribution, group=group)
 
 

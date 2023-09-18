@@ -34,6 +34,14 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
         return iter(i.name for i in dataclasses.fields(self))
 
     def merge(self, other: collections.abc.Mapping, additive: bool = False):
+        """Merge requirements with another requirements instance or dict.
+
+        Adds requirements from other to this instance.
+
+        Arguments:
+            other: The requirements to merge into this one.
+            additive: Merge strategy. Either additive or replace.
+        """
         self.css |= other["css"]
         self.templates += other["templates"]
         mergehelpers.merge_dicts(self.markdown_extensions, other["markdown_extensions"])

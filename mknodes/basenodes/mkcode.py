@@ -79,7 +79,7 @@ class MkCode(mkcontainer.MkContainer):
 
     @property
     def fence_boundary(self) -> str:
-        """Fence boundary."""
+        """Return Fence boundary, based on nesting level. Default is ```."""
         if self._fence_level:
             return "`" * (self._fence_level + 3)
         block_level = sum(isinstance(i, MkCode) for i in self.ancestors)

@@ -63,6 +63,7 @@ class GitHubRepo:
 
     @functools.cached_property
     def workflows(self) -> list[dict[str, str]]:
+        """Return a list of dictionaries containing info about the current workflows."""
         result = []
         for wf in self.repo.get_workflows():
             url = f"{self.raw_prefix}{self.default_branch}/{wf.path}"
@@ -73,6 +74,11 @@ class GitHubRepo:
 
     @functools.cached_property
     def raw_prefix(self) -> str:
+        """Path to the base url of the "Raw" links of GitHub.
+
+        If used in combination with the relative path of a module file,
+        this geives a valid link to a GitHub raw link.
+        """
         return f"{RAW_URL}{self.username}/{self.repo_name}/"
 
     def get_last_commits(

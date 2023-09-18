@@ -81,16 +81,9 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
         text = path.read_text()
         css_code = mk.MkCode(text, language="css")
         page += mk.MkDetailsBlock(css_code, title="Required CSS")
-    code = mk.MkCode.for_object(
-        create_class_page,
-        extract_body=True,
-    )
-    admonition = mk.MkDetailsBlock(
-        code,
-        typ="quote",
-        title=code.title,
-        header="Code for the subsections",
-    )
+    code = mk.MkCode.for_object(create_class_page, extract_body=True)
+    header = "Code for the subsections"
+    admonition = mk.MkDetailsBlock(code, typ="quote", title=code.title, header=header)
     page += admonition
 
 
