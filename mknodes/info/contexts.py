@@ -13,6 +13,7 @@ import mknodes
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
+from mknodes.jinja import environment
 from mknodes.utils import log, requirements, superdict
 
 
@@ -257,6 +258,12 @@ class ProjectContext(Context):
     links: linkprovider.LinkProvider = dataclasses.field(
         default_factory=linkprovider.LinkProvider,
     )
+    env: environment.Environment = dataclasses.field(
+        default_factory=lambda: environment.Environment(
+            undefined="strict",
+            load_templates=True,
+        ),
+    )
     # requirements: Requirements = dataclasses.field(default_factory=Requirements)
     # pyproject: pyproject.PyProject = dataclasses.field(
     #     default_factory=pyproject.PyProject,
@@ -319,6 +326,7 @@ default_project_context = ProjectContext(
     github=default_github_context,
     theme=default_theme_context,
     links=linkprovider.LinkProvider(),
+    env=environment.Environment(undefined="strict", load_templates=True),
     # requirements=Requirements(),
 )
 

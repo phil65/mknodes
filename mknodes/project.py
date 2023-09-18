@@ -10,10 +10,18 @@ from typing import Any, Generic, TypeVar
 
 from mknodes import paths
 from mknodes.info import contexts, folderinfo, linkprovider, packageregistry
+from mknodes.jinja import environment
 from mknodes.navs import mknav
 from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
-from mknodes.utils import classhelpers, helpers, log, reprhelpers, requirements
+from mknodes.utils import (
+    classhelpers,
+    helpers,
+    jinjahelpers,
+    log,
+    reprhelpers,
+    requirements,
+)
 
 
 logger = log.get_logger(__name__)
@@ -51,6 +59,7 @@ class Project(Generic[T]):
             use_directory_urls=use_directory_urls,
             include_stdlib=True,
         )
+        self.env = environment.Environment(undefined="strict", load_templates=True)
         self.theme: T = theme
         self.theme.associated_project = self
         self.templates = self.theme.templates
@@ -77,8 +86,6 @@ class Project(Generic[T]):
             msg = "No root for project created."
             raise RuntimeError(msg)
 
-        from mknodes.basenodes import mknode
-
         mapping = {
             node.resolved_file_path: node
             for _level, node in self._root.iter_nodes()
@@ -95,7 +102,8 @@ class Project(Generic[T]):
             requirements=reqs,
             node_counter=collections.Counter(for_stats),
         )
-        mknode.MkNode._env.globals |= variables | ctx.as_dict()
+        self.env.globals |= variables | ctx.as_dict()
+        jinjahelpers.set_markdown_exec_namespace(self.env.globals)
         return ctx
 
     def __repr__(self):
@@ -172,6 +180,7 @@ class Project(Generic[T]):
             # github=self.folderinfo.github.context,
             theme=self.theme.context,
             links=self.linkprovider,
+            env=self.env,
             # requirements=self.get_requirements(),
         )
 

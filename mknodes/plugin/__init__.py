@@ -14,7 +14,6 @@ from mkdocs import livereload
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
 from mknodes import mkdocsconfig, project
-from mknodes.basenodes import mknode
 from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, markdownbackend, mkdocsbackend, pluginconfig
@@ -142,7 +141,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
 
     def on_env(self, env: jinja2.Environment, config: MkDocsConfig, files: Files):
         """Add our own info to the MkDocs environment."""
-        node_env = mknode.MkNode._env
+        node_env = self.project.context.env
         env.globals["mknodes"] = node_env.globals
         env.filters |= node_env.filters
         logger.debug("Added macros / filters to MkDocs jinja2 environment.")

@@ -9,10 +9,9 @@ from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
-from mknodes.jinja import environment
 from mknodes.pages import pagetemplate
 from mknodes.treelib import node
-from mknodes.utils import jinjahelpers, log, mergehelpers, requirements
+from mknodes.utils import log, mergehelpers, requirements
 
 
 if TYPE_CHECKING:
@@ -45,7 +44,6 @@ class MkNode(node.Node):
     JS = None
     children: list[MkNode]
     _context = contexts.ProjectContext()
-    _env = environment.Environment(undefined="strict", load_templates=True)
     _name_registry: dict[str, MkNode] = dict()
 
     def __init__(
@@ -132,9 +130,9 @@ class MkNode(node.Node):
 
     @property
     def env(self):
-        self._env.globals["parent"] = self.parent
-        self._env.set_mknodes_filters(parent=self)
-        return self._env
+        self.ctx.env.globals["parent"] = self.parent
+        self.ctx.env.set_mknodes_filters(parent=self)
+        return self.ctx.env
 
     @classmethod
     def get_node(cls, name: str):
@@ -296,9 +294,6 @@ class MkNode(node.Node):
 
         proj = mknodes.Project.for_mknodes()
         return cls(*args, **kwargs, project=proj)
-
-
-jinjahelpers.set_markdown_exec_namespace(MkNode._env.globals)
 
 
 if __name__ == "__main__":

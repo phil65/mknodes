@@ -57,12 +57,3 @@ def create_jinja_namespace_section(nav: mk.MkNav):
     for ctx in CONTEXTS:
         subpage = nav.add_page(ctx.__name__)
         add_context_doc(subpage, ctx)
-
-
-# @nav.route.nav("Templates for documentation pages")
-# def create_documentation_templates_section(nav: mk.MkNav):
-#     page = nav.add_index_page(hide="toc")
-#     page += mk.MkAdmonition("This is the default Jinja template for class pages")
-#     text = pathlib.Path(paths.RESOURCES / "classpage.md").read_text(encoding="utf-8")
-#     text = text.replace(r"{{", "{ {").replace(r"}}", "} }")
-#     page += mk.MkCode(text)
