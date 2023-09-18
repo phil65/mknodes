@@ -130,7 +130,7 @@ class MkNode(node.Node):
 
     @property
     def env(self):
-        self.ctx.env.globals["parent"] = self.parent
+        self.ctx.env.globals["mknode"] = self
         self.ctx.env.set_mknodes_filters(parent=self)
         return self.ctx.env
 
