@@ -295,6 +295,15 @@ class MkNode(node.Node):
         proj = mknodes.Project.for_mknodes()
         return cls(*args, **kwargs, project=proj)
 
+    def to_html(self) -> str:
+        import markdown
+
+        md = self.to_markdown()
+        reqs = self.get_requirements()
+        configs = reqs.markdown_extensions
+        exts = list(configs.keys())
+        return markdown.Markdown(extensions=exts, extension_configs=configs).convert(md)
+
 
 if __name__ == "__main__":
     import mknodes
