@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Self
+from typing import Literal, Self
 
 from mkdocs.utils import meta
 
@@ -11,8 +11,15 @@ from mknodes.utils import yamlhelpers
 HEADER = "---\n{options}---\n"
 
 
+SectionStr = Literal["navigation", "toc", "path", "tags"]
+
+
 class Metadata(dict):
-    """Metadata is a dict with some common keys exposed as properties."""
+    """The Metadata class is a subclassed Python dictionary.
+
+    It is enhanced with properties for common metadata fields in order
+    to get proper type hints.
+    """
 
     def __init__(self, *args, **kwargs):
         search_dict = {}
@@ -31,7 +38,11 @@ class Metadata(dict):
             self.hide = [i if i != "nav" else "navigation" for i in self.hide or []]
 
     @property
-    def hide(self) -> list[str] | str | None:
+    def hide(self) -> list[SectionStr] | None:
+        """A list of items which should be hidden from the page.
+
+        MkDocs-Material supports `"navigation"`, `"toc"`, `"path"`, `"tags"`.
+        """
         return self.get("hide")
 
     @hide.setter
@@ -40,6 +51,7 @@ class Metadata(dict):
 
     @property
     def search_boost(self) -> float | None:
+        """A multiplier to modify search relevance."""
         return self.get("search_boost")
 
     @search_boost.setter
@@ -48,6 +60,7 @@ class Metadata(dict):
 
     @property
     def exclude_from_search(self) -> bool | None:
+        """Exclude this page from search."""
         return self.get("exclude_from_search")
 
     @exclude_from_search.setter
@@ -56,6 +69,7 @@ class Metadata(dict):
 
     @property
     def icon(self) -> str | None:
+        """An icon for the page (Example: `"material/wrench"`)."""
         return self.get("icon")
 
     @icon.setter
@@ -66,6 +80,12 @@ class Metadata(dict):
 
     @property
     def status(self) -> datatypes.PageStatusStr | None:
+        """The status of the page.
+
+        MaterialTheme supports `"new"`, `"deprecated"` and `"encrypted"` by default
+        by showing an icon in the navigation. Additional icons can be added via
+        `MaterialTheme.add_status_icon`.
+        """
         return self.get("status")
 
     @status.setter
@@ -74,6 +94,7 @@ class Metadata(dict):
 
     @property
     def title(self) -> str | None:
+        """Title for the page."""
         return self.get("title")
 
     @title.setter
@@ -82,6 +103,7 @@ class Metadata(dict):
 
     @property
     def subtitle(self) -> str | None:
+        """Subtitle for the page."""
         return self.get("subtitle")
 
     @subtitle.setter
@@ -90,6 +112,7 @@ class Metadata(dict):
 
     @property
     def description(self) -> str | None:
+        """Description text for the page."""
         return self.get("description")
 
     @description.setter
@@ -98,6 +121,10 @@ class Metadata(dict):
 
     @property
     def template(self) -> str | None:
+        """Filename of the template the page should use.
+
+        This is only a reference, you still need to add the template to the theme.
+        """
         return self.get("template")
 
     @template.setter
@@ -106,6 +133,7 @@ class Metadata(dict):
 
     @property
     def tags(self) -> list[str] | None:
+        """A list of tags associated with the page."""
         return self.get("tags")
 
     @tags.setter
@@ -114,6 +142,7 @@ class Metadata(dict):
 
     @property
     def search(self) -> dict | None:
+        """A dictionary containing search-related settings (`"boost"` / `"exclude"`)."""
         return self.get("search")
 
     @search.setter

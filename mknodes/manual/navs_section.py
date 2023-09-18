@@ -2,6 +2,7 @@ import mknodes as mk
 
 from mknodes import paths
 from mknodes.manual import routing
+from mknodes.pages import metadata
 from mknodes.project import Project
 
 
@@ -25,6 +26,31 @@ ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* no
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
 
+METADATA_TEXT = """##Description
+
+Every `MkPage` as well as every `MkNav` can carry metadata.
+Page metadata inherits from Nav metadata, similarly as the MkDocs-Material meta plugin.
+
+Metadata can be set either via the `MkPage` constructor, via the `MkNav.route.page`
+decorator. Also, some methods like `MkNav.parse.folder` take metadata keyword arguments
+in order to set it for all parsed pages.
+
+## Examples
+
+Via decorators:
+```py
+@nav.route.page("My page", icon="material/code-json", status="new")
+def _(page: mk.MkPage):
+    ...
+```
+
+Via constructor:
+```py
+page = MkPage("My page", icon="material/code-json", status="new")
+```
+
+## Metadata fields
+"""
 
 nav = mk.MkNav("Navigation & Pages")
 
@@ -149,8 +175,14 @@ def create_adding_to_mkpages_page(page: mk.MkPage):
 def create_metadata_page(page: mk.MkPage):
     """Create the "Metadata" MkPage and attach it to given nav."""
     # page.metadata is a dataclass, we can prettyprint these with MkPrettyPrint.
-    page += mk.MkPrettyPrint(page.metadata)
-    page += mk.MkHtmlBlock(str(page))
+    page += METADATA_TEXT
+    page += mk.MkDocStrings(
+        metadata.Metadata,
+        show_root_toc_entry=False,
+        heading_level=3,
+        show_bases=False,
+        show_source=False,
+    )
 
 
 def create_mkdefaultwebsite_section(nav: mk.MkNav):
