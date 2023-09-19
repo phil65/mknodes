@@ -63,13 +63,22 @@ class CommandInfo:
     def __getitem__(self, name):
         return self.subcommands[name]
 
-    def to_markdown(self):
+    def to_markdown(self, recursive: bool = False):
         text = self.description + "\n\n" + str(mkcode.MkCode(self.usage))
         params = [i.to_markdown() for i in self.params]
-        return text + "\n\n\n" + "\n\n\n".join(params)
+        cmd_text = text + "\n\n\n" + "\n\n\n".join(params)
+        if not recursive:
+            return cmd_text
+        children_text = "\n".join(
+            i.to_markdown(recursive=True) for i in self.subcommands.values()
+        )
+        return cmd_text + children_text
 
 
-def get_typer_info(instance: typer.Typer, command: str | None = None) -> CommandInfo:
+def get_typer_info(
+    instance: typer.Typer | click.Group,
+    command: str | None = None,
+) -> CommandInfo:
     cmd = get_command(instance) if isinstance(instance, typer.Typer) else instance
     info = get_command_info(cmd)
     if command:
@@ -118,7 +127,7 @@ def _make_usage(ctx: click.Context) -> str:
 if __name__ == "__main__":
     from pprint import pprint
 
-    from mknodes import cli
+    import mkdocs.__main__
 
-    info = get_typer_info(cli.cli, "build")
-    pprint(info.to_markdown())
+    info = get_typer_info(mkdocs.__main__.cli)
+    pprint(info.to_markdown(recursive=True))
