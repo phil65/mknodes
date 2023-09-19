@@ -18,6 +18,8 @@ from .basenodes.mkcodeimage import MkCodeImage
 from .basenodes._mkdocstrings import MkDocStrings
 from .basenodes.mkclickdoc import MkClickDoc
 from .basenodes.mkimage import MkImage
+from .basenodes.mkimagecompare import MkImageCompare
+from .basenodes.mkimageslideshow import MkImageSlideshow
 from .basenodes.mkbinaryimage import MkBinaryImage
 from .basenodes.mklist import MkList
 from .basenodes.mkdiagram import MkDiagram
@@ -95,6 +97,8 @@ __all__ = [
     "MkCode",
     "MkCodeImage",
     "MkImage",
+    "MkImageCompare",
+    "MkImageSlideshow",
     "MkHeader",
     "MkBinaryImage",
     "MkPage",

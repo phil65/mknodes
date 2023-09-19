@@ -64,7 +64,6 @@ def create_section_for_nodes(
 
 
 def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
-    """Create a MkPage with example code for given klass."""
     # Each example page will begin by displaying the code used to create the page.
     page += mk.MkCode.for_object(kls.create_example_page, extract_body=True)
     # page += mk.MkHeader(kls.__doc__.split("\n")[0])
@@ -85,7 +84,6 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
 
 @nav.route.nav("Base nodes")
 def create_basic_nodes_section(nav: mk.MkNav):
-    """Add a sub-MkNav containing all base node pages to given MkNav."""
     klasses = [
         mk.MkNode,
         mk.MkText,
@@ -94,10 +92,6 @@ def create_basic_nodes_section(nav: mk.MkNav):
         mk.MkLink,
         mk.MkKeys,
         mk.MkProgressBar,
-        mk.MkImage,
-        mk.MkBadge,
-        mk.MkBinaryImage,
-        mk.MkCard,
         mk.MkSpeechBubble,
         mk.MkJinjaTemplate,
     ]
@@ -107,9 +101,24 @@ def create_basic_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
+@nav.route.nav("Image nodes")
+def create_image_nodes_section(nav: mk.MkNav):
+    klasses = [
+        mk.MkImage,
+        mk.MkImageCompare,
+        mk.MkImageSlideshow,
+        mk.MkBadge,
+        mk.MkBinaryImage,
+        mk.MkCard,
+    ]
+    page = nav.add_index_page(hide="toc")
+    page += create_section_for_nodes(nav, klasses)
+    code = mk.MkCode.for_object(create_section_for_nodes)
+    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+
+
 @nav.route.nav("Container nodes")
 def create_container_nodes_section(nav: mk.MkNav):
-    """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
         mk.MkBlockQuote,
         mk.MkAdmonition,
