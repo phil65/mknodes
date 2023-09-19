@@ -12,7 +12,7 @@ from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.navs import mknav
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import downloadhelpers, helpers, log, reprhelpers
+from mknodes.utils import downloadhelpers, helpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -99,6 +99,10 @@ class MkPage(mkcontainer.MkContainer):
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=str(self.path), **self._metadata)
+
+    def get_node_requirements(self):
+        templates = [self.template] if self.template else []
+        return requirements.Requirements(templates=templates)
 
     def is_index(self) -> bool:
         """Returns True if the page is the index page for the parent Nav."""

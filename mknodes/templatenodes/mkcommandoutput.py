@@ -4,7 +4,7 @@ from collections.abc import Sequence
 import os
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -21,7 +21,7 @@ class MkCommandOutput(mknode.MkNode):
 
     ICON = "material/bash"
     STATUS = "new"
-    CSS = "css/terminal.css"
+    CSS = [requirements.CSSFile("css/terminal.css")]
 
     def __init__(self, call: Sequence[str], **kwargs):
         self.call = call

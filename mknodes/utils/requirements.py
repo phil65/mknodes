@@ -26,6 +26,24 @@ class Extension(dict):
         return {self.extension_name: dict(self)}
 
 
+class Plugin(dict):
+    def __init__(self, plugin_name: str, **kwargs):
+        super().__init__(**kwargs)
+        self.plugin_name = plugin_name
+
+    def __str__(self):
+        return self.plugin_name
+
+    def __repr__(self):
+        return f"{type(self).__name__}({self.plugin_name!r})"
+
+    def __hash__(self):
+        return hash(self.plugin_name + str(dict(self)))
+
+    def as_mkdocs_dict(self):
+        return {self.plugin_name: dict(self)}
+
+
 class CSSLink(str):
     __slots__ = ()
 
@@ -88,7 +106,7 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     """A list of required templates."""
     markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
     """A extension_name->settings dictionary containing the required md extensions."""
-    plugins: set[str] = dataclasses.field(default_factory=set)
+    plugins: list[Plugin] = dataclasses.field(default_factory=list)
     """A set of required plugins. (Only for info purposes)"""
     js_files: list = dataclasses.field(default_factory=list)
     """A list of JS file paths."""
@@ -114,13 +132,13 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
             other: The requirements to merge into this one.
             additive: Merge strategy. Either additive or replace.
         """
-        self.css = list(set(self.css + other["css"]))
         self.templates += other["templates"]
         if other_exts := other["markdown_extensions"]:
             exts = [self.markdown_extensions, other_exts]
             merged = mergehelpers.merge_extensions(exts)
             self.markdown_extensions = mergehelpers.merge_dicts(*merged)
-        self.plugins |= other["plugins"]
+        self.css = list(set(self.css + other["css"]))
+        self.plugins = list(set(self.plugins + other["plugins"]))
         self.js_files = list(set(self.js_files + other["js_files"]))
         return self
 

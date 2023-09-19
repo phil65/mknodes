@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from xml.etree import ElementTree
 
 from mknodes.basenodes import mkbinaryimage, mknode
-from mknodes.utils import log, reprhelpers, xmlhelpers
+from mknodes.utils import log, reprhelpers, requirements, xmlhelpers
 
 
 if TYPE_CHECKING:
@@ -68,7 +68,7 @@ class MkCard(mknode.MkNode):
 
     ICON = "material/square-medium"
     STATUS = "new"
-    CSS = "css/grid.css"
+    CSS = [requirements.CSSFile("css/grid.css")]
 
     def __init__(
         self,

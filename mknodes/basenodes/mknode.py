@@ -36,10 +36,10 @@ class MkNode(node.Node):
 
     ICON = "material/puzzle-outline"
     REQUIRED_EXTENSIONS: list[requirements.Extension] = []
-    REQUIRED_PLUGINS: list[str] = []
+    REQUIRED_PLUGINS: list[requirements.Plugin] = []
     STATUS: datatypes.PageStatusStr | None = None
-    CSS = None
-    JS_FILES = None
+    CSS: list[requirements.CSSFile | requirements.CSSLink | requirements.CSSText] = []
+    JS_FILES: list[requirements.JSLink] = []
     children: list[MkNode]
     _context = contexts.ProjectContext()
     _name_registry: dict[str, MkNode] = dict()
@@ -207,32 +207,21 @@ class MkNode(node.Node):
         """
         self._css_classes.add(class_name)
 
-    def get_req(self):
-        from mknodes.pages import mkpage
-
+    def get_node_requirements(self):
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
-        if not isinstance(self.CSS, requirements.CSSLink) and self.CSS:
-            css = requirements.CSSFile(self.CSS)
-        else:
-            css = self.CSS
         return requirements.Requirements(
-            templates=(
-                [self.template]
-                if isinstance(self, mkpage.MkPage) and self.template
-                else []
-            ),
-            js_files=self.JS_FILES or [],
+            js_files=self.JS_FILES,
             markdown_extensions=extension,
-            plugins=set(self.REQUIRED_PLUGINS) or set(),
-            css=[css] if css else [],
+            plugins=self.REQUIRED_PLUGINS,
+            css=self.CSS,
         )
 
     def get_requirements(self, recursive: bool = True) -> requirements.Requirements:
         logger.debug("Collecting requirements from tree...")
         nodes = [*list(self.descendants), self] if recursive else [self]
-        req = requirements.Requirements()
+        req = requirements.Requirements(markdown_extensions={"pymdownx.emoji": {}})
         for _node in nodes:
-            node_req = _node.get_req()
+            node_req = _node.get_node_requirements()
             req.merge(node_req)
         return req
 
@@ -272,6 +261,7 @@ class MkNode(node.Node):
         return cls(*args, **kwargs, project=proj)
 
     def to_html(self) -> str:
+        """Convert node to HTML using the requirements from node + children."""
         import markdown
 
         md = self.to_markdown()

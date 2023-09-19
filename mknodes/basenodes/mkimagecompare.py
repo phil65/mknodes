@@ -30,7 +30,7 @@ class MkImageCompare(mknode.MkNode):
         requirements.Extension("md_in_html"),
     ]
     JS_FILES = [requirements.JSLink(JS_URL, defer=True)]
-    CSS = requirements.CSSLink(CSS_URL)
+    CSS = [requirements.CSSLink(CSS_URL)]
 
     def __init__(
         self,
