@@ -49,16 +49,16 @@ in order to set it for all parsed pages.
 ## Examples
 
 Via decorators:
-```py
+`````py
 @nav.route.page("My page", icon="material/code-json", status="new")
 def _(page: mk.MkPage):
     ...
-```
+`````
 
 Via constructor:
-```py
+`````py
 page = MkPage("My page", icon="material/code-json", status="new")
-```
+`````
 
 ## Metadata fields
 """
