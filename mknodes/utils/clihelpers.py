@@ -85,7 +85,7 @@ def get_typer_info(
         ctx = typer.Context(cmd)
         subcommands = getattr(cmd, "commands", {})
         cmds = {k: get_command_info(v, parent=ctx) for k, v in subcommands.items()}
-        return cmds[command]
+        return cmds.get(command, info)
     return info
 
 
@@ -129,5 +129,5 @@ if __name__ == "__main__":
 
     import mkdocs.__main__
 
-    info = get_typer_info(mkdocs.__main__.cli)
+    info = get_typer_info(mkdocs.__main__.cli, command="mkdocs")
     pprint(info.to_markdown(recursive=True))

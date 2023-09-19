@@ -72,7 +72,7 @@ class MkClickDoc(mknode.MkNode):
         mod = importlib.import_module(attrs["module"])
         instance = getattr(mod, attrs["command"])
         info = clihelpers.get_typer_info(instance, command=attrs["prog_name"])
-        return info.to_markdown()
+        return info.to_markdown(recursive=self.show_subcommands)
 
     @staticmethod
     def create_example_page(page):
@@ -85,5 +85,5 @@ class MkClickDoc(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc.with_default_context("mknodes.cli:cli", prog_name="build")
+    docstrings = MkClickDoc.with_default_context("mknodes.cli:cli", prog_name="mkdocs")
     print(docstrings)
