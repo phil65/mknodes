@@ -7,7 +7,7 @@ from typing import Any, Literal
 from pymdownx import superfences
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import reprhelpers
+from mknodes.utils import reprhelpers, requirements
 
 
 GraphTypeStr = Literal["flow", "sequence", "state"]
@@ -23,7 +23,7 @@ class MkDiagram(mkcode.MkCode):
     """Class representing a mermaid diagram. Can show DAGs."""
 
     ICON = "material/graph-outline"
-    REQUIRED_EXTENSIONS = {"pymdownx.superfences": config}
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.superfences", **config)]
 
     TYPE_MAP = dict(
         flow="graph",

@@ -8,6 +8,21 @@ from mknodes.pages import pagetemplate
 from mknodes.utils import mergehelpers
 
 
+class Extension(dict):
+    def __init__(self, extension_name: str, **kwargs):
+        super().__init__(**kwargs)
+        self.extension_name = extension_name
+
+    def __str__(self):
+        return self.extension_name
+
+    def __hash__(self):
+        return hash(self.extension_name + str(dict(self)))
+
+    def as_mkdocs_dict(self):
+        return {self.extension_name: dict(self)}
+
+
 @dataclasses.dataclass
 class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     css: dict[str, str] = dataclasses.field(default_factory=dict)

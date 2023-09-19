@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -12,7 +12,10 @@ logger = log.get_logger(__name__)
 class MkClickDoc(mknode.MkNode):
     """Documentation for click / typer CLI apps."""
 
-    REQUIRED_EXTENSIONS = ["mkdocs-typer", "attr_list"]
+    REQUIRED_EXTENSIONS = [
+        requirements.Extension("mkdocs-typer"),
+        requirements.Extension("attr_list"),
+    ]
     ICON = "material/api"
 
     def __init__(

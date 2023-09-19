@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 class MkProgressBar(mknode.MkNode):
     """Node to display a CSS-based progress bar."""
 
-    REQUIRED_EXTENSIONS = ["pymdownx.progressbar"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.progressbar")]
     ICON = "fontawesome/solid/bars-progress"
     STATUS = "new"
     CSS = "css/progressbar.css"

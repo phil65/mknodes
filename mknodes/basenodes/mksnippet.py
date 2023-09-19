@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -15,7 +15,7 @@ class MkSnippet(mknode.MkNode):
     [More info](https://facelessuser.github.io/pymdown-extensions/extensions/snippets/)
     """
 
-    REQUIRED_EXTENSIONS = ["pymdownx.snippets"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.snippets")]
     ICON = "material/paperclip"
 
     def __init__(

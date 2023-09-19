@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -13,7 +13,7 @@ logger = log.get_logger(__name__)
 class MkDefinition(mkcontainer.MkContainer):
     """Node for a single definition."""
 
-    REQUIRED_EXTENSIONS = ["def_list"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("def_list")]
     ICON = "material/library"
 
     def __init__(
@@ -61,7 +61,7 @@ class MkDefinition(mkcontainer.MkContainer):
 class MkDefinitionList(mkcontainer.MkContainer):
     """Node for definition lists."""
 
-    REQUIRED_EXTENSIONS = ["def_list"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("def_list")]
     ICON = "material/library"
 
     def __init__(

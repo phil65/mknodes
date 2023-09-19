@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktabs, mktext
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -137,7 +137,10 @@ class MkTabbed(MkTabContainer):
     """PyMdown-based Tab."""
 
     items: list[mktabs.MkTab]
-    REQUIRED_EXTENSIONS = ["pymdownx.tabbed", "pymdownx.superfences"]
+    REQUIRED_EXTENSIONS = [
+        requirements.Extension("pymdownx.tabbed"),
+        requirements.Extension("pymdownx.superfences"),
+    ]
     Tab = mktabs.MkTab
 
     @staticmethod
@@ -156,7 +159,7 @@ class MkTabbedBlocks(MkTabContainer):
     """PyMdown Block Extension Tab."""
 
     items: list[mktabs.MkTabBlock]
-    REQUIRED_EXTENSIONS = ["pymdownx.blocks.tab"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.blocks.tab")]
     Tab = mktabs.MkTabBlock
 
     @staticmethod

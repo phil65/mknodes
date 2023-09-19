@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktext
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -13,7 +13,11 @@ logger = log.get_logger(__name__)
 class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
-    REQUIRED_EXTENSIONS = ["attr_list", "md_in_html", "pymdownx.superfences"]
+    REQUIRED_EXTENSIONS = [
+        requirements.Extension("attr_list"),
+        requirements.Extension("md_in_html"),
+        requirements.Extension("pymdownx.superfences"),
+    ]
 
     def __init__(
         self,
@@ -47,7 +51,11 @@ class MkAnnotations(mkcontainer.MkContainer):
     """Node containing a list of MkAnnotations."""
 
     items: list[MkAnnotation]
-    REQUIRED_EXTENSIONS = ["attr_list", "md_in_html", "pymdownx.superfences"]
+    REQUIRED_EXTENSIONS = [
+        requirements.Extension("attr_list"),
+        requirements.Extension("md_in_html"),
+        requirements.Extension("pymdownx.superfences"),
+    ]
     ICON = "material/alert-box"
 
     def __init__(

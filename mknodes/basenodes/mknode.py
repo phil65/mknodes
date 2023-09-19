@@ -9,9 +9,8 @@ from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
-from mknodes.pages import pagetemplate
 from mknodes.treelib import node
-from mknodes.utils import log, mergehelpers, requirements
+from mknodes.utils import log, requirements
 
 
 if TYPE_CHECKING:
@@ -37,7 +36,7 @@ class MkNode(node.Node):
     # METADATA (should be set by subclasses)
 
     ICON = "material/puzzle-outline"
-    REQUIRED_EXTENSIONS: list[str] | dict[str, dict] = []
+    REQUIRED_EXTENSIONS: list[requirements.Extension] = []
     REQUIRED_PLUGINS: list[str] = []
     STATUS: datatypes.PageStatusStr | None = None
     CSS = None
@@ -209,56 +208,40 @@ class MkNode(node.Node):
         """
         self._css_classes.add(class_name)
 
+    def get_req(self):
+        from mknodes.pages import mkpage
+
+        extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
+        if css := self.CSS:
+            file_path = paths.RESOURCES / css
+            css_text = file_path.read_text()
+        else:
+            css_text = None
+        return requirements.Requirements(
+            templates=(
+                [self.template]
+                if isinstance(self, mkpage.MkPage) and self.template
+                else []
+            ),
+            js_files={f"{hash(self.JS)}.js": self.JS} if self.JS else {},
+            markdown_extensions=extension,
+            plugins=set(self.REQUIRED_PLUGINS) or set(),
+            css=(
+                {f"{type(self).__name__}_{hash(css_text)}.css": css_text}
+                if css_text
+                else {}
+            ),
+        )
+
     def get_requirements(self, recursive: bool = True) -> requirements.Requirements:
-        all_templates: list[pagetemplate.PageTemplate] = []
-        all_js_files: set[str] = set()
-        all_plugins: set[str] = set()
-        all_extensions: list[dict] = [{"pymdownx.emoji": {}}]
-        all_css: set[str] = set()
         logger.debug("Collecting requirements from tree...")
         nodes = [*list(self.descendants), self] if recursive else [self]
-        for des in nodes:
-            if hasattr(des, "template") and isinstance(
-                des.template,
-                pagetemplate.PageTemplate,
-            ):
-                all_templates.append(des.template)
-            extension = (
-                des.REQUIRED_EXTENSIONS
-                if isinstance(des.REQUIRED_EXTENSIONS, dict)
-                else {k: {} for k in des.REQUIRED_EXTENSIONS}
-            )
-            if extension:
-                all_extensions.append(extension)
-            if js := des.JS:
-                if isinstance(js, list):
-                    all_js_files.update(js)
-                else:
-                    all_js_files.add(js)
-            for p in des.REQUIRED_PLUGINS:
-                all_plugins.add(p)
-            if css := des.CSS:
-                file_path = paths.RESOURCES / css
-                text = file_path.read_text()
-                all_css.add(text)
-        logger.debug(
-            "Collected %s templates, %s js files, %s markdown extensions, %s css blocks",
-            len(all_templates),
-            len(all_js_files),
-            len(all_extensions),
-            len(all_css),
-        )
-        logger.debug("Merging Extensions...")
-        all_extensions = mergehelpers.merge_extensions(all_extensions)
-        logger.debug("Resulting extensions: %s", len(all_extensions))
-        logger.debug("Building Requirements object...")
-        return requirements.Requirements(
-            templates=all_templates,
-            js_files={p: (paths.RESOURCES / p).read_text() for p in all_js_files},
-            markdown_extensions=mergehelpers.merge_dicts(*all_extensions),
-            plugins=all_plugins,
-            css={"mknodes_nodes.css": "\n".join(all_css)},
-        )
+        req = requirements.Requirements()
+        for _node in nodes:
+            node_req = _node.get_req()
+            req.merge(node_req)
+        print(req.markdown_extensions)
+        return req
 
     @staticmethod
     def create_example_page(page):

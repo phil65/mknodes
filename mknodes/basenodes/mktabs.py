@@ -5,7 +5,7 @@ import textwrap
 from typing import Any
 
 from mknodes.basenodes import mkblock, mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -15,7 +15,7 @@ class MkTabBlock(mkblock.MkBlock):
     """Node representing a single tab (new block style)."""
 
     ICON = "material/tab"
-    REQUIRED_EXTENSIONS = ["pymdownx.blocks.tab"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.blocks.tab")]
 
     def __init__(
         self,
@@ -75,7 +75,7 @@ class MkTab(mkcontainer.MkContainer):
     """Node representing a single tab."""
 
     ICON = "material/tab"
-    REQUIRED_EXTENSIONS = ["pymdownx.tabbed"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.tabbed")]
 
     def __init__(
         self,

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -14,7 +14,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
 
     ICON = "material/chat"
     CSS = "css/speechbubble.css"
-    REQUIRED_EXTENSIONS = ["md_in_html"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(
         self,

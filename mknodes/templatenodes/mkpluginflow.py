@@ -15,7 +15,7 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.data import eventplugins
-from mknodes.utils import inspecthelpers, log, reprhelpers
+from mknodes.utils import inspecthelpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -26,7 +26,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
     ICON = "material/dev-to"
     STATUS = "new"
-    REQUIRED_EXTENSIONS = ["md_in_html"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(self, plugin: type[plugins.BasePlugin] | None = None, **kwargs: Any):
         """Constructor.

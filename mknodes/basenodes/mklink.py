@@ -5,7 +5,7 @@ import types
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 if TYPE_CHECKING:
@@ -19,7 +19,7 @@ class MkLink(mknode.MkNode):
     """A simple Link (with optional icon and option to show up as a button)."""
 
     ICON = "octicons/link-24"
-    REQUIRED_EXTENSIONS = ["attr_list"]  # for buttons
+    REQUIRED_EXTENSIONS = [requirements.Extension("attr_list")]  # for buttons
 
     def __init__(
         self,

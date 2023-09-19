@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 class MkKeys(mknode.MkNode):
     """Node to display Keyboard shortcuts."""
 
-    REQUIRED_EXTENSIONS = ["pymdownx.keys"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.keys")]
     ICON = "fontawesome/regular/keyboard"
 
     def __init__(

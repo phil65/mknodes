@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -15,7 +15,7 @@ class MkCritic(mkcontainer.MkContainer):
     """MkCritic block."""
 
     ICON = "material/format-text"
-    REQUIRED_EXTENSIONS = ["pymdownx.critic"]
+    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.critic")]
 
     def __init__(
         self,
