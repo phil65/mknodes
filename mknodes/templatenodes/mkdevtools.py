@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mkadmonition, mkcode, mkcontainer, mkheader, mklink, mktext
+from mknodes.basenodes import mkcontainer
 from mknodes.data import tools
 from mknodes.info import folderinfo
 from mknodes.utils import log, reprhelpers
@@ -47,6 +47,8 @@ class MkDevTools(mkcontainer.MkContainer):
 
     @property
     def items(self):
+        import mknodes as mk
+
         items = []
         info = (
             self.associated_project.folderinfo
@@ -55,33 +57,19 @@ class MkDevTools(mkcontainer.MkContainer):
         )
         for tool in self.tools:
             cfg = tool.get_config(info)
-            code = mkcode.MkCode(cfg or "", language=tool.config_syntax)
-            items.extend([mkheader.MkHeader(tool.title), mktext.MkText(tool.description)])
-            if tool.setup_cmd:
-                items.append(mkcode.MkCode(tool.setup_cmd, language="md"))
-            items.extend(
-                [
-                    mkadmonition.MkAdmonition(
-                        code,
-                        collapsible=True,
-                        title="Config",
-                        typ="quote",
-                    ),
-                    mkadmonition.MkAdmonition(
-                        [
-                            f"To install {tool.identifier}:",
-                            mkcode.MkCode(
-                                f"pip install {tool.identifier}",
-                                language="bash",
-                            ),
-                            mklink.MkLink(tool.url, "More information"),
-                        ],
-                        collapsible=True,
-                        title=f"Installing {tool.title}",
-                    ),
-                ],
-            )
-
+            cfg_node = mk.MkCode(cfg or "", language=tool.config_syntax)
+            code = mk.MkCode(f"pip install {tool.identifier}", language="bash")
+            link = mk.MkLink(tool.url, "More information")
+            in_adm = [f"To install {tool.identifier}:", code, link]
+            title = f"Installing {tool.title}"
+            section = [
+                mk.MkHeader(tool.title),
+                mk.MkText(tool.description),
+                mk.MkCode(tool.setup_cmd, language="md") if tool.setup_cmd else None,
+                mk.MkAdmonition(cfg_node, collapsible=True, title="Config", typ="quote"),
+                mk.MkAdmonition(in_adm, collapsible=True, title=title),
+            ]
+            items.extend(i for i in section if i is not None)
         for item in items:
             item.parent = self
         return items
