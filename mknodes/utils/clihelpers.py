@@ -33,7 +33,7 @@ class Param:
 
     def to_markdown(self):
         opt_str = ", ".join(f"`{i}`" for i in reversed(self.opts))
-        lines = [f"###{opt_str}"]
+        lines = [f"### {opt_str}"]
         if self.required:
             lines.append("**REQUIRED**")
         if self.envvar:
@@ -64,7 +64,8 @@ class CommandInfo:
         return self.subcommands[name]
 
     def to_markdown(self, recursive: bool = False):
-        text = self.description + "\n\n" + str(mkcode.MkCode(self.usage))
+        header = f"## {self.name}\n\n"
+        text = header + self.description + "\n\n" + str(mkcode.MkCode(self.usage))
         params = [i.to_markdown() for i in self.params]
         cmd_text = text + "\n\n\n" + "\n\n\n".join(params)
         if not recursive:

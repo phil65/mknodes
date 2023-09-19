@@ -32,7 +32,7 @@ class MkDefaultWebsite(mknodes.MkNav):
                 and "click" in proj.folderinfo.info.required_package_names
             ):
                 page = self.add_page("CLI", hide="nav")
-                page += mknodes.MkClickDoc()
+                page += mknodes.MkClickDoc(show_subcommands=True)
 
         nav = self.add_nav("Development")
 
