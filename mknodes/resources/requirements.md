@@ -16,13 +16,7 @@ Plugins used by the tree nodes:
 
 CSS used by the tree nodes:
 
-{% for filename, content in requirements.css.items() %}
-
-{{ filename | MkHeader(level=4)}}
-
-{{ content | MkCode(language="css") }}
-
-{% endfor %}
+{{ requirements.css | MkPrettyPrint }}
 
 ### Markdown extensions
 

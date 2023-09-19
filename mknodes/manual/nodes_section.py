@@ -2,8 +2,6 @@ import os
 
 import mknodes as mk
 
-from mknodes import paths
-
 
 DOC_TEXT = """Now lets create the documentation.
 This code will show how to build a simple documentation section.
@@ -74,11 +72,11 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     if kls.STATUS:  # some classes are marked as "new"
         page.status = kls.STATUS  # we use that info to display an icon in the menu.
     kls.create_example_page(page)
-    if kls.CSS:
-        path = paths.RESOURCES / kls.CSS
-        text = path.read_text()
-        css_code = mk.MkCode(text, language="css")
-        page += mk.MkDetailsBlock(css_code, title="Required CSS")
+    # if kls.CSS:
+    #     path = paths.RESOURCES / kls.CSS
+    #     text = path.read_text()
+    #     css_code = mk.MkCode(text, language="css")
+    #     page += mk.MkDetailsBlock(css_code, title="Required CSS")
     code = mk.MkCode.for_object(create_class_page, extract_body=True)
     header = "Code for the subsections"
     admonition = mk.MkDetailsBlock(code, typ="quote", title=code.title, header=header)

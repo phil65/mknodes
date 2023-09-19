@@ -6,11 +6,12 @@ import pathlib
 
 import markdown
 
+from mkdocs.config import config_options
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_
 
-from mknodes import mkdocsconfig
+from mknodes import mkdocsconfig, paths
 from mknodes.pages import pagetemplate
 from mknodes.plugin import buildbackend, mkdocsbuilder, mkdocshelpers
 from mknodes.utils import mergehelpers, pathhelpers, requirements
@@ -62,10 +63,29 @@ class MkDocsBackend(buildbackend.BuildBackend):
         self.write_files(files)
         logger.info("Finished writing pages to disk")
         logger.info("Adding requirements to Config and build...")
-        for k, v in reqs.css.items():
-            self.add_css_file(k, v)
-        for k, v in reqs.js_files.items():
-            self.add_js_file(k, v)
+        for css in reqs.css:
+            if isinstance(css, requirements.CSSFile):
+                file_path = paths.RESOURCES / css
+                css_text = file_path.read_text()
+                path = f"{hash(css_text)}.css"
+                self.add_css_file(path, css_text)
+            elif isinstance(css, requirements.CSSText):
+                self.add_css_file(css.filename, css.content)
+            else:
+                logger.debug("Adding remote CSS file %s", css)
+                self._config.extra_css.append(str(css))
+        for file in reqs.js_files:
+            if isinstance(file, requirements.JSLink):
+                logger.debug("Adding remote JS file %s", str(file))
+                val = config_options.ExtraScriptValue(str(file))
+                val.async_ = file.async_
+                val.defer = file.defer
+                val.type = file.typ
+                self._config.extra_javascript.append(val)
+            else:
+                file_path = paths.RESOURCES / file.path
+                js_text = file_path.read_text()
+                self.add_js_file(file.path, js_text)
         if extensions := reqs.markdown_extensions:
             self.register_extensions(extensions)
         for template in reqs.templates:
@@ -151,7 +171,7 @@ class MkDocsBackend(buildbackend.BuildBackend):
 if __name__ == "__main__":
     backend = MkDocsBackend()
 
-    from mknodes import paths, project
+    from mknodes import project
     from mknodes.theme import theme as theme_
 
     skin = theme_.Theme("material")

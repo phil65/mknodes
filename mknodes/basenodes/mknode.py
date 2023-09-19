@@ -5,7 +5,6 @@ import time
 
 from typing import TYPE_CHECKING
 
-from mknodes import paths
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
@@ -40,7 +39,7 @@ class MkNode(node.Node):
     REQUIRED_PLUGINS: list[str] = []
     STATUS: datatypes.PageStatusStr | None = None
     CSS = None
-    JS = None
+    JS_FILES = None
     children: list[MkNode]
     _context = contexts.ProjectContext()
     _name_registry: dict[str, MkNode] = dict()
@@ -212,25 +211,20 @@ class MkNode(node.Node):
         from mknodes.pages import mkpage
 
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
-        if css := self.CSS:
-            file_path = paths.RESOURCES / css
-            css_text = file_path.read_text()
+        if not isinstance(self.CSS, requirements.CSSLink) and self.CSS:
+            css = requirements.CSSFile(self.CSS)
         else:
-            css_text = None
+            css = self.CSS
         return requirements.Requirements(
             templates=(
                 [self.template]
                 if isinstance(self, mkpage.MkPage) and self.template
                 else []
             ),
-            js_files={f"{hash(self.JS)}.js": self.JS} if self.JS else {},
+            js_files=self.JS_FILES or [],
             markdown_extensions=extension,
             plugins=set(self.REQUIRED_PLUGINS) or set(),
-            css=(
-                {f"{type(self).__name__}_{hash(css_text)}.css": css_text}
-                if css_text
-                else {}
-            ),
+            css=[css] if css else [],
         )
 
     def get_requirements(self, recursive: bool = True) -> requirements.Requirements:

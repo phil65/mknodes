@@ -16,6 +16,9 @@ class Extension(dict):
     def __str__(self):
         return self.extension_name
 
+    def __repr__(self):
+        return f"{type(self).__name__}({self.extension_name!r})"
+
     def __hash__(self):
         return hash(self.extension_name + str(dict(self)))
 
@@ -26,25 +29,60 @@ class Extension(dict):
 class CSSLink(str):
     __slots__ = ()
 
+    def __repr__(self):
+        return f"{type(self).__name__}('{self}')"
 
-class JSLink(str):
-    __slots__ = ()
 
+@dataclasses.dataclass(frozen=True)
+class JSLink:
+    link: str
+    defer: bool = False
+    async_: bool = False
+    typ: str = ""
 
-class CSSFile:
-    def __init__(self, path):
-        self.path = path
+    def __str__(self):
+        return self.link
 
     def __fspath__(self):
-        return self.path
+        return self.link
+
+    def to_html(self) -> str:
+        html = f'<script src="{self.link}"'
+        if self.typ:
+            html += f' type="{self.typ}"'
+        if self.defer:
+            html += " defer"
+        if self.async_:
+            html += " async"
+        html += "></script>"
+        return html
+
+
+class CSSFile(str):
+    __slots__ = ()
+
+    def __fspath__(self):
+        return str(self)
+
+    def __repr__(self):
+        return f"{type(self).__name__}('{self}')"
+
+
+class CSSText:
+    def __init__(self, filename, content):
+        self.filename = filename
+        self.content = content
 
     def __hash__(self):
-        return hash(self.path)
+        return hash(self.content)
+
+    def __repr__(self):
+        return f"{type(self).__name__}({self.filename!r})"
 
 
 @dataclasses.dataclass
 class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
-    css: dict[str, str] = dataclasses.field(default_factory=dict)
+    css: list = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
     """A list of required templates."""
@@ -52,8 +90,8 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: set[str] = dataclasses.field(default_factory=set)
     """A set of required plugins. (Only for info purposes)"""
-    js_files: dict[str, str] = dataclasses.field(default_factory=dict)
-    """A filepath->filecontent dictionary containing the required JS files."""
+    js_files: list = dataclasses.field(default_factory=list)
+    """A list of JS file paths."""
 
     def __getitem__(self, value):
         return getattr(self, value)
@@ -76,18 +114,21 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
             other: The requirements to merge into this one.
             additive: Merge strategy. Either additive or replace.
         """
-        self.css |= other["css"]
+        self.css = list(set(self.css + other["css"]))
         self.templates += other["templates"]
         if other_exts := other["markdown_extensions"]:
             exts = [self.markdown_extensions, other_exts]
             merged = mergehelpers.merge_extensions(exts)
             self.markdown_extensions = mergehelpers.merge_dicts(*merged)
         self.plugins |= other["plugins"]
-        self.js_files |= other["js_files"]
+        self.js_files = list(set(self.js_files + other["js_files"]))
         return self
 
 
 if __name__ == "__main__":
-    req = Requirements(css={"a.css": "CSS"})
-    req.merge(dict(css={"b.css": "CSS"}))
+    link = CSSLink("test")
+    print(repr(link))
+    req = Requirements(css=[CSSText("a.css", "CSS")])
+    req2 = Requirements(css=[CSSText("b.css", "CSS2")])
+    req.merge(req2)
     print(req)
