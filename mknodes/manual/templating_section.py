@@ -36,7 +36,7 @@ def create_templating_section(root_nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += mk.MkJinjaTemplate("template_index.jinja")
     page += mk.MkDetailsBlock(ADDITIONAL_INFO_TEXT, expand=True)
-    page += "### These are the availabe namespaces:"
+    page += "### These are the available namespaces:"
     page += mk.MkDefinitionList(NAMESPACES)
     code = mk.MkCode.for_object(create_templating_section)
     page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True, typ="quote")

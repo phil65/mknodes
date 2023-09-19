@@ -23,10 +23,7 @@ def create_development_section(root_nav: mk.MkNav):
     root_nav += nav
     page = nav.add_index_page(hide="toc")
     page += INTRO_TEXT
-    page += mk.MkCode.for_object(
-        create_development_section,
-        header=SECTION_CODE,
-    )
+    page += mk.MkCode.for_object(create_development_section, header=SECTION_CODE)
 
 
 @nav.route.page("Module overview", show_source=True, icon="file-tree-outline")

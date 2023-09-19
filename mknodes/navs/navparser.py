@@ -261,6 +261,7 @@ class NavParser:
                     Can be used to hide the TOC for all pages for example.
         """
         folder = pathlib.Path(folder)
+        nav = self._nav
         for path in folder.iterdir():
             if (
                 recursive
@@ -271,26 +272,19 @@ class NavParser:
                 path = folder / path.parts[-1]
                 subnav = mknav.MkNav(path.name)
                 subnav.parse.folder(folder=path, **kwargs)
-                self._nav += subnav
+                nav += subnav
                 logger.debug("Loaded subnav from from %s", path)
             elif path.name == "index.md":
                 logger.debug("Loaded index page from %s", path)
-                self._nav.index_page = mkpage.MkPage(
-                    path=path.name,
-                    content=path.read_text(encoding="utf-8"),
-                    parent=self._nav,
-                    **kwargs,
-                )
-                self._nav.index_title = self._nav.section or "Home"
+                text = path.read_text(encoding="utf-8")
+                nav.index_page = mkpage.MkPage(path=path.name, content=text, **kwargs)
+                nav.index_title = nav.section or "Home"
             elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
-                self._nav += mkpage.MkPage(
-                    path=path.relative_to(folder),
-                    content=path.read_text(encoding="utf-8"),
-                    parent=self._nav,
-                    **kwargs,
-                )
+                text = path.read_text(encoding="utf-8")
+                rel_path = path.relative_to(folder)
+                nav += mkpage.MkPage(path=rel_path, content=text, **kwargs)
                 logger.debug("Loaded page from from %s", path)
-        return self._nav
+        return nav
 
     def module(
         self,
@@ -323,12 +317,7 @@ class NavParser:
                 self._nav += subnav
                 logger.debug("Loaded subnav from from %s", path)
             elif path.suffix in [".py"]:
-                page = mkpage.MkPage(
-                    path=path.name,
-                    title=path.name,
-                    parent=self._nav,
-                    **kwargs,
-                )
+                page = mkpage.MkPage(path=path.name, title=path.name, **kwargs)
                 content = path.read_text(encoding="utf-8")
                 page += mkcode.MkCode(content, language="py", linenums=1)
                 self._nav += page
