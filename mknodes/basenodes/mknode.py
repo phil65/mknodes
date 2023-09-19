@@ -240,7 +240,6 @@ class MkNode(node.Node):
         for _node in nodes:
             node_req = _node.get_req()
             req.merge(node_req)
-        print(req.markdown_extensions)
         return req
 
     @staticmethod

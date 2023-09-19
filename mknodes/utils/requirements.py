@@ -23,6 +23,25 @@ class Extension(dict):
         return {self.extension_name: dict(self)}
 
 
+class CSSLink(str):
+    __slots__ = ()
+
+
+class JSLink(str):
+    __slots__ = ()
+
+
+class CSSFile:
+    def __init__(self, path):
+        self.path = path
+
+    def __fspath__(self):
+        return self.path
+
+    def __hash__(self):
+        return hash(self.path)
+
+
 @dataclasses.dataclass
 class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     css: dict[str, str] = dataclasses.field(default_factory=dict)
