@@ -108,7 +108,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             extra_files |= node.files
             match node:
                 case mkpage.MkPage():
-                    if node.created_by:
+                    if self.config.show_code_admonition and node.created_by:
                         code = mk.MkCode.for_object(node.created_by)
                         title = (
                             "Code for this section"
