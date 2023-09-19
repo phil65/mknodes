@@ -99,7 +99,7 @@ class PreCommit(Tool):
 
     def get_config(self, folder):
         path = pathhelpers.find_file_in_folder_or_parent(self.cfg_file, folder.path)
-        return path.read_text() if path else None
+        return path.read_text(encoding="utf-8") if path else None
 
 
 class Ruff(Tool):
@@ -163,7 +163,7 @@ class Coverage(Tool):
     def get_config(self, folder):
         text = folder.pyproject.get_section_text("tool", "coverage")
         if (path := (folder.path / ".coveragerc")).exists():
-            return f"{text}\n{path.read_text()}"
+            return f"{text}\n{path.read_text(encoding='utf-8')}"
         return text
 
 
@@ -179,7 +179,7 @@ class MkDocs(Tool):
         return bool(folder.mkdocs_config)
 
     def get_config(self, folder):
-        return yamlhelpers.dump_yaml(folder.mkdocs_config)
+        return folder.mkdocs_config.serialize("yaml")
 
 
 class MkDocsMaterial(Tool):
