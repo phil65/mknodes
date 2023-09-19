@@ -15,8 +15,6 @@ def get_material_icon_svg(icon: str):
     """
     from xml.etree import ElementTree
 
-    if "/" not in icon:
-        icon = f"material/{icon}"
     path = pathhelpers.get_material_icon_path(icon)
     ElementTree.register_namespace("", "http://www.w3.org/2000/svg")
     svg_text = path.read_text()
