@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import clihelpers, log, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
@@ -12,19 +12,13 @@ logger = log.get_logger(__name__)
 class MkClickDoc(mknode.MkNode):
     """Documentation for click / typer CLI apps."""
 
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("mkdocs-typer"),
-        requirements.Extension("attr_list"),
-    ]
+    REQUIRED_EXTENSIONS = [requirements.Extension("attr_list")]
     ICON = "material/api"
 
     def __init__(
         self,
         target: str | None = None,
         prog_name: str | None = None,
-        depth: int | None = None,
-        style: Literal["plain", "table"] | None = None,
-        remove_ascii_art: bool = False,
         show_hidden: bool = False,
         show_subcommands: bool = False,
         **kwargs: Any,
@@ -34,10 +28,6 @@ class MkClickDoc(mknode.MkNode):
         Arguments:
             target: Dotted path to Click command
             prog_name: Program name
-            depth: Offset to add when generating headers.
-            style: Style for the options section.
-            remove_ascii_art: When docstrings begin with the escape character \b, all
-                              text will be ignored until next blank line is encountered.
             show_hidden: Show commands and options that are marked as hidden.
             show_subcommands: List subcommands of a given command.
             kwargs: Keyword arguments passed to parent
@@ -45,9 +35,6 @@ class MkClickDoc(mknode.MkNode):
         super().__init__(**kwargs)
         self._target = target
         self._prog_name = prog_name
-        self._depth = depth
-        self.style = style
-        self.remove_ascii_art = remove_ascii_art
         self.show_hidden = show_hidden
         self.show_subcommands = show_subcommands
 
@@ -55,7 +42,7 @@ class MkClickDoc(mknode.MkNode):
         return reprhelpers.get_repr(self, target=self._target)
 
     @property
-    def attributes(self) -> dict[str, str | None]:
+    def attributes(self) -> dict[str, Any]:
         # sourcery skip: use-named-expression
         dct: dict[str, Any] = {}
         match self._target:
@@ -70,25 +57,22 @@ class MkClickDoc(mknode.MkNode):
                     dct = dict(module=module, command=command, prog_name=eps[0].name)
         if not dct:
             return {}
-        dct.update(
-            depth=self._depth,
-            style=self.style,
-            remove_ascii_art=self.remove_ascii_art,
-            show_hidden=self.show_hidden,
-            show_subcommands=self.show_subcommands,
-        )
+        dct.update(show_hidden=self.show_hidden, show_subcommands=self.show_subcommands)
         return dct
 
     def _to_markdown(self) -> str:
+        import importlib
+
         if not self.attributes:
             return ""
         app = self.ctx.metadata.cli
         if not app:
             return ""
-        md = f"::: mkdocs-{app}"
-        option_lines = [f"    :{k}: {v}" for k, v in self.attributes.items() if v]
-        option_text = "\n".join(option_lines)
-        return f"{md}\n{option_text}\n\n"
+        attrs = self.attributes
+        mod = importlib.import_module(attrs["module"])
+        instance = getattr(mod, attrs["command"])
+        info = clihelpers.get_typer_info(instance, command=attrs["prog_name"])
+        return info.to_markdown()
 
     @staticmethod
     def create_example_page(page):
@@ -101,5 +85,5 @@ class MkClickDoc(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc.with_default_context("mknodes.cli:cli", prog_name="sth")
+    docstrings = MkClickDoc.with_default_context("mknodes.cli:cli", prog_name="build")
     print(docstrings)

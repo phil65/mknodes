@@ -2,41 +2,97 @@ from __future__ import annotations
 
 import dataclasses
 
+from typing import Any
+
 import click
 import typer
 
 from typer.main import get_command
 
+from mknodes.basenodes import mkcode
+
+
+@dataclasses.dataclass
+class Param:
+    count: bool = False
+    default: Any = None
+    envvar: str | None = None
+    flag_value: bool = False
+    help: str | None = None  # noqa: A003
+    hidden: bool = False
+    is_flag: bool = False
+    multiple: bool = False
+    name: str = ""
+    nargs: int = 1
+    opts: list[str] = dataclasses.field(default_factory=list)
+    param_type_name: str = "option"
+    prompt: Any = None
+    required: bool = False
+    secondary_opts: list[str] = dataclasses.field(default_factory=list)
+    type: dict[str, str] = dataclasses.field(default_factory=dict)  # noqa: A003
+
+    def to_markdown(self):
+        opt_str = ", ".join(f"`{i}`" for i in reversed(self.opts))
+        lines = [f"###{opt_str}"]
+        if self.required:
+            lines.append("**REQUIRED**")
+        if self.envvar:
+            lines.append(f"**Environment variable:** {self.envvar}")
+        if self.multiple:
+            lines.append("**Multiple values allowed.**")
+        if self.default:
+            lines.append(f"**Default:** {self.default}")
+        if self.is_flag:
+            lines.append(f"**Flag:** {self.flag_value}")
+        if self.help:
+            lines.append(self.help)
+        return "\n\n".join(lines)
+
 
 @dataclasses.dataclass
 class CommandInfo:
-    title: str
+    name: str
     description: str
     usage: str
-    options: str
     subcommands: dict[str, CommandInfo] = dataclasses.field(default_factory=dict)
+    deprecated: bool = False
+    epilog: str | None = None
+    hidden: bool = False
+    params: list[Param] = dataclasses.field(default_factory=list)
 
     def __getitem__(self, name):
         return self.subcommands[name]
 
+    def to_markdown(self):
+        text = self.description + "\n\n" + str(mkcode.MkCode(self.usage))
+        params = [i.to_markdown() for i in self.params]
+        return text + "\n\n\n" + "\n\n\n".join(params)
 
-def get_typer_info(typer_instance: typer.Typer) -> CommandInfo:
-    cmd = get_command(typer_instance)
-    return get_command_info(cmd)
+
+def get_typer_info(instance: typer.Typer, command: str | None = None) -> CommandInfo:
+    cmd = get_command(instance) if isinstance(instance, typer.Typer) else instance
+    info = get_command_info(cmd)
+    if command:
+        ctx = typer.Context(cmd)
+        subcommands = getattr(cmd, "commands", {})
+        cmds = {k: get_command_info(v, parent=ctx) for k, v in subcommands.items()}
+        return cmds[command]
+    return info
 
 
 def get_command_info(command: click.Command, parent=None) -> CommandInfo:
     ctx = typer.Context(command, parent=parent)
     subcommands = getattr(command, "commands", {})
-    formatter = ctx.make_formatter()
-    click.Command.format_options(ctx.command, ctx, formatter)
+    dct = ctx.command.to_info_dict(ctx)
     return CommandInfo(
-        title=ctx.command.name or "",
+        name=ctx.command.name or "",
         description=ctx.command.help or ctx.command.short_help or "",
         usage=_make_usage(ctx),
-        options=formatter.getvalue(),
-        # ctx.command_path
+        params=[Param(**i) for i in dct["params"]],
         subcommands={k: get_command_info(v, parent=ctx) for k, v in subcommands.items()},
+        deprecated=dct["deprecated"],
+        epilog=dct["epilog"],
+        hidden=dct["hidden"],
     )
 
 
@@ -51,10 +107,7 @@ def _make_usage(ctx: click.Context) -> str:
     full_path = []
     current: click.Context | None = ctx
     while current is not None:
-        name = current.command.name
-        if name is None:
-            msg = f"command {current.command} has no `name`"
-            raise RuntimeError(msg)
+        name = current.command.name.lower()
         full_path.append(name)
         current = current.parent
 
@@ -67,5 +120,5 @@ if __name__ == "__main__":
 
     from mknodes import cli
 
-    info = get_typer_info(cli.cli)
-    pprint(info)
+    info = get_typer_info(cli.cli, "build")
+    pprint(info.to_markdown())

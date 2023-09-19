@@ -27,7 +27,6 @@ dependencies = [
     # Docs
     "pymdown-extensions",
     "markdown-exec[ansi]",
-    "mkdocs-typer",
     "mkdocs-click",
     "pygments",
     "pydeps",
