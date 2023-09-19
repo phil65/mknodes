@@ -142,7 +142,7 @@ class Project(Generic[T]):
         self._root = nav
         nav.associated_project = self
 
-    def get_root(self, **kwargs) -> mknav.MkNav:
+    def get_root(self, **kwargs: Any) -> mknav.MkNav:
         """Return the root MkNav.
 
         This MkNav should get populated in order to build

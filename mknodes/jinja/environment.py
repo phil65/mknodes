@@ -7,7 +7,7 @@ import functools
 import os
 import pathlib
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import jinja2
 
@@ -20,6 +20,10 @@ from mknodes.utils import (
     mergehelpers,
     yamlhelpers,
 )
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -63,7 +67,7 @@ class Environment(jinja2.Environment):
         self.filters.update(ENVIRONMENT_FILTERS)
         self.globals.update(ENVIRONMENT_GLOBALS)
 
-    def set_mknodes_filters(self, parent=None):
+    def set_mknodes_filters(self, parent: mk.MkNode | None = None):
         """Set our MkNode filters.
 
         The filters are a partial with the parent already set, if parent is given.
@@ -161,7 +165,7 @@ class Environment(jinja2.Environment):
         return template.render(**variables)
 
     @contextlib.contextmanager
-    def with_globals(self, **kwargs):
+    def with_globals(self, **kwargs: Any):
         """Context manager to temporarily set globals for the environment.
 
         Arguments:

@@ -6,12 +6,20 @@ import os
 import sys
 import types
 
+from typing import TYPE_CHECKING
+
 from mknodes import paths
 from mknodes.info import packageregistry
 from mknodes.utils import helpers, inventorymanager, log
 
 
 logger = log.get_logger(__name__)
+
+
+if TYPE_CHECKING:
+    import mknodes
+
+    LinkableType = str | mknodes.MkPage | mknodes.MkNav | types.ModuleType | type
 
 
 def homepage_for_distro(dist_name: str) -> str | None:
@@ -145,7 +153,7 @@ class LinkProvider:
             return linked(url, qual_name)
         return linked(qual_name)
 
-    def url_for_nav(self, nav) -> str:
+    def url_for_nav(self, nav: mknodes.MkNav) -> str:
         """Return the final URL for given MkNav.
 
         Arguments:
@@ -158,7 +166,7 @@ class LinkProvider:
             path = nav.resolved_file_path
         return self.base_url + path
 
-    def url_for_page(self, page) -> str:
+    def url_for_page(self, page: mknodes.MkPage) -> str:
         """Return the final URL for given MkPage.
 
         Arguments:
@@ -171,7 +179,7 @@ class LinkProvider:
             path = path.replace(".md", ".html")
         return self.base_url + path
 
-    def get_link(self, target, title: str | None = None):
+    def get_link(self, target: LinkableType, title: str | None = None):
         """Return a markdown link for given target.
 
         Target can be a class, a module, a MkPage, MkNav or a string.
@@ -183,7 +191,7 @@ class LinkProvider:
         url = self.get_url(target)
         return linked(url, title)
 
-    def get_url(self, target) -> str:  # type: ignore[return]  # noqa: PLR0911
+    def get_url(self, target: LinkableType) -> str:  # type: ignore  # noqa: PLR0911
         """Get a url for given target.
 
         Target can be a class, a module, a MkPage, MkNav or a string.

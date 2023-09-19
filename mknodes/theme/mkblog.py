@@ -3,6 +3,8 @@ from __future__ import annotations
 import dataclasses
 import datetime
 
+from typing import Any
+
 from mknodes.basenodes import mktext
 from mknodes.info import yamlfile
 from mknodes.navs import mknav
@@ -57,7 +59,7 @@ class BlogMetadata(metadata.Metadata):
 class MkBlog(mknav.MkNav):
     """Class representing the blog provided by the MkDocs-Material blog plugin."""
 
-    def __init__(self, section: str | None = "Blog", **kwargs):
+    def __init__(self, section: str | None = "Blog", **kwargs: Any):
         super().__init__(section=section, **kwargs)
         self.authors: dict[str, Author] = {}
 
@@ -100,7 +102,7 @@ class MkBlog(mknav.MkNav):
         categories: list[str] | str | None = None,
         authors: list[str] | str | None = None,
         draft: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Add a post to the blog.
 
@@ -139,7 +141,7 @@ class MkBlogPost(mkpage.MkPage):
         draft: bool = True,
         categories: list[str] | str | None = None,
         authors: list[str] | str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
