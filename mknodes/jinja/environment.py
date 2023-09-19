@@ -2,24 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import contextlib
-import datetime
-import functools
 import os
-import pathlib
 
 from typing import TYPE_CHECKING, Any
 
 import jinja2
 
-from mknodes import paths
-from mknodes.utils import (
-    helpers,
-    inspecthelpers,
-    jinjahelpers,
-    log,
-    mergehelpers,
-    yamlhelpers,
-)
+from mknodes.utils import jinjahelpers, log, mergehelpers
 
 
 if TYPE_CHECKING:
@@ -27,33 +16,6 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
-
-
-@functools.cache
-def load_file(path: str | os.PathLike) -> str:
-    return pathlib.Path(path).read_text(encoding="utf-8")
-
-
-ENVIRONMENT_GLOBALS = {
-    "log": log.log_stream.getvalue,
-    "now": datetime.datetime.now,
-    "str": str,
-    "inspecthelpers": inspecthelpers,
-    "resources_dir": paths.RESOURCES,
-}
-ENVIRONMENT_FILTERS = {
-    "dump_yaml": yamlhelpers.dump_yaml,
-    "styled": helpers.styled,
-    "rstrip": str.rstrip,
-    "lstrip": str.lstrip,
-    "removesuffix": str.removesuffix,
-    "removeprefix": str.removeprefix,
-    "issubclass": issubclass,
-    "isinstance": isinstance,
-    "hasattr": hasattr,
-    "load_file": load_file,
-    "path_join": os.path.join,
-}
 
 
 class Environment(jinja2.Environment):
@@ -64,8 +26,8 @@ class Environment(jinja2.Environment):
         behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
         self.extra_files: set[str] = set()
         super().__init__(undefined=behavior, loader=loader)
-        self.filters.update(ENVIRONMENT_FILTERS)
-        self.globals.update(ENVIRONMENT_GLOBALS)
+        self.filters.update(jinjahelpers.ENVIRONMENT_FILTERS)
+        self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
 
     def set_mknodes_filters(self, parent: mk.MkNode | None = None):
         """Set our MkNode filters.
@@ -125,7 +87,7 @@ class Environment(jinja2.Environment):
         if file in self.extra_files:
             return
         self.extra_files.add(file)
-        content = load_file(file)
+        content = jinjahelpers.load_file(file)
         new_loader = jinja2.DictLoader({file: content})
         match self.loader:
             case jinja2.ChoiceLoader():
@@ -144,7 +106,7 @@ class Environment(jinja2.Environment):
             file: Template file to load
             variables: Extra variables for the environment
         """
-        content = load_file(str(file))
+        content = jinjahelpers.load_file(str(file))
         return self.render_string(content, variables)
 
     def render_template(
