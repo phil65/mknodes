@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from mknodes.utils import log
 
 
@@ -20,7 +22,12 @@ STRATEGIES = {
 }
 
 
-def merge_dicts(dct, *dicts, strategy: str = "additive", deepcopy: bool = False):
+def merge_dicts(
+    dct: Mapping,
+    *dicts: Mapping,
+    strategy: str = "additive",
+    deepcopy: bool = False,
+):
     import copy
 
     import deepmerge
@@ -35,7 +42,7 @@ def merge_dicts(dct, *dicts, strategy: str = "additive", deepcopy: bool = False)
     return dct
 
 
-def merge_extensions(dicts):
+def merge_extensions(dicts: list[dict[str, dict]]) -> list[dict[str, dict]]:
     seen = set()
     result = []
     for dct in dicts:
