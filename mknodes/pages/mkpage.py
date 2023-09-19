@@ -100,6 +100,9 @@ class MkPage(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(self, path=str(self.path), **self._metadata)
 
+    def is_index(self) -> bool:
+        return self.parent.index_page is self if self.parent else False
+
     @property
     def metadata(self) -> metadata.Metadata:
         meta = metadata.Metadata()
