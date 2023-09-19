@@ -20,7 +20,6 @@ the MkClassDiagram Node.
 MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 
 SECTION_CODE = "Code for this section"
-PAGE_CODE = "Code for this page"
 
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code

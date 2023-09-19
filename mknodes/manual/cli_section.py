@@ -22,9 +22,6 @@ creates a Config file based on the metadata and extension requirements provided
 by the combination of Callable and repository.
 """
 
-SECTION_CODE = "Code for this section"
-PAGE_CODE = "Code for this page"
-
 # this is the nav we will populate via decorators.
 nav = mk.MkNav("CLI")
 
@@ -43,8 +40,7 @@ def create_cli_section(root_nav: mk.MkNav):
     page += INTRO_TEXT
     page += mk.MkAdmonition(INFO_BOX)
     page += EXPLANATION_TEXT
-    code = mk.MkCode.for_object(create_cli_section)
-    page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True, typ="quote")
+    page.created_by = create_cli_section
 
 
 @nav.route.page("build", icon="wrench")

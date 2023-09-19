@@ -5,9 +5,6 @@ INTRO_TEXT = """MkNodes also contains some higher-order nodes to quickly put tog
 a Development section.
 """
 
-SECTION_CODE = "Code for this section"
-PAGE_CODE = "Code for this page"
-
 # this is the nav we will populate via decorators.
 nav = mk.MkNav("Development")
 
@@ -23,7 +20,7 @@ def create_development_section(root_nav: mk.MkNav):
     root_nav += nav
     page = nav.add_index_page(hide="toc")
     page += INTRO_TEXT
-    page += mk.MkCode.for_object(create_development_section, header=SECTION_CODE)
+    page.created_by = create_development_section
 
 
 @nav.route.page("Module overview", icon="file-tree-outline")

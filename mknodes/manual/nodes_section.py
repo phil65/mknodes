@@ -18,9 +18,8 @@ the MkClassDiagram Node.
 
 MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 
-SECTION_CODE = "Code for this section"
-PAGE_CODE = "Code for this page"
 NODE_PAGE_TEXT = "Code for each MkNode page"
+
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
@@ -44,8 +43,7 @@ def create_nodes_section(root_nav: mk.MkNav):
     page += INTRO_TEXT
     page += mk.MkHeader("All the nodes")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR", max_depth=3)
-    code = mk.MkCode.for_object(create_nodes_section)
-    page += mk.MkDetailsBlock(code, title=SECTION_CODE, typ="quote")
+    page.created_by = create_nodes_section
 
 
 def create_section_for_nodes(

@@ -10,9 +10,6 @@ because at that stage of the build process, our nodes already became text and we
 the nodes for context (mainly to attach a parent to the MkNodes used as macros / filters)
 """
 
-SECTION_CODE = "Code for this section"
-PAGE_CODE = "Code for this page"
-
 NAMESPACES = {
     "`metadata`": "Package information",
     "`git`": "Local repository information",
@@ -38,8 +35,7 @@ def create_templating_section(root_nav: mk.MkNav):
     page += mk.MkDetailsBlock(ADDITIONAL_INFO_TEXT, expand=True)
     page += "### These are the available namespaces:"
     page += mk.MkDefinitionList(NAMESPACES)
-    code = mk.MkCode.for_object(create_templating_section)
-    page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True, typ="quote")
+    page.created_by = create_templating_section
 
 
 @nav.route.nav("Jinja Namespace")

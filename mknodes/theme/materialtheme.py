@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
+import functools
 import pathlib
 
 from typing import Literal
@@ -110,12 +111,12 @@ class MaterialTheme(theme.Theme):
         self._foreground_color = None
         self.blog = mkblog.MkBlog()
         self.features = self.data.get("features")
-        self.palettes = self.load_palettes()
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
 
-    def load_palettes(self):
+    @functools.cached_property
+    def palettes(self) -> list[palette.Palette]:
         data = self.data.get("palette")
         if not data:
             return [palette.Palette()]

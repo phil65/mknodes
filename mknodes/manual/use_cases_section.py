@@ -34,10 +34,6 @@ websites. This section will highlight some of them.
 """
 
 
-SECTION_CODE = "Code for this section"
-PAGE_CODE = "Code for this page"
-
-
 nav = mk.MkNav("Use cases")
 
 
@@ -46,8 +42,7 @@ def create_use_cases_section(root_nav: mk.MkNav):
     root_nav += nav
     page = nav.add_index_page(hide="toc")
     page += INTRO_TEXT
-    code = mk.MkCode.for_object(create_use_cases_section)
-    page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True)
+    page.created_by = create_use_cases_section
 
 
 @nav.route.page("Creating a sample website", hide="toc")
