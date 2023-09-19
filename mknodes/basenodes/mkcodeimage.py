@@ -50,7 +50,7 @@ class MkCodeImage(mknode.MkNode):
         )
 
     @property
-    def code(self):
+    def code(self) -> str:
         match self._code:
             case str():
                 return self._code

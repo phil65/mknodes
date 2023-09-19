@@ -101,10 +101,12 @@ class MkPage(mkcontainer.MkContainer):
         return reprhelpers.get_repr(self, path=str(self.path), **self._metadata)
 
     def is_index(self) -> bool:
+        """Returns True if the page is the index page for the parent Nav."""
         return self.parent.index_page is self if self.parent else False
 
     @property
     def metadata(self) -> metadata.Metadata:
+        """Return page metadata, complemented with the parent Nav metadata objects."""
         meta = metadata.Metadata()
         navs = [i for i in self.ancestors if isinstance(i, mknav.MkNav)]
         for nav in reversed(navs):
