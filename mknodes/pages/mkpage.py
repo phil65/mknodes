@@ -71,16 +71,6 @@ class MkPage(mkcontainer.MkContainer):
         self._edit_path = edit_path
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.inclusion_level = inclusion_level
-        frame = i.f_back.f_back if (i := inspect.currentframe()) else None  # type: ignore[union-attr]  # noqa: E501
-        self.created = {}
-        if frame:
-            fn_name = qual if (qual := frame.f_code.co_qualname) != "<module>" else None
-            self.created = dict(
-                source_filename=frame.f_code.co_filename,
-                source_function=fn_name,
-                source_line_no=frame.f_lineno,
-                # klass=frame.f_locals["self"].__class__.__name__,
-            )
         self.created_by: Callable | None = None
         self._metadata = metadata.Metadata(
             hide=hide,
@@ -95,6 +85,15 @@ class MkPage(mkcontainer.MkContainer):
             tags=tags,
         )
         self.template = template
+        frame = i.f_back.f_back if (i := inspect.currentframe()) else None  # type: ignore[union-attr]  # noqa: E501
+        if frame:
+            fn_name = qual if (qual := frame.f_code.co_qualname) != "<module>" else None
+            self._metadata["created"] = dict(
+                source_filename=frame.f_code.co_filename,
+                source_function=fn_name,
+                source_line_no=frame.f_lineno,
+                # klass=frame.f_locals["self"].__class__.__name__,
+            )
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self):

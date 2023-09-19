@@ -207,7 +207,8 @@ class MkNode(node.Node):
         """
         self._css_classes.add(class_name)
 
-    def get_node_requirements(self):
+    def get_node_requirements(self) -> requirements.Requirements:
+        """Return the requirements specific for this node."""
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
         return requirements.Requirements(
             js_files=self.JS_FILES,
@@ -216,9 +217,10 @@ class MkNode(node.Node):
             css=self.CSS,
         )
 
-    def get_requirements(self, recursive: bool = True) -> requirements.Requirements:
+    def get_requirements(self) -> requirements.Requirements:
+        """Return the "final" requirements object."""
         logger.debug("Collecting requirements from tree...")
-        nodes = [*list(self.descendants), self] if recursive else [self]
+        nodes = [*list(self.descendants), self]
         req = requirements.Requirements(markdown_extensions={"pymdownx.emoji": {}})
         for _node in nodes:
             node_req = _node.get_node_requirements()

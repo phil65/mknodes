@@ -5,6 +5,7 @@ import mknodes
 
 def test_page():
     page = mknodes.MkPage()
+    page._metadata.pop("created")
     assert not str(page)
 
 
@@ -36,4 +37,5 @@ def test_metadata():
         subtitle="Some subtitle",
         description="Some description",
     )
+    page._metadata.pop("created")
     assert str(page) == EXPECTED
