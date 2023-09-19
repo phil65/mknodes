@@ -17,20 +17,20 @@ class MkDocsConfigFile(yamlfile.YamlFile):
         return self.get_section("theme")
 
     @property
-    def markdown_extensions(self):
-        return self.get_section("markdown_extensions")
+    def markdown_extensions(self) -> list:
+        return self.get_section("markdown_extensions") or []
 
     @property
-    def plugins(self):
-        return self.get_section("plugins")
+    def plugins(self) -> list:
+        return self.get_section("plugins") or []
 
     @property
-    def mknodes_config(self):
+    def mknodes_config(self) -> dict | None:
         return self.get_section("plugins", "mknodes")
 
     @property
-    def mkdocstrings_config(self):
-        return self.get_section("plugins", "mkdocstrings", "handlers", "python")
+    def mkdocstrings_config(self) -> dict:
+        return self.get_section("plugins", "mkdocstrings", "handlers", "python") or {}
 
     def to_mkdocsconfig(self, **kwargs) -> MkDocsConfig:
         return load_config(self.serialize("yaml"), **kwargs)
