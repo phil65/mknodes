@@ -62,7 +62,7 @@ class MkImageSlideshow(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        images = ["https://picsum.photos/200", "https://picsum.photos/201"]
+        images = ["https://picsum.photos/700", "https://picsum.photos/701"]
         node = MkImageSlideshow(images)
         page += mknodes.MkReprRawRendered(node)
 

@@ -67,8 +67,8 @@ class MkImageCompare(mknode.MkNode):
         import mknodes
 
         node = MkImageCompare(
-            before_image="https://picsum.photos/200",
-            after_image="https://picsum.photos/201",
+            before_image="https://picsum.photos/700",
+            after_image="https://picsum.photos/701",
         )
         page += mknodes.MkReprRawRendered(node)
 
