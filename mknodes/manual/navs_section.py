@@ -21,6 +21,18 @@ MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 
 SECTION_CODE = "Code for this section"
 
+CLASSPAGE_TEXT = """An MkClassPage is an MkPage subclass used to display information about
+ a specific class. It uses a Jinja template to display the class-related information.
+ By default, the Docstrings, tables for sub and parent classes as well as an inheritance
+ graph are shown. The template can be adjusted manually in case a different layout
+ is preferred."""
+
+MODULEPAGE_TEXT = """An MkMkodulePage is an MkPage subclass used to display information
+about a specific module. It uses a Jinja template to display the module-related
+information. By default, the Docstrings and tables showing the contained classes and
+submodules. The template can be adjusted manually in case a different layout is
+preferred."""
+
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
@@ -136,6 +148,7 @@ def create_from_folder_section(nav: mk.MkNav):
 
 @pages_nav.route.page("MkClassPage")
 def create_mkclasspage_page(page: mk.MkPage):
+    page += CLASSPAGE_TEXT
     class_page = mk.MkClassPage(mk.MkCode, inclusion_level=False)
     page += mk.MkReprRawRendered(class_page)
 
@@ -144,11 +157,12 @@ def create_mkclasspage_page(page: mk.MkPage):
 def create_mkmodulepage_page(page: mk.MkPage):
     import mkdocs.config
 
+    page += MODULEPAGE_TEXT
     module_page = mk.MkModulePage(mkdocs.config, inclusion_level=False)
     page += mk.MkReprRawRendered(module_page)
 
 
-@pages_nav.route.page("Adding to MkPages", hide="toc, nav", status="new")
+@pages_nav.route.page("Adding to MkPages", hide="toc", status="new")
 def create_adding_to_mkpages_page(page: mk.MkPage):
     """Create the "Adding to MkPages" MkPage and attach it to given MkNav."""
     page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
