@@ -107,7 +107,7 @@ def _make_usage(ctx: click.Context) -> str:
     full_path = []
     current: click.Context | None = ctx
     while current is not None:
-        name = current.command.name.lower()
+        name = current.command.name.lower() if current.command.name else ""
         full_path.append(name)
         current = current.parent
 
