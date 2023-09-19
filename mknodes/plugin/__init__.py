@@ -110,14 +110,10 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
                 case mkpage.MkPage():
                     if self.config.show_code_admonition and node.created_by:
                         code = mk.MkCode.for_object(node.created_by)
-                        title = (
-                            "Code for this section"
-                            if node.is_index()
-                            else "Code for this page"
-                        )
+                        typ = "section" if node.is_index() else "page"
                         details = mk.MkAdmonition(
                             code,
-                            title=title,
+                            title=f"Code for this {typ}",
                             collapsible=True,
                             typ="quote",
                         )
