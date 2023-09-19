@@ -86,6 +86,7 @@ class MkNav(mknode.MkNode):
 
     @index_page.setter
     def index_page(self, value):
+        value.parent = self
         self.nav.index_page = value
 
     @property
