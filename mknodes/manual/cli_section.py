@@ -47,16 +47,16 @@ def create_cli_section(root_nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=SECTION_CODE, collapsible=True, typ="quote")
 
 
-@nav.route.page("build", show_source=True, icon="wrench")
+@nav.route.page("build", icon="wrench")
 def create_build_page(page: mk.MkPage):
     page += mk.MkClickDoc("mknodes.cli:cli", prog_name="build")
 
 
-@nav.route.page("serve", show_source=True, icon="web")
+@nav.route.page("serve", icon="web")
 def create_changelog_page(page: mk.MkPage):
     page += mk.MkClickDoc("mknodes.cli:cli", prog_name="serve")
 
 
-@nav.route.page("create-config", show_source=True, icon="folder-wrench")
+@nav.route.page("create-config", icon="folder-wrench")
 def create_coc_page(page: mk.MkPage):
     page += mk.MkClickDoc("mknodes.cli:cli", prog_name="create-config")

@@ -24,19 +24,19 @@ def create_routing_section(root_nav: mk.MkNav):
     page += mk.MkDocStrings(navrouter.NavRouter, header="MkNav.route Docstrings")
 
 
-@nav.route.page("Routed page", show_source=True)
+@nav.route.page("Routed page")
 def routed_page(page: mk.MkPage):
     """Builds a MkPage and attaches it to the router MkNav."""
     page += mk.MkAdmonition("I'm a page added via decorators!")
 
 
-@nav.route.page("Routed", "Deeply", "Nested", "Nested page", show_source=True)
+@nav.route.page("Routed", "Deeply", "Nested", "Nested page")
 def routed_nested_page(page: mk.MkPage):
     """Builds a nested MkPage and attaches it to the router MkNav."""
     page += mk.MkAdmonition("I'm a nested page added via decorators!")
 
 
-@nav.route.nav("Routed", "Deeply", "Nested", "Nav", show_source=True)
+@nav.route.nav("Routed", "Deeply", "Nested", "Nav")
 def routed_nav(nav: mk.MkNav):
     """Builds a nested MkNav and attaches it to the router MkNav."""
     index_page = nav.add_index_page()

@@ -78,6 +78,8 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
           - Templates
           - CSS files
         """
+        import mknodes as mk
+
         if not self.config.build_fn:
             return files
 
@@ -106,6 +108,20 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             extra_files |= node.files
             match node:
                 case mkpage.MkPage():
+                    if node.created_by:
+                        code = mk.MkCode.for_object(node.created_by)
+                        title = (
+                            "Code for this section"
+                            if node.is_index()
+                            else "Code for this page"
+                        )
+                        details = mk.MkAdmonition(
+                            code,
+                            title=title,
+                            collapsible=True,
+                            typ="quote",
+                        )
+                        node.append(details)
                     if node.inclusion_level:
                         path, md = node.resolved_file_path, node.to_markdown()
                         node_files[path] = md

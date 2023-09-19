@@ -17,23 +17,23 @@ def create_internals_section(root_nav: mk.MkNav):
     page += mk.MkCode.for_object(create_internals_section, header=SECTION_CODE)
 
 
-# @nav.route.page("Tree", show_source=True, hide="toc", icon="graph")
+# @nav.route.page("Tree", hide="toc", icon="graph")
 # def create_tree_page(page: mk.MkPage):
 #     page += mk.MkHeader("This is the tree we built up to now.", level=3)
 #     tree = page.root.get_tree_repr(detailed=False, max_depth=3)
 #     page += mk.MkCode(tree, language="")
 
 
-@nav.route.page("Requirements", hide="toc", icon="puzzle-edit", show_source=True)
+@nav.route.page("Requirements", hide="toc", icon="puzzle-edit")
 def create_requirements_page(page: mk.MkPage):
     page += mk.MkJinjaTemplate("requirements.md")
 
 
-@nav.route.page("Build Log", show_source=True, hide="toc", icon="puzzle-edit")
+@nav.route.page("Build Log", hide="toc", icon="puzzle-edit")
 def create_log_page(page: mk.MkPage):
     page += mk.MkText("log() | MkCode", is_jinja_expression=True)
 
 
-@nav.route.nav("Complete code", show_source=True)
+@nav.route.nav("Complete code")
 def create_complete_code_section(nav: mk.MkNav):
     nav.parse.module("mknodes/manual/", hide="toc")

@@ -87,7 +87,7 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     page += admonition
 
 
-@nav.route.nav("Base nodes", show_source=True)
+@nav.route.nav("Base nodes")
 def create_basic_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all base node pages to given MkNav."""
     klasses = [
@@ -111,7 +111,7 @@ def create_basic_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
-@nav.route.nav("Container nodes", show_source=True)
+@nav.route.nav("Container nodes")
 def create_container_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
@@ -137,7 +137,7 @@ def create_container_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
-@nav.route.nav("Presentation nodes", show_source=True)
+@nav.route.nav("Presentation nodes")
 def create_presentation_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
@@ -153,7 +153,7 @@ def create_presentation_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
-@nav.route.nav("Documentation nodes", show_source=True)
+@nav.route.nav("Documentation nodes")
 def create_documentation_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
@@ -173,7 +173,7 @@ def create_documentation_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
-@nav.route.nav("About-the-project nodes", show_source=True)
+@nav.route.nav("About-the-project nodes")
 def create_about_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
@@ -199,7 +199,7 @@ def create_about_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
-@nav.route.nav("Special nodes", show_source=True)
+@nav.route.nav("Special nodes")
 def create_special_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
@@ -209,7 +209,7 @@ def create_special_nodes_section(nav: mk.MkNav):
     page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
 
 
-@nav.route.nav("Block nodes", show_source=True)
+@nav.route.nav("Block nodes")
 def create_block_nodes_section(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [

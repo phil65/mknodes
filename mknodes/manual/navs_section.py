@@ -91,7 +91,7 @@ def create_navs_section(root_nav: mk.MkNav):
     page += mk.MkCode(text, header="The resulting MkNav")
 
 
-@nav.route.nav("From file", show_source=True)
+@nav.route.nav("From file")
 def create_from_file_section(nav: mk.MkNav):
     """Load an existing SUMMARY.md and attach it to given MkNav."""
     # We will now demonstate loading an existing Nav tree.
@@ -122,7 +122,7 @@ def create_from_file_section(nav: mk.MkNav):
     page += file_content_node
 
 
-@nav.route.nav("From folder", show_source=True)
+@nav.route.nav("From folder")
 def create_from_folder_section(nav: mk.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
@@ -135,13 +135,13 @@ def create_from_folder_section(nav: mk.MkNav):
     page += mk.MkDocStrings(mk.MkTreeView)
 
 
-@pages_nav.route.page("MkClassPage", show_source=True)
+@pages_nav.route.page("MkClassPage")
 def create_mkclasspage_page(page: mk.MkPage):
     class_page = mk.MkClassPage(mk.MkCode, inclusion_level=False)
     page += mk.MkReprRawRendered(class_page)
 
 
-@pages_nav.route.page("MkModulePage", show_source=True)
+@pages_nav.route.page("MkModulePage")
 def create_mkmodulepage_page(page: mk.MkPage):
     import mkdocs.config
 
@@ -149,12 +149,7 @@ def create_mkmodulepage_page(page: mk.MkPage):
     page += mk.MkReprRawRendered(module_page)
 
 
-@pages_nav.route.page(
-    "Adding to MkPages",
-    hide="toc, nav",
-    status="new",
-    show_source=True,
-)
+@pages_nav.route.page("Adding to MkPages", hide="toc, nav", status="new")
 def create_adding_to_mkpages_page(page: mk.MkPage):
     """Create the "Adding to MkPages" MkPage and attach it to given MkNav."""
     page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
@@ -170,7 +165,6 @@ def create_adding_to_mkpages_page(page: mk.MkPage):
     search_boost=2.0,
     subtitle="Subtitle",
     description="Description",
-    show_source=True,
 )
 def create_metadata_page(page: mk.MkPage):
     """Create the "Metadata" MkPage and attach it to given nav."""
@@ -192,7 +186,7 @@ def create_mkdefaultwebsite_section(nav: mk.MkNav):
     nav += website_nav
 
 
-@nav.route.nav("MkDoc", show_source=True)
+@nav.route.nav("MkDoc")
 def create_mkdoc_section(nav: mk.MkNav):
     """Create the "Metadata" sub-MkNav and attach it to given nav."""
     nav = nav.add_nav("MkDoc")
