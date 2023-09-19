@@ -45,10 +45,10 @@ def merge_dicts(
 def merge_extensions(dicts: list[dict[str, dict]]) -> list[dict[str, dict]]:
     seen = set()
     result = []
+    dicts = [{k: dct[k]} for dct in dicts for k in dct]
     for dct in dicts:
         dct = dict(sorted(dct.items()))
         if (stringed := str(dct)) not in seen:
-            # print(str(dct))
             seen.add(stringed)
             result.append(dct)
     return result

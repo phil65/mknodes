@@ -44,7 +44,10 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
         """
         self.css |= other["css"]
         self.templates += other["templates"]
-        mergehelpers.merge_dicts(self.markdown_extensions, other["markdown_extensions"])
+        if other_exts := other["markdown_extensions"]:
+            exts = [self.markdown_extensions, other_exts]
+            merged = mergehelpers.merge_extensions(exts)
+            self.markdown_extensions = mergehelpers.merge_dicts(*merged)
         self.plugins |= other["plugins"]
         self.js_files |= other["js_files"]
         return self
