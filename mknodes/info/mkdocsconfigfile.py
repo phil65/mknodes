@@ -57,6 +57,13 @@ class MkDocsConfigFile(yamlfile.YamlFile):
         """
         return self.mkdocstrings_config.get("import") or []
 
+    @property
+    def theme_name(self):
+        try:
+            return self._data["theme"]["name"]
+        except (KeyError, TypeError):
+            return self._data.get("theme")
+
 
 if __name__ == "__main__":
     info = MkDocsConfigFile("mkdocs.yml")

@@ -81,9 +81,7 @@ class MkBinaryImage(mkimage.MkImage):
             kwargs: Keyword arguments passed to constructor
         """
         path = pathlib.Path(path)
-        content = path.read_bytes()
-        path = path.name
-        return cls(data=content, path=path, **kwargs)
+        return cls(data=path.read_bytes(), path=path.name, **kwargs)
 
 
 if __name__ == "__main__":

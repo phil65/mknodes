@@ -16,7 +16,10 @@ logger = log.get_logger(__name__)
 
 
 class MkLink(mknode.MkNode):
-    """A simple Link (with optional icon and option to show up as a button)."""
+    """A simple Link (with optional icon and option to show up as a button).
+
+    If no title is given, the URL is used as a title.
+    """
 
     ICON = "octicons/link-24"
     REQUIRED_EXTENSIONS = [requirements.Extension("attr_list")]  # for buttons
@@ -84,19 +87,19 @@ class MkLink(mknode.MkNode):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
         url = "http://www.google.de"
-        node = mknodes.MkLink(url, "This is a link.")
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
-        node = mknodes.MkLink(url, "Disguised as button.", as_button=True)
-        page += mknodes.MkReprRawRendered(node, header="### Button")
-        node = mknodes.MkLink(url, "Colored.", as_button=True, primary_color=True)
-        page += mknodes.MkReprRawRendered(node, header="### Colored")
-        node = mknodes.MkLink(url, "With icon.", icon="octicons/link-24")
-        page += mknodes.MkReprRawRendered(node, header="### With icon")
-        node = mknodes.MkLink(page.parent.index_page, "To page.")
-        page += mknodes.MkReprRawRendered(node, header="###To page")
+        node = mk.MkLink(url, "This is a link.")
+        page += mk.MkReprRawRendered(node, header="### Regular")
+        node = mk.MkLink(url, "Disguised as button.", as_button=True)
+        page += mk.MkReprRawRendered(node, header="### Button")
+        node = mk.MkLink(url, "Colored.", as_button=True, primary_color=True)
+        page += mk.MkReprRawRendered(node, header="### Colored")
+        node = mk.MkLink(url, "With icon.", icon="octicons/link-24")
+        page += mk.MkReprRawRendered(node, header="### With icon")
+        node = mk.MkLink(page.parent.index_page, "To page.")
+        page += mk.MkReprRawRendered(node, header="###To page")
 
 
 if __name__ == "__main__":

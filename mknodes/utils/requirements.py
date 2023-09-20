@@ -108,9 +108,21 @@ class CSSText:
         return f"{type(self).__name__}({self.filename!r})"
 
 
+class Asset:
+    def __init__(self, filename, content):
+        self.filename = filename
+        self.content = content
+
+    def __hash__(self):
+        return hash(self.content)
+
+    def __repr__(self):
+        return f"{type(self).__name__}({self.filename!r})"
+
+
 @dataclasses.dataclass
 class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
-    css: list = dataclasses.field(default_factory=list)
+    css: list[CSSFile | CSSLink | CSSText] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
     """A list of required templates."""
@@ -118,8 +130,10 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: list[Plugin] = dataclasses.field(default_factory=list)
     """A set of required plugins. (Only for info purposes)"""
-    js_files: list = dataclasses.field(default_factory=list)
+    js_files: list[JSFile | JSLink] = dataclasses.field(default_factory=list)
     """A list of JS file paths."""
+    assets: list[Asset] = dataclasses.field(default_factory=list)
+    """A list of additional assets required (static files which go into assets dir)."""
 
     def __getitem__(self, value):
         return getattr(self, value)
