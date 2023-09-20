@@ -144,6 +144,8 @@ class MkNode(node.Node):
                 return mknodes.MkHeader(match[2], level=len(match[1]), parent=self)
             case str():
                 return mknodes.MkText(other, parent=self)
+            case list():
+                return mknodes.MkContainer([self.to_child_node(i) for i in other])
             case mknodes.MkNode():
                 other.parent = self
                 return other
