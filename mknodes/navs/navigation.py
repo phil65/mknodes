@@ -79,7 +79,7 @@ class Navigation(dict):
         """Return all registered links."""
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
 
-    def to_literate_nav(self):
+    def to_literate_nav(self) -> str:
         nav = navbuilder.NavBuilder()
         # In a nav, the first inserted item becomes the index page in case
         # the section-index plugin is used, so we add it first.
