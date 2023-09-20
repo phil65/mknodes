@@ -114,6 +114,21 @@ class Config:
             get_deps.get_deps(path, self._config.config_file_path)
         return [i for i in buffer.getvalue().split("\n") if i]
 
+    def add_js(
+        self,
+        path: str,
+        defer: bool = False,
+        async_: bool = False,
+        typ: str = "",
+    ):
+        from mkdocs.config import config_options
+
+        val = config_options.ExtraScriptValue(str(path))
+        val.async_ = async_
+        val.defer = defer
+        val.type = typ
+        self.extra_javascript.append(val)
+
 
 if __name__ == "__main__":
     cfg = Config()
