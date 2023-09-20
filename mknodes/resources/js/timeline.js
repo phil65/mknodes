@@ -12,6 +12,7 @@ $(function(){
       origin: 'right',
       distance: '300px',
       easing: 'ease-in-out',
+      reset: true,
       duration: 800,
     });
 
@@ -21,6 +22,7 @@ $(function(){
       origin: 'left',
       distance: '300px',
       easing: 'ease-in-out',
+      reset: true,
       duration: 800,
     });
 
@@ -28,6 +30,7 @@ $(function(){
       origin: 'right',
       distance: '300px',
       easing: 'ease-in-out',
+      reset: true,
       duration: 800,
     });
 
@@ -37,6 +40,7 @@ $(function(){
       origin: 'left',
       distance: '300px',
       easing: 'ease-in-out',
+      reset: true,
       duration: 800,
     });
 
@@ -44,6 +48,7 @@ $(function(){
       origin: 'right',
       distance: '300px',
       easing: 'ease-in-out',
+      reset: true,
       duration: 800,
     });
 

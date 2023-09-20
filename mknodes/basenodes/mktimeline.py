@@ -93,11 +93,11 @@ class MkTimeline(mkcontainer.MkContainer):
         requirements.Extension("md_in_html"),
     ]
     JS_FILES = [
-        requirements.JSFile("js/timeline.js"),
         requirements.JSLink("https://code.jquery.com/jquery-2.2.4.min.js"),
         requirements.JSLink(
             "https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js",
         ),
+        requirements.JSFile("js/timeline.js"),
     ]
     CSS = [requirements.CSSFile("css/timeline.css")]
     items: list[MkTimelineItem]
