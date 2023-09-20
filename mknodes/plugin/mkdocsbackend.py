@@ -82,10 +82,11 @@ class MkDocsBackend(buildbackend.BuildBackend):
                 val.defer = file.defer
                 val.type = file.typ
                 self._config.extra_javascript.append(val)
-            else:
-                file_path = paths.RESOURCES / file.path
+            elif isinstance(file, requirements.JSFile):
+                file_path = paths.RESOURCES / str(file)
                 js_text = file_path.read_text()
-                self.add_js_file(file.path, js_text)
+                path = f"{hash(js_text)}.css"
+                self.add_js_file(path, js_text)
         if extensions := reqs.markdown_extensions:
             self.register_extensions(extensions)
         for template in reqs.templates:

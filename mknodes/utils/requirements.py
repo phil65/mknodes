@@ -76,6 +76,16 @@ class JSLink:
         return html
 
 
+class JSFile(str):
+    __slots__ = ()
+
+    def __fspath__(self):
+        return str(self)
+
+    def __repr__(self):
+        return f"{type(self).__name__}('{self}')"
+
+
 class CSSFile(str):
     __slots__ = ()
 
