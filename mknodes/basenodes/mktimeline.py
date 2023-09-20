@@ -65,9 +65,10 @@ class MkTimelineItem(mknode.MkNode):
             img = STYLE.format(image=self.image)
             p = Et.SubElement(header_div, "p", {"style": img})
             h_header = Et.SubElement(p, "h2")
-        else:
+            h_header.text = self.title
+        elif self.title:
             h_header = Et.SubElement(content_div, "h2")
-        h_header.text = self.title
+            h_header.text = self.title
         if self.date:
             div_date = Et.SubElement(content_div, "div", {"class": "date"})
             div_date.text = self.date
@@ -76,6 +77,7 @@ class MkTimelineItem(mknode.MkNode):
             p_text.text = self.content
         else:
             text = self.content.to_html()
+            text = f"<div>{text}</div>"
             p_text.append(Et.fromstring(text))
         if self.link:
             attrs = {"class": "bnt-more", "href": self.link}
@@ -126,6 +128,28 @@ class MkTimeline(mkcontainer.MkContainer):
             elem = item.get_element()
             div.append(elem)
         return "\n\n" + xmlhelpers.pformat(root) + "\n\n"
+
+    def add_item(
+        self,
+        title: str = "",
+        content: str | mknode.MkNode = "",
+        date: str = "",
+        link: str = "",
+        button_text: str = "More",
+        image: str = "",
+        **kwargs,
+    ):
+        item = MkTimelineItem(
+            title=title,
+            content=content,
+            date=date,
+            link=link,
+            button_text=button_text,
+            image=image,
+            **kwargs,
+        )
+        self += item
+        return item
 
     @staticmethod
     def create_example_page(page):
