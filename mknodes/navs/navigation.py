@@ -54,7 +54,7 @@ class Navigation(dict):
             case mkpage.MkPage():
                 self[node.path.removesuffix(".md")] = node
             case mklink.MkLink():
-                self[node.title or node.url] = node
+                self[node.title] = node
             case _:
                 raise TypeError(node)
 

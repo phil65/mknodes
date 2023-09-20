@@ -42,7 +42,7 @@ class MkLink(mknode.MkNode):
         """
         super().__init__(**kwargs)
         self.target = target
-        self.title = title
+        self._title = title
         self.as_button = as_button
         self.primary_color = primary_color
         self._icon = icon or ""
@@ -55,7 +55,7 @@ class MkLink(mknode.MkNode):
         return reprhelpers.get_repr(
             self,
             target=self.target,
-            title=self.title,
+            title=self._title,
             icon=self._icon,
             as_button=self.as_button,
             primary_color=self.primary_color,
@@ -74,10 +74,13 @@ class MkLink(mknode.MkNode):
     def url(self) -> str:
         return self.ctx.links.get_url(self.target)
 
+    @property
+    def title(self) -> str:
+        return self.url if self._title is None else self._title
+
     def _to_markdown(self) -> str:
-        title = self.target if self.title is None else self.title
         prefix = f"{self.icon} " if self.icon else ""
-        return f"[{prefix}{title}]({self.url})"
+        return f"[{prefix}{self.title}]({self.url})"
 
     @staticmethod
     def create_example_page(page):
