@@ -37,6 +37,7 @@ from .basenodes.mkcard import MkCard
 from .basenodes.mkshowcase import MkShowcase
 from .basenodes.mkspeechbubble import MkSpeechBubble
 from .basenodes.mktasklist import MkTaskList
+from .basenodes.mktimeline import MkTimeline
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -150,6 +151,7 @@ __all__ = [
     "MkConfigSetting",
     "MkSpeechBubble",
     "MkTaskList",
+    "MkTimeline",
     "MkJinjaTemplate",
     "MkPyDeps",
     "MkPipDepTree",

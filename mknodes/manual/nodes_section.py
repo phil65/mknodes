@@ -151,6 +151,7 @@ def create_presentation_nodes_section(nav: mk.MkNav):
         mk.MkReprRawRendered,
         mk.MkCodeImage,
         mk.MkDiagram,
+        mk.MkTimeline,
     ]
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
