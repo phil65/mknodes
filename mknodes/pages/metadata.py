@@ -152,11 +152,6 @@ class Metadata(dict):
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
         text, metadata = meta.get_data(text)
-        if (hide := metadata.pop("hide", None)) is not None:
-            metadata["hide"] = hide
-        if search := metadata.pop("search", None):
-            metadata["search_boost"] = search.get("boost")
-            metadata["exclude_from_search"] = search.get("exclude")
         return cls(**metadata), text
 
     def __str__(self):

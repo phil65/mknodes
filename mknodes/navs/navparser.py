@@ -39,7 +39,7 @@ def add_page(
     Arguments:
         path: Path to build a MkPage for
         name: Name for given MkPage
-        kwargs: Keyword arguments passed to MkPage
+        kwargs: Additional metadata for MkPage
     """
     import mknodes
 

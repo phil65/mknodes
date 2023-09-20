@@ -187,8 +187,8 @@ class MkPage(mkcontainer.MkContainer):
         cls,
         path: str | os.PathLike,
         title: str | None = None,
-        hide: str | list[str] | None = None,
         parent: mknode.MkNode | None = None,
+        **kwargs,
     ) -> Self:
         """Reads file content and creates an MkPage.
 
@@ -198,8 +198,8 @@ class MkPage(mkcontainer.MkContainer):
             path: Path to load file from
             title: Optional title to use
                    If None, title will be infered from metadata or filename
-            hide: Hide parts of the page ("toc", "nav", "tags", "path")
             parent: Optional parent for new page
+            kwargs: Additional metadata for MkPage. Will override parsed metadata.
         """
         if helpers.is_url(url := str(path)):
             file_content = downloadhelpers.download(url).decode()
@@ -210,8 +210,7 @@ class MkPage(mkcontainer.MkContainer):
             path = pathlib.Path(path)
             file_content = path.read_text()
         data, text = metadata.Metadata.parse(file_content)
-        if hide is not None:
-            data.hide = hide
+        data.update(kwargs)
         page = cls(path=path.name, content=text, title=title, parent=parent)
         page.metadata = data
         return page
