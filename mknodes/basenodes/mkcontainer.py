@@ -2,15 +2,12 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 import contextlib
-import re
 
 from typing import Any
 
-from mknodes.basenodes import mkheader, mknode, mktext
+from mknodes.basenodes import mknode, mktext
 from mknodes.utils import helpers, log, reprhelpers
 
-
-HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 
 logger = log.get_logger(__name__)
 
@@ -109,18 +106,6 @@ class MkContainer(mknode.MkNode):
     def insert(self, index: int, other: str | mknode.MkNode):
         node = self.to_child_node(other)
         self.items.insert(index, node)
-
-    def to_child_node(self, other) -> mknode.MkNode:  # type: ignore[return]
-        match other:
-            case str() if (match := HEADER_REGEX.match(other)) and "\n" not in other:
-                return mkheader.MkHeader(match[2], level=len(match[1]), parent=self)
-            case str():
-                return mktext.MkText(other, parent=self)
-            case mknode.MkNode():
-                other.parent = self
-                return other
-            case _:
-                raise TypeError(other)
 
     @property  # type: ignore
     def children(self) -> list[mknode.MkNode]:

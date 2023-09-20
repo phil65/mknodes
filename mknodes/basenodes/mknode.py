@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+import re
 import time
 
 from typing import TYPE_CHECKING
@@ -17,6 +18,9 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
+
+
+HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 
 
 class MkNode(node.Node):
@@ -131,6 +135,20 @@ class MkNode(node.Node):
         self.ctx.env.globals["mknode"] = self
         self.ctx.env.set_mknodes_filters(parent=self)
         return self.ctx.env
+
+    def to_child_node(self, other) -> MkNode:  # type: ignore[return]
+        import mknodes
+
+        match other:
+            case str() if (match := HEADER_REGEX.match(other)) and "\n" not in other:
+                return mknodes.MkHeader(match[2], level=len(match[1]), parent=self)
+            case str():
+                return mknodes.MkText(other, parent=self)
+            case mknodes.MkNode():
+                other.parent = self
+                return other
+            case _:
+                raise TypeError(other)
 
     @classmethod
     def get_node(cls, name: str):

@@ -91,7 +91,7 @@ html, body {
   box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.6);
 }
 .timeline a:hover, .timeline a:active, .timeline a:focus {
-  background: #32408f;
+  background: var(--md-accent-fg-color);
   color: #FFFFFF;
   text-decoration: none;
 }

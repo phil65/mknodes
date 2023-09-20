@@ -1,35 +1,53 @@
 from __future__ import annotations
 
-from typing import Any
-from xml.etree import ElementTree
+from typing import Any, Literal
+from xml.etree import ElementTree as Et
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, reprhelpers, requirements, xmlhelpers
 
 
 logger = log.get_logger(__name__)
 
 
-class TimelineItem:
+STYLE = (
+    "background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0,"
+    ' 0.4)), url("{image}") center center no-repeat;'
+    " background-size: cover;"
+)
+
+
+class MkTimelineItem(mknode.MkNode):
     def __init__(
         self,
         title: str = "",
-        content: str = "",
+        content: str | mknode.MkNode = "",
         date: str = "",
         link: str = "",
+        button_text: str = "More",
         image: str = "",
-        fade_direction: str | None = None,
+        **kwargs,
     ):
+        super().__init__(**kwargs)
         self.title = title
-        self.content = content
+        self.content = self.to_child_node(content)
         self.image = image
         self.date = date
         self.link = link
-        self.fade_direction = fade_direction
+        self.button_text = button_text
+        self.fade_direction: Literal["left", "right"] | None = None
+
+    @property
+    def children(self):
+        return [self.content]
+
+    @children.setter
+    def children(self, val):
+        pass
 
     def get_element(self):
-        root = ElementTree.Element("div", {"class": "timeline-item"})
-        timeline_img = ElementTree.SubElement(root, "div", {"class": "timeline-img"})
+        root = Et.Element("div", {"class": "timeline-item"})
+        timeline_img = Et.SubElement(root, "div", {"class": "timeline-img"})
         timeline_img.text = " "
         match self.fade_direction:
             case "left":
@@ -40,38 +58,33 @@ class TimelineItem:
                 fade = ""
         tl = " timeline-card" if self.image else ""
         attrs = {"class": f"timeline-content{tl}{fade}"}
-        content_div = ElementTree.SubElement(root, "div", attrs)
+        content_div = Et.SubElement(root, "div", attrs)
         if self.image:
             attrs = {"class": "timeline-img-header"}
-            header_div = ElementTree.SubElement(content_div, "div", attrs)
-            p = ElementTree.SubElement(
-                header_div,
-                "p",
-                {
-                    "style": (
-                        "background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0,"
-                        f' 0.4)), url("{self.image}") center center no-repeat;'
-                        " background-size: cover;"
-                    ),
-                },
-            )
-            h_header = ElementTree.SubElement(p, "h2")
+            header_div = Et.SubElement(content_div, "div", attrs)
+            img = STYLE.format(image=self.image)
+            p = Et.SubElement(header_div, "p", {"style": img})
+            h_header = Et.SubElement(p, "h2")
         else:
-            h_header = ElementTree.SubElement(content_div, "h2")
+            h_header = Et.SubElement(content_div, "h2")
         h_header.text = self.title
         if self.date:
-            div_date = ElementTree.SubElement(content_div, "div", {"class": "date"})
+            div_date = Et.SubElement(content_div, "div", {"class": "date"})
             div_date.text = self.date
-        p_text = ElementTree.SubElement(content_div, "p")
-        p_text.text = self.content
+        p_text = Et.SubElement(content_div, "p")
+        if isinstance(self.content, str):
+            p_text.text = self.content
+        else:
+            text = self.content.to_html()
+            p_text.append(Et.fromstring(text))
         if self.link:
             attrs = {"class": "bnt-more", "href": self.link}
-            btn = ElementTree.SubElement(content_div, "a", attrs)
-            btn.text = "More"
+            btn = Et.SubElement(content_div, "a", attrs)
+            btn.text = self.button_text
         return root
 
 
-class MkTimeline(mknode.MkNode):
+class MkTimeline(mkcontainer.MkContainer):
     """Node to show an Image comparison (using a slider)."""
 
     ICON = "material/timeline"
@@ -87,6 +100,7 @@ class MkTimeline(mknode.MkNode):
         ),
     ]
     CSS = [requirements.CSSFile("css/timeline.css")]
+    items: list[MkTimelineItem]
 
     def __init__(
         self,
@@ -99,50 +113,59 @@ class MkTimeline(mknode.MkNode):
             items: Timeline items
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
-        self.items = items or []
+        super().__init__(items, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
 
     def _to_markdown(self) -> str:
-        root = ElementTree.Element("section", {"class": "timeline"})
-        div = ElementTree.SubElement(root, "div", {"class": "container"})
-        for item in self.items:
-            item = item.get_element()
-            div.append(item)
+        root = Et.Element("section", {"class": "timeline"})
+        div = Et.SubElement(root, "div", {"class": "container"})
+        for i, item in enumerate(self.items):
+            item.fade_direction = "left" if i % 2 == 0 else "right"
+            elem = item.get_element()
+            div.append(elem)
         return "\n\n" + xmlhelpers.pformat(root) + "\n\n"
 
     @staticmethod
     def create_example_page(page):
-        item = TimelineItem(
-            title="Title",
-            content="A card with an image.",
-            date="A label",
-            link="https://phil65.github.io/mknodes",
-            image="https://picsum.photos/1000/800/?random",
-            fade_direction="left",
-        )
-        item2 = TimelineItem(
-            title="Title",
-            content="Lorem ipsum dolor sit amet.",
-            date="1 MAY 2016",
-            link="https://phil65.github.io/mknodes",
-            # image="https://picsum.photos/1000/800/?random",
-            fade_direction="right",
-        )
-        node = MkTimeline([item, item2])
+        import mknodes
+
+        node = MkTimeline()
+        for i in range(1, 6):
+            node += MkTimelineItem(
+                title=f"Image card {i}",
+                content="A card with an image.",
+                date=f"{i} JANUARY 2023",
+                link="https://phil65.github.io/mknodes",
+                image=f"https://picsum.photos/40{i}",
+            )
+            admonition = mknodes.MkAdmonition("test")
+            node += MkTimelineItem(
+                title=f"Card {i}",
+                content=admonition,
+                date=f"{i} JANUARY 2023",
+                link="https://phil65.github.io/mknodes",
+            )
         page += node
 
 
 if __name__ == "__main__":
-    item = TimelineItem(
+    import mknodes
+
+    node = mknodes.MkAdmonition("test")
+    item = MkTimelineItem(
         title="Title",
-        content="Lorem ipsum dolor sit amet.",
+        content=node,
         date="1 MAY 2016",
         link="https://phil65.github.io/mknodes",
         # image="https://picsum.photos/1000/800/?random",
-        fade_direction="left",
     )
-    timeline = MkTimeline([item, item, item, item])
-    print(timeline.to_markdown())
+    item2 = MkTimelineItem(
+        title="Title",
+        content="fdsfs",
+        date="1 MAY 2016",
+        link="https://phil65.github.io/mknodes",
+    )
+    timeline = MkTimeline([item, item2, item])
+    print(timeline.to_html())
