@@ -1,14 +1,14 @@
 Build process
 
 - Clone repository (in case it is a remote one)
-- Aggregate information about repository from
+- Aggregate information about repository from:
 
-  - metadata.Distribution
-  - PyProject File
-  - MkDocs Config file
-  - Other config-related files
-  - Git info (aquired from GitPython)
-  - GitHub info (using PyGitHub)
+    - metadata.Distribution
+    - PyProject File
+    - MkDocs Config file
+    - Other config-related files
+    - Git info (aquired from GitPython)
+    - GitHub info (using PyGitHub)
 
 - Build node tree based on Build script / function
 - Populate mknodes-specific Jinja environment with all collected metadata
