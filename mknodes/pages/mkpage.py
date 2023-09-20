@@ -188,7 +188,7 @@ class MkPage(mkcontainer.MkContainer):
         path: str | os.PathLike,
         title: str | None = None,
         parent: mknode.MkNode | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Reads file content and creates an MkPage.
 
