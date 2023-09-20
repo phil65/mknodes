@@ -130,7 +130,7 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: list[Plugin] = dataclasses.field(default_factory=list)
     """A set of required plugins. (Only for info purposes)"""
-    js_files: list[JSFile | JSLink] = dataclasses.field(default_factory=list)
+    js: list[JSFile | JSLink] = dataclasses.field(default_factory=list)
     """A list of JS file paths."""
     assets: list[Asset] = dataclasses.field(default_factory=list)
     """A list of additional assets required (static files which go into assets dir)."""
@@ -146,6 +146,20 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
 
     def __iter__(self):
         return iter(i.name for i in dataclasses.fields(self))
+
+    def __ior__(self, other):
+        return self.merge(other)
+
+    def __or__(self, other):
+        return self.merge(other)
+
+    @property
+    def js_files(self):
+        return [i for i in self.js if isinstance(i, JSFile)]
+
+    @property
+    def js_links(self):
+        return [i for i in self.js if isinstance(i, JSLink)]
 
     def merge(self, other: collections.abc.Mapping, additive: bool = False):
         """Merge requirements with another requirements instance or dict.
@@ -163,7 +177,7 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
             self.markdown_extensions = mergehelpers.merge_dicts(*merged)
         self.css = list(set(self.css + other["css"]))
         self.plugins = list(set(self.plugins + other["plugins"]))
-        self.js_files = list(set(self.js_files + other["js_files"]))
+        self.js = list(set(self.js + other["js"]))
         return self
 
 

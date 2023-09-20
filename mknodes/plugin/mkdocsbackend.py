@@ -74,19 +74,18 @@ class MkDocsBackend(buildbackend.BuildBackend):
             else:
                 logger.debug("Adding remote CSS file %s", css)
                 self._config.extra_css.append(str(css))
+        for file in reqs.js_links:
+            logger.debug("Adding remote JS file %s", str(file))
+            val = config_options.ExtraScriptValue(str(file))
+            val.async_ = file.async_
+            val.defer = file.defer
+            val.type = file.typ
+            self._config.extra_javascript.append(val)
         for file in reqs.js_files:
-            if isinstance(file, requirements.JSLink):
-                logger.debug("Adding remote JS file %s", str(file))
-                val = config_options.ExtraScriptValue(str(file))
-                val.async_ = file.async_
-                val.defer = file.defer
-                val.type = file.typ
-                self._config.extra_javascript.append(val)
-            elif isinstance(file, requirements.JSFile):
-                file_path = paths.RESOURCES / str(file)
-                js_text = file_path.read_text()
-                path = f"{hash(js_text)}.css"
-                self.add_js_file(path, js_text)
+            file_path = paths.RESOURCES / str(file)
+            js_text = file_path.read_text()
+            path = f"{hash(js_text)}.css"
+            self.add_js_file(path, js_text)
         if extensions := reqs.markdown_extensions:
             self.register_extensions(extensions)
         for template in reqs.templates:

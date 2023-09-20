@@ -229,7 +229,7 @@ class MkNode(node.Node):
         """Return the requirements specific for this node."""
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
         return requirements.Requirements(
-            js_files=self.JS_FILES,
+            js=self.JS_FILES,
             markdown_extensions=extension,
             plugins=self.REQUIRED_PLUGINS,
             css=self.CSS,
