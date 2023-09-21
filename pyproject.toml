@@ -106,7 +106,7 @@ dependencies = [
     # MkDocs
     "mkdocs >=1.5",
     "mkdocs-literate-nav",
-    "mkdocs-material",
+    "mkdocs-material >= 9.4",
     "mkdocstrings[python]",
     "mkdocs-section-index",
 

@@ -86,7 +86,7 @@ def get_material_icon_path(icon: str) -> pathlib.Path:
     if "/" not in icon:
         icon = f"material/{icon}"
     path = pathlib.Path(next(iter(material.__path__)))
-    return path / ".icons" / f"{icon}.svg"
+    return path / "templates" / ".icons" / f"{icon}.svg"
 
 
 def download_from_github(
