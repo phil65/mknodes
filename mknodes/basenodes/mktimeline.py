@@ -47,7 +47,7 @@ class MkTimelineItem(mknode.MkNode):
     def children(self, val):
         pass
 
-    def get_element(self):
+    def get_element(self) -> xml.Div:
         root = xml.Div("timeline-item")
         xml.Div("timeline-img", text=" ", parent=root)
         match self.fade_direction:
@@ -72,13 +72,10 @@ class MkTimelineItem(mknode.MkNode):
         if isinstance(self.content, str):
             p_text.text = self.content
         else:
-            text = self.content.to_html()
-            text = f"<div>{text}</div>"
+            text = f"<div>{self.content.to_html()}</div>"
             p_text.append(Et.fromstring(text))
         if self.link:
-            attrs = {"class": "bnt-more", "href": self.link}
-            btn = Et.SubElement(content_div, "a", attrs)
-            btn.text = self.button_text
+            xml.A("bnt-more", href=self.link, text=self.button_text, parent=content_div)
         return root
 
 

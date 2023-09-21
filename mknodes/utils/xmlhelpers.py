@@ -39,6 +39,30 @@ class P(Et.Element):
             parent.append(self)
 
 
+class Img(Et.Element):
+    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+        attrs = {"class": klass} if klass else {}
+        super().__init__("img", attrs | kwargs)
+        if parent is not None:
+            parent.append(self)
+
+
+class A(Et.Element):
+    def __init__(
+        self,
+        klass: str | None = None,
+        text: str | None = None,
+        parent=None,
+        **kwargs,
+    ):
+        attrs = {"class": klass} if klass else {}
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        super().__init__("a", attrs | kwargs)
+        self.text = text
+        if parent is not None:
+            parent.append(self)
+
+
 def get_material_icon_svg(icon: str) -> Et.Element:
     """Return a xmlElement for given MaterialIcon.
 

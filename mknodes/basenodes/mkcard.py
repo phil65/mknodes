@@ -26,18 +26,16 @@ def build_html_card(
     caption: str | None = None,
     path_dark_mode: str | None = None,
 ):
-    root = ElementTree.Element("a")
-    if link:
-        root.set("href", link)
+    root = xml.A(href=link)
     card_div = xml.Div("card", parent=root)
     container_div = xml.Div("showcase-container", parent=card_div)
     src = f"{image}#only-light" if path_dark_mode else image
     style = f"width:{size}px,height:{size}px"
-    ElementTree.SubElement(container_div, "img", src=src, alt=title, style=style)
+    xml.Img(parent=container_div, src=src, alt=title, style=style)
     if path_dark_mode:
         src = f"{path_dark_mode}#only-dark"
         style = f"width:{size}px,height:{size}px"
-        ElementTree.SubElement(container_div, "img", src=src, alt=title, style=style)
+        xml.Img(parent=container_div, src=src, alt=title, style=style)
     if caption:
         xml.Div("overlay", text=caption, parent=container_div)
     p = xml.P(parent=card_div)
