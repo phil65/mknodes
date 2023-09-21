@@ -87,7 +87,7 @@ def pformat(str_or_elem: str | Et.Element, space: str = "  ", level: int = 0) ->
     if isinstance(str_or_elem, str):
         str_or_elem = Et.fromstring(str_or_elem)
     Et.indent(str_or_elem, space=space, level=level)
-    return Et.tostring(str_or_elem, encoding="unicode")
+    return Et.tostring(str_or_elem, encoding="unicode", method="html")
 
 
 if __name__ == "__main__":

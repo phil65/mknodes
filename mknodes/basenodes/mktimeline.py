@@ -49,7 +49,7 @@ class MkTimelineItem(mknode.MkNode):
 
     def get_element(self) -> xml.Div:
         root = xml.Div("timeline-item")
-        xml.Div("timeline-img", text=" ", parent=root)
+        xml.Div("timeline-img", parent=root)
         match self.fade_direction:
             case "left":
                 fade = " js--fadeInLeft"
