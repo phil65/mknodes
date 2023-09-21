@@ -66,6 +66,7 @@ class JSLink:
     async_: bool = False
     crossorigin: Literal["anonymous", "use-credentials"] | None = None
     typ: str = ""
+    is_library: bool = False
 
     def __str__(self):
         return self.link
@@ -94,6 +95,7 @@ class JSFile:
     async_: bool = False
     crossorigin: Literal["anonymous", "use-credentials"] | None = None
     typ: str = ""
+    is_library: bool = False
 
     def __str__(self):
         return self.link

@@ -4,7 +4,7 @@ import dataclasses
 
 from xml.etree import ElementTree
 
-from mknodes.utils import xmlhelpers
+from mknodes.utils import xmlhelpers as xml
 
 
 SCRIPT = """
@@ -32,10 +32,8 @@ def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
     # body = ElementTree.Element("body")
     # form = ElementTree.SubElement(
     # body,
-    form = ElementTree.Element(
-        "form",
-        {"class": "md-header__option", "data-md-component": "palette"},
-    )
+    kwargs = {"data-md-component": "palette"}
+    form = xml.Form("md-header__option", None, **kwargs)
     for i, pal in enumerate(palettes):
         mode = "dark" if pal.scheme == "slate" else "light"
         attrs = {
@@ -61,7 +59,7 @@ def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
                 "hidden": "hidden",
             }
             label = ElementTree.SubElement(el_input, "label", attrs)
-            el = xmlhelpers.get_material_icon_svg(
+            el = xml.get_material_icon_svg(
                 pal.toggle_icon or "material/brightness-4",
             )
             label.append(el)
@@ -78,5 +76,5 @@ if __name__ == "__main__":
         scheme="slate",
     )
     root = build_toggle([default_palette, dark_palette])
-    xml_string = xmlhelpers.pformat(root)
+    xml_string = xml.pformat(root)
     print(xml_string)
