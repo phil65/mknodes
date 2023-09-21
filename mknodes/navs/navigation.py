@@ -51,9 +51,7 @@ class Navigation(dict):
         match node:
             case mknav.MkNav():
                 self[(node.section,)] = node
-            case mkpage.MkPage():
-                self[node.path.removesuffix(".md")] = node
-            case mklink.MkLink():
+            case mkpage.MkPage() | mklink.MkLink():
                 self[node.title] = node
             case _:
                 raise TypeError(node)

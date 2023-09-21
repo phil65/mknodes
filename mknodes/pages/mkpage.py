@@ -123,7 +123,7 @@ class MkPage(mkcontainer.MkContainer):
     def path(self):
         if self._path:
             return self._path.removesuffix(".md") + ".md"
-        return f"{self.title}.md"
+        return f"{self.metadata.title}.md"
 
     @path.setter
     def path(self, value):
@@ -144,8 +144,8 @@ class MkPage(mkcontainer.MkContainer):
         self._metadata.status = value
 
     @property
-    def title(self) -> str | None:
-        return self.metadata.title
+    def title(self) -> str:
+        return self.metadata.title or self.path.removesuffix(".md")
 
     @title.setter
     def title(self, value: str):
