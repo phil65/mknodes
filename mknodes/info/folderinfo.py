@@ -178,7 +178,7 @@ class FolderInfo:
     @functools.cached_property
     def tools(self) -> list[tools.Tool]:
         """Return a list of build tools used by this package."""
-        return [t for t in tools.TOOLS.values() if t.is_used(self)]
+        return [instance for t in tools.TOOLS.values() if (instance := t(self)).used]
 
     @functools.cached_property
     def docstring_style(self):

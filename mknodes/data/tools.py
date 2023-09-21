@@ -68,6 +68,10 @@ class Tool:
     setup_cmd: str | None
     config_syntax: str
 
+    def __init__(self, folderinfo):
+        self.used = self.is_used(folderinfo)
+        self.cfg = self.get_config(folderinfo) if self.used else None
+
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         """Return whether tool is used for given directory.
 
@@ -218,15 +222,15 @@ ToolStr = Literal[
 ]
 
 
-TOOLS: dict[ToolStr, Tool] = {
+TOOLS: dict[ToolStr, type[Tool]] = {
     p.identifier: p
     for p in [
-        PreCommit(),
-        Ruff(),
-        Black(),
-        MyPy(),
-        Coverage(),
-        MkDocs(),
-        MkDocsMaterial(),
+        PreCommit,
+        Ruff,
+        Black,
+        MyPy,
+        Coverage,
+        MkDocs,
+        MkDocsMaterial,
     ]
 }

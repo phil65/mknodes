@@ -4,7 +4,6 @@ from typing import Any
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import tools
-from mknodes.info import folderinfo
 from mknodes.utils import log, reprhelpers
 
 
@@ -19,7 +18,7 @@ class MkDevTools(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        tools: list[tools.ToolStr] | None = None,
+        tools: list[tools.Tool] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -39,7 +38,7 @@ class MkDevTools(mkcontainer.MkContainer):
     def tools(self) -> list[tools.Tool]:  # type: ignore[return]
         match self._tools:
             case list():
-                return [tools.TOOLS[i] for i in self._tools]
+                return self._tools
             case None:
                 return self.ctx.metadata.tools
             case _:
@@ -50,14 +49,8 @@ class MkDevTools(mkcontainer.MkContainer):
         import mknodes as mk
 
         items = []
-        info = (
-            self.associated_project.folderinfo
-            if self.associated_project
-            else folderinfo.FolderInfo()
-        )
         for tool in self.tools:
-            cfg = tool.get_config(info)
-            cfg_node = mk.MkCode(cfg or "", language=tool.config_syntax)
+            cfg_node = mk.MkCode(tool.cfg or "", language=tool.config_syntax)
             code = mk.MkCode(f"pip install {tool.identifier}", language="bash")
             link = mk.MkLink(tool.url, "More information")
             in_adm = [f"To install {tool.identifier}:", code, link]
@@ -83,9 +76,7 @@ class MkDevTools(mkcontainer.MkContainer):
         import mknodes
 
         node = MkDevTools()
-        page += mknodes.MkReprRawRendered(node, header="### From project")
-        node = MkDevTools(["pre-commit"])
-        page += mknodes.MkReprRawRendered(node, header="### Explicit")
+        page += mknodes.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
