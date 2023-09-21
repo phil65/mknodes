@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class PageTemplate:
     def __init__(
         self,
-        filename: str,
+        filename: str | None = None,
         extends: str | None = "base",
     ):
         self.filename = filename
@@ -29,6 +29,9 @@ class PageTemplate:
 
     def __bool__(self):
         return any(self.blocks)
+
+    def __hash__(self):
+        return hash(self.build_html())
 
     @property
     def blocks(self) -> list[templateblocks.Block]:

@@ -126,19 +126,24 @@ class Project(Generic[T]):
         for _, node in iterator:
             extra_files |= node.files
             match node:
-                case mk.MkPage():
-                    if show_code_admonition and node.created_by:
-                        code = mk.MkCode.for_object(node.created_by)
-                        typ = "section" if node.is_index() else "page"
+                case mk.MkPage() as page:
+                    if show_code_admonition and page.created_by:
+                        code = mk.MkCode.for_object(page.created_by)
+                        typ = "section" if page.is_index() else "page"
                         details = mk.MkAdmonition(
                             code,
                             title=f"Code for this {typ}",
                             collapsible=True,
                             typ="quote",
                         )
-                        node.append(details)
-                    if node.inclusion_level:
-                        path, md = node.resolved_file_path, node.to_markdown()
+                        page.append(details)
+                    if page.inclusion_level:
+                        path = page.resolved_file_path
+                        if page.template:
+                            html_path = pathlib.Path(path).with_suffix(".html").as_posix()
+                            page._metadata.template = html_path
+                            page.template.filename = html_path
+                        md = page.to_markdown()
                         node_files[path] = md
                 case mknav.MkNav():
                     logger.info("Processing section %r...", node.section)

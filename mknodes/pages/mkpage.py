@@ -89,7 +89,7 @@ class MkPage(mkcontainer.MkContainer):
             template=None,
             tags=tags,
         )
-        self.template = template
+        self.template = template or pagetemplate.PageTemplate()
         if frame := inspect.currentframe():
             self._metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
