@@ -4,7 +4,7 @@ import abc
 import collections.abc
 import dataclasses
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from mknodes.utils import mergehelpers
 
@@ -64,6 +64,7 @@ class JSLink:
     link: str
     defer: bool = False
     async_: bool = False
+    crossorigin: Literal["anonymous", "use-credentials"] | None = None
     typ: str = ""
 
     def __str__(self):
@@ -80,6 +81,8 @@ class JSLink:
             html += " defer"
         if self.async_:
             html += " async"
+        if self.crossorigin:
+            html += f' crossorigin="{self.crossorigin}"'
         html += "></script>"
         return html
 
@@ -89,6 +92,7 @@ class JSFile:
     link: str
     defer: bool = False
     async_: bool = False
+    crossorigin: Literal["anonymous", "use-credentials"] | None = None
     typ: str = ""
 
     def __str__(self):
@@ -105,6 +109,8 @@ class JSFile:
             html += " defer"
         if self.async_:
             html += " async"
+        if self.crossorigin:
+            html += f' crossorigin="{self.crossorigin}"'
         html += "></script>"
         return html
 
