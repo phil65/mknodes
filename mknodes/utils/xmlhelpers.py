@@ -8,7 +8,13 @@ from mknodes.utils import log, pathhelpers
 logger = log.get_logger(__name__)
 
 
-class Div(Et.Element):
+class HTMLElement(Et.Element):
+    def to_string(self, space: str = "  ", level: int = 0) -> str:
+        Et.indent(self, space=space, level=level)
+        return Et.tostring(self, encoding="unicode", method="html")
+
+
+class Div(HTMLElement):
     def __init__(
         self,
         klass: str | None = None,
@@ -23,7 +29,7 @@ class Div(Et.Element):
             parent.append(self)
 
 
-class Header(Et.Element):
+class Header(HTMLElement):
     def __init__(self, level: int, text: str, parent=None, **kwargs):
         super().__init__(f"h{level}", kwargs)
         self.text = text
@@ -31,7 +37,7 @@ class Header(Et.Element):
             parent.append(self)
 
 
-class P(Et.Element):
+class P(HTMLElement):
     def __init__(self, klass: str | None = None, parent=None, **kwargs):
         attrs = {"class": klass} if klass else {}
         super().__init__("p", attrs | kwargs)
@@ -39,7 +45,15 @@ class P(Et.Element):
             parent.append(self)
 
 
-class Img(Et.Element):
+class Section(HTMLElement):
+    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+        attrs = {"class": klass} if klass else {}
+        super().__init__("section", attrs | kwargs)
+        if parent is not None:
+            parent.append(self)
+
+
+class Img(HTMLElement):
     def __init__(self, klass: str | None = None, parent=None, **kwargs):
         attrs = {"class": klass} if klass else {}
         super().__init__("img", attrs | kwargs)
@@ -47,7 +61,7 @@ class Img(Et.Element):
             parent.append(self)
 
 
-class A(Et.Element):
+class A(HTMLElement):
     def __init__(
         self,
         klass: str | None = None,

@@ -112,13 +112,13 @@ class MkTimeline(mkcontainer.MkContainer):
         return reprhelpers.get_repr(self)
 
     def _to_markdown(self) -> str:
-        root = Et.Element("section", {"class": "timeline"})
+        root = xml.Section("timeline")
         div = xml.Div("container", parent=root)
         for i, item in enumerate(self.items):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()
             div.append(elem)
-        return "\n\n" + xml.pformat(root) + "\n\n"
+        return "\n\n" + root.to_string() + "\n\n"
 
     def add_item(
         self,

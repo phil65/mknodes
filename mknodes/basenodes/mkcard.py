@@ -41,8 +41,7 @@ def build_html_card(
     p = xml.P(parent=card_div)
     button = ElementTree.SubElement(p, "button")
     button.text = title
-    return xml.pformat(root)
-    # return ElementTree.tostring(root, encoding="unicode")
+    return root.to_string()
 
 
 class MkCard(mknode.MkNode):
