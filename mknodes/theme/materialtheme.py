@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
+import dataclasses
 import functools
 import pathlib
 
@@ -85,6 +86,35 @@ CONTAINER_RULE = """.mdx-container {
     );
     }
 """  # noqa: E501
+
+
+@dataclasses.dataclass
+class Admonition:
+    svg: str
+    header_color: str
+    icon_color: str
+    border_color: str
+
+
+@dataclasses.dataclass
+class StatusIcon:
+    name: str
+    svg: str
+
+
+@dataclasses.dataclass
+class ColorTheme:
+    color: str
+    light_shade: str | None = None
+    dark_shade: str | None = None
+
+    @property
+    def light_str(self) -> str:
+        return self.light_shade or self.color
+
+    @property
+    def dark_str(self) -> str:
+        return self.dark_shade or self.color
 
 
 def get_partial_path(partial: str) -> pathlib.Path:
