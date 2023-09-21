@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-from xml.etree import ElementTree
 
 from mknodes.basenodes import mkbinaryimage, mknode
 from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
@@ -39,7 +38,7 @@ def build_html_card(
     if caption:
         xml.Div("overlay", text=caption, parent=container_div)
     p = xml.P(parent=card_div)
-    button = ElementTree.SubElement(p, "button")
+    button = xml.Button(parent=p)
     button.text = title
     return root.to_string()
 

@@ -10,12 +10,27 @@ logger = log.get_logger(__name__)
 
 
 class HTMLElement(Et.Element):
+    tag_name: str
+
+    def __init__(
+        self,
+        klass: str | None = None,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
+    ):
+        attrs = {"class": klass} if klass else {}
+        super().__init__(self.tag_name, attrs | kwargs)
+        if parent is not None:
+            parent.append(self)
+
     def to_string(self, space: str = "  ", level: int = 0) -> str:
         Et.indent(self, space=space, level=level)
         return Et.tostring(self, encoding="unicode", method="html")
 
 
 class Div(HTMLElement):
+    tag_name = "div"
+
     def __init__(
         self,
         klass: str | None = None,
@@ -23,11 +38,8 @@ class Div(HTMLElement):
         parent: Et.Element | None = None,
         **kwargs: Any,
     ):
-        attrs = {"class": klass} if klass else {}
-        super().__init__("div", attrs | kwargs)
+        super().__init__(klass, parent, **kwargs)
         self.text = text
-        if parent is not None:
-            parent.append(self)
 
 
 class Header(HTMLElement):
@@ -38,52 +50,52 @@ class Header(HTMLElement):
         parent: Et.Element | None = None,
         **kwargs: Any,
     ):
-        super().__init__(f"h{level}", kwargs)
+        self.tag_name = f"h{level}"
+        super().__init__(**kwargs)
         self.text = text
         if parent is not None:
             parent.append(self)
 
 
 class P(HTMLElement):
-    def __init__(
-        self,
-        klass: str | None = None,
-        parent: Et.Element | None = None,
-        **kwargs: Any,
-    ):
-        attrs = {"class": klass} if klass else {}
-        super().__init__("p", attrs | kwargs)
-        if parent is not None:
-            parent.append(self)
+    tag_name = "p"
 
 
 class Section(HTMLElement):
-    def __init__(
-        self,
-        klass: str | None = None,
-        parent: Et.Element | None = None,
-        **kwargs: Any,
-    ):
-        attrs = {"class": klass} if klass else {}
-        super().__init__("section", attrs | kwargs)
-        if parent is not None:
-            parent.append(self)
+    tag_name = "section"
 
 
 class Img(HTMLElement):
-    def __init__(
-        self,
-        klass: str | None = None,
-        parent: Et.Element | None = None,
-        **kwargs: Any,
-    ):
-        attrs = {"class": klass} if klass else {}
-        super().__init__("img", attrs | kwargs)
-        if parent is not None:
-            parent.append(self)
+    tag_name = "img"
+
+
+class Ul(HTMLElement):
+    tag_name = "ul"
+
+
+class Li(HTMLElement):
+    tag_name = "li"
+
+
+class Button(HTMLElement):
+    tag_name = "button"
+
+
+class Form(HTMLElement):
+    tag_name = "form"
+
+
+class Input(HTMLElement):
+    tag_name = "input"
+
+
+class Label(HTMLElement):
+    tag_name = "label"
 
 
 class A(HTMLElement):
+    tag_name = "a"
+
     def __init__(
         self,
         klass: str | None = None,
@@ -91,12 +103,8 @@ class A(HTMLElement):
         parent: Et.Element | None = None,
         **kwargs: Any,
     ):
-        attrs = {"class": klass} if klass else {}
-        kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        super().__init__("a", attrs | kwargs)
+        super().__init__(klass, parent, **kwargs)
         self.text = text
-        if parent is not None:
-            parent.append(self)
 
 
 def get_material_icon_svg(icon: str) -> Et.Element:
