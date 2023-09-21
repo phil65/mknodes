@@ -5,7 +5,7 @@ from typing import Literal
 
 from markdown import markdown
 
-from mknodes import mkdocsconfig
+from mknodes.basenodes import mknode
 
 
 BlockStr = Literal[
@@ -35,13 +35,15 @@ class Super:
         return "{{{{ super() }}}}"
 
 
-class Block:
+class Block(mknode.MkNode):
     block_id: str
 
     def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
     def to_markdown(self, md: markdown.Markdown | None = None):
+        from mknodes import mkdocsconfig
+
         instance = md or mkdocsconfig.Config().get_markdown_instance()
         content = self.block_content(instance)
         return f"{{% block {self.block_id} %}}\n{content}\n{{% endblock %}}"
@@ -50,20 +52,24 @@ class Block:
 class HtmlBlock(Block):
     block_id: str
 
-    def __init__(self):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
         self.items = [Super()]
 
     def __bool__(self):
         return len(self.items) != 1 or not isinstance(self.items[0], Super)
 
-    def block_content(self, md: markdown.Markdown | None = None):
+    def block_content(self, md: markdown.Markdown | None = None) -> str:
         import mknodes
+
+        from mknodes import mkdocsconfig
 
         instance = md or mkdocsconfig.Config().get_markdown_instance()
         result = ""
         for i in self.items:
             match i:
                 case mknodes.MkNode():
+                    i.parent = self.parent
                     result += instance.convert(str(i))
                 case _:
                     result += str(i)
@@ -76,6 +82,7 @@ class HtmlBlock(Block):
 
     @content.setter
     def content(self, value):
+        value = self.to_child_node(value)
         self.items = [value]
 
 
@@ -89,6 +96,10 @@ class AnnouncementBarBlock(HtmlBlock):
 
 class FooterBlock(HtmlBlock):
     block_id = "footer"
+
+
+class OutdatedBlock(HtmlBlock):
+    block_id = "outdated"
 
 
 class TabsBlock(HtmlBlock):

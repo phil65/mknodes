@@ -16,14 +16,17 @@ class PageTemplate:
         self,
         filename: str | None = None,
         extends: str | None = "base",
+        parent=None,
     ):
         self.filename = filename
         self.extends = extends
+        self.parent = parent
         self.title_block = templateblocks.TitleBlock()
-        self.content_block = templateblocks.ContentBlock()
-        self.tabs_block = templateblocks.TabsBlock()
-        self.announce_block = templateblocks.AnnouncementBarBlock()
-        self.footer_block = templateblocks.FooterBlock()
+        self.content_block = templateblocks.ContentBlock(parent)
+        self.tabs_block = templateblocks.TabsBlock(parent)
+        self.outdated_block = templateblocks.OutdatedBlock(parent)
+        self.announce_block = templateblocks.AnnouncementBarBlock(parent)
+        self.footer_block = templateblocks.FooterBlock(parent)
         self.libs_block = templateblocks.LibsBlock()
         self.styles_block = templateblocks.StylesBlock()
 
@@ -43,6 +46,7 @@ class PageTemplate:
             self.footer_block,
             self.libs_block,
             self.styles_block,
+            self.outdated_block,
         ]
 
     def __repr__(self):
