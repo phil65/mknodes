@@ -1,4 +1,4 @@
-$(function(){
+$(window).load(function(){
 
   window.sr = ScrollReveal();
 
