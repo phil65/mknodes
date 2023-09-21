@@ -101,6 +101,8 @@ class BuildContext(Context):
     """All requirements (JS, CSS, extensions) inferred from the build."""
     node_stats: list[NodeBuildStats] = dataclasses.field(default_factory=list)
     """Some stats about nodes construction."""
+    build_files: dict = dataclasses.field(default_factory=dict)
+    """A mapping of filepaths -> Markdown."""
     node_counter: collections.Counter = dataclasses.field(
         default_factory=collections.Counter,
     )

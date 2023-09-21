@@ -12,7 +12,6 @@ from mkdocs.plugins import get_plugin_logger
 from mkdocs.structure import files as files_
 
 from mknodes import mkdocsconfig, paths
-from mknodes.pages import pagetemplate
 from mknodes.plugin import buildbackend, mkdocsbuilder, mkdocshelpers
 from mknodes.utils import mergehelpers, pathhelpers, requirements
 
@@ -34,7 +33,7 @@ class MkDocsBackend(buildbackend.BuildBackend):
                 self._config = config
             case _:
                 self._config = mkdocsconfig.Config(config)._config
-        super().__init__(directory)
+        self.directory = pathlib.Path(directory or ".")
         files_map = {pathlib.PurePath(f.src_path).as_posix(): f for f in files or []}
         self._mk_files: collections.ChainMap[str, files_.File] = collections.ChainMap(
             {},
@@ -58,12 +57,15 @@ class MkDocsBackend(buildbackend.BuildBackend):
         files = sorted(self._mk_files.values(), key=mkdocshelpers.file_sorter)
         return files_.Files(files)
 
-    def on_collect(self, files: dict[str, str | bytes], reqs: requirements.Requirements):
-        logger.info("Finished writing pages to disk")
-        self.write_files(files)
-        logger.info("Finished writing pages to disk")
-        logger.info("Adding requirements to Config and build...")
-        for css in reqs.css:
+    def collect_files(self, files):
+        for k, v in files.items():
+            logger.debug("%s: Writing file to %r", type(self).__name__, str(k))
+            path = pathlib.Path(k).as_posix()
+            # self._files[path] = v
+            self._write_file(path, v)
+
+    def collect_css(self, css_files):
+        for css in css_files:
             if isinstance(css, requirements.CSSFile):
                 file_path = paths.RESOURCES / css
                 css_text = file_path.read_text()
@@ -74,22 +76,52 @@ class MkDocsBackend(buildbackend.BuildBackend):
             else:
                 logger.debug("Adding remote CSS file %s", css)
                 self._config.extra_css.append(str(css))
-        for file in reqs.js_links:
+
+    def collect_js_links(self, js_links):
+        for file in js_links:
             logger.debug("Adding remote JS file %s", str(file))
             val = config_options.ExtraScriptValue(str(file))
             val.async_ = file.async_
             val.defer = file.defer
             val.type = file.typ
             self._config.extra_javascript.append(val)
-        for file in reqs.js_files:
+
+    def collect_js_files(self, js_files):
+        for file in js_files:
             file_path = paths.RESOURCES / str(file)
             js_text = file_path.read_text()
-            path = f"{hash(js_text)}.css"
-            self.add_js_file(path, js_text, file.async_, file.defer, file.typ)
-        if extensions := reqs.markdown_extensions:
-            self.register_extensions(extensions)
-        for template in reqs.templates:
-            self.add_template(template)
+            path = (pathlib.Path("assets") / f"{hash(js_text)}.css").as_posix()
+            val = config_options.ExtraScriptValue(str(path))
+            val.async_ = file.async_
+            val.defer = file.defer
+            val.type = file.typ
+            self._config.extra_javascript.append(path)
+            abs_path = pathlib.Path(self._config.site_dir) / path
+            logger.info("Registering js file %s...", abs_path)
+            pathhelpers.write_file(js_text, abs_path)
+
+    def collect_extensions(self, extensions):
+        if extensions:
+            for ext_name in extensions:
+                if ext_name not in self._config.markdown_extensions:
+                    logger.info("Adding %s to extensions", ext_name)
+                    self._config.markdown_extensions.append(ext_name)
+            self._config.mdx_configs = mergehelpers.merge_dicts(
+                self._config.mdx_configs,
+                extensions,
+            )
+
+    def collect_templates(self, templates):
+        if not self._config.theme.custom_dir:
+            logger.warning("Cannot write template. No custom_dir set in config.")
+            return
+        path = pathlib.Path(self._config.theme.custom_dir)
+        for template in templates:
+            md = self._get_parser()
+            if html := template.build_html(md):
+                target_path = path / template.filename
+                logger.info("Creating %s...", target_path.as_posix())
+                pathhelpers.write_file(html, target_path)
 
     def _write_file(self, path: str | os.PathLike, content: str | bytes):
         path = pathlib.PurePath(path).as_posix()
@@ -109,16 +141,6 @@ class MkDocsBackend(buildbackend.BuildBackend):
             target_path = new_path
         pathhelpers.write_file(content, target_path or source_path)
 
-    def register_extensions(self, extensions: dict[str, dict]):
-        for ext_name in extensions:
-            if ext_name not in self._config.markdown_extensions:
-                logger.info("Adding %s to extensions", ext_name)
-                self._config.markdown_extensions.append(ext_name)
-        self._config.mdx_configs = mergehelpers.merge_dicts(
-            self._config.mdx_configs,
-            extensions,
-        )
-
     def add_css_file(self, filename: str | os.PathLike, css: str):
         """Register a css file.
 
@@ -133,53 +155,6 @@ class MkDocsBackend(buildbackend.BuildBackend):
         abs_path = pathlib.Path(self._config.site_dir) / path
         logger.info("Registering css file %s...", abs_path)
         pathhelpers.write_file(css, abs_path)
-
-    def add_js_file(
-        self,
-        filename: str | os.PathLike,
-        js: str,
-        async_: bool = False,
-        defer: bool = False,
-        typ: str | None = None,
-    ):
-        """Register a javascript file.
-
-        Writes file to build assets folder and registers extra_javascript in config
-
-        Arguments:
-            filename: Filename to write
-            js: file content
-            async_: file content
-            defer: file content
-            typ: file content
-        """
-        path = (pathlib.Path("assets") / filename).as_posix()
-        val = config_options.ExtraScriptValue(str(path))
-        val.async_ = async_
-        val.defer = defer
-        val.type = typ
-        self._config.extra_javascript.append(path)
-        abs_path = pathlib.Path(self._config.site_dir) / path
-        logger.info("Registering js file %s...", abs_path)
-        pathhelpers.write_file(js, abs_path)
-
-    def add_template(self, template: pagetemplate.PageTemplate):
-        """Register a html template.
-
-        Writes file to build custom_dir folder
-
-        Arguments:
-            template: Template object
-        """
-        if not self._config.theme.custom_dir:
-            logger.warning("Cannot write template. No custom_dir set in config.")
-            return
-        md = self._get_parser()
-        if html := template.build_html(md):
-            target_path = pathlib.Path(self._config.theme.custom_dir) / template.filename
-            # path = pathlib.Path("overrides") / filename
-            logger.info("Creating %s...", target_path.as_posix())
-            pathhelpers.write_file(html, target_path)
 
 
 if __name__ == "__main__":

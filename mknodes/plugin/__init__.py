@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 from collections.abc import Callable
-import itertools
 
 import pathlib
 import urllib.parse
@@ -14,7 +13,6 @@ from mkdocs import livereload
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
 from mknodes import mkdocsconfig, project
-from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, markdownbackend, mkdocsbackend, pluginconfig
 from mknodes.theme import theme
@@ -53,9 +51,10 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         """Create the project based on MkDocs config."""
         if not self.config.build_fn:
             return
-        data = config.theme._vars  # type: ignore[attr-defined]
-        theme_name = config.theme.name or "material"
-        skin = theme.Theme.get_theme(theme_name=theme_name, data=data)
+        skin = theme.Theme.get_theme(
+            theme_name=config.theme.name or "material",
+            data=config.theme._vars,  # type: ignore[attr-defined]
+        )
         self.project = project.Project(
             base_url=config.site_url or "",
             use_directory_urls=config.use_directory_urls,
@@ -66,7 +65,12 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             clone_depth=self.config.clone_depth,
         )
         logger.info("Generating pages...")
-        self.build_info = self.project.build()
+        self.build_info = self.project.build(self.config.show_code_admonition)
+        # now we add our stuff to the MkDocs build environment
+        cfg = mkdocsconfig.Config(config)
+
+        logger.info("Updating MkDocs config metadata...")
+        cfg.update_from_context(self.project.context)
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """Create the node tree and write files to build folder.
@@ -78,62 +82,25 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
           - Templates
           - CSS files
         """
-        import mknodes as mk
-
         if not self.config.build_fn:
             return files
 
-        # now we add our stuff to the MkDocs build environment
         logger.info("Setting up build backends...")
-        cfg = mkdocsconfig.Config(config)
         mkdocs_backend = mkdocsbackend.MkDocsBackend(
             files=files,
-            config=cfg,
+            config=config,
             directory=self.build_folder,
         )
 
         markdown_backend = markdownbackend.MarkdownBackend(
-            directory=cfg.site_dir / "src",
+            directory=pathlib.Path(config.site_dir) / "src",
             extension=".original",
         )
         self.backends = [mkdocs_backend, markdown_backend]
 
-        logger.info("Writing Markdown and assets to MkDocs environment...")
-        node_files: dict[str, str | bytes] = {}
-        extra_files: dict[str, str | bytes] = {}
-        iterator = self.project.theme.iter_nodes()
-        if root := self.project._root:
-            iterator = itertools.chain(iterator, root.iter_nodes())
-        for _, node in iterator:
-            extra_files |= node.files
-            match node:
-                case mkpage.MkPage():
-                    if self.config.show_code_admonition and node.created_by:
-                        code = mk.MkCode.for_object(node.created_by)
-                        typ = "section" if node.is_index() else "page"
-                        details = mk.MkAdmonition(
-                            code,
-                            title=f"Code for this {typ}",
-                            collapsible=True,
-                            typ="quote",
-                        )
-                        node.append(details)
-                    if node.inclusion_level:
-                        path, md = node.resolved_file_path, node.to_markdown()
-                        node_files[path] = md
-                case mknav.MkNav():
-                    logger.info("Processing section %r...", node.section)
-                    path, md = node.resolved_file_path, node.to_markdown()
-                    node_files[path] = md
-
-        build_files = node_files | extra_files
-        logger.info("Fetching requirements from tree...")
-        requirements = self.project.get_requirements()
         for backend in self.backends:
-            backend.on_collect(build_files, requirements)
-
-        logger.info("Updating MkDocs config metadata...")
-        cfg.update_from_context(self.project.context)
+            logger.info("%s: Collecting data..", type(self).__name__)
+            backend.collect(self.build_info.build_files, self.build_info.requirements)
         return mkdocs_backend.files
 
     def on_nav(

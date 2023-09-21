@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import os
-import pathlib
-
 from mknodes.utils import log, requirements
 
 
@@ -10,31 +7,34 @@ logger = log.get_logger(__name__)
 
 
 class BuildBackend:
-    def __init__(
-        self,
-        path: str | os.PathLike | None = None,
-    ):
-        self.directory = pathlib.Path(path or ".")
-        self.assets_path = pathlib.Path(self.directory) / "assets"
-        self.asset_files: dict[str, str | bytes] = {}
-        self._files: dict[str, str | bytes] = {}
+    def collect(self, files: dict[str, str | bytes], reqs: requirements.Requirements):
+        self.collect_extensions(reqs.markdown_extensions)
+        self.collect_js_links(reqs.js_links)
+        self.collect_js_files(reqs.js_files)
+        self.collect_css(reqs.css)
+        self.collect_templates(reqs.templates)
+        self.collect_files(files)
 
-    def _write_file(self, path: str | os.PathLike, content: str | bytes):
-        raise NotImplementedError
-
-    def on_collect(self, files: dict[str, str | bytes], reqs: requirements.Requirements):
+    def collect_files(self, files):
         pass
 
-    def write_file(self, path: str | os.PathLike, content: str | bytes):
-        logger.debug("%s: Writing file to %r", type(self).__name__, str(path))
-        path = pathlib.Path(path).as_posix()
-        self._files[path] = content
-        self._write_file(path, content)
+    def collect_js_links(self, js_links):
+        pass
 
-    def write_files(self, dct: dict[str, str | bytes]):
-        """Write a mapping of {filename: file_content} to build directory."""
-        for k, v in dct.items():
-            self.write_file(k, v)
+    def collect_js_files(self, js_files):
+        pass
+
+    def collect_css(self, css):
+        pass
+
+    # def collect_css_links(self, css):
+    #     pass
+
+    def collect_extensions(self, extensions):
+        pass
+
+    def collect_templates(self, templates):
+        pass
 
 
 if __name__ == "__main__":

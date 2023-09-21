@@ -3,7 +3,7 @@ from __future__ import annotations
 import collections
 
 from collections.abc import Callable
-import functools
+import itertools
 import os
 import pathlib
 from typing import Any, Generic, TypeVar
@@ -74,11 +74,22 @@ class Project(Generic[T]):
                 )
             case _:
                 self.folderinfo = folderinfo.FolderInfo(repo)
+
+        self.context = contexts.ProjectContext(
+            metadata=self.folderinfo.context,
+            git=self.folderinfo.git.context,
+            # github=self.folderinfo.github.context,
+            theme=self.theme.context,
+            links=self.linkprovider,
+            env=self.env,
+            # requirements=self.get_requirements(),
+        )
+
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
 
-    def build(self):
+    def build(self, show_code_admonition: bool = False):
         logger.debug("Building page...")
         self.build_fn(project=self, **self.build_kwargs)
         logger.debug("Finished building page.")
@@ -95,6 +106,8 @@ class Project(Generic[T]):
         paths = [pathlib.Path(i).stem for i in mapping]
         self.linkprovider.set_excludes(paths)
 
+        import mknodes as mk
+
         variables = self.context.as_dict()
         reqs = self.get_requirements()
         ctx = contexts.BuildContext(
@@ -102,7 +115,37 @@ class Project(Generic[T]):
             requirements=reqs,
             node_counter=collections.Counter(for_stats),
         )
+
         self.env.globals |= variables | ctx.as_dict()
+        logger.info("Writing Markdown and assets to MkDocs environment...")
+        node_files: dict[str, str | bytes] = {}
+        extra_files: dict[str, str | bytes] = {}
+        iterator = self.theme.iter_nodes()
+        if root := self._root:
+            iterator = itertools.chain(iterator, root.iter_nodes())
+        for _, node in iterator:
+            extra_files |= node.files
+            match node:
+                case mk.MkPage():
+                    if show_code_admonition and node.created_by:
+                        code = mk.MkCode.for_object(node.created_by)
+                        typ = "section" if node.is_index() else "page"
+                        details = mk.MkAdmonition(
+                            code,
+                            title=f"Code for this {typ}",
+                            collapsible=True,
+                            typ="quote",
+                        )
+                        node.append(details)
+                    if node.inclusion_level:
+                        path, md = node.resolved_file_path, node.to_markdown()
+                        node_files[path] = md
+                case mknav.MkNav():
+                    logger.info("Processing section %r...", node.section)
+                    path, md = node.resolved_file_path, node.to_markdown()
+                    node_files[path] = md
+
+        ctx.build_files = node_files | extra_files
         jinjahelpers.set_markdown_exec_namespace(self.env.globals)
         return ctx
 
@@ -171,18 +214,6 @@ class Project(Generic[T]):
             repo=self.folderinfo.repository_name,
         )
         return reqs
-
-    @functools.cached_property
-    def context(self):
-        return contexts.ProjectContext(
-            metadata=self.folderinfo.context,
-            git=self.folderinfo.git.context,
-            # github=self.folderinfo.github.context,
-            theme=self.theme.context,
-            links=self.linkprovider,
-            env=self.env,
-            # requirements=self.get_requirements(),
-        )
 
     def populate_linkprovider(self):
         invs = self.folderinfo.mkdocs_config.get_inventory_infos()
