@@ -51,7 +51,8 @@ class MkCode(mkcontainer.MkContainer):
             title: Code block title
             linenums: If set, use as start linenumber
             highlight_lines: Optionally highlight lines
-            fence_level: Determines amount of ` used for fence. If None, auto-determine.
+            fence_level: Determines amount of ticks used for fence.
+                         If None, auto-determine based on nesting depth.
             header: Section header
             kwargs: Keyword arguments passed to parent
         """

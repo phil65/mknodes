@@ -112,6 +112,20 @@ def get_material_icon_svg(icon: str) -> Et.Element:
     return Et.fromstring(svg_text)
 
 
+def get_source_button(icon: str = "material/code-json"):
+    href = (
+        "{{ config.site_url | rstrip('/') + '/src/' + page.file.src_uri | replace('.md',"
+        " '.original') }}"
+    )
+    elem = A(
+        "md-content__button md-icon",
+        title="Source",
+        href=href,
+    )
+    elem.append(get_material_icon_svg(icon))
+    return elem
+
+
 def pformat(str_or_elem: str | Et.Element, space: str = "  ", level: int = 0) -> str:
     """Prettyprint given XML.
 

@@ -68,7 +68,6 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     page += admonition  # This adds (6) to the page.
 
     # Now we add the MkNode you are looking at right now.
-    # We will use MkCode.for_object quite a lot in the next sections.
     # DocStrings for for_object: (7)
     page += mk.MkCode.for_object(build)
     page += annotations  # here we add the (invisible) annotations block to the page.
