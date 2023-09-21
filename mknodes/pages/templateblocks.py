@@ -32,7 +32,7 @@ BlockStr = Literal[
 
 class Super:
     def __str__(self):
-        return "{{ super() }}"
+        return "{{{{ super() }}}}"
 
 
 class Block:
@@ -111,22 +111,20 @@ class TitleBlock(Block):
 class LibsBlock(Block):
     block_id = "libs"
 
-    def __init__(self, scripts: Iterable[str] | None = None, include_super: bool = True):
+    def __init__(self, scripts=None, include_super: bool = True):
         self.include_super = include_super
-        self.scripts = set(scripts) if scripts else set()
+        self.scripts = scripts or []
 
     def add_script_file(self, script: str):
-        self.scripts.add(script)
+        self.scripts.append(script)
 
     def __bool__(self):
         return bool(self.scripts)
 
     def block_content(self, md: markdown.Markdown | None = None):
-        lines = [
-            f'<script src="{{ base_url }}/{path}"></script>' for path in self.scripts
-        ]
+        lines = [i.to_html() for i in self.scripts]
         scripts = "\n".join(lines)
-        return f"{{ super() }}\n{scripts}" if self.include_super else scripts
+        return f"{{{{ super() }}}}\n{scripts}" if self.include_super else scripts
 
 
 class StylesBlock(Block):
@@ -148,7 +146,7 @@ class StylesBlock(Block):
             for path in self.styles
         ]
         styles = "\n".join(lines)
-        return f"{{ super() }}\n{styles}" if self.include_super else styles
+        return f"{{{{ super() }}}}\n{styles}" if self.include_super else styles
 
 
 if __name__ == "__main__":
