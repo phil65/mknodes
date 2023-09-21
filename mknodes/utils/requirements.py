@@ -4,8 +4,13 @@ import abc
 import collections.abc
 import dataclasses
 
-from mknodes.pages import pagetemplate
+from typing import TYPE_CHECKING
+
 from mknodes.utils import mergehelpers
+
+
+if TYPE_CHECKING:
+    from mknodes.pages import pagetemplate
 
 
 class Extension(dict):
@@ -49,6 +54,9 @@ class CSSLink(str):
 
     def __repr__(self):
         return f"{type(self).__name__}('{self}')"
+
+    def to_html(self):
+        return f'<link rel="stylesheet" href="{self}" />'
 
 
 @dataclasses.dataclass(frozen=True)
@@ -109,6 +117,10 @@ class CSSFile(str):
 
     def __repr__(self):
         return f"{type(self).__name__}('{self}')"
+
+    def to_html(self):
+        # return '<link rel="stylesheet" href="{{ base_url }}/{path}" />'
+        return f'<link rel="stylesheet" href="{self}" />'
 
 
 class CSSText:
