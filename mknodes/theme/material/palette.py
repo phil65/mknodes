@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import dataclasses
 
-from xml.etree import ElementTree
-
 from mknodes.utils import xmlhelpers as xml
 
 
@@ -27,7 +25,7 @@ class Palette:
     toggle_icon: str | None = None
 
 
-def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
+def build_toggle(palettes: list[Palette]) -> xml.Form:
     """Builds the XML equivalent to the content of "palette.html" partial."""
     # body = ElementTree.Element("body")
     # form = ElementTree.SubElement(
@@ -50,7 +48,7 @@ def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
             attrs["aria-label"] = pal.toggle_name
         else:
             attrs["aria-hidden"] = "true"
-        el_input = ElementTree.SubElement(form, "input", attrs)
+        el_input = xml.Input(parent=form, **attrs)
         if pal.toggle_name:
             attrs = {
                 "class": "md-header__button md-icon",
@@ -58,10 +56,8 @@ def build_toggle(palettes: list[Palette]) -> ElementTree.Element:
                 "for": f"__palette_{i or len(palettes)}",
                 "hidden": "hidden",
             }
-            label = ElementTree.SubElement(el_input, "label", attrs)
-            el = xml.get_material_icon_svg(
-                pal.toggle_icon or "material/brightness-4",
-            )
+            label = xml.Label(parent=el_input, **attrs)
+            el = xml.get_material_icon_svg(pal.toggle_icon or "brightness-4")
             label.append(el)
     # script = ElementTree.SubElement(body, "script")
     # script.text = SCRIPT
