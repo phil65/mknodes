@@ -12,7 +12,14 @@ from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.navs import mknav
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import downloadhelpers, helpers, log, reprhelpers, requirements
+from mknodes.utils import (
+    downloadhelpers,
+    helpers,
+    inspecthelpers,
+    log,
+    reprhelpers,
+    requirements,
+)
 
 
 logger = log.get_logger(__name__)
@@ -85,15 +92,8 @@ class MkPage(mkcontainer.MkContainer):
             tags=tags,
         )
         self.template = template
-        frame = i.f_back.f_back if (i := inspect.currentframe()) else None  # type: ignore[union-attr]  # noqa: E501
-        if frame:
-            fn_name = qual if (qual := frame.f_code.co_qualname) != "<module>" else None
-            self._metadata["created"] = dict(
-                source_filename=frame.f_code.co_filename,
-                source_function=fn_name,
-                source_line_no=frame.f_lineno,
-                # klass=frame.f_locals["self"].__class__.__name__,
-            )
+        if frame := inspect.currentframe():
+            self._metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self):
@@ -212,7 +212,7 @@ class MkPage(mkcontainer.MkContainer):
         data, text = metadata.Metadata.parse(file_content)
         data.update(kwargs)
         page = cls(path=path.name, content=text, title=title, parent=parent)
-        page.metadata = data
+        page.metadata.update(data)
         return page
 
     def get_processors(self):

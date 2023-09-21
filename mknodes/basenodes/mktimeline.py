@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 
 STYLE = (
     "background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0,"
-    ' 0.4)), url("{image}") center center no-repeat;'
+    " 0.4)), url({image}) center center no-repeat;"
     " background-size: cover;"
 )
 

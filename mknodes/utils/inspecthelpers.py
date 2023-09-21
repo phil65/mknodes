@@ -16,6 +16,20 @@ RESPONSE_CODE_OK = 200
 logger = log.get_logger(__name__)
 
 
+def get_stack_info(frame, level: int) -> dict | None:
+    for _ in range(level):
+        frame = frame.f_back
+    if not frame:
+        return None
+    fn_name = qual if (qual := frame.f_code.co_qualname) != "<module>" else None
+    return dict(
+        source_filename=frame.f_code.co_filename,
+        source_function=fn_name,
+        source_line_no=frame.f_lineno,
+        # klass=frame.f_locals["self"].__class__.__name__,
+    )
+
+
 @functools.cache
 def get_function_body(func: types.MethodType | types.FunctionType | type) -> str:
     """Get body of given function. Strips off the signature.

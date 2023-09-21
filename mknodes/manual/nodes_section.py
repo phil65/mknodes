@@ -68,8 +68,8 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     page += mk.MkCode.for_object(kls.create_example_page, extract_body=True)
     # page += mk.MkHeader(kls.__doc__.split("\n")[0])
     page += "## Examples"
-    if kls.STATUS:  # some classes are marked as "new"
-        page.status = kls.STATUS  # we use that info to display an icon in the menu.
+    if kls.STATUS:
+        page.metadata.status = kls.STATUS
     kls.create_example_page(page)
     # if kls.CSS:
     #     path = paths.RESOURCES / kls.CSS
