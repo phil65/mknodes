@@ -18,10 +18,9 @@ class Div(Et.Element):
     ):
         attrs = {"class": klass} if klass else {}
         super().__init__("div", attrs | kwargs)
+        self.text = text
         if parent is not None:
             parent.append(self)
-        if text is not None:
-            self.text = text
 
 
 class Header(Et.Element):
@@ -40,7 +39,7 @@ class P(Et.Element):
             parent.append(self)
 
 
-def get_material_icon_svg(icon: str):
+def get_material_icon_svg(icon: str) -> Et.Element:
     """Return a xmlElement for given MaterialIcon.
 
     Arguments:
@@ -53,7 +52,7 @@ def get_material_icon_svg(icon: str):
     return Et.fromstring(svg_text)
 
 
-def pformat(str_or_elem, space: str = "  ", level: int = 0):
+def pformat(str_or_elem: str | Et.Element, space: str = "  ", level: int = 0) -> str:
     """Prettyprint given XML.
 
     Arguments:
