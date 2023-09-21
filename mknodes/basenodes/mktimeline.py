@@ -47,8 +47,7 @@ class MkTimelineItem(mknode.MkNode):
 
     def get_element(self):
         root = xml.Div("timeline-item")
-        timeline_img = xml.Div("timeline-img", parent=root)
-        timeline_img.text = " "
+        xml.Div("timeline-img", text=" ", parent=root)
         match self.fade_direction:
             case "left":
                 fade = " js--fadeInLeft"
@@ -60,14 +59,12 @@ class MkTimelineItem(mknode.MkNode):
         content_div = xml.Div(f"timeline-content{tl}{fade}", parent=root)
         if self.image:
             header_div = xml.Div("timeline-img-header", parent=content_div)
-            img = STYLE.format(image=self.image)
-            p = xml.P(parent=header_div, style=img)
+            p = xml.P(parent=header_div, style=STYLE.format(image=self.image))
             xml.Header(2, self.title, parent=p)
         elif self.title:
             xml.Header(2, self.title, parent=content_div)
         if self.date:
-            div_date = xml.Div("date", parent=content_div)
-            div_date.text = self.date
+            xml.Div("date", text=self.date, parent=content_div)
         p_text = xml.P(parent=content_div)
         if isinstance(self.content, str):
             p_text.text = self.content

@@ -31,24 +31,15 @@ def build_html_card(
         root.set("href", link)
     card_div = xml.Div("card", parent=root)
     container_div = xml.Div("showcase-container", parent=card_div)
-    ElementTree.SubElement(
-        container_div,
-        "img",
-        src=f"{image}#only-light" if path_dark_mode else image,
-        alt=title,
-        style=f"width:{size}px,height:{size}px",
-    )
+    src = f"{image}#only-light" if path_dark_mode else image
+    style = f"width:{size}px,height:{size}px"
+    ElementTree.SubElement(container_div, "img", src=src, alt=title, style=style)
     if path_dark_mode:
-        ElementTree.SubElement(
-            container_div,
-            "img",
-            src=f"{path_dark_mode}#only-dark",
-            alt=title,
-            style=f"width:{size}px,height:{size}px",
-        )
+        src = f"{path_dark_mode}#only-dark"
+        style = f"width:{size}px,height:{size}px"
+        ElementTree.SubElement(container_div, "img", src=src, alt=title, style=style)
     if caption:
-        overlay_div = xml.Div("overlay", parent=container_div)
-        overlay_div.text = caption
+        xml.Div("overlay", text=caption, parent=container_div)
     p = xml.P(parent=card_div)
     button = ElementTree.SubElement(p, "button")
     button.text = title

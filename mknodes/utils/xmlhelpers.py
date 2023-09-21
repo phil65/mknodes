@@ -9,7 +9,13 @@ logger = log.get_logger(__name__)
 
 
 class Div(Et.Element):
-    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+    def __init__(
+        self,
+        klass: str | None = None,
+        text: str | None = None,
+        parent: Et.Element | None = None,
+        **kwargs,
+    ):
         attrs = {"class": klass} if klass else {}
         super().__init__("div", attrs | kwargs)
         if parent is not None:
