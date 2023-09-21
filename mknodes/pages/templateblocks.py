@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from typing import Literal
 
 from markdown import markdown
 
 from mknodes.basenodes import mknode
+from mknodes.utils import requirements
 
 
 BlockStr = Literal[
@@ -122,11 +122,15 @@ class TitleBlock(Block):
 class LibsBlock(Block):
     block_id = "libs"
 
-    def __init__(self, scripts=None, include_super: bool = True):
+    def __init__(
+        self,
+        scripts: list[requirements.JSFile | requirements.JSLink] | None = None,
+        include_super: bool = True,
+    ):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: str):
+    def add_script_file(self, script: requirements.JSFile | requirements.JSLink):
         self.scripts.append(script)
 
     def __bool__(self):
@@ -141,21 +145,22 @@ class LibsBlock(Block):
 class StylesBlock(Block):
     block_id = "styles"
 
-    def __init__(self, styles: Iterable[str] | None = None, include_super: bool = True):
+    def __init__(
+        self,
+        styles: list[requirements.CSSLink] | None = None,
+        include_super: bool = True,
+    ):
         self.include_super = include_super
-        self.styles = set(styles) if styles else set()
+        self.styles = styles or []
 
-    def add_stylesheet(self, stylesheet: str):
-        self.styles.add(stylesheet)
+    def add_stylesheet(self, stylesheet: requirements.CSSLink):
+        self.styles.append(stylesheet)
 
     def __bool__(self):
         return bool(self.styles)
 
     def block_content(self, md: markdown.Markdown | None = None):
-        lines = [
-            f'<link rel="stylesheet" href="{{ base_url }}/{path}" />'
-            for path in self.styles
-        ]
+        lines = [i.to_html() for i in self.styles]
         styles = "\n".join(lines)
         return f"{{{{ super() }}}}\n{styles}" if self.include_super else styles
 
