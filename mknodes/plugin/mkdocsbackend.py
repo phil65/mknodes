@@ -85,7 +85,7 @@ class MkDocsBackend(buildbackend.BuildBackend):
             file_path = paths.RESOURCES / str(file)
             js_text = file_path.read_text()
             path = f"{hash(js_text)}.css"
-            self.add_js_file(path, js_text)
+            self.add_js_file(path, js_text, file.async_, file.defer, file.typ)
         if extensions := reqs.markdown_extensions:
             self.register_extensions(extensions)
         for template in reqs.templates:
@@ -134,7 +134,14 @@ class MkDocsBackend(buildbackend.BuildBackend):
         logger.info("Registering css file %s...", abs_path)
         pathhelpers.write_file(css, abs_path)
 
-    def add_js_file(self, filename: str | os.PathLike, js: str):
+    def add_js_file(
+        self,
+        filename: str | os.PathLike,
+        js: str,
+        async_: bool = False,
+        defer: bool = False,
+        typ: str | None = None,
+    ):
         """Register a javascript file.
 
         Writes file to build assets folder and registers extra_javascript in config
@@ -142,8 +149,15 @@ class MkDocsBackend(buildbackend.BuildBackend):
         Arguments:
             filename: Filename to write
             js: file content
+            async_: file content
+            defer: file content
+            typ: file content
         """
         path = (pathlib.Path("assets") / filename).as_posix()
+        val = config_options.ExtraScriptValue(str(path))
+        val.async_ = async_
+        val.defer = defer
+        val.type = typ
         self._config.extra_javascript.append(path)
         abs_path = pathlib.Path(self._config.site_dir) / path
         logger.info("Registering js file %s...", abs_path)

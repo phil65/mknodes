@@ -76,14 +76,29 @@ class JSLink:
         return html
 
 
-class JSFile(str):
-    __slots__ = ()
+@dataclasses.dataclass(frozen=True)
+class JSFile:
+    link: str
+    defer: bool = False
+    async_: bool = False
+    typ: str = ""
+
+    def __str__(self):
+        return self.link
 
     def __fspath__(self):
-        return str(self)
+        return self.link
 
-    def __repr__(self):
-        return f"{type(self).__name__}('{self}')"
+    def to_html(self) -> str:
+        html = f'<script src="{self.link}"'
+        if self.typ:
+            html += f' type="{self.typ}"'
+        if self.defer:
+            html += " defer"
+        if self.async_:
+            html += " async"
+        html += "></script>"
+        return html
 
 
 class CSSFile(str):
