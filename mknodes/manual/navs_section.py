@@ -164,7 +164,6 @@ def create_mkmodulepage_page(page: mk.MkPage):
 
 @pages_nav.route.page("Adding to MkPages", hide="toc", status="new")
 def create_adding_to_mkpages_page(page: mk.MkPage):
-    """Create the "Adding to MkPages" MkPage and attach it to given MkNav."""
     page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
     page += "Adding strings also works, they get converted to MkText nodes."
     page += "### ...and text starting with # will become a MkHeader."
@@ -180,8 +179,6 @@ def create_adding_to_mkpages_page(page: mk.MkPage):
     description="Description",
 )
 def create_metadata_page(page: mk.MkPage):
-    """Create the "Metadata" MkPage and attach it to given nav."""
-    # page.metadata is a dataclass, we can prettyprint these with MkPrettyPrint.
     page += METADATA_TEXT
     page += mk.MkDocStrings(
         metadata.Metadata,
@@ -192,8 +189,22 @@ def create_metadata_page(page: mk.MkPage):
     )
 
 
+@pages_nav.route.page("Templates", hide="toc", status="new")
+def create_template_page(page: mk.MkPage):
+    page += "The page template can be edited easily via the 'template' attribute."
+    code = "information = 'You can even put MkNodes here!'"
+    text = (
+        'page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")\n'
+        "page.template.footer_block.content = mk.MkProgressBar(50)\n"
+        f'page.template.tabs_block.content = mk.MkCode(f"{code}")'
+    )
+    page += mk.MkCode(text)
+    page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")
+    page.template.footer_block.content = mk.MkProgressBar(50)
+    page.template.tabs_block.content = mk.MkCode(f"{code}")
+
+
 def create_mkdefaultwebsite_section(nav: mk.MkNav):
-    """Create the "MkDefaultWebsite" sub-MkNav and attach it to given nav."""
     proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
     website_nav = mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
     nav += website_nav
@@ -201,7 +212,6 @@ def create_mkdefaultwebsite_section(nav: mk.MkNav):
 
 @nav.route.nav("MkDoc")
 def create_mkdoc_section(nav: mk.MkNav):
-    """Create the "Metadata" sub-MkNav and attach it to given nav."""
     nav = nav.add_nav("MkDoc")
 
     page = nav.add_index_page(hide="toc", icon="api")

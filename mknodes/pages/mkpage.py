@@ -168,7 +168,7 @@ class MkPage(mkcontainer.MkContainer):
         self._metadata.icon = value
 
     @property
-    def template(self) -> pagetemplate.PageTemplate | None:
+    def template(self) -> pagetemplate.PageTemplate:
         return self._template
 
     @template.setter
