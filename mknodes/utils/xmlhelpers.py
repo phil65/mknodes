@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any
 from xml.etree import ElementTree as Et
 
 from mknodes.utils import log, pathhelpers
@@ -20,7 +21,7 @@ class Div(HTMLElement):
         klass: str | None = None,
         text: str | None = None,
         parent: Et.Element | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         attrs = {"class": klass} if klass else {}
         super().__init__("div", attrs | kwargs)
@@ -30,7 +31,13 @@ class Div(HTMLElement):
 
 
 class Header(HTMLElement):
-    def __init__(self, level: int, text: str, parent=None, **kwargs):
+    def __init__(
+        self,
+        level: int,
+        text: str,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
+    ):
         super().__init__(f"h{level}", kwargs)
         self.text = text
         if parent is not None:
@@ -38,7 +45,12 @@ class Header(HTMLElement):
 
 
 class P(HTMLElement):
-    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+    def __init__(
+        self,
+        klass: str | None = None,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
+    ):
         attrs = {"class": klass} if klass else {}
         super().__init__("p", attrs | kwargs)
         if parent is not None:
@@ -46,7 +58,12 @@ class P(HTMLElement):
 
 
 class Section(HTMLElement):
-    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+    def __init__(
+        self,
+        klass: str | None = None,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
+    ):
         attrs = {"class": klass} if klass else {}
         super().__init__("section", attrs | kwargs)
         if parent is not None:
@@ -54,7 +71,12 @@ class Section(HTMLElement):
 
 
 class Img(HTMLElement):
-    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+    def __init__(
+        self,
+        klass: str | None = None,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
+    ):
         attrs = {"class": klass} if klass else {}
         super().__init__("img", attrs | kwargs)
         if parent is not None:
@@ -66,8 +88,8 @@ class A(HTMLElement):
         self,
         klass: str | None = None,
         text: str | None = None,
-        parent=None,
-        **kwargs,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
     ):
         attrs = {"class": klass} if klass else {}
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
