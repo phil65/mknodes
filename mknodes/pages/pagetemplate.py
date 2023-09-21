@@ -27,6 +27,9 @@ class PageTemplate:
         self.libs_block = templateblocks.LibsBlock()
         self.styles_block = templateblocks.StylesBlock()
 
+    def __bool__(self):
+        return any(self.blocks)
+
     @property
     def blocks(self) -> list[templateblocks.Block]:
         return [
