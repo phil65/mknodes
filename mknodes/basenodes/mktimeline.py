@@ -58,8 +58,9 @@ class MkTimelineItem(mknode.MkNode):
         tl = " timeline-card" if self.image else ""
         content_div = xml.Div(f"timeline-content{tl}{fade}", parent=root)
         if self.image:
-            header_div = xml.Div("timeline-img-header", parent=content_div)
-            p = xml.P(parent=header_div, style=STYLE.format(image=self.image))
+            style = STYLE.format(image=self.image)
+            header_div = xml.Div("timeline-img-header", parent=content_div, style=style)
+            p = xml.P(parent=header_div)
             xml.Header(2, self.title, parent=p)
         elif self.title:
             xml.Header(2, self.title, parent=content_div)
