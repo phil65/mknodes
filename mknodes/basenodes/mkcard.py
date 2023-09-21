@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from xml.etree import ElementTree
 
 from mknodes.basenodes import mkbinaryimage, mknode
-from mknodes.utils import log, reprhelpers, requirements, xmlhelpers
+from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
 
 
 if TYPE_CHECKING:
@@ -29,12 +29,8 @@ def build_html_card(
     root = ElementTree.Element("a")
     if link:
         root.set("href", link)
-    card_div = ElementTree.SubElement(root, "div", {"class": "card"})
-    container_div = ElementTree.SubElement(
-        card_div,
-        "div",
-        {"class": "showcase-container"},
-    )
+    card_div = xml.Div("card", parent=root)
+    container_div = xml.Div("showcase-container", parent=card_div)
     ElementTree.SubElement(
         container_div,
         "img",
@@ -51,12 +47,12 @@ def build_html_card(
             style=f"width:{size}px,height:{size}px",
         )
     if caption:
-        overlay_div = ElementTree.SubElement(container_div, "div", {"class": "overlay"})
+        overlay_div = xml.Div("overlay", parent=container_div)
         overlay_div.text = caption
     p = ElementTree.SubElement(card_div, "p")
     button = ElementTree.SubElement(p, "button")
     button.text = title
-    return xmlhelpers.pformat(root)
+    return xml.pformat(root)
     # return ElementTree.tostring(root, encoding="unicode")
 
 

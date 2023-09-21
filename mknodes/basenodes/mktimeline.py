@@ -4,7 +4,7 @@ from typing import Any, Literal
 from xml.etree import ElementTree as Et
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers, requirements, xmlhelpers
+from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -46,8 +46,8 @@ class MkTimelineItem(mknode.MkNode):
         pass
 
     def get_element(self):
-        root = Et.Element("div", {"class": "timeline-item"})
-        timeline_img = Et.SubElement(root, "div", {"class": "timeline-img"})
+        root = xml.Div("timeline-item")
+        timeline_img = xml.Div("timeline-img", parent=root)
         timeline_img.text = " "
         match self.fade_direction:
             case "left":
@@ -57,11 +57,9 @@ class MkTimelineItem(mknode.MkNode):
             case _:
                 fade = ""
         tl = " timeline-card" if self.image else ""
-        attrs = {"class": f"timeline-content{tl}{fade}"}
-        content_div = Et.SubElement(root, "div", attrs)
+        content_div = xml.Div(f"timeline-content{tl}{fade}", parent=root)
         if self.image:
-            attrs = {"class": "timeline-img-header"}
-            header_div = Et.SubElement(content_div, "div", attrs)
+            header_div = xml.Div("timeline-img-header", parent=content_div)
             img = STYLE.format(image=self.image)
             p = Et.SubElement(header_div, "p", {"style": img})
             h_header = Et.SubElement(p, "h2")
@@ -70,7 +68,7 @@ class MkTimelineItem(mknode.MkNode):
             h_header = Et.SubElement(content_div, "h2")
             h_header.text = self.title
         if self.date:
-            div_date = Et.SubElement(content_div, "div", {"class": "date"})
+            div_date = xml.Div("date", parent=content_div)
             div_date.text = self.date
         p_text = Et.SubElement(content_div, "p")
         if isinstance(self.content, str):
@@ -127,7 +125,7 @@ class MkTimeline(mkcontainer.MkContainer):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()
             div.append(elem)
-        return "\n\n" + xmlhelpers.pformat(root) + "\n\n"
+        return "\n\n" + xml.pformat(root) + "\n\n"
 
     def add_item(
         self,
