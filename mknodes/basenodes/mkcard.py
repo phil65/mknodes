@@ -49,7 +49,7 @@ def build_html_card(
     if caption:
         overlay_div = xml.Div("overlay", parent=container_div)
         overlay_div.text = caption
-    p = ElementTree.SubElement(card_div, "p")
+    p = xml.P(parent=card_div)
     button = ElementTree.SubElement(p, "button")
     button.text = title
     return xml.pformat(root)

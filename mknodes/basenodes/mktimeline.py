@@ -61,16 +61,14 @@ class MkTimelineItem(mknode.MkNode):
         if self.image:
             header_div = xml.Div("timeline-img-header", parent=content_div)
             img = STYLE.format(image=self.image)
-            p = Et.SubElement(header_div, "p", {"style": img})
-            h_header = Et.SubElement(p, "h2")
-            h_header.text = self.title
+            p = xml.P(parent=header_div, style=img)
+            xml.Header(2, self.title, parent=p)
         elif self.title:
-            h_header = Et.SubElement(content_div, "h2")
-            h_header.text = self.title
+            xml.Header(2, self.title, parent=content_div)
         if self.date:
             div_date = xml.Div("date", parent=content_div)
             div_date.text = self.date
-        p_text = Et.SubElement(content_div, "p")
+        p_text = xml.P(parent=content_div)
         if isinstance(self.content, str):
             p_text.text = self.content
         else:
@@ -120,7 +118,7 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         root = Et.Element("section", {"class": "timeline"})
-        div = Et.SubElement(root, "div", {"class": "container"})
+        div = xml.Div("container", parent=root)
         for i, item in enumerate(self.items):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()

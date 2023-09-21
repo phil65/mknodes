@@ -16,6 +16,22 @@ class Div(Et.Element):
             parent.append(self)
 
 
+class Header(Et.Element):
+    def __init__(self, level: int, text: str, parent=None, **kwargs):
+        super().__init__(f"h{level}", kwargs)
+        self.text = text
+        if parent is not None:
+            parent.append(self)
+
+
+class P(Et.Element):
+    def __init__(self, klass: str | None = None, parent=None, **kwargs):
+        attrs = {"class": klass} if klass else {}
+        super().__init__("p", attrs | kwargs)
+        if parent is not None:
+            parent.append(self)
+
+
 def get_material_icon_svg(icon: str):
     """Return a xmlElement for given MaterialIcon.
 
