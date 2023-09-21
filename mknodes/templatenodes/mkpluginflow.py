@@ -4,16 +4,7 @@ from typing import Any
 
 from mkdocs import plugins
 
-from mknodes.basenodes import (
-    _mkdocstrings,
-    mkadmonition,
-    mkcode,
-    mkcontainer,
-    mkheader,
-    mklink,
-    mkspeechbubble,
-    mktext,
-)
+from mknodes.basenodes import mkcontainer
 from mknodes.data import eventplugins
 from mknodes.utils import inspecthelpers, log, reprhelpers, requirements
 
@@ -57,14 +48,16 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
     @property
     def items(self):
+        import mknodes as mk
+
         if not self.plugins:
             return []
         items = []
         for plg in self.plugins:
             section = [
-                mkheader.MkHeader(plg.__name__, parent=self),
-                mkheader.MkHeader("Config", parent=self, level=3),
-                _mkdocstrings.MkDocStrings(
+                mk.MkHeader(plg.__name__, parent=self),
+                mk.MkHeader("Config", parent=self, level=3),
+                mk.MkDocStrings(
                     plg.config_class,
                     parent=self,
                     show_root_toc_entry=False,
@@ -78,28 +71,19 @@ class MkPluginFlow(mkcontainer.MkContainer):
                 if not hasattr(plg, event):
                     continue
                 fn = getattr(plg, event)
-                code = mkcode.MkCode.for_object(fn)
+                code = mk.MkCode.for_object(fn)
                 fn_name = fn.__name__
                 link = self.event_plugin.help_link.format(event=fn_name)
-                link = mklink.MkLink(link, fn_name)
-                hook_path = self.event_plugin.hook_fn_path.format(event=fn_name)
-                info = _mkdocstrings.MkDocStrings(
-                    hook_path,
-                    show_source=False,
-                    show_root_toc_entry=False,
-                )
+                link = mk.MkLink(link, fn_name)
+                path = self.event_plugin.hook_fn_path.format(event=fn_name)
+                info = mk.MkDocStrings(path, show_source=False, show_root_toc_entry=False)
                 bubble_content = [
-                    mkheader.MkHeader(link, level=3),
-                    mktext.MkText(inspecthelpers.get_doc(fn)),
-                    mkadmonition.MkAdmonition(
-                        code,
-                        collapsible=True,
-                        typ="quote",
-                        title="Source",
-                    ),
-                    mkadmonition.MkAdmonition(info, collapsible=True, title="Hook info"),
+                    mk.MkHeader(link, level=3),
+                    mk.MkText(inspecthelpers.get_doc(fn)),
+                    mk.MkAdmonition(code, collapsible=True, typ="quote", title="Source"),
+                    mk.MkAdmonition(info, collapsible=True, title="Hook info"),
                 ]
-                bubble = mkspeechbubble.MkSpeechBubble(bubble_content, parent=self)
+                bubble = mk.MkSpeechBubble(bubble_content, parent=self)
                 section.append(bubble)
             if section:
                 section[-1].arrow = None

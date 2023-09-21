@@ -9,6 +9,8 @@ from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
 
 logger = log.get_logger(__name__)
 
+SCROLLREVEAL_LINK = "https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"
+JQUERY_LINK = "https://code.jquery.com/jquery-2.2.4.min.js"
 
 STYLE = (
     "background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0,"
@@ -89,10 +91,8 @@ class MkTimeline(mkcontainer.MkContainer):
         requirements.Extension("md_in_html"),
     ]
     JS_FILES = [
-        requirements.JSLink("https://code.jquery.com/jquery-2.2.4.min.js"),
-        requirements.JSLink(
-            "https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js",
-        ),
+        requirements.JSLink(JQUERY_LINK),
+        requirements.JSLink(SCROLLREVEAL_LINK),
         requirements.JSFile("js/timeline.js"),
     ]
     CSS = [requirements.CSSFile("css/timeline.css")]
