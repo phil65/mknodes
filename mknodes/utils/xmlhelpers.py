@@ -20,6 +20,8 @@ class Div(Et.Element):
         super().__init__("div", attrs | kwargs)
         if parent is not None:
             parent.append(self)
+        if text is not None:
+            self.text = text
 
 
 class Header(Et.Element):
