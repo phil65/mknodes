@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import datetime
 import functools
 
@@ -12,12 +11,7 @@ from typing import Any
 import jinja2
 
 from mknodes import paths
-from mknodes.utils import (
-    helpers,
-    inspecthelpers,
-    log,
-    yamlhelpers,
-)
+from mknodes.utils import helpers, inspecthelpers, log, yamlhelpers
 
 
 resources_loader = jinja2.PackageLoader("mknodes", "resources")
@@ -70,26 +64,8 @@ UNDEFINED_BEHAVIOR = {
 }
 
 
-def get_mknodes_macros(parent=None) -> dict[str, Callable]:
-    import mknodes
-
-    return {
-        kls_name: (
-            functools.partial(getattr(mknodes, kls_name), parent=parent)
-            if parent is not None
-            else getattr(mknodes, kls_name)
-        )
-        for kls_name in mknodes.__all__
-    }
-
-
 def set_markdown_exec_namespace(variables: dict[str, Any], namespace: str = "mknodes"):
     if util.find_spec("markdown_exec"):
         from markdown_exec.formatters import python
 
         python._sessions_globals[namespace] = variables
-
-
-if __name__ == "__main__":
-    macros = get_mknodes_macros(parent=None)
-    print(macros["MkCode"])

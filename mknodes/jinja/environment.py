@@ -28,18 +28,10 @@ class Environment(jinja2.Environment):
         super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
         self.filters.update(jinjahelpers.ENVIRONMENT_FILTERS)
         self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
+        self.rendered_nodes: set[mk.MkNode] = set()
 
-    def set_mknodes_filters(self, parent: mk.MkNode | None = None):
-        """Set our MkNode filters.
-
-        The filters are a partial with the parent already set, if parent is given.
-
-        Arguments:
-            parent: Node parent
-        """
-        filters = jinjahelpers.get_mknodes_macros(parent)
-        self.filters.update(filters)
-        # self.globals.update(filters)
+    def collect_reqs(self, ctx, **kwargs):
+        pass
 
     def merge_globals(self, other: Mapping, additive: bool = False):
         """Merge other into the environment globals with given strategy.
@@ -138,15 +130,47 @@ class Environment(jinja2.Environment):
         for k in kwargs:
             del self.globals[k]
 
+    def set_mknodes_filters(self, parent: mk.MkNode | None = None):
+        """Set our MkNode filters.
+
+        The filters are a partial with the parent already set, if parent is given.
+
+        Arguments:
+            parent: Node parent
+        """
+        import functools
+
+        import mknodes
+
+        filters = {}
+        for kls_name in mknodes.__all__:
+            if parent is not None:
+                fn = functools.partial(getattr(mknodes, kls_name), parent=parent)
+            else:
+                fn = getattr(mknodes, kls_name)
+
+            def wrapped(ctx, *args, fn=fn, **kwargs):
+                node = fn(*args, **kwargs)
+                self.rendered_nodes.add(node)
+                return node
+
+            new = functools.partial(wrapped, fn=fn)
+            filters[kls_name] = jinja2.pass_context(new)
+        self.filters.update(filters)
+        # self.globals.update(filters)
+
 
 if __name__ == "__main__":
     # from mknodes.project import Project
 
     env = Environment()
     env.set_mknodes_filters()
-    print(env.loader)
-    env.add_template("mknodes/resources/requirements.md")
-    env.get_template("mknodes/resources/requirements.md")
+    text = env.render_string(r"{{ 'test' | MkHeader }}")
+    text = env.render_string(r"{{ 'test' | MkText }}")
+    print(env.rendered_nodes)
+    # print(text)
+    # env.render_string(r"{{test('hallo')}}")
+
     # proj = Project.for_mknodes()
     # ctx = proj.context.as_dict()
     # env.globals.update(ctx)
