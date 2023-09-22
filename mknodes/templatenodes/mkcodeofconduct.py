@@ -15,9 +15,7 @@ logger = log.get_logger(__name__)
 @functools.cache
 def get_markdown():
     file = paths.RESOURCES / "code_of_conduct_2_1.md"
-    text = file.read_text()
-    # Cut off first lines containing header
-    return "\n".join(text.split("\n")[3:])
+    return file.read_text()
 
 
 class MkCodeOfConduct(mktext.MkText):
