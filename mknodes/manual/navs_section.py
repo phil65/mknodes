@@ -2,7 +2,6 @@ import mknodes as mk
 
 from mknodes import paths
 from mknodes.manual import routing
-from mknodes.pages import metadata
 from mknodes.project import Project
 
 
@@ -16,8 +15,6 @@ It`s the base class for all tree nodes we are building. The tree goes from the r
 down to single markup elements. We can show the subclass tree by using
 the MkClassDiagram Node.
 """
-
-MKPAGE_TIP = "MkPages can also be loaded from files by using MkPage.from_file"
 
 SECTION_CODE = "Code for this section"
 
@@ -37,31 +34,6 @@ ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* no
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
 
-METADATA_TEXT = """##Description
-
-Every `MkPage` as well as every `MkNav` can carry metadata.
-Page metadata inherits from Nav metadata, similarly as the MkDocs-Material meta plugin.
-
-Metadata can be set either via the `MkPage` constructor, via the `MkNav.route.page`
-decorator. Also, some methods like `MkNav.parse.folder` take metadata keyword arguments
-in order to set it for all parsed pages.
-
-## Examples
-
-Via decorators:
-`````py
-@nav.route.page("My page", icon="material/code-json", status="new")
-def _(page: mk.MkPage):
-    ...
-`````
-
-Via constructor:
-`````py
-page = MkPage("My page", icon="material/code-json", status="new")
-`````
-
-## Metadata fields
-"""
 
 nav = mk.MkNav("Navigation & Pages")
 
@@ -87,8 +59,7 @@ def create_navs_section(root_nav: mk.MkNav):
 
     # Navs contain also contain pages. This section provides some info how to use MkPages.
     page = pages_nav.add_index_page(hide="toc")
-    page += mk.MkAdmonition(MKPAGE_TIP, typ="tip")
-
+    page += mk.MkJinjaTemplate("mkpage_index.jinja")
     # and then we create the index page (the page you are lookin at right now)
 
     page = nav.add_index_page(hide="toc")
@@ -179,29 +150,15 @@ def create_adding_to_mkpages_page(page: mk.MkPage):
     description="Description",
 )
 def create_metadata_page(page: mk.MkPage):
-    page += METADATA_TEXT
-    page += mk.MkDocStrings(
-        metadata.Metadata,
-        show_root_toc_entry=False,
-        heading_level=3,
-        show_bases=False,
-        show_source=False,
-    )
+    page += mk.MkJinjaTemplate("page_metadata.jinja")
 
 
 @pages_nav.route.page("Templates", hide="toc", status="new")
 def create_template_page(page: mk.MkPage):
-    page += "The page template can be edited easily via the 'template' attribute."
-    code = "information = 'You can even put MkNodes here!'"
-    text = (
-        'page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")\n'
-        "page.template.footer_block.content = mk.MkProgressBar(50)\n"
-        f'page.template.tabs_block.content = mk.MkCode("{code}")\n'
-        'page.template.hero_block.content = mk.MkHeader("A header!")'
-    )
-    page += mk.MkCode(text)
+    page += mk.MkJinjaTemplate("page_templates.jinja")
     page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")
     page.template.footer_block.content = mk.MkProgressBar(50)
+    code = "information = 'You can even put MkNodes here!'"
     page.template.tabs_block.content = mk.MkCode(f"{code}")
     page.template.hero_block.content = mk.MkHeader("A header!")
 
