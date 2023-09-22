@@ -18,6 +18,12 @@ CSS used by the tree nodes:
 
 {{ requirements.css | MkPrettyPrint }}
 
+### JS
+
+JS used by the tree nodes:
+
+{{ requirements.js | MkPrettyPrint }}
+
 ### Markdown extensions
 
 Extensions used by the tree nodes:
