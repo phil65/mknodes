@@ -53,3 +53,8 @@ def create_jinja_namespace_section(nav: mk.MkNav):
     for ctx in CONTEXTS:
         subpage = nav.add_page(ctx.__name__)
         add_context_doc(subpage, ctx)
+
+
+@nav.route.page("Template filters")
+def create_filters_section(page: mk.MkPage):
+    page += mk.MkJinjaTemplate("template_filters.jinja")

@@ -1,0 +1,41 @@
+The Jinja environment also contains some pre-defined filters.
+
+!!! info
+     The output gets passed to the first argument of the filter function.
+     Filters are separated from the variable by a pipe symbol (|) and may have optional arguments in parentheses. Multiple filters can be chained. The output of one filter is applied to the next.
+
+### `get_link`
+
+Example:
+```
+"PageName" | get_link
+```
+
+::: mknodes.info.linkprovider.LinkProvider.get_link
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+
+### `get_url`
+
+Example:
+```
+"PageName" | get_url
+```
+
+::: mknodes.info.linkprovider.LinkProvider.get_url
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+
+### `styled`
+
+Example:
+```
+"My text" | styled(bold=True, align="right")
+```
+
+::: mknodes.utils.helpers.styled
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
