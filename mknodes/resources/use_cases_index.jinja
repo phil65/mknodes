@@ -18,8 +18,23 @@ websites. This section will highlight some of them.
 
 * Create single static pages / blocks for your page
     You can also just use **MkNodes** to create some Nodes, stringify them and include
-    the markdown in your static pages
+    the markdown in your static pages. It can also be used to create your GitHub / PyPi
+    overview page.
 
 * Using `Markdown-Exec` or similar inline execution plugins
     You can also embed **MkNodes** code directly by using various plug-ins
-    (personal recommendation: `Markdown-Exec`)
+    (personal recommendation: `Markdown-Exec`) For most cases the built-in
+    jinja environment should include enough to display complex Markdown in an easy way.
+
+* Create "multi-pages"
+  MkNodes can even "merge" multiple websites into one.
+  In its core, MkNodes is nothing more than one large tree ranging from the start page
+  down to individual markdown elements,
+  where you can put  all leafs to the places where you want.
+  It´s easy to make a complete website tree the subtree of another Parent-tree.
+
+  * Create a "structure template" for multiple sites
+   MkNodes separates content and appearance to a large extent. Website templates
+   can be written in a way that they work for multiple websites without any manual adaption.
+   (Check out the very basic included `MkDefaultWebsite` and `MkEmptyWebsite` nodes as an example)
+
