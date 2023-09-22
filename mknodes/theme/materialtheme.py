@@ -118,6 +118,7 @@ class MaterialTheme(theme.Theme):
     """Material Theme."""
 
     name = "material"
+    css_template = "material_css.jinja"
 
     def __init__(self, **kwargs):
         super().__init__(self.name, **kwargs)

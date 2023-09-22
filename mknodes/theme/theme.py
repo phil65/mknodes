@@ -14,6 +14,8 @@ logger = log.get_logger(__name__)
 class Theme:
     """MkDocs Theme."""
 
+    css_template = None
+
     def __init__(
         self,
         theme_name: str,
@@ -32,10 +34,12 @@ class Theme:
 
     def get_requirements(self):
         req = []
-        if proj := self.associated_project:
+        if self.css_template and (proj := self.associated_project):
             tmpl_ctx = self.get_template_context()
-            filename = "material_css.jinja"
-            css_text = proj.context.env.render_template(filename, variables=tmpl_ctx)
+            css_text = proj.context.env.render_template(
+                self.css_template,
+                variables=tmpl_ctx,
+            )
             req = [requirements.CSSText("mknodes_theme.css", css_text)]
         return requirements.Requirements(css=req, templates=list(self.templates))
 
