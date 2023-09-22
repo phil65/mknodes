@@ -28,6 +28,7 @@ class Theme:
         self.data = data or {}
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
+        self.error_page = self.templates["404.html"]
 
     def __repr__(self):
         return reprhelpers.get_repr(self, theme_name=self.theme_name)

@@ -12,7 +12,6 @@ from mknodes import paths
 from mknodes.info import contexts, folderinfo, linkprovider, packageregistry
 from mknodes.jinja import environment
 from mknodes.navs import mknav
-from mknodes.pages import pagetemplate
 from mknodes.theme import theme as theme_
 from mknodes.utils import (
     classhelpers,
@@ -62,8 +61,6 @@ class Project(Generic[T]):
         self.env = environment.Environment(undefined="strict", load_templates=True)
         self.theme: T = theme
         self.theme.associated_project = self
-        self.templates = self.theme.templates
-        self.error_page: pagetemplate.PageTemplate = self.templates["404.html"]
         match repo:
             case folderinfo.FolderInfo():
                 self.folderinfo = repo

@@ -38,7 +38,7 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     # SUMMARY.md and is the root of the complete tree we are building during this tour.
     root_nav = project.get_root()
     project.theme.announcement_bar = mk.MkMetadataBadges("websites")
-    project.error_page.content = mk.MkAdmonition("Page does not exist!")
+    project.theme.error_page.content = mk.MkAdmonition("Page does not exist!")
     project.theme.show_annotation_numbers = True
     project.theme.content_area_width = 1300
     project.theme.tooltip_width = 800
