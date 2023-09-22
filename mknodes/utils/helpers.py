@@ -5,7 +5,7 @@ import itertools
 import os
 import re
 
-from typing import TypeVar
+from typing import Literal, TypeVar
 
 from mknodes.utils import log
 
@@ -105,6 +105,7 @@ def styled(
     bold: bool = False,
     italic: bool = False,
     code: bool = False,
+    align: Literal["left", "right", "center"] | None = None,
 ) -> str:
     """Apply styling to given markdown.
 
@@ -114,6 +115,7 @@ def styled(
         bold: Whether styled text should be bold
         italic: Whether styled text should be italic
         code: Whether styled text should styled as (inline) code
+        align: Optional text alignment
     """
     if size:
         text = f"<font size='{size}'>{text}</font>"
@@ -123,6 +125,8 @@ def styled(
         text = f"*{text}*"
     if code:
         text = f"`{text}`"
+    if align:
+        text = f"<p style='text-align: {align};'>{text}</p>"
     return text
 
 
