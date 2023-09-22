@@ -250,6 +250,7 @@ class FolderInfo:
         return contexts.PackageContext(
             pretty_name=self.mkdocs_config.get("site_name") or self.info.name,
             distribution_name=self.info.name,
+            version=self.info.version,
             author_name=self.info.author_name,
             author_email=self.info.author_email,
             docstring_style=self.docstring_style,

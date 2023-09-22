@@ -124,6 +124,8 @@ class PackageContext(Context):
     """The style used for DocStrings."""
     distribution_name: str = ""
     """The name of the distribution *[Metadata]*"""
+    version: str = ""
+    """The version of the distribution *[Metadata]*"""
     summary: str = ""
     """A summary for the distribution *[Metadata]*"""
     description: str = ""
@@ -284,6 +286,7 @@ class ProjectContext(Context):
 
 default_package_context = PackageContext(
     pretty_name="MkNodes",
+    version="1.0.0",
     distribution_name="mknodes",
     summary="Don't write docs. Code them.",
     description="Long text with description.",
