@@ -20,7 +20,7 @@ from mknodes.utils import (
 )
 
 
-resources_loader = jinja2.FileSystemLoader(searchpath="mknodes/resources")
+resources_loader = jinja2.PackageLoader("mknodes", "resources")
 docs_loader = jinja2.FileSystemLoader(searchpath="docs/")
 resource_loader = jinja2.ChoiceLoader([resources_loader, docs_loader])
 
