@@ -27,7 +27,6 @@ class MkCodeOfConduct(mktext.MkText):
         self,
         contact_email: str | None = None,
         version: Literal["2.1"] | None = None,
-        header: str = "# Code of Conduct",
         **kwargs: Any,
     ):
         """Constructor.
@@ -35,10 +34,9 @@ class MkCodeOfConduct(mktext.MkText):
         Arguments:
             contact_email: Email for contacting. If None, it will be pulled from Project.
             version: Contributor covenant version (currently only "2.1")
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         self.version = version
         self.contact_email = contact_email
 
