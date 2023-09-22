@@ -125,10 +125,12 @@ class Environment(jinja2.Environment):
         Arguments:
             kwargs: Globals to set
         """
-        self.globals.update(kwargs)
+        temp = {}
+        for k, v in kwargs.items():
+            temp[k] = self.globals.get(k)
+            self.globals[k] = v
         yield
-        for k in kwargs:
-            del self.globals[k]
+        self.globals.update(temp)
 
     def set_mknodes_filters(self, parent: mk.MkNode | None = None):
         """Set our MkNode filters.
