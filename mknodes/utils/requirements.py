@@ -13,6 +13,12 @@ if TYPE_CHECKING:
     from mknodes.pages import pagetemplate
 
 
+@dataclasses.dataclass(frozen=True)
+class Package:
+    package_name: str
+    extras: list[str] = dataclasses.field(default_factory=list)
+
+
 class Extension(dict):
     def __init__(self, extension_name: str, **kwargs):
         super().__init__(**kwargs)
