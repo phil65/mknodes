@@ -175,7 +175,6 @@ def create_mkdoc_section(nav: mk.MkNav):
 
     page = nav.add_index_page(hide="toc", icon="api")
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
-    page.env.add_template("docs/classpage_custom.jinja")
     mknodes_docs = nav.add_doc(
         module=mk,
         filter_by___all__=True,

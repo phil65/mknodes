@@ -54,6 +54,12 @@ class MkDoc(mknav.MkNav):
         self._exclude = exclude_modules or []
         # self.root_path = pathlib.Path(f"./{self.module_name}")
         super().__init__(section=section_name or self.module_name, **kwargs)
+        # we add the templates to the env after init to get correct environment.
+        # perhaps better to move this to a later stage..
+        if isinstance(class_page, str):
+            self.env.add_template(class_page)
+        if isinstance(module_page, str):
+            self.env.add_template(module_page)
 
     def __repr__(self):
         return reprhelpers.get_repr(
