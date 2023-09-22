@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     import mknodes
 
     LinkableType = str | mknodes.MkPage | mknodes.MkNav | types.ModuleType | type
+    """A type which can get linked by the LinkProvider."""
 
 
 def homepage_for_distro(dist_name: str) -> str | None:
@@ -214,6 +215,9 @@ class LinkProvider:
                 return self.base_url.rstrip("/") + target
             case str() if helpers.is_url(target):
                 return target
+            case str() if target in mknodes.MkNode._name_registry:
+                node = mknodes.MkNode.get_node(target)
+                return self.get_url(node)
             case str():
                 return f"{target}.md"
             case _:
