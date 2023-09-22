@@ -59,6 +59,8 @@ class Project(Generic[T]):
             include_stdlib=True,
         )
         self.env = environment.Environment(undefined="strict", load_templates=True)
+        self.env.filters["get_link"] = self.linkprovider.get_link
+        self.env.filters["get_url"] = self.linkprovider.get_url
         self.theme: T = theme
         self.theme.associated_project = self
         match repo:
