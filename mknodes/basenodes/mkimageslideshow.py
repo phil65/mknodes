@@ -16,8 +16,12 @@ HTML = """
 <div style="width: 100%; padding-bottom: 25%" data-simple-slider>
 {images}
 </div>
+"""
+SCRIPT = r"""
 <script>
+  window.addEventListener('DOMContentLoaded', function () {
   simpleslider.getSlider();
+})
 </script>
 """
 
@@ -56,7 +60,7 @@ class MkImageSlideshow(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         lines = [f'  <img src="{i}"/>' for i in self.images]
-        return HTML.format(images="\n".join(lines))
+        return HTML.format(images="\n".join(lines)) + SCRIPT
 
     @staticmethod
     def create_example_page(page):
