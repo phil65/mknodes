@@ -196,7 +196,7 @@ def create_template_page(page: mk.MkPage):
     text = (
         'page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")\n'
         "page.template.footer_block.content = mk.MkProgressBar(50)\n"
-        f'page.template.tabs_block.content = mk.MkCode(f"{code}")'
+        f'page.template.tabs_block.content = mk.MkCode("{code}")'
     )
     page += mk.MkCode(text)
     page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")
