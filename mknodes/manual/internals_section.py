@@ -6,7 +6,9 @@ nav = mk.MkNav("Internals")
 # - Clone repository (in case it is a remote one)
 # - Aggregate information about repository from:
 
-STEP_1 = "Clone the repository (in case it is a remote one)"
+STEP_1 = (
+    "### Set up the working directory\nClone the repository (in case it is a remote one)"
+)
 STEP_2 = "Aggregate information about the repository from:"
 INFO_PROVIDERS = [
     "metadata.Distribution",
@@ -16,17 +18,32 @@ INFO_PROVIDERS = [
     "Git info (aquired from GitPython)",
     "GitHub info (using PyGitHub)",
 ]
-STEP_3 = "Build the MkNode tree based on Build script / function"
-STEP_4 = "Populate mknodes-specific Jinja environment with all collected metadata"
-STEP_5 = "Render jinja stuff with our own environment on node level"
-STEP_6 = (
-    "Convert node tree to a file folder structure containing markdown files (using"
-    " literate-nav-style SUMMARY.md files to describe the hierarchy)"
+STEP_3 = "### Build the tree\nBuild the MkNode tree based on Build script / function"
+STEP_4 = (
+    "### Populate the environment\n"
+    "Populate mknodes-specific Jinja environment with all collected metadata"
 )
-STEP_7 = "Gather information from the nodes about required Extensions / CSS / JavaScript"
-STEP_8 = "Merge node requirements with provided MkDocs config file"
-STEP_9 = "Let mkdocs-literate-nav populate the Navigation based on generated SUMMARY.mds"
-STEP_10 = "Let MkDocs convert everything to HTML based on the composite config"
+STEP_5 = "### Render Jinja\nRender jinja stuff with our own environment on node level"
+STEP_6 = (
+    "### Serialize tree to markdown files\n"
+    "Convert node tree to a file folder structure containing markdown files "
+    "(using literate-nav-style SUMMARY.md files to describe the hierarchy)"
+)
+STEP_7 = (
+    "### Collect requirements\n"
+    "Gather information from the nodes about required Extensions / CSS / JavaScript"
+)
+STEP_8 = (
+    "### Build project config\nMerge node requirements with provided MkDocs config file"
+)
+STEP_9 = (
+    "### Menu generation\nLet mkdocs-literate-nav populate the Navigation based on"
+    " generated SUMMARY.mds"
+)
+STEP_10 = (
+    "### Convert to HTML\nLet MkDocs convert everything to HTML based on the composite"
+    " config"
+)
 
 
 def create_internals_section(root_nav: mk.MkNav):
@@ -38,7 +55,7 @@ def create_internals_section(root_nav: mk.MkNav):
     ls = mk.MkList(INFO_PROVIDERS)
     node.add_item(
         date="Step 2",
-        content=mk.MkContainer([STEP_2, ls], header="#### Aggregate info from:"),
+        content=mk.MkContainer([STEP_2, ls], header="### Aggregate info"),
     )
     node.add_item(date="Step 3", content=STEP_3)
     node.add_item(date="Step 4", content=STEP_4)
