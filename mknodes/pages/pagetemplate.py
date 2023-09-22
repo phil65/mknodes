@@ -29,6 +29,7 @@ class PageTemplate:
         self.footer_block = templateblocks.FooterBlock(parent)
         self.libs_block = templateblocks.LibsBlock()
         self.styles_block = templateblocks.StylesBlock()
+        self.hero_block = templateblocks.HeroBlock()
 
     def __bool__(self):
         return any(self.blocks)
@@ -47,6 +48,7 @@ class PageTemplate:
             self.libs_block,
             self.styles_block,
             self.outdated_block,
+            self.hero_block,
         ]
 
     def __repr__(self):

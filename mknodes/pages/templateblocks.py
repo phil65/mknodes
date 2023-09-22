@@ -98,6 +98,10 @@ class FooterBlock(HtmlBlock):
     block_id = "footer"
 
 
+class HeroBlock(HtmlBlock):
+    block_id = "hero"
+
+
 class OutdatedBlock(HtmlBlock):
     block_id = "outdated"
 

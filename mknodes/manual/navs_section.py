@@ -196,12 +196,14 @@ def create_template_page(page: mk.MkPage):
     text = (
         'page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")\n'
         "page.template.footer_block.content = mk.MkProgressBar(50)\n"
-        f'page.template.tabs_block.content = mk.MkCode("{code}")'
+        f'page.template.tabs_block.content = mk.MkCode("{code}")\n'
+        'page.template.hero_block.content = mk.MkHeader("A header!")'
     )
     page += mk.MkCode(text)
     page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")
     page.template.footer_block.content = mk.MkProgressBar(50)
     page.template.tabs_block.content = mk.MkCode(f"{code}")
+    page.template.hero_block.content = mk.MkHeader("A header!")
 
 
 def create_mkdefaultwebsite_section(nav: mk.MkNav):
