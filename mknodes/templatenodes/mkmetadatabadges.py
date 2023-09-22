@@ -80,30 +80,31 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     @property
     def badge_content(self) -> list[tuple]:
         items: list[tuple] = []
+        ctx = (
+            packageregistry.get_info(self._package)
+            if self._package
+            else self.ctx.metadata
+        )
         match self._typ:
             case "classifiers":
-                dct = self.ctx.metadata.classifier_map
+                dct = ctx.classifier_map
                 for category, labels in dct.items():
                     items.extend([(i, category, None) for i in labels])
             case "keywords":
-                items.extend(
-                    (keyword, "", None) for keyword in self.ctx.metadata.keywords
-                )
+                items.extend((keyword, "", None) for keyword in ctx.keywords)
             case "keywords_combined":
-                items.append(
-                    ("Keywords", " | ".join(self.ctx.metadata.keywords), None),
-                )
+                items.append(("Keywords", " | ".join(ctx.keywords), None))
             case "required_python":
-                string = self.ctx.metadata.required_python_version
+                string = ctx.required_python_version
                 items.append(("Python", string, "https://www.python.org"))
             case "websites":
                 urls = [
                     (name, parse.urlparse(url).netloc, url)
-                    for name, url in self.ctx.metadata.urls.items()
+                    for name, url in ctx.urls.items()
                 ]
                 items.extend(urls)
             case "dependencies":
-                info = self.ctx.metadata.required_packages
+                info = ctx.required_packages
                 items.extend(
                     (package.name, package.version, package.homepage) for package in info
                 )
@@ -121,7 +122,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             case str():
                 raise ValueError(self._typ)
             case _ if self._typ in datatypes.CLASSIFIERS:
-                labels = self.ctx.metadata.classifier_map.get(self._typ, [])
+                labels = ctx.classifier_map.get(self._typ, [])
                 items.extend([(i, self._typ, None) for i in labels])
         return items
 
