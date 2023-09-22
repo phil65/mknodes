@@ -2,7 +2,6 @@ site_name: MkDocs
 site_description: A MkDocs page created by MkNodes
 repo_url: "https://github.com/mkdocs/mkdocs/"
 site_url: https://phil65.github.io/mknodes/mkdocs/
-edit_uri: edit/main
 
 theme:
   name: material
