@@ -56,7 +56,8 @@ def create_license_page(page: mk.MkPage):
 
 @nav.route.page("Dependencies", hide="toc", icon="database")
 def create_dependencies_page(page: mk.MkPage):
-    page += mk.MkDependencyTable()
+    page += mk.MkDependencyTable(layout="badge")
+    page += mk.MkPipDepTree(direction="LR")
 
 
 @nav.route.page("Development environment", icon="dev-to")
