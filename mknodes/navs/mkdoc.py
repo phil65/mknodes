@@ -81,9 +81,16 @@ class MkDoc(mknav.MkNav):
         self,
         *,
         recursive: bool = False,
-        predicate: Callable | None = None,
+        predicate: Callable[[type], bool] | None = None,
         submodule: types.ModuleType | str | tuple | list | None = None,
     ):
+        """Collect classes from given module.
+
+        Arguments:
+            recursive: Also collect classes from submodules
+            predicate: Class filter predicate
+            submodule: If set, only collect from given module.
+        """
         for klass in self.iter_classes(
             recursive=recursive,
             predicate=predicate,
@@ -107,7 +114,7 @@ class MkDoc(mknav.MkNav):
         submodule: types.ModuleType | str | tuple | list | None = None,
         *,
         recursive: bool = False,
-        predicate: Callable | None = None,
+        predicate: Callable[[type], bool] | None = None,
         _seen: set | None = None,
     ) -> Iterator[type]:
         """Iterate over all classes of the module.
@@ -147,9 +154,16 @@ class MkDoc(mknav.MkNav):
         self,
         *,
         recursive: bool = False,
-        predicate: Callable | None = None,
+        predicate: Callable[[types.ModuleType], bool] | None = None,
         submodule: types.ModuleType | str | tuple | list | None = None,
     ):
+        """Collect submodules.
+
+        Arguments:
+            recursive: Collect recursively
+            predicate: Module filter predicate
+            submodule: Module to collect from. If None, collect from project module.
+        """
         for module in self.iter_modules(
             recursive=recursive,
             predicate=predicate,
@@ -162,7 +176,7 @@ class MkDoc(mknav.MkNav):
         *,
         submodule: types.ModuleType | str | tuple | list | None = None,
         recursive: bool = False,
-        predicate: Callable | None = None,
+        predicate: Callable[[types.ModuleType], bool] | None = None,
         _seen: set | None = None,
     ) -> Iterator[types.ModuleType]:
         """Iterate over all submodules of the module.
