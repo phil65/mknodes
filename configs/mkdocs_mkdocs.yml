@@ -20,7 +20,6 @@ theme:
 
 plugins:
 - search
-- section-index
 - literate-nav
 - mkdocstrings
 - mknodes:

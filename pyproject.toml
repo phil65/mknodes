@@ -108,7 +108,6 @@ dependencies = [
     "mkdocs-literate-nav",
     "mkdocs-material >= 9.4",
     "mkdocstrings[python]",
-    "mkdocs-section-index",
 
     # Git(Hub)
     "git-changelog",

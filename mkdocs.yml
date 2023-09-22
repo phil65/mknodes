@@ -56,7 +56,6 @@ plugins:
 - social:
     enabled: !ENV [CI, false]
 - tags
-- section-index  # clickable sections (https://github.com/oprypin/mkdocs-section-index)
 - markdown-exec
 - literate-nav
 - mknodes:

@@ -79,8 +79,6 @@ class Navigation(dict):
 
     def to_literate_nav(self) -> str:
         nav = navbuilder.NavBuilder()
-        # In a nav, the first inserted item becomes the index page in case
-        # the section-index plugin is used, so we add it first.
         if self.index_page and self.index_title:
             nav[self.index_title] = pathlib.Path(self.index_page.path).as_posix()
         for path, item in self.items():

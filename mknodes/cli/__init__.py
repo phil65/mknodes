@@ -158,7 +158,6 @@ def create_config(
         "extra": {},
         "plugins": [
             "search",
-            "section-index",
             "mkdocstrings",
             "literate-nav",
             mknodes_plugin,
