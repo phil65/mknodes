@@ -11,7 +11,7 @@ from mknodes.basenodes import mknode
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
 from mknodes.theme.material import palette
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -75,6 +75,7 @@ def build_badge(icon: str, text: str = "", typ: str = ""):
 
 @dataclasses.dataclass
 class AdmonitionType:
+    name: str
     svg: str
     header_color: str
     icon_color: str
@@ -238,15 +239,17 @@ class MaterialTheme(theme.Theme):
     def add_admonition_type(
         self,
         name: str,
-        data: str,
+        material_icon: str,
         header_color: datatypes.ColorType,
         icon_color: datatypes.ColorType | None = None,
         border_color: datatypes.ColorType | None = None,
     ):
-        header_color_str = helpers.get_color_str(header_color)
-        icon_color_str = helpers.get_color_str(icon_color or (255, 255, 255))
-        border_color_str = helpers.get_color_str(border_color or (255, 255, 255))
-        adm = AdmonitionType(data, header_color_str, icon_color_str, border_color_str)
+        header_col_str = helpers.get_color_str(header_color)
+        icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
+        border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
+        icon = pathhelpers.get_material_icon_path(material_icon)
+        data = icon.read_text()
+        adm = AdmonitionType(name, data, header_col_str, icon_col_str, border_col_str)
         self.admonitions.append(adm)
 
     def set_primary_foreground_color(
@@ -272,7 +275,9 @@ class MaterialTheme(theme.Theme):
     def set_default_icon(self, icon_type: IconTypeStr, data: str):
         self.default_icons[icon_type] = data
 
-    def add_status_icon(self, name: str, data: str):
+    def add_status_icon(self, name: str, material_icon: str):
+        icon = pathhelpers.get_material_icon_path(material_icon)
+        data = icon.read_text()
         self.status_icons.append(StatusIcon(name, data))
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):

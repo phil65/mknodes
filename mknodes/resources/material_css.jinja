@@ -2,7 +2,7 @@
 content_area_width, classic_admonition_style, show_annotation_numbers, default_icons, color_theme*/
 :root {
 {% for admonition in admonitions %}
-    --md-admonition-icon--note: url('data:image/svg+xml;charset=utf-8,{{ admonition.svg }}');
+    --md-admonition-icon--{{ admonition.name }}: url('data:image/svg+xml;charset=utf-8,{{ admonition.svg }}');
 {% endfor %}
 {% for status_icon in status_icons %}
     --md-status--encrypted: url('data:image/svg+xml;charset=utf-8,{ {status_icon.svg }}');
@@ -28,26 +28,26 @@ content_area_width, classic_admonition_style, show_annotation_numbers, default_i
 {% endif %}
 }
 {% for admonition in admonitions %}
-.md-typeset .admonition.{{ admonition.type }},
-.md-typeset details.{{ admonition.type }} {
+.md-typeset .admonition.{{ admonition.name }},
+.md-typeset details.{{ admonition.name }} {
     border-color: {{ admonition.border_color }};
 }
-.md-typeset .admonition.{{ admonition.type }}:focus-within,
-.md-typeset details.{{ admonition.type }}:focus-within {
+.md-typeset .admonition.{{ admonition.name }}:focus-within,
+.md-typeset details.{{ admonition.name }}:focus-within {
     box-shadow: 0 0 0 0.2rem {{ admonition.header_color }}; ## #00c8531a
 }
-.md-typeset .{{ admonition.type }} > .admonition-title,
-.md-typeset .{{ admonition.type }} > summary {
+.md-typeset .{{ admonition.name }} > .admonition-title,
+.md-typeset .{{ admonition.name }} > summary {
     background-color: {{ admonition.header_color }};
 }
-.md-typeset .{{ admonition.type }} > .admonition-title:before,
-.md-typeset .{{ admonition.type }} > summary:before {
+.md-typeset .{{ admonition.name }} > .admonition-title:before,
+.md-typeset .{{ admonition.name }} > summary:before {
     background-color: {{admonition.icon_color}};
-    -webkit-mask-image: var(--md-admonition-icon--{{ admonition.type }});
-    mask-image: var(--md-admonition-icon--{{ admonition.type }});
+    -webkit-mask-image: var(--md-admonition-icon--{{ admonition.name }});
+    mask-image: var(--md-admonition-icon--{{ admonition.name }});
 }
-.md-typeset .{{ admonition.type }} > .admonition-title:after,
-.md-typeset .{{ admonition.type }} > summary:after {
+.md-typeset .{{ admonition.name }} > .admonition-title:after,
+.md-typeset .{{ admonition.name }} > summary:after {
     color: {{ admonition.icon_color }};  ## #00c853
 }
 
