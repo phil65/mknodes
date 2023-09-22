@@ -132,7 +132,6 @@ dependencies = [
     "jinja2",
     "griffe",
     "fsspec",
-    "cssutils",
     "deepmerge",
     "coloraide",
     "anybadge",

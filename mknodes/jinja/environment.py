@@ -25,7 +25,7 @@ class Environment(jinja2.Environment):
         loader = jinjahelpers.resource_loader if load_templates else None
         behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
         self.extra_files: set[str] = set()
-        super().__init__(undefined=behavior, loader=loader)
+        super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
         self.filters.update(jinjahelpers.ENVIRONMENT_FILTERS)
         self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
 

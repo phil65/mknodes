@@ -8,7 +8,6 @@ import pathlib
 from typing import Literal
 
 from mknodes.basenodes import mknode
-from mknodes.cssclasses import cssclasses, rootcss
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
 from mknodes.theme.material import palette
@@ -74,22 +73,8 @@ def build_badge(icon: str, text: str = "", typ: str = ""):
     return "".join(lines)
 
 
-CONTAINER_RULE = """.mdx-container {
-  padding-top: px2rem(20px);
-  background:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: hsla(0, 0%, 100%, 1)' /></svg>") no-repeat bottom,
-    linear-gradient(
-      to bottom,
-      var(--md-primary-fg-color),
-      hsla(280, 67%, 55%, 1) 99%,
-      var(--md-default-bg-color) 99%
-    );
-    }
-"""  # noqa: E501
-
-
 @dataclasses.dataclass
-class Admonition:
+class AdmonitionType:
     svg: str
     header_color: str
     icon_color: str
@@ -109,12 +94,16 @@ class ColorTheme:
     dark_shade: str | None = None
 
     @property
+    def color_str(self) -> str:
+        return helpers.get_color_str(self.color)
+
+    @property
     def light_str(self) -> str:
-        return self.light_shade or self.color
+        return helpers.get_color_str(self.light_shade or self.color)
 
     @property
     def dark_str(self) -> str:
-        return self.dark_shade or self.color
+        return helpers.get_color_str(self.dark_shade or self.color)
 
 
 def get_partial_path(partial: str) -> pathlib.Path:
@@ -124,11 +113,6 @@ def get_partial_path(partial: str) -> pathlib.Path:
     return path / "partials" / f"{partial}.html"
 
 
-class MdxContainerRule(cssclasses.StyleRule):
-    def __init__(self):
-        super().__init__(CONTAINER_RULE)
-
-
 class MaterialTheme(theme.Theme):
     """Material Theme."""
 
@@ -136,11 +120,34 @@ class MaterialTheme(theme.Theme):
 
     def __init__(self, **kwargs):
         super().__init__(self.name, **kwargs)
-        self.css = rootcss.RootCSS()
         self.main_template = self.templates["main.html"]
         self._foreground_color = None
         self.blog = mkblog.MkBlog()
         self.features = self.data.get("features")
+        self.show_annotation_numbers = True
+        self.classic_admonition_style = True
+        self.tooltip_width: int | None = None
+        self.content_area_width: int | None = None
+        self.default_icons = {}
+        self.status_icons = []
+        self.accent_fg_color = None
+        self.primary_bg_color = None
+        self.admonitions = []
+        self.color_theme = None
+
+    def get_template_context(self):
+        return dict(
+            admonitions=self.admonitions,
+            show_annotation_numbers=self.show_annotation_numbers,
+            classic_admonition_style=self.classic_admonition_style,
+            tooltip_width=self.tooltip_width,
+            content_area_width=self.content_area_width,
+            default_icons=self.default_icons,
+            status_icons=self.status_icons,
+            accent_fg_color=self.accent_fg_color,
+            primary_bg_color=self.primary_bg_color,
+            color_theme=self.color_theme,
+        )
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
@@ -203,8 +210,7 @@ class MaterialTheme(theme.Theme):
 
     def set_accent_foreground_color(self, color: datatypes.RGBColorType):
         color_str = helpers.get_color_str(color)
-        self.css[":root"]["--md-accent-fg-color"] = color_str
-        self.css[":root"]["--md-accent-fg-color--transparent"] = color_str
+        self.accent_fg_color = color_str
         self.set_color("accent", "custom")
         return color_str
 
@@ -214,8 +220,7 @@ class MaterialTheme(theme.Theme):
     ):
         self.set_color("primary", "custom")
         color_str = helpers.get_color_str(color)
-        self.css[":root"]["--md-primary-bg-color"] = color_str
-        self.css[":root"]["--md-primary-bg-color--light"] = color_str
+        self.primary_bg_color = color_str
         return color_str
 
     @property
@@ -230,18 +235,6 @@ class MaterialTheme(theme.Theme):
         color = self._get_color("primary", fallback="indigo")
         return COLORS[color]["text"]
 
-    def set_content_area_width(self, width: int):
-        self.css.add_rule(".md-grid", {"max-width": f"{width}px"})
-
-    def set_tooltip_width(self, height: int):
-        self.css[":root"]["--md-tooltip-width"] = f"{height}px"
-
-    def set_classic_admonition_style(self):
-        self.css.add_rule(
-            ".md-typeset .admonition, .md-typeset details",
-            {"border-width": 0, "border-left-width": "4px"},
-        )
-
     def add_admonition_type(
         self,
         name: str,
@@ -250,29 +243,11 @@ class MaterialTheme(theme.Theme):
         icon_color: datatypes.ColorType | None = None,
         border_color: datatypes.ColorType | None = None,
     ):
-        self.css[":root"][f"--md-admonition-icon--{name}"] = self.css.wrap_svg(data)
         header_color_str = helpers.get_color_str(header_color)
         icon_color_str = helpers.get_color_str(icon_color or (255, 255, 255))
         border_color_str = helpers.get_color_str(border_color or (255, 255, 255))
-        self.css.add_rule(
-            f".md-typeset .admonition.{name}, .md-typeset details.{name}",
-            {
-                "border-color": border_color_str,
-            },
-        )
-        self.css.add_rule(
-            f".md-typeset .{name} > .admonition-title, .md-typeset .{name} > summary",
-            {"background-color": header_color_str},
-        )
-        self.css.add_rule(
-            f".md-typeset .{name} > .admonition-title::before, .md-typeset .{name} >"
-            " summary::before",
-            {
-                "background-color": icon_color_str,
-                "-webkit-mask-image": f"var(--md-admonition-icon--{name})",
-                "mask-image": f"var(--md-admonition-icon--{name})",
-            },
-        )
+        adm = AdmonitionType(data, header_color_str, icon_color_str, border_color_str)
+        self.admonitions.append(adm)
 
     def set_primary_foreground_color(
         self,
@@ -287,38 +262,18 @@ class MaterialTheme(theme.Theme):
         if dark_shade is None:
             dark_shade = color
         color_str = helpers.get_color_str(color)
-        self.css[":root"]["--md-primary-fg-color"] = color_str
-        self.css[":root"]["--md-primary-fg-color--light"] = helpers.get_color_str(
-            light_shade,
-        )
-        self.css[":root"]["--md-primary-fg-color--dark"] = helpers.get_color_str(
-            dark_shade,
+        self.color_theme = ColorTheme(
+            color_str,
+            helpers.get_color_str(light_shade),
+            helpers.get_color_str(dark_shade),
         )
         return color_str
 
     def set_default_icon(self, icon_type: IconTypeStr, data: str):
-        typ = ICON_TYPE[icon_type]
-        self.css[":root"][f"--{typ}"] = self.css.wrap_svg(data)
+        self.default_icons[icon_type] = data
 
     def add_status_icon(self, name: str, data: str):
-        self.css[":root"][f"--md-status--{name}"] = self.css.wrap_svg(data)
-        self.css.add_rule(
-            f".md-status--{name}:after",
-            {
-                "-webkit-mask-image": f"var(--md-status--{name})",
-                "mask-image": f"var(--md-status--{name})",
-            },
-        )
-
-    def show_annotation_numbers(self):
-        self.css.add_rule(
-            ".md-typeset .md-annotation__index > ::before",
-            {"content": "attr(data-md-annotation-id)"},
-        )
-        self.css.add_rule(
-            ".md-typeset :focus-within > .md-annotation__index > ::before",
-            {"transform": "none"},
-        )
+        self.status_icons.append(StatusIcon(name, data))
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         for k in dict(extensions).copy():
@@ -338,5 +293,7 @@ class MaterialTheme(theme.Theme):
 
 
 if __name__ == "__main__":
-    theme = build_badge("palette", "tst")
-    print(theme)
+    from mknodes import project
+
+    theme = MaterialTheme()
+    proj = project.Project.for_mknodes()

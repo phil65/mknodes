@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import MutableMapping
 
 from mknodes import project
-from mknodes.cssclasses import rootcss
 from mknodes.info import contexts
 from mknodes.pages import templateregistry
 from mknodes.utils import log, reprhelpers, requirements
@@ -25,7 +24,6 @@ class Theme:
     ):
         self.theme_name = theme_name
         self.data = data or {}
-        self.css = rootcss.RootCSS()
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
 
@@ -33,10 +31,16 @@ class Theme:
         return reprhelpers.get_repr(self, theme_name=self.theme_name)
 
     def get_requirements(self):
-        return requirements.Requirements(
-            css=[requirements.CSSText("mknodes_theme.css", str(self.css))],
-            templates=list(self.templates),
-        )
+        req = []
+        if proj := self.associated_project:
+            tmpl_ctx = self.get_template_context()
+            filename = "material_css.jinja"
+            css_text = proj.context.env.render_template(filename, variables=tmpl_ctx)
+            req = [requirements.CSSText("mknodes_theme.css", css_text)]
+        return requirements.Requirements(css=req, templates=list(self.templates))
+
+    def get_template_context(self):
+        return {}
 
     @classmethod
     def get_theme(cls, theme_name: str = "material", data: dict | None = None, **kwargs):
@@ -71,5 +75,6 @@ class Theme:
 
 
 if __name__ == "__main__":
-    theme = Theme(theme_name="material")
+    theme = Theme.get_theme("material")
+    proj = project.Project.for_mknodes()
     print(theme)
