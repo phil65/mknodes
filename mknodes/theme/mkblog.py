@@ -63,7 +63,7 @@ class MkBlog(mknav.MkNav):
     def __init__(self, section: str | None = "Blog", **kwargs: Any):
         super().__init__(section=section, **kwargs)
         self.authors: dict[str, Author] = {}
-        self.posts = mknav.MkNav("posts", parent=self)
+        # self.posts = mknav.MkNav("posts", parent=self)
         # self.index_page = mkpage.MkPage()
 
     def add_author(

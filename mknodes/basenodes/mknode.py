@@ -292,7 +292,7 @@ class MkNode(node.Node):
         md = self.to_markdown()
         reqs = self.get_requirements()
         configs = reqs.markdown_extensions
-        exts = list(configs.keys())
+        exts = [*list(configs.keys()), "attr_list", "md_in_html"]
         return markdown.Markdown(extensions=exts, extension_configs=configs).convert(md)
 
 

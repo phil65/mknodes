@@ -33,6 +33,13 @@ class Commit:
 
 
 def get_latest_commits(owner: str, repo: str, page: int = 1):
+    """Return latest commits from given repository.
+
+    Arguments:
+        owner: Repository owner
+        repo: Repository name
+        page: page to get. Each page contains max 100 commits.
+    """
     url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=100&page={page}"
     response = downloadhelpers.download(url)
     commits = json.loads(response.decode())
@@ -61,6 +68,8 @@ def get_latest_commits(owner: str, repo: str, page: int = 1):
 
 
 class MkGitBlog(mkblog.MkBlog):
+    """The MkDocs-Material plugin-blog, misused as a Git log."""
+
     def __init__(self, org: str, repo: str, posts_dir: str | os.PathLike, **kwargs):
         super().__init__(**kwargs)
         self.commits: list[mkblog.MkBlogPost] = []
@@ -69,6 +78,7 @@ class MkGitBlog(mkblog.MkBlog):
         self.repo = repo
 
     def add_commits(self):
+        """Fetch commits and add them to the blog."""
         commits = get_latest_commits(self.org, self.repo)
         for c in commits:
             if c.author_login not in self.authors:
@@ -84,6 +94,7 @@ class MkGitBlog(mkblog.MkBlog):
                     avatar=c.committer_avatar,
                 )
             self.add_post(
+                title=c.message,
                 date=c.author_date,
                 authors=list({c.author_login, c.committer_login}),
                 text=c.message,
