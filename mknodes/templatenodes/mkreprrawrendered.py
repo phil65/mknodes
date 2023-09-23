@@ -11,7 +11,7 @@ logger = log.get_logger(__name__)
 
 
 class MkReprRawRendered(mktabcontainer.MkTabbed):
-    """Node showing a tabbed bock to visualize a node.
+    """Node showing a tabbed block to visualize a node in different representations.
 
     It contains a tab for the repr, one for the rendered output,
     one for the markdown and a Repr tree in case the node has children.
@@ -22,7 +22,7 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     def __init__(
         self,
         node: mknode.MkNode,
-        select_tab: int | str | None = 2,
+        select_tab: int | str | None = 3,
         **kwargs: Any,
     ):
         """Constructor.
@@ -44,9 +44,12 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
         # part of the tree. Perhaps add a setting for MkPages to be only-virtual?
         # Needs a general concept in regards to re-parenting. (should base nodes
         # be allowed to have pages as children?)
+        html_node = self.node.__copy__()
+        html_node.as_html = True
         tabs: dict[str, str | mknode.MkNode] = dict(  # type: ignore[annotation-unchecked]
             Repr=mkcode.MkCode(repr(self.node)),
-            Markdown=mkcode.MkCode(self.node, language="markdown"),
+            Raw=mkcode.MkCode(self.node, language="markdown"),
+            Html=mkcode.MkCode(html_node, language="html"),
             Rendered=self.node.__copy__(),
         )
         if len(self.node.children) > 0:
