@@ -28,7 +28,7 @@ class Environment(jinja2.Environment):
         super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
         self.filters.update(jinjahelpers.ENVIRONMENT_FILTERS)
         self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
-        self.rendered_nodes: set[mk.MkNode] = set()
+        self.rendered_nodes: list[mk.MkNode] = list()
 
     def collect_reqs(self, ctx, **kwargs):
         pass
@@ -153,7 +153,7 @@ class Environment(jinja2.Environment):
 
             def wrapped(ctx, *args, fn=fn, **kwargs):
                 node = fn(*args, **kwargs)
-                self.rendered_nodes.add(node)
+                self.rendered_nodes.append(node)
                 return node
 
             new = functools.partial(wrapped, fn=fn)
