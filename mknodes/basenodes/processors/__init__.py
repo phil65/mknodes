@@ -91,7 +91,7 @@ class AppendCssClassesProcessor(TextProcessor):
         if not self.css_classes:
             return text
         classes = " ".join(f".{kls_name}" for kls_name in self.css_classes)
-        suffix = f"{{: {classes}}}"
+        suffix = f" {{: {classes}}}"
         text += suffix
         return text
 
