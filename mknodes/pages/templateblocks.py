@@ -32,7 +32,7 @@ BlockStr = Literal[
 
 class Super:
     def __str__(self):
-        return "{{{{ super() }}}}"
+        return r"{{ super() }}"
 
 
 class Block(mknode.MkNode):

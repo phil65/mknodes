@@ -25,7 +25,7 @@ logger = get_plugin_logger(__name__)
 
 
 @functools.cache
-def load_config(path: str | os.PathLike | None = None):
+def load_config(path: str | os.PathLike | None = None) -> MkDocsConfig:
     path = None if path is None else str(path)
     cfg = _config.load_config(path)
     logger.info("Loaded config from path '%s'", path or "mkdocs.yml")
