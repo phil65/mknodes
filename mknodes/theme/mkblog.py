@@ -9,6 +9,7 @@ from mknodes.basenodes import mktext
 from mknodes.info import yamlfile
 from mknodes.navs import mknav
 from mknodes.pages import metadata, mkpage
+from mknodes.utils import requirements
 
 
 @dataclasses.dataclass(frozen=True)
@@ -62,6 +63,8 @@ class MkBlog(mknav.MkNav):
     def __init__(self, section: str | None = "Blog", **kwargs: Any):
         super().__init__(section=section, **kwargs)
         self.authors: dict[str, Author] = {}
+        self.posts = mknav.MkNav("posts", parent=self)
+        # self.index_page = mkpage.MkPage()
 
     def add_author(
         self,
@@ -83,15 +86,16 @@ class MkBlog(mknav.MkNav):
         author = Author(name=name, description=description, avatar=avatar)
         self.authors[username] = author
 
-    def write_authors_yml(self):
-        """Write the authors yaml file to disk."""
+    def get_node_requirements(self):
         authors_file = yamlfile.YamlFile()
-        authors_file._data = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
-        # authors_file.write("docs/blog/.authors.yml", mode="yaml")
-        self.add_file("blog/.authors.yml", authors_file.serialize("yaml"))
-        self.add_file(".authors.yml", authors_file.serialize("yaml"))
-        self.add_file("blog/authors.yml", authors_file.serialize("yaml"))
-        self.add_file("authors.yml", authors_file.serialize("yaml"))
+        dct = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
+        authors_file._data["authors"] = dct
+        content = authors_file.serialize("yaml")
+        return requirements.Requirements(
+            assets=[
+                requirements.Asset("blog/.authors.yml", content, target="docs_dir"),
+            ],
+        )
 
     def add_post(
         self,
@@ -168,8 +172,6 @@ class MkBlogPost(mkpage.MkPage):
             categories=categories or [],
             authors=authors or [],
         )
-        self.posts = mknav.MkNav("posts", parent=self)
-        self.index_page = mkpage.MkPage()
 
 
 if __name__ == "__main__":

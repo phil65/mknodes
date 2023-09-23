@@ -64,6 +64,15 @@ class MkDocsBackend(buildbackend.BuildBackend):
             # self._files[path] = v
             self._write_file(path, v)
 
+    def collect_assets(self, assets):
+        for asset in assets:
+            if asset.target_dir == "docs_dir":
+                abs_path = pathlib.Path(self._config.docs_dir) / asset.filename
+                logger.info("Writing asset %s...", abs_path)
+                pathhelpers.write_file(asset.content, abs_path)
+            else:
+                raise ValueError(asset.target_dir)
+
     def collect_css(self, css_files):
         for css in css_files:
             if isinstance(css, requirements.CSSFile):

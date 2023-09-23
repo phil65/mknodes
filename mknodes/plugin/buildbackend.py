@@ -14,6 +14,7 @@ class BuildBackend:
         self.collect_css(reqs.css)
         self.collect_templates(reqs.templates)
         self.collect_files(files)
+        self.collect_assets(reqs.assets)
 
     def collect_files(self, files):
         pass
@@ -34,6 +35,9 @@ class BuildBackend:
         pass
 
     def collect_templates(self, templates):
+        pass
+
+    def collect_assets(self, assets):
         pass
 
 

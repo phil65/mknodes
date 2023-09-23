@@ -150,9 +150,10 @@ class CSSText:
 
 
 class Asset:
-    def __init__(self, filename, content):
+    def __init__(self, filename, content, target=None):
         self.filename = filename
         self.content = content
+        self.target_dir = target
 
     def __hash__(self):
         return hash(self.content)
@@ -219,6 +220,7 @@ class Requirements(collections.abc.Mapping, metaclass=abc.ABCMeta):
         self.css = list(set(self.css + other["css"]))
         self.plugins = list(set(self.plugins + other["plugins"]))
         self.js = list(set(self.js + other["js"]))
+        self.assets = list(set(self.assets + other["assets"]))
         return self
 
 
