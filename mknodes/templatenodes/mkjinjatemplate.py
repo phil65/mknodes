@@ -49,7 +49,7 @@ class MkJinjaTemplate(mknode.MkNode):
         page += mknodes.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
-        return self.env.render_template(self.template)
+        return self.env.render_template(self.template, variables=self.variables)
 
 
 if __name__ == "__main__":
