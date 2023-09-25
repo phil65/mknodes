@@ -263,12 +263,8 @@ class NavParser:
         folder = pathlib.Path(folder)
         nav = self._nav
         for path in folder.iterdir():
-            if (
-                recursive
-                and path.is_dir()
-                and not path.name.startswith(("_", "."))
-                and any(path.iterdir())
-            ):
+            is_hidden = path.name.startswith(("_", "."))
+            if recursive and path.is_dir() and not is_hidden and any(path.iterdir()):
                 path = folder / path.parts[-1]
                 subnav = mknav.MkNav(path.name)
                 subnav.parse.folder(folder=path, **kwargs)
