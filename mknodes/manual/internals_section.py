@@ -3,13 +3,11 @@ import mknodes as mk
 
 nav = mk.MkNav("Internals")
 
-# - Clone repository (in case it is a remote one)
-# - Aggregate information about repository from:
 
 STEP_1 = (
     "### Set up the working directory\nClone the repository (in case it is a remote one)"
 )
-STEP_2 = "Aggregate information about the repository from:"
+STEP_2 = "### Aggregate info\nAggregate information about the repository from:"
 INFO_PROVIDERS = [
     "metadata.Distribution",
     "PyProject File",
@@ -53,10 +51,7 @@ def create_internals_section(root_nav: mk.MkNav):
     node = mk.MkTimeline()
     node.add_item(date="Step 1", content=STEP_1)
     ls = mk.MkList(INFO_PROVIDERS)
-    node.add_item(
-        date="Step 2",
-        content=mk.MkContainer([STEP_2, ls], header="### Aggregate info"),
-    )
+    node.add_item(date="Step 2", content=mk.MkContainer([STEP_2, ls]))
     node.add_item(date="Step 3", content=STEP_3)
     node.add_item(date="Step 4", content=STEP_4)
     node.add_item(date="Step 5", content=STEP_5)
@@ -67,7 +62,6 @@ def create_internals_section(root_nav: mk.MkNav):
     node.add_item(date="Step 10", content=STEP_10)
     page += node
     page.created_by = create_internals_section
-
 
 # @nav.route.page("Tree", hide="toc", icon="graph")
 # def create_tree_page(page: mk.MkPage):

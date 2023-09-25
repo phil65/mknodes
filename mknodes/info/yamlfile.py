@@ -14,14 +14,14 @@ class YamlFile(configfile.ConfigFile):
     def __init__(
         self,
         path: str | os.PathLike | None = None,
-        mode: str = "unsafe",
+        mode: yamlhelpers.LoaderStr = "unsafe",
         inherit_from: str | os.PathLike | None = None,
     ):
         super().__init__(path)
         if inherit_from:
             self.resolve_inherit_tag(inherit_from, mode)
 
-    def resolve_inherit_tag(self, parent_path: str | os.PathLike, mode: str = "unsafe"):
+    def resolve_inherit_tag(self, parent_path: str | os.PathLike, mode: yamlhelpers.LoaderStr = "unsafe"):
         """Merge the current data with data of of given parent_path file.
 
         Arguments:
@@ -48,7 +48,7 @@ class YamlFile(configfile.ConfigFile):
         return yamlhelpers.dump_yaml(data)
 
     @classmethod
-    def _load(cls, data: str, mode: str = "unsafe") -> dict | list:
+    def _load(cls, data: str, mode: yamlhelpers.LoaderStr = "unsafe") -> dict | list:
         return yamlhelpers.load_yaml(data, mode)
 
 

@@ -13,6 +13,8 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 YAMLError = yaml.YAMLError
 
+LoaderStr = Literal["unsafe", "full", "safe"]
+
 
 def patch_dumper_to_not_order(dumper_cls):
     def map_representer(dumper_cls_, data):
@@ -34,7 +36,7 @@ def patch_pyyaml_to_not_order_dicts():
 # patch_pyyaml_to_not_order_dicts()
 
 
-def get_safe_loader(base_loader_cls):
+def get_safe_loader(base_loader_cls: type):
     class SafeLoader(base_loader_cls):
         """Safe Loader."""
 
@@ -50,7 +52,7 @@ def get_safe_loader(base_loader_cls):
     return SafeLoader
 
 
-def get_default_loader(base_loader_cls):
+def get_default_loader(base_loader_cls: type):
     # Attach Environment Variable constructor.
     # See https://github.com/waylan/pyyaml-env-tag
 
@@ -68,7 +70,7 @@ def get_default_loader(base_loader_cls):
     return DefaultLoader
 
 
-def load_yaml(text: str, mode="unsafe"):
+def load_yaml(text: str, mode: LoaderStr = "unsafe"):
     """Wrap PyYaml's loader so we can extend it to suit our needs."""
     match mode:
         case "unsafe":

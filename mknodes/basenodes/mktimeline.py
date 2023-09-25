@@ -113,7 +113,7 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         root = xml.Section("timeline")
-        div = xml.Div("container", parent=root)
+        div = xml.Div(parent=root)
         for i, item in enumerate(self.items):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()

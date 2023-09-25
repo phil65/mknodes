@@ -41,7 +41,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
         return len(self._data)
 
     def get_section(self, *sections: str, keep_path: bool = False) -> Any:
-        """Try to get data[sections[0]][sections[1]]...
+        """Try to get data with given section path.
 
         If Key path does not exist, return None.
 
@@ -75,7 +75,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
             result = result[sect]
         return SuperDict(new) if isinstance(new, dict) else new
 
-    def serialize(self, mode: MarkupTypeStr | None):
+    def serialize(self, mode: MarkupTypeStr | None) -> str:  # type: ignore[return]
         match mode:
             case None | "yaml":
                 from mknodes.utils import yamlhelpers
