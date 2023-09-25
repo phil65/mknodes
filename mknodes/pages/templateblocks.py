@@ -30,9 +30,11 @@ BlockStr = Literal[
 ]
 
 
+SUPER_TEXT = r"{{ super() }}"
+
 class Super:
     def __str__(self):
-        return r"{{ super() }}"
+        return SUPER_TEXT
 
 
 class Block(mknode.MkNode):
@@ -110,6 +112,10 @@ class TabsBlock(HtmlBlock):
     block_id = "tabs"
 
 
+class SiteNavBlock(HtmlBlock):
+    block_id = "site_nav"
+
+
 class TitleBlock(Block):
     block_id = "htmltitle"
 
@@ -143,7 +149,7 @@ class LibsBlock(Block):
     def block_content(self, md: markdown.Markdown | None = None):
         lines = [i.to_html() for i in self.scripts]
         scripts = "\n".join(lines)
-        return f"{{{{ super() }}}}\n{scripts}" if self.include_super else scripts
+        return f"{SUPER_TEXT}\n{scripts}" if self.include_super else scripts
 
 
 class StylesBlock(Block):
@@ -166,7 +172,7 @@ class StylesBlock(Block):
     def block_content(self, md: markdown.Markdown | None = None):
         lines = [i.to_html() for i in self.styles]
         styles = "\n".join(lines)
-        return f"{{{{ super() }}}}\n{styles}" if self.include_super else styles
+        return f"{SUPER_TEXT}\n{styles}" if self.include_super else styles
 
 
 if __name__ == "__main__":
