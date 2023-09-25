@@ -1,27 +1,6 @@
 import mknodes as mk
 
 
-INTRO_TEXT = """MkNodes offers a CLI interface in order to build projects based on
-Callables. The CLI is closely aligned to the MkDocs CLI to simplify the usage. Most
-arguments have the same name.
-"""
-
-INFO_BOX = """The biggest technical difference compared to MkDocs CLI:
-MkNodes CLI is based on `Typer` and uses a log handler from `rich` for log output."""
-
-EXPLANATION_TEXT = """
-There are 3 diffent commands right now:
-
-- `mknodes build`: Closely aligned to `mkdocs build`, but with the option to point
-to a (remote) repository as well as a Website template in form of a Python Callable.
-
-- `mknodes serve`: Same as `mknodes build`, but for serving the page.
-
-- `mknodes create-config`: Does a test run with given callable and repository and
-creates a Config file based on the metadata and extension requirements provided
-by the combination of Callable and repository.
-"""
-
 # this is the nav we will populate via decorators.
 nav = mk.MkNav("CLI")
 
@@ -37,9 +16,7 @@ def create_cli_section(root_nav: mk.MkNav):
     root_nav += nav
     page = nav.add_index_page(hide="toc")
     page += mk.MkBinaryImage.for_file("docs/assets/cli.gif")
-    page += INTRO_TEXT
-    page += mk.MkAdmonition(INFO_BOX)
-    page += EXPLANATION_TEXT
+    page += mk.MkJinjaTemplate("cli_index.jinja")
     page.created_by = create_cli_section
 
 
