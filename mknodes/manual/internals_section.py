@@ -71,15 +71,15 @@ def create_internals_section(root_nav: mk.MkNav):
 
 
 @nav.route.page("Requirements", hide="toc", icon="puzzle-edit")
-def create_requirements_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("requirements.md")
 
 
 @nav.route.page("Build Log", hide="toc", icon="puzzle-edit")
-def create_log_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += mk.MkText("log() | MkCode", is_jinja_expression=True)
 
 
 @nav.route.nav("Complete code")
-def create_complete_code_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     nav.parse.module("mknodes/manual/", hide="toc")

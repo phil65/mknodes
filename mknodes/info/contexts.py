@@ -34,6 +34,8 @@ class Context:
 
 @dataclasses.dataclass
 class GitContext(Context):
+    """Local repository information."""
+
     main_branch: str = ""
     """Name of the main branch of the repo (`master` / `main`)."""
     repo_name: str = ""
@@ -48,6 +50,8 @@ class GitContext(Context):
 
 @dataclasses.dataclass
 class ThemeContext(Context):
+    """Information about the theme."""
+
     name: str = ""
     """Name of the theme."""
     primary_color: str = ""
@@ -93,6 +97,8 @@ class NodeBuildStats:
 
 @dataclasses.dataclass
 class BuildContext(Context):
+    """Information about a website build."""
+
     page_mapping: dict = dataclasses.field(default_factory=dict)
     """A dictionary mapping all page filenames to the corresponding MkPages."""
     requirements: requirements.Requirements = dataclasses.field(
@@ -115,6 +121,8 @@ class BuildContext(Context):
 
 @dataclasses.dataclass
 class PackageContext(Context):
+    """Information about a package."""
+
     # PackageInfo
     module: types.ModuleType | None = None
     """The module object itself."""
@@ -256,12 +264,17 @@ class ProjectContext(Context):
     """All information about a project."""
 
     metadata: PackageContext = dataclasses.field(default_factory=PackageContext)
+    """Information about a package."""
     git: GitContext = dataclasses.field(default_factory=GitContext)
+    """Local repository information."""
     github: GitHubContext = dataclasses.field(default_factory=GitHubContext)
+    """Information about the GitHub repo / user."""
     theme: ThemeContext = dataclasses.field(default_factory=ThemeContext)
+    """Information about the theme."""
     links: linkprovider.LinkProvider = dataclasses.field(
         default_factory=linkprovider.LinkProvider,
     )
+    """Link source."""
     env: environment.Environment = dataclasses.field(
         default_factory=lambda: environment.Environment(
             undefined="strict",

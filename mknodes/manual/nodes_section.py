@@ -83,7 +83,7 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
 
 
 @nav.route.nav("Base nodes")
-def create_basic_nodes_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     klasses = [
         mk.MkNode,
         mk.MkText,
@@ -102,7 +102,7 @@ def create_basic_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("Image nodes")
-def create_image_nodes_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     klasses = [
         mk.MkImage,
         mk.MkImageCompare,
@@ -118,7 +118,7 @@ def create_image_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("Container nodes")
-def create_container_nodes_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     klasses = [
         mk.MkBlockQuote,
         mk.MkAdmonition,
@@ -143,7 +143,7 @@ def create_container_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("Presentation nodes")
-def create_presentation_nodes_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     klasses = [
         mk.MkTreeView,
@@ -160,8 +160,7 @@ def create_presentation_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("Documentation nodes")
-def create_documentation_nodes_section(nav: mk.MkNav):
-    """Add a sub-MkNav containing all template node pages to given MkNav."""
+def _(nav: mk.MkNav):
     klasses = [
         mk.MkClassDiagram,
         mk.MkDocStrings,
@@ -180,8 +179,7 @@ def create_documentation_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("About-the-project nodes")
-def create_about_nodes_section(nav: mk.MkNav):
-    """Add a sub-MkNav containing all template node pages to given MkNav."""
+def _(nav: mk.MkNav):
     klasses = [
         mk.MkChangelog,
         mk.MkCodeOfConduct,
@@ -206,8 +204,7 @@ def create_about_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("Special nodes")
-def create_special_nodes_section(nav: mk.MkNav):
-    """Add a sub-MkNav containing all template node pages to given MkNav."""
+def _(nav: mk.MkNav):
     klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
@@ -216,8 +213,7 @@ def create_special_nodes_section(nav: mk.MkNav):
 
 
 @nav.route.nav("Block nodes")
-def create_block_nodes_section(nav: mk.MkNav):
-    """Add a sub-MkNav containing all template node pages to given MkNav."""
+def _(nav: mk.MkNav):
     klasses = [
         mk.MkBlock,
         mk.MkAdmonitionBlock,

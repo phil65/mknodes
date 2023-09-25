@@ -3,7 +3,7 @@ from __future__ import annotations
 import collections
 import contextlib
 
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 
