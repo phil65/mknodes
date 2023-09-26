@@ -32,6 +32,7 @@ BlockStr = Literal[
 
 SUPER_TEXT = r"{{ super() }}"
 
+
 class Super:
     def __str__(self):
         return SUPER_TEXT
@@ -150,6 +151,19 @@ class LibsBlock(Block):
         lines = [i.to_html() for i in self.scripts]
         scripts = "\n".join(lines)
         return f"{SUPER_TEXT}\n{scripts}" if self.include_super else scripts
+
+
+class ExtraHeadBlock(Block):
+    block_id = "extrahead"
+
+    def __init__(self):
+        self.content = ""
+
+    def __bool__(self):
+        return bool(self.content)
+
+    def block_content(self, md: markdown.Markdown | None = None):
+        return self.content
 
 
 class StylesBlock(Block):

@@ -29,6 +29,7 @@ class PageTemplate:
         self.footer_block = templateblocks.FooterBlock(parent)
         self.libs_block = templateblocks.LibsBlock()
         self.styles_block = templateblocks.StylesBlock()
+        self.extra_head_block = templateblocks.ExtraHeadBlock()
         self.site_nav_block = templateblocks.SiteNavBlock()
         self.hero_block = templateblocks.HeroBlock()
 
