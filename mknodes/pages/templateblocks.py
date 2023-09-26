@@ -53,10 +53,9 @@ class Block(mknode.MkNode):
 
 
 class HtmlBlock(Block):
-    block_id: str
-
-    def __init__(self, parent=None):
+    def __init__(self, block_id: str, parent=None):
         super().__init__(parent=parent)
+        self.block_id = block_id
         self.items = [Super()]
 
     def __bool__(self):
@@ -87,34 +86,6 @@ class HtmlBlock(Block):
     def content(self, value):
         value = self.to_child_node(value)
         self.items = [value]
-
-
-class ContentBlock(HtmlBlock):
-    block_id = "content"
-
-
-class AnnouncementBarBlock(HtmlBlock):
-    block_id = "announce"
-
-
-class FooterBlock(HtmlBlock):
-    block_id = "footer"
-
-
-class HeroBlock(HtmlBlock):
-    block_id = "hero"
-
-
-class OutdatedBlock(HtmlBlock):
-    block_id = "outdated"
-
-
-class TabsBlock(HtmlBlock):
-    block_id = "tabs"
-
-
-class SiteNavBlock(HtmlBlock):
-    block_id = "site_nav"
 
 
 class TitleBlock(Block):
@@ -190,5 +161,5 @@ class StylesBlock(Block):
 
 
 if __name__ == "__main__":
-    cfg = AnnouncementBarBlock()
-    print(cfg.to_markdown())
+    block = StylesBlock()
+    print(block.to_markdown())

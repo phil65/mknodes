@@ -22,16 +22,16 @@ class PageTemplate:
         self.extends = extends
         self.parent = parent
         self.title_block = templateblocks.TitleBlock()
-        self.content_block = templateblocks.ContentBlock(parent)
-        self.tabs_block = templateblocks.TabsBlock(parent)
-        self.outdated_block = templateblocks.OutdatedBlock(parent)
-        self.announce_block = templateblocks.AnnouncementBarBlock(parent)
-        self.footer_block = templateblocks.FooterBlock(parent)
+        self.content_block = templateblocks.HtmlBlock("content", parent=parent)
+        self.tabs_block = templateblocks.HtmlBlock("tabs", parent=parent)
+        self.outdated_block = templateblocks.HtmlBlock("outdated", parent=parent)
+        self.announce_block = templateblocks.HtmlBlock("announce", parent=parent)
+        self.footer_block = templateblocks.HtmlBlock("footer", parent=parent)
+        self.site_nav_block = templateblocks.HtmlBlock("site_nav", parent=parent)
+        self.hero_block = templateblocks.HtmlBlock("hero", parent=parent)
         self.libs_block = templateblocks.LibsBlock()
         self.styles_block = templateblocks.StylesBlock()
         self.extra_head_block = templateblocks.ExtraHeadBlock()
-        self.site_nav_block = templateblocks.SiteNavBlock()
-        self.hero_block = templateblocks.HeroBlock()
 
     def __bool__(self):
         return any(self.blocks)
