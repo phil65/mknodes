@@ -51,6 +51,7 @@ class PageTemplate:
             self.styles_block,
             self.outdated_block,
             self.hero_block,
+            self.extra_head_block,
             self.site_nav_block,
         ]
 
