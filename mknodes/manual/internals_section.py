@@ -63,6 +63,7 @@ def create_internals_section(root_nav: mk.MkNav):
     page += node
     page.created_by = create_internals_section
 
+
 # @nav.route.page("Tree", hide="toc", icon="graph")
 # def create_tree_page(page: mk.MkPage):
 #     page += mk.MkHeader("This is the tree we built up to now.", level=3)

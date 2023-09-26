@@ -55,5 +55,3 @@ registry = PackageRegistry()
 if __name__ == "__main__":
     reg = PackageRegistry()
     info = reg.get_info("mknodes")
-    print(info.get_entry_points("mkdocs.plugins"))
-    print(info.cli)

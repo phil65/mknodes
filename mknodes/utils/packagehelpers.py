@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import collections
+
 from collections.abc import Mapping
 import dataclasses
 import functools
 import importlib
-
 from importlib import metadata
 import types
 
@@ -93,26 +94,33 @@ class EntryPoint:
 def get_entry_points(
     dist: metadata.Distribution | str,
     group: str | None = None,
-) -> dict[str, EntryPoint]:
+) -> collections.defaultdict[str, list[EntryPoint]]:
+    """Returns a dictionary with entry point group as key, entry points as value.
+
+    Arguments:
+        dist: Distribution to get entry points for.
+        group: Optional group filter.
+    """
     if isinstance(dist, str):
         dist = get_distribution(dist)
     if not group:
         eps = _get_entry_points(dist)
     else:
         eps = [i for i in _get_entry_points(dist) if i.group == group]
-    dct = {}
+    dct = collections.defaultdict(list)
     for ep in eps:
         if ":" in ep.value:
             mod_name, kls_name = ep.value.split(":")
         else:
             mod_name, kls_name = ep.value, None
         mod = importlib.import_module(mod_name)
-        dct[f"{ep.group}.{ep.name}"] = EntryPoint(
+        ep = EntryPoint(
             name=ep.name,
             dotted_path=ep.value,
             group=ep.group,
             obj=getattr(mod, kls_name) if kls_name else mod,
         )
+        dct[ep.group].append(ep)
     return dct
 
 

@@ -27,12 +27,9 @@ class MkDefaultWebsite(mknodes.MkNav):
         docs.collect_classes(recursive=True)
         if proj := self.associated_project:
             proj.theme.announcement_bar = mknodes.MkMetadataBadges("websites")
-            if (
-                proj.folderinfo.info.get_entry_points("console_scripts")
-                and "click" in proj.folderinfo.info.required_package_names
-            ):
-                page = self.add_page("CLI", hide="nav")
-                page += mknodes.MkClickDoc(show_subcommands=True)
+        if self.ctx.metadata.cli:
+            page = self.add_page("CLI", hide="nav")
+            page += mknodes.MkClickDoc(show_subcommands=True)
 
         nav = self.add_nav("Development")
 
@@ -57,9 +54,7 @@ class MkDefaultWebsite(mknodes.MkNav):
         page = nav.add_page("Module overview")
         page += mknodes.MkModuleOverview()
 
-        if (proj := self.associated_project) and proj.folderinfo.info.get_entry_points(
-            "mkdocs.plugins",
-        ):
+        if "mkdocs.plugins" in self.ctx.metadata.entry_points:
             page = nav.add_page("MkDocs Plugins")
             page += mknodes.MkPluginFlow()
 

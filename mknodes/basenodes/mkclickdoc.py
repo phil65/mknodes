@@ -50,11 +50,10 @@ class MkClickDoc(mknode.MkNode):
                 module, command = self._target.split(":")
                 dct = dict(module=module, command=command, prog_name=self._prog_name)
             case None:
-                eps = self.ctx.metadata.entry_points
-                eps = [i for i in eps.values() if i.group == "console_scripts"]
-                if eps:
-                    module, command = eps[0].dotted_path.split(":")
-                    dct = dict(module=module, command=command, prog_name=eps[0].name)
+                cli_eps = self.ctx.metadata.entry_points.get("console_scripts")
+                if cli_eps:
+                    module, command = cli_eps[0].dotted_path.split(":")
+                    dct = dict(module=module, command=command, prog_name=cli_eps[0].name)
         if not dct:
             return {}
         dct.update(show_hidden=self.show_hidden, show_subcommands=self.show_subcommands)

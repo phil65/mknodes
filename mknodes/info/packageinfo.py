@@ -198,13 +198,13 @@ class PackageInfo:
         eps = self.get_entry_points("console_scripts")
         if not eps:
             return None
-        _name, ep = next(iter(eps.items()))
+        ep = eps["console_scripts"][0]
         return "typer" if ep.obj.__class__.__qualname__ == "Typer" else "click"
 
     def get_entry_points(
         self,
         group: str | None = None,
-    ) -> dict[str, packagehelpers.EntryPoint]:
+    ) -> dict[str, list[packagehelpers.EntryPoint]]:
         """Get entry points for this package."""
         return packagehelpers.get_entry_points(self.distribution, group=group)
 
