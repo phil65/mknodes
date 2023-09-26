@@ -5,11 +5,6 @@ import mknodes as mk
 from mknodes.info import contexts
 
 
-ADDITIONAL_INFO_TEXT = """MkNodes cannot just re-use the MkDocs jinja environment
-because at that stage of the build process, our nodes already became text and we need
-the nodes for context (mainly to attach a parent to the MkNodes used as macros / filters)
-"""
-
 NAMESPACES = {
     "`metadata`": "Package information",
     "`git`": "Local repository information",
@@ -31,15 +26,13 @@ def create_templating_section(root_nav: mk.MkNav):
     """Add the complete "Templating" section to given MkNav."""
     root_nav += nav
     page = nav.add_index_page(hide="toc")
-    page += mk.MkJinjaTemplate("template_index.jinja")
-    page += mk.MkDetailsBlock(ADDITIONAL_INFO_TEXT, expand=True)
-    page += "### These are the available namespaces:"
-    page += mk.MkDefinitionList(NAMESPACES)
+    variables = dict(namespaces=NAMESPACES)
+    page += mk.MkJinjaTemplate("template_index.jinja", variables=variables)
     page.created_by = create_templating_section
 
 
 @nav.route.nav("Jinja Namespace")
-def create_jinja_namespace_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     def add_context_doc(container, context):
         container += mk.MkDocStrings(
             context,
@@ -56,5 +49,5 @@ def create_jinja_namespace_section(nav: mk.MkNav):
 
 
 @nav.route.page("Template filters")
-def create_filters_section(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("template_filters.jinja")

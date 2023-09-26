@@ -20,3 +20,13 @@ The main features of the environment are 2 things:
   You can see all available info in the subsections of this page.
 
     * Example: `{ { metadata.license_name } }`
+
+
+/// details
+MkNodes cannot just re-use the MkDocs jinja environment
+because at that stage of the build process, our nodes already became text and we need
+the nodes for context (mainly to attach a parent to the MkNodes used as macros / filters)
+///
+
+### These are the available namespaces:
+{{ namespaces | MkDefinitionList }}
