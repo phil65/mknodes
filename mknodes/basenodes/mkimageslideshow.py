@@ -57,7 +57,7 @@ class MkImageSlideshow(mknode.MkNode):
         attrs = {"data-simple-slider": ""}
         root = xml.Div(style="width: 100%; padding-bottom: 25%", parent=None, **attrs)
         for img in self.images:
-            xml.Img(src={img}, parent=root)
+            xml.Img(src=img, parent=root)
         return root
 
     def _to_markdown(self) -> str:
