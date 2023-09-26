@@ -45,7 +45,7 @@ class PackageRegistry(MutableMapping, metaclass=ABCMeta):
         return self._packages[pkg_name]
 
     @property
-    def inventory_urls(self):
+    def inventory_urls(self) -> set[str]:
         return {v.inventory_url for v in self.values() if v.inventory_url is not None}
 
 

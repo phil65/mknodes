@@ -302,12 +302,8 @@ class NavParser:
         # if isinstance(module, types.ModuleType):
         #     module = inspecthelpers.get_file(module)
         for path in pathlib.Path(module).iterdir():
-            if (
-                recursive
-                and path.is_dir()
-                and not path.name.startswith(("_", "."))
-                and any(path.iterdir())
-            ):
+            is_hidden = path.name.startswith(("_", "."))
+            if recursive and path.is_dir() and not is_hidden and any(path.iterdir()):
                 subnav = mknav.MkNav(path.name)
                 subnav.parse.folder(folder=path, **kwargs)
                 self._nav += subnav

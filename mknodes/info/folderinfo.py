@@ -6,6 +6,7 @@ import importlib
 import os
 import pathlib
 import re
+import types
 
 from griffe import Module
 from griffe.enumerations import Parser
@@ -74,7 +75,7 @@ class FolderInfo:
         return str(self.path)
 
     @functools.cached_property
-    def module(self):
+    def module(self) -> types.ModuleType:
         """Return the module itself."""
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
         return importlib.import_module(mod_name)

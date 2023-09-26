@@ -4,6 +4,8 @@ import mknodes as mk
 # this is the nav we will populate via decorators.
 nav = mk.MkNav("CLI")
 
+CLI_PATH = "mknodes.cli:cli"
+
 
 def create_cli_section(root_nav: mk.MkNav):
     """Create the "Development" sub-MkNav and attach it to given MkNav."""
@@ -22,14 +24,14 @@ def create_cli_section(root_nav: mk.MkNav):
 
 @nav.route.page("build", icon="wrench")
 def _(page: mk.MkPage):
-    page += mk.MkClickDoc("mknodes.cli:cli", prog_name="build")
+    page += mk.MkClickDoc(CLI_PATH, prog_name="build")
 
 
 @nav.route.page("serve", icon="web")
 def _(page: mk.MkPage):
-    page += mk.MkClickDoc("mknodes.cli:cli", prog_name="serve")
+    page += mk.MkClickDoc(CLI_PATH, prog_name="serve")
 
 
 @nav.route.page("create-config", icon="folder-wrench")
 def _(page: mk.MkPage):
-    page += mk.MkClickDoc("mknodes.cli:cli", prog_name="create-config")
+    page += mk.MkClickDoc(CLI_PATH, prog_name="create-config")

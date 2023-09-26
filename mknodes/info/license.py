@@ -5,7 +5,7 @@ import functools
 import json
 import pathlib
 
-from typing import Any
+from typing import Any, Self
 
 from mknodes import paths
 from mknodes.info import packageregistry
@@ -34,7 +34,7 @@ class License:
     header: str | None = None
 
     @classmethod
-    def from_name(cls, name_or_id: str):
+    def from_name(cls, name_or_id: str) -> Self:
         db = get_db()
         name_or_id = name_or_id.lower()
         for lic in db["licenses"]:
@@ -52,7 +52,7 @@ class License:
         raise ValueError(name_or_id)
 
     @classmethod
-    def from_path(cls, path: str):
+    def from_path(cls, path: str) -> Self:
         p = pathlib.Path(path)
         return cls(
             path=str(p),

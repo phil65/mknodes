@@ -35,7 +35,7 @@ class PyProject(tomlfile.TomlFile):
         super().__init__(path)
 
     @property
-    def mknodes_section(self):
+    def mknodes_section(self) -> dict[str, Any]:
         return self.get_section("tool", "mknodes") or {}
 
     @property
