@@ -77,6 +77,18 @@ class Li(HTMLElement):
     tag_name = "li"
 
 
+class Table(HTMLElement):
+    tag_name = "table"
+
+
+class Tr(HTMLElement):
+    tag_name = "tr"
+
+
+class Td(HTMLElement):
+    tag_name = "td"
+
+
 class Button(HTMLElement):
     tag_name = "button"
 

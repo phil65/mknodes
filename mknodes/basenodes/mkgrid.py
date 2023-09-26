@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers, requirements, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -68,11 +68,15 @@ class MkGrid(mkcontainer.MkContainer):
                 cards.append(item)
         return reprhelpers.get_repr(self, cards=cards)
 
-    def _to_markdown(self) -> str:
-        begin = '<div class="grid cards" markdown>'
-        end = "</div>"
+    def get_element(self) -> xml.Div:
+        root = xml.Div("grid cards", markdown="1")
         content = "".join(str(i) for i in self.items) if self.items else ""
-        return f"{begin}\n\n{content}\n{end}"
+        root.text = "\n\n" + content + "\n"
+        return root
+
+    def _to_markdown(self) -> str:
+        root = self.get_element()
+        return root.to_string(space="")
 
     @staticmethod
     def create_example_page(page):

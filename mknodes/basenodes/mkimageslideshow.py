@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -12,11 +12,6 @@ logger = log.get_logger(__name__)
 
 JS_URL = "https://rawgit.com/ruyadorno/simple-slider/master/dist/simpleslider.min.js"
 
-HTML = """
-<div style="width: 100%; padding-bottom: 25%" data-simple-slider>
-{images}
-</div>
-"""
 SCRIPT = r"""
 <script>
   window.addEventListener('DOMContentLoaded', function () {
@@ -58,9 +53,16 @@ class MkImageSlideshow(mknode.MkNode):
             _filter_false=True,
         )
 
+    def get_element(self) -> xml.Div:
+        attrs = {"data-simple-slider": ""}
+        root = xml.Div(style="width: 100%; padding-bottom: 25%", parent=None, **attrs)
+        for img in self.images:
+            xml.Img(src={img}, parent=root)
+        return root
+
     def _to_markdown(self) -> str:
-        lines = [f'  <img src="{i}"/>' for i in self.images]
-        return HTML.format(images="\n".join(lines)) + SCRIPT
+        root = self.get_element()
+        return root.to_string()
 
     @staticmethod
     def create_example_page(page):

@@ -111,13 +111,17 @@ class MkTimeline(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(self)
 
-    def _to_markdown(self) -> str:
+    def get_element(self) -> xml.Section:
         root = xml.Section("timeline")
         div = xml.Div(parent=root)
         for i, item in enumerate(self.items):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()
             div.append(elem)
+        return root
+
+    def _to_markdown(self) -> str:
+        root = self.get_element()
         return "\n\n" + root.to_string() + "\n\n"
 
     def add_item(
@@ -130,6 +134,16 @@ class MkTimeline(mkcontainer.MkContainer):
         image: str = "",
         **kwargs,
     ):
+        """Add a timeline item.
+
+        title: Item header
+        content: Markdown for content
+        date: Label to be displayed in small box at the top
+        link: Optional button-link. Text of button can be set via button_text
+        button_text: Text for the link button.
+        image: Optional image for the item
+        kwargs: keyword arguments passed to parent
+        """
         item = MkTimelineItem(
             title=title,
             content=content,

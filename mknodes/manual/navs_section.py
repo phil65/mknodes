@@ -74,7 +74,7 @@ def create_navs_section(root_nav: mk.MkNav):
 
 
 @nav.route.nav("From file")
-def create_from_file_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     """Load an existing SUMMARY.md and attach it to given MkNav."""
     # We will now demonstate loading an existing Nav tree.
 
@@ -105,27 +105,25 @@ def create_from_file_section(nav: mk.MkNav):
 
 
 @nav.route.nav("From folder")
-def create_from_folder_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
     # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
     nav.parse.folder(folder, hide="toc")
-
-    # Finally, create the index page.
     page = nav.add_index_page(hide="toc", icon="folder")
     page += mk.MkTreeView(folder)
     page += mk.MkDocStrings(mk.MkTreeView)
 
 
 @pages_nav.route.page("MkClassPage")
-def create_mkclasspage_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += CLASSPAGE_TEXT
     class_page = mk.MkClassPage(mk.MkCode, inclusion_level=False)
     page += mk.MkReprRawRendered(class_page)
 
 
 @pages_nav.route.page("MkModulePage")
-def create_mkmodulepage_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     import mkdocs.config
 
     page += MODULEPAGE_TEXT
@@ -134,7 +132,7 @@ def create_mkmodulepage_page(page: mk.MkPage):
 
 
 @pages_nav.route.page("Adding to MkPages", hide="toc", status="new")
-def create_adding_to_mkpages_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
     page += "Adding strings also works, they get converted to MkText nodes."
     page += "### ...and text starting with # will become a MkHeader."
@@ -149,12 +147,12 @@ def create_adding_to_mkpages_page(page: mk.MkPage):
     subtitle="Subtitle",
     description="Description",
 )
-def create_metadata_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("page_metadata.jinja")
 
 
 @pages_nav.route.page("Templates", hide="toc", status="new")
-def create_template_page(page: mk.MkPage):
+def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("page_templates.jinja")
     page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")
     page.template.footer_block.content = mk.MkProgressBar(50)
@@ -163,6 +161,7 @@ def create_template_page(page: mk.MkPage):
     page.template.hero_block.content = mk.MkHeader("A header!")
 
 
+# @nav.route.nav("MkDefaultWebsite")
 def create_mkdefaultwebsite_section(nav: mk.MkNav):
     proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
     website_nav = mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
@@ -170,7 +169,7 @@ def create_mkdefaultwebsite_section(nav: mk.MkNav):
 
 
 @nav.route.nav("MkDoc")
-def create_mkdoc_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     nav = nav.add_nav("MkDoc")
 
     page = nav.add_index_page(hide="toc", icon="api")

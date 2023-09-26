@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mknodes.basenodes import mkbasetable
-from mknodes.utils import log
+from mknodes.utils import log, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -16,23 +16,24 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
 
     STATUS = "new"
 
-    def _to_markdown(self) -> str:
+    def get_element(self) -> xml.Table | None:
         table_data = self.data  # property
+        root = xml.Table(markdown="1")
         if not any(table_data[k] for k in table_data):
-            return ""
+            return None
         data = [[str(k) for k in row] for row in self.iter_rows()]
         headers = list(table_data.keys())
         data.insert(0, headers)
-        text = '<table markdown="1">'
         for items in data:
-            text += "\n\n<tr>"
+            tr = xml.Tr(parent=root)
             for item in items:
-                text += "\n<td>\n"
-                text += item
-                text += "\n</td>"
-            text += "\n</tr>"
-        text += "\n</table>"
-        return text
+                td = xml.Td(parent=tr)
+                td.text = "\n" + item + "\n"
+        return root
+
+    def _to_markdown(self) -> str:
+        root = self.get_element()
+        return root.to_string(space="") if root else ""
 
     @staticmethod
     def create_example_page(page):
@@ -47,4 +48,4 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
 
 if __name__ == "__main__":
     table = MkHtmlTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
-    print(table)
+    print(table._to_markdown())

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -13,12 +13,9 @@ JS_URL = "https://unpkg.com/img-comparison-slider@7/dist/index.js"
 
 CSS_URL = "https://unpkg.com/img-comparison-slider@7/dist/styles.css"
 
-HTML = """
-<img-comparison-slider>
-  <img slot="first" src="{before}" />
-  <img slot="second" src="{after}" />
-</img-comparison-slider>
-"""
+
+class ImgComparisonSlider(xml.HTMLElement):
+    tag_name = "img-comparison-slider"
 
 
 class MkImageCompare(mknode.MkNode):
@@ -56,11 +53,15 @@ class MkImageCompare(mknode.MkNode):
             _filter_false=True,
         )
 
+    def get_element(self) -> ImgComparisonSlider:
+        root = ImgComparisonSlider()
+        xml.Img(src=self.before_image, slot="first", parent=root)
+        xml.Img(src=self.after_image, slot="second", parent=root)
+        return root
+
     def _to_markdown(self) -> str:
-        return HTML.format(
-            before=self.before_image,
-            after=self.after_image,
-        )
+        root = self.get_element()
+        return root.to_string()
 
     @staticmethod
     def create_example_page(page):
