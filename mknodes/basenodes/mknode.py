@@ -178,7 +178,7 @@ class MkNode(node.Node):
         return [
             processors.ShiftHeaderLevelProcessor(self.shift_header_levels),
             processors.IndentationProcessor(self.indent),
-            processors.AppendCssClassesProcessor(self._css_classes),
+            processors.AppendCssClassesProcessor(self),
             processors.PrependHeaderProcessor(self.header),
             processors.AnnotationProcessor(self),
         ]
@@ -192,6 +192,13 @@ class MkNode(node.Node):
             text: Markdown to annote
         """
         return self.annotations.annotate_text(text) if self.annotations else text
+
+    def attach_css_classes(self, text: str):
+        if not self._css_classes:
+            return text
+        classes = " ".join(f".{kls_name}" for kls_name in self._css_classes)
+        text += f" {{: {classes}}}"
+        return text
 
     @property
     def resolved_parts(self) -> tuple[str, ...]:

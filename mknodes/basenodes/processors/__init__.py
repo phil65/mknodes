@@ -84,16 +84,11 @@ class RenderJinjaProcessor(TextProcessor):
 class AppendCssClassesProcessor(TextProcessor):
     ID = "append_css_classes"
 
-    def __init__(self, css_classes: set):
-        self.css_classes = css_classes
+    def __init__(self, item):
+        self.item = item
 
     def run(self, text: str) -> str:
-        if not self.css_classes:
-            return text
-        classes = " ".join(f".{kls_name}" for kls_name in self.css_classes)
-        suffix = f" {{: {classes}}}"
-        text += suffix
-        return text
+        return self.item.attach_css_classes(text) if self.item._css_classes else text
 
 
 class PrependMetadataProcessor(TextProcessor):

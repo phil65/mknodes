@@ -81,6 +81,13 @@ class MkLink(mknode.MkNode):
     def title(self) -> str:
         return self.url if self._title is None else self._title
 
+    def attach_css_classes(self, text: str):
+        if not self._css_classes:
+            return text
+        classes = " ".join(f".{kls_name}" for kls_name in self._css_classes)
+        text += f"{{: {classes}}}"
+        return text
+
     def _to_markdown(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""
         return f"[{prefix}{self.title}]({self.url})"
