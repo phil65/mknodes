@@ -30,9 +30,6 @@ class Environment(jinja2.Environment):
         self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
         self.rendered_nodes: list[mk.MkNode] = list()
 
-    def collect_reqs(self, ctx, **kwargs):
-        pass
-
     def merge_globals(self, other: Mapping, additive: bool = False):
         """Merge other into the environment globals with given strategy.
 
@@ -147,7 +144,8 @@ class Environment(jinja2.Environment):
         filters = {}
         for kls_name in mknodes.__all__:
             if parent is not None:
-                fn = functools.partial(getattr(mknodes, kls_name), parent=parent)
+                kls = getattr(mknodes, kls_name)
+                fn = functools.partial(kls, parent=parent)
             else:
                 fn = getattr(mknodes, kls_name)
 
