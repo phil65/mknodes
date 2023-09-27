@@ -81,7 +81,7 @@ class PageTemplate:
 
     def build_html(self, md: markdown.Markdown | None = None) -> str | None:
         md = md or mkdocsconfig.Config().get_markdown_instance()
-        blocks = ['{% extends "' + self.extends + '.html" %}\n'] if self.extends else []
+        blocks = [r'{% extends "' + self.extends + '.html" %}\n'] if self.extends else []
         blocks.extend(block.to_markdown(md) for block in self.blocks if block)
         return "\n".join(blocks) + "\n" if blocks else None
 

@@ -33,8 +33,8 @@ class Theme:
     def __repr__(self):
         return reprhelpers.get_repr(self, theme_name=self.theme_name)
 
-    def get_requirements(self):
-        req = []
+    def get_requirements(self) -> requirements.Requirements:
+        req: list[requirements.CSSLink | requirements.CSSFile | requirements.CSSText] = []
         if self.css_template and (proj := self.associated_project):
             tmpl_ctx = self.get_template_context()
             css_text = proj.context.env.render_template(

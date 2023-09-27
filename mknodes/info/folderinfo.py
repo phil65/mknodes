@@ -8,7 +8,7 @@ import pathlib
 import re
 import types
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 from griffe import Module
 from griffe.enumerations import Parser
@@ -103,7 +103,7 @@ class FolderInfo:
         url: str,
         # path: str | os.PathLike,
         depth: int = 100,
-    ):
+    ) -> Self:
         """Create a FolderInfo from a remote repository url.
 
         Arguments:
