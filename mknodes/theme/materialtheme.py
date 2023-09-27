@@ -11,7 +11,7 @@ from mknodes.basenodes import mknode
 from mknodes.data import datatypes
 from mknodes.theme import mkblog, theme
 from mknodes.theme.material import palette
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -64,13 +64,12 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
 
 def build_badge(icon: str, text: str = "", typ: str = ""):
     classes = f"mdx-badge mdx-badge--{typ}" if typ else "mdx-badge"
-    lines = [f'<span class="{classes}">']
+    root = xml.Span(classes)
     if icon:
-        lines.append(f'<span class="mdx-badge__icon">{icon}</span>')
+        xml.Span("mdx-badge__icon", parent=root, text=icon)
     if text:
-        lines.append(f'<span class="mdx-badge__icon">{text}</span>')
-    lines.append("</span>")
-    return "".join(lines)
+        xml.Span("mdx-badge__icon", parent=root, text=text)
+    return root.to_string()
 
 
 @dataclasses.dataclass
@@ -126,7 +125,7 @@ class MaterialTheme(theme.Theme):
         self._foreground_color = None
         self.blog = mkblog.MkBlog()
         self.features = self.data.get("features")
-        self.show_annotation_numbers = True
+        self.show_annotation_numbers = False
         self.classic_admonition_style = True
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None

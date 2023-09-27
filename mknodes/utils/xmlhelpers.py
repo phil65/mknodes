@@ -65,6 +65,20 @@ class Section(HTMLElement):
     tag_name = "section"
 
 
+class Span(HTMLElement):
+    tag_name = "span"
+
+    def __init__(
+        self,
+        klass: str | None = None,
+        text: str | None = None,
+        parent: Et.Element | None = None,
+        **kwargs: Any,
+    ):
+        super().__init__(klass, parent, **kwargs)
+        self.text = text
+
+
 class Img(HTMLElement):
     tag_name = "img"
 

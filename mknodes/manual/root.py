@@ -39,7 +39,6 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     root_nav = project.get_root()
     project.theme.announcement_bar = mk.MkMetadataBadges("websites")
     project.theme.error_page.content = mk.MkAdmonition("Page does not exist!")
-    project.theme.show_annotation_numbers = True
     project.theme.content_area_width = 1300
     project.theme.tooltip_width = 800
     project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
