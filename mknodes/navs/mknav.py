@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from mknodes.basenodes import mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
-from mknodes.pages import metadata, mkpage
+from mknodes.pages import metadata, mkpage, pagetemplate
 from mknodes.utils import log, reprhelpers, requirements
 
 
@@ -59,6 +59,7 @@ class MkNav(mknode.MkNode):
         """Parser object used to build Navs from different data / directory structures."""
         self.metadata = metadata.Metadata()
         """Page Metadata, in form of a dataclass."""
+        self.page_template = pagetemplate.PageTemplate(parent=self, extends="main.html")
         super().__init__(**kwargs)
 
     def __repr__(self):
@@ -82,6 +83,10 @@ class MkNav(mknode.MkNode):
 
     def __iter__(self):
         yield from self.nav.all_items
+
+    def get_node_requirements(self):
+        templates = [self.page_template] if self.page_template else []
+        return requirements.Requirements(templates=templates)
 
     @property
     def index_page(self):

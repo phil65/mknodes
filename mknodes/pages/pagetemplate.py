@@ -15,11 +15,11 @@ class PageTemplate:
     def __init__(
         self,
         filename: str | None = None,
-        extends: str | None = "base",
+        extends: str | None = "base.html",
         parent=None,
     ):
         self.filename = filename
-        self.extends = extends
+        self.extends = f"{extends.rstrip('.html')}.html" if extends else None
         self.parent = parent
         self.title_block = templateblocks.TitleBlock()
         self.content_block = templateblocks.HtmlBlock("content", parent=parent)
@@ -73,7 +73,7 @@ class PageTemplate:
 
     def build_html(self, md: markdown.Markdown | None = None) -> str | None:
         md = md or mkdocsconfig.Config().get_markdown_instance()
-        blocks = [r'{% extends "' + self.extends + '.html" %}\n'] if self.extends else []
+        blocks = [r'{% extends "' + self.extends + '" %}\n'] if self.extends else []
         blocks.extend(block.to_markdown(md) for block in self.blocks if block)
         return "\n".join(blocks) + "\n" if blocks else None
 
