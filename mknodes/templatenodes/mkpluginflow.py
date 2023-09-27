@@ -37,7 +37,8 @@ class MkPluginFlow(mkcontainer.MkContainer):
     def plugins(self):
         match self._plugin:
             case None:
-                eps = self.ctx.metadata.entry_points.get("mkdocs.plugins", [])
+                ep_group = self.event_plugin.entry_point_group
+                eps = self.ctx.metadata.entry_points.get(ep_group, [])
                 return [i.obj for i in eps]
             case _:
                 return [self._plugin]

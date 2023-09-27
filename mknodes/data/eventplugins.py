@@ -13,6 +13,7 @@ class EventPlugin:
     flow: list[str]
     help_link: str
     hook_fn_path: str
+    entry_point_group: str
 
 
 MKDOCS_FLOW = [
@@ -45,4 +46,5 @@ mkdocs_plugin = EventPlugin(
     flow=MKDOCS_FLOW,
     help_link="https://www.mkdocs.org/dev-guide/plugins/#{event}",
     hook_fn_path="mkdocs.plugins.BasePlugin.{event}",
+    entry_point_group="mkdocs.plugins",
 )
