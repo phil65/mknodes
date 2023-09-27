@@ -81,7 +81,6 @@ class Project(Generic[T]):
             theme=self.theme.context,
             links=self.linkprovider,
             env=self.env,
-            # requirements=self.get_requirements(),
         )
 
         self._root: mknav.MkNav | None = None

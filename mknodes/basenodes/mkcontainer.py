@@ -31,21 +31,18 @@ class MkContainer(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.items: list[mknode.MkNode] = []
         self.block_separator = "\n\n" if block_separator is None else block_separator
         match content:
             case None:
-                items: list[mknode.MkNode] = []
+                self.items: list[mknode.MkNode] = []
             case str():
-                items = [self.to_child_node(content)] if content else []
+                self.items = [self.to_child_node(content)] if content else []
             case mknode.MkNode():
-                items = [self.to_child_node(content)]
+                self.items = [self.to_child_node(content)]
             case list():
-                items = [self.to_child_node(i) for i in content]
+                self.items = [self.to_child_node(i) for i in content]
             case _:
                 raise TypeError(content)
-        for item in items:
-            self.append(item)
 
     def __bool__(self):
         return bool(self.items)
@@ -63,7 +60,7 @@ class MkContainer(mknode.MkNode):
 
     @contextlib.contextmanager
     def in_html_tag(self, tag_name: str, **attributes: Any):
-        """Will wrap the content in hatml tags with tag name.
+        """Will wrap the content in html tags with tag name.
 
         Examples:
             with node.in_html_tag("div", **{"class": "css_class"}):

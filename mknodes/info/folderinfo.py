@@ -8,6 +8,8 @@ import pathlib
 import re
 import types
 
+from typing import TYPE_CHECKING
+
 from griffe import Module
 from griffe.enumerations import Parser
 from griffe.loader import GriffeLoader
@@ -24,6 +26,9 @@ from mknodes.info import (
 )
 from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
 
+
+if TYPE_CHECKING:
+    from mknodes.info import packageinfo
 
 logger = log.get_logger(__name__)
 
@@ -119,7 +124,7 @@ class FolderInfo:
         return kls
 
     @functools.cached_property
-    def info(self):
+    def info(self) -> packageinfo.PackageInfo:
         """Return a PackageInfo object for given distribution."""
         return packageregistry.get_info(self.pyproject.name or self.git.repo_name)
 
@@ -182,7 +187,7 @@ class FolderInfo:
         return [instance for t in tools.TOOLS.values() if (instance := t(self)).used]
 
     @functools.cached_property
-    def docstring_style(self):
+    def docstring_style(self) -> str | None:
         """Return docstring style (google / numpy)."""
         if style := self.pyproject.docstring_style:
             return style
@@ -271,7 +276,7 @@ class FolderInfo:
             required_package_names=self.info.required_package_names,
             extras=self.info.extras,
             tools=self.tools,
-            entry_points=self.info.get_entry_points(),
+            entry_points=self.info.entry_points,
             cli=self.info.cli,
             mkdocs_config=self.mkdocs_config,
             pyproject_file=self.pyproject,

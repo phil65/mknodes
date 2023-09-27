@@ -195,21 +195,18 @@ class PackageInfo:
     @functools.cached_property
     def cli(self) -> str | None:
         """Get the name of the CLI package being used."""
-        eps = self.get_entry_points("console_scripts")
+        eps = self.entry_points.get("console_scripts")
         if not eps:
             return None
-        ep = eps["console_scripts"][0]
+        ep = eps[0]
         return "typer" if ep.obj.__class__.__qualname__ == "Typer" else "click"
 
-    def get_entry_points(
-        self,
-        group: str | None = None,
-    ) -> dict[str, list[packagehelpers.EntryPoint]]:
+    @functools.cached_property
+    def entry_points(self) -> dict[str, list[packagehelpers.EntryPoint]]:
         """Get entry points for this package."""
-        return packagehelpers.get_entry_points(self.distribution, group=group)
+        return packagehelpers.get_entry_points(self.distribution)
 
 
 if __name__ == "__main__":
     info = PackageInfo("mknodes")
-    print(info.get_entry_points("mkdocs.plugins"))
     print(info.cli)

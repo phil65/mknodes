@@ -114,12 +114,8 @@ def get_entry_points(
         else:
             mod_name, kls_name = ep.value, None
         mod = importlib.import_module(mod_name)
-        ep = EntryPoint(
-            name=ep.name,
-            dotted_path=ep.value,
-            group=ep.group,
-            obj=getattr(mod, kls_name) if kls_name else mod,
-        )
+        obj = getattr(mod, kls_name) if kls_name else mod
+        ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group, obj=obj)
         dct[ep.group].append(ep)
     return dct
 
