@@ -21,22 +21,10 @@ pages_nav = nav.add_nav("MkPage")
 
 def create_navs_section(root_nav: mk.MkNav):
     """Add the complete "The Nodes" section to given MkNav."""
-    # Basic structure: Theres one root MkNav, MkNavs can contain MkPages and other MkNavs,
-    # MkPages contain more atomic MkNodes, like MkText, MkTable, and MkDiagrams.
-    # These markup nodes in some cases can contain other Markup nodes.
-    # It`s all one big tree.
-
-    # MkNavs can either be populated manually with MkPages and MkNavs, or we can load
-    # existing folders containing markup files. There are two ways for this:
-    #
-    #   * Load an existing SUMMARY.md and create a nav based on given file content.
-    #
     root_nav += nav
 
-    # Another approach to set up navs is by using decorators. We will explain that here:
     routing.create_routing_section(nav)
 
-    # Navs contain also contain pages. This section provides some info how to use MkPages.
     page = pages_nav.add_index_page(hide="toc")
     page += mk.MkJinjaTemplate("mkpage_index.jinja")
 
@@ -47,36 +35,25 @@ def create_navs_section(root_nav: mk.MkNav):
 
 @nav.route.nav("From file")
 def _(nav: mk.MkNav):
-    """Load an existing SUMMARY.md and attach it to given MkNav."""
-    # We will now demonstate loading an existing Nav tree.
-
-    # This path contains Markdown files/ folders and a pre-populated SUMMARY.md.
-    folder = paths.TEST_RESOURCES / "nav_tree/"  # Folder content: # (1)
-    summary_file = folder / "SUMMARY.md"  # File content: # (2)
+    folder = paths.TEST_RESOURCES / "nav_tree/"
+    summary_file = folder / "SUMMARY.md"
     nav.parse.file(summary_file, hide="toc")
-
     page = nav.add_index_page(hide="toc", icon="file")
     text = summary_file.read_text()
     text = text.replace("](", "] (")  ##
     path = paths.TEST_RESOURCES / "nav_tree/"
-    tree_node = mk.MkTreeView(path, header="Directory tree")
-    page += mk.MkAdmonition(tree_node)
-    file_content_node = mk.MkCode(text, header="SUMMARY.md content")
-    page += mk.MkAdmonition(file_content_node)
-    page += ANNOTATIONS_INFO
-    page += tree_node
-    page += file_content_node
+    variables = dict(path=path, text=text)
+    page += mk.MkJinjaTemplate("nav_from_file.jinja", variables=variables)
 
 
 @nav.route.nav("From folder")
 def _(nav: mk.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
-    # We are using a part of the previous nav tree. It's a subfolder without a SUMMARY.md.
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
     nav.parse.folder(folder, hide="toc")
     page = nav.add_index_page(hide="toc", icon="folder")
-    page += mk.MkTreeView(folder)
-    page += mk.MkDocStrings(mk.MkTreeView)
+    variables = dict(folder=folder)
+    page += mk.MkJinjaTemplate("nav_from_folder.jinja", variables=variables)
 
 
 @pages_nav.route.page("MkClassPage")
