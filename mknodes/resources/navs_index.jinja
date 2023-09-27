@@ -1,0 +1,12 @@
+## "Code for this section"
+
+{{ create_navs_section | MkCommentedCode }}
+
+{{"Basically everything interesting in this library inherits from MkNode.
+It`s the base class for all tree nodes we are building. The tree goes from the root nav
+down to single markup elements. We can show the subclass tree by using
+the MkClassDiagram Node." | MkDetailsBlock }}
+
+## All the navs
+
+{{ mknode_cls | MkClassDiagram(mode="subclasses", direction="LR", max_depth=3) }}

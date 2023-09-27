@@ -9,15 +9,6 @@ DOC_TEXT = """Now lets create the documentation.
 This code will show how to build a simple documentation section.
 """
 
-INTRO_TEXT = """
-Basically everything interesting in this library inherits from MkNode.
-It`s the base class for all tree nodes we are building. The tree goes from the root nav
-down to single markup elements. We can show the subclass tree by using
-the MkClassDiagram Node.
-"""
-
-SECTION_CODE = "Code for this section"
-
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
@@ -50,10 +41,8 @@ def create_navs_section(root_nav: mk.MkNav):
     page += mk.MkJinjaTemplate("mkpage_index.jinja")
 
     page = nav.add_index_page(hide="toc")
-    page += mk.MkCommentedCode(create_navs_section, header=SECTION_CODE)
-    page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
-    page += mk.MkHeader("All the navs")
-    page += mk.MkClassDiagram(mk.MkNav, mode="subclasses", direction="LR", max_depth=3)
+    variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNode)
+    page += mk.MkJinjaTemplate("navs_index.jinja", variables=variables)
 
 
 @nav.route.nav("From file")
