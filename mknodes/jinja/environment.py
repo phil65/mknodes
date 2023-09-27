@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import contextlib
+import functools
 import os
 
 from typing import TYPE_CHECKING, Any
@@ -137,8 +138,6 @@ class Environment(jinja2.Environment):
         Arguments:
             parent: Node parent
         """
-        import functools
-
         import mknodes
 
         filters = {}

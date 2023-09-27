@@ -135,8 +135,7 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     kls.create_example_page(page)
     code = mk.MkCode.for_object(create_class_page, extract_body=True)
     header = "Code for the subsections"
-    admonition = mk.MkDetailsBlock(code, typ="quote", title=code.title, header=header)
-    page += admonition
+    page += mk.MkDetailsBlock(code, typ="quote", title=code.title, header=header)
 
 
 @nav.route.nav("Base nodes")
