@@ -140,6 +140,12 @@ class MkNode(node.Node):
         self.ctx.env.set_mknodes_filters(parent=self)
         return self.ctx.env
 
+    @property
+    def parent_navs(self):
+        import mknodes
+
+        return reversed([i for i in self.ancestors if isinstance(i, mknodes.MkNav)])
+
     def to_child_node(self, other) -> MkNode:  # type: ignore[return]
         import mknodes
 
