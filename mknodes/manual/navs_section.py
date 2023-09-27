@@ -53,25 +53,17 @@ def _(nav: mk.MkNav):
     # This path contains Markdown files/ folders and a pre-populated SUMMARY.md.
     folder = paths.TEST_RESOURCES / "nav_tree/"  # Folder content: # (1)
     summary_file = folder / "SUMMARY.md"  # File content: # (2)
-
-    # We will load it as an MkNav...
     nav.parse.file(summary_file, hide="toc")
 
-    # Finally, the page you are seeing right now.
     page = nav.add_index_page(hide="toc", icon="file")
-
     text = summary_file.read_text()
     text = text.replace("](", "] (")  ##
-    # we are wrapping some annotations with Admonitions, that seems to help
-    # with nesting / escaping issues in some cases (and it looks nice!).
     path = paths.TEST_RESOURCES / "nav_tree/"
     tree_node = mk.MkTreeView(path, header="Directory tree")
     page += mk.MkAdmonition(tree_node)
     file_content_node = mk.MkCode(text, header="SUMMARY.md content")
     page += mk.MkAdmonition(file_content_node)
     page += ANNOTATIONS_INFO
-
-    # we could also add the annotiation nodes to the page of course:
     page += tree_node
     page += file_content_node
 

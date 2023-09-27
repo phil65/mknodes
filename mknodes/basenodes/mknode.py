@@ -15,6 +15,7 @@ from mknodes.utils import log, requirements
 
 if TYPE_CHECKING:
     from mknodes import project
+    from mknodes.jinja import environment
 
 
 logger = log.get_logger(__name__)
@@ -134,7 +135,7 @@ class MkNode(node.Node):
         return self._context
 
     @property
-    def env(self):
+    def env(self) -> environment.Environment:
         self.ctx.env.globals["mknode"] = self
         self.ctx.env.set_mknodes_filters(parent=self)
         return self.ctx.env

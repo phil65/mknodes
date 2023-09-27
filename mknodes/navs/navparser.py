@@ -201,7 +201,7 @@ class NavParser:
             # * [Example](example_folder/)
 
             if m := re.match(SECTION_AND_FOLDER_RE, line):
-                file_path = path.parent / f"{m[2]}/SUMMARY.md"
+                file_path = path.parent / m[2] / "SUMMARY.md"
                 subnav = mknav.MkNav(m[1], parent=self._nav)
                 subnav.parse.file(file_path, **kwargs)
                 self._nav[m[1]] = subnav

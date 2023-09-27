@@ -10,15 +10,13 @@ import pathlib
 from typing import Any
 from urllib import parse
 
-import markdown
-
 from mkdocs import config as _config
 from mkdocs.commands import get_deps
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.plugins import get_plugin_logger
 
 from mknodes.info import contexts
-from mknodes.utils import pathhelpers
+from mknodes.utils import mdconverter, pathhelpers
 
 
 logger = get_plugin_logger(__name__)
@@ -81,13 +79,13 @@ class Config:
         self,
         additional_extensions: list[str] | None = None,
         config_override: dict[str, Any] | None = None,
-    ) -> markdown.Markdown:
+    ) -> mdconverter.MdConverter:
         """Return a markdown instance based on given config."""
         extensions = self._config.markdown_extensions
         if additional_extensions:
             extensions = list(set(additional_extensions + extensions))
         configs = self._config.mdx_configs | (config_override or {})
-        return markdown.Markdown(extensions=extensions, extension_configs=configs)
+        return mdconverter.MdConverter(extensions=extensions, extension_configs=configs)
 
     def get_edit_url(self, edit_path: str | None) -> str | None:
         repo_url = self.repo_url

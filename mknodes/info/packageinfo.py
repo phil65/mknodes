@@ -17,7 +17,6 @@ class PackageInfo:
         self.metadata = packagehelpers.get_metadata(self.distribution)
         self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
         self.version = self.metadata["Version"]
-        self.metadata_version = self.metadata["Metadata-Version"]
         self.name = self.metadata["Name"]
 
     def __repr__(self):
@@ -172,18 +171,17 @@ class PackageInfo:
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         from mknodes.info import packageregistry
 
+        requires = packagehelpers.get_requires(self.distribution)
         modules = (
-            {
-                packagehelpers.get_dependency(i).name
-                for i in packagehelpers.get_requires(self.distribution)
-            }
-            if packagehelpers.get_requires(self.distribution)
+            {packagehelpers.get_dependency(i).name for i in requires}
+            if requires
             else set()
         )
         packages = {}
         for mod in modules:
             with contextlib.suppress(Exception):
-                packages[packageregistry.get_info(mod)] = self._get_dep_info(mod)
+                info = packageregistry.get_info(mod)
+                packages[info] = self._get_dep_info(mod)
         return packages
 
     def _get_dep_info(self, name: str) -> packagehelpers.Dependency:

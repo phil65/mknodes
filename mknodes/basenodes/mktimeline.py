@@ -23,7 +23,7 @@ class MkTimelineItem(mknode.MkNode):
     def __init__(
         self,
         title: str = "",
-        content: str | mknode.MkNode = "",
+        content: str | mknode.MkNode | Et.Element = "",
         date: str = "",
         link: str = "",
         button_text: str = "More",
@@ -69,11 +69,14 @@ class MkTimelineItem(mknode.MkNode):
         if self.date:
             xml.Div("date", text=self.date, parent=content_div)
         p_text = xml.P(parent=content_div)
-        if isinstance(self.content, str):
-            p_text.text = self.content
-        else:
-            text = f"<div>{self.content.to_html()}</div>"
-            p_text.append(Et.fromstring(text))
+        match self.content:
+            case str():
+                p_text.text = self.content
+            case Et.Element():
+                p_text.append(self.content)
+            case _:
+                text = f"<div>{self.content.to_html()}</div>"
+                p_text.append(Et.fromstring(text))
         if self.link:
             xml.A("bnt-more", href=self.link, text=self.button_text, parent=content_div)
         return root
