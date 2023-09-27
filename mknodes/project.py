@@ -125,6 +125,7 @@ class Project(Generic[T]):
             extra_files |= node.files
             match node:
                 case mk.MkPage() as page:
+                    path = page.resolved_file_path
                     if show_code_admonition and page.created_by:
                         code = mk.MkCode.for_object(page.created_by)
                         typ = "section" if page.is_index() else "page"
@@ -136,16 +137,39 @@ class Project(Generic[T]):
                         )
                         page.append(details)
                     if page.inclusion_level:
-                        path = page.resolved_file_path
                         if page.template:
-                            html_path = pathlib.Path(path).with_suffix(".html").as_posix()
+                            node_path = pathlib.Path(path)
+                        elif any(i.page_template for i in page.parent_navs):
+                            nav = next(i for i in page.parent_navs if i.page_template)
+                            node_path = pathlib.Path(nav.resolved_file_path)
+                        else:
+                            node_path = None
+                        if node_path:
+                            html_path = node_path.with_suffix(".html").as_posix()
                             page._metadata.template = html_path
                             page.template.filename = html_path
-                        md = page.to_markdown()
-                        node_files[path] = md
+                            for nav in page.parent_navs:
+                                if nav.page_template:
+                                    p = pathlib.Path(nav.resolved_file_path)
+                                    parent_path = p.with_suffix(".html").as_posix()
+                                    page.template.extends = parent_path
+                                    break
+                    md = page.to_markdown()
+                    node_files[path] = md
                 case mknav.MkNav():
                     logger.info("Processing section %r...", node.section)
-                    path, md = node.resolved_file_path, node.to_markdown()
+                    path = node.resolved_file_path
+                    if node.page_template:
+                        html_path = pathlib.Path(path).with_suffix(".html").as_posix()
+                        for nav in node.parent_navs:
+                            if nav.page_template:
+                                p = pathlib.Path(nav.resolved_file_path)
+                                parent_path = p.with_suffix(".html").as_posix()
+                                node.page_template.extends = parent_path
+                                break
+                        node.metadata.template = html_path
+                        node.page_template.filename = html_path
+                    md = node.to_markdown()
                     node_files[path] = md
 
         ctx.build_files = node_files | extra_files
