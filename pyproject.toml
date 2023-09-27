@@ -48,13 +48,13 @@ test = "pytest -vv"
 test-cov-xml = "pytest --cov-report=xml"
 test-cov-html = "pytest --cov-report=html"
 lint = [
-  "hatch run black .",
   "hatch run ruff --fix .",
+  "hatch run black .",
   "hatch run mypy mknodes/",
 ]
 lint-check = [
-  "hatch run black --check .",
   "hatch run ruff .",
+  "hatch run black --check .",
   "hatch run mypy mknodes/",
 ]
 
