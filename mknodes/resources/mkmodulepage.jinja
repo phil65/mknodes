@@ -1,0 +1,7 @@
+An MkMkodulePage is an MkPage subclass used to display information
+about a specific module. It uses a Jinja template to display the module-related
+information. By default, the Docstrings and tables showing the contained classes and
+submodules. The template can be adjusted manually in case a different layout is
+preferred.
+
+ {{ example_module | MkModulePage(inclusion_level=False) | MkReprRawRendered }}

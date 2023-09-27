@@ -18,18 +18,6 @@ the MkClassDiagram Node.
 
 SECTION_CODE = "Code for this section"
 
-CLASSPAGE_TEXT = """An MkClassPage is an MkPage subclass used to display information about
- a specific class. It uses a Jinja template to display the class-related information.
- By default, the Docstrings, tables for sub and parent classes as well as an inheritance
- graph are shown. The template can be adjusted manually in case a different layout
- is preferred."""
-
-MODULEPAGE_TEXT = """An MkMkodulePage is an MkPage subclass used to display information
-about a specific module. It uses a Jinja template to display the module-related
-information. By default, the Docstrings and tables showing the contained classes and
-submodules. The template can be adjusted manually in case a different layout is
-preferred."""
-
 ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
 (We could also have used the annotations from MKPage, but since this source code
 is displayed by the MkCode node, we use that one.)"""
@@ -60,17 +48,12 @@ def create_navs_section(root_nav: mk.MkNav):
     # Navs contain also contain pages. This section provides some info how to use MkPages.
     page = pages_nav.add_index_page(hide="toc")
     page += mk.MkJinjaTemplate("mkpage_index.jinja")
-    # and then we create the index page (the page you are lookin at right now)
 
     page = nav.add_index_page(hide="toc")
     page += mk.MkCommentedCode(create_navs_section, header=SECTION_CODE)
     page += mk.MkDetailsBlock(INTRO_TEXT, expand=True)
     page += mk.MkHeader("All the navs")
     page += mk.MkClassDiagram(mk.MkNav, mode="subclasses", direction="LR", max_depth=3)
-    # A nav section corresponds to a `SUMMARY.md`. You can see that when stringifying it.
-    text = str(nav)
-    text = text.replace("](", "] (")  ##
-    page += mk.MkCode(text, header="The resulting MkNav")
 
 
 @nav.route.nav("From file")
@@ -117,18 +100,16 @@ def _(nav: mk.MkNav):
 
 @pages_nav.route.page("MkClassPage")
 def _(page: mk.MkPage):
-    page += CLASSPAGE_TEXT
-    class_page = mk.MkClassPage(mk.MkCode, inclusion_level=False)
-    page += mk.MkReprRawRendered(class_page)
+    variables = dict(example_class=mk.MkCode)
+    page += mk.MkJinjaTemplate("mkclasspage.jinja", variables=variables)
 
 
 @pages_nav.route.page("MkModulePage")
 def _(page: mk.MkPage):
     import mkdocs.config
 
-    page += MODULEPAGE_TEXT
-    module_page = mk.MkModulePage(mkdocs.config, inclusion_level=False)
-    page += mk.MkReprRawRendered(module_page)
+    variables = dict(example_module=mkdocs.config)
+    page += mk.MkJinjaTemplate("mkmodulepage.jinja", variables=variables)
 
 
 @pages_nav.route.page("Adding to MkPages", hide="toc", status="new")
