@@ -178,13 +178,13 @@ class MaterialTheme(theme.Theme):
 
     @property
     def announcement_bar(self):
-        return self.main_template.announcement_bar
+        return self.main_template.announce_block.content
 
     @announcement_bar.setter
     def announcement_bar(self, value):
         if isinstance(value, mknode.MkNode):
             value.associated_project = self.associated_project
-        self.main_template.announcement_bar = value
+        self.main_template.announce_block.content = value
 
     def get_accent_color(self) -> str:
         # sourcery skip: use-or-for-fallback

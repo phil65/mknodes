@@ -64,14 +64,6 @@ class PageTemplate:
         )
 
     @property
-    def announcement_bar(self):
-        return self.announce_block.content
-
-    @announcement_bar.setter
-    def announcement_bar(self, value):
-        self.announce_block.content = value
-
-    @property
     def content(self):
         return self.content_block.content
 
