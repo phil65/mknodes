@@ -9,11 +9,6 @@ DOC_TEXT = """Now lets create the documentation.
 This code will show how to build a simple documentation section.
 """
 
-ANNOTATIONS_INFO = """It is always best to use annotations from the *closest* node.
-(We could also have used the annotations from MKPage, but since this source code
-is displayed by the MkCode node, we use that one.)"""
-
-
 nav = mk.MkNav("Navigation & Pages")
 
 pages_nav = nav.add_nav("MkPage")
@@ -29,7 +24,7 @@ def create_navs_section(root_nav: mk.MkNav):
     page += mk.MkJinjaTemplate("mkpage_index.jinja")
 
     page = nav.add_index_page(hide="toc")
-    variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNode)
+    variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNav)
     page += mk.MkJinjaTemplate("navs_index.jinja", variables=variables)
 
 
