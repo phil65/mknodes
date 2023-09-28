@@ -75,4 +75,3 @@ class MkImageSlideshow(mknode.MkNode):
 
 if __name__ == "__main__":
     img = MkImageSlideshow(["https://picsum.photos/200", "https://picsum.photos/201"])
-    print(img.get_requirements())

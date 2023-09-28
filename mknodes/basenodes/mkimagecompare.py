@@ -76,4 +76,3 @@ class MkImageCompare(mknode.MkNode):
 
 if __name__ == "__main__":
     img = MkImageCompare("a", "b")
-    print(img.get_requirements())
