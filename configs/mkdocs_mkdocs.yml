@@ -26,7 +26,6 @@ plugins:
     clone_depth: 100
     build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
     kwargs:
-      show_debug_section: True
       static_pages:
         Usage:
           - Getting started: https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md
