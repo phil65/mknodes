@@ -14,7 +14,6 @@ class MkDefaultWebsite(mknodes.MkNav):
     def __init__(
         self,
         static_pages: dict[str, str | dict | list] | None = None,
-        show_debug_section: bool = False,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -61,20 +60,6 @@ class MkDefaultWebsite(mknodes.MkNav):
         node = mknodes.MkLicense()
         page = nav.add_page("License", hide="toc")
         page += node
-        if show_debug_section:
-            self.add_debug_nav()
-
-    def add_debug_nav(self):
-        internals_nav = self.add_nav("Debug info")
-        page = internals_nav.add_index_page(hide="toc", icon="magnify")
-        page = internals_nav.add_page("Tree", hide="toc", icon="graph")
-        # page += mknodes.MkHeader("Node tree.", level=3)
-        # text = self.root.get_tree_repr(detailed=False)
-        # page += mknodes.MkCode(text, language="")
-        page = internals_nav.add_page("Requirements", hide="toc", icon="puzzle-edit")
-        page += mknodes.MkJinjaTemplate("requirements.md")
-        page = internals_nav.add_page("Build Log", hide="toc", icon="puzzle-edit")
-        page += mknodes.MkText("log() | MkCode", is_jinja_expression=True)
 
     @classmethod
     def for_project(cls, project, **kwargs):

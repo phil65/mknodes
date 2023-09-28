@@ -45,7 +45,7 @@ class MkJinjaTemplate(mknode.MkNode):
     def create_example_page(page):
         import mknodes
 
-        node = MkJinjaTemplate(template="requirements.md")
+        node = MkJinjaTemplate(template="cli_index.jinja")
         page += mknodes.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
@@ -53,5 +53,5 @@ class MkJinjaTemplate(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkJinjaTemplate.with_default_context("requirements.md")
+    node = MkJinjaTemplate.with_default_context("cli_index.jinja")
     print(node)

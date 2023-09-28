@@ -1,27 +1,17 @@
 from __future__ import annotations
 
-import collections
-
 from collections.abc import Callable
-import itertools
 import os
 import pathlib
+
 from typing import Any, Generic, TypeVar
 
-from mknodes import paths
-from mknodes.buildcollector import BuildCollector
+from mknodes import buildcollector, paths
 from mknodes.info import contexts, folderinfo, linkprovider, packageregistry
 from mknodes.jinja import environment
 from mknodes.navs import mknav
 from mknodes.theme import theme as theme_
-from mknodes.utils import (
-    classhelpers,
-    helpers,
-    jinjahelpers,
-    log,
-    reprhelpers,
-    requirements,
-)
+from mknodes.utils import classhelpers, helpers, jinjahelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -62,6 +52,7 @@ class Project(Generic[T]):
         self.env = environment.Environment(undefined="strict", load_templates=True)
         self.env.filters["get_link"] = self.linkprovider.get_link
         self.env.filters["get_url"] = self.linkprovider.get_url
+        jinjahelpers.set_markdown_exec_namespace(self.env.globals)
         self.theme: T = theme
         self.theme.associated_project = self
         match repo:
@@ -101,26 +92,14 @@ class Project(Generic[T]):
             for _level, node in self._root.iter_nodes()
             if hasattr(node, "resolved_file_path")
         }
-        for_stats = [node.__class__.__name__ for _level, node in self._root.iter_nodes()]
+
         paths = [pathlib.Path(i).stem for i in mapping]
         self.linkprovider.set_excludes(paths)
 
-        variables = self.context.as_dict()
-        ctx = contexts.BuildContext(
-            page_mapping=mapping,
-            requirements=self.get_requirements(),
-            node_counter=collections.Counter(for_stats),
-        )
-
-        self.env.globals |= variables | ctx.as_dict()
-        logger.info("Writing Markdown and assets to MkDocs environment...")
-        iterator = self.theme.iter_nodes()
-        if root := self._root:
-            iterator = itertools.chain(iterator, root.iter_nodes())
-        nodes = [i[1] for i in iterator]
-        collector = BuildCollector(nodes, show_page_info)
-        ctx.build_files = collector.node_files | collector.extra_files
-        jinjahelpers.set_markdown_exec_namespace(self.env.globals)
+        self.env.globals |= self.context.as_dict()
+        collector = buildcollector.BuildCollector(show_page_info=show_page_info)
+        ctx = collector.collect(self._root, self.theme)
+        self.env.globals |= ctx.as_dict()
         return ctx
 
     def __repr__(self):
@@ -170,24 +149,6 @@ class Project(Generic[T]):
         """
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
-
-    def get_requirements(self) -> requirements.Requirements:
-        """Return requirements for this project based on theme and used nodes."""
-        logger.debug("Collecting theme requirements...")
-        reqs = self.theme.get_requirements()
-        if self._root:
-            tree_reqs = self._root.get_requirements()
-            logger.debug("Merging tree and theme requirements...")
-            reqs.merge(tree_reqs)
-        logger.debug("Adapting collected extensions to theme...")
-        self.theme.adapt_extensions(reqs.markdown_extensions)
-        logger.debug("Setting default markdown extensions...")
-        reqs.markdown_extensions["pymdownx.magiclink"] = dict(
-            repo_url_shorthand=True,
-            user=self.folderinfo.repository_username,
-            repo=self.folderinfo.repository_name,
-        )
-        return reqs
 
     def populate_linkprovider(self):
         invs = self.folderinfo.mkdocs_config.get_inventory_infos()

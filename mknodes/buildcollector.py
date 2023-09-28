@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import collections
+import itertools
 import pathlib
 
 import mknodes as mk
 
+from mknodes.info import contexts
 from mknodes.utils import log, requirements
 
 
@@ -12,22 +14,33 @@ logger = log.get_logger(__name__)
 
 
 class BuildCollector:
-    """MkNodes Project."""
+    """A class to assist in extracting build stuff from a Node tree + Theme."""
 
-    def __init__(self, nodes: list[mk.MkNode], show_page_info: bool = False):
-        """The main project to create a website.
+    def __init__(self, show_page_info: bool = False):
+        """Constructor.
 
         Arguments:
-            nodes: The theme to use
-            show_page_info: Add a code admonition box to each page.
+            show_page_info: Add a admonition box containing page build info to each page
         """
-        self.nodes = nodes
         self.show_page_info = show_page_info
         self.node_files: dict[str, str | bytes] = {}
         self.extra_files: dict[str, str | bytes] = {}
         self.node_counter: collections.Counter[str] = collections.Counter()
         self.requirements = requirements.Requirements()
-        for node in self.nodes:
+        self.mapping: dict[str, mk.MkNode] = dict()
+
+    def collect(self, root: mk.MkNode, theme):
+        """Collect build stuff from given node + theme.
+
+        Arguments:
+            root: A node to collect build stuff from
+            theme: A theme to collect build stuff from.
+        """
+        logger.debug("Collecting theme requirements...")
+        iterator = itertools.chain(theme.iter_nodes(), root.iter_nodes())
+        nodes = [i[1] for i in iterator]
+
+        for node in nodes:
             self.node_counter.update([node.__class__.__name__])
             self.extra_files |= node.files
             match node:
@@ -35,29 +48,40 @@ class BuildCollector:
                     self.collect_page(page)
                 case mk.MkNav() as nav:
                     self.collect_nav(nav)
+        logger.debug("Setting default markdown extensions...")
+        reqs = theme.get_requirements()
+        self.requirements.merge(reqs)
+        logger.debug("Adapting collected extensions to theme...")
+        theme.adapt_extensions(self.requirements)
+        return contexts.BuildContext(
+            page_mapping=self.mapping,
+            requirements=self.requirements,
+            node_counter=self.node_counter,
+            build_files=self.node_files | self.extra_files,
+        )
 
     def collect_page(self, page: mk.MkPage):
         path = page.resolved_file_path
+        self.mapping[path] = page
         req = page.get_requirements()
         self.requirements.merge(req)
-        if page.inclusion_level:
-            if page.template:
-                node_path = pathlib.Path(path)
-            elif any(i.page_template for i in page.parent_navs):
-                nav = next(i for i in page.parent_navs if i.page_template)
-                node_path = pathlib.Path(nav.resolved_file_path)
-            else:
-                node_path = None
-            if node_path:
-                html_path = node_path.with_suffix(".html").as_posix()
-                page._metadata.template = html_path
-                page.template.filename = html_path
-                for nav in page.parent_navs:
-                    if nav.page_template:
-                        p = pathlib.Path(nav.resolved_file_path)
-                        parent_path = p.with_suffix(".html").as_posix()
-                        page.template.extends = parent_path
-                        break
+        if page.template:
+            node_path = pathlib.Path(path)
+        elif any(i.page_template for i in page.parent_navs):
+            nav = next(i for i in page.parent_navs if i.page_template)
+            node_path = pathlib.Path(nav.resolved_file_path)
+        else:
+            node_path = None
+        if node_path:
+            html_path = node_path.with_suffix(".html").as_posix()
+            page._metadata.template = html_path
+            page.template.filename = html_path
+            for nav in page.parent_navs:
+                if nav.page_template:
+                    p = pathlib.Path(nav.resolved_file_path)
+                    parent_path = p.with_suffix(".html").as_posix()
+                    page.template.extends = parent_path
+                    break
         if self.show_page_info:
             adm = mk.MkAdmonition([], title="Page info", typ="theme", collapsible=True)
 
@@ -88,6 +112,7 @@ class BuildCollector:
     def collect_nav(self, nav: mk.MkNav):
         logger.info("Processing section %r...", nav.section)
         path = nav.resolved_file_path
+        self.mapping[path] = nav
         if nav.page_template:
             html_path = pathlib.Path(path).with_suffix(".html").as_posix()
             for parent_nav in nav.parent_navs:
@@ -109,6 +134,6 @@ if __name__ == "__main__":
     log.basic()
     root.build(project)
     if project._root:
-        nodes = [i[1] for i in project._root.iter_nodes()]
-        collector = BuildCollector(nodes)
-        print(collector.node_files)
+        collector = BuildCollector()
+        ctx = collector.collect(project._root, project.theme)
+        print(ctx)
