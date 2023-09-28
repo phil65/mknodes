@@ -27,7 +27,6 @@ class MkCode(mkcontainer.MkContainer):
             line_spans="__span",
             pygments_lang_class=True,
         ),
-        requirements.Extension("pymdownx.snippets"),
         requirements.Extension("pymdownx.superfences"),
     ]
 
