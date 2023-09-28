@@ -6,7 +6,7 @@ import dataclasses
 
 from typing import TYPE_CHECKING, Literal
 
-from mknodes.utils import mergehelpers
+from mknodes.utils import mergehelpers, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -74,6 +74,9 @@ class JSLink:
     typ: str = ""
     is_library: bool = False
 
+    def __repr__(self):
+        return reprhelpers.dataclass_repr(self)
+
     def __str__(self):
         return self.link
 
@@ -102,6 +105,9 @@ class JSFile:
     crossorigin: Literal["anonymous", "use-credentials"] | None = None
     typ: str = ""
     is_library: bool = False
+
+    def __repr__(self):
+        return reprhelpers.dataclass_repr(self)
 
     def __str__(self):
         return self.link

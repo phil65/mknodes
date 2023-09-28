@@ -64,6 +64,22 @@ def get_repr(
     return f"{classname}({sig})"
 
 
+def dataclass_repr(instance):
+    """Return repr for dataclass, filtered by non-default values."""
+    import dataclasses
+
+    from operator import attrgetter
+
+    nodef_f_vals = (
+        (f.name, attrgetter(f.name)(instance))
+        for f in dataclasses.fields(instance)
+        if attrgetter(f.name)(instance) != f.default
+    )
+
+    nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in nodef_f_vals)
+    return f"{instance.__class__.__name__}({nodef_f_repr})"
+
+
 if __name__ == "__main__":
     strings = get_repr([str(i) for i in range(1000)])
     print(limit_repr.repr(strings))
