@@ -3,9 +3,6 @@ import os
 import mknodes as mk
 
 
-NODE_PAGE_TEXT = "Code for each MkNode page"
-
-
 BASE_NODES = [
     mk.MkNode,
     mk.MkText,
@@ -133,33 +130,28 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     if kls.STATUS:
         page.metadata.status = kls.STATUS
     kls.create_example_page(page)
-    code = mk.MkCode.for_object(create_class_page, extract_body=True)
-    header = "Code for the subsections"
-    page += mk.MkDetailsBlock(code, typ="quote", title=code.title, header=header)
+    page.created_by = create_class_page
 
 
 @nav.route.nav("Base nodes")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, BASE_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Image nodes")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, IMAGE_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Container nodes")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, CONTAINER_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Presentation nodes")
@@ -167,24 +159,21 @@ def _(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, PRESENTATION_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Documentation nodes")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, DOCUMENTATION_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("About-the-project nodes")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, ABOUT_THE_PROJECT_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Special nodes")
@@ -192,13 +181,11 @@ def _(nav: mk.MkNav):
     klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, klasses)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Block nodes")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc")
     page += create_section_for_nodes(nav, BLOCK_NODES)
-    code = mk.MkCode.for_object(create_section_for_nodes)
-    page += mk.MkAdmonition(code, title=NODE_PAGE_TEXT, collapsible=True, typ="quote")
+    page.created_by = create_section_for_nodes
