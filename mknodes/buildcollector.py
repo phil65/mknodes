@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 import pathlib
 
 import mknodes as mk
@@ -24,7 +25,9 @@ class BuildCollector:
         self.show_page_info = show_page_info
         self.node_files: dict[str, str | bytes] = {}
         self.extra_files: dict[str, str | bytes] = {}
+        self.node_counter: collections.Counter[str] = collections.Counter()
         for node in self.nodes:
+            self.node_counter.update([node.__class__.__name__])
             self.extra_files |= node.files
             match node:
                 case mk.MkPage() as page:
