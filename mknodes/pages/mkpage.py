@@ -10,7 +10,6 @@ from urllib import parse
 
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
-from mknodes.navs import mknav
 from mknodes.pages import metadata, pagetemplate
 from mknodes.utils import (
     downloadhelpers,
@@ -112,8 +111,7 @@ class MkPage(mkcontainer.MkContainer):
     def metadata(self) -> metadata.Metadata:
         """Return page metadata, complemented with the parent Nav metadata objects."""
         meta = metadata.Metadata()
-        navs = [i for i in self.ancestors if isinstance(i, mknav.MkNav)]
-        for nav in reversed(navs):
+        for nav in self.parent_navs:
             meta.update(nav.metadata)
         meta.update(self._metadata)
         return meta

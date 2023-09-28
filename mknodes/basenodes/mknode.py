@@ -211,12 +211,10 @@ class MkNode(node.Node):
         """Return a tuple containing all section names."""
         from mknodes.navs import mknav
 
-        node = self
-        parts = [self.section] if isinstance(self, mknav.MkNav) and self.section else []
-        while node := node.parent:
-            if isinstance(node, mknav.MkNav) and node.section:
-                parts.append(node.section)
-        return tuple(reversed(parts))
+        parts = [nav.section for nav in self.parent_navs if nav.section]
+        if isinstance(self, mknav.MkNav) and self.section:
+            parts.append(self.section)
+        return tuple(parts)
 
     @property
     def files(self):
