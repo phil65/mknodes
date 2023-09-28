@@ -1,20 +1,32 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
+import dataclasses
 
 from mknodes import project
+from mknodes.data import datatypes
 from mknodes.info import contexts
 from mknodes.pages import templateregistry
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers, requirements
 
 
 logger = log.get_logger(__name__)
 
 
+@dataclasses.dataclass
+class AdmonitionType:
+    name: str
+    svg: str
+    header_color: str
+    icon_color: str
+    border_color: str
+    font_color: str
+
+
 class Theme:
     """MkDocs Theme."""
 
-    css_template = None
+    css_template = "mkdocs_css.jinja"
 
     def __init__(
         self,
@@ -29,9 +41,43 @@ class Theme:
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.associated_project = project
         self.error_page = self.templates["404.html"]
+        self.admonitions: list[AdmonitionType] = []
+        self.add_admonition_type(
+            name="theme",
+            material_icon="file",
+            header_color=self.primary_color,
+            icon_color="black",
+            border_color="black",
+            font_color=self.text_color,
+        )
 
     def __repr__(self):
         return reprhelpers.get_repr(self, theme_name=self.theme_name)
+
+    def add_admonition_type(
+        self,
+        name: str,
+        material_icon: str,
+        header_color: datatypes.ColorType,
+        icon_color: datatypes.ColorType | None = None,
+        border_color: datatypes.ColorType | None = None,
+        font_color: datatypes.ColorType | None = None,
+    ):
+        header_col_str = helpers.get_color_str(header_color)
+        icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
+        border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
+        font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
+        icon = pathhelpers.get_material_icon_path(material_icon)
+        data = icon.read_text()
+        adm = AdmonitionType(
+            name,
+            data,
+            header_col_str,
+            icon_col_str,
+            border_col_str,
+            font_col_str,
+        )
+        self.admonitions.append(adm)
 
     def get_requirements(self) -> requirements.Requirements:
         req: list[requirements.CSSLink | requirements.CSSFile | requirements.CSSText] = []
@@ -45,7 +91,11 @@ class Theme:
         return requirements.Requirements(css=req, templates=list(self.templates))
 
     def get_template_context(self):
-        return {}
+        return dict(
+            admonitions=self.admonitions,
+            primary_color=self.primary_color,
+            text_color=self.text_color,
+        )
 
     @classmethod
     def get_theme(cls, theme_name: str = "material", data: dict | None = None, **kwargs):
