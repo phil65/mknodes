@@ -182,4 +182,3 @@ if __name__ == "__main__":
         clone_depth=1,
     )
     proj.build()
-    reqs = proj.get_requirements()

@@ -176,8 +176,8 @@ def create_config(
         build_fn=build_fn,
         clone_depth=1,
     )
-    proj.build()
-    requirements = proj.get_requirements()
+    info = proj.build()
+    requirements = info.requirements
     info = proj.context.metadata
     config["markdown_extensions"] = requirements.markdown_extensions
     if social := info.social_info:
