@@ -51,7 +51,7 @@ class BuildCollector:
         reqs = theme.get_requirements()
         self.requirements.merge(reqs)
         logger.debug("Adapting collected extensions to theme...")
-        theme.adapt_extensions(self.requirements)
+        theme.adapt_extensions(self.requirements.markdown_extensions)
         return contexts.BuildContext(
             page_mapping=self.mapping,
             requirements=self.requirements,
