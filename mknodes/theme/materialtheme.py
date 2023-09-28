@@ -79,6 +79,7 @@ class AdmonitionType:
     header_color: str
     icon_color: str
     border_color: str
+    font_color: str
 
 
 @dataclasses.dataclass
@@ -135,6 +136,14 @@ class MaterialTheme(theme.Theme):
         self.primary_bg_color = None
         self.admonitions = []
         self.color_theme = None
+        self.add_admonition_type(
+            name="theme",
+            material_icon="file",
+            header_color=self.primary_color,
+            icon_color="black",
+            border_color="black",
+            font_color=self.text_color,
+        )
 
     def get_template_context(self):
         return dict(
@@ -243,13 +252,22 @@ class MaterialTheme(theme.Theme):
         header_color: datatypes.ColorType,
         icon_color: datatypes.ColorType | None = None,
         border_color: datatypes.ColorType | None = None,
+        font_color: datatypes.ColorType | None = None,
     ):
         header_col_str = helpers.get_color_str(header_color)
         icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
         border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
+        font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
         icon = pathhelpers.get_material_icon_path(material_icon)
         data = icon.read_text()
-        adm = AdmonitionType(name, data, header_col_str, icon_col_str, border_col_str)
+        adm = AdmonitionType(
+            name,
+            data,
+            header_col_str,
+            icon_col_str,
+            border_col_str,
+            font_col_str,
+        )
         self.admonitions.append(adm)
 
     def set_primary_foreground_color(
