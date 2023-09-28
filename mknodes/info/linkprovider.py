@@ -17,9 +17,9 @@ logger = log.get_logger(__name__)
 
 
 if TYPE_CHECKING:
-    import mknodes
+    import mknodes as mk
 
-    LinkableType = str | mknodes.MkPage | mknodes.MkNav | types.ModuleType | type
+    LinkableType = str | mk.MkPage | mk.MkNav | mk.MkHeader | types.ModuleType | type
     """A type which can get linked by the LinkProvider."""
 
 
@@ -154,7 +154,7 @@ class LinkProvider:
             return linked(url, qual_name)
         return linked(qual_name)
 
-    def url_for_nav(self, nav: mknodes.MkNav) -> str:
+    def url_for_nav(self, nav: mk.MkNav) -> str:
         """Return the final URL for given MkNav.
 
         Arguments:
@@ -167,7 +167,7 @@ class LinkProvider:
             path = nav.resolved_file_path
         return self.base_url + path
 
-    def url_for_page(self, page: mknodes.MkPage) -> str:
+    def url_for_page(self, page: mk.MkPage) -> str:
         """Return the final URL for given MkPage.
 
         Arguments:
@@ -179,6 +179,19 @@ class LinkProvider:
         else:
             path = path.replace(".md", ".html")
         return self.base_url + path
+
+    def url_for_header(self, header: mk.MkHeader) -> str:
+        """Return the final URL for given MkHeader.
+
+        Arguments:
+            header: The Header to link to
+        """
+        page = header.parent_page
+        if page is None:
+            msg = "Need a parent page for MkHeader in order to link to it"
+            raise RuntimeError(msg)
+        suffix = "#" + helpers.slugify(header.text)
+        return self.url_for_page(page) + suffix
 
     def get_link(self, target: LinkableType, title: str | None = None):
         """Return a markdown link for given target.
@@ -200,13 +213,15 @@ class LinkProvider:
         Arguments:
             target: The thing to link to
         """
-        import mknodes
+        import mknodes as mk
 
         match target:
-            case mknodes.MkPage():
+            case mk.MkPage():
                 return self.url_for_page(target)
-            case mknodes.MkNav():
+            case mk.MkNav():
                 return self.url_for_nav(target)
+            case mk.MkHeader():
+                return self.url_for_header(target)
             case type():
                 return self.url_for_klass(target) or ""
             case types.ModuleType():
@@ -215,9 +230,12 @@ class LinkProvider:
                 return self.base_url.rstrip("/") + target
             case str() if helpers.is_url(target):
                 return target
-            case str() if target in mknodes.MkNode._name_registry:
-                node = mknodes.MkNode.get_node(target)
-                return self.get_url(node)
+            case str() if target in mk.MkNode._name_registry:
+                node = mk.MkNode.get_node(target)
+                if isinstance(node, mk.MkPage | mk.MkNav):
+                    return self.get_url(node)
+                msg = f"Cannot get link for {node!r}"
+                raise TypeError(msg)
             case str():
                 return f"{target}.md"
             case _:

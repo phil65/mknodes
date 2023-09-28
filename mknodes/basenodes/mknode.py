@@ -4,7 +4,7 @@ from collections.abc import Iterable
 import re
 import time
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
@@ -151,7 +151,13 @@ class MkNode(node.Node):
         navs = [i for i in self.ancestors if isinstance(i, mk.MkNav)]
         return list(reversed(navs))
 
-    def to_child_node(self, other):  # type: ignore[return]
+    @property
+    def parent_page(self) -> mk.MkPage | None:
+        import mknodes as mk
+
+        return next((i for i in self.ancestors if isinstance(i, mk.MkPage)), None)
+
+    def to_child_node(self, other: Any):  # type: ignore[return]
         """Convert given nodes / strings to child nodes.
 
         Either converts text to an MkNode sets parent of node to self.
@@ -175,7 +181,7 @@ class MkNode(node.Node):
                 raise TypeError(other)
 
     @classmethod
-    def get_node(cls, name: str):
+    def get_node(cls, name: str) -> MkNode:
         """Get a node from name registry."""
         return cls._name_registry[name]
 

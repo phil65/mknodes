@@ -39,7 +39,6 @@ class BuildCollector:
         logger.debug("Collecting theme requirements...")
         iterator = itertools.chain(theme.iter_nodes(), root.iter_nodes())
         nodes = [i[1] for i in iterator]
-
         for node in nodes:
             self.node_counter.update([node.__class__.__name__])
             self.extra_files |= node.files
@@ -61,6 +60,8 @@ class BuildCollector:
         )
 
     def collect_page(self, page: mk.MkPage):
+        if not page.inclusion_level:
+            return
         path = page.resolved_file_path
         self.mapping[path] = page
         req = page.get_requirements()

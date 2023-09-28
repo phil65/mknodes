@@ -34,6 +34,7 @@ ENVIRONMENT_GLOBALS = {
 ENVIRONMENT_FILTERS = {
     "dump_yaml": yamlhelpers.dump_yaml,
     "styled": helpers.styled,
+    "str": str,
     "rstrip": str.rstrip,
     "lstrip": str.lstrip,
     "removesuffix": str.removesuffix,
