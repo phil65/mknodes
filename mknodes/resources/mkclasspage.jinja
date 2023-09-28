@@ -4,6 +4,8 @@ An MkClassPage is an MkPage subclass used to display information about
  graph are shown. The template can be adjusted manually in case a different layout
  is preferred.
 
- {{ example_class | MkClassPage(inclusion_level=False) | MkReprRawRendered }}
-class_page = mk.MkClassPage(mk.MkCode, inclusion_level=False)
-page += mk.MkReprRawRendered(class_page)
+
+This is an example for an MkClassPage with the default layout:
+
+
+ {{ example_class | MkClassPage(inclusion_level=False) }}

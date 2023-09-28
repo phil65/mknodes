@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
 
 
-class MkJinjaTemplate(mknode.MkNode):
+class MkJinjaTemplate(mkcontainer.MkContainer):
     """Node representing a jinja template."""
 
     ICON = "simple/jinja"
@@ -41,6 +41,18 @@ class MkJinjaTemplate(mknode.MkNode):
             _filter_empty=True,
         )
 
+    @property
+    def items(self):
+        self.env.rendered_nodes = []
+        self.env.render_template(self.template, variables=self.variables)
+        for i in self.env.rendered_nodes:
+            i.parent = self
+        return self.env.rendered_nodes
+
+    @items.setter
+    def items(self, val):
+        pass
+
     @staticmethod
     def create_example_page(page):
         import mknodes
@@ -53,5 +65,5 @@ class MkJinjaTemplate(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkJinjaTemplate.with_default_context("cli_index.jinja")
-    print(node)
+    node = MkJinjaTemplate("nodes_index.jinja")
+    print(node.get_requirements())
