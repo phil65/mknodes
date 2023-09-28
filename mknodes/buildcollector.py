@@ -5,7 +5,7 @@ import pathlib
 
 import mknodes as mk
 
-from mknodes.utils import log
+from mknodes.utils import log, requirements
 
 
 logger = log.get_logger(__name__)
@@ -26,6 +26,7 @@ class BuildCollector:
         self.node_files: dict[str, str | bytes] = {}
         self.extra_files: dict[str, str | bytes] = {}
         self.node_counter: collections.Counter[str] = collections.Counter()
+        self.requirements = requirements.Requirements()
         for node in self.nodes:
             self.node_counter.update([node.__class__.__name__])
             self.extra_files |= node.files
@@ -38,6 +39,7 @@ class BuildCollector:
     def collect_page(self, page: mk.MkPage):
         path = page.resolved_file_path
         req = page.get_requirements()
+        self.requirements.merge(req)
         if page.inclusion_level:
             if page.template:
                 node_path = pathlib.Path(path)
