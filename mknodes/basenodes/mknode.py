@@ -14,9 +14,9 @@ from mknodes.utils import log, requirements
 
 
 if TYPE_CHECKING:
-    from mknodes import project
+    import mknodes as mk
+
     from mknodes.jinja import environment
-    from mknodes.navs import mknav
 
 
 logger = log.get_logger(__name__)
@@ -59,7 +59,7 @@ class MkNode(node.Node):
         shift_header_levels: int = 0,
         css_classes: Iterable[str] | None = None,
         as_html: bool = False,
-        project: project.Project | None = None,
+        project: mk.Project | None = None,
         parent: MkNode | None = None,
     ):
         """Constructor.
@@ -112,12 +112,12 @@ class MkNode(node.Node):
         return dct_1 == dct_2
 
     def __rshift__(self, other, inverse: bool = False):
-        import mknodes
+        import mknodes as mk
 
-        if self.parent or (isinstance(other, mknodes.MkNode) and other.parent):
+        if self.parent or (isinstance(other, mk.MkNode) and other.parent):
             msg = "Can only perform shift when nodes have no parent"
             raise RuntimeError(msg)
-        container = mknodes.MkContainer(parent=self.parent, block_separator=" ")
+        container = mk.MkContainer(parent=self.parent, block_separator=" ")
         if inverse:
             container.append(other)
             container.append(self)
@@ -144,14 +144,14 @@ class MkNode(node.Node):
         return self.ctx.env
 
     @property
-    def parent_navs(self) -> list[mknav.MkNav]:
+    def parent_navs(self) -> list[mk.MkNav]:
         """Return a list of parent MkNavs, ordered from root to leaf."""
-        import mknodes
+        import mknodes as mk
 
-        navs = [i for i in self.ancestors if isinstance(i, mknodes.MkNav)]
+        navs = [i for i in self.ancestors if isinstance(i, mk.MkNav)]
         return list(reversed(navs))
 
-    def to_child_node(self, other) -> MkNode:  # type: ignore[return]
+    def to_child_node(self, other):  # type: ignore[return]
         """Convert given nodes / strings to child nodes.
 
         Either converts text to an MkNode sets parent of node to self.
@@ -159,16 +159,16 @@ class MkNode(node.Node):
         Arguments:
             other: The node / string to convert to a child node.
         """
-        import mknodes
+        import mknodes as mk
 
         match other:
             case str() if (match := HEADER_REGEX.match(other)) and "\n" not in other:
-                return mknodes.MkHeader(match[2], level=len(match[1]), parent=self)
+                return mk.MkHeader(match[2], level=len(match[1]), parent=self)
             case str():
-                return mknodes.MkText(other, parent=self)
+                return mk.MkText(other, parent=self)
             case list():
-                return mknodes.MkContainer([self.to_child_node(i) for i in other])
-            case mknodes.MkNode():
+                return mk.MkContainer([self.to_child_node(i) for i in other])
+            case mk.MkNode():
                 other.parent = self
                 return other
             case _:
@@ -278,7 +278,16 @@ class MkNode(node.Node):
         """Return the "final" requirements object."""
         logger.debug("Collecting requirements from tree...")
         nodes = [*list(self.descendants), self]
-        req = requirements.Requirements(markdown_extensions={"pymdownx.emoji": {}})
+        extensions: dict[str, dict] = {
+            "pymdownx.emoji": {},
+            "pymdownx.magiclink": dict(
+                repo_url_shorthand=True,
+                user=self.ctx.metadata.repository_username,
+                repo=self.ctx.metadata.repository_name,
+            ),
+        }
+
+        req = requirements.Requirements(markdown_extensions=extensions)
         for _node in nodes:
             node_req = _node.get_node_requirements()
             req.merge(node_req)
@@ -300,7 +309,7 @@ class MkNode(node.Node):
         page += mknodes.MkReprRawRendered(node, header="### Append annotations")
 
     @property
-    def associated_project(self) -> project.Project | None:
+    def associated_project(self) -> mk.Project | None:
         if proj := self._associated_project:
             return proj
         for ancestor in self.ancestors:
@@ -309,7 +318,7 @@ class MkNode(node.Node):
         return None
 
     @associated_project.setter
-    def associated_project(self, value: project.Project):
+    def associated_project(self, value: mk.Project):
         self._associated_project = value
 
     @classmethod
