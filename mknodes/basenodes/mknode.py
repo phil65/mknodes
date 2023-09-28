@@ -16,6 +16,7 @@ from mknodes.utils import log, requirements
 if TYPE_CHECKING:
     from mknodes import project
     from mknodes.jinja import environment
+    from mknodes.navs import mknav
 
 
 logger = log.get_logger(__name__)
@@ -130,23 +131,34 @@ class MkNode(node.Node):
 
     @property
     def ctx(self):
+        """The tree context."""
         if self.associated_project:
             return self.associated_project.context
         return self._context
 
     @property
     def env(self) -> environment.Environment:
+        """The node jinja environment."""
         self.ctx.env.globals["mknode"] = self
         self.ctx.env.set_mknodes_filters(parent=self)
         return self.ctx.env
 
     @property
-    def parent_navs(self):
+    def parent_navs(self) -> list[mknav.MkNav]:
+        """Return a list of parent MkNavs, ordered from root to leaf."""
         import mknodes
 
-        return reversed([i for i in self.ancestors if isinstance(i, mknodes.MkNav)])
+        navs = [i for i in self.ancestors if isinstance(i, mknodes.MkNav)]
+        return list(reversed(navs))
 
     def to_child_node(self, other) -> MkNode:  # type: ignore[return]
+        """Convert given nodes / strings to child nodes.
+
+        Either converts text to an MkNode sets parent of node to self.
+
+        Arguments:
+            other: The node / string to convert to a child node.
+        """
         import mknodes
 
         match other:
@@ -164,6 +176,7 @@ class MkNode(node.Node):
 
     @classmethod
     def get_node(cls, name: str):
+        """Get a node from name registry."""
         return cls._name_registry[name]
 
     def _to_markdown(self) -> str:
@@ -199,7 +212,16 @@ class MkNode(node.Node):
         """
         return self.annotations.annotate_text(text) if self.annotations else text
 
-    def attach_css_classes(self, text: str):
+    def attach_css_classes(self, text: str) -> str:
+        """Attach CSS classes to given markdown in attr-list style.
+
+        Can be reimplemented if non-default behavior is needed.
+        Default behavior is appending the css class snippet with a space
+        as separator.
+
+        Arguments:
+            text: Markdown to annote
+        """
         if not self._css_classes:
             return text
         classes = " ".join(f".{kls_name}" for kls_name in self._css_classes)
