@@ -12,7 +12,7 @@ from urllib import parse
 from mknodes.basenodes import mkcode
 from mknodes.navs import mknav
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, log
+from mknodes.utils import classhelpers, helpers, log
 
 
 logger = log.get_logger(__name__)
@@ -201,9 +201,17 @@ class NavParser:
             # * [Example](example_folder/)
 
             if m := re.match(SECTION_AND_FOLDER_RE, line):
-                file_path = path.parent / m[2] / "SUMMARY.md"
-                subnav = mknav.MkNav(m[1], parent=self._nav)
-                subnav.parse.file(file_path, **kwargs)
+                folder_path = path.parent / m[2]
+                if (file_path := (folder_path / "SUMMARY.md")).exists():
+                    subnav = mknav.MkNav(m[1], parent=self._nav)
+                    subnav.parse.file(file_path, **kwargs)
+                elif (file_path := (folder_path / "index.py")).exists():
+                    mod = classhelpers.import_file(file_path)
+                    subnav = mod.nav
+                    subnav.parent = self._nav
+                else:
+                    msg = "No SUMMARY.md / index.py found."
+                    raise RuntimeError(msg)
                 self._nav[m[1]] = subnav
                 logger.debug("Created subsection %s from %s", m[1], file_path)
 
