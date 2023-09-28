@@ -13,15 +13,15 @@ logger = log.get_logger(__name__)
 class BuildCollector:
     """MkNodes Project."""
 
-    def __init__(self, nodes: list[mk.MkNode], show_code_admonition: bool = False):
+    def __init__(self, nodes: list[mk.MkNode], show_page_info: bool = False):
         """The main project to create a website.
 
         Arguments:
             nodes: The theme to use
-            show_code_admonition: Add a code admonition box to each page.
+            show_page_info: Add a code admonition box to each page.
         """
         self.nodes = nodes
-        self.show_code_admonition = show_code_admonition
+        self.show_page_info = show_page_info
         self.node_files: dict[str, str | bytes] = {}
         self.extra_files: dict[str, str | bytes] = {}
         for node in self.nodes:
@@ -34,16 +34,7 @@ class BuildCollector:
 
     def collect_page(self, page: mk.MkPage):
         path = page.resolved_file_path
-        if self.show_code_admonition and page.created_by:
-            code = mk.MkCode.for_object(page.created_by)
-            typ = "section" if page.is_index() else "page"
-            details = mk.MkAdmonition(
-                code,
-                title=f"Code for this {typ}",
-                collapsible=True,
-                typ="quote",
-            )
-            page.append(details)
+        req = page.get_requirements()
         if page.inclusion_level:
             if page.template:
                 node_path = pathlib.Path(path)
@@ -62,6 +53,30 @@ class BuildCollector:
                         parent_path = p.with_suffix(".html").as_posix()
                         page.template.extends = parent_path
                         break
+        if self.show_page_info:
+            adm = mk.MkAdmonition([], title="Page info", typ="theme", collapsible=True)
+
+            if page.created_by:
+                typ = "section" if page.is_index() else "page"
+                details = mk.MkAdmonition(
+                    mk.MkCode.for_object(page.created_by),
+                    title=f"Code for this {typ}",
+                    collapsible=True,
+                    typ="quote",
+                )
+                adm += details
+
+            title = "Requirements"
+            pretty = mk.MkPrettyPrint(req)
+            details = mk.MkAdmonition(pretty, title=title, collapsible=True, typ="quote")
+            adm += details
+
+            title = "Metadata"
+            code = mk.MkCode(str(page.metadata), language="yaml")
+            details = mk.MkAdmonition(code, title=title, collapsible=True, typ="quote")
+            adm += details
+
+            page += adm
         md = page.to_markdown()
         self.node_files[path] = md
 

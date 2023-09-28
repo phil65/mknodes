@@ -32,11 +32,14 @@ class PluginConfig(base.Config):
     """Folder to create the Markdown files in.
 
     If no folder is set, **MkNodes** will generate a temporary dir."""
-    show_code_admonition = c.Type(bool, default=False)
-    """Append an admonition box with the generator code to each page.
+    show_page_info = c.Type(bool, default=False)
+    """Append an admonition box with build-related information.
 
     If True, all pages get added an expandable admonition box at the bottom,
-    containing the code which generated the page.
-    In order for this to work, the page needs to be created via decorators, or
-    the `generated_by` attribute of the MkPage needs to be set manually.
+    containing information about the created page.
+    This includes:
+    - Metadata
+    - Requirements
+    - Code which created the page (needs the page to be created via decorators, or
+    the `generated_by` attribute of the MkPage needs to be set manually)
     """

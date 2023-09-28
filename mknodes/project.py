@@ -88,7 +88,7 @@ class Project(Generic[T]):
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
 
-    def build(self, show_code_admonition: bool = False):
+    def build(self, show_page_info: bool = False):
         logger.debug("Building page...")
         self.build_fn(project=self, **self.build_kwargs)
         logger.debug("Finished building page.")
@@ -118,7 +118,7 @@ class Project(Generic[T]):
         if root := self._root:
             iterator = itertools.chain(iterator, root.iter_nodes())
         nodes = [i[1] for i in iterator]
-        collector = BuildCollector(nodes, show_code_admonition)
+        collector = BuildCollector(nodes, show_page_info)
         ctx.build_files = collector.node_files | collector.extra_files
         jinjahelpers.set_markdown_exec_namespace(self.env.globals)
         return ctx

@@ -58,7 +58,7 @@ plugins:
 - literate-nav
 - mknodes:
     build_fn: mknodes.manual.root:build
-    show_code_admonition: true
+    show_page_info: true
     # build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
     # repo_path: https://github.com/pallets/jinja2.git
 - mkdocstrings:

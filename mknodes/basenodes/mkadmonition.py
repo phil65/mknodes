@@ -26,7 +26,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         self,
         content: str | list | mknode.MkNode,
         *,
-        typ: datatypes.AdmonitionTypeStr = "info",
+        typ: datatypes.AdmonitionTypeStr | str = "info",
         title: str | None = None,
         collapsible: bool = False,
         expanded: bool = False,

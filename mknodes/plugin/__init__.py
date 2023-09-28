@@ -65,7 +65,7 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             clone_depth=self.config.clone_depth,
         )
         logger.info("Generating pages...")
-        self.build_info = self.project.build(self.config.show_code_admonition)
+        self.build_info = self.project.build(self.config.show_page_info)
         # now we add our stuff to the MkDocs build environment
         cfg = mkdocsconfig.Config(config)
 
