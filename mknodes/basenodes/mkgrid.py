@@ -12,10 +12,7 @@ class MkGridCard(mkcontainer.MkContainer):
 
     ICON = "material/square-medium"
     STATUS = "new"
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
-        requirements.Extension("md_in_html"),
-    ]
+    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(
         self,
@@ -36,10 +33,7 @@ class MkGrid(mkcontainer.MkContainer):
     """Node for showing a grid."""
 
     ICON = "material/view-grid"
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
-        requirements.Extension("md_in_html"),
-    ]
+    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
     items: list[MkGridCard]
 
     def __init__(

@@ -19,10 +19,7 @@ class MkImage(mknode.MkNode):
     """Image including optional caption."""
 
     ICON = "material/image"
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
-        requirements.Extension("md_in_html"),
-    ]
+    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(
         self,

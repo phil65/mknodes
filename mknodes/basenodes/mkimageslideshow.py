@@ -25,10 +25,6 @@ class MkImageSlideshow(mknode.MkNode):
     """Node to show an Image comparison (using a slider)."""
 
     ICON = "material/image-multiple"
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
-        requirements.Extension("md_in_html"),
-    ]
     JS_FILES = [requirements.JSLink(JS_URL)]
 
     def __init__(

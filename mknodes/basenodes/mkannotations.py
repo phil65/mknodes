@@ -14,7 +14,6 @@ class MkAnnotation(mkcontainer.MkContainer):
     """Represents a single annotation. It gets managed by an MkAnnotations node."""
 
     REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
         requirements.Extension("md_in_html"),
         requirements.Extension("pymdownx.superfences"),
     ]
@@ -52,7 +51,6 @@ class MkAnnotations(mkcontainer.MkContainer):
 
     items: list[MkAnnotation]
     REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
         requirements.Extension("md_in_html"),
         requirements.Extension("pymdownx.superfences"),
     ]

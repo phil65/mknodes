@@ -22,10 +22,6 @@ class MkImageCompare(mknode.MkNode):
     """Node to show an Image comparison (using a slider)."""
 
     ICON = "material/image-off"
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
-        requirements.Extension("md_in_html"),
-    ]
     JS_FILES = [requirements.JSLink(JS_URL, defer=True)]
     CSS = [requirements.CSSLink(CSS_URL)]
 

@@ -86,10 +86,7 @@ class MkTimeline(mkcontainer.MkContainer):
     """Node to show an Image comparison (using a slider)."""
 
     ICON = "material/timeline"
-    REQUIRED_EXTENSIONS = [
-        requirements.Extension("attr_list"),
-        requirements.Extension("md_in_html"),
-    ]
+    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
     JS_FILES = [
         requirements.JSLink(JQUERY_LINK),
         requirements.JSLink(SCROLLREVEAL_LINK),

@@ -285,6 +285,8 @@ class MkNode(node.Node):
         logger.debug("Collecting requirements from tree...")
         nodes = [*list(self.descendants), self]
         extensions: dict[str, dict] = {
+            "attr_list": {},
+            "md_in_html": {},
             "pymdownx.emoji": {},
             "pymdownx.magiclink": dict(
                 repo_url_shorthand=True,
@@ -341,7 +343,7 @@ class MkNode(node.Node):
         md = self.to_markdown()
         reqs = self.get_requirements()
         configs = reqs.markdown_extensions
-        exts = [*list(configs.keys()), "attr_list", "md_in_html"]
+        exts = list(configs.keys())
         return markdown.Markdown(extensions=exts, extension_configs=configs).convert(md)
 
 
