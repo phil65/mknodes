@@ -62,7 +62,7 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
 )
 
 
-def build_badge(icon: str, text: str = "", typ: str = ""):
+def build_badge(icon: str, text: str = "", typ: str = "") -> str:
     classes = f"mdx-badge mdx-badge--{typ}" if typ else "mdx-badge"
     root = xml.Span(classes)
     if icon:

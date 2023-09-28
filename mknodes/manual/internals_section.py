@@ -48,6 +48,11 @@ def create_internals_section(root_nav: mk.MkNav):
     """Create the "Internals" Sub-MkNav and attach it to given MkNav."""
     root_nav += nav
     page = nav.add_index_page(hide="toc")
+    page += "TODO"
+
+
+@nav.route.page("Build steps")
+def _(page: mk.MkPage):
     node = mk.MkTimeline()
     node.add_item(date="Step 1", content=STEP_1)
     ls = mk.MkList(INFO_PROVIDERS)
@@ -62,23 +67,6 @@ def create_internals_section(root_nav: mk.MkNav):
     node.add_item(date="Step 10", content=STEP_10)
     page += node
     page.created_by = create_internals_section
-
-
-# @nav.route.page("Tree", hide="toc", icon="graph")
-# def create_tree_page(page: mk.MkPage):
-#     page += mk.MkHeader("This is the tree we built up to now.", level=3)
-#     tree = page.root.get_tree_repr(detailed=False, max_depth=3)
-#     page += mk.MkCode(tree, language="")
-
-
-@nav.route.page("Requirements", hide="toc", icon="puzzle-edit")
-def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("requirements.md")
-
-
-@nav.route.page("Build Log", hide="toc", icon="puzzle-edit")
-def _(page: mk.MkPage):
-    page += mk.MkText("log() | MkCode", is_jinja_expression=True)
 
 
 @nav.route.nav("Complete code")
