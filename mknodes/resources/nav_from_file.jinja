@@ -1,11 +1,14 @@
-## Directory tree
+MkNavs can parse index files in SUMMARY.md style (as popularized by mkdocs-literate-nav).
+
+Given the following folder structure:
+
+### Directory tree
 
 {{ path | MkTreeView | MkAdmonition }}
 
-## SUMMARY.md content
+and a root SUMMARY.md looking like:
 
-{{ text | MkCode | MkAdmonition }}
+### SUMMARY.md content
 
-It is always best to use annotations from the *closest* node.
-(We could also have used the annotations from MKPage, but since this source code
-is displayed by the MkCode node, we use that one.)
+{{ text | MkCode | MkAdmonition(title="Root SUMMARY.md") }}
+
