@@ -55,14 +55,31 @@ class Plugin(dict):
         return {self.plugin_name: dict(self)}
 
 
-class CSSLink(str):
-    __slots__ = ()
+@dataclasses.dataclass(frozen=True)
+class CSSLink:
+    link: str
+    color_scheme: Literal["dark", "light"] | None = None
+    onload: str | None = None
 
     def __repr__(self):
-        return f"{type(self).__name__}('{self}')"
+        return reprhelpers.dataclass_repr(self)
+
+    def __str__(self):
+        return self.link
+
+    def __fspath__(self):
+        return self.link
 
     def to_html(self):
-        return f'<link rel="stylesheet" href="{self}" />'
+        if self.color_scheme == "light":
+            media = ' media="(prefers-color-scheme:light)"'
+        elif self.color_scheme == "dark":
+            media = ' media="(prefers-color-scheme:dark)"'
+        else:
+            media = ""
+        onload = f" onload={self.onload!r}" if self.onload else ""
+        # return '<link rel="stylesheet" href="{{ base_url }}/{path}" />'
+        return f'<link rel="stylesheet" href={self.link!r}{media}{onload}/>'
 
 
 @dataclasses.dataclass(frozen=True)
@@ -129,18 +146,31 @@ class JSFile:
         return html
 
 
-class CSSFile(str):
-    __slots__ = ()
-
-    def __fspath__(self):
-        return str(self)
+@dataclasses.dataclass(frozen=True)
+class CSSFile:
+    link: str
+    color_scheme: Literal["dark", "light"] | None = None
+    onload: str | None = None
 
     def __repr__(self):
-        return f"{type(self).__name__}('{self}')"
+        return reprhelpers.dataclass_repr(self)
+
+    def __str__(self):
+        return self.link
+
+    def __fspath__(self):
+        return self.link
 
     def to_html(self):
+        if self.color_scheme == "light":
+            media = ' media="(prefers-color-scheme:light)"'
+        elif self.color_scheme == "dark":
+            media = ' media="(prefers-color-scheme:dark)"'
+        else:
+            media = ""
+        onload = f" onload={self.onload!r}" if self.onload else ""
         # return '<link rel="stylesheet" href="{{ base_url }}/{path}" />'
-        return f'<link rel="stylesheet" href="{self}" />'
+        return f'<link rel="stylesheet" href={self.link!r}{media}{onload}/>'
 
 
 class CSSText:
