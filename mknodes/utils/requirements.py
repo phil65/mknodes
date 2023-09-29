@@ -155,6 +155,18 @@ class CSSText:
         return f"{type(self).__name__}({self.filename!r})"
 
 
+class RawCSS:
+    def __init__(self, content):
+        self.content = content
+
+    def __hash__(self):
+        return hash(self.content)
+
+    def to_html(self):
+        # content = self.content.replace("\n", "")
+        return f"<style>\n{self.content}\n</style>"
+
+
 class Asset:
     def __init__(self, filename, content, target=None):
         self.filename = filename

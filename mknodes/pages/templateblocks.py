@@ -5,7 +5,7 @@ from typing import Literal
 from markdown import markdown
 
 from mknodes.basenodes import mknode
-from mknodes.utils import requirements
+from mknodes.utils import css, requirements
 
 
 BlockStr = Literal[
@@ -142,7 +142,7 @@ class StylesBlock(Block):
 
     def __init__(
         self,
-        styles: list[requirements.CSSLink] | None = None,
+        styles: list[requirements.CSSLink | requirements.RawCSS] | None = None,
         include_super: bool = True,
     ):
         self.include_super = include_super
@@ -150,6 +150,10 @@ class StylesBlock(Block):
 
     def add_stylesheet(self, stylesheet: requirements.CSSLink):
         self.styles.append(stylesheet)
+
+    def add_css(self, css_dict: dict):
+        css_obj = css.CSS(css_dict)
+        self.styles.append(requirements.RawCSS(str(css_obj)))
 
     def __bool__(self):
         return bool(self.styles)
