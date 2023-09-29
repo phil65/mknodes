@@ -5,7 +5,7 @@ import typer as t
 
 from mknodes import paths
 from mknodes.info import mkdocsconfigfile
-from mknodes.plugin import mkdocshelpers
+from mknodes.plugin import build_page, serve as serve_
 from mknodes.utils import log, richhelpers, yamlhelpers
 
 
@@ -87,7 +87,7 @@ def build(
         clone_depth=clone_depth,
     )
     cfg["site_dir"] = site_dir
-    mkdocshelpers.build(
+    build_page.build(
         cfg,
         strict=strict,
         theme=theme if theme != "material" else None,
@@ -120,7 +120,7 @@ def serve(
         build_fn=build_fn,
         clone_depth=clone_depth,
     )
-    mkdocshelpers.serve(
+    serve_.serve(
         cfg,
         strict=strict,
         theme=theme if theme != "material" else None,
