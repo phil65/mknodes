@@ -46,7 +46,7 @@ class MkPage(mkcontainer.MkContainer):
         subtitle: str | None = None,
         description: str | None = None,
         template: str | pagetemplate.PageTemplate | None = None,
-        inclusion_level: bool | None = True,
+        inclusion_level: bool | None = None,
         tags: list[str] | None = None,
         edit_path: str | None = None,
         **kwargs: Any,
@@ -74,7 +74,6 @@ class MkPage(mkcontainer.MkContainer):
         self._path = str(path) if path else None
         self._edit_path = edit_path
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
-        self.inclusion_level = inclusion_level
         self.created_by: Callable | None = None
         self._metadata = metadata.Metadata(
             hide=hide,
@@ -85,6 +84,7 @@ class MkPage(mkcontainer.MkContainer):
             subtitle=subtitle,
             title=title,
             description=description,
+            inclusion_level=inclusion_level,
             template=None,
             tags=tags,
         )

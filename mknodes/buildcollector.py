@@ -60,7 +60,7 @@ class BuildCollector:
         )
 
     def collect_page(self, page: mk.MkPage):
-        if not page.inclusion_level:
+        if page.metadata.inclusion_level is False:
             return
         path = page.resolved_file_path
         self.mapping[path] = page

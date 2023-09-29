@@ -120,6 +120,15 @@ class Metadata(dict):
         self["description"] = val
 
     @property
+    def inclusion_level(self) -> str | None:
+        """Page inclusion level."""
+        return self.get("inclusion_level")
+
+    @inclusion_level.setter
+    def inclusion_level(self, val: str | None):
+        self["inclusion_level"] = val
+
+    @property
     def template(self) -> str | None:
         """Filename of the template the page should use.
 
