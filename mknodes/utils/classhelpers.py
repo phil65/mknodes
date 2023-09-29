@@ -100,7 +100,13 @@ def to_class(klass: type | str | tuple[str, ...] | list[str]):
     match klass:
         case type():
             return klass
+        case str() if ":" in klass:
+            # path.to.mod:Classname
+            mod_path, klass_name = klass.split(":", maxsplit=1)
+            mod = import_module(mod_path)
+            return getattr(mod, klass_name)
         case str():
+            # path.to.mod.Classname
             parts = klass.split(".")
             mod = import_module(".".join(parts[:-1]))
             return getattr(mod, parts[-1])
