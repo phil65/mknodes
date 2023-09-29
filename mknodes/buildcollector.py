@@ -7,6 +7,7 @@ import pathlib
 import mknodes as mk
 
 from mknodes.info import contexts
+from mknodes.theme import theme as theme_
 from mknodes.utils import log, requirements
 
 
@@ -29,7 +30,7 @@ class BuildCollector:
         self.requirements = requirements.Requirements()
         self.mapping: dict[str, mk.MkNode] = dict()
 
-    def collect(self, root: mk.MkNode, theme):
+    def collect(self, root: mk.MkNode, theme: theme_.Theme):
         """Collect build stuff from given node + theme.
 
         Arguments:

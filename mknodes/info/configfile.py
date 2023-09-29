@@ -30,7 +30,7 @@ class ConfigFile(superdict.SuperDict):
         *sections: str,
         keep_path: bool = False,
     ) -> str:
-        """Try to get data[sections[0]][sections[1]]... as text.
+        """Try to get data from given path as text.
 
         If Key path does not exist, return empty string.
 
