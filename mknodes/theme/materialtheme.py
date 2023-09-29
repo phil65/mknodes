@@ -97,13 +97,6 @@ class ColorTheme:
         return helpers.get_color_str(self.dark_shade or self.color)
 
 
-def get_partial_path(partial: str) -> pathlib.Path:
-    import material
-
-    path = pathlib.Path(material.__path__[0])
-    return path / "partials" / f"{partial}.html"
-
-
 class MaterialTheme(theme.Theme):
     """Material Theme."""
 
@@ -142,6 +135,7 @@ class MaterialTheme(theme.Theme):
 
     @functools.cached_property
     def palettes(self) -> list[palette.Palette]:
+        """Return a list of palettes used by the theme."""
         data = self.data.get("palette")
         if not data:
             return [palette.Palette()]
@@ -215,7 +209,7 @@ class MaterialTheme(theme.Theme):
         return COLORS[color]["color"]
 
     @property
-    def _text_color(self):
+    def _text_color(self) -> str:
         color = self._get_color("primary", fallback="indigo")
         return COLORS[color]["text"]
 
@@ -225,6 +219,15 @@ class MaterialTheme(theme.Theme):
         light_shade: datatypes.ColorType | None = None,
         dark_shade: datatypes.ColorType | None = None,
     ):
+        """Set a custom color theme.
+
+        Requires primary color set to "custom".
+
+        Arguments:
+            color: Main color
+            light_shade: Optional light shade. If None, same as color.
+            dark_shade: Optional dark shade. If None, same as color.
+        """
         self._foreground_color = color
         self.set_color("primary", "custom")
         if light_shade is None:
@@ -243,6 +246,12 @@ class MaterialTheme(theme.Theme):
         self.default_icons[icon_type] = data
 
     def add_status_icon(self, name: str, material_icon: str):
+        """Add a custom status icon.
+
+        Arguments:
+            name: slug for the status icon
+            material_icon: Material icon name
+        """
         icon = pathhelpers.get_material_icon_path(material_icon)
         data = icon.read_text()
         self.status_icons.append(StatusIcon(name, data))
@@ -262,6 +271,13 @@ class MaterialTheme(theme.Theme):
                 extensions[k]["alternate_style"] = True
             elif k == "pymdownx.tasklist":
                 extensions[k]["custom_checkbox"] = True
+
+    @staticmethod
+    def get_partial_path(partial: str) -> pathlib.Path:
+        import material
+
+        path = pathlib.Path(material.__path__[0])
+        return path / "partials" / f"{partial}.html"
 
 
 if __name__ == "__main__":

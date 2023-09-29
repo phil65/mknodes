@@ -68,6 +68,16 @@ class Theme:
         border_color: datatypes.ColorType | None = None,
         font_color: datatypes.ColorType | None = None,
     ):
+        """Add a custom admonition type.
+
+        Arguments:
+            name: Slug for new admonition type
+            material_icon: Material icon path
+            header_color: Color for the admonition header
+            icon_color: Color for the admonition icon
+            border_color: Color for the admonition border
+            font_color: Color for the admonition header font
+        """
         header_col_str = helpers.get_color_str(header_color)
         icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
         border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
@@ -96,6 +106,10 @@ class Theme:
         return requirements.Requirements(css=req, templates=list(self.templates))
 
     def get_template_context(self):
+        """Return variables used to resolve the CSS template.
+
+        Can be overridden by subclasses.
+        """
         return dict(
             admonitions=self.admonitions,
             primary_color=self.primary_color,
@@ -121,10 +135,18 @@ class Theme:
 
     @property
     def primary_color(self) -> str:
+        """Return the primary color of the theme.
+
+        Can be overridden by subclasses.
+        """
         return "#5555BB"
 
     @property
     def text_color(self) -> str:
+        """Return the text color of the theme.
+
+        Can be overridden by subclasses.
+        """
         return "#000000"
 
     @property
