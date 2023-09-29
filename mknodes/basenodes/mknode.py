@@ -282,7 +282,6 @@ class MkNode(node.Node):
 
     def get_requirements(self) -> requirements.Requirements:
         """Return the "final" requirements object."""
-        logger.debug("Collecting requirements from tree...")
         nodes = [*list(self.descendants), self]
         extensions: dict[str, dict] = {
             "attr_list": {},
