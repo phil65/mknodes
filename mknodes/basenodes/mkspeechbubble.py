@@ -14,7 +14,6 @@ class MkSpeechBubble(mkcontainer.MkContainer):
 
     ICON = "material/chat"
     CSS = [requirements.CSSFile("css/speechbubble.css")]
-    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(
         self,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, requirements, xmlhelpers as xml
+from mknodes.utils import helpers, log, reprhelpers, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -12,7 +12,6 @@ class MkGridCard(mkcontainer.MkContainer):
 
     ICON = "material/square-medium"
     STATUS = "new"
-    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(
         self,
@@ -33,7 +32,6 @@ class MkGrid(mkcontainer.MkContainer):
     """Node for showing a grid."""
 
     ICON = "material/view-grid"
-    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
     items: list[MkGridCard]
 
     def __init__(

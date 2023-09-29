@@ -5,7 +5,7 @@ import pathlib
 from typing import TYPE_CHECKING, Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -19,7 +19,6 @@ class MkImage(mknode.MkNode):
     """Image including optional caption."""
 
     ICON = "material/image"
-    REQUIRED_EXTENSIONS = [requirements.Extension("md_in_html")]
 
     def __init__(
         self,
