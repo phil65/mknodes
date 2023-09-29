@@ -86,28 +86,28 @@ class MkAdmonition(mkcontainer.MkContainer):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
-        node = mknodes.MkAdmonition("MkAdmonitions can carry annotations(1).")
+        node = mk.MkAdmonition("MkAdmonitions can carry annotations(1).")
         node.annotations[1] = "Super handy!"
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in get_args(datatypes.AdmonitionTypeStr):
-            page += mknodes.MkHeader(f"Type '{typ}'", level=3)
+            page += mk.MkHeader(f"Type '{typ}'", level=3)
             content = f"This is type **{typ}**"
-            node = mknodes.MkAdmonition(typ=typ, content=content)
-            page += mknodes.MkReprRawRendered(node)
-        page += mknodes.MkHeader("Collapsible and expandable", level=3)
-        node = mknodes.MkAdmonition(
+            node = mk.MkAdmonition(typ=typ, content=content)
+            page += mk.MkReprRawRendered(node)
+        page += mk.MkHeader("Collapsible and expandable", level=3)
+        node = mk.MkAdmonition(
             content="Admonitions can also be collapsible.",
             collapsible=True,
             title="Expand me!",
             expanded=True,  # this changes the initial state to expanded
         )
-        page += mknodes.MkReprRawRendered(node)
-        page += mknodes.MkHeader("Inlined", level=3)
-        node = mknodes.MkAdmonition(content="Inlined.", inline="left", title="Inlined.")
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
+        page += mk.MkHeader("Inlined", level=3)
+        node = mk.MkAdmonition(content="Inlined.", inline="left", title="Inlined.")
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

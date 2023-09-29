@@ -99,27 +99,17 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
         parent_diagram = MkClassDiagram(klass=MkClassDiagram, mode="baseclasses")
-        sub_diagram = MkClassDiagram(
-            klass=mknodes.MkContainer,
-            mode="subclasses",
-            direction="LR",
-        )
-        mro_diagram = MkClassDiagram(klass=mknodes.MkTable, mode="mro")
-        page += mknodes.MkReprRawRendered(
-            parent_diagram,
-            header="### Parent class hierarchy: MkClassDiagram",
-        )
-        page += mknodes.MkReprRawRendered(
-            sub_diagram,
-            header="### Subclass hierarchy: MkContainer",
-        )
-        page += mknodes.MkReprRawRendered(
-            mro_diagram,
-            header="### Method resolution order: MkTable",
-        )
+        sub = MkClassDiagram(klass=mk.MkContainer, mode="subclasses", direction="LR")
+        mro_diagram = MkClassDiagram(klass=mk.MkTable, mode="mro")
+        page += "### Parent class hierarchy: MkClassDiagram"
+        page += mk.MkReprRawRendered(parent_diagram)
+        page += "### Subclass hierarchy: MkContainer"
+        page += mk.MkReprRawRendered(sub)
+        page += "### Method resolution order: MkTable"
+        page += mk.MkReprRawRendered(mro_diagram)
 
     @property
     def mermaid_code(self) -> str:

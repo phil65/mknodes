@@ -147,18 +147,18 @@ class MkBadge(mkimage.MkImage):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
         node = MkBadge(label="Some", value="Badge")
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         node = MkBadge(label="Some", value="Badge", font_size=12)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         node = MkBadge(label="Some", value="Badge", num_padding_chars=5)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         node = MkBadge(label="Some", value="Badge", badge_color="teal")
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         node = MkBadge(label="Some", value="Badge", use_gitlab_style=True)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

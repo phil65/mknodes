@@ -48,15 +48,13 @@ class MkCommandOutput(mknode.MkNode):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
         if os.environ.get("CI"):
             node = MkCommandOutput(["make", "help"])
-            node = mknodes.MkReprRawRendered(node)
+            node = mk.MkReprRawRendered(node)
         else:
-            node = mknodes.MkHeader(
-                "Sadly breaks log output ATM, so only triggered in CI",
-            )
+            node = mk.MkHeader("Sadly breaks log output ATM, so only triggered in CI")
         page += node
 
 

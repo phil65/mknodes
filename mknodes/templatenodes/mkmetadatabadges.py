@@ -151,26 +151,26 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
         node = MkMetadataBadges(typ="classifiers")
-        page += mknodes.MkReprRawRendered(node, header="### Classifiers")
+        page += mk.MkReprRawRendered(node, header="### Classifiers")
         node = MkMetadataBadges(typ="keywords")
-        page += mknodes.MkReprRawRendered(node, header="### Keywords")
+        page += mk.MkReprRawRendered(node, header="### Keywords")
         node = MkMetadataBadges(typ="keywords_combined")
-        page += mknodes.MkReprRawRendered(node, header="### Keywords")
+        page += mk.MkReprRawRendered(node, header="### Keywords")
         node = MkMetadataBadges(typ="websites")
-        page += mknodes.MkReprRawRendered(node, header="### Websites")
+        page += mk.MkReprRawRendered(node, header="### Websites")
         node = MkMetadataBadges(typ="dependencies")
-        page += mknodes.MkReprRawRendered(node, header="### Dependencies")
+        page += mk.MkReprRawRendered(node, header="### Dependencies")
         node = MkMetadataBadges(typ="dependencies", package="mkdocs")
-        page += mknodes.MkReprRawRendered(node, header="### For other package")
+        page += mk.MkReprRawRendered(node, header="### For other package")
         # node = MkMetadataBadges(typ="installed_packages")
-        # page += mknodes.MkReprRawRendered(node, header="### Installed packages")
+        # page += mk.MkReprRawRendered(node, header="### Installed packages")
         node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
-        page += mknodes.MkReprRawRendered(node, header="### Gitlab style")
+        page += mk.MkReprRawRendered(node, header="### Gitlab style")
         node = MkMetadataBadges(typ="required_python", badge_color="red")
-        page += mknodes.MkReprRawRendered(node, header="### Colored")
+        page += mk.MkReprRawRendered(node, header="### Colored")
 
 
 if __name__ == "__main__":

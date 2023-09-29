@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 def test_modes():
-    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="mro")
-    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="subclasses")
-    mknodes.MkClassDiagram(mknodes.MkClassDiagram, mode="baseclasses")
+    mk.MkClassDiagram(mk.MkClassDiagram, mode="mro")
+    mk.MkClassDiagram(mk.MkClassDiagram, mode="subclasses")
+    mk.MkClassDiagram(mk.MkClassDiagram, mode="baseclasses")

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 from mknodes.utils import log
 
@@ -8,7 +8,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkDefaultWebsite(mknodes.MkNav):
+class MkDefaultWebsite(mk.MkNav):
     """Nav for showing a module documenation."""
 
     def __init__(
@@ -19,45 +19,45 @@ class MkDefaultWebsite(mknodes.MkNav):
         super().__init__(**kwargs)
 
         page = self.add_index_page("Overview", hide="toc")
-        page += mknodes.MkText(page.ctx.metadata.description)
+        page += mk.MkText(page.ctx.metadata.description)
         static_pages = static_pages or {}
         self.parse.json(static_pages)
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
         if proj := self.associated_project:
-            proj.theme.announcement_bar = mknodes.MkMetadataBadges("websites")
+            proj.theme.announcement_bar = mk.MkMetadataBadges("websites")
         if self.ctx.metadata.cli:
             page = self.add_page("CLI", hide="nav")
-            page += mknodes.MkClickDoc(show_subcommands=True)
+            page += mk.MkClickDoc(show_subcommands=True)
 
         nav = self.add_nav("Development")
 
         page = nav.add_page("Changelog")
-        page += mknodes.MkChangelog()
+        page += mk.MkChangelog()
 
         page = nav.add_page("Code of conduct")
-        page += mknodes.MkCodeOfConduct()
+        page += mk.MkCodeOfConduct()
 
         page = nav.add_page("Contributing")
-        page += mknodes.MkCommitConventions()
-        page += mknodes.MkPullRequestGuidelines()
+        page += mk.MkCommitConventions()
+        page += mk.MkPullRequestGuidelines()
 
         page = nav.add_page("Setting up the environment")
-        page += mknodes.MkDevEnvSetup()
-        page += mknodes.MkDevTools(header="Tools")
+        page += mk.MkDevEnvSetup()
+        page += mk.MkDevTools(header="Tools")
 
         page = nav.add_page("Dependencies")
-        page += mknodes.MkDependencyTable()
-        page += mknodes.MkPipDepTree(direction="LR")
+        page += mk.MkDependencyTable()
+        page += mk.MkPipDepTree(direction="LR")
 
         page = nav.add_page("Module overview")
-        page += mknodes.MkModuleOverview()
+        page += mk.MkModuleOverview()
 
         if "mkdocs.plugins" in self.ctx.metadata.entry_points:
             page = nav.add_page("MkDocs Plugins")
-            page += mknodes.MkPluginFlow()
+            page += mk.MkPluginFlow()
 
-        node = mknodes.MkLicense()
+        node = mk.MkLicense()
         page = nav.add_page("License", hide="toc")
         page += node
 
@@ -69,10 +69,8 @@ class MkDefaultWebsite(mknodes.MkNav):
 
 
 if __name__ == "__main__":
-    import mknodes
-
     doc = MkDefaultWebsite.for_project(
-        mknodes.Project.for_mknodes(),
+        mk.Project.for_mknodes(),
         static_pages={
             "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
         },

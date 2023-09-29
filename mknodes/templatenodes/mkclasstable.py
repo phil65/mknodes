@@ -53,18 +53,13 @@ class MkClassTable(mktable.MkTable):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
+        import mknodes as mk
 
-        node_1 = MkClassTable(
-            klasses=[mknodes.MkTable, MkClassTable, mknodes.MkNav],
-            layout="compact",
-        )
-        node_2 = MkClassTable(
-            klasses=[mknodes.MkTable, MkClassTable, mknodes.MkNav],
-            layout="extended",
-        )
-        page += mknodes.MkReprRawRendered(node_1, header="### Compact layout")
-        page += mknodes.MkReprRawRendered(node_2, header="### Extended layout")
+        klasses = [mk.MkTable, MkClassTable, mk.MkNav]
+        node_1 = MkClassTable(klasses=klasses, layout="compact")
+        node_2 = MkClassTable(klasses=klasses, layout="extended")
+        page += mk.MkReprRawRendered(node_1, header="### Compact layout")
+        page += mk.MkReprRawRendered(node_2, header="### Extended layout")
 
 
 if __name__ == "__main__":
