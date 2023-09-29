@@ -106,6 +106,7 @@ class Config:
         return parse.urljoin(base_url, rel_path)
 
     def get_install_candidates(self) -> list[str]:
+        """Return a list of installation candidates for this config."""
         path = "https://raw.githubusercontent.com/mkdocs/catalog/main/projects.yaml"
         buffer = io.StringIO()
         with contextlib.redirect_stdout(buffer):
@@ -119,6 +120,14 @@ class Config:
         async_: bool = False,
         typ: str = "",
     ):
+        """Add javascript to the config.
+
+        Arguments:
+            path: Path / URL to the javascript file
+            defer: Add defer attribute to <script> tag
+            async_: Add async attribute to <script> tag
+            typ: Add given type attribute to <script> tag
+        """
         from mkdocs.config import config_options
 
         val = config_options.ExtraScriptValue(str(path))
