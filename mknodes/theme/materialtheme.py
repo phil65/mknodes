@@ -11,7 +11,7 @@ from mknodes.basenodes import mknode
 from mknodes.data import datatypes
 from mknodes.theme import theme
 from mknodes.theme.material import palette
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers, xmlhelpers as xml
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -60,16 +60,6 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
     tasklist="md-tasklist-icon",
     tasklist_checked="md-tasklist-icon--checked",
 )
-
-
-def build_badge(icon: str, text: str = "", typ: str = "") -> str:
-    classes = f"mdx-badge mdx-badge--{typ}" if typ else "mdx-badge"
-    root = xml.Span(classes)
-    if icon:
-        xml.Span("mdx-badge__icon", parent=root, text=icon)
-    if text:
-        xml.Span("mdx-badge__icon", parent=root, text=text)
-    return root.to_string()
 
 
 @dataclasses.dataclass

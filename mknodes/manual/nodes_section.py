@@ -20,6 +20,7 @@ IMAGE_NODES = [
     mk.MkImageCompare,
     mk.MkImageSlideshow,
     mk.MkBadge,
+    mk.MkMaterialBadge,
     mk.MkBinaryImage,
     mk.MkCard,
 ]

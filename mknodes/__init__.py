@@ -18,6 +18,7 @@ from .basenodes.mkcodeimage import MkCodeImage
 from .basenodes._mkdocstrings import MkDocStrings
 from .basenodes.mkclickdoc import MkClickDoc
 from .basenodes.mkimage import MkImage
+from .basenodes.mkmaterialbadge import MkMaterialBadge
 from .basenodes.mkimagecompare import MkImageCompare
 from .basenodes.mkimageslideshow import MkImageSlideshow
 from .basenodes.mkbinaryimage import MkBinaryImage
@@ -97,6 +98,7 @@ __all__ = [
     "MkGrid",
     "MkCode",
     "MkCodeImage",
+    "MkMaterialBadge",
     "MkImage",
     "MkImageCompare",
     "MkImageSlideshow",
