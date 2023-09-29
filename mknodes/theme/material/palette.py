@@ -31,7 +31,7 @@ def build_toggle(palettes: list[Palette]) -> xml.Form:
     # form = ElementTree.SubElement(
     # body,
     kwargs = {"data-md-component": "palette"}
-    form = xml.Form("md-header__option", None, **kwargs)
+    form = xml.Form("md-header__option", parent=None, attrs=kwargs)
     for i, pal in enumerate(palettes):
         mode = "dark" if pal.scheme == "slate" else "light"
         attrs = {
@@ -48,7 +48,7 @@ def build_toggle(palettes: list[Palette]) -> xml.Form:
             attrs["aria-label"] = pal.toggle_name
         else:
             attrs["aria-hidden"] = "true"
-        el_input = xml.Input(parent=form, **attrs)
+        el_input = xml.Input(parent=form, attrs=attrs)
         if pal.toggle_name:
             attrs = {
                 "class": "md-header__button md-icon",
@@ -56,7 +56,7 @@ def build_toggle(palettes: list[Palette]) -> xml.Form:
                 "for": f"__palette_{i or len(palettes)}",
                 "hidden": "hidden",
             }
-            label = xml.Label(parent=el_input, **attrs)
+            label = xml.Label(parent=el_input, attrs=attrs)
             el = xml.get_material_icon_svg(pal.toggle_icon or "brightness-4")
             label.append(el)
     # script = ElementTree.SubElement(body, "script")

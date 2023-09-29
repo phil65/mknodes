@@ -16,12 +16,34 @@ class HTMLElement(Et.Element):
         self,
         klass: str | None = None,
         parent: Et.Element | None = None,
-        **kwargs: Any,
+        *,
+        attrs: dict | None = None,
+        markdown: bool = False,
+        **kwargs: str,
     ):
-        attrs = {"class": klass} if klass else {}
-        super().__init__(self.tag_name, attrs | kwargs)
+        """Constructor.
+
+        Arguments:
+            klass: CSS class
+            parent: Optional parent element
+            attrs: A dict containing XML attributes
+            markdown: Set markdown attribute. (Also sets markdown attr for parents)
+            kwargs: Additional XML attributes
+        """
+        kls = {"class": klass} if klass else {}
+        self.parent = parent
+        attrs = attrs or {}
+        super().__init__(self.tag_name, attrs | kwargs | kls)
         if parent is not None:
             parent.append(self)
+        if markdown:
+            parent = self
+            while parent is not None:
+                parent.set("markdown", "1")
+                if isinstance(parent, HTMLElement) and parent.parent:
+                    parent = parent.parent
+                else:
+                    break
 
     def to_string(self, space: str = "  ", level: int = 0) -> str:
         Et.indent(self, space=space, level=level)
@@ -146,7 +168,7 @@ def get_material_icon_svg(icon: str) -> Et.Element:
     return Et.fromstring(svg_text)
 
 
-def get_source_button(icon: str = "material/code-json"):
+def get_source_button(icon: str = "material/code-json") -> A:
     href = (
         "{{ config.site_url | rstrip('/') + '/src/' + page.file.src_uri | replace('.md',"
         " '.original') }}"

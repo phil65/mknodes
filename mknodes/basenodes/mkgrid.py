@@ -61,7 +61,7 @@ class MkGrid(mkcontainer.MkContainer):
         return reprhelpers.get_repr(self, cards=cards)
 
     def get_element(self) -> xml.Div:
-        root = xml.Div("grid cards", markdown="1")
+        root = xml.Div("grid cards", markdown=True)
         content = "".join(str(i) for i in self.items) if self.items else ""
         root.text = "\n\n" + content + "\n"
         return root
