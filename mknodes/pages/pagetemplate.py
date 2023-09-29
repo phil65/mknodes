@@ -21,17 +21,25 @@ class PageTemplate:
         self.filename = filename
         self.extends = f"{extends.rstrip('.html')}.html" if extends else None
         self.parent = parent
-        self.title_block = templateblocks.TitleBlock()
+
+        # Common blocks
+        self.title = templateblocks.TitleBlock()
+        self.libs = templateblocks.LibsBlock()
+        # self.analytics = templateblocks.AnalyticsBlock()
+        # self.scripts = templateblocks.ScriptsBlock()
+        # self.site_meta = templateblocks.SiteMetaBlock()
+        self.styles = templateblocks.StylesBlock()
+        self.extra_head = templateblocks.ExtraHeadBlock()
+
         self.content_block = templateblocks.HtmlBlock("content", parent=parent)
-        self.tabs_block = templateblocks.HtmlBlock("tabs", parent=parent)
-        self.outdated_block = templateblocks.HtmlBlock("outdated", parent=parent)
-        self.announce_block = templateblocks.HtmlBlock("announce", parent=parent)
-        self.footer_block = templateblocks.HtmlBlock("footer", parent=parent)
-        self.site_nav_block = templateblocks.HtmlBlock("site_nav", parent=parent)
-        self.hero_block = templateblocks.HtmlBlock("hero", parent=parent)
-        self.libs_block = templateblocks.LibsBlock()
-        self.styles_block = templateblocks.StylesBlock()
-        self.extra_head_block = templateblocks.ExtraHeadBlock()
+        self.footer = templateblocks.HtmlBlock("footer", parent=parent)
+        self.site_nav = templateblocks.HtmlBlock("site_nav", parent=parent)
+
+        # MkDocs-Material
+        self.tabs = templateblocks.HtmlBlock("tabs", parent=parent)
+        self.outdated = templateblocks.HtmlBlock("outdated", parent=parent)
+        self.hero = templateblocks.HtmlBlock("hero", parent=parent)
+        self.announce = templateblocks.HtmlBlock("announce", parent=parent)
 
     def __bool__(self):
         return any(self.blocks)
@@ -42,17 +50,17 @@ class PageTemplate:
     @property
     def blocks(self) -> list[templateblocks.Block]:
         return [
-            self.title_block,
+            self.title,
             self.content_block,
-            self.tabs_block,
-            self.announce_block,
-            self.footer_block,
-            self.libs_block,
-            self.styles_block,
-            self.outdated_block,
-            self.hero_block,
-            self.extra_head_block,
-            self.site_nav_block,
+            self.tabs,
+            self.announce,
+            self.footer,
+            self.libs,
+            self.styles,
+            self.outdated,
+            self.hero,
+            self.extra_head,
+            self.site_nav,
         ]
 
     def __repr__(self):
@@ -84,6 +92,6 @@ if __name__ == "__main__":
     cfg = mkdocsconfig.Config()
     md = cfg.get_markdown_instance()
     template = PageTemplate(filename="main.html")
-    template.announce_block.content = mknodes.MkAdmonition("test")
+    template.announce.content = mknodes.MkAdmonition("test")
     html = template.build_html(md)
     print(html)

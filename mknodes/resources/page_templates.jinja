@@ -4,7 +4,7 @@ Some blocks can be populated by assigning MkNodes to its content, others can be 
 to add CSS / javascript specific to each page.
 
 ```py
-page.template.tabs_block.content = mk.MkAdmonition("Some text.")
+page.template.tabs.content = mk.MkAdmonition("Some text.")
 ```
 would generate the following template override automatically:
 
@@ -22,8 +22,8 @@ would generate the following template override automatically:
 
 
 ```py
-page.template.announce_block.content = mk.MkMetadataBadges(typ="classifiers")
-page.template.footer_block.content = mk.MkProgressBar(50)
-page.template.tabs_block.content = mk.MkCode("information = 'You can even put MkNodes here!'")
-page.template.hero_block.content = mk.MkHeader("A header!")
+page.template.announce.content = mk.MkMetadataBadges(typ="classifiers")
+page.template.footer.content = mk.MkProgressBar(50)
+page.template.tabs.content = mk.MkCode("information = 'You can even put MkNodes here!'")
+page.template.hero.content = mk.MkHeader("A header!")
 ```

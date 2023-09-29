@@ -40,10 +40,6 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
 
     @property
     def items(self):
-        # TODO: hack: without doing this, we get issues because the page becomes
-        # part of the tree. Perhaps add a setting for MkPages to be only-virtual?
-        # Needs a general concept in regards to re-parenting. (should base nodes
-        # be allowed to have pages as children?)
         html_node = self.node.__copy__()
         html_node.as_html = True
         tabs: dict[str, str | mknode.MkNode] = dict(  # type: ignore[annotation-unchecked]

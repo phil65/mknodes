@@ -39,7 +39,7 @@ COLORS = {
     "blue grey": {"color": "#546d78", "text": "#ffffff"},
     "black": {"color": "#000000", "text": "#ffffff"},
     "white": {"color": "#ffffff", "text": "#000000"},
-    "custom": {"color": "#000000", "text": "#FFFFFF"},
+    "custom": {"color": "#757575", "text": "#FFFFFF"},
 }
 
 
@@ -168,13 +168,13 @@ class MaterialTheme(theme.Theme):
 
     @property
     def announcement_bar(self):
-        return self.main_template.announce_block.content
+        return self.main_template.announce.content
 
     @announcement_bar.setter
     def announcement_bar(self, value):
         if isinstance(value, mknode.MkNode):
             value.associated_project = self.associated_project
-        self.main_template.announce_block.content = value
+        self.main_template.announce.content = value
 
     def get_accent_color(self) -> str:
         # sourcery skip: use-or-for-fallback
