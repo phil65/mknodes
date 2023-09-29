@@ -6,7 +6,7 @@ import dataclasses
 from mknodes import project
 from mknodes.data import datatypes
 from mknodes.info import contexts
-from mknodes.pages import templateregistry
+from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import helpers, log, pathhelpers, reprhelpers, requirements
 
 
@@ -36,11 +36,16 @@ class Theme:
         project: project.Project | None = None,
         template_registry: templateregistry.TemplateRegistry | None = None,
     ):
+        self.associated_project = project
+
         self.theme_name = theme_name
         self.data = data or {}
+        self.features = self.data.get("features")
+
         self.templates = template_registry or templateregistry.TemplateRegistry()
-        self.associated_project = project
+        self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
+
         self.admonitions: list[AdmonitionType] = []
         self.add_admonition_type(
             name="theme",
@@ -106,7 +111,13 @@ class Theme:
         return Theme(theme_name, data=data, **kwargs)
 
     def iter_nodes(self):
-        yield from ()
+        import mknodes as mk
+
+        for block in self.main_template.blocks:
+            if isinstance(block, templateblocks.HtmlBlock):
+                for node in block.items:
+                    if isinstance(node, mk.MkNode):
+                        yield 0, node
 
     @property
     def primary_color(self) -> str:

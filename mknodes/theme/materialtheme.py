@@ -9,7 +9,7 @@ from typing import Literal
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
-from mknodes.theme import mkblog, theme
+from mknodes.theme import theme
 from mknodes.theme.material import palette
 from mknodes.utils import helpers, log, pathhelpers, reprhelpers, xmlhelpers as xml
 
@@ -112,10 +112,6 @@ class MaterialTheme(theme.Theme):
 
     def __init__(self, **kwargs):
         self._foreground_color = None
-        super().__init__(self.name, **kwargs)
-        self.main_template = self.templates["main.html"]
-        self.blog = mkblog.MkBlog()
-        self.features = self.data.get("features")
         self.show_annotation_numbers = False
         self.classic_admonition_style = True
         self.tooltip_width: int | None = None
@@ -125,6 +121,7 @@ class MaterialTheme(theme.Theme):
         self.accent_fg_color = None
         self.primary_bg_color = None
         self.color_theme = None
+        super().__init__(self.name, **kwargs)
 
     def get_template_context(self):
         return dict(
@@ -161,10 +158,6 @@ class MaterialTheme(theme.Theme):
             )
             for pal in data
         ]
-
-    def iter_nodes(self):
-        if isinstance(self.announcement_bar, mknode.MkNode):
-            yield 0, self.announcement_bar
 
     @property
     def announcement_bar(self):
