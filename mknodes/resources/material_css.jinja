@@ -19,9 +19,9 @@ content_area_width, classic_admonition_style, show_annotation_numbers, default_i
     --md-primary-bg-color--light: {{ primary_bg_color }};
 {% endif %}
 {% if color_theme %}
-    ----md-primary-fg-color: {{ theme.color }};
-    ----md-primary-fg-color--light: {{ theme.light_str }};
-    ----md-primary-fg-color--dark: {{ theme.dark_str }};
+    --md-primary-fg-color: {{ color_theme.color_str }};
+    --md-primary-fg-color--light: {{ color_theme.light_str }};
+    --md-primary-fg-color--dark: {{ color_theme.dark_str }};
 {% endif %}
 {% if tooltip_width %}
     --md-tooltip-width: {{ tooltip_width }}px;
