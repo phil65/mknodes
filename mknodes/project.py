@@ -98,29 +98,23 @@ class Project(Generic[T]):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
 
     @classmethod
-    def for_mknodes(cls, config=None) -> Project:
-        from mknodes import mkdocsconfig
-
-        config = mkdocsconfig.Config(config)
+    def for_mknodes(cls) -> Project:
         kls = cls(
-            base_url=config.site_url or "",
-            use_directory_urls=config.use_directory_urls,
-            theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
-            build_fn=config.plugins["mknodes"].config.build_fn,
+            base_url="",
+            use_directory_urls=True,
+            theme=theme_.Theme.get_theme("material", data={}),
+            build_fn=paths.DEFAULT_BUILD_FN,
         )
         kls.build()
         return kls
 
     @classmethod
-    def for_path(cls, path: str, config=None) -> Project:
-        from mknodes import mkdocsconfig
-
-        config = mkdocsconfig.Config(config)
+    def for_path(cls, path: str) -> Project:
         kls = cls(
-            base_url=config.site_url or "",
-            use_directory_urls=config.use_directory_urls,
-            theme=theme_.Theme.get_theme(config.theme.name, data=config.theme._vars),
-            repo=folderinfo.FolderInfo.clone_from(path),
+            base_url="",
+            use_directory_urls=True,
+            theme=theme_.Theme.get_theme("material", data={}),
+            repo=path,
         )
         kls.build()
         return kls
