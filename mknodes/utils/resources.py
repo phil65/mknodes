@@ -4,7 +4,7 @@ import abc
 import collections.abc
 import dataclasses
 
-from typing import TYPE_CHECKING, ClassVar, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from mknodes import paths
 from mknodes.utils import mergehelpers, reprhelpers
@@ -25,7 +25,7 @@ class Package:
 class Extension(dict):
     """A markdown extension resource."""
 
-    def __init__(self, extension_name: str, **kwargs):
+    def __init__(self, extension_name: str, **kwargs: Any):
         """Constructor.
 
         Arguments:
@@ -51,7 +51,7 @@ class Extension(dict):
 class Plugin(dict):
     """A plugin resource."""
 
-    def __init__(self, plugin_name: str, **kwargs):
+    def __init__(self, plugin_name: str, **kwargs: Any):
         """Constructor.
 
         Arguments:
@@ -70,7 +70,7 @@ class Plugin(dict):
     def __hash__(self):
         return hash(self.plugin_name + str(dict(self)))
 
-    def as_mkdocs_dict(self):
+    def as_mkdocs_dict(self) -> dict[str, dict]:
         return {self.plugin_name: dict(self)}
 
 
@@ -91,7 +91,7 @@ class CSSLink:
     def __fspath__(self):
         return self.link
 
-    def to_html(self):
+    def to_html(self) -> str:
         if self.color_scheme == "light":
             media = ' media="(prefers-color-scheme:light)"'
         elif self.color_scheme == "dark":
@@ -180,7 +180,7 @@ class TextResource:
     content: str
 
     @property
-    def resolved_filename(self):
+    def resolved_filename(self) -> str:
         hashed = hash(self.content)
         return (
             f"{self.filename.removesuffix(self.EXTENSION)}{hashed}{self.EXTENSION}"
@@ -197,6 +197,8 @@ class TextResource:
 
 @dataclasses.dataclass(frozen=True)
 class CSSText(TextResource):
+    """Class representing non-file-bound CSS."""
+
     EXTENSION: ClassVar = ".css"
     content: str
     filename: str | None
@@ -204,6 +206,8 @@ class CSSText(TextResource):
 
 @dataclasses.dataclass(frozen=True)
 class JSText(TextResource):
+    """Class representing non-file-bound JavaScript code."""
+
     EXTENSION: ClassVar = ".js"
     content: str
     filename: str | None
@@ -250,6 +254,12 @@ class Asset:
 
 @dataclasses.dataclass
 class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
+    """A resource bundle containing different assets.
+
+    Most of the time this class is used for bundling required resources
+    for a specific node.
+    """
+
     css: list[CSSType] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
@@ -283,10 +293,12 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
 
     @property
     def js_files(self):
+        """All JavaScript files of this resource bundle."""
         return [i for i in self.js if isinstance(i, JSText)]
 
     @property
     def js_links(self):
+        """All JavaScript links of this resource bundle."""
         return [i for i in self.js if isinstance(i, JSLink)]
 
     def merge(self, other: collections.abc.Mapping, additive: bool = False):

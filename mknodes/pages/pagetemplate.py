@@ -9,14 +9,25 @@ from mknodes.utils import mdconverter, reprhelpers
 if TYPE_CHECKING:
     import markdown
 
+    import mknodes as mk
+
 
 class PageTemplate:
+    """A jinja template used to build a website from an MkPage."""
+
     def __init__(
         self,
         filename: str | None = None,
         extends: str | None = "base.html",
-        parent=None,
+        parent: mk.MkPage | mk.MkNav | None = None,
     ):
+        """Constructor.
+
+        Arguments:
+            filename: Optional filename for the Template (can get overridden during build)
+            extends: Parent template path
+            parent: The MkPage using this Page template.
+        """
         self.filename = filename
         self.extends = f"{extends.rstrip('.html')}.html" if extends else None
         self.parent = parent
@@ -48,6 +59,7 @@ class PageTemplate:
 
     @property
     def blocks(self) -> list[templateblocks.Block]:
+        """A list containing all blocks of the PageTemplate."""
         return [
             self.title,
             self.content_block,
@@ -79,6 +91,11 @@ class PageTemplate:
         self.content_block.content = value
 
     def build_html(self, md: markdown.Markdown | None = None) -> str | None:
+        """Convert given PageTemplate to HTML.
+
+        Arguments:
+            md: Markdown parser to use for HTML conversion.
+        """
         md = md or mdconverter.MdConverter()
         blocks = [r'{% extends "' + self.extends + '" %}\n'] if self.extends else []
         blocks.extend(block.to_markdown(md) for block in self.blocks if block)

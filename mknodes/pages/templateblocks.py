@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from markdown import markdown
 
 from mknodes.basenodes import mknode
 from mknodes.utils import css, mdconverter, resources
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 BlockStr = Literal[
@@ -62,7 +66,7 @@ class Block(mknode.MkNode):
 class HtmlBlock(Block):
     """Base class for blocks which usually contain HTML content."""
 
-    def __init__(self, block_id: str, parent=None):
+    def __init__(self, block_id: str, parent: mk.MkPage | mk.MkNav | None = None):
         """Constructor.
 
         Arguments:
