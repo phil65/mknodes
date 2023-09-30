@@ -32,7 +32,7 @@ class Commit:
     verified_reason: str
 
 
-def get_latest_commits(owner: str, repo: str, page: int = 1):
+def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
     """Return latest commits from given repository.
 
     Arguments:

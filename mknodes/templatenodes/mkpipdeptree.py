@@ -12,7 +12,7 @@ from mknodes.utils import reprhelpers
 
 @functools.cache
 def get_mermaid(
-    package: str | list[str] | None = None,
+    package: str | tuple[str] | None = None,
     local_only: bool = False,
     user_only: bool = False,
     reverse: bool = False,
