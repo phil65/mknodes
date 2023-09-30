@@ -39,7 +39,7 @@ COLORS = {
     "blue grey": {"color": "#546d78", "text": "#ffffff"},
     "black": {"color": "#000000", "text": "#ffffff"},
     "white": {"color": "#ffffff", "text": "#000000"},
-    "custom": {"color": "#757575", "text": "#FFFFFF"},
+    "custom": {"color": "#4051b5", "text": "#ffffff"},
 }
 
 
