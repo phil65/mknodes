@@ -121,6 +121,10 @@ class Tr(HTMLElement):
     tag_name = "tr"
 
 
+class Aside(HTMLElement):
+    tag_name = "aside"
+
+
 class Td(HTMLElement):
     tag_name = "td"
 
