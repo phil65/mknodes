@@ -6,6 +6,7 @@ import dataclasses
 
 from typing import TYPE_CHECKING, Literal
 
+from mknodes import paths
 from mknodes.utils import mergehelpers, reprhelpers
 
 
@@ -127,10 +128,10 @@ class JSFile:
         return reprhelpers.dataclass_repr(self)
 
     def __str__(self):
-        return self.link
+        return str(paths.RESOURCES / self.link)
 
     def __fspath__(self):
-        return self.link
+        return str(self)
 
     def to_html(self) -> str:
         html = f'<script src="{self.link}"'
@@ -156,10 +157,10 @@ class CSSFile:
         return reprhelpers.dataclass_repr(self)
 
     def __str__(self):
-        return self.link
+        return str(paths.RESOURCES / self.link)
 
     def __fspath__(self):
-        return self.link
+        return str(self)
 
     def to_html(self):
         if self.color_scheme == "light":
