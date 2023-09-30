@@ -16,12 +16,22 @@ if TYPE_CHECKING:
 
 @dataclasses.dataclass(frozen=True)
 class Package:
+    """A python package requirement."""
+
     package_name: str
     extras: list[str] = dataclasses.field(default_factory=list)
 
 
 class Extension(dict):
+    """A markdown extension resource."""
+
     def __init__(self, extension_name: str, **kwargs):
+        """Constructor.
+
+        Arguments:
+            extension_name: Name of the extension
+            kwargs: Optional settings for the extension
+        """
         super().__init__(**kwargs)
         self.extension_name = extension_name
 
@@ -39,7 +49,15 @@ class Extension(dict):
 
 
 class Plugin(dict):
+    """A plugin resource."""
+
     def __init__(self, plugin_name: str, **kwargs):
+        """Constructor.
+
+        Arguments:
+            plugin_name: Name of the plugin
+            kwargs: Optional settings for the plugin
+        """
         super().__init__(**kwargs)
         self.plugin_name = plugin_name
 
@@ -58,6 +76,8 @@ class Plugin(dict):
 
 @dataclasses.dataclass(frozen=True)
 class CSSLink:
+    """A CSS link resource."""
+
     link: str
     color_scheme: Literal["dark", "light"] | None = None
     onload: str | None = None
@@ -85,6 +105,8 @@ class CSSLink:
 
 @dataclasses.dataclass(frozen=True)
 class JSLink:
+    """A JavaScript link resource."""
+
     link: str
     defer: bool = False
     async_: bool = False
@@ -97,38 +119,6 @@ class JSLink:
 
     def __str__(self):
         return self.link
-
-    def __fspath__(self):
-        return self.link
-
-    def to_html(self) -> str:
-        html = f'<script src="{self.link}"'
-        if self.typ:
-            html += f' type="{self.typ}"'
-        if self.defer:
-            html += " defer"
-        if self.async_:
-            html += " async"
-        if self.crossorigin:
-            html += f' crossorigin="{self.crossorigin}"'
-        html += "></script>"
-        return html
-
-
-@dataclasses.dataclass(frozen=True)
-class JSFile:
-    link: str
-    defer: bool = False
-    async_: bool = False
-    crossorigin: Literal["anonymous", "use-credentials"] | None = None
-    typ: str = ""
-    is_library: bool = False
-
-    def __repr__(self):
-        return reprhelpers.dataclass_repr(self)
-
-    def __str__(self):
-        return str(paths.RESOURCES / self.link)
 
     def __fspath__(self):
         return str(self)
@@ -148,7 +138,17 @@ class JSFile:
 
 
 @dataclasses.dataclass(frozen=True)
+class JSFile(JSLink):
+    """JavaScript file resource."""
+
+    def __str__(self):
+        return str(paths.RESOURCES / self.link)
+
+
+@dataclasses.dataclass(frozen=True)
 class CSSFile:
+    """CSS file resource."""
+
     link: str
     color_scheme: Literal["dark", "light"] | None = None
     onload: str | None = None
@@ -162,7 +162,7 @@ class CSSFile:
     def __fspath__(self):
         return str(self)
 
-    def to_html(self):
+    def to_html(self) -> str:
         if self.color_scheme == "light":
             media = ' media="(prefers-color-scheme:light)"'
         elif self.color_scheme == "dark":
@@ -175,7 +175,7 @@ class CSSFile:
 
 
 class CSSText:
-    def __init__(self, filename, content):
+    def __init__(self, filename: str, content: str):
         self.filename = filename
         self.content = content
 
@@ -187,19 +187,28 @@ class CSSText:
 
 
 class RawCSS:
-    def __init__(self, content):
+    def __init__(self, content: str):
         self.content = content
 
     def __hash__(self):
         return hash(self.content)
 
-    def to_html(self):
+    def to_html(self) -> str:
         # content = self.content.replace("\n", "")
         return f"<style>\n{self.content}\n</style>"
 
 
 class Asset:
-    def __init__(self, filename, content, target=None):
+    """An asset resource."""
+
+    def __init__(self, filename: str, content: str, target: str | None = None):
+        """Constructor.
+
+        Arguments:
+            filename: Filename for the asset
+            content: File content
+            target: target directory for the asset file
+        """
         self.filename = filename
         self.content = content
         self.target_dir = target
