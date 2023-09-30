@@ -174,16 +174,35 @@ class CSSFile:
         return f'<link rel="stylesheet" href={self.link!r}{media}{onload}/>'
 
 
-class CSSText:
-    def __init__(self, filename: str, content: str):
-        self.filename = filename
+class TextResource:
+    EXTENSION: str
+
+    def __init__(self, content: str, filename: str | None):
         self.content = content
+        self._filename = filename
+
+    @property
+    def filename(self):
+        hashed = hash(self.content)
+        return (
+            f"{self._filename.removesuffix(self.EXTENSION)}{hashed}{self.EXTENSION}"
+            if self._filename
+            else f"{hashed}{self.EXTENSION}"
+        )
 
     def __hash__(self):
         return hash(self.content)
 
     def __repr__(self):
         return f"{type(self).__name__}({self.filename!r})"
+
+
+class CSSText(TextResource):
+    EXTENSION = ".css"
+
+
+class JSText(TextResource):
+    EXTENSION = ".js"
 
 
 class RawCSS:
@@ -222,7 +241,7 @@ class Asset:
 
 @dataclasses.dataclass
 class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
-    css: list[CSSFile | CSSLink | CSSText] = dataclasses.field(default_factory=list)
+    css: list[CSSType] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
     templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
     """A list of required templates."""
@@ -230,7 +249,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: list[Plugin] = dataclasses.field(default_factory=list)
     """A set of required plugins. (Only for info purposes)"""
-    js: list[JSFile | JSLink] = dataclasses.field(default_factory=list)
+    js: list[JSType] = dataclasses.field(default_factory=list)
     """A list of JS file paths."""
     assets: list[Asset] = dataclasses.field(default_factory=list)
     """A list of additional assets required (static files which go into assets dir)."""
@@ -255,7 +274,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
 
     @property
     def js_files(self):
-        return [i for i in self.js if isinstance(i, JSFile)]
+        return [i for i in self.js if isinstance(i, JSText)]
 
     @property
     def js_links(self):
@@ -282,10 +301,14 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         return self
 
 
+CSSType = CSSFile | CSSLink | CSSText
+JSType = JSFile | JSLink | JSText
+
+
 if __name__ == "__main__":
     link = CSSLink("test")
     print(repr(link))
-    req = Resources(css=[CSSText("a.css", "CSS")])
-    req2 = Resources(css=[CSSText("b.css", "CSS2")])
+    req = Resources(css=[CSSText("CSS", "a.css")])
+    req2 = Resources(css=[CSSText("CSS2", "b.css")])
     req.merge(req2)
     print(req)

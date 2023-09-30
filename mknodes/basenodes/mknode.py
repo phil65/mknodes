@@ -273,11 +273,27 @@ class MkNode(node.Node):
     def get_node_resources(self) -> resources.Resources:
         """Return the resources specific for this node."""
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
+        css_resources: list[resources.CSSType] = []
+        for css in self.CSS:
+            if isinstance(css, resources.CSSFile):
+                text = self.env.render_template(css.link)
+                css_resource = resources.CSSText(text, css.link)
+                css_resources.append(css_resource)
+            else:
+                css_resources.append(css)
+        js_resources: list[resources.JSType] = []
+        for js_file in self.JS_FILES:
+            if isinstance(js_file, resources.JSFile):
+                text = self.env.render_template(js_file.link)
+                js_resource = resources.JSText(text, js_file.link)
+                js_resources.append(js_resource)
+            else:
+                js_resources.append(js_file)
         return resources.Resources(
-            js=self.JS_FILES,
+            js=js_resources,
             markdown_extensions=extension,
             plugins=self.REQUIRED_PLUGINS,
-            css=self.CSS,
+            css=css_resources,
         )
 
     def get_resources(self) -> resources.Resources:

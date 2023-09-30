@@ -102,7 +102,7 @@ class Theme:
                 self.css_template,
                 variables=tmpl_ctx,
             )
-            req = [resources.CSSText("mknodes_theme.css", css_text)]
+            req = [resources.CSSText(css_text, filename="mknodes_theme.css")]
         return resources.Resources(css=req, templates=list(self.templates))
 
     def get_template_context(self):
