@@ -7,7 +7,10 @@ from typing import Any, Literal
 
 from mknodes import project
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import reprhelpers
+from mknodes.utils import log, reprhelpers
+
+
+logger = log.get_logger(__name__)
 
 
 @functools.cache
@@ -42,7 +45,12 @@ def get_mermaid(
             show_only = None
     exclude_list = set(exclude.split(",")) if exclude else None
     if show_only is not None or exclude_list is not None:
-        tree = tree.filter_nodes(show_only, exclude_list)
+        try:
+            tree = tree.filter_nodes(show_only, exclude_list)
+        except ValueError:
+            msg = "Error when filtering nodes for pipdeptree. Is the package on PyPi?."
+            logger.exception(msg)
+            return ""
     tree = [tree] if isinstance(tree, str) else tree
     text = render_mermaid(tree)
     return "\n".join(text.splitlines()[1:])
