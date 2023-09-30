@@ -13,6 +13,18 @@ from mknodes.plugin import buildbackend
 logger = get_plugin_logger(__name__)
 
 
+class MkDocsPage(pages.Page):
+    def __init__(self, mkpage, file, config: MkDocsConfig):
+        self.mkpage = mkpage
+        super().__init__(title=self.mkpage.title, file=file, config=config)
+
+    def read_source(self, config: MkDocsConfig):
+        self.meta = self.mkpage.metadata
+        self.mkpage.metadata = {}
+        self.markdown = str(self.mkpage)
+        self.mkpage.metadata = self.meta
+
+
 class MkDocsBuilder(buildbackend.BuildBackend):
     def __init__(
         self,
@@ -49,6 +61,7 @@ class MkDocsBuilder(buildbackend.BuildBackend):
             use_directory_urls=self._config.use_directory_urls,
             inclusion=inclusion_level,
         )
+        self.mk_files.append(new_f)
         new_f.generated_by = "mknodes"  # type: ignore
         return new_f
 
@@ -71,13 +84,14 @@ class MkDocsBuilder(buildbackend.BuildBackend):
 
     def get_page(
         self,
-        title: str,
-        path: str | os.PathLike,
-        inclusion_level: files_.InclusionLevel = files_.InclusionLevel.UNDEFINED,
+        mkpage,
         run_event_hooks: bool = False,
     ) -> pages.Page:
-        file = self.get_file(path, inclusion_level=inclusion_level)
-        page = pages.Page(title, file, self._config)
+        file = self.get_file(
+            mkpage.resolved_file_path,
+            inclusion_level=files_.InclusionLevel.UNDEFINED,
+        )
+        page = MkDocsPage(mkpage, file, self._config)
 
         if run_event_hooks:
             self._config._current_page = page
