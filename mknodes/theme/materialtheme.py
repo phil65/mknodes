@@ -9,7 +9,7 @@ from typing import Literal
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
-from mknodes.theme import theme
+from mknodes.theme import colortheme, theme
 from mknodes.theme.material import palette
 from mknodes.utils import helpers, log, pathhelpers, reprhelpers
 
@@ -66,25 +66,6 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
 class StatusIcon:
     name: str
     svg: str
-
-
-@dataclasses.dataclass
-class ColorTheme:
-    color: str
-    light_shade: str | None = None
-    dark_shade: str | None = None
-
-    @property
-    def color_str(self) -> str:
-        return helpers.get_color_str(self.color)
-
-    @property
-    def light_str(self) -> str:
-        return helpers.get_color_str(self.light_shade or self.color)
-
-    @property
-    def dark_str(self) -> str:
-        return helpers.get_color_str(self.dark_shade or self.color)
 
 
 class MaterialTheme(theme.Theme):
@@ -225,7 +206,7 @@ class MaterialTheme(theme.Theme):
         if dark_shade is None:
             dark_shade = color
         color_str = helpers.get_color_str(color)
-        self.color_theme = ColorTheme(
+        self.color_theme = colortheme.ColorTheme(
             color_str,
             helpers.get_color_str(light_shade),
             helpers.get_color_str(dark_shade),
