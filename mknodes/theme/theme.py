@@ -28,7 +28,7 @@ class AdmonitionType:
 class Theme:
     """MkDocs Theme."""
 
-    css_template = "mkdocs_css.jinja"
+    css_template = "css/theme_mkdocs.css"
 
     def __init__(
         self,

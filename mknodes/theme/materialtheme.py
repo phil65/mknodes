@@ -72,7 +72,7 @@ class MaterialTheme(theme.Theme):
     """Material Theme."""
 
     name = "material"
-    css_template = "material_css.jinja"
+    css_template = "css/theme_material.css"
 
     def __init__(self, **kwargs):
         self._foreground_color = None
@@ -238,19 +238,20 @@ class MaterialTheme(theme.Theme):
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         for k in dict(extensions).copy():
+            ext = extensions[k]
             if k == "pymdownx.emoji":
                 from materialx import emoji
 
-                extensions[k].update(
+                ext.update(
                     {
                         "emoji_index": emoji.twemoji,
                         "emoji_generator": emoji.to_svg,
                     },
                 )
             elif k in ["pymdownx.blocks.tab", "pymdownx.tabbed"]:
-                extensions[k]["alternate_style"] = True
+                ext["alternate_style"] = True
             elif k == "pymdownx.tasklist":
-                extensions[k]["custom_checkbox"] = True
+                ext["custom_checkbox"] = True
 
     @staticmethod
     def get_partial_path(partial: str) -> pathlib.Path:
