@@ -9,9 +9,7 @@ DOC_TEXT = """Now lets create the documentation.
 This code will show how to build a simple documentation section.
 """
 
-nav = mk.MkNav("Navigation & Pages")
-
-pages_nav = nav.add_nav("MkPage")
+nav = mk.MkNav("MkNavs")
 
 
 def create_navs_section(root_nav: mk.MkNav):
@@ -19,9 +17,6 @@ def create_navs_section(root_nav: mk.MkNav):
     root_nav += nav
 
     routing.create_routing_section(nav)
-
-    page = pages_nav.add_index_page(hide="toc")
-    page += mk.MkJinjaTemplate("mkpage_index.jinja")
 
     page = nav.add_index_page(hide="toc")
     variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNav)
@@ -51,61 +46,8 @@ def _(nav: mk.MkNav):
     page += mk.MkJinjaTemplate("nav_from_folder.jinja", variables=variables)
 
 
-@pages_nav.route.page("MkClassPage")
-def _(page: mk.MkPage):
-    variables = dict(example_class=mk.MkCode)
-    page += mk.MkJinjaTemplate("mkclasspage.jinja", variables=variables)
-
-
-@pages_nav.route.page("MkModulePage")
-def _(page: mk.MkPage):
-    import mkdocs.config
-
-    variables = dict(example_module=mkdocs.config)
-    page += mk.MkJinjaTemplate("mkmodulepage.jinja", variables=variables)
-
-
-@pages_nav.route.page("Adding to MkPages", hide="toc", status="new")
-def _(page: mk.MkPage):
-    page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
-    page += "Adding strings also works, they get converted to MkText nodes."
-    page += "### ...and text starting with # will become a MkHeader."
-    page += "Every MkPage has a MkFootNotes node built-in[^1]."
-    page.footnotes[1] = "Super cool, right?"
-
-
-@pages_nav.route.page(
-    "Metadata",
-    status="deprecated",
-    search_boost=2.0,
-    subtitle="Subtitle",
-    description="Description",
-)
-def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("page_metadata.jinja")
-
-
-@pages_nav.route.page("Templates", hide="toc", status="new")
-def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("page_templates.jinja")
-    page.template.announce.content = mk.MkMetadataBadges(typ="classifiers")
-    page.template.footer.content = mk.MkProgressBar(50)
-    code = "information = 'You can even put MkNodes here!'"
-    page.template.tabs.content = mk.MkCode(f"{code}")
-    page.template.hero.content = mk.MkHeader("A header!")
-    page.template.styles.add_css(
-        {
-            ":root": {
-                "--md-primary-fg-color": "#FF0000",
-                "--md-primary-fg-color--light": "#FF0000",
-                "--md-primary-fg-color--dark": "#FF0000",
-            },
-        },
-    )
-
-
 # @nav.route.nav("MkDefaultWebsite")
-def create_mkdefaultwebsite_section(nav: mk.MkNav):
+def _(nav: mk.MkNav):
     proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
     website_nav = mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
     nav += website_nav
@@ -113,8 +55,6 @@ def create_mkdefaultwebsite_section(nav: mk.MkNav):
 
 @nav.route.nav("MkDoc")
 def _(nav: mk.MkNav):
-    nav = nav.add_nav("MkDoc")
-
     page = nav.add_index_page(hide="toc", icon="api")
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
     mknodes_docs = nav.add_doc(

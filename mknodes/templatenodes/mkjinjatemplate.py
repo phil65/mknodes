@@ -55,10 +55,8 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
     @staticmethod
     def create_example_page(page):
-        import mknodes
-
-        node = MkJinjaTemplate(template="cli_index.jinja")
-        page += mknodes.MkReprRawRendered(node)
+        node = MkJinjaTemplate(template="nodes_index.jinja")
+        page += node
 
     def _to_markdown(self) -> str:
         return self.env.render_template(self.template, variables=self.variables)
