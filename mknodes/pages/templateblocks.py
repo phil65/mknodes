@@ -34,24 +34,41 @@ SUPER_TEXT = r"{{ super() }}"
 
 
 class Super:
+    """Simple class to use for the jinja super expression."""
+
     def __str__(self):
         return SUPER_TEXT
 
 
 class Block(mknode.MkNode):
+    """A class representing a block from a page template."""
+
     block_id: str
 
     def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
     def to_markdown(self, md: markdown.Markdown | None = None):
+        """Return HTML for the block.
+
+        Arguments:
+            md: Markdown parser to use
+        """
         instance = md or mdconverter.MdConverter()
         content = self.block_content(instance)
         return f"{{% block {self.block_id} %}}\n{content}\n{{% endblock %}}"
 
 
 class HtmlBlock(Block):
+    """Base class for blocks which usually contain HTML content."""
+
     def __init__(self, block_id: str, parent=None):
+        """Constructor.
+
+        Arguments:
+            block_id: Name of the block
+            parent: Parent node
+        """
         super().__init__(parent=parent)
         self.block_id = block_id
         self.items = [Super()]
@@ -60,6 +77,11 @@ class HtmlBlock(Block):
         return len(self.items) != 1 or not isinstance(self.items[0], Super)
 
     def block_content(self, md: markdown.Markdown | None = None) -> str:
+        """Return the actual block content.
+
+        Arguments:
+            md: Markdown parser to use
+        """
         import mknodes
 
         instance = md or mdconverter.MdConverter()
@@ -85,6 +107,8 @@ class HtmlBlock(Block):
 
 
 class TitleBlock(Block):
+    """Block wrapping the HTML title."""
+
     block_id = "htmltitle"
 
     def __init__(self, title: str | None = None):
@@ -98,6 +122,8 @@ class TitleBlock(Block):
 
 
 class LibsBlock(Block):
+    """Block for additional libraries."""
+
     block_id = "libs"
 
     def __init__(
@@ -105,10 +131,21 @@ class LibsBlock(Block):
         scripts: list[resources.JSFile | resources.JSLink] | None = None,
         include_super: bool = True,
     ):
+        """Constructor.
+
+        Arguments:
+            scripts: List of scripts to add to HTML header libs.
+            include_super: Whether to include the original content.
+        """
         self.include_super = include_super
         self.scripts = scripts or []
 
     def add_script_file(self, script: resources.JSFile | resources.JSLink):
+        """Add a script file to the block.
+
+        Arguments:
+            script: Script to add to the block
+        """
         self.scripts.append(script)
 
     def __bool__(self):
@@ -121,6 +158,8 @@ class LibsBlock(Block):
 
 
 class ExtraHeadBlock(Block):
+    """Block for extra HEAD content."""
+
     block_id = "extrahead"
 
     def __init__(self):
@@ -134,6 +173,8 @@ class ExtraHeadBlock(Block):
 
 
 class StylesBlock(Block):
+    """Block for additional stylesheets."""
+
     block_id = "styles"
 
     def __init__(

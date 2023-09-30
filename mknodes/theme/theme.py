@@ -85,14 +85,13 @@ class Theme:
         border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
         font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
         icon = pathhelpers.get_material_icon_path(material_icon)
-        data = icon.read_text()
         adm = AdmonitionType(
-            name,
-            data,
-            header_col_str,
-            icon_col_str,
-            border_col_str,
-            font_col_str,
+            name=name,
+            svg=icon.read_text(),
+            header_color=header_col_str,
+            icon_color=icon_col_str,
+            border_color=border_col_str,
+            font_color=font_col_str,
         )
         self.admonitions.append(adm)
 
@@ -104,7 +103,7 @@ class Theme:
                 self.css_template,
                 variables=tmpl_ctx,
             )
-            req = [resources.CSSText(css_text, filename="mknodes_theme.css")]
+            req = [resources.CSSText(content=css_text, filename="mknodes_theme.css")]
         return resources.Resources(css=req, templates=list(self.templates))
 
     def get_template_context(self) -> dict[str, Any]:
