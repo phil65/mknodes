@@ -6,7 +6,7 @@ from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -17,9 +17,9 @@ class MkAdmonition(mkcontainer.MkContainer):
 
     ICON = "octicons/info-16"
     REQUIRED_EXTENSIONS = [
-        requirements.Extension("admonition"),
-        requirements.Extension("pymdownx.details"),
-        requirements.Extension("pymdownx.superfences"),
+        resources.Extension("admonition"),
+        resources.Extension("pymdownx.details"),
+        resources.Extension("pymdownx.superfences"),
     ]
 
     def __init__(

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from mknodes.basenodes import mkblock, mknode
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -20,7 +20,7 @@ class MkHtmlBlock(mkblock.MkBlock):
     """PyMdown-based Html block. Can be used to show raw content."""
 
     ICON = "octicons/code-16"
-    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.blocks.html")]
+    REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.blocks.html")]
 
     def __init__(
         self,

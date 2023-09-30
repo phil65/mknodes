@@ -17,7 +17,7 @@ from mknodes.utils import (
     inspecthelpers,
     log,
     reprhelpers,
-    requirements,
+    resources,
 )
 
 
@@ -99,9 +99,9 @@ class MkPage(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(self, path=str(self.path), **self._metadata)
 
-    def get_node_requirements(self):
+    def get_node_resources(self):
         templates = [self.template] if self.template else []
-        return requirements.Requirements(templates=templates)
+        return resources.Resources(templates=templates)
 
     def is_index(self) -> bool:
         """Returns True if the page is the index page for the parent Nav."""

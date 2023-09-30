@@ -13,7 +13,7 @@ from mkdocs.structure import files as files_
 
 from mknodes import mkdocsconfig, paths
 from mknodes.plugin import buildbackend, mkdocsbuilder, mkdocshelpers
-from mknodes.utils import mergehelpers, pathhelpers, requirements
+from mknodes.utils import mergehelpers, pathhelpers, resources
 
 
 logger = get_plugin_logger(__name__)
@@ -75,12 +75,12 @@ class MkDocsBackend(buildbackend.BuildBackend):
 
     def collect_css(self, css_files):
         for css in css_files:
-            if isinstance(css, requirements.CSSFile):
+            if isinstance(css, resources.CSSFile):
                 file_path = paths.RESOURCES / css
                 css_text = file_path.read_text()
                 path = f"{hash(css_text)}.css"
                 self.add_css_file(path, css_text)
-            elif isinstance(css, requirements.CSSText):
+            elif isinstance(css, resources.CSSText):
                 self.add_css_file(css.filename, css.content)
             else:
                 logger.debug("Adding remote CSS file %s", css)

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
+from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -13,7 +13,7 @@ class MkMaterialBadge(mknode.MkNode):
     """Node for a CSS-based badge a la MkDocs-Material."""
 
     ICON = "simple/shieldsdotio"
-    CSS = [requirements.CSSFile("css/materialbadge.css")]
+    CSS = [resources.CSSFile("css/materialbadge.css")]
 
     def __init__(
         self,

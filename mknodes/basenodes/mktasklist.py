@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 class MkTask(mkcontainer.MkContainer):
     """Node for a single task listitem."""
 
-    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.tasklist")]
+    REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.tasklist")]
     ICON = "material/library"
 
     def __init__(
@@ -45,7 +45,7 @@ class MkTask(mkcontainer.MkContainer):
 class MkTaskList(mkcontainer.MkContainer):
     """Node for task lists."""
 
-    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.tasklist")]
+    REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.tasklist")]
     ICON = "material/library"
 
     def __init__(

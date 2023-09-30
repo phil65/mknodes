@@ -9,7 +9,7 @@ from mknodes.basenodes import mktext
 from mknodes.info import yamlfile
 from mknodes.navs import mknav
 from mknodes.pages import metadata, mkpage
-from mknodes.utils import requirements
+from mknodes.utils import resources
 
 
 @dataclasses.dataclass(frozen=True)
@@ -86,14 +86,14 @@ class MkBlog(mknav.MkNav):
         author = Author(name=name, description=description, avatar=avatar)
         self.authors[username] = author
 
-    def get_node_requirements(self):
+    def get_node_resources(self):
         authors_file = yamlfile.YamlFile()
         dct = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
         authors_file._data["authors"] = dct
         content = authors_file.serialize("yaml")
-        return requirements.Requirements(
+        return resources.Resources(
             assets=[
-                requirements.Asset("blog/.authors.yml", content, target="docs_dir"),
+                resources.Asset("blog/.authors.yml", content, target="docs_dir"),
             ],
         )
 

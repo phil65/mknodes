@@ -4,7 +4,7 @@ from collections.abc import Sequence
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.info import linkprovider
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -14,7 +14,7 @@ class MkList(mkcontainer.MkContainer):
     """Node for showing a formatted list."""
 
     ICON = "octicons/list-unordered-24"
-    REQUIRED_EXTENSIONS = [requirements.Extension("def_list")]
+    REQUIRED_EXTENSIONS = [resources.Extension("def_list")]
 
     def __init__(
         self,

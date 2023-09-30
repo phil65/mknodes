@@ -7,7 +7,7 @@ from mknodes import project
 from mknodes.data import datatypes
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers, requirements
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -94,16 +94,16 @@ class Theme:
         )
         self.admonitions.append(adm)
 
-    def get_requirements(self) -> requirements.Requirements:
-        req: list[requirements.CSSLink | requirements.CSSFile | requirements.CSSText] = []
+    def get_resources(self) -> resources.Resources:
+        req: list[resources.CSSLink | resources.CSSFile | resources.CSSText] = []
         if self.css_template and (proj := self.associated_project):
             tmpl_ctx = self.get_template_context()
             css_text = proj.context.env.render_template(
                 self.css_template,
                 variables=tmpl_ctx,
             )
-            req = [requirements.CSSText("mknodes_theme.css", css_text)]
-        return requirements.Requirements(css=req, templates=list(self.templates))
+            req = [resources.CSSText("mknodes_theme.css", css_text)]
+        return resources.Resources(css=req, templates=list(self.templates))
 
     def get_template_context(self):
         """Return variables used to resolve the CSS template.

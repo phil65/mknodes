@@ -14,7 +14,7 @@ import mknodes
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
 from mknodes.jinja import environment
-from mknodes.utils import log, requirements, superdict
+from mknodes.utils import log, resources, superdict
 
 
 logger = log.get_logger(__name__)
@@ -101,10 +101,10 @@ class BuildContext(Context):
 
     page_mapping: dict = dataclasses.field(default_factory=dict)
     """A dictionary mapping all page filenames to the corresponding MkPages."""
-    requirements: requirements.Requirements = dataclasses.field(
-        default_factory=requirements.Requirements,
+    resources: resources.Resources = dataclasses.field(
+        default_factory=resources.Resources,
     )
-    """All requirements (JS, CSS, extensions) inferred from the build."""
+    """All resources (JS, CSS, extensions) inferred from the build."""
     node_stats: list[NodeBuildStats] = dataclasses.field(default_factory=list)
     """Some stats about nodes construction."""
     build_files: dict = dataclasses.field(default_factory=dict)
@@ -281,7 +281,7 @@ class ProjectContext(Context):
             load_templates=True,
         ),
     )
-    # requirements: Requirements = dataclasses.field(default_factory=Requirements)
+    # resources: Resources = dataclasses.field(default_factory=Resources)
     # pyproject: pyproject.PyProject = dataclasses.field(
     #     default_factory=pyproject.PyProject,
     # )
@@ -291,7 +291,7 @@ class ProjectContext(Context):
             metadata=self.metadata,
             git=self.git,
             github=self.github,
-            # requirements=dict(self.requirements),
+            # resources=dict(self.resources),
             theme=self.theme,
             links=self.links,
         )
@@ -345,7 +345,7 @@ default_project_context = ProjectContext(
     theme=default_theme_context,
     links=linkprovider.LinkProvider(),
     env=environment.Environment(undefined="strict", load_templates=True),
-    # requirements=Requirements(),
+    # resources=Resources(),
 )
 
 

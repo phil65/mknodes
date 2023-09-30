@@ -11,7 +11,7 @@ from mknodes.basenodes import (
     mktext,
 )
 from mknodes.data import datatypes
-from mknodes.utils import inspecthelpers, log, reprhelpers, requirements
+from mknodes.utils import inspecthelpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -28,9 +28,9 @@ class MkCommentedCode(mkcontainer.MkContainer):
     STATUS = "new"
 
     REQUIRED_EXTENSIONS = [
-        requirements.Extension("pymdownx.highlight"),
-        requirements.Extension("pymdownx.snippets"),
-        requirements.Extension("pymdownx.superfences"),
+        resources.Extension("pymdownx.highlight"),
+        resources.Extension("pymdownx.snippets"),
+        resources.Extension("pymdownx.superfences"),
     ]
 
     def __init__(

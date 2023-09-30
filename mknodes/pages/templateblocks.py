@@ -5,7 +5,7 @@ from typing import Literal
 from markdown import markdown
 
 from mknodes.basenodes import mknode
-from mknodes.utils import css, requirements
+from mknodes.utils import css, resources
 
 
 BlockStr = Literal[
@@ -106,13 +106,13 @@ class LibsBlock(Block):
 
     def __init__(
         self,
-        scripts: list[requirements.JSFile | requirements.JSLink] | None = None,
+        scripts: list[resources.JSFile | resources.JSLink] | None = None,
         include_super: bool = True,
     ):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: requirements.JSFile | requirements.JSLink):
+    def add_script_file(self, script: resources.JSFile | resources.JSLink):
         self.scripts.append(script)
 
     def __bool__(self):
@@ -142,18 +142,18 @@ class StylesBlock(Block):
 
     def __init__(
         self,
-        styles: list[requirements.CSSLink | requirements.RawCSS] | None = None,
+        styles: list[resources.CSSLink | resources.RawCSS] | None = None,
         include_super: bool = True,
     ):
         self.include_super = include_super
         self.styles = styles or []
 
-    def add_stylesheet(self, stylesheet: requirements.CSSLink):
+    def add_stylesheet(self, stylesheet: resources.CSSLink):
         self.styles.append(stylesheet)
 
     def add_css(self, css_dict: dict):
         css_obj = css.CSS(css_dict)
-        self.styles.append(requirements.RawCSS(str(css_obj)))
+        self.styles.append(resources.RawCSS(str(css_obj)))
 
     def __bool__(self):
         return bool(self.styles)

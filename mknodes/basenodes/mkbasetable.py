@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -16,7 +16,7 @@ class MkBaseTable(mkcontainer.MkContainer):
     Subclasses can use other mechanisms for the rendering, like external libraries.
     """
 
-    REQUIRED_EXTENSIONS = [requirements.Extension("tables")]
+    REQUIRED_EXTENSIONS = [resources.Extension("tables")]
     ICON = "octicons/table-24"
 
     def __init__(

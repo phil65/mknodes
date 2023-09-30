@@ -28,12 +28,10 @@ STEP_6 = (
     "(using literate-nav-style SUMMARY.md files to describe the hierarchy)"
 )
 STEP_7 = (
-    "### Collect requirements\n"
+    "### Collect resources\n"
     "Gather information from the nodes about required Extensions / CSS / JavaScript"
 )
-STEP_8 = (
-    "### Build project config\nMerge node requirements with provided MkDocs config file"
-)
+STEP_8 = "### Build project config\nMerge node resources with provided MkDocs config file"
 STEP_9 = (
     "### Menu generation\nLet mkdocs-literate-nav populate the Navigation based on"
     " generated SUMMARY.mds"

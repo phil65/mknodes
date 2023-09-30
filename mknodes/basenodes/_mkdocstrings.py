@@ -7,7 +7,7 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import classhelpers, log, reprhelpers, requirements
+from mknodes.utils import classhelpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -16,7 +16,7 @@ logger = log.get_logger(__name__)
 class MkDocStrings(mknode.MkNode):
     """Docstring section (powered by mkdocstrings)."""
 
-    REQUIRED_PLUGINS = [requirements.Plugin("mkdocstrings")]
+    REQUIRED_PLUGINS = [resources.Plugin("mkdocstrings")]
     OPTIONS_DEFAULT: dict[str, Any] = {}
     ICON = "material/api"
 

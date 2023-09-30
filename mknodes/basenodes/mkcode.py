@@ -10,7 +10,7 @@ from typing import Any, Self
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers, requirements
+from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -21,13 +21,13 @@ class MkCode(mkcontainer.MkContainer):
 
     ICON = "material/code-json"
     REQUIRED_EXTENSIONS = [
-        requirements.Extension(
+        resources.Extension(
             "pymdownx.highlight",
             anchor_linenums=True,
             line_spans="__span",
             pygments_lang_class=True,
         ),
-        requirements.Extension("pymdownx.superfences"),
+        resources.Extension("pymdownx.superfences"),
     ]
 
     def __init__(

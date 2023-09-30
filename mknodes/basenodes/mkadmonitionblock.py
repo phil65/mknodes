@@ -4,7 +4,7 @@ from typing import Any, get_args
 
 from mknodes.basenodes import mkblock, mknode
 from mknodes.data import datatypes
-from mknodes.utils import helpers, log, reprhelpers, requirements
+from mknodes.utils import helpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -14,7 +14,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
     """Pymdownx-based Admonition Block."""
 
     ICON = "octicons/info-16"
-    REQUIRED_EXTENSIONS = [requirements.Extension("pymdownx.blocks.admonition")]
+    REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.blocks.admonition")]
 
     def __init__(
         self,

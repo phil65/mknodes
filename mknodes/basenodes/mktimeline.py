@@ -4,7 +4,7 @@ from typing import Any, Literal
 from xml.etree import ElementTree as Et
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
+from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -87,11 +87,11 @@ class MkTimeline(mkcontainer.MkContainer):
 
     ICON = "material/timeline"
     JS_FILES = [
-        requirements.JSLink(JQUERY_LINK),
-        requirements.JSLink(SCROLLREVEAL_LINK),
-        requirements.JSFile("js/timeline.js"),
+        resources.JSLink(JQUERY_LINK),
+        resources.JSLink(SCROLLREVEAL_LINK),
+        resources.JSFile("js/timeline.js"),
     ]
-    CSS = [requirements.CSSFile("css/timeline.css")]
+    CSS = [resources.CSSFile("css/timeline.css")]
     items: list[MkTimelineItem]
 
     def __init__(

@@ -66,4 +66,4 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
 if __name__ == "__main__":
     node = MkJinjaTemplate("nodes_index.jinja")
-    print(node.get_requirements())
+    print(node.get_resources())

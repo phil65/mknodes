@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mknodes.basenodes import mkbasetable
-from mknodes.utils import log, requirements
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 class MkTable(mkbasetable.MkBaseTable):
     """Class representing a formatted table."""
 
-    REQUIRED_EXTENSIONS = [requirements.Extension("tables")]
+    REQUIRED_EXTENSIONS = [resources.Extension("tables")]
 
     def _to_markdown(self) -> str:
         table_data = self.data  # property

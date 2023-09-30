@@ -10,7 +10,7 @@ from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
 from mknodes.treelib import node
-from mknodes.utils import log, requirements
+from mknodes.utils import log, resources
 
 
 if TYPE_CHECKING:
@@ -41,11 +41,11 @@ class MkNode(node.Node):
     # METADATA (should be set by subclasses)
 
     ICON = "material/puzzle-outline"
-    REQUIRED_EXTENSIONS: list[requirements.Extension] = []
-    REQUIRED_PLUGINS: list[requirements.Plugin] = []
+    REQUIRED_EXTENSIONS: list[resources.Extension] = []
+    REQUIRED_PLUGINS: list[resources.Plugin] = []
     STATUS: datatypes.PageStatusStr | None = None
-    CSS: list[requirements.CSSFile | requirements.CSSLink | requirements.CSSText] = []
-    JS_FILES: list[requirements.JSLink | requirements.JSFile] = []
+    CSS: list[resources.CSSFile | resources.CSSLink | resources.CSSText] = []
+    JS_FILES: list[resources.JSLink | resources.JSFile] = []
     children: list[MkNode]
     _context = contexts.ProjectContext()
     _name_registry: dict[str, MkNode] = dict()
@@ -270,18 +270,18 @@ class MkNode(node.Node):
         """
         self._css_classes.add(class_name)
 
-    def get_node_requirements(self) -> requirements.Requirements:
-        """Return the requirements specific for this node."""
+    def get_node_resources(self) -> resources.Resources:
+        """Return the resources specific for this node."""
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
-        return requirements.Requirements(
+        return resources.Resources(
             js=self.JS_FILES,
             markdown_extensions=extension,
             plugins=self.REQUIRED_PLUGINS,
             css=self.CSS,
         )
 
-    def get_requirements(self) -> requirements.Requirements:
-        """Return the "final" requirements object."""
+    def get_resources(self) -> resources.Resources:
+        """Return the "final" resources object."""
         nodes = [*list(self.descendants), self]
         extensions: dict[str, dict] = {
             "attr_list": {},
@@ -294,9 +294,9 @@ class MkNode(node.Node):
             ),
         }
 
-        req = requirements.Requirements(markdown_extensions=extensions)
+        req = resources.Resources(markdown_extensions=extensions)
         for _node in nodes:
-            node_req = _node.get_node_requirements()
+            node_req = _node.get_node_resources()
             req.merge(node_req)
         return req
 
@@ -336,11 +336,11 @@ class MkNode(node.Node):
         return cls(*args, **kwargs, project=proj)
 
     def to_html(self) -> str:
-        """Convert node to HTML using the requirements from node + children."""
+        """Convert node to HTML using the resources from node + children."""
         import markdown
 
         md = self.to_markdown()
-        reqs = self.get_requirements()
+        reqs = self.get_resources()
         configs = reqs.markdown_extensions
         exts = list(configs.keys())
         return markdown.Markdown(extensions=exts, extension_configs=configs).convert(md)

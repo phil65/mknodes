@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
+from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -22,8 +22,8 @@ class MkImageCompare(mknode.MkNode):
     """Node to show an Image comparison (using a slider)."""
 
     ICON = "material/image-off"
-    JS_FILES = [requirements.JSLink(JS_URL, defer=True)]
-    CSS = [requirements.CSSLink(CSS_URL)]
+    JS_FILES = [resources.JSLink(JS_URL, defer=True)]
+    CSS = [resources.CSSLink(CSS_URL)]
 
     def __init__(
         self,

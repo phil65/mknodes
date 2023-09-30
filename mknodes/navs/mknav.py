@@ -10,7 +10,7 @@ from mknodes.basenodes import mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata, mkpage, pagetemplate
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
@@ -31,8 +31,8 @@ class MkNav(mknode.MkNode):
 
     ICON = "material/navigation-outline"
     REQUIRED_PLUGINS = [
-        requirements.Plugin("literate_nav"),
-        requirements.Plugin("section_index"),
+        resources.Plugin("literate_nav"),
+        resources.Plugin("section_index"),
     ]
 
     def __init__(
@@ -84,9 +84,9 @@ class MkNav(mknode.MkNode):
     def __iter__(self):
         yield from self.nav.all_items
 
-    def get_node_requirements(self):
+    def get_node_resources(self):
         templates = [self.page_template] if self.page_template else []
-        return requirements.Requirements(templates=templates)
+        return resources.Resources(templates=templates)
 
     @property
     def index_page(self):

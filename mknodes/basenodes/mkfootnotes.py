@@ -6,7 +6,7 @@ import textwrap
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktext
-from mknodes.utils import log, reprhelpers, requirements
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -15,7 +15,7 @@ logger = log.get_logger(__name__)
 class MkFootNote(mkcontainer.MkContainer):
     """Represents a single footnote. It gets managed by an MkFootNotes node."""
 
-    REQUIRED_EXTENSIONS = [requirements.Extension("footnotes")]
+    REQUIRED_EXTENSIONS = [resources.Extension("footnotes")]
     STATUS = "new"
 
     def __init__(
@@ -48,7 +48,7 @@ class MkFootNotes(mkcontainer.MkContainer):
 
     items: list[MkFootNote]
     ICON = "octicons/list-ordered-16"
-    REQUIRED_EXTENSIONS = [requirements.Extension("footnotes")]
+    REQUIRED_EXTENSIONS = [resources.Extension("footnotes")]
 
     def __init__(
         self,

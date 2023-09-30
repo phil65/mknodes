@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkbinaryimage, mknode
-from mknodes.utils import log, reprhelpers, requirements, xmlhelpers as xml
+from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
 
 
 if TYPE_CHECKING:
@@ -51,7 +51,7 @@ class MkCard(mknode.MkNode):
 
     ICON = "material/square-medium"
     STATUS = "new"
-    CSS = [requirements.CSSFile("css/grid.css")]
+    CSS = [resources.CSSFile("css/grid.css")]
 
     def __init__(
         self,
