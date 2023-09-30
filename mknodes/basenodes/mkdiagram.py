@@ -95,7 +95,7 @@ class MkDiagram(mkcode.MkCode):
         return f"{self.graph_type} {self.direction}\n{self.mermaid_code}"
 
     @property
-    def mermaid_code(self):
+    def mermaid_code(self) -> str:
         lines = list(self.names)
         for connection in self.connections:
             if len(connection) == 2:  # noqa: PLR2004
