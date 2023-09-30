@@ -4,7 +4,7 @@ import abc
 import collections.abc
 import dataclasses
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 from mknodes import paths
 from mknodes.utils import mergehelpers, reprhelpers
@@ -176,17 +176,15 @@ class CSSFile:
 
 class TextResource:
     EXTENSION: str
-
-    def __init__(self, content: str, filename: str | None):
-        self.content = content
-        self._filename = filename
+    filename: str | None
+    content: str
 
     @property
-    def filename(self):
+    def resolved_filename(self):
         hashed = hash(self.content)
         return (
-            f"{self._filename.removesuffix(self.EXTENSION)}{hashed}{self.EXTENSION}"
-            if self._filename
+            f"{self.filename.removesuffix(self.EXTENSION)}{hashed}{self.EXTENSION}"
+            if self.filename
             else f"{hashed}{self.EXTENSION}"
         )
 
@@ -194,15 +192,26 @@ class TextResource:
         return hash(self.content)
 
     def __repr__(self):
-        return f"{type(self).__name__}({self.filename!r})"
+        return reprhelpers.dataclass_repr(self)
 
 
+@dataclasses.dataclass
 class CSSText(TextResource):
-    EXTENSION = ".css"
+    EXTENSION: ClassVar = ".css"
+    content: str
+    filename: str | None
 
 
+@dataclasses.dataclass
 class JSText(TextResource):
-    EXTENSION = ".js"
+    EXTENSION: ClassVar = ".js"
+    content: str
+    filename: str | None
+    defer: bool = False
+    async_: bool = False
+    crossorigin: Literal["anonymous", "use-credentials"] | None = None
+    typ: str = ""
+    is_library: bool = False
 
 
 class RawCSS:
@@ -306,9 +315,5 @@ JSType = JSFile | JSLink | JSText
 
 
 if __name__ == "__main__":
-    link = CSSLink("test")
-    print(repr(link))
-    req = Resources(css=[CSSText("CSS", "a.css")])
-    req2 = Resources(css=[CSSText("CSS2", "b.css")])
-    req.merge(req2)
-    print(req)
+    link = JSText("jkfdjl", "kfjdsdkljf", async_=True)
+    print(link)
