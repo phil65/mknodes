@@ -6,7 +6,7 @@ nav = mk.MkNav("MkPages")
 
 def create_page_section(root_nav: mk.MkNav):
     root_nav += nav
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_index_page()
     page += mk.MkJinjaTemplate("mkpage_index.jinja")
     page.created_by = create_page_section
 

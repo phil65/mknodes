@@ -1,1 +1,57 @@
-MkPages can also be loaded from files by using MkPage.from_file
+## General information
+
+MkPages are nodes which are children from MkNavs, and represent a single page from a website.
+A page can either be a regular page or an "index page" for an MkNav.
+An index page shows when clicking on a menu item with children, or for the website root.
+
+!!! info
+    Index pages need specific theme support (like [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) has) or the
+    [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index) plugin.
+
+## Page metadata
+
+MkPages have metadata attached, which can be set via the [MkPage.metadata][mknodes.pages.metadata.Metadata] attribute.
+Metadata is also inherited from the parent MkNavs in case they have metadata set.
+That metadata can alter the behaviour and appearance of given page. It can be used to
+show icons / subtitles in menus, to modify the search ranking, to set a reference to a Page template, and much more. (See the [Metadata][mknodes.pages.metadata.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.)
+
+## Page templates
+
+Each MkPage also carries a [PageTemplate][mknodes.pages.pagetemplate.PageTemplate], which can be used for more advanced modification of a page. For example, page templates can be used to put HTML / Markdown into other areas of the page than just the main content area, like the announcement bar or the site nav section.
+Like metadata, the templates also inherit from MkNavs, meaning that a [MkPage][mknodes.MkPage] will use the
+template of a parent [MkNav][mknodes.MkNav] if it has one defined.
+
+
+## Using MkPages
+
+MkPages can get created in many ways. You can simply use the constructor and add the page
+to an MkNav, you can create MkPages by using the [nav.route.page][mknodes.navs.navrouter.NavRouter.page] decorator, by
+using [MkNav.add_page][mknodes.MkNav.add_page] / [MkNav.add_index_page][mknodes.MkNav.add_index_page], by using the alternative constructor [MkPage.from_file][mknodes.MkPage.from_file], or by using "batch operations" like [nav.parse.folder][mknodes.navs.navparser.NavParser.folder] and similar.
+
+
+Like many other nodes, MkPages inherits from [MkContainer][mknodes.MkContainer] and looks to the outside world like a list, meaning you can add nodes to them by using `+=`, [MkPage.append][mknodes.MkPage.append] or [MkPage.insert][mknodes.MkPage.insert]
+
+
+Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node attached which can be used to easily add footnotes to a page.
+
+## Build process
+
+During the build process, all Markdown nodes which are part of an [MkPage][mknodes.MkPage] get collected and scanned for required resources like CSS / JS / static assets. If appropriate, these resources then automatically get inserted into the Page template and end up in the HTML header.
+
+
+The final URL of an [MkPage][mknodes.MkPage] is determined by its position inside the tree and gets calculated
+when the tree gets "serialized" into markdown. The HTML filename is inferred from the Page
+title in case no specific path is given.
+
+
+MkPages do **NOT**  inherit from [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) objects or are in any way connected to them.
+In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an `MkNodes` tree or anything else in this library, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin.
+
+
+During the build process, MkPages get serialized to Markdown and are put into the build folder, where [MkDocs](https://www.mkdocs.org) picks the files up and creates [MkDocs](https://www.mkdocs.org) Page objects in following steps.
+
+
+## Template MkPages
+`MkNodes` also contains two special subclasses of [MkPage][mknodes.MkPage], [MkModulePage][mknodes.MkModulePage] and [MkClassPage][mknodes.MkClassPage].
+They get used by the automatic API generator node named [MkDoc][mknodes.MkDoc] and contain a jinja template used to create an API / info page for given module / class.
+

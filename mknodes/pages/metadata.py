@@ -18,7 +18,8 @@ class Metadata(dict):
     """The Metadata class is a subclassed Python dictionary.
 
     It is enhanced with properties for common metadata fields in order
-    to get proper type hints.
+    to get proper type hints. Since this object is a dict subclass, you can of
+    course also add any non-documented stuff to the Metadata.
     """
 
     def __init__(self, *args, **kwargs):
@@ -160,6 +161,7 @@ class Metadata(dict):
 
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
+        """Parse given text for metadata and return a (Metadata, Rest-from-text) tuple."""
         text, metadata = meta.get_data(text)
         return cls(**metadata), text
 
@@ -168,6 +170,7 @@ class Metadata(dict):
         return yamlhelpers.dump_yaml(dct) if dct else ""
 
     def as_page_header(self) -> str:
+        """Format metadata in Page header format (with --- separators)."""
         text = str(self)
         return HEADER.format(options=text) if text else ""
 

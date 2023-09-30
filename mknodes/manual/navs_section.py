@@ -59,7 +59,6 @@ def _(nav: mk.MkNav):
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
     mknodes_docs = nav.add_doc(
         module=mk,
-        filter_by___all__=True,
         class_page="docs/classpage_custom.jinja",
     )
     # now we collect the stuff we want to document.
