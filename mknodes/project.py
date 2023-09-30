@@ -6,7 +6,7 @@ import pathlib
 
 from typing import Any, Generic, TypeVar
 
-from mknodes import buildcollector, paths
+from mknodes import paths
 from mknodes.info import contexts, folderinfo, linkprovider, packageregistry
 from mknodes.jinja import environment
 from mknodes.navs import mknav
@@ -92,12 +92,7 @@ class Project(Generic[T]):
             if hasattr(node, "resolved_file_path")
         ]
         self.linkprovider.set_excludes(paths)
-
         self.env.globals |= self.context.as_dict()
-        collector = buildcollector.BuildCollector(show_page_info=show_page_info)
-        ctx = collector.collect(self._root, self.theme)
-        self.env.globals |= ctx.as_dict()
-        return ctx
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))

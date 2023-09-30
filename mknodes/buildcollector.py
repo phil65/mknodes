@@ -4,11 +4,17 @@ import collections
 import itertools
 import pathlib
 
+from typing import TYPE_CHECKING
+
 import mknodes as mk
 
 from mknodes.info import contexts
-from mknodes.theme import theme as theme_
 from mknodes.utils import log, requirements
+
+
+if TYPE_CHECKING:
+    from mknodes.plugin import buildbackend
+    from mknodes.theme import theme as theme_
 
 
 logger = log.get_logger(__name__)
@@ -40,12 +46,18 @@ def add_page_info(page: mk.MkPage, req: requirements.Requirements):
 class BuildCollector:
     """A class to assist in extracting build stuff from a Node tree + Theme."""
 
-    def __init__(self, show_page_info: bool = False):
+    def __init__(
+        self,
+        backends: list[buildbackend.BuildBackend],
+        show_page_info: bool = False,
+    ):
         """Constructor.
 
         Arguments:
+            backends: A list of backends which should be used for building
             show_page_info: Add a admonition box containing page build info to each page
         """
+        self.backends = backends
         self.show_page_info = show_page_info
         self.node_files: dict[str, str | bytes] = {}
         self.extra_files: dict[str, str | bytes] = {}
@@ -75,11 +87,15 @@ class BuildCollector:
         self.requirements.merge(reqs)
         logger.debug("Adapting collected extensions to theme...")
         theme.adapt_extensions(self.requirements.markdown_extensions)
+        build_files = self.node_files | self.extra_files
+        for backend in self.backends:
+            logger.info("%s: Collecting data..", type(self).__name__)
+            backend.collect(build_files, self.requirements)
         return contexts.BuildContext(
             page_mapping=self.mapping,
             requirements=self.requirements,
             node_counter=self.node_counter,
-            build_files=self.node_files | self.extra_files,
+            build_files=build_files,
         )
 
     def collect_page(self, page: mk.MkPage):
@@ -136,6 +152,6 @@ if __name__ == "__main__":
     log.basic()
     root.build(project)
     if project._root:
-        collector = BuildCollector()
+        collector = BuildCollector([])
         ctx = collector.collect(project._root, project.theme)
         print(ctx)

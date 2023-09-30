@@ -12,7 +12,7 @@ from mkdocs import livereload
 
 from mkdocs.plugins import BasePlugin, get_plugin_logger
 
-from mknodes import mkdocsconfig, project
+from mknodes import buildcollector, mkdocsconfig, project
 from mknodes.pages import mkpage
 from mknodes.plugin import linkreplacer, markdownbackend, mkdocsbackend, pluginconfig
 from mknodes.theme import theme
@@ -64,13 +64,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             build_kwargs=self.config.kwargs,
             clone_depth=self.config.clone_depth,
         )
-        logger.info("Generating pages...")
-        self.build_info = self.project.build(self.config.show_page_info)
-        # now we add our stuff to the MkDocs build environment
-        cfg = mkdocsconfig.Config(config)
-
-        logger.info("Updating MkDocs config metadata...")
-        cfg.update_from_context(self.project.context)
 
     def on_files(self, files: Files, config: MkDocsConfig) -> Files:
         """Create the node tree and write files to build folder.
@@ -85,6 +78,14 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
         if not self.config.build_fn:
             return files
 
+        logger.info("Generating pages...")
+        self.project.build()
+        # now we add our stuff to the MkDocs build environment
+        cfg = mkdocsconfig.Config(config)
+
+        logger.info("Updating MkDocs config metadata...")
+        cfg.update_from_context(self.project.context)
+
         logger.info("Setting up build backends...")
         mkdocs_backend = mkdocsbackend.MkDocsBackend(
             files=files,
@@ -96,11 +97,12 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             directory=pathlib.Path(config.site_dir) / "src",
             extension=".original",
         )
-        self.backends = [mkdocs_backend, markdown_backend]
-
-        for backend in self.backends:
-            logger.info("%s: Collecting data..", type(self).__name__)
-            backend.collect(self.build_info.build_files, self.build_info.requirements)
+        collector = buildcollector.BuildCollector(
+            backends=[mkdocs_backend, markdown_backend],
+            show_page_info=self.config.show_page_info,
+        )
+        assert self.project._root
+        self.build_info = collector.collect(self.project._root, self.project.theme)
         return mkdocs_backend.files
 
     def on_nav(
@@ -150,17 +152,6 @@ class MkNodesPlugin(BasePlugin[pluginconfig.PluginConfig]):
             return markdown
         markdown = node.env.render_string(markdown)
         return self.link_replacer.replace(markdown, page.file.src_uri)
-
-    # def on_page_context(
-    #     self,
-    #     context: TemplateContext,
-    #     *,
-    #     page: Page,
-    #     config: MkDocsConfig,
-    #     nav: Navigation,
-    # ) -> TemplateContext | None:
-    #     """Also add our info stuff to the MkDocs jinja context."""
-    #     return context
 
     def on_post_build(self, config: MkDocsConfig):
         """Delete the temporary template files."""
