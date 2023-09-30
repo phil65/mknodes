@@ -56,7 +56,7 @@ html, body {
   width: 45%;
   padding: 10px 30px;
   border-radius: 4px;
-  background: var(--md-primary-bg-color--light);
+  background: {{ theme.css_primary_bg_light }};
   box-shadow: 0 20px 25px -15px rgba(0, 0, 0, 0.3);
 }
 .timeline-content::after {
@@ -74,7 +74,7 @@ html, body {
 .timeline-img {
   width: 30px;
   height: 30px;
-  background: var(--md-primary-fg-color);
+  background: {{ theme.css_primary_fg }};
   border-radius: 50%;
   position: absolute;
   left: 50%;
@@ -83,7 +83,7 @@ html, body {
 }
 
 .timeline a {
-  background: var(--md-primary-fg-color);
+  background: {{ theme.css_primary_fg }};
   color: #FFFFFF;
   padding: 8px 20px;
   text-transform: uppercase;
@@ -95,7 +95,7 @@ html, body {
   box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.6);
 }
 .timeline a:hover, .timeline a:active, .timeline a:focus {
-  background: var(--md-accent-fg-color);
+  background: {{ theme.css_accent_fg }};
   color: #FFFFFF;
   text-decoration: none;
 }
@@ -123,7 +123,7 @@ html, body {
 }
 
 .date {
-  background: var(--md-primary-fg-color);
+  background: {{ theme.css_primary_fg }};
   display: inline-block;
   color: #FFFFFF;
   padding: 10px;

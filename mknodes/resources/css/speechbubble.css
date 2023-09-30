@@ -1,8 +1,8 @@
 .speech {
    font-size: 1.1em;
-  color: var(--md-primary-fg-color);
-  background: var(--md-primary-bg-color--light);
-  border-color: var(--md-primary-fg-color);
+  color: {{ theme.css_primary_fg }};
+  background: {{ theme.css_primary_bg_light }};
+  border-color: {{ theme.css_primary_fg }};
   position: relative;
   padding: 20px;
   border-radius: 10px;
@@ -17,28 +17,28 @@
 }
 
 .bottom.speech::after {
-  border-top-color: var(--md-primary-fg-color);
+  border-top-color: {{ theme.css_primary_fg }};
   border-bottom: 0;
   bottom: -20px; left: 50%;
   margin-left: -20px;
 }
 
 .top.speech::after {
-  border-bottom-color: var(--md-primary-fg-color);
+  border-bottom-color: {{ theme.css_primary_fg }};
   border-top: 0;
   top: -20px; left: 50%;
   margin-left: -20px;
 }
 
 .left.speech::after {
-  border-right-color: var(--md-primary-fg-color);
+  border-right-color: {{ theme.css_primary_fg }};
   border-left: 0;
   left: -20px; top: 50%;
   margin-top: -20px;
 }
 
 .right.speech::after {
-  border-left-color: var(--md-primary-fg-color);
+  border-left-color: {{ theme.css_primary_fg }};
   border-right: 0;
   right: -20px; top: 50%;
   margin-top: -20px;

@@ -60,6 +60,14 @@ class ThemeContext(Context):
     """Primary text color."""
     data: dict[str, str] = dataclasses.field(default_factory=dict)
     """Additional data of the theme."""
+    admonitions: list = dataclasses.field(default_factory=list)
+    css_primary_fg: str = ""
+    css_primary_fg_transparent: str = ""
+    css_primary_bg: str = ""
+    css_primary_bg_light: str = ""
+    css_accent_fg: str = ""
+    css_accent_fg_transparent: str = ""
+    css_accent_bg: str = ""
 
 
 # @dataclasses.dataclass

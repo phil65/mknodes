@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import MutableMapping
 import dataclasses
 
+from typing import Any
+
 from mknodes import project
 from mknodes.data import datatypes
 from mknodes.info import contexts
@@ -105,7 +107,7 @@ class Theme:
             req = [resources.CSSText(css_text, filename="mknodes_theme.css")]
         return resources.Resources(css=req, templates=list(self.templates))
 
-    def get_template_context(self):
+    def get_template_context(self) -> dict[str, Any]:
         """Return variables used to resolve the CSS template.
 
         Can be overridden by subclasses.
@@ -114,6 +116,13 @@ class Theme:
             admonitions=self.admonitions,
             primary_color=self.primary_color,
             text_color=self.text_color,
+            css_primary_fg=self.text_color,
+            css_primary_fg_transparent=self.text_color,
+            css_primary_bg=self.primary_color,
+            css_primary_bg_light=self.primary_color,
+            css_accent_fg=self.text_color,
+            css_accent_fg_transparent=self.text_color,
+            css_accent_bg=self.primary_color,
         )
 
     @classmethod
@@ -139,7 +148,7 @@ class Theme:
 
         Can be overridden by subclasses.
         """
-        return "#5555BB"
+        return "#2fa4e7"
 
     @property
     def text_color(self) -> str:
@@ -147,15 +156,24 @@ class Theme:
 
         Can be overridden by subclasses.
         """
-        return "#000000"
+        return "#333333"
 
     @property
     def context(self):
+        ctx = self.get_template_context()
         return contexts.ThemeContext(
             name=self.theme_name,
             data=self.data,
             primary_color=self.primary_color,
             text_color=self.text_color,
+            admonitions=self.admonitions,
+            css_primary_fg=ctx["css_primary_fg"],
+            css_primary_fg_transparent=ctx["css_primary_fg_transparent"],
+            css_primary_bg=ctx["css_primary_bg"],
+            css_primary_bg_light=ctx["css_primary_bg_light"],
+            css_accent_fg=ctx["css_accent_fg"],
+            css_accent_fg_transparent=ctx["css_accent_fg_transparent"],
+            css_accent_bg=ctx["css_accent_bg"],
         )
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):

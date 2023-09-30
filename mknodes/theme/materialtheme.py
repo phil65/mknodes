@@ -5,7 +5,7 @@ import dataclasses
 import functools
 import pathlib
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
@@ -78,6 +78,7 @@ class MaterialTheme(theme.Theme):
         self._foreground_color = None
         self.show_annotation_numbers = False
         self.classic_admonition_style = True
+        self.alternating_table_colors = False
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None
         self.default_icons = {}
@@ -87,11 +88,12 @@ class MaterialTheme(theme.Theme):
         self.color_theme = None
         super().__init__(self.name, **kwargs)
 
-    def get_template_context(self):
+    def get_template_context(self) -> dict[str, Any]:
         return dict(
             admonitions=self.admonitions,
             show_annotation_numbers=self.show_annotation_numbers,
             classic_admonition_style=self.classic_admonition_style,
+            alternating_table_colors=self.alternating_table_colors,
             tooltip_width=self.tooltip_width,
             content_area_width=self.content_area_width,
             default_icons=self.default_icons,
@@ -99,6 +101,13 @@ class MaterialTheme(theme.Theme):
             accent_fg_color=self.accent_fg_color,
             primary_bg_color=self.primary_bg_color,
             color_theme=self.color_theme,
+            css_primary_fg="var(--md-primary-fg-color)",
+            css_primary_fg_transparent="var(--md-primary-fg-color--transparent)",
+            css_primary_bg="var(--md-primary-bg-color)",
+            css_primary_bg_light="var(--md-primary-bg-color--light)",
+            css_accent_fg="var(--md-accent-fg-color)",
+            css_accent_fg_transparent="var(--md-accent-fg-color--transparent)",
+            css_accent_bg="var(--md-accent-bg-color)",
         )
 
     def __repr__(self):

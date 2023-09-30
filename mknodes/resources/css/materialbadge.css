@@ -35,7 +35,7 @@
     border-bottom-right-radius: .1rem;
 }
 .md-typeset .mdx-badge__icon {
-    background: var(--md-accent-fg-color--transparent);
+    background: {{ theme.css_accent_fg_transparent }};
     padding: .2rem;
 }
 .md-typeset .mdx-badge__icon:last-child {
@@ -54,6 +54,6 @@
     border-bottom-left-radius: .1rem;
 }
 .md-typeset .mdx-badge__text {
-    box-shadow: 0 0 0 1px inset var(--md-accent-fg-color--transparent);
+    box-shadow: 0 0 0 1px inset {{ theme.css_accent_fg_transparent }};
     padding: .2rem .3rem;
 }
