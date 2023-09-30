@@ -14,6 +14,29 @@ from mknodes.utils import log, requirements
 logger = log.get_logger(__name__)
 
 
+def add_page_info(page: mk.MkPage, req: requirements.Requirements):
+    adm = mk.MkAdmonition([], title="Page info", typ="theme", collapsible=True)
+
+    if page.created_by:
+        typ = "section" if page.is_index() else "page"
+        code = mk.MkCode.for_object(page.created_by)
+        title = f"Code for this {typ}"
+        details = mk.MkAdmonition(code, title=title, collapsible=True, typ="quote")
+        adm += details
+
+    title = "Requirements"
+    pretty = mk.MkPrettyPrint(req)
+    details = mk.MkAdmonition(pretty, title=title, collapsible=True, typ="quote")
+    adm += details
+
+    title = "Metadata"
+    code = mk.MkCode(str(page.metadata), language="yaml")
+    details = mk.MkAdmonition(code, title=title, collapsible=True, typ="quote")
+    adm += details
+
+    page += adm
+
+
 class BuildCollector:
     """A class to assist in extracting build stuff from a Node tree + Theme."""
 
@@ -39,8 +62,7 @@ class BuildCollector:
         """
         logger.debug("Collecting theme requirements...")
         iterator = itertools.chain(theme.iter_nodes(), root.iter_nodes())
-        nodes = [i[1] for i in iterator]
-        for node in nodes:
+        for _, node in iterator:
             self.node_counter.update([node.__class__.__name__])
             self.extra_files |= node.files
             match node:
@@ -85,29 +107,7 @@ class BuildCollector:
                     page.template.extends = parent_path
                     break
         if self.show_page_info:
-            adm = mk.MkAdmonition([], title="Page info", typ="theme", collapsible=True)
-
-            if page.created_by:
-                typ = "section" if page.is_index() else "page"
-                details = mk.MkAdmonition(
-                    mk.MkCode.for_object(page.created_by),
-                    title=f"Code for this {typ}",
-                    collapsible=True,
-                    typ="quote",
-                )
-                adm += details
-
-            title = "Requirements"
-            pretty = mk.MkPrettyPrint(req)
-            details = mk.MkAdmonition(pretty, title=title, collapsible=True, typ="quote")
-            adm += details
-
-            title = "Metadata"
-            code = mk.MkCode(str(page.metadata), language="yaml")
-            details = mk.MkAdmonition(code, title=title, collapsible=True, typ="quote")
-            adm += details
-
-            page += adm
+            add_page_info(page, req)
         md = page.to_markdown()
         self.node_files[path] = md
 

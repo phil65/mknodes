@@ -86,14 +86,11 @@ class Project(Generic[T]):
         if not self._root:
             msg = "No root for project created."
             raise RuntimeError(msg)
-
-        mapping = {
-            node.resolved_file_path: node
+        paths = [
+            pathlib.Path(node.resolved_file_path).stem
             for _level, node in self._root.iter_nodes()
             if hasattr(node, "resolved_file_path")
-        }
-
-        paths = [pathlib.Path(i).stem for i in mapping]
+        ]
         self.linkprovider.set_excludes(paths)
 
         self.env.globals |= self.context.as_dict()
