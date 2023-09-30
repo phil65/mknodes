@@ -43,6 +43,40 @@ def add_page_info(page: mk.MkPage, req: requirements.Requirements):
     page += adm
 
 
+def update_page_template(page: mk.MkPage):
+    if page.template:
+        node_path = pathlib.Path(page.resolved_file_path)
+    elif any(i.page_template for i in page.parent_navs):
+        nav = next(i for i in page.parent_navs if i.page_template)
+        node_path = pathlib.Path(nav.resolved_file_path)
+    else:
+        node_path = None
+    if node_path:
+        html_path = node_path.with_suffix(".html").as_posix()
+        page._metadata.template = html_path
+        page.template.filename = html_path
+        if extends := _get_extends_from_parent(page):
+            page.template.extends = extends
+
+
+def update_nav_template(nav: mk.MkNav):
+    if nav.page_template:
+        path = pathlib.Path(nav.resolved_file_path)
+        html_path = path.with_suffix(".html").as_posix()
+        nav.metadata.template = html_path
+        nav.page_template.filename = html_path
+        if extends := _get_extends_from_parent(nav):
+            nav.page_template.extends = extends
+
+
+def _get_extends_from_parent(node: mk.MkPage | mk.MkNav):
+    for nav in node.parent_navs:
+        if nav.page_template:
+            p = pathlib.Path(nav.resolved_file_path)
+            return p.with_suffix(".html").as_posix()
+    return None
+
+
 class BuildCollector:
     """A class to assist in extracting build stuff from a Node tree + Theme."""
 
@@ -105,23 +139,7 @@ class BuildCollector:
         self.mapping[path] = page
         req = page.get_requirements()
         self.requirements.merge(req)
-        if page.template:
-            node_path = pathlib.Path(path)
-        elif any(i.page_template for i in page.parent_navs):
-            nav = next(i for i in page.parent_navs if i.page_template)
-            node_path = pathlib.Path(nav.resolved_file_path)
-        else:
-            node_path = None
-        if node_path:
-            html_path = node_path.with_suffix(".html").as_posix()
-            page._metadata.template = html_path
-            page.template.filename = html_path
-            for nav in page.parent_navs:
-                if nav.page_template:
-                    p = pathlib.Path(nav.resolved_file_path)
-                    parent_path = p.with_suffix(".html").as_posix()
-                    page.template.extends = parent_path
-                    break
+        update_page_template(page)
         if self.show_page_info:
             add_page_info(page, req)
         md = page.to_markdown()
@@ -131,16 +149,7 @@ class BuildCollector:
         logger.info("Processing section %r...", nav.section)
         path = nav.resolved_file_path
         self.mapping[path] = nav
-        if nav.page_template:
-            html_path = pathlib.Path(path).with_suffix(".html").as_posix()
-            for parent_nav in nav.parent_navs:
-                if parent_nav.page_template:
-                    p = pathlib.Path(parent_nav.resolved_file_path)
-                    parent_path = p.with_suffix(".html").as_posix()
-                    nav.page_template.extends = parent_path
-                    break
-            nav.metadata.template = html_path
-            nav.page_template.filename = html_path
+        update_nav_template(nav)
         md = nav.to_markdown()
         self.node_files[path] = md
 
