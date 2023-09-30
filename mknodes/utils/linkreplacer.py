@@ -6,12 +6,10 @@ import collections
 import re
 import urllib.parse
 
-from mkdocs.plugins import get_plugin_logger
-
-from mknodes.utils import helpers
+from mknodes.utils import helpers, log
 
 
-logger = get_plugin_logger(__name__)
+logger = log.get_logger(__name__)
 
 
 # For Regex, match groups are:

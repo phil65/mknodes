@@ -25,10 +25,13 @@ dependencies = [
     "pytest-responsemock",
 
     # Docs
+    "mkdocs >=1.5",
+    "mkdocs_mknodes",
+    "mkdocs-literate-nav",
     "pymdown-extensions",
     "markdown-exec[ansi]",
-    "mkdocs-click",
     "pygments",
+    "mkdocs-click",
     "pydeps",
 
     # Material Social addon
@@ -104,13 +107,9 @@ keywords = [
 requires-python = ">=3.11"
 dependencies = [
     # MkDocs
-    "mkdocs >=1.5",
-    "mkdocs-literate-nav",
     "mkdocs-material >= 9.4",
-    "mkdocstrings[python]",
 
     # Git(Hub)
-    "git-changelog",
     "gitpython",
     "pygithub>=2.0.dev0",
 
@@ -123,26 +122,21 @@ dependencies = [
     "requests",
     "requests_cache",
 
-    # CLI
-    "rich",
-    "typer",
-
     # Tools
     "jinja2",
     "griffe",
     "fsspec",
     "deepmerge",
     "coloraide",
+    "rich",
+
+    # TODO: make these optional
     "anybadge",
     "pipdeptree",
+    "git-changelog",
+    "mkdocstrings[python]",
 ]
 license = "MIT"
-
-[project.scripts]
-mknodes = "mknodes.cli:cli"
-
-[project.entry-points."mkdocs.plugins"]
-mknodes = "mknodes.plugin:MkNodesPlugin"
 
 [project.urls]
 Documentation = "https://phil65.github.io/mknodes/"

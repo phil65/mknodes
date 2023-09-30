@@ -48,10 +48,8 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
     # For demonstration purposes, this process is split up into several functions.
     # Each function here adds another Menu item to the root nav (aka the tabs at the top).
     # We will get there later.
-    manual.create_use_cases_section(root_nav)
     manual.create_navs_section(root_nav)
     manual.create_nodes_section(root_nav)
-    manual.create_cli_section(root_nav)
     manual.create_templating_section(root_nav)
     # manual.create_internals_section(root_nav)
     manual.create_development_section(root_nav)
