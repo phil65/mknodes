@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import textwrap
 
 from typing import Any, Literal
@@ -40,10 +41,10 @@ class MkDiagram(mkcode.MkCode):
 
     def __init__(
         self,
-        graph_type: GraphTypeStr = "flow",
-        *,
         items: list | None = None,
         connections: list[tuple] | None = None,
+        *,
+        graph_type: GraphTypeStr = "flow",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         attributes: dict[str, str] | None = None,
         **kwargs: Any,
@@ -97,6 +98,9 @@ class MkDiagram(mkcode.MkCode):
     @property
     def mermaid_code(self) -> str:
         lines = list(self.names)
+        if not self.connections:
+            for prev, nxt in itertools.pairwise(self.names):
+                lines.append(f"{prev} --> {nxt}")
         for connection in self.connections:
             if len(connection) == 2:  # noqa: PLR2004
                 source, target = connection
