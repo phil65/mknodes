@@ -195,14 +195,14 @@ class TextResource:
         return reprhelpers.dataclass_repr(self)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class CSSText(TextResource):
     EXTENSION: ClassVar = ".css"
     content: str
     filename: str | None
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class JSText(TextResource):
     EXTENSION: ClassVar = ".js"
     content: str
