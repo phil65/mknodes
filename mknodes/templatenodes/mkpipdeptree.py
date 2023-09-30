@@ -33,7 +33,13 @@ def get_mermaid(
     # thus ensuring, that the filter will be applied on ReverseTree
     if reverse:
         tree = tree.reverse()
-    show_only = package.split(",") if isinstance(package, str) else package
+    match package:
+        case str():
+            show_only = package.split(",")
+        case list() | tuple():
+            show_only = list(package)
+        case None:
+            show_only = None
     exclude_list = set(exclude.split(",")) if exclude else None
     if show_only is not None or exclude_list is not None:
         tree = tree.filter_nodes(show_only, exclude_list)
