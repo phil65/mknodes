@@ -79,7 +79,7 @@ class Project(Generic[T]):
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
 
-    def build(self, show_page_info: bool = False):
+    def build(self):
         logger.debug("Building page...")
         self.build_fn(project=self, **self.build_kwargs)
         logger.debug("Finished building page.")
