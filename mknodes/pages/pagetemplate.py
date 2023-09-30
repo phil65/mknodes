@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mknodes import mkdocsconfig
 from mknodes.pages import templateblocks
-from mknodes.utils import reprhelpers
+from mknodes.utils import mdconverter, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -80,7 +79,7 @@ class PageTemplate:
         self.content_block.content = value
 
     def build_html(self, md: markdown.Markdown | None = None) -> str | None:
-        md = md or mkdocsconfig.Config().get_markdown_instance()
+        md = md or mdconverter.MdConverter()
         blocks = [r'{% extends "' + self.extends + '" %}\n'] if self.extends else []
         blocks.extend(block.to_markdown(md) for block in self.blocks if block)
         return "\n".join(blocks) + "\n" if blocks else None
@@ -89,8 +88,7 @@ class PageTemplate:
 if __name__ == "__main__":
     import mknodes
 
-    cfg = mkdocsconfig.Config()
-    md = cfg.get_markdown_instance()
+    md = mdconverter.MdConverter()
     template = PageTemplate(filename="main.html")
     template.announce.content = mknodes.MkAdmonition("test")
     html = template.build_html(md)

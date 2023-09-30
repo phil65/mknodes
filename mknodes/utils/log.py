@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+import importlib.util
 import io
 import logging
 import sys
-
-from mkdocs.plugins import get_plugin_logger
 
 
 class Logger:
@@ -20,7 +19,11 @@ class Logger:
 
 
 def get_logger(name: str | None = None):
-    return get_plugin_logger("mknodes")
+    if importlib.util.find_spec("mkdocs"):
+        from mkdocs.plugins import get_plugin_logger
+
+        return get_plugin_logger("mknodes")
+    return logging.getLogger(name)
 
 
 def basic():

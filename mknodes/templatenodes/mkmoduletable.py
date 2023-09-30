@@ -40,11 +40,11 @@ class MkModuleTable(mktable.MkTable):
 
     @staticmethod
     def create_example_page(page):
-        import mkdocstrings
+        import jinja2
 
         import mknodes
 
-        modules = [mod for _, mod in inspect.getmembers(mkdocstrings, inspect.ismodule)]
+        modules = [mod for _, mod in inspect.getmembers(jinja2, inspect.ismodule)]
         node = MkModuleTable(modules=modules)
         page += mknodes.MkReprRawRendered(node)
 

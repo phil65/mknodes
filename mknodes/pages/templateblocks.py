@@ -5,7 +5,7 @@ from typing import Literal
 from markdown import markdown
 
 from mknodes.basenodes import mknode
-from mknodes.utils import css, resources
+from mknodes.utils import css, mdconverter, resources
 
 
 BlockStr = Literal[
@@ -45,9 +45,7 @@ class Block(mknode.MkNode):
         raise NotImplementedError
 
     def to_markdown(self, md: markdown.Markdown | None = None):
-        from mknodes import mkdocsconfig
-
-        instance = md or mkdocsconfig.Config().get_markdown_instance()
+        instance = md or mdconverter.MdConverter()
         content = self.block_content(instance)
         return f"{{% block {self.block_id} %}}\n{content}\n{{% endblock %}}"
 
@@ -64,9 +62,7 @@ class HtmlBlock(Block):
     def block_content(self, md: markdown.Markdown | None = None) -> str:
         import mknodes
 
-        from mknodes import mkdocsconfig
-
-        instance = md or mkdocsconfig.Config().get_markdown_instance()
+        instance = md or mdconverter.MdConverter()
         result = ""
         for i in self.items:
             match i:
