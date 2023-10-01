@@ -128,7 +128,8 @@ class MkPage(mkcontainer.MkContainer):
     def path(self):
         """Return the last part of the page path."""
         if self._is_homepage:
-            return "index.md"
+            prefix = "../" * (len(self.parent_navs) - 1)
+            return f"{prefix}index.md"
         if self._path:
             return self._path.removesuffix(".md") + ".md"
         return f"{self.metadata.title}.md"
