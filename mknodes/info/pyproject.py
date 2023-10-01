@@ -36,6 +36,7 @@ class PyProject(tomlfile.TomlFile):
 
     @property
     def mknodes_section(self) -> dict[str, Any]:
+        """Return our very own config section."""
         return self.get_section("tool", "mknodes") or {}
 
     @property

@@ -10,7 +10,12 @@ logger = log.get_logger(__name__)
 
 
 class MkJinjaTemplate(mkcontainer.MkContainer):
-    """Node representing a jinja template."""
+    """Node representing a jinja template.
+
+    Renders templates with the context-aware MkNodes jinja environment.
+    Rendered nodes become virtual children of this node.
+    Additional variables can be passed to the render process.
+    """
 
     ICON = "simple/jinja"
     STATUS = "new"
@@ -19,7 +24,7 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
         self,
         template: str,
         *,
-        variables: dict | None = None,
+        variables: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
         """Constructor.

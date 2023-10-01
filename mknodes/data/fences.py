@@ -8,11 +8,20 @@ from pymdownx import superfences
 
 @dataclasses.dataclass(frozen=True)
 class Fences:
+    """Class describing a superfence.
+
+    Arguments:
+        name: name of the fence
+        class_name: CSS class used by the fence
+        format_fn: Callable for formatting
+    """
+
     name: str
     class_name: str
     format_fn: str | Callable
 
     def as_dict(self):
+        """Return fence data as a dictionary."""
         return {"name": self.name, "class": self.class_name, "format": self.format_fn}
 
 
