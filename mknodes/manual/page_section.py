@@ -28,6 +28,11 @@ def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("mkmodulepage.jinja", variables=variables)
 
 
+@nav.route.page("Setting the homepage")
+def _(page: mk.MkPage):
+    page += mk.MkJinjaTemplate("homepage.jinja")
+
+
 @nav.route.page("Adding to MkPages", hide="toc", status="new")
 def _(page: mk.MkPage):
     page += mk.MkAdmonition("You can add other MkNodes to a page sequentially.")
