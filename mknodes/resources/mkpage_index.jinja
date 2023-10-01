@@ -75,7 +75,7 @@ MkPages can get created in many ways:
 Like many other nodes, MkPages inherits from [MkContainer][mknodes.MkContainer] and looks to the outside world like a list, meaning you can add nodes to them by using `+=`, [MkPage.append][mknodes.MkPage.append] or [MkPage.insert][mknodes.MkPage.insert]
 
 
-Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node "embedded" which can be used to easily add footnotes to a page.
+Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node "embedded" which can be used to easily add footnotes to a page. (Scroll to the bottom to see the result)
 
 ``` py title="MkFootnotes embedded"
 page = MkPage("My page")
@@ -90,7 +90,7 @@ During the build process, all Markdown nodes which are part of an [MkPage][mknod
 
 
 The final URL of an [MkPage][mknodes.MkPage] is determined by its position inside the tree and gets calculated
-when the tree gets "serialized" into markdown. The HTML filename is inferred from the Page
+when the tree gets "serialized" into markdown. The HTML filename is inferred from the page
 title in case no specific path is given.
 
 

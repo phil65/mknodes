@@ -34,7 +34,7 @@ class MkTimelineItem(mknode.MkNode):
         link: str = "",
         button_text: str = "More",
         image: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
@@ -151,7 +151,7 @@ class MkTimeline(mkcontainer.MkContainer):
         link: str = "",
         button_text: str = "More",
         image: str = "",
-        **kwargs,
+        **kwargs: Any,
     ):
         """Add a timeline item.
 
