@@ -133,7 +133,7 @@ class MkCode(mkcontainer.MkContainer):
     ):
         """Create a MkCode node based on a code file.
 
-        Line numbers will be shown by default. If highlight_caller is True,
+        Line numbers will be shown by default. If `highlight_caller` is `True`,
         it will try to detect whether the calling method is inside the code block are
         creating and if yes, it will highlight that line.
 

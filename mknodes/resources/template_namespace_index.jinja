@@ -9,6 +9,10 @@ about the context by inspecting the distribution info, the local git repository,
 
 The collected information is also used to populate the MkNodes-specific **Jinja2** namespace. In combination with the **MkNodes** jinja filters, this allows to efficiently write documentation about your project as well as building project-agnostic websites / website parts which can be re-used across different projects.
 
+!!! info "Rendering CSS files"
+    Data about the used theme (colors etc.) is also part of the context / project information.
+    That information is used then to dynamically create CSS stylesheets during the build process.
+
 
 #### Example:
 
