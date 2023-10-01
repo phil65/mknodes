@@ -97,7 +97,8 @@ class MkPage(mkcontainer.MkContainer):
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, path=str(self.path), **self._metadata)
+        kwargs = {k: v for k, v in self.metadata.items() if v is not None}
+        return reprhelpers.get_repr(self, path=str(self.path), **kwargs)
 
     def get_node_resources(self):
         templates = [self.template] if self.template else []

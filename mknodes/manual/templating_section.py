@@ -26,8 +26,7 @@ def create_templating_section(root_nav: mk.MkNav):
     """Add the complete "Templating" section to given MkNav."""
     root_nav += nav
     page = nav.add_index_page(hide="toc")
-    variables = dict(namespaces=NAMESPACES)
-    page += mk.MkJinjaTemplate("template_index.jinja", variables=variables)
+    page += mk.MkJinjaTemplate("template_index.jinja")
     page.created_by = create_templating_section
 
 
@@ -46,6 +45,9 @@ def _(nav: mk.MkNav):
     for ctx in CONTEXTS:
         subpage = nav.add_page(ctx.__name__)
         add_context_doc(subpage, ctx)
+    page = nav.add_index_page()
+    variables = dict(namespaces=NAMESPACES)
+    page += mk.MkJinjaTemplate("template_namespace_index.jinja", variables=variables)
 
 
 @nav.route.page("Template filters")
