@@ -1,19 +1,25 @@
 ## General information
 
 MkPages are nodes which are children from MkNavs, and represent a single page from a website.
-A page can either be a regular page or an "index page" for an MkNav.
+Like already described, a page can either be a regular page or an "index page" for an MkNav.
 An index page shows when clicking on a menu item with children, or for the website root.
 
-!!! info
-    Index pages need specific theme support (like [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) has) or the
-    [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index) plugin.
 
 ## Page metadata
 
 MkPages have metadata attached, which can be set via the [MkPage.metadata][mknodes.pages.metadata.Metadata] attribute.
 Metadata is also inherited from the parent MkNavs in case they have metadata set.
 That metadata can alter the behaviour and appearance of given page. It can be used to
-show icons / subtitles in menus, to modify the search ranking, to set a reference to a Page template, and much more. (See the [Metadata][mknodes.pages.metadata.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.)
+show icons / subtitles in menus, to modify the search ranking, to set a reference to a Page template, and much more.
+
+!!! Info
+    The *page information* box at the bottom of each page also contains the metadata content of the current page, as well as the code which created the page. If you're interested how MkNodes works, it can help to check out
+    these information boxes! (What you will notice: **MkNodes** puts some data about the page instantiation into the metadata.)
+
+
+??? info "Further info"
+    See the [Metadata][mknodes.pages.metadata.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.
+
 
 ## Page templates
 
@@ -33,6 +39,7 @@ Like many other nodes, MkPages inherits from [MkContainer][mknodes.MkContainer] 
 
 
 Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node attached which can be used to easily add footnotes to a page.
+
 
 ## Build process
 

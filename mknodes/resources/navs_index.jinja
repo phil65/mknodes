@@ -1,12 +1,121 @@
-## "Code for this section"
+## A quick overview
 
-{{ create_navs_section | MkCommentedCode }}
+The very foundation of **MkNodes** is the [MkNode][mknodes.MkNode] class. All elements which can become part of our
+"website tree" inherit from this base, it's the required base class to become part of the tree.
 
-{{"Basically everything interesting in this library inherits from MkNode.
-It`s the base class for all tree nodes we are building. The tree goes from the root nav
-down to single markup elements. We can show the subclass tree by using
-the MkClassDiagram Node." | MkDetailsBlock }}
+In simple terms, there are basically 3 different MkNode types:
 
-## All the navs
+* **MkNavs**, used to structure the pages into a hierarchy
+* **Mkpages**, used as a container for the markdown elements
+* **MkNode elements**, used to display the markdown itself (and in some cases HTML)
 
-{{ mknode_cls | MkClassDiagram(mode="subclasses", direction="LR", max_depth=3) }}
+Given a random Element from a full website tree, this is how the path from root to leaf element could look like:
+
+{{ ["Root nav\n(MkNav)", "Sub-nav\n(MkNav)", "Page\n(MkPage)", "Container element\n(MkTabbed)", "Container element\n(MkAdmonition)", "Atomic markdown element\n(MkText)"] | MkDiagram(direction="LR") }}
+
+In essence: A path can contain *one or more MkNavs*, exactly *one MkPage*, and *one or more (nested) MkNode Elements*.
+
+!!! info
+    Because of the Markdown elements being part of the tree, the elements can behave quite intelligently in some situations. For example, code blocks automatically set the correct amount of fence backticks. That way you cant get conflicts because of two blocks having the same fence backtick sequence. The same accounts for the new Block extensions from [pymdownx](https://facelessuser.github.io/pymdown-extensions/), which uses `/` as fence character.
+
+
+## MkNavs: General information
+
+MkNavs are nodes to represent "sections", perhaps comparable to a folder (with MkPages being files in this analogy).
+MkNavs can contain other MkNavs to construct a hierarchical website structure, as well as MkPages and [MkLinks][mknodes.MkLink].
+MkPages can be "regular" child of an [MkNav][mknodes.MkNav], or an index page. Index pages are dedicated pages
+which are shown when a site nav menu item containing children is clicked, or for the website root.
+
+??? tip
+    Index pages need specific theme support (like [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) has) or the
+    [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index) plugin.
+
+
+## MkNav metadata
+
+MkNavs (as well as MkPages) own a metadata object, which can be set via the [MkPage.metadata][mknodes.pages.metadata.Metadata] attribute.
+That metadata is not really useful for the [MkNav][mknodes.MkNav] itself. The metadata gets propagated to the child pages though, and thus this mechanism can be helpful to set metadata for a complete website branch / section in one go.
+Metadata is also inherited from the parent MkNavs in case they have metadata set. In other words:
+Template / Metadata inheritance happens through the whole chain of MkNavs / MkPages, from top to bottom.
+
+??? info "Further info"
+    See the [Metadata][mknodes.pages.metadata.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.
+
+
+## MkNav templates
+
+Similar to metadata, page templates can also be set for MkNavs. (small difference: attribute is called `page_template` for MkNavs instead of `template` for MkPages) Again, they are not used by the MkNavs itself, but propagate to all child pages / navs. You will find more details in later parts of the docs.
+
+Here is a quick example to show how easy a new template can get set up.
+Compare this one-liner to the "regular" process of creating an HTML file (with no markdown support) in a subfolder separated from your actual content:
+
+``` py
+nav = MkNav()
+nav.page_template.announce.content = "Display **Markdown** in announcement bar!"
+```
+
+In the case of MkDocs, Template HTMLs will get created temporarily during the build process and will get deleted after deployment / serving.
+
+??? tip
+    Apart from "page templates", which apply to specific (groups of) MkPages, there are also "static" templates
+    which are part of the [Theme][mknodes.theme.theme.Theme] object (or of a Theme subclass).
+    That way you can for example populate the `404` error page easily with Markdown.
+
+
+## Using MkNavs
+
+The very first element you get in **MkNodes** is the root nav. The root nav is the node which will contain all other nodes at the end of the tree building process, in a nested, hierarchical structure.
+
+Technically, there are no differences between the root MkNav and any other "nested" MkNav, except that the root MkNav does not have a a parent.
+
+You can construct sub-MkNavs by [instantiating][mknodes.MkNav.__init__] them, by using [MkNav.add_nav][mknodes.MkNav.add_nav] or by using the decorator routing mechanism.
+
+Besides getting created via decorated functions, MkNavs can also get populated via decorators.
+
+``` py
+nav = MkNav()  # this nav will get populated with a sub-nav
+
+@nav.route.nav("Path to", "Nav", optional=kw_args):  # Arguments reflect the "path" of newly created nav.
+def _(sub_nav: MkNav)  # naming these methods is rather pointless, so we'll just call them "_".
+    sub_nav += ...  #  this sub_nav is created via decorator
+
+
+@nav.route.page("My page"):  # Pages can get routed, too, of course.
+...
+```
+
+Another way to populate MkNavs is by using the [NavParser][mknodes.navs.navparser.NavParser] (`parse` attribute of an MkNav)
+The NavParser allows to read *SUMMARY.md* files (known from [mkdocs-literate-nav](https://oprypin.github.io/mkdocs-literate-nav/) ), "pure" markdown-file / folder structures and more.
+There is also an experimental support for `index.py` routing files as a replacement for *SUMMARY.md* files.
+
+``` py
+nav = MkNav()  # this nav will get populated with the *SUMMARY.md* content
+nav.parse.file("path/to/SUMMARY.md")
+```
+
+## Index pages
+
+"Index pages" (the index.md files of the root and the subfolders) are a special case when it comes to
+building the tree. Each MkNav has a dedicated slot for an index page.
+
+``` py
+nav.index_page = my_mkpage_instance
+```
+
+Alternatively, MkNavs have a separate method to create an index page:
+``` py
+index_page = nav.add_index_page()
+```
+
+
+## Build process
+
+During the build process, MkNavs get converted to *SUMMARY.md* files. These will then get picked up by MkDocs afterwards in order to build the MkDocs nav tree.
+
+!!! info
+    In the future, MkNavs (as well as MkPages) will likely get converted to `MkDocs.structure` instances directly without taking the extra route of becoming a physical file on the hard drive.
+
+
+## Subclasses
+
+**MkNodes** also contains a special subclass of [MkNav][mknodes.MkNav] called [MkDoc][mknodes.MkDoc]. This node is responsible for creating API documentation in an easy way, using templates (to get in impression, this is the [default template for documenting classes](https://raw.githubusercontent.com/phil65/mknodes/main/mknodes/resources/classpage.md) ). [MkDoc][mknodes.MkDoc] objects have methods to collect submodules / classes from the module you want to document. The collected modules / classes are passed through the template render process in order to create Markdown text. That text will get added automatically to the [MkDoc][mknodes.MkDoc] nav as an [MkPage][mknodes.MkPage].

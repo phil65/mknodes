@@ -18,7 +18,7 @@ def create_navs_section(root_nav: mk.MkNav):
 
     routing.create_routing_section(nav)
 
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_index_page()
     variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNav)
     page += mk.MkJinjaTemplate("navs_index.jinja", variables=variables)
 
