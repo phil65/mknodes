@@ -75,6 +75,7 @@ class Project(Generic[T]):
             env=self.env,
         )
 
+        self.env.globals |= self.context.as_dict()
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
@@ -92,7 +93,6 @@ class Project(Generic[T]):
             if hasattr(node, "resolved_file_path")
         ]
         self.linkprovider.set_excludes(paths)
-        self.env.globals |= self.context.as_dict()
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
