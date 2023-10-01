@@ -1,7 +1,7 @@
 .speech {
    font-size: 1.1em;
-  color: {{ theme.css_primary_fg }};
-  background: {{ theme.css_primary_bg_light }};
+  color: {{ theme.css_default_fg }};
+  background: {{ theme.css_default_bg }};
   border-color: {{ theme.css_primary_fg }};
   position: relative;
   padding: 20px;
