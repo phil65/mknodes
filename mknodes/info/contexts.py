@@ -22,6 +22,8 @@ logger = log.get_logger(__name__)
 
 @dataclasses.dataclass
 class Context:
+    """Base class for contexts."""
+
     def as_dict(self):
         return {
             field.name: getattr(self, field.name) for field in dataclasses.fields(self)
@@ -99,6 +101,8 @@ class ThemeContext(Context):
 
 @dataclasses.dataclass
 class NodeBuildStats:
+    """Node stats collected during rendering."""
+
     render_duration: float = 0
     render_count: int = 0
 

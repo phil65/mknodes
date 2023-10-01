@@ -17,14 +17,27 @@ logger = log.get_logger(__name__)
 
 
 @functools.cache
-def get_db() -> dict[str, Any]:
+def get_db() -> list[dict[str, Any]]:
+    """Return dictionary with license data."""
     path = paths.RESOURCES / "licenses" / "db.json"
     with path.open("r") as file:
-        return json.load(file)
+        return json.load(file)["licenses"]
 
 
 @dataclasses.dataclass
 class License:
+    """Class representing a license.
+
+    Arguments:
+        name: Name of the license
+        identifier: License identifier
+        content: License text content
+        path: Path to the license
+        sources: License sources
+        osi_approved: Whether license is OSI-approved
+        header: Optional header for the license.
+    """
+
     name: str
     identifier: str
     content: str
@@ -35,9 +48,14 @@ class License:
 
     @classmethod
     def from_name(cls, name_or_id: str) -> Self:
+        """Get license based on license name.
+
+        Arguments:
+            name_or_id: Name or id of the license to get.
+        """
         db = get_db()
         name_or_id = name_or_id.lower()
-        for lic in db["licenses"]:
+        for lic in db:
             if name_or_id in {lic["name"].lower(), lic["id"].lower()}:
                 path = paths.RESOURCES / "licenses" / "templates" / lic["template"]
                 return cls(
@@ -53,6 +71,11 @@ class License:
 
     @classmethod
     def from_path(cls, path: str) -> Self:
+        """Get a license from a file path.
+
+        Arguments:
+            path: Path to get license from.
+        """
         p = pathlib.Path(path)
         return cls(
             path=str(p),
@@ -62,6 +85,11 @@ class License:
         )
 
     def resolve_by_distribution(self, distribution: str):
+        """Resolve license based on distribution data.
+
+        Arguments:
+            distribution: Distribution to use data from.
+        """
         info = packageregistry.get_info(distribution)
         env = environment.Environment()
 
@@ -87,6 +115,17 @@ class License:
         summary: str = "",
         version: str = "",
     ):
+        """Resolve license template by manually passing needed metadata.
+
+        Arguments:
+            holder: Copyright holder
+            package_name: Name of the package the license is used for
+            org: Name of the organization
+            website: Website of the copyright holders
+            mail_address: Mail address of the copyright holder
+            summary: Summary of the program the license is used for
+            version: Version of the program the license is used for
+        """
         env = environment.Environment()
 
         class Ctx:

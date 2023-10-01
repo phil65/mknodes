@@ -122,6 +122,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def path(self):
+        """Return the last part of the page path."""
         if self._path:
             return self._path.removesuffix(".md") + ".md"
         return f"{self.metadata.title}.md"
@@ -138,6 +139,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def status(self) -> datatypes.PageStatusStr | None:
+        """Return page status from metadata."""
         return self.metadata.status
 
     @status.setter
@@ -146,6 +148,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def title(self) -> str:
+        """Return the page title if set, otherwise infer title from path."""
         return self.metadata.title or self.path.removesuffix(".md")
 
     @title.setter
@@ -154,6 +157,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def subtitle(self) -> str | None:
+        """Return subtitle from metadata."""
         return self.metadata.subtitle
 
     @subtitle.setter
@@ -162,6 +166,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def icon(self) -> str | None:
+        """Return page icon from metadata."""
         return self.metadata.icon
 
     @icon.setter
@@ -174,6 +179,14 @@ class MkPage(mkcontainer.MkContainer):
 
     @template.setter
     def template(self, value: str | pagetemplate.PageTemplate | None):
+        """Set the page template.
+
+        If value is a string, use that string for metadata and clear the template object.
+        If value is a PageTemplate, use that and put its name into metadata.
+
+        Arguments:
+            value: Page template to set.
+        """
         if isinstance(value, pagetemplate.PageTemplate):
             self._metadata.template = value.filename
             self._template = value

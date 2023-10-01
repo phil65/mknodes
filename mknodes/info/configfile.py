@@ -8,6 +8,11 @@ from mknodes.utils import downloadhelpers, helpers, superdict
 
 class ConfigFile(superdict.SuperDict):
     def __init__(self, path: str | os.PathLike | None = None):
+        """Constructor.
+
+        Arguments:
+            path: Path to the config file
+        """
         super().__init__()
         self.path = path
         if self.path is None:
@@ -66,12 +71,20 @@ class ConfigFile(superdict.SuperDict):
 
     @classmethod
     def _dump(cls, data: dict) -> str:
-        """Needs to be reimplemented by subclasses."""
+        """Needs to be reimplemented by subclasses.
+
+        Arguments:
+            data: Data to dump
+        """
         raise NotImplementedError
 
     @classmethod
     def _load(cls, data: str) -> dict | list:
-        """Needs to be reimplemented by subclasses."""
+        """Needs to be reimplemented by subclasses.
+
+        Arguments:
+            data: Data to load
+        """
         raise NotImplementedError
 
 

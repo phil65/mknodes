@@ -23,6 +23,12 @@ class Environment(jinja2.Environment):
     """Jinja environment."""
 
     def __init__(self, *, undefined: str = "silent", load_templates: bool = False):
+        """Constructor.
+
+        Arguments:
+            undefined: Handling of "Undefined" errors
+            load_templates: Whether to load the templates into environment.
+        """
         loader = jinjahelpers.resource_loader if load_templates else None
         behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
         self.extra_files: set[str] = set()

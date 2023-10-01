@@ -18,6 +18,7 @@ class GitRepository(git.Repo):
 
     @cached_property
     def main_branch(self) -> str:
+        """The default branch of the repository."""
         hast_master_branch = any(branch.name == "master" for branch in self.heads)
         return "master" if hast_master_branch else "main"
 
@@ -107,6 +108,7 @@ class GitRepository(git.Repo):
 
     @cached_property
     def context(self) -> contexts.GitContext:
+        """Return Git context."""
         return contexts.GitContext(
             main_branch=self.main_branch,
             repo_hoster=self.code_repository,

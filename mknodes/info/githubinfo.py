@@ -23,6 +23,12 @@ logger = log.get_logger(__name__)
 
 class GitHubRepo:
     def __init__(self, username: str, repository: str):
+        """Constructor.
+
+        Arguments:
+            username: Github user name
+            repository: Github repository / project name
+        """
         self.main = github.Github(auth=auth)
         self.username = username
         self.repo_name = repository
@@ -98,6 +104,7 @@ class GitHubRepo:
 
     @functools.cached_property
     def context(self):
+        """Return github context."""
         return contexts.GitHubContext(
             default_branch=self.default_branch,
             repo_name=self.repo_name,
