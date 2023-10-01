@@ -159,4 +159,4 @@ __all__ = [
     "MkPipDepTree",
 ]
 
-__version__ = "0.43.5"
+__version__ = "0.43.6"
