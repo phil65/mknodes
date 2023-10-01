@@ -10,7 +10,7 @@ via code of course though), but has a much larger built-in set of macros and fil
       This can go beyond modifying the main content section which is usually used and "modified" when working with **MkDocs** or similar on a pure markdown level.
       Page templates contain smaller blocks wrapping specific website elements which can be overridden. The available blocks which can be modified depend on the theme chosen.
     - *MkTemplatePage and its subclasses* ([MkClassPage][mknodes.MkClassPage] / [MkModulePage][mknodes.MkModulePage]): These are [MkPage][mknodes.MkPage] subclasses
-      which render Jinja templates to display information about classes / modules.
+      which render **jinja2** templates to display information about classes / modules.
       The rendered information is shown in the main content area of the Website.
     - *The MkDocs-specific template environment*: This one is used to resolve the mentioned Page / Static templates and is used by **MkDocs** itself. This environment can be modified during the event hooks by all add-ons.
     - *The **MkNodes**-specific template environment*: This one is used for resolving CSS files as well as content
@@ -34,10 +34,10 @@ via code of course though), but has a much larger built-in set of macros and fil
     from the project.
 
     Example: `{ { "classifiers" | MkMetadataBadges } }` would automatically show classifier badges
-              for the distribion associated to the current context. (in most cases, the current context is the package you are writing / coding docs for)
+              for the distribution associated to the current context. (in most cases, the current context is the package you are writing / coding docs for)
 
 
-* Project metadata is also available in the Jinja environment namespace.
+* Project metadata is also available in the **jinja2** environment namespace.
   You can see all available info in the subsections of this page.
 
     * Example: `{ { metadata.license_name } }`
@@ -62,7 +62,7 @@ via code of course though), but has a much larger built-in set of macros and fil
 **MkNodes** cannot just re-use the **MkDocs** jinja environment
 because at that stage of the build process, our nodes already became text and we need
 the nodes for context (mainly to attach a parent to the MkNodes used as macros / filters)
-Apart from that, it's probably not a wise idea to allow lot of add-ons to modify the environment
+Apart from that, it's probably not a wise idea to allow lot of add-ons to mess with the environment
 since this could lead to namespace conflics.
 ///
 
