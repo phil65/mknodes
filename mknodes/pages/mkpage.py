@@ -228,7 +228,7 @@ class MkPage(mkcontainer.MkContainer):
         page.metadata.update(data)
         return page
 
-    def get_processors(self):
+    def get_processors(self) -> list[processors.TextProcessor]:
         """Override base MkNode processors."""
         return [
             processors.PrependMetadataProcessor(self.metadata),

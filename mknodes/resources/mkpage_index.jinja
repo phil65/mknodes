@@ -27,19 +27,62 @@ Each MkPage also carries a [PageTemplate][mknodes.pages.pagetemplate.PageTemplat
 Like metadata, the templates also inherit from MkNavs, meaning that a [MkPage][mknodes.MkPage] will use the
 template of a parent [MkNav][mknodes.MkNav] if it has one defined.
 
+More information about templates can be found [here](Templating.md).
+
 
 ## Using MkPages
 
-MkPages can get created in many ways. You can simply use the constructor and add the page
-to an MkNav, you can create MkPages by using the [nav.route.page][mknodes.navs.navrouter.NavRouter.page] decorator, by
-using [MkNav.add_page][mknodes.MkNav.add_page] / [MkNav.add_index_page][mknodes.MkNav.add_index_page], by using the alternative constructor [MkPage.from_file][mknodes.MkPage.from_file], or by using "batch operations" like [nav.parse.folder][mknodes.navs.navparser.NavParser.folder] and similar.
+MkPages can get created in many ways:
 
+* By simply use the constructor and add the page to an MkNav:
+
+    ``` py title="The classic way"
+    page = MkPage("My page")
+    nav += page
+    ```
+
+* By using the [nav.route.page][mknodes.navs.navrouter.NavRouter.page] decorator.
+
+    ``` py title="Via decorators"
+    @nav.route.page("My page")
+    def _(page): ...
+    ```
+
+  More information about routing can be found [here](Routing.md).
+
+* By using [MkNav.add_page][mknodes.MkNav.add_page] / [MkNav.add_index_page][mknodes.MkNav.add_index_page]:
+
+    ``` py title="Via add_page / add_index_page"
+    page = nav.add_page("My page")
+    index_page = nav.add_index_page("My index page")
+    ```
+
+* By using the alternative constructor [MkPage.from_file][mknodes.MkPage.from_file]:
+
+    ``` py title="Via MkPage.from_file"
+    page = MkPage.from_file("path/to/file.md")
+    ```
+
+* Or indirectly by using "batch operations" like [nav.parse.folder][mknodes.navs.navparser.NavParser.folder]
+  and similar (see also: [NavParser](NavParser.md):
+
+    ``` py title="Via parse.folder or similar"
+    nav = MkNav()
+    nav.parse.folder("path/to/folder/with/markdown/files/")
+    assert nav.pages
+    ```
 
 Like many other nodes, MkPages inherits from [MkContainer][mknodes.MkContainer] and looks to the outside world like a list, meaning you can add nodes to them by using `+=`, [MkPage.append][mknodes.MkPage.append] or [MkPage.insert][mknodes.MkPage.insert]
 
 
-Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node attached which can be used to easily add footnotes to a page.
+Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node "embedded" which can be used to easily add footnotes to a page.
 
+``` py title="MkFootnotes embedded"
+page = MkPage("My page")
+page.footnotes[1] = r"Footnotes are numbered, can be set via \__setitem__."
+page.footnotes[2] = r"They can also get nested[^3]."
+page.footnotes[3] = MkAdmonition("And they can also contain other Markdown (nodes).")
+```
 
 ## Build process
 
@@ -51,14 +94,13 @@ when the tree gets "serialized" into markdown. The HTML filename is inferred fro
 title in case no specific path is given.
 
 
-MkPages do **NOT**  inherit from [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) objects or are in any way connected to them.
-In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an `MkNodes` tree or anything else in this library, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin.
-
+MkPages do **NOT**  inherit from [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) objects or are in any way directly connected to them.
+In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an **MkNodes** tree or anything else in this library, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin, which happens after the tree was built.
 
 During the build process, MkPages get serialized to Markdown and are put into the build folder, where [MkDocs](https://www.mkdocs.org) picks the files up and creates [MkDocs](https://www.mkdocs.org) Page objects in following steps.
 
 
 ## Template MkPages
-`MkNodes` also contains two special subclasses of [MkPage][mknodes.MkPage], [MkModulePage][mknodes.MkModulePage] and [MkClassPage][mknodes.MkClassPage].
+**MkNodes** also contains two special subclasses of [MkPage][mknodes.MkPage], [MkModulePage][mknodes.MkModulePage] and [MkClassPage][mknodes.MkClassPage].
 They get used by the automatic API generator node named [MkDoc][mknodes.MkDoc] and contain a jinja template used to create an API / info page for given module / class.
 
