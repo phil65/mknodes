@@ -45,7 +45,7 @@ def _(nav: mk.MkNav):
     for ctx in CONTEXTS:
         subpage = nav.add_page(ctx.__name__)
         add_context_doc(subpage, ctx)
-    page = nav.add_index_page()
+    page = nav.add_index_page(hide="toc")
     variables = dict(namespaces=NAMESPACES)
     page += mk.MkJinjaTemplate("template_namespace_index.jinja", variables=variables)
 
