@@ -116,12 +116,13 @@ class Theme:
             primary_color=self.primary_color,
             text_color=self.text_color,
             css_primary_fg=self.text_color,
-            css_primary_fg_transparent=self.text_color,
             css_primary_bg=self.primary_color,
             css_primary_bg_light=self.primary_color,
             css_accent_fg=self.text_color,
             css_accent_fg_transparent=self.text_color,
             css_accent_bg=self.primary_color,
+            css_default_fg="#222222",
+            css_default_bg="#DDDDDD",
         )
 
     @classmethod
@@ -167,12 +168,13 @@ class Theme:
             text_color=self.text_color,
             admonitions=self.admonitions,
             css_primary_fg=ctx["css_primary_fg"],
-            css_primary_fg_transparent=ctx["css_primary_fg_transparent"],
             css_primary_bg=ctx["css_primary_bg"],
             css_primary_bg_light=ctx["css_primary_bg_light"],
             css_accent_fg=ctx["css_accent_fg"],
             css_accent_fg_transparent=ctx["css_accent_fg_transparent"],
             css_accent_bg=ctx["css_accent_bg"],
+            css_default_fg=ctx["css_default_fg"],
+            css_default_bg=ctx["css_default_bg"],
         )
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):

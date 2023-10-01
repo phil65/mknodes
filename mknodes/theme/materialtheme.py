@@ -103,12 +103,13 @@ class MaterialTheme(theme.Theme):
             primary_bg_color=self.primary_bg_color,
             color_theme=self.color_theme,
             css_primary_fg="var(--md-primary-fg-color)",
-            css_primary_fg_transparent="var(--md-primary-fg-color--transparent)",
             css_primary_bg="var(--md-primary-bg-color)",
             css_primary_bg_light="var(--md-primary-bg-color--light)",
             css_accent_fg="var(--md-accent-fg-color)",
             css_accent_fg_transparent="var(--md-accent-fg-color--transparent)",
             css_accent_bg="var(--md-accent-bg-color)",
+            css_default_fg="var(--md-code-fg-color)",
+            css_default_bg="var(--md-code-bg-color)",
         )
 
     def __repr__(self):
