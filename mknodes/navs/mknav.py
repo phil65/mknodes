@@ -89,6 +89,7 @@ class MkNav(mknode.MkNode):
 
     @property
     def index_page(self) -> mk.MkPage | None:
+        """Get the current index page if set."""
         return self.nav.index_page
 
     @index_page.setter

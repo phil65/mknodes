@@ -78,6 +78,7 @@ class MkDiagram(mkcode.MkCode):
 
     @property
     def graph_type(self):
+        """The type of the graph (usually flow)."""
         return (
             self._graph_type
             if self._graph_type not in self.TYPE_MAP
@@ -86,6 +87,7 @@ class MkDiagram(mkcode.MkCode):
 
     @property
     def direction(self):
+        """The graph direction."""
         return (
             self._direction
             if self._direction not in self.ORIENTATION
@@ -94,10 +96,15 @@ class MkDiagram(mkcode.MkCode):
 
     @property
     def text(self):
+        """MkCode override."""
         return f"{self.graph_type} {self.direction}\n{self.mermaid_code}"
 
     @property
     def mermaid_code(self) -> str:
+        """Return code block, excluding fences and (graph type direction) line.
+
+        Can be overriden by subclasses.
+        """
         lines = list(self.names)
         if not self.connections:
             lines = [f'{hash(i)}["{i}"]' for i in lines]
@@ -118,6 +125,7 @@ class MkDiagram(mkcode.MkCode):
 
     @property
     def fence_title(self):
+        """MkCode override."""
         return "mermaid"
 
     @staticmethod

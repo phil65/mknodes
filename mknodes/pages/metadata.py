@@ -83,9 +83,10 @@ class Metadata(dict):
     def status(self) -> datatypes.PageStatusStr | None:
         """The status of the page.
 
-        MaterialTheme supports `"new"`, `"deprecated"` and `"encrypted"` by default
-        by showing an icon in the navigation. Additional icons can be added via
-        `MaterialTheme.add_status_icon`.
+        MkDocs-Material supports `"new"`, `"deprecated"` and `"encrypted"` by default
+        by showing an icon in the site nav. Additional icons can be added during
+        the build process via
+        [MaterialTheme.add_status_icon][mknodes.theme.materialtheme.MaterialTheme.add_status_icon].
         """
         return self.get("status")
 

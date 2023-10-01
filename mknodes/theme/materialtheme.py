@@ -89,6 +89,7 @@ class MaterialTheme(theme.Theme):
         super().__init__(self.name, **kwargs)
 
     def get_template_context(self) -> dict[str, Any]:
+        """Return template context (used to render the CSS template."""
         return dict(
             admonitions=self.admonitions,
             show_annotation_numbers=self.show_annotation_numbers,
@@ -144,6 +145,7 @@ class MaterialTheme(theme.Theme):
         self.main_template.announce.content = value
 
     def get_accent_color(self) -> str:
+        """Get the accent foreground color."""
         # sourcery skip: use-or-for-fallback
         color = self._get_color("accent", fallback="")
         if not color:
@@ -151,6 +153,12 @@ class MaterialTheme(theme.Theme):
         return COLORS[color]["color"]
 
     def _get_color(self, color_type: Literal["primary", "accent"], fallback: str) -> str:
+        """Return either primary or accent color.
+
+        Arguments:
+            color_type: The color type to get
+            fallback: value to return in case color_type is not defined.
+        """
         pal = self.palettes[0]
         match color_type:
             case "primary":
@@ -158,7 +166,13 @@ class MaterialTheme(theme.Theme):
             case "accent":
                 return pal.accent or fallback
 
-    def set_color(self, color_type: Literal["primary", "accent"], value: str):
+    def _set_color(self, color_type: Literal["primary", "accent"], value: str):
+        """Set the color for the first palette.
+
+        Arguments:
+            color_type: The color type to set
+            value: The color to set
+        """
         pal = self.palettes[0]
         match color_type:
             case "primary":
@@ -167,22 +181,33 @@ class MaterialTheme(theme.Theme):
                 pal.accent = value
 
     def set_accent_foreground_color(self, color: datatypes.RGBColorType):
+        """Set the accent foreground color.
+
+        Arguments:
+            color: Color to set
+        """
         color_str = helpers.get_color_str(color)
         self.accent_fg_color = color_str
-        self.set_color("accent", "custom")
+        self._set_color("accent", "custom")
         return color_str
 
     def set_primary_background_color(
         self,
         color: datatypes.RGBColorType,
     ):
-        self.set_color("primary", "custom")
+        """Set the primary background color.
+
+        Arguments:
+            color: Color to set
+        """
+        self._set_color("primary", "custom")
         color_str = helpers.get_color_str(color)
         self.primary_bg_color = color_str
         return color_str
 
     @property
     def primary_color(self) -> str:
+        """Get the primary foreground color."""
         if self._foreground_color:
             return self._foreground_color
         color = self._get_color("primary", fallback="indigo")
@@ -190,6 +215,7 @@ class MaterialTheme(theme.Theme):
 
     @property
     def _text_color(self) -> str:
+        """Get the primary text color."""
         color = self._get_color("primary", fallback="indigo")
         return COLORS[color]["text"]
 
@@ -209,7 +235,7 @@ class MaterialTheme(theme.Theme):
             dark_shade: Optional dark shade. If None, same as color.
         """
         self._foreground_color = color
-        self.set_color("primary", "custom")
+        self._set_color("primary", "custom")
         if light_shade is None:
             light_shade = color
         if dark_shade is None:
@@ -223,6 +249,7 @@ class MaterialTheme(theme.Theme):
         return color_str
 
     def set_default_icon(self, icon_type: IconTypeStr, data: str):
+        """Allows setting some custom default icons used throughout the theme."""
         self.default_icons[icon_type] = data
 
     def add_status_icon(self, name: str, material_icon: str):
@@ -237,6 +264,14 @@ class MaterialTheme(theme.Theme):
         self.status_icons.append(StatusIcon(name, data))
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
+        """MkDocs-Material needs some custom configuration for extensions.
+
+        This method will get called during the build process in order to make sure
+        that theme-specifics are considered.
+
+        Arguments:
+            extensions: Extensions to adapt.
+        """
         for k in dict(extensions).copy():
             ext = extensions[k]
             if k == "pymdownx.emoji":
@@ -255,10 +290,15 @@ class MaterialTheme(theme.Theme):
 
     @staticmethod
     def get_partial_path(partial: str) -> pathlib.Path:
+        """Return the path to the MkDocs-Material partial file.
+
+        Arguments:
+            partial: The partial to get a path for.
+        """
         import material
 
         path = pathlib.Path(material.__path__[0])
-        return path / "partials" / f"{partial}.html"
+        return path / "partials" / f"{partial.removesuffix('.html')}.html"
 
 
 if __name__ == "__main__":
