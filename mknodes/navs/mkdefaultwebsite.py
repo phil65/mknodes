@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import mknodes as mk
 
 from mknodes.utils import log
@@ -14,7 +16,7 @@ class MkDefaultWebsite(mk.MkNav):
     def __init__(
         self,
         static_pages: dict[str, str | dict | list] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         super().__init__(**kwargs)
 

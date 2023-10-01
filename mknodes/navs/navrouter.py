@@ -69,9 +69,11 @@ class NavRouter:
         decorated method, that MkNav takes preference then over the modified one.
 
         Examples:
+            ``` py
             @nav.route.nav("Routed nav")
             def _(nav: mk.MkNav):
                 nav += ...
+            ```
 
         Arguments:
             path: The section path for the returned MkNav
@@ -107,11 +109,15 @@ class NavRouter:
         There is also the possibility to create a new MkPage and return it in the
         decorated method, that MkPage takes preference then over the modified one.
 
+        The keyword arguments can be used to pass metadata-related keyword arguments
+        to the MkPage constructor.
+
         Examples:
+            ``` py
             @nav.route.page("Routed page", icon=...)
             def _(page: mk.MkPage):
                 page += ...
-
+            ```
         Arguments:
             path: The section path for the returned MkPage
             kwargs: Keyword arguments passed to the MkPage constructor.
