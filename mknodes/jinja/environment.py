@@ -32,6 +32,7 @@ class Environment(jinja2.Environment):
         loader = jinjahelpers.resource_loader if load_templates else None
         behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
         self.extra_files: set[str] = set()
+        self.extra_paths: set[str] = set()
         super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
         self.filters.update(jinjahelpers.ENVIRONMENT_FILTERS)
         self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
@@ -85,6 +86,25 @@ class Environment(jinja2.Environment):
         self.extra_files.add(file)
         content = jinjahelpers.load_file(file)
         new_loader = jinja2.DictLoader({file: content})
+        self._add_loader(new_loader)
+
+    def add_template_path(self, path: str | os.PathLike | list[str]):
+        """Add a new template path runtime.
+
+        Will append a new FileSystemLoader by wrapping it and the the current loader into
+        either an already-existing or a new Choiceloader.
+
+        Arguments:
+            path: Template serch patch to add
+        """
+        path = str(path)
+        if path in self.extra_paths:
+            return
+        self.extra_paths.add(path)
+        new_loader = jinja2.FileSystemLoader(path)
+        self._add_loader(new_loader)
+
+    def _add_loader(self, new_loader):
         match self.loader:
             case jinja2.ChoiceLoader():
                 self.loader.loaders = [new_loader, *self.loader.loaders]
