@@ -62,7 +62,8 @@ class MkDiagram(mkcode.MkCode):
         super().__init__(language="mermaid", **kwargs)
         self._graph_type = graph_type
         self._direction = direction
-        self.names = set(items or [])
+        # Preserve order. Useful if only items are passed, order is important then.
+        self.names = sorted(set(items or []), key=items.index) if items else []
         self.connections = set(connections or [])
         self.attributes = attributes or {}
 
@@ -99,8 +100,10 @@ class MkDiagram(mkcode.MkCode):
     def mermaid_code(self) -> str:
         lines = list(self.names)
         if not self.connections:
+            lines = [f'{hash(i)}["{i}"]' for i in lines]
             for prev, nxt in itertools.pairwise(self.names):
-                lines.append(f"{prev} --> {nxt}")
+                lines.append(f"{hash(prev)} --> {hash(nxt)}")
+            return textwrap.indent("\n".join(lines), "  ")
         for connection in self.connections:
             if len(connection) == 2:  # noqa: PLR2004
                 source, target = connection
@@ -133,5 +136,5 @@ class MkDiagram(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    diagram = MkDiagram(graph_type="flow")
+    diagram = MkDiagram(["a", "b", "c", "d"])
     print(diagram)

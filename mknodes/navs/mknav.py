@@ -14,8 +14,7 @@ from mknodes.utils import log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
-    from mknodes.navs import mkdoc
-    from mknodes.pages import mkclasspage, mkmodulepage
+    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -84,12 +83,12 @@ class MkNav(mknode.MkNode):
     def __iter__(self):
         yield from self.nav.all_items
 
-    def get_node_resources(self):
+    def get_node_resources(self) -> resources.Resources:
         templates = [self.page_template] if self.page_template else []
         return resources.Resources(templates=templates)
 
     @property
-    def index_page(self):
+    def index_page(self) -> mk.MkPage | None:
         return self.nav.index_page
 
     @index_page.setter
@@ -158,7 +157,7 @@ class MkNav(mknode.MkNode):
         path: str | None = None,
         template: str | None = None,
         tags: list[str] | None = None,
-    ) -> mkpage.MkPage:
+    ) -> mk.MkPage:
         """Register and return a index page with given title.
 
         Arguments:
@@ -210,7 +209,7 @@ class MkNav(mknode.MkNode):
         description: str | None = None,
         template: str | None = None,
         tags: list[str] | None = None,
-    ) -> mkpage.MkPage:
+    ) -> mk.MkPage:
         """Add a page to the Nav.
 
         Arguments:
@@ -255,10 +254,10 @@ class MkNav(mknode.MkNode):
         *,
         filter_by___all__: bool = False,
         section_name: str | None = None,
-        class_page: type[mkclasspage.MkClassPage] | str | None = None,
-        module_page: type[mkmodulepage.MkModulePage] | str | None = None,
+        class_page: type[mk.MkClassPage] | str | None = None,
+        module_page: type[mk.MkModulePage] | str | None = None,
         flatten_nav: bool = False,
-    ) -> mkdoc.MkDoc:
+    ) -> mk.MkDoc:
         """Add a module documentation to the Nav.
 
         Arguments:

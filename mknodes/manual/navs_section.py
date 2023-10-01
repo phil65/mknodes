@@ -23,7 +23,7 @@ def create_navs_section(root_nav: mk.MkNav):
     page += mk.MkJinjaTemplate("navs_index.jinja", variables=variables)
 
 
-@nav.route.nav("From file")
+@nav.route.nav("Populate MkPages from SUMMARY.md")
 def _(nav: mk.MkNav):
     folder = paths.TEST_RESOURCES / "nav_tree/"
     summary_file = folder / "SUMMARY.md"
@@ -36,7 +36,7 @@ def _(nav: mk.MkNav):
     page += mk.MkJinjaTemplate("nav_from_file.jinja", variables=variables)
 
 
-@nav.route.nav("From folder")
+@nav.route.nav("Populate MkPages from folder")
 def _(nav: mk.MkNav):
     """Create a MkNav based on a folder tree containing markup files."""
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
@@ -53,7 +53,7 @@ def _(nav: mk.MkNav):
     nav += website_nav
 
 
-@nav.route.nav("MkDoc")
+@nav.route.nav("The MkDoc class")
 def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc", icon="api")
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
