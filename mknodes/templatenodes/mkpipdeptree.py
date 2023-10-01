@@ -114,7 +114,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
     @property
     def mermaid_code(self) -> str:
         return get_mermaid(
-            self.package,
+            tuple(self.package) if isinstance(self.package, list) else self.package,
             local_only=self.local_only,
             user_only=self.user_only,
         )
