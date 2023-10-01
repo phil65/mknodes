@@ -20,6 +20,12 @@ STYLE = (
 
 
 class MkTimelineItem(mknode.MkNode):
+    """Single Timeline item / card.
+
+    Not intended to be used directly. Use MkTimeline instead, which manages
+    MkTimelineItems.
+    """
+
     def __init__(
         self,
         title: str = "",
@@ -30,6 +36,17 @@ class MkTimelineItem(mknode.MkNode):
         image: str = "",
         **kwargs,
     ):
+        """Constructor.
+
+        Arguments:
+            title: Item header / title
+            content: Text / markdown for the content area
+            date: A date, displayed in an upper corner
+            link: An optional link for the "More" button
+            button_text: allows to switch the button label from "More" to sth user-chosen.
+            image: Optional image to display in upper half of the card
+            kwargs: Keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.title = title
         self.content = self.to_child_node(content)
@@ -83,7 +100,10 @@ class MkTimelineItem(mknode.MkNode):
 
 
 class MkTimeline(mkcontainer.MkContainer):
-    """Node to show an Image comparison (using a slider)."""
+    """Node to show a JavaScript-supported Timeline.
+
+    Consists of cards which slide in and out once they enter / leave the screen.
+    """
 
     ICON = "material/timeline"
     JS_FILES = [

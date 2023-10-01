@@ -134,7 +134,7 @@ class MkTabContainer(mkcontainer.MkContainer):
 
 
 class MkTabbed(MkTabContainer):
-    """PyMdown-based Tab."""
+    """PyMdown-based Tab container."""
 
     items: list[mktabs.MkTab]
     REQUIRED_EXTENSIONS = [

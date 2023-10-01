@@ -10,10 +10,10 @@ An index page shows when clicking on a menu item with children, or for the websi
 MkPages have metadata attached, which can be set via the [MkPage.metadata][mknodes.pages.metadata.Metadata] attribute.
 Metadata is also inherited from the parent MkNavs in case they have metadata set.
 That metadata can alter the behaviour and appearance of given page. It can be used to
-show icons / subtitles in menus, to modify the search ranking, to set a reference to a Page template, and much more.
+show icons / subtitles in menus, to modify the search ranking, to set a reference to a [PageTemplate][mknodes.pages.pagetemplate.PageTemplate], and much more.
 
 !!! Info
-    The *page information* box at the bottom of each page also contains the metadata content of the current page, as well as the code which created the page. If you're interested how MkNodes works, it can help to check out
+    The *page information* box at the bottom of each page also contains the metadata content of the current page, as well as the code which created the page. If you're interested how **MkNodes** works, it can help to check out
     these information boxes! (What you will notice: **MkNodes** puts some data about the page instantiation into the metadata.)
 
 
@@ -86,7 +86,7 @@ page.footnotes[3] = MkAdmonition("And they can also contain other Markdown (node
 
 ## Build process
 
-During the build process, all Markdown nodes which are part of an [MkPage][mknodes.MkPage] get collected and scanned for required resources like CSS / JS / static assets. If appropriate, these resources then automatically get inserted into the Page template and end up in the HTML header.
+During the build process, all Markdown nodes which are part of an [MkPage][mknodes.MkPage] get collected and scanned for required resources like CSS / JS / static assets. If appropriate, these resources then automatically get inserted into the [PageTemplate][mknodes.pages.pagetemplate.PageTemplate] and end up in the HTML header.
 
 
 The final URL of an [MkPage][mknodes.MkPage] is determined by its position inside the tree and gets calculated
@@ -97,7 +97,7 @@ title in case no specific path is given.
 MkPages do **NOT**  inherit from [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) objects or are in any way directly connected to them.
 In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an **MkNodes** tree or anything else in this library, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin, which happens after the tree was built.
 
-During the build process, MkPages get serialized to Markdown and are put into the build folder, where [MkDocs](https://www.mkdocs.org) picks the files up and creates [MkDocs](https://www.mkdocs.org) Page objects in following steps.
+During the build process, MkPages get serialized to Markdown and are put into the build folder, where [MkDocs](https://www.mkdocs.org) picks the files up and creates [MkDocs](https://www.mkdocs.org) File / Page objects in following steps.
 
 
 ## Template MkPages

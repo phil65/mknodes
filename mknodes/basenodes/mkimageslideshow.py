@@ -22,7 +22,7 @@ SCRIPT = r"""
 
 
 class MkImageSlideshow(mknode.MkNode):
-    """Node to show an Image comparison (using a slider)."""
+    """Node to show an Image slideshow (in autoplay mode)."""
 
     ICON = "material/image-multiple"
     JS_FILES = [resources.JSLink(JS_URL)]
