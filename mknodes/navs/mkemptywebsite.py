@@ -8,7 +8,7 @@ logger = log.get_logger(__name__)
 
 
 class MkEmptyWebsite(mknav.MkNav):
-    """Nav for showing a module documenation."""
+    """Non-populated MkNav which parses given static pages dict."""
 
     def __init__(self, static_pages: dict | None = None, **kwargs):
         super().__init__(**kwargs)

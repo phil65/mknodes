@@ -26,7 +26,7 @@ MkNavs can contain other MkNavs to construct a hierarchical website structure, a
 MkPages can be "regular" child of an [MkNav][mknodes.MkNav], or an index page. Index pages are dedicated pages
 which are shown when a site nav menu item containing children is clicked, or for the website root.
 
-??? tip
+??? tip "Theme support for index pages"
     Index pages need specific theme support (like [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) has) or the
     [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index) plugin.
 
@@ -56,7 +56,7 @@ nav.page_template.announce.content = "Display **Markdown** in announcement bar!"
 
 In the case of MkDocs, Template HTMLs will get created temporarily during the build process and will get deleted after deployment / serving.
 
-??? tip
+??? tip "Static templates"
     Apart from "page templates", which apply to specific (groups of) MkPages, there are also "static" templates
     which are part of the [Theme][mknodes.theme.theme.Theme] object (or of a Theme subclass).
     That way you can for example populate the `404` error page easily with Markdown.
@@ -66,7 +66,7 @@ In the case of MkDocs, Template HTMLs will get created temporarily during the bu
 
 The very first element you get in **MkNodes** is the root nav. The root nav is the node which will contain all other nodes at the end of the tree building process, in a nested, hierarchical structure.
 
-Technically, there are no differences between the root MkNav and any other "nested" MkNav, except that the root MkNav does not have a a parent.
+Technically, there are no differences between the root MkNav and any other "nested" MkNav, except that the root MkNav does not have a parent.
 
 You can construct sub-MkNavs by [instantiating][mknodes.MkNav.__init__] them, by using [MkNav.add_nav][mknodes.MkNav.add_nav] or by using the decorator routing mechanism.
 

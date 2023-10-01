@@ -9,7 +9,7 @@ logger = log.get_logger(__name__)
 
 
 class MkDefaultWebsite(mk.MkNav):
-    """Nav for showing a module documenation."""
+    """Nav for showing a default website including API docs and environment infos."""
 
     def __init__(
         self,
