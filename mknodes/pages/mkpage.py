@@ -49,6 +49,7 @@ class MkPage(mkcontainer.MkContainer):
         inclusion_level: bool | None = None,
         tags: list[str] | None = None,
         edit_path: str | None = None,
+        is_homepage: bool | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -69,10 +70,12 @@ class MkPage(mkcontainer.MkContainer):
             tags: tags to show above the main headline and within the search preview
             edit_path: Custom edit path for this page
             kwargs: Keyword arguments passed to parent
+            is_homepage: Whether this page should be the homepage.
         """
         super().__init__(**kwargs)
         self._path = str(path) if path else None
         self._edit_path = edit_path
+        self._is_homepage = is_homepage
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.created_by: Callable | None = None
         self._metadata = metadata.Metadata(
@@ -124,6 +127,8 @@ class MkPage(mkcontainer.MkContainer):
     @property
     def path(self):
         """Return the last part of the page path."""
+        if self._is_homepage:
+            return "index.md"
         if self._path:
             return self._path.removesuffix(".md") + ".md"
         return f"{self.metadata.title}.md"
@@ -134,6 +139,8 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def resolved_file_path(self) -> str:
+        if self._is_homepage:
+            return "index.md"
         """Returns the resulting section/subsection/../filename.xyz path."""
         path = "/".join(self.resolved_parts) + "/" + self.path
         return path.lstrip("/")
