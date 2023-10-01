@@ -1,11 +1,15 @@
 When a website build is started, MkNodes will collect as much information as possible
-about the build by inspecting the distribution info, the local git repository, the remote GitHub repository as well as other related information. That information is used to build a context, thus enabling the MkNodes to display project information without explicitely "setting" that info. The collected information is also used to populate the MkNodes-specific Jinja namespace. In combination with the MkNode filters, this allows to efficiently write
-documentation about your project. Everything is right at your fingertips.
+about the context by inspecting the distribution info, the local git repository, the remote GitHub repository as well as other related information. That information is used to build a context, thus enabling the MkNodes to display project information without explicitely "hardcoding" the project.
+
+The collected information is also used to populate the MkNodes-specific Jinja namespace. In combination with the MkNode jinja filters, this allows to efficiently write documentation about your project as well as building project-agnostic websites / website parts which can be re-used across different projects.
 
 ### These are the available namespaces available in the Jinja2 environment:
 
 {{ namespaces | MkDefinitionList }}
 
-Example:
 
-{{ metadata.required_package_names | MkPipDepTree(direction="LR") }}
+#### Example:
+
+This call would pass the module of the current context to MkPipDepTree and let it create a dependency graph:
+
+{ { metadata.module | MkPipDepTree(direction="LR") } }

@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 class MkEmptyWebsite(mknav.MkNav):
     """Nav for showing a module documenation."""
 
-    def __init__(self, static_pages=None, **kwargs):
+    def __init__(self, static_pages: dict | None = None, **kwargs):
         super().__init__(**kwargs)
         import mknodes
 
