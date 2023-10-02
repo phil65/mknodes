@@ -11,14 +11,14 @@ Finally a break to write some **regular** markdown!
 
 ## What is MkNodes
 
-* Markdown objectified. A complete `MkDocs` project can be built by attaching nodes
+* Markdown objectified. A complete **MkDocs** project can be built by attaching nodes
   to a tree. Nodes range from atomic Markdown elements up to composed templates.
 
 * A parametrized Webpage. Because the tree only gets evaluted when it is written,
   it can basically behave like a template. Changing the project connected to the
   tree also changes the content of Nodes which pull metadata from the project.
 
-* `MkNodes` is aligned to the popular MkDocs/MkDocstrings/MkDocs for Material/PyMDown
+* **MkNodes** is aligned to the popular MkDocs/MkDocstrings/MkDocs for Material/PyMDown
   documentation stack for python. Other themes work probably, too, but are not tested.
 
 * It is *not* a parser. The only things that get parsed are SUMMARY.md files and the
