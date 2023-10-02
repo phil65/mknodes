@@ -36,6 +36,13 @@ BlockStr = Literal[
 
 SUPER_TEXT = r"{{ super() }}"
 
+REDIRECT = """
+<link rel="canonical" href="{url}">
+<meta name="robots" content="noindex">
+<script>var anchor=window.location.hash.substr(1);location.href="{url}"+(anchor?"#"+anchor:"")</script>
+<meta http-equiv="refresh" content="0; url={url}">
+"""  # noqa: E501
+
 
 class Super:
     """Simple class to use for the jinja super expression."""
@@ -180,8 +187,10 @@ class ExtraHeadBlock(Block):
     def block_content(self, md: markdown.Markdown | None = None):
         content = self.content
         if self.robots_rule:
-            rule = f'<meta name="robots" content="{self.robots_rule}">'
-            return f"{content}\n{rule}"
+            rule = f'\n<meta name="robots" content="{self.robots_rule}">'
+            content += rule
+        if self.redirect_url:
+            content += REDIRECT.format(url=self.redirect_url)
         return content
 
     def set_robots_rule(self, rule: str | None = None):
@@ -194,6 +203,14 @@ class ExtraHeadBlock(Block):
             rule: Rule to apply for robots
         """
         self.robots_rule = rule
+
+    def set_redirect_url(self, url: str):
+        """Set a URL which the page should redirect to.
+
+        Arguments:
+            url: URL to redirect to
+        """
+        self.redirect_url = url
 
 
 class StylesBlock(Block):
