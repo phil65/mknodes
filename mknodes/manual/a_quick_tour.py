@@ -73,14 +73,14 @@ def a_quick_tour(page: mk.MkPage):
     #
     # or we pass them a parent on instantiation.
     #
-    # In this example, once we add `MkMetadataBadges` to the tree, he knows that he should
-    # create badges for our very own package, `mknodes`, unless we explicitely tell him
-    # to do otherwise. It will become his "default".
+    # In this example, once we add `MkMetadataBadges` to the tree, that node knows
+    # that he should create badges for our very own package, `mknodes`,
+    # unless we explicitely tell him to do otherwise. It will become his new "default".
     #
     # You dont believe me? Let me show you:
     node = mk.MkMetadataBadges("websites", parent=page)
 
-    # now that node is connected. If we ask him to draw now, he will give us website
+    # Now that node is connected. If we ask him to draw now, he will create website
     # badges for `mknodes`!
 
     str(node)
@@ -94,27 +94,14 @@ def a_quick_tour(page: mk.MkPage):
     #
     # That's it for a first quick look at the nodes.
     # There are about 70 different ones available in this package.
-    # some are exciting, some are boring. It's no difference to humans.
+    # Some are exciting, some are boring. It's no difference to humans.
     #
     # Oh, and if you wonder how this tour was done: I got help from `MkCommentedCode`!
 
     page += mk.MkCommentedCode(a_quick_tour, style="text")
 
-    # MkCommentedCode parses a function and separates comments from code.
+    # `MkCommentedCode` parses a function and separates comments from code.
     # These chunks are displayed on a rotating basis then.
-    #
-    # Before we end the tour, let's take a look at the raw material.
-    # We can use the MkCode node for that.
-    #
-    node = mk.MkCode.for_object(a_quick_tour)
-    text = str(node).replace(r"{", "<").replace(r"}", ">")
-    page += text
-    # As you can see, we added the MkCode node to the page. It will be displayed right
-    # after the MkCommentedCode block. You will see it right below.
-    #
-    # Oh, and the String replacement you probably noticed is a quick hack to prevent
-    # jinja code from getting executed. YOu can ignore that, it's not relevant for this
-    # tour.
-    #
+
     # That's it. The rest of the nodes you need to check out yourself. Have fun!
     print("bye!")

@@ -28,11 +28,6 @@ def _(page: mk.MkPage):
     page += mk.MkModuleOverview(maximum_depth=2)
 
 
-@nav.route.page("Plugin flow", icon="dev-to")
-def _(page: mk.MkPage):
-    page += mk.MkPluginFlow()
-
-
 @nav.route.page("Changelog", icon="format-list-group")
 def _(page: mk.MkPage):
     page += mk.MkChangelog()
