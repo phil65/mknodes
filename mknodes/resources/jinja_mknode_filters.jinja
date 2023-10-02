@@ -1,9 +1,9 @@
-All approx. 70 different `MkNodes` are available as filters in the `MkNodes` jinja environment, thus makin the environment a powerful tool for writing Markdown. This section shows a few example cases and how to use them.
+All approx. 70 different **MkNodes** are available as filters in the **MkNodes** jinja environment, thus makin the environment a powerful tool for writing Markdown. This section shows a few example cases and how to use them.
 
 !!! info
     An important consideration for some situations: The node filters arent a `type` aka a class, they are a partial function. That is required in order to automatically have the correct parent for the nodes set.
-    In some cases we can workaround that fact because a lot of `MkNodes` take both a type or a string as an input (example: [MkDocStrings][mknodes.MkDocStrings]). In these cases we can simply pass a string.
-    If there ever arises a need to have the "real" [MkNode][mknodes.MkNode] classes in the `jinja2` namespace, then they will get added with a prefix or a similar solution.
+    In some cases we can workaround that fact because a lot of **MkNodes** take both a type or a string as an input (example: [MkDocStrings][mknodes.MkDocStrings]). In these cases we can simply pass a string.
+    If there ever arises a need to have the "real" [MkNode][mknodes.MkNode] classes in the **jinja2** namespace, then they will get added with a prefix or a similar solution.
 
 
 ### Example 1: show MkDocStrings for MkPage
@@ -17,14 +17,14 @@ All approx. 70 different `MkNodes` are available as filters in the `MkNodes` jin
 "classifiers" | MkMetadataBadges
 ```
 ??? info
-    If a [MkNode][mknodes.MkNode] uses the `MkNodes` `jinja2` environment (which can get accessed by every node via `mknodes.MkNode.env`), then the filter-nodes already have the calling node set as their parent, and, because of that, also have access to the same context. If this would not be the case (or if the caller itself doesnt have a context), then the following line would be required in order for the command to work:
+    If a [MkNode][mknodes.MkNode] uses the **MkNodes** **jinja2** environment (which can get accessed by every node via `mknodes.MkNode.env`), then the filter-nodes already have the calling node set as their parent, and, because of that, also have access to the same context. If this would not be the case (or if the caller itself doesnt have a context), then the following line would be required in order for the command to work:
     ```
     "classifiers" | MkMetadataBadges(package="mknodes")
     ```
 
-### Example 3: Show MkDocStrings wrapped in an Admonition box
+### Example 3: Show nested MkNode
 
-`jinja2` filters can get chained using the pipe operator. This allows a concise syntax to deeply nest `MkNodes` with one command.
+**jinja2** filters can get chained using the pipe operator. This allows a concise syntax to deeply nest **MkNodes** with one command.
 
 ```
 "mknodes.MkNode" | MkClassDiagram(mode="subclasses") | MkAdmonition
@@ -35,5 +35,5 @@ A nice feature: If the caller (the node which renders a template) is a [MkJinjaT
 If that Node would go through the build pipeline afterwards, these extensions would be included for the markdown-HTML conversion.
 
 ??? Limitations
-    When just using the pipe operator for filtering, everything is working perfectly fine. Sadly, the [MkNode][mknodes.MkNode] filters dont work with filter blocks (check the `jinja2` docs), apparently these are handled differently internally by `jinja2`.
+    When just using the pipe operator for filtering, everything is working perfectly fine. Sadly, the [MkNode][mknodes.MkNode] filters dont work with filter blocks (check the **jinja2** docs), apparently these are handled differently internally by **jinja2**.
 
