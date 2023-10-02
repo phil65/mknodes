@@ -50,6 +50,11 @@ def _(nav: mk.MkNav):
     page += mk.MkJinjaTemplate("template_namespace_index.jinja", variables=variables)
 
 
-@nav.route.page("Template filters")
+@nav.route.page("Utility filters")
 def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("template_filters.jinja")
+
+
+@nav.route.page("MkNode filters")
+def _(page: mk.MkPage):
+    page += mk.MkJinjaTemplate("jinja_mknode_filters.jinja")
