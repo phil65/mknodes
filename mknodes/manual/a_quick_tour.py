@@ -2,7 +2,12 @@ import mknodes as mk
 
 
 def a_quick_tour(page: mk.MkPage):
-    # Let the tour begin! We will start by introducing some **MkNodes**.
+    # This will be a quick, short random introduction of some of the nodes
+    # included in **MkNodes**.
+    # The selection of nodes is totally random, this should just provide a quick overview
+    # how to interact with the nodes.
+    #
+    # Let the tour begin!
     #
     # Our first [MkNode][mknodes.MkNode] is very clever. You just show him a node and he
     # will tell you all you need to know about him.
@@ -127,4 +132,4 @@ def a_quick_tour(page: mk.MkPage):
     #  for this tour.
     #
     # That's it. The rest of the nodes you need to check out yourself. Have fun!
-    print("bye!")
+    pass

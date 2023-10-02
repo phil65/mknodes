@@ -1,17 +1,14 @@
 There can only be one....**Homepage**!
 
-Homepage in this context means the front page, the page you land on when visiting the page.
-
-There are basically two different types of Homepages, either detached or part of the menu.
+**Homepage** in this context means the front page, the page you land on when visiting the page.
 
 
-## Regular homepages
+## Setting the Homepage
 
-The first (and more popular) option is to make a "regular" menu item your homepage. To achieve this, set `is_homepage` to True in the [MkPage][mknodes.MkPage] constructor for the page you want to become your homepage.
+If you want an [MkPage][mknodes.MkPage] to become your Homepage, set `is_homepage` to True in the [MkPage][mknodes.MkPage] constructor for the page you want to become your homepage.
 
-**Example 1**: setting `is_homepage` via constructor
 
-``` py
+``` py title="setting `is_homepage` via constructor"
 sub_nav = root_nav.add_nav("My child nav")
 # first we create an MkPage with is_homepage set to True
 my_homepage = mk.MkPage("My first Homepage", is_homepage=True)
@@ -21,12 +18,10 @@ sub_nav += my_homepage
 `my_homepage` is now both the homepage and a child page from `sub_nav`.
 
 
-Alternatively, in case you use the routing decorators:
-with the same effect, you can set `is_homepage` to True for the decorator keyword argument.
+If decorators are used for routing, `is_homepage` can be passed as decorator keyword argument
+with the same effect.
 
-**Example 2**: setting `is_homepage` via decorator
-
-``` py
+``` py title="setting `is_homepage` via decorator"
 nav = root_nav.get_nav("My child nav")
 
 @nav.route.page("My first Homepage", is_homepage=True)
@@ -34,25 +29,27 @@ def _(page: mk.MkPage):
     page += ...
     ...
 ```
-Same as in the previous example, `my_homepage` is both a homepage and a regular page as part of the site navigation.
+
+## Setting Index pages
+
+**Index pages** is a more general term and can also refer to pages which could be described as a "Sub-Homepages". The homepage itself is also an index page.
+
+For pages with a hierarchical site navigation, you can usually reach the index pages by clicking the section label in the site navigation menu.
+
+!!! info
+    **MkDocs** does not support index pages "out-of-the box". You either need the plugin [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index) or a theme which
+    supports them natively.
 
 
-## Detached Homepages
+To create an index page for a section, you can use [MkNav.add_index_page][mknodes.MkNav.add_index_page]:
 
-A detached homepage is not part of the navigation (and it's probably also excluded from search). How you can reach it (and perhaps even IF you can reach it) depends on the theme used.
-In the case of **MkDocs-Material**, a detached homepage can only be reached via the top left icon.
 
-To set a detached homepage, simply set an index page for the root nav.
-
-``` py
-page = root_nav.add_index_page()
+``` py title="Setting an index page"
+page = nav.add_index_page()
 ...
 ```
 
+You can also use `add_index_page` on the root nav to set your homepage,
+using the `is_homepage` keyword argument is more flexible though because it also allows you to set a homepage which is not a direct child of the root nav.
+A common approach for example is to make the first page of the first section your homepage.
 
-The first approach is much more common when it comes to **MkDocs** themes and is also probably the "proper" way to do it, but I guess the detached option is still worth mentioning.
-
-In general, there is nothing really special about the homepage. If you want to make it "special" appearance-wise, then using [page templates](Templates.md) is the way to go.
-
-??? tip
-    If you want to have "Section Pages" by using the plugin [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index), then using `set_index_page` is the correct way to do it. The `is_homepage` keyword argument is only meant for the *root* `index.md`, not for the *section* `index.mds`.
