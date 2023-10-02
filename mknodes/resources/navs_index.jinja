@@ -22,7 +22,7 @@ In essence: A path can contain *one or more MkNavs*, exactly *one MkPage*, and *
 ## MkNavs: General information
 
 MkNavs are nodes to represent "sections", perhaps comparable to a folder (with MkPages being files in this analogy).
-MkNavs can contain other MkNavs to construct a hierarchical website structure, as well as MkPages and [MkLinks][mknodes.MkLink].
+MkNavs can contain other MkNavs to construct a hierarchical website tree structure, as well as MkPages and [MkLinks][mknodes.MkLink].
 MkPages can be "regular" child of an [MkNav][mknodes.MkNav], or an index page. Index pages are dedicated pages
 which are shown when a site nav menu item containing children is clicked, or for the website root.
 
@@ -33,13 +33,13 @@ which are shown when a site nav menu item containing children is clicked, or for
 
 ## MkNav metadata
 
-MkNavs (as well as MkPages) own a metadata object, which can be set via the [MkPage.metadata][mknodes.pages.metadata.Metadata] attribute.
+MkNavs (as well as MkPages) own a metadata object, which can be set via the [MkPage.metadata][mknodes.Metadata] attribute.
 That metadata is not really useful for the [MkNav][mknodes.MkNav] itself. The metadata gets propagated to the child pages though, and thus this mechanism can be helpful to set metadata for a complete website branch / section in one go.
 Metadata is also inherited from the parent MkNavs in case they have metadata set. In other words:
 Template / Metadata inheritance happens through the whole chain of MkNavs / MkPages, from top to bottom.
 
 ??? info "Further info"
-    See the [Metadata][mknodes.pages.metadata.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.
+    See the [Metadata][mknodes.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.
 
 
 ## MkNav templates

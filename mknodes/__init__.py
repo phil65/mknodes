@@ -78,6 +78,8 @@ from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
 
 from .project import Project
+from .pages.metadata import Metadata
+from .pages.pagetemplate import PageTemplate
 from .navs.mkdefaultwebsite import MkDefaultWebsite
 
 __all__ = [
@@ -147,6 +149,8 @@ __all__ = [
     "MkCommandOutput",
     "MkBadge",
     "Project",
+    "Metadata",
+    "PageTemplate",
     "MkMetadataBadges",
     "MkModuleOverview",
     "MkCommentedCode",

@@ -7,10 +7,10 @@ An index page shows when clicking on a menu item with children, or for the websi
 
 ## Page metadata
 
-MkPages have metadata attached, which can be set via the [MkPage.metadata][mknodes.pages.metadata.Metadata] attribute.
+MkPages have metadata attached, which can be set via the [MkPage.metadata][mknodes.Metadata] attribute.
 Metadata is also inherited from the parent MkNavs in case they have metadata set.
 That metadata can alter the behaviour and appearance of given page. It can be used to
-show icons / subtitles in menus, to modify the search ranking, to set a reference to a [PageTemplate][mknodes.pages.pagetemplate.PageTemplate], and much more.
+show icons / subtitles in menus, to modify the search ranking, to set a reference to a [PageTemplate][mknodes.PageTemplate], and much more.
 
 !!! Info
     The *page information* box at the bottom of each page also contains the metadata content of the current page, as well as the code which created the page. If you're interested how **MkNodes** works, it can help to check out
@@ -18,12 +18,12 @@ show icons / subtitles in menus, to modify the search ranking, to set a referenc
 
 
 ??? info "Further info"
-    See the [Metadata][mknodes.pages.metadata.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.
+    See the [Metadata][mknodes.Metadata] section, the [MkDocs Documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) as well as the [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/) docs for further info.
 
 
 ## Page templates
 
-Each MkPage also carries a [PageTemplate][mknodes.pages.pagetemplate.PageTemplate], which can be used for more advanced modification of a page. For example, page templates can be used to put HTML / Markdown into other areas of the page than just the main content area, like the announcement bar or the site nav section.
+Each MkPage also carries a [PageTemplate][mknodes.PageTemplate], which can be used for more advanced modification of a page. For example, page templates can be used to put HTML / Markdown into other areas of the page than just the main content area, like the announcement bar or the site nav section.
 Like metadata, the templates also inherit from MkNavs, meaning that a [MkPage][mknodes.MkPage] will use the
 template of a parent [MkNav][mknodes.MkNav] if it has one defined.
 
@@ -75,7 +75,7 @@ MkPages can get created in many ways:
 Like many other nodes, MkPages inherits from [MkContainer][mknodes.MkContainer] and looks to the outside world like a list, meaning you can add nodes to them by using `+=`, [MkPage.append][mknodes.MkPage.append] or [MkPage.insert][mknodes.MkPage.insert]
 
 
-Each MkPage also has an [MkFootnotes][mknodes.MkFootNotes] node "embedded" which can be used to easily add footnotes to a page. (Scroll to the bottom to see the result)
+Each [MkPage][mknodes.MkPage] also has an [MkFootnotes][mknodes.MkFootNotes] node "embedded" which can be used to easily add footnotes to a page. (Scroll to the bottom to see the result)
 
 ``` py title="MkFootnotes embedded"
 page = MkPage("My page")
@@ -86,7 +86,7 @@ page.footnotes[3] = MkAdmonition("And they can also contain other Markdown (node
 
 ## Build process
 
-During the build process, all Markdown nodes which are part of an [MkPage][mknodes.MkPage] get collected and scanned for required resources like CSS / JS / static assets. If appropriate, these resources then automatically get inserted into the [PageTemplate][mknodes.pages.pagetemplate.PageTemplate] and end up in the HTML header.
+During the build process, all Markdown nodes which are part of an [MkPage][mknodes.MkPage] get collected and scanned for required resources like CSS / JS / static assets. If appropriate, these resources then automatically get inserted into the [PageTemplate][mknodes.PageTemplate] and end up in the HTML header.
 
 
 The final URL of an [MkPage][mknodes.MkPage] is determined by its position inside the tree and gets calculated
@@ -94,8 +94,8 @@ when the tree gets "serialized" into markdown. The HTML filename is inferred fro
 title in case no specific path is given.
 
 
-MkPages do **NOT**  inherit from [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) objects or are in any way directly connected to them.
-In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an **MkNodes** tree or anything else in this library, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin, which happens after the tree was built.
+MkPages do **NOT** inherit from the [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) object.
+In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an **MkNodes** tree, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin, which happens after the tree was built.
 
 During the build process, MkPages get serialized to Markdown and are put into the build folder, where [MkDocs](https://www.mkdocs.org) picks the files up and creates [MkDocs](https://www.mkdocs.org) File / Page objects in following steps.
 
@@ -103,5 +103,5 @@ During the build process, MkPages get serialized to Markdown and are put into th
 ## Template MkPages
 
 **MkNodes** also contains two special subclasses of [MkPage][mknodes.MkPage], [MkModulePage][mknodes.MkModulePage] and [MkClassPage][mknodes.MkClassPage].
-They get used by the automatic API generator node named [MkDoc][mknodes.MkDoc] and contain a jinja template used to create an API / info page for given module / class.
+They get used by the automatic API generator node named [MkDoc][mknodes.MkDoc] and contain a **jinja2** template used to create an API / info page for given module / class.
 
