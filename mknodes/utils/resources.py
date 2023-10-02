@@ -279,6 +279,13 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
     def __setitem__(self, index, value):
         setattr(self, index, value)
 
+    def __contains__(self, other):
+        if any(i == other for i in self.markdown_extensions):
+            return True
+        if any(i.plugin_name == other for i in self.plugins):
+            return True
+        return super().__contains__(other)
+
     def __len__(self):
         return len(dataclasses.fields(self))
 
