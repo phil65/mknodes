@@ -26,4 +26,3 @@ def _(page: mk.MkPage):
 
 page = nav.add_page("A quick node tour", hide="toc")
 a_quick_tour(page)
-page.created_by = a_quick_tour

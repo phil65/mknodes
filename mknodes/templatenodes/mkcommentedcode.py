@@ -21,7 +21,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
     """Node which displays a list of code / comment blocks for given code.
 
     Lines beginning with # are shown in dedicated blocks and can be used to
-    inline-explain the code. Lines can be hidden by ending a line with "#".
+    inline-explain the code. Lines can be hidden by ending a line with "##".
     """
 
     ICON = "material/code-json"
