@@ -71,7 +71,12 @@ def get_default_loader(base_loader_cls: type):
 
 
 def load_yaml(text: str, mode: LoaderStr = "unsafe"):
-    """Wrap PyYaml's loader so we can extend it to suit our needs."""
+    """Load a yaml string.
+
+    Arguments:
+        text: the string to load
+        mode: the yaml loader mode.
+    """
     match mode:
         case "unsafe":
             base_loader_cls: type = yaml.CUnsafeLoader
@@ -86,6 +91,11 @@ def load_yaml(text: str, mode: LoaderStr = "unsafe"):
 
 
 def dump_yaml(yaml_obj: Any) -> str:
+    """Dump a data structure to a yaml string.
+
+    Arguments:
+        yaml_obj: The object to serialize
+    """
     return yaml.dump(yaml_obj, Dumper=yaml.Dumper, indent=2)
 
 

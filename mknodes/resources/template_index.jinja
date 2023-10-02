@@ -45,7 +45,7 @@ via code of course though), but has a much larger built-in set of macros and fil
 
 * Nodes rendered with [MkJinjaTemplate][mknodes.MkJinjaTemplate] actually become virtual children of that node.
   This means that they will get iterated when the tree is traversed.
-  In other words: If you use a node in a template which requires resources (CSS, JS, static files, ...),
+  In other words: If you use a node which requires resources (CSS, JS, static files, ...) inside a template,
   then these resources will automatically get added to the website build (aka to the config and the page templates) without any further interaction.
 
     A short example:
