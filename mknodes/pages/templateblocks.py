@@ -162,18 +162,38 @@ class LibsBlock(Block):
 
 
 class ExtraHeadBlock(Block):
-    """Block for extra HEAD content."""
+    """Block for extra HEAD content.
+
+    Can be used for stuff not covered by other blocks, like changing the
+    indexing rules.
+    """
 
     block_id = "extrahead"
 
     def __init__(self):
         self.content = ""
+        self.robots_rule = None
 
     def __bool__(self):
         return bool(self.content)
 
     def block_content(self, md: markdown.Markdown | None = None):
-        return self.content
+        content = self.content
+        if self.robots_rule:
+            rule = f'<meta name="robots" content="{self.robots_rule}">'
+            return f"{content}\n{rule}"
+        return content
+
+    def set_robots_rule(self, rule: str | None = None):
+        """Set a rule for search robots.
+
+        For valid rule values, check
+        https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag
+
+        Arguments:
+            rule: Rule to apply for robots
+        """
+        self.robots_rule = rule
 
 
 class StylesBlock(Block):
