@@ -1,4 +1,4 @@
-When a website build is started, MkNodes will collect as much information as possible
+When a website build is started, **MkNodes** will collect as much information as possible
 about the context by inspecting the distribution info, the local git repository, the remote GitHub repository as well as other project-related information. That information is used to build a context. A large amount of **MkNodes** fallback to context info if no other info is explicitely set, thus enabling the nodes to display project information without explicitely "hardcoding" the project.
 
 ### These are the available namespaces available in the Jinja2 environment:
@@ -7,7 +7,7 @@ about the context by inspecting the distribution info, the local git repository,
 
 *Take a look at the sections in the site nav in order to discover all available information in the environment.*
 
-The collected information is also used to populate the MkNodes-specific **Jinja2** namespace. In combination with the **MkNodes** jinja filters, this allows to efficiently write documentation about your project as well as building project-agnostic websites / website parts which can be re-used across different projects.
+The collected information is also used to populate the **MkNodes**-specific **Jinja2** namespace. In combination with the **MkNodes** jinja filters, this allows to efficiently write documentation about your project as well as building project-agnostic websites / website parts which can be re-used across different projects.
 
 !!! info "Rendering CSS files"
     Data about the used theme (colors etc.) is also part of the context / project information.

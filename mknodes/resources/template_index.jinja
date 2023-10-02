@@ -1,4 +1,4 @@
-MkNodes contains an expansive **Jinja2** Environment. It is comparable to
+**MkNodes** contains an expansive **Jinja2** Environment. It is comparable to
 the **MkDocs-macros** plugin. It has less settings (you can modify the environment in every way you want
 via code of course though), but has a much larger built-in set of macros and filters as well as some unique features.
 
@@ -58,7 +58,7 @@ via code of course though), but has a much larger built-in set of macros and fil
     assert node.items[0].parent == node
     ```
 
-/// details | "Why not use the MkDocs environment?"
+/// details | "Why not use the **MkDocs** environment?"
 **MkNodes** cannot just re-use the **MkDocs** jinja environment
 because at that stage of the build process, our nodes already became text and we need
 the nodes for context (mainly to attach a parent to the MkNodes used as macros / filters)

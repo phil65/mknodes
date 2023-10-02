@@ -11,8 +11,8 @@ PRE_COMMIT_CODE = """
 pre-commit install
 """
 
-PRE_COMMIT_TEXT = """This project uses `pre-commit` to ensure code quality.
-A .pre-commit-config.yaml configuration file tailored for this project is provided
+PRE_COMMIT_TEXT = """This project uses **pre-commit** to ensure code quality.
+A `.pre-commit-config.yaml` configuration file tailored for this project is provided
 in the root folder."""
 
 
@@ -20,28 +20,28 @@ MYPY_CODE = """
 {{metadata.build_system.run_prefix}}mypy --help
 """
 
-MYPY_TEXT = """MyPy is used for type checking. You can find the configuration in the
-pyproject.toml file."""
+MYPY_TEXT = """**MyPy** is used for type checking. You can find the configuration in the
+`pyproject.toml` file."""
 
 RUFF_CODE = """
 {{metadata.build_system.run_prefix}}ruff --help
 """
 
-RUFF_TEXT = """Ruff is used as a linter. You can find the configuration in the
-pyproject.toml file."""
+RUFF_TEXT = """**Ruff** is used as a linter. You can find the configuration in the
+`pyproject.toml` file."""
 
 BLACK_CODE = """
 {{metadata.build_system.run_prefix}}black .
 """
 
-BLACK_TEXT = """Black is used as a code formatter. You can find the configuration in the
-pyproject.toml file."""
+BLACK_TEXT = """**Black** is used as a code formatter. You can find the configuration in
+the `pyproject.toml` file."""
 
 COVERAGE_CODE = """
 {{metadata.build_system.run_prefix}}coverage run some_module.py
 """
 
-COVERAGE_TEXT = """Coverage is used to monitor test coverage."""
+COVERAGE_TEXT = """**Coverage** is used to monitor test coverage."""
 
 MKDOCS_CODE = """
 # To build the docs
@@ -54,10 +54,10 @@ MKDOCS_CODE = """
 {{metadata.build_system.run_prefix}}mkdocs --help
 """
 
-MKDOCS_TEXT = """MkDocs is used to create the documentation."""
+MKDOCS_TEXT = """**MkDocs** is used to create the documentation."""
 
 
-MATERIAL_TEXT = """Material for MkDocs is used as the Website theme."""
+MATERIAL_TEXT = """**Material for MkDocs** is used as the Website theme."""
 
 
 class Tool:
