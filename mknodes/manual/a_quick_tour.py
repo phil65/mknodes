@@ -2,7 +2,7 @@ import mknodes as mk
 
 
 def a_quick_tour(page: mk.MkPage):
-    # Let the tour begin! We will start by introducing some `MkNodes`.
+    # Let the tour begin! We will start by introducing some **MkNodes**.
     #
     # Our first [MkNode][mknodes.MkNode] is very clever. You just show him a node and he
     # will tell you all you need to know about him.
@@ -47,7 +47,7 @@ def a_quick_tour(page: mk.MkPage):
     str(diagram)
     # {{ "mknodes.MkPage" | MkClassDiagram(mode="subclasses") }}
 
-    # There are multiple talented drawers among the `MkNodes`.
+    # There are multiple talented drawers among the **MkNodes**.
     # [MkPipDepTree][mknodes.MkPipDepTree] is known for his dependency drawings,
     # we can ask him to draw a graph for one of our dependencies.
     #
@@ -71,7 +71,7 @@ def a_quick_tour(page: mk.MkPage):
     # This is also a good chance to explain how nodes can get their information
     # from the context. Let me explain:
     #
-    # If we instanciate `MkNodes` and dont add them to the tree,
+    # If we instanciate **MkNodes** and dont add them to the tree,
     # then the nodes are clueless. They dont know who they belong to.
     #
     # To make them part of the tree, we either add them for example to a page
@@ -82,21 +82,21 @@ def a_quick_tour(page: mk.MkPage):
     #
     # In this example, once we add [MkMetadataBadges][mknodes.MkMetadataBadges]
     # to the tree, that node knows
-    # that he should create badges for our very own package, `mknodes`,
+    # that he should create badges for our very own package, **mknodes**,
     # unless we explicitely tell him to do otherwise. It will become his new "default".
     #
     # You dont believe me? Let me show you:
     node = mk.MkMetadataBadges("websites", parent=page)
 
     # Now that node is connected. If we ask him to draw now, he will create website
-    # badges for `mknodes`!
+    # badges for **mknodes**!
 
     str(node)
     # {{ "websites" | MkMetadataBadges }}
 
-    # This mechanism is the same for many `MkNodes`. For example, our earlier guest
+    # This mechanism is the same for many **MkNodes**. For example, our earlier guest
     # [MkPipDepTree][mknodes.MkPipDepTree] behaves the same. Once connected,
-    # he will want to paint `mknodes` dependency graphs without us telling him to do so!
+    # he will want to paint **mknodes** dependency graphs without us telling him to do so!
     #
     # Interesting, right?
     #
@@ -113,17 +113,18 @@ def a_quick_tour(page: mk.MkPage):
     # from code. These chunks are displayed on a rotating basis then.
     #
     # Before we end the tour, let's take a look at the raw material.
-    # We can use the MkCode node for that.
+    # We can use the [MkCode][mknodes.MkCode] node for that.
     #
     node = mk.MkCode.for_object(a_quick_tour)
     text = str(node).replace(r"{", "<").replace(r"}", ">")
     page += text
-    # As you can see, we added the MkCode node to the page. It will be displayed right
-    # after the MkCommentedCode block. You will see it right below.
+    # As you can see, we added the [MkCode][mknodes.MkCode] node to the page.
+    # It will be displayed right after the [MkCommentedCode][mknodes.MkCommentedCode]
+    # block. You will see it right below.
     #
     # Oh, and the String replacement you probably noticed is a quick hack to prevent
-    # jinja code from getting executed. YOu can ignore that, it's not relevant for this
-    # tour.
+    # **jinja2** code from getting executed. YOu can ignore that, it's not relevant
+    #  for this tour.
     #
     # That's it. The rest of the nodes you need to check out yourself. Have fun!
     print("bye!")

@@ -2,13 +2,9 @@ MkNavs can parse index files in `SUMMARY.md` style (as popularized by **mkdocs-l
 
 Given the following folder structure:
 
-### Directory tree
-
-{{ path | MkTreeView | MkAdmonition }}
+{{ path | MkTreeView | MkAdmonition(title="Directory tree") }}
 
 and a root `SUMMARY.md` looking like:
-
-### SUMMARY.md content
 
 {{ text | MkCode | MkAdmonition(title="Root SUMMARY.md") }}
 
