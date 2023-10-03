@@ -26,8 +26,7 @@ class MkDefaultWebsite(mk.MkNav):
         self.parse.json(static_pages)
         docs = self.add_doc(section_name="API")
         docs.collect_classes(recursive=True)
-        if proj := self.associated_project:
-            proj.theme.announcement_bar = mk.MkMetadataBadges("websites")
+        self.page_template.announcement_bar = mk.MkMetadataBadges("websites")
         if self.ctx.metadata.cli:
             page = self.add_page("CLI", hide="nav")
             page += mk.MkClickDoc(show_subcommands=True)

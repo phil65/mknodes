@@ -86,6 +86,18 @@ class PageTemplate:
         )
 
     @property
+    def announcement_bar(self):
+        return self.announce.content
+
+    @announcement_bar.setter
+    def announcement_bar(self, value):
+        from mknodes.basenodes import mknode
+
+        if isinstance(value, mknode.MkNode):
+            value.associated_project = self.parent.associated_project
+        self.announce.content = value
+
+    @property
     def content(self):
         return self.content_block.content
 

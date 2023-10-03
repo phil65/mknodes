@@ -7,7 +7,6 @@ import pathlib
 
 from typing import Any, Literal
 
-from mknodes.basenodes import mknode
 from mknodes.data import datatypes
 from mknodes.theme import colortheme, theme
 from mknodes.theme.material import palette
@@ -134,16 +133,6 @@ class MaterialTheme(theme.Theme):
             )
             for pal in data
         ]
-
-    @property
-    def announcement_bar(self):
-        return self.main_template.announce.content
-
-    @announcement_bar.setter
-    def announcement_bar(self, value):
-        if isinstance(value, mknode.MkNode):
-            value.associated_project = self.associated_project
-        self.main_template.announce.content = value
 
     def get_accent_color(self) -> str:
         """Get the accent foreground color."""
