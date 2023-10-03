@@ -269,6 +269,7 @@ pyup_badge = Badge(
 )
 
 SHIELDS = [
+    latest_version_badge,
     license_badge,
     package_status_badge,
     daily_downloads_badge,
