@@ -103,7 +103,7 @@ class MkPage(mkcontainer.MkContainer):
         kwargs = {k: v for k, v in self.metadata.items() if v is not None}
         return reprhelpers.get_repr(self, path=str(self.path), **kwargs)
 
-    def get_node_resources(self):
+    def get_node_resources(self) -> resources.Resources:
         templates = [self.template] if self.template else []
         return resources.Resources(templates=templates)
 
@@ -125,7 +125,7 @@ class MkPage(mkcontainer.MkContainer):
         self._metadata = val
 
     @property
-    def path(self):
+    def path(self) -> str:
         """Return the last part of the page path."""
         if self._is_homepage:
             prefix = "../" * (len(self.parent_navs) - 1)
@@ -135,7 +135,7 @@ class MkPage(mkcontainer.MkContainer):
         return f"{self.metadata.title}.md"
 
     @path.setter
-    def path(self, value):
+    def path(self, value: str | None):
         self._path = value
 
     @property

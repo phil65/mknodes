@@ -57,7 +57,7 @@ class MkNav(mknode.MkNode):
         self.parse = navparser.NavParser(self)
         """Parser object used to build Navs from different data / directory structures."""
         self.metadata = metadata.Metadata()
-        """Page Metadata, in form of a dataclass."""
+        """Page Metadata."""
         self.page_template = pagetemplate.PageTemplate(parent=self, extends="main.html")
         super().__init__(**kwargs)
 
