@@ -122,8 +122,8 @@ class MkImage(mknode.MkNode):
             markdown_link = f"[{markdown_link}]({self.url})"
         return markdown_link
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkImage(path="https://picsum.photos/200", caption="Dummy image")

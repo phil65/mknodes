@@ -35,8 +35,8 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
         root = self.get_element()
         return root.to_string(space="") if root else ""
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         code_col = [mknodes.MkCode("print('hello world')\nsys.exit()") for _ in range(3)]

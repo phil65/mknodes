@@ -198,8 +198,8 @@ class MkDocStrings(mknode.MkNode):
         option_text = "\n".join(option_lines)
         return f"{md}    options:\n{option_text}\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "The MkDocStrings node shows DocStrings from mkdocstrings addon."

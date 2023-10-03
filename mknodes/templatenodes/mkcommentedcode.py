@@ -134,8 +134,8 @@ class MkCommentedCode(mkcontainer.MkContainer):
     def items(self, value):
         pass
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         # Comment sections automatically get converted to non-codeblock sections.

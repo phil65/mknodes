@@ -71,8 +71,8 @@ class MkModuleOverview(mktreeview.MkTreeView):
             _filter_empty=True,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkModuleOverview(maximum_depth=2)

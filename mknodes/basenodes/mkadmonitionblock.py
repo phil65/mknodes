@@ -57,8 +57,8 @@ class MkAdmonitionBlock(mkblock.MkBlock):
     def typ(self, value: datatypes.AdmonitionTypeStr):
         self.attributes["type"] = value
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "MkAdmonitionBlock is an admonition based on new pymdownx block syntax."

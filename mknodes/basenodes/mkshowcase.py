@@ -77,8 +77,8 @@ class MkShowcase(mkcontainer.MkContainer):
         card = mkcard.MkCard(target=link, title=title, image=image, caption=caption)
         self.append(card)
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkShowcase()

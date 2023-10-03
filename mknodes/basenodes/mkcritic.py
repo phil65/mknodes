@@ -51,8 +51,8 @@ class MkCritic(mkcontainer.MkContainer):
                 raise TypeError(self.mark)
         return f"{{{left}\n\n{super()._to_markdown()}\n\n{right}}}"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "The MkCritic node can be used to display text diffs."

@@ -94,8 +94,8 @@ class MkPluginFlow(mkcontainer.MkContainer):
     def items(self, value):
         pass
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         from mkdocs.contrib import search
 
         import mknodes

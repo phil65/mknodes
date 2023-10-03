@@ -45,8 +45,8 @@ class MkIFrame(mknode.MkNode):
             height=self.height,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         frame = MkIFrame(url="https://phil65.github.io/mknodes/", width=600, height=600)

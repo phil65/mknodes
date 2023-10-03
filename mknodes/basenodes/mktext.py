@@ -66,8 +66,8 @@ class MkText(mknode.MkNode):
     def _to_markdown(self) -> str:
         return self.text
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkText("This is the most basic node. It contains `markdown` text")

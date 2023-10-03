@@ -38,8 +38,8 @@ class MkModuleTable(mktable.MkTable):
             for k in data[0]
         }
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import jinja2
 
         import mknodes

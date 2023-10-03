@@ -122,8 +122,8 @@ class MkPyDeps(mknode.MkNode):
         content = insert_links(content, self.ctx.links.inv_manager)
         return f"<body>\n\n{content}\n\n</body>\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkPyDeps("mknodes/data/tools.py", max_bacon=1, max_module_depth=1)

@@ -40,8 +40,8 @@ class MkKeys(mknode.MkNode):
         key_str = "+".join(self.keys)
         return f"++{key_str}++"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += mknodes.MkAdmonition("MkKeys can be used to show Key combinations.")

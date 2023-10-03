@@ -50,8 +50,8 @@ class MkArgParseHelp(mkcontainer.MkContainer):
     def items(self, value):
         pass
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         from git_changelog import cli
 
         import mknodes

@@ -100,8 +100,8 @@ class MkCode(mkcontainer.MkContainer):
         first_line = f"{self.fence_boundary} {self.fence_title}"
         return f"{first_line}\n{self.text}\n{self.fence_boundary}"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes as mk
 
         page += mk.MkHeader("Regular", level=3)

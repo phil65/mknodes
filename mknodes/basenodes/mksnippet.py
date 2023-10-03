@@ -39,8 +39,8 @@ class MkSnippet(mknode.MkNode):
     def __repr__(self):
         return reprhelpers.get_repr(self, path=str(self.path))
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkSnippet(path="README.md")

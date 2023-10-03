@@ -120,8 +120,8 @@ class MkCard(mknode.MkNode):
         card.add_file(image.path, image.data)
         return card
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkCard(

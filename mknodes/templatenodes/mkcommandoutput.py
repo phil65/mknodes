@@ -46,8 +46,8 @@ class MkCommandOutput(mknode.MkNode):
         call = " ".join(self.call)
         return TEXT.format(input=call, output=self.output)
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes as mk
 
         if os.environ.get("CI"):

@@ -57,8 +57,8 @@ class MkCodeOfConduct(mktext.MkText):
                 mail = self.ctx.metadata.author_email or "<MAIL NOT SET>"
         return get_markdown().replace("[INSERT CONTACT METHOD]", mail)
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkCodeOfConduct(contact_email="my@email.com")

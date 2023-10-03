@@ -60,8 +60,8 @@ class MkImageSlideshow(mknode.MkNode):
         root = self.get_element()
         return root.to_string()
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         images = ["https://picsum.photos/700", "https://picsum.photos/701"]

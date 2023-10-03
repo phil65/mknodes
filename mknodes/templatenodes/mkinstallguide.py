@@ -87,8 +87,8 @@ class MkInstallGuide(mkcontainer.MkContainer):
             _filter_empty=True,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         # this will show an install guide for our associated project

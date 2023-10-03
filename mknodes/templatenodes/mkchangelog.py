@@ -95,8 +95,8 @@ class MkChangelog(mktext.MkText):
             sections=tuple(self.sections) if self.sections else None,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkChangelog(template="keepachangelog", shift_header_levels=2)

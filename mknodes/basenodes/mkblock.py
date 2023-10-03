@@ -68,8 +68,8 @@ class MkBlock(mkcontainer.MkContainer):
             base += f" | {self.argument}"
         return f"{base}\n{self.attributes_block}\n{self.content_block}{boundary}\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "An MkBlock is a base class for pymdownx-style blocks."

@@ -143,8 +143,8 @@ class MkTabbed(MkTabContainer):
     ]
     Tab = mktabs.MkTab
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         # this node is basically a container and manager for MkTabs nodes.
@@ -162,8 +162,8 @@ class MkTabbedBlocks(MkTabContainer):
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.blocks.tab")]
     Tab = mktabs.MkTabBlock
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         # this one is basically the same as MkTabbed,

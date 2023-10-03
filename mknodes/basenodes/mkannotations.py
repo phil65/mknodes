@@ -133,8 +133,8 @@ class MkAnnotations(mkcontainer.MkContainer):
         else:
             self.items.append(node)
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += mknodes.MkCode.for_object(

@@ -50,8 +50,8 @@ class MkDefinition(mkcontainer.MkContainer):
         result.append("")
         return "\n".join(result) + "\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkDefinition("test", content="hfkdlsjk")
@@ -113,8 +113,8 @@ class MkDefinitionList(mkcontainer.MkContainer):
             result.append("")
         return "\n".join(result) + "\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         definitions = dict(something="A definition", somethingelse="Another\ndefinition")

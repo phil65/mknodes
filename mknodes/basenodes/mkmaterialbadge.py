@@ -61,8 +61,8 @@ class MkMaterialBadge(mknode.MkNode):
             _filter_empty=True,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkMaterialBadge(icon=":material-file:", text="text")

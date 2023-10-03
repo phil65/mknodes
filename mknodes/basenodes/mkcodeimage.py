@@ -65,8 +65,8 @@ class MkCodeImage(mknode.MkNode):
         )
         return f"<body>\n\n{content}\n\n</body>\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         node = MkCodeImage(language="python", code="a = 1 + 2", title="Window title")
         page += node
 

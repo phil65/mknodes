@@ -51,8 +51,8 @@ class MkClassTable(mktable.MkTable):
             for k in data[0]
         }
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes as mk
 
         klasses = [mk.MkTable, MkClassTable, mk.MkNav]

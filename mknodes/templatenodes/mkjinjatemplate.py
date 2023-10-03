@@ -58,8 +58,8 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
     def items(self, val):
         pass
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         node = MkJinjaTemplate(template="nodes_index.jinja")
         page += node
 

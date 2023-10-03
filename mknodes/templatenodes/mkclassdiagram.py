@@ -97,8 +97,8 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             direction=self.direction,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes as mk
 
         parent_diagram = MkClassDiagram(klass=MkClassDiagram, mode="baseclasses")

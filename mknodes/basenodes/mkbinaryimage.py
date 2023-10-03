@@ -38,8 +38,8 @@ class MkBinaryImage(mkimage.MkImage):
         path = "/".join(self.resolved_parts) + "/" + self.path
         return {path: self.data} | self._files
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "A BinaryImage carries the image data by itself."

@@ -36,8 +36,8 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         return self.get_element().to_string()
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes as mk
 
         node = MkSpeechBubble(MkSpeechBubble.__doc__)

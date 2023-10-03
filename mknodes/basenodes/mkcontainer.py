@@ -82,8 +82,8 @@ class MkContainer(mknode.MkNode):
             self.append(item)
         self.append(f"</{tag_name}>")
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "MkContainers are usually only used as a base class"

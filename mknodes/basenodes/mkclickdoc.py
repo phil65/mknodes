@@ -72,8 +72,8 @@ class MkClickDoc(mknode.MkNode):
         info = clihelpers.get_typer_info(instance, command=attrs["prog_name"])
         return info.to_markdown(recursive=self.show_subcommands)
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         # import mknodes
 
         page += "The MkClickDoc node shows DocStrings for Click / Typer."

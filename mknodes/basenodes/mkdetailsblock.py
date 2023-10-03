@@ -73,8 +73,8 @@ class MkDetailsBlock(mkblock.MkBlock):
     def expand(self, value: bool):
         self.attributes["open"] = value
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "MkDetailsBlock is a markdown extension based on pymdownx block syntax."

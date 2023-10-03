@@ -65,8 +65,8 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
     def items(self, value):
         pass
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         example_node = mknodes.MkAdmonition("Some text")

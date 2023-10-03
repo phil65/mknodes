@@ -84,8 +84,8 @@ class MkAdmonition(mkcontainer.MkContainer):
         optional = ann_marker + inline_label
         return f"{block_start} {self.typ}{optional}{title}\n{indented}\n{annotations}"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes as mk
 
         node = mk.MkAdmonition("MkAdmonitions can carry annotations(1).")

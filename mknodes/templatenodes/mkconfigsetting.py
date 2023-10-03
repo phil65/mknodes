@@ -84,8 +84,8 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
     def items(self, value):
         pass
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         setting = {"plugins": {"mknodes": {"path": "path.to.module"}}}

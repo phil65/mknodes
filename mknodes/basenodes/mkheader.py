@@ -43,8 +43,8 @@ class MkHeader(mknode.MkNode):
         suffix = " { data-search-exclude }" if self._exclude_from_search else ""
         return f"{level_str} {self.text}{suffix}"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         for i in range(1, 7):

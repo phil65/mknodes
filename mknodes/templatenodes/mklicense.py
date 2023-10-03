@@ -46,8 +46,8 @@ class MkLicense(mktext.MkText):
             return lic.content
         return self.ctx.metadata.license_text or ""
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkLicense()

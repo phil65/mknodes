@@ -70,8 +70,8 @@ class MkGrid(mkcontainer.MkContainer):
         root = self.get_element()
         return root.to_string(space="")
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         # only works for Mkdocs-material sponsors.

@@ -64,8 +64,8 @@ class MkCallable(mknode.MkNode):
         node = self.__call__()
         return node.files
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkCallable(lambda: mknodes.MkAdmonition("Nested!"))

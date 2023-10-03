@@ -128,8 +128,8 @@ class MkDiagram(mkcode.MkCode):
         """MkCode override."""
         return "mermaid"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "MkDiagrams can be used to create Mermaid diagrams manually."

@@ -54,8 +54,8 @@ class MkInclude(mknode.MkNode):
             case _:
                 raise TypeError(self.target)
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkInclude(EXAMPLE_URL)

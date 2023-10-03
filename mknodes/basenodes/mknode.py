@@ -316,8 +316,8 @@ class MkNode(node.Node):
             req.merge(node_req)
         return req
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         # We dont instanciate MkNode directly, so we take a subclass

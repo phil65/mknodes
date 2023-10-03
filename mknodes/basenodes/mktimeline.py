@@ -175,8 +175,8 @@ class MkTimeline(mkcontainer.MkContainer):
         self += item
         return item
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkTimeline()

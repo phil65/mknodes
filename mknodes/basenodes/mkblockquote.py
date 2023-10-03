@@ -19,8 +19,8 @@ class MkBlockQuote(mkcontainer.MkContainer):
         text = super()._to_markdown()
         return textwrap.indent(text, "> ").rstrip("\n") + "\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         page += "An MkBlockQuote can display > Blockquotes."

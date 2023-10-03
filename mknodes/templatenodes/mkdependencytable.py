@@ -62,8 +62,8 @@ class MkDependencyTable(mktable.MkTable):
             }
         return {}
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node_1 = MkDependencyTable()

@@ -32,8 +32,8 @@ class MkTable(mkbasetable.MkBaseTable):
         data_txt = ["| " + " | ".join(line) + " |" for line in data]
         return "\n".join([header_txt, divider_text, *data_txt]) + "\n"
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node_1 = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})

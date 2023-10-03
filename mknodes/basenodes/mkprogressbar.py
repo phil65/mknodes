@@ -63,8 +63,8 @@ class MkProgressBar(mknode.MkNode):
                 title = f"{self.percentage}%"
         return rf'[={self.percentage}% "{title}"]'
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkProgressBar(60)

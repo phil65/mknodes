@@ -92,8 +92,8 @@ class MkPipDepTree(mkdiagram.MkDiagram):
             _filter_false=True,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         tree = MkPipDepTree(direction="LR")

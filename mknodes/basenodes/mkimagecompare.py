@@ -59,8 +59,8 @@ class MkImageCompare(mknode.MkNode):
         root = self.get_element()
         return root.to_string()
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         node = MkImageCompare(

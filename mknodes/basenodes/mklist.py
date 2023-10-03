@@ -56,8 +56,8 @@ class MkList(mkcontainer.MkContainer):
             _filter_false=True,
         )
 
-    @staticmethod
-    def create_example_page(page):
+    @classmethod
+    def create_example_page(cls, page):
         import mknodes
 
         list_1 = MkList(items=["Item 1", "Item 2", "Item 3"])
