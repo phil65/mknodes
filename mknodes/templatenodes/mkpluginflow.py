@@ -54,19 +54,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
             return []
         items = []
         for plg in self.plugins:
-            section = [
-                mk.MkHeader(plg.__name__, parent=self),
-                mk.MkHeader("Config", parent=self, level=3),
-                mk.MkDocStrings(
-                    plg.config_class,
-                    parent=self,
-                    show_root_toc_entry=False,
-                    show_if_no_docstring=True,
-                    heading_level=4,
-                    show_bases=False,
-                    show_source=False,
-                ),
-            ]
+            section = [mk.MkHeader(plg.__name__, parent=self)]
             for event in self.event_plugin.flow:
                 if not hasattr(plg, event):
                     continue
