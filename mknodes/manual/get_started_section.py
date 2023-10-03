@@ -19,6 +19,11 @@ def _(page: mk.MkPage):
     page += node
 
 
+@nav.route.page("Installation", hide="toc")
+def _(page: mk.MkPage):
+    page += mk.MkInstallGuide()
+
+
 @nav.route.page("Why should I use MkNodes?", hide="toc")
 def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("why_mknodes.jinja")

@@ -7,7 +7,7 @@ import dataclasses
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from mknodes import paths
-from mknodes.utils import mergehelpers, reprhelpers
+from mknodes.utils import helpers, mergehelpers, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -122,6 +122,9 @@ class JSLink:
 
     def __fspath__(self):
         return str(self)
+
+    def is_local(self) -> bool:
+        return not helpers.is_url(self.link)
 
     def to_html(self) -> str:
         html = f'<script src="{self.link}"'

@@ -48,7 +48,7 @@ class MkNav(mknode.MkNode):
             filename: FileName for the resulting nav
             kwargs: Keyword arguments passed to parent
         """
-        self.section = section  # helpers.slugify(section)
+        self.section = section
         self.filename = filename
         self.nav = navigation.Navigation()
         """Navigation object containing all child items."""

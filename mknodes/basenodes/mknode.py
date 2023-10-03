@@ -283,7 +283,7 @@ class MkNode(node.Node):
                 css_resources.append(css)
         js_resources: list[resources.JSType] = []
         for js_file in self.JS_FILES:
-            if isinstance(js_file, resources.JSFile):
+            if isinstance(js_file, resources.JSFile) and js_file.is_local():
                 text = self.env.render_template(js_file.link)
                 js_resource = resources.JSText(text, js_file.link)
                 js_resources.append(js_resource)
