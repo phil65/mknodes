@@ -81,6 +81,7 @@ from .project import Project
 from .pages.metadata import Metadata
 from .pages.pagetemplate import PageTemplate
 from .navs.mkdefaultwebsite import MkDefaultWebsite
+from .navs.router import Router
 
 __all__ = [
     "MkNode",
@@ -161,6 +162,7 @@ __all__ = [
     "MkJinjaTemplate",
     "MkPyDeps",
     "MkPipDepTree",
+    "Router",
 ]
 
 __version__ = "0.43.7"
