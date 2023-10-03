@@ -19,8 +19,8 @@ class GitRepository(git.Repo):
     @cached_property
     def main_branch(self) -> str:
         """The default branch of the repository."""
-        hast_master_branch = any(branch.name == "master" for branch in self.heads)
-        return "master" if hast_master_branch else "main"
+        has_master_branch = any(branch.name == "master" for branch in self.heads)
+        return "master" if has_master_branch else "main"
 
     @classmethod
     def clone_from(cls, *args, **kwargs) -> Self:
