@@ -180,9 +180,10 @@ class ExtraHeadBlock(Block):
     def __init__(self):
         self.content = ""
         self.robots_rule = None
+        self.redirect_url = None
 
     def __bool__(self):
-        return bool(self.content)
+        return bool(self.block_content())
 
     def block_content(self, md: markdown.Markdown | None = None):
         content = self.content
