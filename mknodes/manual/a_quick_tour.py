@@ -132,4 +132,3 @@ def a_quick_tour(page: mk.MkPage):
     #  for this tour.
     #
     # That's it. The rest of the nodes you need to check out yourself. Have fun!
-    pass
