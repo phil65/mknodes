@@ -35,9 +35,9 @@ class PageTemplate:
         # Common blocks
         self.title = templateblocks.TitleBlock()
         self.libs = templateblocks.LibsBlock()
-        # self.analytics = templateblocks.AnalyticsBlock()
-        # self.scripts = templateblocks.ScriptsBlock()
-        # self.site_meta = templateblocks.SiteMetaBlock()
+        self.analytics = templateblocks.AnalyticsBlock()
+        self.scripts = templateblocks.ScriptsBlock()
+        self.site_meta = templateblocks.SiteMetaBlock()
         self.styles = templateblocks.StylesBlock()
         self.extra_head = templateblocks.ExtraHeadBlock()
 
@@ -58,7 +58,7 @@ class PageTemplate:
         return hash(self.build_html())
 
     @property
-    def blocks(self) -> list[templateblocks.Block]:
+    def blocks(self) -> list[templateblocks.BaseBlock]:
         """A list containing all blocks of the PageTemplate."""
         return [
             self.title,
@@ -72,6 +72,9 @@ class PageTemplate:
             self.hero,
             self.extra_head,
             self.site_nav,
+            self.analytics,
+            self.site_meta,
+            self.scripts,
         ]
 
     def __repr__(self):

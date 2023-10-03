@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Literal
 from markdown import markdown
 
 from mknodes.basenodes import mknode
-from mknodes.utils import css, mdconverter, resources
+from mknodes.utils import css as css_, mdconverter, resources
 
 
 if TYPE_CHECKING:
@@ -51,7 +51,7 @@ class Super:
         return SUPER_TEXT
 
 
-class Block(mknode.MkNode):
+class BaseBlock(mknode.MkNode):
     """A class representing a block from a page template."""
 
     block_id: str
@@ -70,7 +70,7 @@ class Block(mknode.MkNode):
         return f"{{% block {self.block_id} %}}\n{content}\n{{% endblock %}}"
 
 
-class HtmlBlock(Block):
+class HtmlBlock(BaseBlock):
     """Base class for blocks which usually contain HTML content."""
 
     def __init__(self, block_id: str, parent: mk.MkPage | mk.MkNav | None = None):
@@ -117,22 +117,35 @@ class HtmlBlock(Block):
         self.items = [value]
 
 
-class TitleBlock(Block):
+class Block(BaseBlock):
+    """Base class for head blocks."""
+
+    def __init__(self):
+        self.content = ""
+
+    def __bool__(self):
+        return bool(self.block_content())
+
+    def block_content(self, md: markdown.Markdown | None = None):
+        return self.content
+
+
+class TitleBlock(BaseBlock):
     """Block wrapping the HTML title."""
 
     block_id = "htmltitle"
 
-    def __init__(self, title: str | None = None):
-        self.title = title
+    def __init__(self, content: str | None = None):
+        self.content = content
 
     def __bool__(self):
-        return bool(self.title)
+        return bool(self.content)
 
     def block_content(self, md: markdown.Markdown | None = None):
-        return f"<title>{self.title}</title>"
+        return f"<title>{self.content}</title>"
 
 
-class LibsBlock(Block):
+class LibsBlock(BaseBlock):
     """Block for additional libraries."""
 
     block_id = "libs"
@@ -151,12 +164,14 @@ class LibsBlock(Block):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: resources.JSFile | resources.JSLink):
+    def add_script_file(self, script: resources.JSFile | resources.JSLink | str):
         """Add a script file to the block.
 
         Arguments:
             script: Script to add to the block
         """
+        if isinstance(script, str):
+            script = resources.JSLink(script)
         self.scripts.append(script)
 
     def __bool__(self):
@@ -166,6 +181,24 @@ class LibsBlock(Block):
         lines = [i.to_html() for i in self.scripts]
         scripts = "\n".join(lines)
         return f"{SUPER_TEXT}\n{scripts}" if self.include_super else scripts
+
+
+class AnalyticsBlock(Block):
+    """Block for analytics-tags in HEAD."""
+
+    block_id = "analytics"
+
+
+class ScriptsBlock(Block):
+    """Block for JavaScripts at end of BODY."""
+
+    block_id = "scripts"
+
+
+class SiteMetaBlock(Block):
+    """Block for meta tags in HEAD."""
+
+    block_id = "site_meta"
 
 
 class ExtraHeadBlock(Block):
@@ -178,12 +211,9 @@ class ExtraHeadBlock(Block):
     block_id = "extrahead"
 
     def __init__(self):
-        self.content = ""
+        super().__init__()
         self.robots_rule = None
         self.redirect_url = None
-
-    def __bool__(self):
-        return bool(self.block_content())
 
     def block_content(self, md: markdown.Markdown | None = None):
         content = self.content
@@ -214,7 +244,7 @@ class ExtraHeadBlock(Block):
         self.redirect_url = url
 
 
-class StylesBlock(Block):
+class StylesBlock(BaseBlock):
     """Block for additional stylesheets."""
 
     block_id = "styles"
@@ -230,9 +260,10 @@ class StylesBlock(Block):
     def add_stylesheet(self, stylesheet: resources.CSSLink):
         self.styles.append(stylesheet)
 
-    def add_css(self, css_dict: dict):
-        css_obj = css.CSS(css_dict)
-        self.styles.append(resources.RawCSS(str(css_obj)))
+    def add_css(self, css: str | dict):
+        if isinstance(css, dict):
+            css = str(css_.CSS(css))
+        self.styles.append(resources.RawCSS(css))
 
     def __bool__(self):
         return bool(self.styles)

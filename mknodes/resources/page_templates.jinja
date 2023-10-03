@@ -1,7 +1,7 @@
-The page template can be edited easily via the 'template' attribute.
-MkNodes will then generate an individual template HTML file the page during the build process.
-Some blocks can be populated by assigning MkNodes to its content, others can be used
-to add CSS / javascript specific to each page.
+The page template can be edited easily via the [MkPage.template][mknodes.PageTemplate] attribute.
+If any block gets modified then **MkNodes** will generate an individual template HTML file for the page during the build process.
+
+An example:
 
 ```py
 page.template.tabs.content = mk.MkAdmonition("Some text.")
@@ -9,7 +9,7 @@ page.template.tabs.content = mk.MkAdmonition("Some text.")
 would generate the following template override automatically:
 
 ```html
-{ % extends "base.html" % }
+{ % extends "main.html" % }
 
 { % block content % }
 <div class="admonition info">
@@ -27,3 +27,99 @@ page.template.footer.content = mk.MkProgressBar(50)
 page.template.tabs.content = mk.MkCode("information = 'You can even put MkNodes here!'")
 page.template.hero.content = mk.MkHeader("A header!")
 ```
+
+### PageTemplate Blocks
+
+#### Title block ([MkPage.template.title][mknodes.pages.templateblocks.TitleBlock])
+
+The title block allows to modify the title tag in HEAD
+
+```py
+page.template.title.content = "New title"
+```
+
+
+
+#### Libs block ([MkPage.template.libs][mknodes.pages.templateblocks.LibsBlock])
+
+The libs block can be used to add additional JavaScript libraries.
+
+```py
+page.template.libs.add_script_file("path_to_file.js")
+```
+
+
+
+#### Analytics block ([MkPage.template.analytics][mknodes.pages.templateblocks.AnalyticsBlock])
+
+The analytics block can be used to set custom analytics.
+
+```py
+page.template.analytics.content = "<html content>"
+```
+
+
+
+#### Scripts block ([MkPage.template.scripts][mknodes.pages.templateblocks.ScriptsBlock])
+
+The scripts block can be used to add custom JavaScripts, put at end of HTML body.
+
+```py
+page.template.scripts.add_script("JavaScript code")
+```
+
+
+
+#### Site meta block ([MkPage.template.site_meta][mknodes.pages.templateblocks.SiteMetaBlock])
+
+The site_meta block contains the site metadata. By default it gets populated by data from
+the MkDocs config file.
+
+
+
+#### Styles block ([MkPage.template.styles][mknodes.pages.templateblocks.StylesBlock])
+
+The styles block can be used to add additional CSS.
+
+
+```py
+page.template.styles.add_css("My custom CSS")
+```
+
+
+
+#### ExtraHead block ([MkPage.template.styles][mknodes.pages.templateblocks.ExtraHeadBlock])
+
+The extrahead block allows to add content to the HTML head which does not suit the other
+categories, like redirecting to another URL.
+
+
+```py
+page.template.extra_head.set_redirect_url("http://some.url")
+```
+
+
+#### HTML blocks
+
+HTML blocks can get populated with Markdown, which will get converted to HTML during the build process.
+
+
+* [MkPage.template.content_block][mknodes.pages.templateblocks.HtmlBlock]
+* [MkPage.template.footer][mknodes.pages.templateblocks.HtmlBlock]
+* [MkPage.template.site_nav][mknodes.pages.templateblocks.HtmlBlock]
+
+**MkDocs-Material**-exclusive blocks:
+
+* [MkPage.template.tabs][mknodes.pages.templateblocks.HtmlBlock]
+* [MkPage.template.outdated][mknodes.pages.templateblocks.HtmlBlock]
+* [MkPage.template.hero][mknodes.pages.templateblocks.HtmlBlock]
+* [MkPage.template.announce][mknodes.pages.templateblocks.HtmlBlock]
+
+
+```py
+page.template.announce.content = mk.MkMetadataBadges(typ="classifiers")
+page.template.footer.content = mk.MkProgressBar(50)
+page.template.tabs.content = mk.MkCode("information = 'You can even put MkNodes here!'")
+page.template.hero.content = mk.MkHeader("A header!")
+```
+
