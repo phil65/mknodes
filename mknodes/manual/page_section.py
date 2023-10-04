@@ -7,7 +7,7 @@ nav = mk.MkNav("MkPages")
 def create_page_section(root_nav: mk.MkNav):
     root_nav += nav
     page = nav.add_index_page()
-    page += mk.MkJinjaTemplate("mkpage_index.jinja")
+    page += mk.MkJinjaTemplate("pages/mkpage_index.jinja")
     page.footnotes[1] = r"Footnotes are numbered, can be set via \__setitem__."
     page.footnotes[2] = r"They can also get nested[^3]."
     page.footnotes[3] = mk.MkAdmonition("They can also contain other Markdown (nodes).")
@@ -17,7 +17,7 @@ def create_page_section(root_nav: mk.MkNav):
 @nav.route.page("MkClassPage")
 def _(page: mk.MkPage):
     variables = dict(example_class=mk.MkCode)
-    page += mk.MkJinjaTemplate("mkclasspage.jinja", variables=variables)
+    page += mk.MkJinjaTemplate("pages/mkclasspage.jinja", variables=variables)
 
 
 @nav.route.page("MkModulePage")
@@ -25,12 +25,12 @@ def _(page: mk.MkPage):
     import mkdocs.config
 
     variables = dict(example_module=mkdocs.config)
-    page += mk.MkJinjaTemplate("mkmodulepage.jinja", variables=variables)
+    page += mk.MkJinjaTemplate("pages/mkmodulepage.jinja", variables=variables)
 
 
 @nav.route.page("Setting the homepage")
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("homepage.jinja")
+    page += mk.MkJinjaTemplate("pages/homepage.jinja")
 
 
 @nav.route.page("Adding to MkPages", hide="toc", status="new")
@@ -50,12 +50,12 @@ def _(page: mk.MkPage):
     description="Description",
 )
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("page_metadata.jinja")
+    page += mk.MkJinjaTemplate("pages/page_metadata.jinja")
 
 
 @nav.route.page("Templates", hide="toc", status="new")
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("page_templates.jinja")
+    page += mk.MkJinjaTemplate("pages/page_templates.jinja")
     page.template.announce.content = mk.MkMetadataBadges(typ="classifiers")
     page.template.footer.content = mk.MkProgressBar(50)
     code = "information = 'You can even put MkNodes here!'"

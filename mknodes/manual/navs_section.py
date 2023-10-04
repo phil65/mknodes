@@ -20,7 +20,7 @@ def create_navs_section(root_nav: mk.MkNav):
 
     page = nav.add_index_page()
     variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNav)
-    page += mk.MkJinjaTemplate("navs_index.jinja", variables=variables)
+    page += mk.MkJinjaTemplate("navs/navs_index.jinja", variables=variables)
 
 
 @nav.route.nav("Populate MkPages from SUMMARY.md")
@@ -33,7 +33,7 @@ def _(nav: mk.MkNav):
     text = text.replace("](", "] (")  ##
     path = paths.TEST_RESOURCES / "nav_tree/"
     variables = dict(path=path, text=text)
-    page += mk.MkJinjaTemplate("nav_from_file.jinja", variables=variables)
+    page += mk.MkJinjaTemplate("navs/nav_from_file.jinja", variables=variables)
 
 
 @nav.route.nav("Populate MkPages from folder")
@@ -43,7 +43,7 @@ def _(nav: mk.MkNav):
     nav.parse.folder(folder, hide="toc")
     page = nav.add_index_page(hide="toc", icon="folder")
     variables = dict(folder=folder)
-    page += mk.MkJinjaTemplate("nav_from_folder.jinja", variables=variables)
+    page += mk.MkJinjaTemplate("navs/nav_from_folder.jinja", variables=variables)
 
 
 # @nav.route.nav("MkDefaultWebsite")
