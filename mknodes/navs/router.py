@@ -26,6 +26,8 @@ class Router:
     def register_nodes(self, nav: mknav.MkNav):
         for path, fn in self._registry.items():
             node = fn()
+            if fn.__name__ != "_":
+                node._node_name = fn.__name__
             node.parent = nav
             if isinstance(node, mkpage.MkPage):
                 node.created_by = fn
@@ -36,7 +38,9 @@ class Router:
         for path, (fn, kwargs) in self._nav_registry.items():
             node = mknav.MkNav(path[-1], parent=nav, **kwargs)
             node = fn(node) or node
-            node.parent = nav  # in case a new MkPage was generated
+            if fn.__name__ != "_":
+                node._node_name = fn.__name__
+            node.parent = nav  # in case a new MkNav was generated
             if node.index_page:
                 node.index_page.created_by = fn
             nav.nav[path] = node
@@ -44,6 +48,8 @@ class Router:
         for path, (fn, kwargs) in self._page_registry.items():
             node = mkpage.MkPage(path[-1], parent=nav, **kwargs)
             node = fn(node) or node
+            if fn.__name__ != "_":
+                node._node_name = fn.__name__
             node.parent = nav  # in case a new MkPage was generated
             node.created_by = fn
             nav.nav[path] = node
