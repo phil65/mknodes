@@ -1,0 +1,3 @@
+??? info
+    Of course, that mechanism only works when **MkNodes** "knows" about the Markdown you used. That is the case when using **MkNodes** directly as Python object, or by applying them as **jinja2** filters / macros using the `MkJinjaTemplate` node. In both cases, the resources get collected.
+    What *won't* work: Adding markdown in text form as an `MkText` node which needs resources, or when using `MkPage.from_file` for example. **MkNodes** is not a parser, so it cant know which extensions etc. your Markdown needs in order to get rendered correctly. In that case you have to add the required extensions etc manually to the **MkDocs** config, like you did before.
