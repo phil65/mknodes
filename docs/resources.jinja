@@ -1,3 +1,29 @@
+All MkNodes can have "resources", which describe what is needed for the node to work.
+
+This can include:
+
+* CSS / JavaScript (either remote links or included in MkNodes)
+* Markdown extensions including their specific config, if required
+* Required python packages
+* Plugins
+* Additional asset files (images, ...)
+
+If a template for a MkPage was set, then the PageTemplate also is included as a resource for
+given MkPage.
+
+These resources are collected during the build phase and put into the appropriate places.
+These places can be:
+
+* Config file
+* Build folder
+* The HTML file the node is included in, by creating / modifying the page template.
+
+Using this mechanism is optional, it is still possible to include the resources directly.
+Inferred resources and directly included resources will get merged then.
+
 ??? info
-    Of course, that mechanism only works when **MkNodes** "knows" about the Markdown you used. That is the case when using **MkNodes** directly as Python object, or by applying them as **jinja2** filters / macros using the `MkJinjaTemplate` node. In both cases, the resources get collected.
+    This mechanism only works when **MkNodes** "knows" about the nodes you used. That is the case when adding **MkNodes** directly to the tree as Python object, or by applying them as **jinja2** filters / macros using the `MkJinjaTemplate` node. In both cases, the resources get collected.
     What *won't* work: Adding markdown in text form as an `MkText` node which needs resources, or when using `MkPage.from_file` for example. **MkNodes** is not a parser, so it cant know which extensions etc. your Markdown needs in order to get rendered correctly. In that case you have to add the required extensions etc manually to the **MkDocs** config, like you did before.
+
+As examples, you can check the "Page information" box on all websites of this documentation.
+It will show the required resources for given page.
