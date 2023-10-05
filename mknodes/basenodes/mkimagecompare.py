@@ -23,7 +23,7 @@ class MkImageCompare(mknode.MkNode):
 
     ICON = "material/image-off"
     JS_FILES = [resources.JSFile(JS_URL, defer=True)]
-    CSS = [resources.CSSLink(CSS_URL)]
+    CSS = [resources.CSSFile(CSS_URL)]
 
     def __init__(
         self,

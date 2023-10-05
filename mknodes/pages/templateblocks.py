@@ -251,13 +251,13 @@ class StylesBlock(BaseBlock):
 
     def __init__(
         self,
-        styles: list[resources.CSSLink | resources.RawCSS] | None = None,
+        styles: list[resources.CSSFile | resources.RawCSS] | None = None,
         include_super: bool = True,
     ):
         self.include_super = include_super
         self.styles = styles or []
 
-    def add_stylesheet(self, stylesheet: resources.CSSLink):
+    def add_stylesheet(self, stylesheet: resources.CSSFile):
         self.styles.append(stylesheet)
 
     def add_css(self, css: str | dict):

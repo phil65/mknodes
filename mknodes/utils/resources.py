@@ -6,7 +6,6 @@ import dataclasses
 
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
-from mknodes import paths
 from mknodes.utils import helpers, mergehelpers, reprhelpers
 
 
@@ -75,8 +74,8 @@ class Plugin(dict):
 
 
 @dataclasses.dataclass(frozen=True)
-class CSSLink:
-    """A CSS link resource."""
+class CSSFile:
+    """CSS file resource."""
 
     link: str
     color_scheme: Literal["dark", "light"] | None = None
@@ -90,6 +89,9 @@ class CSSLink:
 
     def __fspath__(self):
         return self.link
+
+    def is_local(self) -> bool:
+        return not helpers.is_url(self.link)
 
     def to_html(self) -> str:
         if self.color_scheme == "light":
@@ -138,35 +140,6 @@ class JSFile:
             html += f' crossorigin="{self.crossorigin}"'
         html += "></script>"
         return html
-
-
-@dataclasses.dataclass(frozen=True)
-class CSSFile:
-    """CSS file resource."""
-
-    link: str
-    color_scheme: Literal["dark", "light"] | None = None
-    onload: str | None = None
-
-    def __repr__(self):
-        return reprhelpers.dataclass_repr(self)
-
-    def __str__(self):
-        return str(paths.RESOURCES / self.link)
-
-    def __fspath__(self):
-        return str(self)
-
-    def to_html(self) -> str:
-        if self.color_scheme == "light":
-            media = ' media="(prefers-color-scheme:light)"'
-        elif self.color_scheme == "dark":
-            media = ' media="(prefers-color-scheme:dark)"'
-        else:
-            media = ""
-        onload = f" onload={self.onload!r}" if self.onload else ""
-        # return '<link rel="stylesheet" href="{{ base_url }}/{path}" />'
-        return f'<link rel="stylesheet" href={self.link!r}{media}{onload}/>'
 
 
 class TextResource:
@@ -324,7 +297,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         return self
 
 
-CSSType = CSSFile | CSSLink | CSSText
+CSSType = CSSFile | CSSText
 JSType = JSFile | JSText
 
 

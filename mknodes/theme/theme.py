@@ -96,7 +96,7 @@ class Theme:
         self.admonitions.append(adm)
 
     def get_resources(self) -> resources.Resources:
-        req: list[resources.CSSLink | resources.CSSFile | resources.CSSText] = []
+        req: list[resources.CSSFile | resources.CSSText] = []
         if self.css_template and (proj := self.associated_project):
             tmpl_ctx = self.get_template_context()
             css_text = proj.context.env.render_template(

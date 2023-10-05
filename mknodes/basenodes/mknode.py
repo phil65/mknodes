@@ -44,7 +44,7 @@ class MkNode(node.Node):
     REQUIRED_EXTENSIONS: list[resources.Extension] = []
     REQUIRED_PLUGINS: list[resources.Plugin] = []
     STATUS: datatypes.PageStatusStr | None = None
-    CSS: list[resources.CSSFile | resources.CSSLink | resources.CSSText] = []
+    CSS: list[resources.CSSFile | resources.CSSText] = []
     JS_FILES: list[resources.JSFile] = []
     children: list[MkNode]
     _context = contexts.ProjectContext()
@@ -275,7 +275,7 @@ class MkNode(node.Node):
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
         css_resources: list[resources.CSSType] = []
         for css in self.CSS:
-            if isinstance(css, resources.CSSFile):
+            if isinstance(css, resources.CSSFile) and css.is_local():
                 text = self.env.render_template(css.link)
                 css_resource = resources.CSSText(text, css.link)
                 css_resources.append(css_resource)
