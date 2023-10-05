@@ -45,7 +45,7 @@ class MkNode(node.Node):
     REQUIRED_PLUGINS: list[resources.Plugin] = []
     STATUS: datatypes.PageStatusStr | None = None
     CSS: list[resources.CSSFile | resources.CSSLink | resources.CSSText] = []
-    JS_FILES: list[resources.JSLink | resources.JSFile] = []
+    JS_FILES: list[resources.JSFile] = []
     children: list[MkNode]
     _context = contexts.ProjectContext()
     _name_registry: dict[str, MkNode] = dict()

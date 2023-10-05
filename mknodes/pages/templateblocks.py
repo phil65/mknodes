@@ -152,7 +152,7 @@ class LibsBlock(BaseBlock):
 
     def __init__(
         self,
-        scripts: list[resources.JSFile | resources.JSLink] | None = None,
+        scripts: list[resources.JSFile] | None = None,
         include_super: bool = True,
     ):
         """Constructor.
@@ -164,14 +164,14 @@ class LibsBlock(BaseBlock):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: resources.JSFile | resources.JSLink | str):
+    def add_script_file(self, script: resources.JSFile | str):
         """Add a script file to the block.
 
         Arguments:
             script: Script to add to the block
         """
         if isinstance(script, str):
-            script = resources.JSLink(script)
+            script = resources.JSFile(script)
         self.scripts.append(script)
 
     def __bool__(self):

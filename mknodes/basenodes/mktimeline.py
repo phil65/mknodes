@@ -107,8 +107,8 @@ class MkTimeline(mkcontainer.MkContainer):
 
     ICON = "material/timeline"
     JS_FILES = [
-        resources.JSLink(JQUERY_LINK),
-        resources.JSLink(SCROLLREVEAL_LINK),
+        resources.JSFile(JQUERY_LINK),
+        resources.JSFile(SCROLLREVEAL_LINK),
         resources.JSFile("js/timeline.js"),
     ]
     CSS = [resources.CSSFile("css/timeline.css")]

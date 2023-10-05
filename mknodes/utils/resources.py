@@ -104,7 +104,7 @@ class CSSLink:
 
 
 @dataclasses.dataclass(frozen=True)
-class JSLink:
+class JSFile:
     """A JavaScript link resource."""
 
     link: str
@@ -138,14 +138,6 @@ class JSLink:
             html += f' crossorigin="{self.crossorigin}"'
         html += "></script>"
         return html
-
-
-@dataclasses.dataclass(frozen=True)
-class JSFile(JSLink):
-    """JavaScript file resource."""
-
-    def __str__(self):
-        return str(paths.RESOURCES / self.link)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -309,7 +301,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
     @property
     def js_links(self):
         """All JavaScript links of this resource bundle."""
-        return [i for i in self.js if isinstance(i, JSLink)]
+        return [i for i in self.js if isinstance(i, JSFile)]
 
     def merge(self, other: collections.abc.Mapping, additive: bool = False):
         """Merge resources with another resources instance or dict.
@@ -333,7 +325,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
 
 
 CSSType = CSSFile | CSSLink | CSSText
-JSType = JSFile | JSLink | JSText
+JSType = JSFile | JSText
 
 
 if __name__ == "__main__":

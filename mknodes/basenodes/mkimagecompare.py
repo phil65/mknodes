@@ -22,7 +22,7 @@ class MkImageCompare(mknode.MkNode):
     """Node to show an Image comparison (using a slider)."""
 
     ICON = "material/image-off"
-    JS_FILES = [resources.JSLink(JS_URL, defer=True)]
+    JS_FILES = [resources.JSFile(JS_URL, defer=True)]
     CSS = [resources.CSSLink(CSS_URL)]
 
     def __init__(
