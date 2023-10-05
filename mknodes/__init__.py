@@ -83,6 +83,9 @@ from .pages.pagetemplate import PageTemplate
 from .navs.mkdefaultwebsite import MkDefaultWebsite
 from .navs.router import Router
 
+from .theme.theme import Theme
+from .theme.materialtheme import MaterialTheme
+
 __all__ = [
     "MkNode",
     "MkDefaultWebsite",
@@ -163,6 +166,8 @@ __all__ = [
     "MkPyDeps",
     "MkPipDepTree",
     "Router",
+    "Theme",
+    "MaterialTheme",
 ]
 
 __version__ = "0.43.8"

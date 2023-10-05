@@ -1,0 +1,22 @@
+The `Theme` object is used to create additional CSS adapted for the chosen Theme. It also allows modifying static page templates.
+
+Right now, **MkNodes** contains two theme classes: One "general" [Theme][mknodes.Theme] with a very basic feature set as well as [MaterialTheme][mknodes.MaterialTheme], a [Theme][mknodes.Theme] subclass specialized for **Material for MkDocs**.
+
+Both classes support:
+
+* Adding custom admonitions with user-chosen colors / icons
+* Modifying the `404` error page via a static template.
+
+
+In addition, the [MaterialTheme][mknodes.MaterialTheme] class supports:
+
+* Adding custom status icons for MkPages (settable via [Page metadata][mknodes.Metadata.status])
+* Setting custom color palettes
+* Changing the icon for several theme elements
+* Switching to the "classic" admonition style
+* setting alternating row colors for tables
+* Setting the tooltip width
+* Setting the content area width
+
+During the build, a CSS file for these settings gets created and is added to the build resources.
+
