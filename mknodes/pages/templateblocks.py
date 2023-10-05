@@ -251,7 +251,7 @@ class StylesBlock(BaseBlock):
 
     def __init__(
         self,
-        styles: list[resources.CSSFile | resources.RawCSS] | None = None,
+        styles: list[resources.CSSFile | resources.CSSText] | None = None,
         include_super: bool = True,
     ):
         self.include_super = include_super
@@ -263,7 +263,8 @@ class StylesBlock(BaseBlock):
     def add_css(self, css: str | dict):
         if isinstance(css, dict):
             css = str(css_.CSS(css))
-        self.styles.append(resources.RawCSS(css))
+        filename = f"{hash(css)}.css"
+        self.styles.append(resources.CSSText(filename=filename, content=css))
 
     def __bool__(self):
         return bool(self.styles)

@@ -171,6 +171,10 @@ class CSSText(TextResource):
     content: str
     filename: str | None
 
+    def to_html(self) -> str:
+        # content = self.content.replace("\n", "")
+        return f"<style>\n{self.content}\n</style>"
+
 
 @dataclasses.dataclass(frozen=True)
 class JSText(TextResource):
@@ -184,18 +188,6 @@ class JSText(TextResource):
     crossorigin: Literal["anonymous", "use-credentials"] | None = None
     typ: str = ""
     is_library: bool = False
-
-
-class RawCSS:
-    def __init__(self, content: str):
-        self.content = content
-
-    def __hash__(self):
-        return hash(self.content)
-
-    def to_html(self) -> str:
-        # content = self.content.replace("\n", "")
-        return f"<style>\n{self.content}\n</style>"
 
 
 class Asset:
