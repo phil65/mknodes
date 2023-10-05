@@ -43,7 +43,7 @@ class Extension(dict):
     def __hash__(self):
         return hash(self.extension_name + str(dict(self)))
 
-    def as_mkdocs_dict(self):
+    def as_mkdocs_dict(self) -> dict[str, dict]:
         return {self.extension_name: dict(self)}
 
 
@@ -259,12 +259,12 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         return self.merge(other)
 
     @property
-    def js_files(self):
+    def js_files(self) -> list[JSText]:
         """All JavaScript files of this resource bundle."""
         return [i for i in self.js if isinstance(i, JSText)]
 
     @property
-    def js_links(self):
+    def js_links(self) -> list[JSFile]:
         """All JavaScript links of this resource bundle."""
         return [i for i in self.js if isinstance(i, JSFile)]
 
