@@ -131,9 +131,11 @@ class MkPage(mkcontainer.MkContainer):
             prefix = "../" * (len(self.parent_navs) - 1)
             return f"{prefix}index.md"
         if self._path:
-            return self._path.removesuffix(".md") + ".md"
-        return f"{self.metadata.title}.md"
-
+            path = self._path.removesuffix(".md") + ".md"
+        else:
+            path = f"{self.metadata.title}.md"
+        return helpers.slugify(path)
+        
     @path.setter
     def path(self, value: str | None):
         self._path = value
