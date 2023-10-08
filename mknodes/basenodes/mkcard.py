@@ -124,26 +124,16 @@ class MkCard(mknode.MkNode):
     def create_example_page(cls, page):
         import mknodes
 
-        node = MkCard(
-            image="https://picsum.photos/300",
-            title="Title",
-            target="https://phil65.github.io/mknodes/",
-        )
+        img = "https://picsum.photos/300"
+        url = "https://phil65.github.io/mknodes/"
+        img_dark = "https://picsum.photos/200"
+        node = MkCard(image=img, title="Title", target=url)
         page += mknodes.MkReprRawRendered(node, header="### Without caption")
 
-        node = MkCard(
-            image="https://picsum.photos/300",
-            title="Title",
-            target="https://phil65.github.io/mknodes/",
-            caption="Caption",
-        )
+        node = MkCard(image=img, title="Title", target=url, caption="Caption")
         page += mknodes.MkReprRawRendered(node, header="### With caption")
 
-        node = MkCard(
-            image="https://picsum.photos/300",
-            title="Title",
-            path_dark_mode="https://picsum.photos/200",
-        )
+        node = MkCard(image=img, title="Title", path_dark_mode=img_dark)
         page += mknodes.MkReprRawRendered(node, header="### Separate dark mode image")
 
 
