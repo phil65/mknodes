@@ -318,18 +318,18 @@ class MkNode(node.Node):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         # We dont instanciate MkNode directly, so we take a subclass
         # to show some base class functionality
 
-        node = mknodes.MkText("Intro\n# A header\nOutro")
+        node = mk.MkText("Intro\n# A header\nOutro")
         node.shift_header_levels = 2
-        page += mknodes.MkReprRawRendered(node, header="### Shift header levels")
+        page += mk.MkReprRawRendered(node, header="### Shift header levels")
 
-        node = mknodes.MkText("Every node can also append annotations (1)")
+        node = mk.MkText("Every node can also append annotations (1)")
         node.annotations[1] = "Nice!"
-        page += mknodes.MkReprRawRendered(node, header="### Append annotations")
+        page += mk.MkReprRawRendered(node, header="### Append annotations")
 
     @property
     def associated_project(self) -> mk.Project | None:

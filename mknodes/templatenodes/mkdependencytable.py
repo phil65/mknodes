@@ -64,14 +64,14 @@ class MkDependencyTable(mktable.MkTable):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node_1 = MkDependencyTable()
-        page += mknodes.MkReprRawRendered(node_1, header="### From project")
+        page += mk.MkReprRawRendered(node_1, header="### From project")
         node_2 = MkDependencyTable("mkdocs")
-        page += mknodes.MkReprRawRendered(node_2, header="### Explicitely defined")
+        page += mk.MkReprRawRendered(node_2, header="### Explicitely defined")
         node_3 = MkDependencyTable(layout="badge")
-        page += mknodes.MkReprRawRendered(node_3, header="### From project")
+        page += mk.MkReprRawRendered(node_3, header="### From project")
 
 
 if __name__ == "__main__":

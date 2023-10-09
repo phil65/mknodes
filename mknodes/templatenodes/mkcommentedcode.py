@@ -136,7 +136,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         # Comment sections automatically get converted to non-codeblock sections.
         # That way you can explain your code in-line.
@@ -144,15 +144,15 @@ class MkCommentedCode(mkcontainer.MkContainer):
         # ## you can use headers.
 
         node = MkCommentedCode(MkCommentedCode.create_example_page)
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
+        page += mk.MkReprRawRendered(node, header="### Regular")
         # !!! note
         #     Admonitions and everything else work, too.
         #
 
         node = MkCommentedCode(MkCommentedCode.create_example_page, style="admonition")
-        page += mknodes.MkReprRawRendered(node, header="### Admonitions")
+        page += mk.MkReprRawRendered(node, header="### Admonitions")
         node = MkCommentedCode(MkCommentedCode.create_example_page, style="text")
-        page += mknodes.MkReprRawRendered(node, header="### Plain text")
+        page += mk.MkReprRawRendered(node, header="### Plain text")
 
 
 if __name__ == "__main__":

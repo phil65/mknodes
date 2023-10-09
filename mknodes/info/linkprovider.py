@@ -81,6 +81,9 @@ class LinkProvider:
         """Set terms which should not get picked up by the linkprovider.
 
         That way handling of linking can be done by Markdown extensions.
+
+        Arguments:
+            excludes: list of terms to exclude from linking
         """
         self.excludes.update(excludes)
 

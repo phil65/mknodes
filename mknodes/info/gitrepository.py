@@ -24,7 +24,7 @@ class GitRepository(git.Repo):
 
     @classmethod
     def clone_from(cls, *args, **kwargs) -> Self:
-        """Clone a repository. Overriden for typing."""
+        """Clone a repository. Overridden for typing."""
         return super().clone_from(*args, **kwargs)  # type: ignore[return-value]
 
     @cached_property

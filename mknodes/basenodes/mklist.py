@@ -58,7 +58,7 @@ class MkList(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         list_1 = MkList(items=["Item 1", "Item 2", "Item 3"])
         # list can also have a max length. they will get shortened with a "..." entry.
@@ -66,12 +66,12 @@ class MkList(mkcontainer.MkContainer):
         # They can also be ordered.
         list_3 = MkList(items=["Item 1", "Item 2", "Item 3"], ordered=True)
         # and can contain markdown.
-        list_4 = MkList(items=[mknodes.MkAdmonition("Markup")] * 3)
+        list_4 = MkList(items=[mk.MkAdmonition("Markup")] * 3)
 
-        page += mknodes.MkReprRawRendered(list_1, header="### Regular")
-        page += mknodes.MkReprRawRendered(list_2, header="### Shortened")
-        page += mknodes.MkReprRawRendered(list_3, header="### Ordered")
-        page += mknodes.MkReprRawRendered(list_4, header="### Containing markdown")
+        page += mk.MkReprRawRendered(list_1, header="### Regular")
+        page += mk.MkReprRawRendered(list_2, header="### Shortened")
+        page += mk.MkReprRawRendered(list_3, header="### Ordered")
+        page += mk.MkReprRawRendered(list_4, header="### Containing markdown")
 
     def _prep(self, item) -> str:
         return linkprovider.linked(str(item)) if self.as_links else str(item)

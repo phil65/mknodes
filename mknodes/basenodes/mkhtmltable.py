@@ -37,13 +37,13 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
-        code_col = [mknodes.MkCode("print('hello world')\nsys.exit()") for _ in range(3)]
-        admonitions = [mknodes.MkAdmonition("Admonition inside cell") for _ in range(3)]
-        tabs = [mknodes.MkTabbed(dict(A=["Tab a"], B=["Tab b"])) for _ in range(3)]
+        code_col = [mk.MkCode("print('hello world')\nsys.exit()") for _ in range(3)]
+        admonitions = [mk.MkAdmonition("Admonition inside cell") for _ in range(3)]
+        tabs = [mk.MkTabbed(dict(A=["Tab a"], B=["Tab b"])) for _ in range(3)]
         data: dict[str, list] = dict(Code=code_col, Admonitions=admonitions, Tabs=tabs)
-        page += mknodes.MkReprRawRendered(MkHtmlTable(data))
+        page += mk.MkReprRawRendered(MkHtmlTable(data))
 
 
 if __name__ == "__main__":

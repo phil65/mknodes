@@ -60,7 +60,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         return reprhelpers.get_repr(self, klass=self.klass, path=str(self.path))
 
     @property
-    def extra_variables(self):
+    def extra_variables(self) -> dict[str, Any]:
         # right now, we inject the cls and the griffe Class into jinja namespace.
         subclasses = list(classhelpers.iter_subclasses(self.klass, recursive=False))
         variables = dict(cls=self.klass, subclasses=subclasses)

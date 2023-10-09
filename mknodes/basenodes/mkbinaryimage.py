@@ -40,7 +40,7 @@ class MkBinaryImage(mkimage.MkImage):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "A BinaryImage carries the image data by itself."
         page += "A file containing the data will become part of the file tree later on."
@@ -53,11 +53,11 @@ class MkBinaryImage(mkimage.MkImage):
         </svg>
         """
         node = MkBinaryImage(data, path="some_image.svg", caption="A simple cross")
-        page += mknodes.MkHeader("From data", level=3)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkHeader("From data", level=3)
+        page += mk.MkReprRawRendered(node)
         node = MkBinaryImage.for_icon("file-image", width=200)
-        page += mknodes.MkHeader("From icon", level=3)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkHeader("From icon", level=3)
+        page += mk.MkReprRawRendered(node)
 
     @classmethod
     def for_icon(cls, icon: str, **kwargs: Any) -> Self:

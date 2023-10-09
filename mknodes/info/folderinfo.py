@@ -62,6 +62,11 @@ class FolderInfo:
     """Aggregates information about a working dir."""
 
     def __init__(self, path: str | os.PathLike | None = None):
+        """Constructor.
+
+        Arguments:
+            path: Path to the repo.
+        """
         self.path = pathlib.Path(path or ".")
         self.pyproject = pyproject.PyProject(self.path)
         # packagehelpers.install_or_import(mod_name)

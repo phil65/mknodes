@@ -145,14 +145,14 @@ class MkTabbed(MkTabContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         # this node is basically a container and manager for MkTabs nodes.
         node = MkTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
-        admonition = mknodes.MkAdmonition("Nested admonition")
+        page += mk.MkReprRawRendered(node, header="### Regular")
+        admonition = mk.MkAdmonition("Nested admonition")
         nested_node = MkTabbed(tabs={"Tabs": node, "Admonition": admonition})
-        page += mknodes.MkReprRawRendered(nested_node, header="### Nested")
+        page += mk.MkReprRawRendered(nested_node, header="### Nested")
 
 
 class MkTabbedBlocks(MkTabContainer):

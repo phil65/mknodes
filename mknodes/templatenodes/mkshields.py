@@ -101,14 +101,14 @@ class MkShields(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkShields(shields=["version", "status", "codecov"])
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         node = MkShields(user="phil65", project="mknodes", shields=None)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
         node = MkShields(user="mkdocs", project="mkdocs", shields=None)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

@@ -135,22 +135,22 @@ class MkAnnotations(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
-        page += mknodes.MkCode.for_object(
+        page += mk.MkCode.for_object(
             MkAnnotations.create_example_page,
             extract_body=True,
         )
         node = MkAnnotations()
         page += node
-        text = mknodes.MkText("The MkAnnotations node aggregates annotations(1).")
+        text = mk.MkText("The MkAnnotations node aggregates annotations(1).")
         page += text
         info = r"Annotations are numbered and can be set via \__setitem__."
         node[1] = info  # (1)
-        admonition = mknodes.MkAdmonition("They can also contain other Markdown.")
+        admonition = mk.MkAdmonition("They can also contain other Markdown.")
         node[2] = admonition  # (2)
         text.annotations[1] = "Every MkNode can annotate via the 'annotations' attribute"
-        page += mknodes.MkCode(str(node), language="markdown", header="Markdown")
+        page += mk.MkCode(str(node), language="markdown", header="Markdown")
 
     def _to_markdown(self) -> str:
         if not self.items:

@@ -86,7 +86,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         setting = {"plugins": {"mknodes": {"path": "path.to.module"}}}
         desc = "Some **markdown** to describe the setting"
@@ -96,7 +96,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             description=desc,
             default="path.to.module",
         )
-        page += mknodes.MkReprRawRendered(node, header="### YAML")
+        page += mk.MkReprRawRendered(node, header="### YAML")
         node = MkConfigSetting(
             "path",
             mode="json",
@@ -104,7 +104,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             description=desc,
             default="path.to.module",
         )
-        page += mknodes.MkReprRawRendered(node, header="### JSON")
+        page += mk.MkReprRawRendered(node, header="### JSON")
         node = MkConfigSetting(
             "path",
             mode="toml",
@@ -113,7 +113,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             description=desc,
             default="path.to.module",
         )
-        page += mknodes.MkReprRawRendered(node, header="### TOML")
+        page += mk.MkReprRawRendered(node, header="### TOML")
 
 
 if __name__ == "__main__":

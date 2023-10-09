@@ -97,14 +97,14 @@ class MkChangelog(mktext.MkText):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkChangelog(template="keepachangelog", shift_header_levels=2)
-        page += mknodes.MkReprRawRendered(node, header="### keepachangelog template")
+        page += mk.MkReprRawRendered(node, header="### keepachangelog template")
         node = MkChangelog(template="angular", shift_header_levels=2)
-        page += mknodes.MkReprRawRendered(node, header="### angular template")
+        page += mk.MkReprRawRendered(node, header="### angular template")
         node = MkChangelog(convention="basic", shift_header_levels=2)
-        page += mknodes.MkReprRawRendered(node, header="### basic convention")
+        page += mk.MkReprRawRendered(node, header="### basic convention")
 
 
 if __name__ == "__main__":
