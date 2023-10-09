@@ -72,7 +72,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         )
 
     @property
-    def code(self):
+    def code(self) -> str:
         match self._code:
             case str():
                 return self._code
@@ -80,7 +80,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
                 return inspecthelpers.get_source(self._code)
 
     @property
-    def comment_class(self):
+    def comment_class(self) -> type[mknode.MkNode]:
         match self._style:
             case "text":
                 return mktext.MkText

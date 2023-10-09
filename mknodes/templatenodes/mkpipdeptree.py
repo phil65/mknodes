@@ -102,7 +102,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         page += mknodes.MkReprRawRendered(tree)
 
     @property
-    def package(self):
+    def package(self) -> str:
         match self._package:
             case None:
                 return self.ctx.metadata.distribution_name

@@ -58,7 +58,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         )
 
     @property
-    def title(self):
+    def title(self) -> str:
         return helpers.styled(self._title, bold=True, code=True)
 
     @property

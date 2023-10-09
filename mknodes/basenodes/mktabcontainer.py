@@ -121,7 +121,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             _filter_empty=True,
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, str]:
         return {tab.title: "\n\n".join(str(i) for i in tab.items) for tab in self.items}
 
     def _to_markdown(self) -> str:

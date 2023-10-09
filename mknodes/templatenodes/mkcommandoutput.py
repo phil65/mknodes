@@ -33,7 +33,7 @@ class MkCommandOutput(mknode.MkNode):
         return reprhelpers.get_repr(self, call=self.call)
 
     @property
-    def output(self):
+    def output(self) -> str:
         key = " ".join(self.call)
         if key in self._cache:
             return self._cache[key]

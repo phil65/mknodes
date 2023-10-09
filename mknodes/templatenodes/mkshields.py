@@ -77,7 +77,7 @@ class MkShields(mkcontainer.MkContainer):
         return self._shields or [i.identifier for i in badges.SHIELDS]
 
     @property
-    def branch(self):
+    def branch(self) -> str:
         if isinstance(self._branch, str):
             return self._branch
         return self.ctx.git.main_branch or "main"

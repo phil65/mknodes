@@ -5,7 +5,7 @@ import contextlib
 
 from typing import Any
 
-from mknodes.basenodes import mknode, mktext
+from mknodes.basenodes import mknode
 from mknodes.utils import helpers, log, reprhelpers
 
 

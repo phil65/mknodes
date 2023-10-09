@@ -257,7 +257,7 @@ class FolderInfo:
         ]
 
     @functools.cached_property
-    def context(self):
+    def context(self) -> contexts.PackageContext:
         return contexts.PackageContext(
             pretty_name=self.mkdocs_config.get("site_name") or self.info.name,
             distribution_name=self.info.name,
