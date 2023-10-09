@@ -120,15 +120,6 @@ class MkNav(mknode.MkNode):
         return self
 
     @property
-    def path(self) -> str:
-        """Get current path based on section / filename (usually section/SUMMARY.md)."""
-        return (
-            pathlib.Path(self.section) / self.filename
-            if self.section
-            else pathlib.Path(self.filename)
-        ).as_posix()
-
-    @property
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
         path = "/".join(self.resolved_parts) + "/" + self.filename
