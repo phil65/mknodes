@@ -135,7 +135,7 @@ class MkPage(mkcontainer.MkContainer):
         else:
             path = f"{self.metadata.title}.md"
         return helpers.slugify(path)
-        
+
     @path.setter
     def path(self, value: str | None):
         self._path = value
