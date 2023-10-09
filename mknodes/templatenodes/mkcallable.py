@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log, reprhelpers
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -24,7 +28,7 @@ class MkCallable(mknode.MkNode):
 
     def __init__(
         self,
-        fn: Callable[..., mknodes.MkNode],
+        fn: Callable[..., mk.MkNode],
         *,
         args: list | tuple | None = None,
         kw_args: dict | None = None,
@@ -66,10 +70,10 @@ class MkCallable(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
-        node = MkCallable(lambda: mknodes.MkAdmonition("Nested!"))
-        page += mknodes.MkReprRawRendered(node)
+        node = MkCallable(lambda: mk.MkAdmonition("Nested!"))
+        page += mk.MkReprRawRendered(node)
 
     def to_markdown(self) -> str:
         node = self.__call__()
@@ -77,10 +81,10 @@ class MkCallable(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
     def make_page():
-        page = mknodes.MkPage("test", hide="toc", inclusion_level=False)
+        page = mk.MkPage("test", hide="toc", inclusion_level=False)
         page += "Some content"
         return page
 

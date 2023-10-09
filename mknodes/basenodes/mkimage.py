@@ -57,7 +57,7 @@ class MkImage(mknode.MkNode):
         self._path = path
 
     @property
-    def path(self):
+    def path(self) -> str:
         if helpers.is_url(self._path):
             return self._path
         # TODO: linkreplacer doesnt work yet with full path
@@ -124,26 +124,26 @@ class MkImage(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkImage(path="https://picsum.photos/200", caption="Dummy image")
-        page += mknodes.MkReprRawRendered(node, header="### With caption")
+        page += mk.MkReprRawRendered(node, header="### With caption")
 
         node = MkImage(path="https://picsum.photos/200", align="right")
-        page += mknodes.MkReprRawRendered(node, header="### Aligned")
+        page += mk.MkReprRawRendered(node, header="### Aligned")
 
         node = MkImage(path="https://picsum.photos/200", width=500)
-        page += mknodes.MkReprRawRendered(node, header="### Fixed width")
+        page += mk.MkReprRawRendered(node, header="### Fixed width")
 
         node = MkImage(path="https://picsum.photos/200", link="https://www.google.com")
-        page += mknodes.MkReprRawRendered(node, header="### Linked")
+        page += mk.MkReprRawRendered(node, header="### Linked")
 
         node = MkImage(
             path="https://picsum.photos/200",
             link="https://www.google.com",
             path_dark_mode="https://picsum.photos/300",
         )
-        page += mknodes.MkReprRawRendered(node, header="### Separate dark mode")
+        page += mk.MkReprRawRendered(node, header="### Separate dark mode")
 
 
 if __name__ == "__main__":

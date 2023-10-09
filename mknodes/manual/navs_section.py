@@ -2,6 +2,7 @@ import mknodes as mk
 
 from mknodes import paths
 from mknodes.manual import routing
+from mknodes.navs import navrouter
 from mknodes.project import Project
 
 
@@ -15,9 +16,6 @@ nav = mk.MkNav("MkNavs")
 def create_navs_section(root_nav: mk.MkNav):
     """Add the complete "The Nodes" section to given MkNav."""
     root_nav += nav
-
-    routing.create_routing_section(nav)
-
     page = nav.add_index_page()
     variables = dict(create_navs_section=create_navs_section, mknode_cls=mk.MkNav)
     page += mk.MkJinjaTemplate("navs/navs_index.jinja", variables=variables)
@@ -44,6 +42,14 @@ def _(nav: mk.MkNav):
     page = nav.add_index_page(hide="toc", icon="folder")
     variables = dict(folder=folder)
     page += mk.MkJinjaTemplate("navs/nav_from_folder.jinja", variables=variables)
+
+
+@nav.route.nav("Routing")
+def _(nav: mk.MkNav):
+    page = routing.nav.add_index_page(icon="material/call-split", hide="toc")
+    page += mk.MkCode.for_file(routing.__file__, header="Code for this section")
+    page += mk.MkDocStrings(navrouter.NavRouter, header="MkNav.route Docstrings")
+    return routing.nav
 
 
 # @nav.route.nav("MkDefaultWebsite")

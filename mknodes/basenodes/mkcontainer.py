@@ -84,14 +84,14 @@ class MkContainer(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "MkContainers are usually only used as a base class"
         page += "It basically only carries other nodes and stringifies them sequentially."
-        item_1 = mknodes.MkCode(code="a = 1 + 2")
-        item_2 = mktext.MkText("abc")
+        item_1 = mk.MkCode(code="a = 1 + 2")
+        item_2 = mk.MkText("abc")
         node = MkContainer(content=[item_1, item_2])
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
         return self.block_separator.join(i.to_markdown() for i in self.items)

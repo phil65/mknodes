@@ -65,16 +65,16 @@ class MkProgressBar(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkProgressBar(60)
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
+        page += mk.MkReprRawRendered(node, header="### Regular")
         node = MkProgressBar(60, style="thin")
-        page += mknodes.MkReprRawRendered(node, header="### Thin")
+        page += mk.MkReprRawRendered(node, header="### Thin")
         node = MkProgressBar(70, style="candystripe", title="We reached {percentage}!")
-        page += mknodes.MkReprRawRendered(node, header="### Candystripe")
+        page += mk.MkReprRawRendered(node, header="### Candystripe")
         node = MkProgressBar(80, style="candystripe_animated")
-        page += mknodes.MkReprRawRendered(node, header="### Animated")
+        page += mk.MkReprRawRendered(node, header="### Animated")
 
 
 if __name__ == "__main__":

@@ -61,13 +61,13 @@ class MkImageCompare(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkImageCompare(
             before_image="https://picsum.photos/700",
             after_image="https://picsum.photos/701",
         )
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

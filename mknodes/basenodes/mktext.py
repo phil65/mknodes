@@ -54,7 +54,7 @@ class MkText(mknode.MkNode):
         return None if section_text is None else type(self)(section_text)
 
     @property
-    def text(self):
+    def text(self) -> str:
         if not self.is_jinja_expression:
             return self._text
         return self.env.render_string(f"{{{{ {self._text} }}}}")
@@ -68,12 +68,12 @@ class MkText(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkText("This is the most basic node. It contains `markdown` text")
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
+        page += mk.MkReprRawRendered(node, header="### Regular")
         if from_url := MkText.from_url(EXAMPLE_URL):
-            page += mknodes.MkReprRawRendered(from_url, header="### From URL")
+            page += mk.MkReprRawRendered(from_url, header="### From URL")
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:

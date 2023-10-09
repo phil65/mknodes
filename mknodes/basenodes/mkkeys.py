@@ -42,11 +42,11 @@ class MkKeys(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
-        page += mknodes.MkAdmonition("MkKeys can be used to show Key combinations.")
-        page += mknodes.MkReprRawRendered(MkKeys("M+k+K+e+y+s"))
-        page += mknodes.MkReprRawRendered(MkKeys("Ctrl+A"))
+        page += mk.MkAdmonition("MkKeys can be used to show Key combinations.")
+        page += mk.MkReprRawRendered(MkKeys("M+k+K+e+y+s"))
+        page += mk.MkReprRawRendered(MkKeys("Ctrl+A"))
 
 
 if __name__ == "__main__":

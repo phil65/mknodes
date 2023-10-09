@@ -66,7 +66,7 @@ class MkLink(mknode.MkNode):
         )
 
     @property
-    def icon(self):
+    def icon(self) -> str:
         if not self._icon or self._icon.startswith(":"):
             return self._icon
         icon = self._icon if "/" in self._icon else f"material/{self._icon}"
