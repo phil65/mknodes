@@ -10,7 +10,7 @@ from typing import Any, Literal
 from mknodes.data import datatypes
 from mknodes.theme import colortheme, theme
 from mknodes.theme.material import palette
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers
+from mknodes.utils import helpers, icons, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -249,9 +249,9 @@ class MaterialTheme(theme.Theme):
             name: slug for the status icon
             material_icon: Material icon name
         """
-        icon = pathhelpers.get_material_icon_path(material_icon)
-        data = icon.read_text()
-        self.status_icons.append(StatusIcon(name, data))
+        data = icons.get_icon_svg(material_icon)
+        status_icon = StatusIcon(name, data)
+        self.status_icons.append(status_icon)
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         """MkDocs-Material needs some custom configuration for extensions.

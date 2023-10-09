@@ -9,7 +9,7 @@ from mknodes import project
 from mknodes.data import datatypes
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers, resources
+from mknodes.utils import helpers, icons, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -84,10 +84,9 @@ class Theme:
         icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
         border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
         font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
-        icon = pathhelpers.get_material_icon_path(material_icon)
         adm = AdmonitionType(
             name=name,
-            svg=icon.read_text(),
+            svg=icons.get_icon_svg(material_icon),
             header_color=header_col_str,
             icon_color=icon_col_str,
             border_color=border_col_str,

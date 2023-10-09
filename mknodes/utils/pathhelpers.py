@@ -80,15 +80,6 @@ def find_file_in_folder_or_parent(
     return file if (file := (path / filename)).exists() else None
 
 
-def get_material_icon_path(icon: str) -> pathlib.Path:
-    import material
-
-    if "/" not in icon:
-        icon = f"material/{icon}"
-    path = pathlib.Path(next(iter(material.__path__)))
-    return path / "templates" / ".icons" / f"{icon}.svg"
-
-
 def download_from_github(
     org: str,
     repo: str,

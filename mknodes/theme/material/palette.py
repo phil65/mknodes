@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 
-from mknodes.utils import xmlhelpers as xml
+from mknodes.utils import icons, xmlhelpers as xml
 
 
 SCRIPT = """
@@ -57,7 +57,7 @@ def build_toggle(palettes: list[Palette]) -> xml.Form:
                 "hidden": "hidden",
             }
             label = xml.Label(parent=el_input, attrs=attrs)
-            el = xml.get_material_icon_svg(pal.toggle_icon or "brightness-4")
+            el = icons.get_icon_xml(pal.toggle_icon or "brightness-4")
             label.append(el)
     # script = ElementTree.SubElement(body, "script")
     # script.text = SCRIPT

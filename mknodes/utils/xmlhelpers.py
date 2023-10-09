@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 from xml.etree import ElementTree as Et
 
-from mknodes.utils import log, pathhelpers
+from mknodes.utils import icons, log
 
 
 logger = log.get_logger(__name__)
@@ -159,19 +159,6 @@ class A(HTMLElement):
         self.text = text
 
 
-def get_material_icon_svg(icon: str) -> Et.Element:
-    """Return a xmlElement for given MaterialIcon.
-
-    Arguments:
-        icon: Icon to fetch. If iconname is not explicit (aka does not contain "/"),
-              then it will try to get the icon from material/ folder.
-    """
-    path = pathhelpers.get_material_icon_path(icon)
-    Et.register_namespace("", "http://www.w3.org/2000/svg")
-    svg_text = path.read_text()
-    return Et.fromstring(svg_text)
-
-
 def get_source_button(icon: str = "material/code-json") -> A:
     href = (
         "{{ config.site_url | rstrip('/') + '/src/' + page.file.src_uri | replace('.md',"
@@ -182,7 +169,8 @@ def get_source_button(icon: str = "material/code-json") -> A:
         title="Source",
         href=href,
     )
-    elem.append(get_material_icon_svg(icon))
+    svg = icons.get_icon_xml(icon)
+    elem.append(svg)
     return elem
 
 
