@@ -34,7 +34,7 @@ class MkBinaryImage(mkimage.MkImage):
         self.data = data
 
     @property
-    def files(self):
+    def files(self) -> dict[str, str | bytes]:
         path = "/".join(self.resolved_parts) + "/" + self.path
         return {path: self.data} | self._files
 

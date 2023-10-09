@@ -264,7 +264,8 @@ class StylesBlock(BaseBlock):
         if isinstance(css, dict):
             css = str(css_.CSS(css))
         filename = f"{hash(css)}.css"
-        self.styles.append(resources.CSSText(filename=filename, content=css))
+        text = resources.CSSText(filename=filename, content=css)
+        self.styles.append(text)
 
     def __bool__(self):
         return bool(self.styles)

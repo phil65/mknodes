@@ -29,5 +29,6 @@ def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("why_mknodes.jinja")
 
 
-page = nav.add_page("A quick node tour", hide="toc")
-a_quick_tour(page)
+@nav.route.page("A quick node tour", hide="toc")
+def _(page: mk.MkPage):
+    a_quick_tour(page)

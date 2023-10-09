@@ -142,9 +142,9 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def resolved_file_path(self) -> str:
+        """Returns the resulting section/subsection/../filename.xyz path."""
         if self._is_homepage:
             return "index.md"
-        """Returns the resulting section/subsection/../filename.xyz path."""
         path = "/".join(self.resolved_parts) + "/" + self.path
         return path.lstrip("/")
 

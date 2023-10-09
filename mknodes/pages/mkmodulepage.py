@@ -53,7 +53,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         return reprhelpers.get_repr(self, module=self.module, path=str(self.path))
 
     @property
-    def extra_variables(self):
+    def extra_variables(self) -> dict[str, Any]:
         variables = dict(module=self.module, klasses=self.klasses)
         if mod := self.ctx.metadata.griffe_module:
             path = ".".join(self.module.__name__.split(".")[1:])
