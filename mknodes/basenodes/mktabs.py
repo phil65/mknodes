@@ -5,7 +5,7 @@ import textwrap
 from typing import Any
 
 from mknodes.basenodes import mkblock, mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -105,9 +105,9 @@ class MkTab(mkcontainer.MkContainer):
 
     def __repr__(self):
         if len(self.items) == 1:
-            content = helpers.to_str_if_textnode(self.items[0])
+            content = reprhelpers.to_str_if_textnode(self.items[0])
         else:
-            content = [helpers.to_str_if_textnode(i) for i in self.items]
+            content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
         return reprhelpers.get_repr(
             self,
             title=self.title,

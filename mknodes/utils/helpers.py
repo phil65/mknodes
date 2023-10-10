@@ -47,12 +47,6 @@ def extract_header_section(markdown: str, section_name: str) -> str | None:
     return markdown[start_index : end_index + start_index]
 
 
-def to_str_if_textnode(node):
-    import mknodes
-
-    return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
-
-
 def escaped(text: str, entity_type: str | None = None) -> str:
     """Helper function to escape markup.
 

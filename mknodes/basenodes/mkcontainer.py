@@ -6,7 +6,7 @@ import contextlib
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -55,7 +55,7 @@ class MkContainer(mknode.MkNode):
         return iter(self.items)
 
     def __repr__(self):
-        content = [helpers.to_str_if_textnode(i) for i in self.items]
+        content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
         return reprhelpers.get_repr(self, content=content)
 
     @contextlib.contextmanager

@@ -4,7 +4,7 @@ from collections.abc import Sequence
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.info import linkprovider
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -46,7 +46,7 @@ class MkList(mkcontainer.MkContainer):
         return len(self.items)
 
     def __repr__(self):
-        items = [helpers.to_str_if_textnode(i) for i in self.items]
+        items = [reprhelpers.to_str_if_textnode(i) for i in self.items]
         return reprhelpers.get_repr(
             self,
             items=items,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, xmlhelpers as xml
+from mknodes.utils import log, reprhelpers, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -55,7 +55,7 @@ class MkGrid(mkcontainer.MkContainer):
         cards = []
         for item in self.items:
             if len(item.items) == 1:
-                cards.append(helpers.to_str_if_textnode(item.items[0]))
+                cards.append(reprhelpers.to_str_if_textnode(item.items[0]))
             else:
                 cards.append(item)
         return reprhelpers.get_repr(self, cards=cards)

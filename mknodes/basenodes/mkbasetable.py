@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -60,7 +60,8 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def __repr__(self):
         kwarg_data = {
-            k: [helpers.to_str_if_textnode(i) for i in v] for k, v in self.data.items()
+            k: [reprhelpers.to_str_if_textnode(i) for i in v]
+            for k, v in self.data.items()
         }
         return reprhelpers.get_repr(self, data=kwarg_data)
 

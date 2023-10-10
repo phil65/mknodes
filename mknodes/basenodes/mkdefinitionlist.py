@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -83,7 +83,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
         self.items = data
 
     def __repr__(self):
-        kwarg_data = {k: helpers.to_str_if_textnode(v) for k, v in self.data.items()}
+        kwarg_data = {k: reprhelpers.to_str_if_textnode(v) for k, v in self.data.items()}
         return reprhelpers.get_repr(self, data=kwarg_data)
 
     @property

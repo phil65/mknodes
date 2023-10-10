@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktext
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -110,7 +110,7 @@ class MkAnnotations(mkcontainer.MkContainer):
         notes = []
         for item in self.items:
             if len(item.items) == 1:
-                item = helpers.to_str_if_textnode(item.items[0])
+                item = reprhelpers.to_str_if_textnode(item.items[0])
             notes.append(item)
         return reprhelpers.get_repr(self, annotations=notes)
 

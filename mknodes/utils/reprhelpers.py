@@ -80,6 +80,12 @@ def dataclass_repr(instance):
     return f"{instance.__class__.__name__}({nodef_f_repr})"
 
 
+def to_str_if_textnode(node):
+    import mknodes
+
+    return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
+
+
 if __name__ == "__main__":
     strings = get_repr([str(i) for i in range(1000)])
     print(limit_repr.repr(strings))
