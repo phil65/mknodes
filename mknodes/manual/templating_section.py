@@ -47,10 +47,8 @@ def _(nav: mk.MkNav):
         add_context_doc(subpage, ctx)
     page = nav.add_index_page(hide="toc")
     variables = dict(namespaces=NAMESPACES)
-    page += mk.MkJinjaTemplate(
-        "templating/template_namespace_index.jinja",
-        variables=variables,
-    )
+    template = "templating/template_namespace_index.jinja"
+    page += mk.MkJinjaTemplate(template, variables=variables)
 
 
 @nav.route.page("Utility filters")

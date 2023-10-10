@@ -2,10 +2,9 @@ import mknodes as mk
 
 from mknodes import manual
 from mknodes.manual import get_started_section
-from mknodes.theme import materialtheme
 
 
-def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
+def build(project: mk.Project[mk.MaterialTheme]) -> mk.MkNav:
     project.theme.error_page.content = mk.MkAdmonition("Page does not exist!")
     project.theme.content_area_width = 1300
     project.theme.tooltip_width = 800
