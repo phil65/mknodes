@@ -21,7 +21,7 @@ class AnnotationAppender:
         self.count = 0
         self.matches = []
 
-    def __call__(self, match):
+    def __call__(self, match) -> str:
         line = match.group()
         self.count += 1
         self.matches.append((self.count, match.group(2)))

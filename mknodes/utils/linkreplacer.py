@@ -27,7 +27,7 @@ class LinkReplacer:
         self.mapping = collections.defaultdict(list)
         self.page_url = ""
 
-    def __call__(self, match):
+    def __call__(self, match) -> str:
         filename = urllib.parse.unquote(match.group(3).strip())
         if filename not in self.mapping:
             return f"`{match.group(1)}`"

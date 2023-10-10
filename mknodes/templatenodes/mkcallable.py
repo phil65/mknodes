@@ -49,7 +49,7 @@ class MkCallable(mknode.MkNode):
         self.args = args or []
         self.kw_args = kw_args or {}
 
-    def __call__(self):
+    def __call__(self) -> mk.MkNode:
         node = self.fn(*self.args, **self.kw_args)
         node.parent = self.parent
         return node

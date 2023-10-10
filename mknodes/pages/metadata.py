@@ -86,7 +86,7 @@ class Metadata(dict):
         MkDocs-Material supports `"new"`, `"deprecated"` and `"encrypted"` by default
         by showing an icon in the site nav. Additional icons can be added during
         the build process via
-        [MaterialTheme.add_status_icon][mknodes.theme.materialtheme.MaterialTheme.add_status_icon].
+        [MaterialTheme.add_status_icon][mknodes.MaterialTheme.add_status_icon].
         """
         return self.get("status")
 
