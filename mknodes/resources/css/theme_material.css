@@ -5,7 +5,7 @@ content_area_width, classic_admonition_style, show_annotation_numbers, default_i
     --md-admonition-icon--{{ admonition.name }}: url('data:image/svg+xml;charset=utf-8,{{ admonition.svg }}');
 {% endfor %}
 {% for status_icon in status_icons %}
-    --md-status--encrypted: url('data:image/svg+xml;charset=utf-8,{ {status_icon.svg }}');
+    --md-status--{{ status_icon.name }}: url('data:image/svg+xml;charset=utf-8,{ {status_icon.svg }}');
 {% endfor %}
 {% for k, v in default_icons.values() %}
     --md-{k}: url('data:image/svg+xml;charset=utf-8,{{ v }}');
