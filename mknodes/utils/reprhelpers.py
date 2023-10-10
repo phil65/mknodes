@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-import reprlib
+import dataclasses
 
+from operator import attrgetter
+import reprlib
 from typing import Any
 
 from mknodes.utils import log
@@ -38,8 +40,10 @@ def get_repr(
 
     Args:
         _obj: The object to get a repr for.
-        _shorten: Whether to shorten the repr.
         *args: Arguments for the repr
+        _shorten: Whether to shorten the repr.
+        _filter_empty: Filter kwargs  with None, empty str / empty dicts as value
+        _filter_false: Filter False values
         **kwargs: Keyword arguments for the repr
     """
     my_repr = limit_repr.repr if _shorten else repr
@@ -65,11 +69,11 @@ def get_repr(
 
 
 def dataclass_repr(instance):
-    """Return repr for dataclass, filtered by non-default values."""
-    import dataclasses
+    """Return repr for dataclass, filtered by non-default values.
 
-    from operator import attrgetter
-
+    Arguments:
+        instance: dataclass instance
+    """
     nodef_f_vals = (
         (f.name, attrgetter(f.name)(instance))
         for f in dataclasses.fields(instance)

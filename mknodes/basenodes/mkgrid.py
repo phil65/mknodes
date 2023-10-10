@@ -75,7 +75,8 @@ class MkGrid(mkcontainer.MkContainer):
         import mknodes as mk
 
         # only works for Mkdocs-material sponsors.
-        item_1 = mk.MkList(items=["Item 1", "Item 2", "Item 3"])
+        ls = ["Item 1", "Item 2", "Item 3"]
+        item_1 = mk.MkList(ls)
         item_2 = mk.MkKeys(keys=["Ctrl+A"])
         grid = MkGrid(cards=[item_1, item_2])
         page += mk.MkReprRawRendered(grid)
