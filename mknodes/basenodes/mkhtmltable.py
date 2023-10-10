@@ -33,7 +33,7 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
 
     def _to_markdown(self) -> str:
         root = self.get_element()
-        return root.to_string(space="") if root else ""
+        return root.to_string(space="") if root is not None else ""
 
     @classmethod
     def create_example_page(cls, page):
