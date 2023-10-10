@@ -129,7 +129,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 
 
 if __name__ == "__main__":
-    from mknodes.basenodes import mknode
+    import mknodes as mk
 
-    diagram = MkClassDiagram(mknode.MkNode, mode="subclasses", max_depth=3)
+    diagram = MkClassDiagram(mk.MkNode, mode="subclasses", max_depth=3)
     print(diagram)

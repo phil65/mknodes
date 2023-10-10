@@ -51,7 +51,8 @@ class MkCommitConventions(mkjinjatemplate.MkJinjaTemplate):
     def variables(self):
         styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
         all_types = commitconventions.TYPE_DESCRIPTIONS
-        ls = mklist.MkList([f"`{k}`: {all_types[k]}" for k in self.commit_types])
+        items = [f"`{k}`: {all_types[k]}" for k in self.commit_types]
+        ls = mklist.MkList(items)
         return dict(styles=styles, commit_types=str(ls))
 
     @variables.setter

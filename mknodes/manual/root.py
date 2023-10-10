@@ -13,8 +13,8 @@ def build(project: mk.Project[materialtheme.MaterialTheme]) -> mk.MkNav:
 
     root_nav = project.get_root()
     root_nav.page_template.announcement_bar = mk.MkMetadataBadges("websites")
-    nav = get_started_section.nav
-    root_nav += nav
+    root_nav += get_started_section.nav
+
     manual.create_navs_section(root_nav)
     manual.create_page_section(root_nav)
     manual.create_nodes_section(root_nav)

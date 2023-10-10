@@ -3,7 +3,6 @@ import mknodes as mk
 from mknodes import paths
 from mknodes.manual import routing
 from mknodes.navs import navrouter
-from mknodes.project import Project
 
 
 DOC_TEXT = """Now lets create the documentation.
@@ -54,7 +53,7 @@ def _(nav: mk.MkNav):
 
 # @nav.route.nav("MkDefaultWebsite")
 def _(nav: mk.MkNav):
-    proj = Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
+    proj = mk.Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
     website_nav = mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
     nav += website_nav
 

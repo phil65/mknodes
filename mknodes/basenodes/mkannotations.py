@@ -167,8 +167,6 @@ class MkAnnotations(mkcontainer.MkContainer):
 if __name__ == "__main__":
     import mknodes
 
-    # ann = MkAnnotation(1, "test")
-    # print(ann)
     page = mknodes.MkPage()
     MkAnnotations.create_example_page(page)
     print(page)
