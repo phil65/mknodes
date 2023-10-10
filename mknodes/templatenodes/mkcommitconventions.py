@@ -128,12 +128,12 @@ class MkCommitConventions(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkCommitConventions(header="")
-        page += mknodes.MkReprRawRendered(node, header="### All commit_types")
+        page += mk.MkReprRawRendered(node, header="### All commit_types")
         node = MkCommitConventions(["fix", "feat", "refactor"], header="")
-        page += mknodes.MkReprRawRendered(node, header="### Selected commit_types")
+        page += mk.MkReprRawRendered(node, header="### Selected commit_types")
 
 
 if __name__ == "__main__":

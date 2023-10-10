@@ -89,15 +89,15 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         # this will show an install guide for our associated project
         node = MkInstallGuide()
-        page += mknodes.MkReprRawRendered(node, header="### From project")
+        page += mk.MkReprRawRendered(node, header="### From project")
 
         # we can also explicitely define the repositories
         node = MkInstallGuide("mkdocs", package_repos=["pipx"])
-        page += mknodes.MkReprRawRendered(node, header="### Explicit")
+        page += mk.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":

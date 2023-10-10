@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mkcontainer, mkheader, mklink, mknode, mktext
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import buildsystems
 from mknodes.utils import log, reprhelpers
 
@@ -24,12 +24,14 @@ cd {folder_name}
 
 
 def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.MkNode]:
+    import mknodes as mk
+
     backend_name = backend.identifier.capitalize()
     return [
-        mkheader.MkHeader("Build system"),
-        mktext.MkText(f"{backend_name} is used as the build system."),
-        mkcode.MkCode(f"pip install {backend.identifier}", language="bash"),
-        mklink.MkLink(backend.url, "More information"),
+        mk.MkHeader("Build system"),
+        mk.MkText(f"{backend_name} is used as the build system."),
+        mk.MkCode(f"pip install {backend.identifier}", language="bash"),
+        mk.MkLink(backend.url, "More information"),
     ]
 
 
@@ -98,11 +100,13 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
     @property
     def items(self):
+        import mknodes as mk
+
         folder_name = self.repo_url.removesuffix(".git").split("/")[-1]
         code = CLONE_CODE.format(repo_url=self.repo_url, folder_name=folder_name)
-        link = mklink.MkLink(self.repo_url, folder_name)
+        link = mk.MkLink(self.repo_url, folder_name)
         start_text = START_TEXT.format(link=str(link))
-        items = [mktext.MkText(start_text), mkcode.MkCode(code, language="md")]
+        items = [mk.MkText(start_text), mk.MkCode(code, language="md")]
         items.extend(get_build_backend_section(self.build_backend))
         for item in items:
             item.parent = self
@@ -114,12 +118,12 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkDevEnvSetup(header="")
-        page += mknodes.MkReprRawRendered(node, header="### From project")
+        page += mk.MkReprRawRendered(node, header="### From project")
         node = MkDevEnvSetup(header="", repo_url="http://url_to_git_repo.com/name.git")
-        page += mknodes.MkReprRawRendered(node, header="### Explicit")
+        page += mk.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":

@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mknode, mktabcontainer, mktabs
-from mknodes.templatenodes import mktreeview
+from mknodes.basenodes import mknode, mktabcontainer, mktabs
 from mknodes.utils import log, reprhelpers
 
 
@@ -40,16 +39,18 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
 
     @property
     def items(self):
+        import mknodes as mk
+
         html_node = self.node.__copy__()
         html_node.as_html = True
-        tabs: dict[str, str | mknode.MkNode] = dict(  # type: ignore[annotation-unchecked]
-            Repr=mkcode.MkCode(repr(self.node)),
-            Raw=mkcode.MkCode(self.node, language="markdown"),
-            Html=mkcode.MkCode(html_node, language="html"),
+        tabs: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
+            Repr=mk.MkCode(repr(self.node)),
+            Raw=mk.MkCode(self.node, language="markdown"),
+            Html=mk.MkCode(html_node, language="html"),
             Rendered=self.node.__copy__(),
         )
         if len(self.node.children) > 0:
-            tabs["Repr tree"] = mktreeview.MkTreeView(self.node)
+            tabs["Repr tree"] = mk.MkTreeView(self.node)
         items = [mktabs.MkTab(k, v, parent=self) for k, v in tabs.items()]
         items[0].new = True
         if self.select_tab is not None:

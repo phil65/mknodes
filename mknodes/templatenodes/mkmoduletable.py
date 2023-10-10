@@ -42,11 +42,11 @@ class MkModuleTable(mktable.MkTable):
     def create_example_page(cls, page):
         import jinja2
 
-        import mknodes
+        import mknodes as mk
 
         modules = [mod for _, mod in inspect.getmembers(jinja2, inspect.ismodule)]
         node = MkModuleTable(modules=modules)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

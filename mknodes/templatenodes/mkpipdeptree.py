@@ -94,12 +94,12 @@ class MkPipDepTree(mkdiagram.MkDiagram):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         tree = MkPipDepTree(direction="LR")
-        page += mknodes.MkReprRawRendered(tree)
+        page += mk.MkReprRawRendered(tree)
         tree = MkPipDepTree("mkdocstrings", direction="LR")
-        page += mknodes.MkReprRawRendered(tree)
+        page += mk.MkReprRawRendered(tree)
 
     @property
     def package(self) -> str:

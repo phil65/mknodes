@@ -70,13 +70,13 @@ class MkBlock(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "An MkBlock is a base class for pymdownx-style blocks."
         block = MkBlock("html", content="Some text", argument="div")
-        page += mknodes.MkCode(str(block), header="### Markdown")
+        page += mk.MkCode(str(block), header="### Markdown")
         # We can also nest blocks, they will adjust their delimiters automatically.
-        page += mknodes.MkHtmlBlock(block, header="### Nested")
+        page += mk.MkHtmlBlock(block, header="### Nested")
 
 
 if __name__ == "__main__":

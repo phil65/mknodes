@@ -21,14 +21,14 @@ class MkBlockQuote(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "An MkBlockQuote can display > Blockquotes."
         block = MkBlockQuote(content="Some text")
-        page += mknodes.MkReprRawRendered(block, header="### Regular")
+        page += mk.MkReprRawRendered(block, header="### Regular")
         # We can also nest blocks, they will adjust their delimiters automatically.
         nested_quote = MkBlockQuote(MkBlockQuote("nested"))
-        page += mknodes.MkReprRawRendered(nested_quote, header="### Nested")
+        page += mk.MkReprRawRendered(nested_quote, header="### Nested")
 
 
 if __name__ == "__main__":

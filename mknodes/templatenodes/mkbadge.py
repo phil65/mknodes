@@ -105,7 +105,7 @@ class MkBadge(mkimage.MkImage):
         return f"{color},#fff" if self.use_gitlab_style else f"#fff,{color}"
 
     @property
-    def data(self):
+    def data(self) -> str:
         return get_badge(
             label=self.label,
             value=self.value,
@@ -122,7 +122,7 @@ class MkBadge(mkimage.MkImage):
         pass
 
     @property
-    def path(self):
+    def path(self) -> str:
         unique = f"{self.label}_{self.value}_{hash(repr(self))}.svg"
         return helpers.slugify(unique)
 

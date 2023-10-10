@@ -63,10 +63,13 @@ class MkMaterialBadge(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkMaterialBadge(icon=":material-file:", text="text")
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
+
+        node = MkMaterialBadge(icon=":material-file:", text="text", typ="heart")
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

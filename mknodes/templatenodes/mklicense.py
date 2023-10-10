@@ -48,12 +48,12 @@ class MkLicense(mktext.MkText):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkLicense()
-        page += mknodes.MkReprRawRendered(node, header="### From project")
+        page += mk.MkReprRawRendered(node, header="### From project")
         node = MkLicense("GPL-3.0")
-        page += mknodes.MkReprRawRendered(node, header="### Explicit")
+        page += mk.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":

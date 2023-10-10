@@ -86,13 +86,13 @@ class MkPluginFlow(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         from mkdocs.contrib import search
 
-        import mknodes
+        import mknodes as mk
 
         node = MkPluginFlow()
-        page += mknodes.MkReprRawRendered(node, header="### From project")
+        page += mk.MkReprRawRendered(node, header="### From project")
 
         node = MkPluginFlow(plugin=search.SearchPlugin)
-        page += mknodes.MkReprRawRendered(node, header="### Explicit")
+        page += mk.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":

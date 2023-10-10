@@ -73,14 +73,14 @@ class MkModuleOverview(mktreeview.MkTreeView):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkModuleOverview(maximum_depth=2)
-        page += mknodes.MkReprRawRendered(node, header="### From project")
+        page += mk.MkReprRawRendered(node, header="### From project")
         import mkdocs
 
         node = MkModuleOverview(mkdocs, maximum_depth=2)
-        page += mknodes.MkReprRawRendered(node, header="### Explicit")
+        page += mk.MkReprRawRendered(node, header="### Explicit")
 
 
 if __name__ == "__main__":

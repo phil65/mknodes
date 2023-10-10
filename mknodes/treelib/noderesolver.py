@@ -347,12 +347,12 @@ class MkNodeResolver(NodeResolver):
         super().__init__(path_attr="", ignore_case=ignore_case)
 
     def get_attribute(self, node):
-        import mknodes
+        import mknodes as mk
 
         match node:
-            case mknodes.MkNav():
+            case mk.MkNav():
                 return node.section
-            case mknodes.MkPage():
+            case mk.MkPage():
                 return node.path
             case _:
                 return type(node).__name__

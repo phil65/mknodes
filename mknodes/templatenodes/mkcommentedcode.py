@@ -2,14 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from mknodes.basenodes import (
-    mkadmonition,
-    mkcode,
-    mkcontainer,
-    mknode,
-    mkspeechbubble,
-    mktext,
-)
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
 from mknodes.utils import inspecthelpers, log, reprhelpers, resources
 
@@ -81,22 +74,26 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     @property
     def comment_class(self) -> type[mknode.MkNode]:
+        import mknodes as mk
+
         match self._style:
             case "text":
-                return mktext.MkText
+                return mk.MkText
             case "bubble":
-                return mkspeechbubble.MkSpeechBubble
+                return mk.MkSpeechBubble
             case "admonition":
-                return mkadmonition.MkAdmonition
+                return mk.MkAdmonition
             case _:
                 raise TypeError(self._style)
 
     @property
     def items(self):
+        import mknodes as mk
+
         if not self.code:
             return {}
         section: list[str] = []
-        sections: list[mknode.MkNode] = []
+        sections: list[mk.MkNode] = []
         mode = ""
         line_num = self.linenums or 0
         for i, line in enumerate(self.code.split("\n"), start=line_num):
@@ -106,7 +103,8 @@ class MkCommentedCode(mkcontainer.MkContainer):
                 if mode == "code":
                     code = "\n".join(section)
                     start_line = line_num if self.linenums else None
-                    sections.append(mkcode.MkCode(code, linenums=start_line))
+                    node = mk.MkCode(code, linenums=start_line)
+                    sections.append(node)
                     section = []
                     line_num = i
                 section.append(line.strip().removeprefix("#")[1:])
@@ -122,7 +120,8 @@ class MkCommentedCode(mkcontainer.MkContainer):
         if mode == "code":
             code = "\n".join(section)
             start_line = line_num if self.linenums else None
-            sections.append(mkcode.MkCode(code, linenums=start_line))
+            node = mk.MkCode(code, linenums=start_line)
+            sections.append(node)
         elif mode == "comment":
             text = "\n".join(section)
             sections.append(self.comment_class(text))

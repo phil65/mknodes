@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 import os
 
+from typing import Any
+
 from mknodes.basenodes import mknode
 from mknodes.utils import helpers, log, reprhelpers, resources
 
@@ -23,7 +25,7 @@ class MkCommandOutput(mknode.MkNode):
     STATUS = "new"
     CSS = [resources.CSSFile("css/terminal.css")]
 
-    def __init__(self, call: Sequence[str], **kwargs):
+    def __init__(self, call: Sequence[str], **kwargs: Any):
         """Constructor.
 
         Arguments:
