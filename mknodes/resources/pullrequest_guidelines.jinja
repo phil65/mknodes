@@ -1,0 +1,16 @@
+Link to any related issue in the Pull Request message.
+
+During the review, we recommend using fixups:
+
+{{ "git commit --fixup=SHA # SHA of commit you want to fix" | MkCode }}
+
+Once all the changes are approved, you can squash your commits:
+
+{{ "git rebase -i --autosquash main" | MkCode }}
+
+And force-push:
+
+{{ "git push -f" | MkCode }}
+
+If this seems all too complicated, you can push or force-push each new commit,
+and we will squash them ourselves if needed, before merging.
