@@ -239,7 +239,12 @@ class MaterialTheme(theme.Theme):
         return color_str
 
     def set_default_icon(self, icon_type: IconTypeStr, data: str):
-        """Allows setting some custom default icons used throughout the theme."""
+        """Allows setting some custom default icons used throughout the theme.
+
+        Arguments:
+            icon_type: Icon type to set a new default for
+            data: svg for the new icon
+        """
         self.default_icons[icon_type] = data
 
     def add_status_icon(self, name: str, material_icon: str):

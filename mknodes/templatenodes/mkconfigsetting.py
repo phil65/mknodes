@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mkdefinitionlist, mknode, mktext
+from mknodes.basenodes import mkdefinitionlist
 from mknodes.utils import helpers, log, reprhelpers, superdict
 
 
@@ -63,6 +63,8 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
 
     @property
     def items(self):
+        import mknodes as mk
+
         text = f"Default: `{self.default!r}`\n\n"
         if self.version_added:
             text += f"Version added: `{self.version_added}`\n\n"
@@ -70,13 +72,13 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             required = "no" if self.optional else "yes"
             text += f"Required: `{required}`\n\n"
         text += f"{self.description}\n"
-        items: list[mknode.MkNode] = [mktext.MkText(text, parent=self)]
+        items: list[mk.MkNode] = [mk.MkText(text, parent=self)]
         if isinstance(self.setting, dict):
             code = superdict.SuperDict(self.setting).serialize(mode=self.mode)
         else:
             code = self.setting
         if self.setting:
-            code_node = mkcode.MkCode(code, parent=self, language=self.mode or "yaml")
+            code_node = mk.MkCode(code, parent=self, language=self.mode or "yaml")
             items.append(code_node)
         return items
 

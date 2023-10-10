@@ -13,7 +13,7 @@ logger = log.get_logger(__name__)
 
 
 @functools.cache
-def get_markdown():
+def get_markdown() -> str:
     file = paths.RESOURCES / "code_of_conduct_2_1.md"
     return file.read_text()
 

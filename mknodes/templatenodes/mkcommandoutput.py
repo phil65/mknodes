@@ -24,6 +24,12 @@ class MkCommandOutput(mknode.MkNode):
     CSS = [resources.CSSFile("css/terminal.css")]
 
     def __init__(self, call: Sequence[str], **kwargs):
+        """Constructor.
+
+        Arguments:
+            call: System call to make
+            kwargs: Keyword arguments passed to parent
+        """
         self.call = call
         # caching on instance level as a compromise
         self._cache: dict[str, str] = {}  # {call: output}

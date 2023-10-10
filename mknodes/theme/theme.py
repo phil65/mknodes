@@ -34,7 +34,7 @@ class Theme:
         self,
         theme_name: str,
         *,
-        data: dict | None = None,
+        data: dict[str, Any] | None = None,
         project: project.Project | None = None,
         template_registry: templateregistry.TemplateRegistry | None = None,
     ):
@@ -95,6 +95,10 @@ class Theme:
         self.admonitions.append(adm)
 
     def get_resources(self) -> resources.Resources:
+        """Return resources required for the theme.
+
+        Usually, the resources consist of static templates and CSS.
+        """
         req: list[resources.CSSFile | resources.CSSText] = []
         if self.css_template and (proj := self.associated_project):
             tmpl_ctx = self.get_template_context()
@@ -125,7 +129,19 @@ class Theme:
         )
 
     @classmethod
-    def get_theme(cls, theme_name: str = "material", data: dict | None = None, **kwargs):
+    def get_theme(
+        cls,
+        theme_name: str = "material",
+        data: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ):
+        """Return theme instance of corresponding subclass based on theme name.
+
+        Arguments:
+            theme_name: Name of the theme
+            data: Additional data for the theme
+            kwargs: Additional keyword arguments passe to the Theme
+        """
         if theme_name == "material":
             from mknodes.theme import materialtheme
 
@@ -136,10 +152,12 @@ class Theme:
         import mknodes as mk
 
         for block in self.main_template.blocks:
-            if isinstance(block, templateblocks.HtmlBlock):
-                for node in block.items:
-                    if isinstance(node, mk.MkNode):
-                        yield 0, node
+            if not isinstance(block, templateblocks.HtmlBlock):
+                continue
+            for node in block.items:
+                if not isinstance(node, mk.MkNode):
+                    continue
+                yield 0, node
 
     @property
     def primary_color(self) -> str:
