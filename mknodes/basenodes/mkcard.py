@@ -24,7 +24,7 @@ def build_html_card(
     size: int = CARD_DEFAULT_SIZE,
     caption: str | None = None,
     path_dark_mode: str | None = None,
-):
+) -> xml.A:
     root = xml.A(href=link)
     card_div = xml.Div("card", parent=root)
     container_div = xml.Div("showcase-container", parent=card_div)
@@ -40,7 +40,7 @@ def build_html_card(
     p = xml.P(parent=card_div)
     button = xml.Button(parent=p)
     button.text = title
-    return root.to_string()
+    return root
 
 
 class MkCard(mknode.MkNode):
@@ -99,7 +99,7 @@ class MkCard(mknode.MkNode):
         return self.ctx.links.get_url(self.target) if self.target else ""
 
     def _to_markdown(self) -> str:
-        return build_html_card(
+        elem = build_html_card(
             title=self.title,
             image=self.image,
             caption=self.caption,
@@ -107,6 +107,7 @@ class MkCard(mknode.MkNode):
             size=self.size,
             path_dark_mode=self.path_dark_mode,
         )
+        return elem.to_string()
 
     @classmethod
     def for_page(cls, page):

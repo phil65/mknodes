@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+
 from typing import TYPE_CHECKING, Literal
 
 from markdown import markdown
@@ -164,14 +166,14 @@ class LibsBlock(BaseBlock):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: resources.JSFile | str):
+    def add_script_file(self, script: resources.JSFile | str | os.PathLike):
         """Add a script file to the block.
 
         Arguments:
             script: Script to add to the block
         """
-        if isinstance(script, str):
-            script = resources.JSFile(script)
+        if isinstance(script, str | os.PathLike):
+            script = resources.JSFile(str(script))
         self.scripts.append(script)
 
     def __bool__(self):
