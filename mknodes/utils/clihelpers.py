@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import dataclasses
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import click
-import typer
 
-from typer.main import get_command
+if TYPE_CHECKING:
+    import click
+    import typer
+
 
 from mknodes.basenodes import mkcode
 
@@ -80,6 +81,10 @@ def get_typer_info(
     instance: typer.Typer | click.Group,
     command: str | None = None,
 ) -> CommandInfo:
+    import typer
+
+    from typer.main import get_command
+
     cmd = get_command(instance) if isinstance(instance, typer.Typer) else instance
     info = get_command_info(cmd)
     if command:
@@ -91,6 +96,8 @@ def get_typer_info(
 
 
 def get_command_info(command: click.Command, parent=None) -> CommandInfo:
+    import typer
+
     ctx = typer.Context(command, parent=parent)
     subcommands = getattr(command, "commands", {})
     dct = ctx.command.to_info_dict(ctx)
