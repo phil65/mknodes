@@ -128,11 +128,12 @@ class NavRouter:
             path=path,
             kwargs=kwargs,
         ) -> Callable:
-            node = mkpage.MkPage(path[-1], parent=self._nav, **kwargs)
+            p = path[-1] if path else (self._nav.section or "Home")
+            node = mkpage.MkPage(p, parent=self._nav, **kwargs)
             node = fn(node) or node
             node.parent = self._nav  # in case a new MkPage was generated
             node.created_by = fn
-            self._nav.nav[path] = node
+            self._nav.nav[p] = node
             return fn
 
         return decorator
