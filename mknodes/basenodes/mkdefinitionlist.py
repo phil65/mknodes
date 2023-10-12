@@ -117,12 +117,12 @@ class MkDefinitionList(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         import mknodes
 
-        definitions = dict(something="A definition", somethingelse="Another\ndefinition")
-        node = MkDefinitionList(data=definitions)
+        defs_1 = dict(something="A definition", somethingelse="Another\ndefinition")
+        node = MkDefinitionList(data=defs_1)
         page += mknodes.MkReprRawRendered(node, header="### Regular")
 
-        definitions = dict(admonition=mknodes.MkAdmonition("Nested markup"))
-        node = MkDefinitionList(data=definitions)
+        defs_2 = dict(admonition=mknodes.MkAdmonition("Nested markup"))
+        node = MkDefinitionList(data=defs_2)
         page += mknodes.MkReprRawRendered(node, header="### Nested markup")
 
 

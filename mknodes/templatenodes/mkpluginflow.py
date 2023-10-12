@@ -79,7 +79,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
                 ]
                 bubble = mk.MkSpeechBubble(bubble_content, parent=self)
                 section.append(bubble)
-            if section:
+            if section and isinstance(section[-1], mk.MkSpeechBubble):
                 section[-1].arrow = None
             items.extend(section)
         return items

@@ -143,9 +143,9 @@ class Theme:
             kwargs: Additional keyword arguments passe to the Theme
         """
         if theme_name == "material":
-            from mknodes.theme import materialtheme
+            import mknodes as mk
 
-            return materialtheme.MaterialTheme(data=data, **kwargs)
+            return mk.MaterialTheme(data=data, **kwargs)
         return Theme(theme_name, data=data, **kwargs)
 
     def iter_nodes(self):

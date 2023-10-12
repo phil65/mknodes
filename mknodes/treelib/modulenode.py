@@ -4,6 +4,8 @@ from collections.abc import Callable
 import inspect
 import types
 
+from typing import Any
+
 from mknodes.treelib import node
 from mknodes.utils import inspecthelpers, log
 
@@ -12,7 +14,7 @@ logger = log.get_logger(__name__)
 
 
 class ModuleNode(node.Node):
-    def __init__(self, module: types.ModuleType, **kwargs):
+    def __init__(self, module: types.ModuleType, **kwargs: Any):
         self.module = module
         self.summary = inspecthelpers.get_doc(self.module, only_summary=True)
         super().__init__(**kwargs)

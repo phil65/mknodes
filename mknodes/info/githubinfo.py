@@ -32,7 +32,7 @@ class GitHubRepo:
         self.main = github.Github(auth=auth)
         self.username = username
         self.repo_name = repository
-        self.user: github.NamedUser = self.main.get_user(username)  # type: ignore
+        self.user: github.NamedUser.NamedUser = self.main.get_user(username)  # type: ignore
         self.repo = self.main.get_repo(f"{username}/{repository}")
         self.default_branch = self.repo.default_branch
 

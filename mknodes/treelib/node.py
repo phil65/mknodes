@@ -90,6 +90,7 @@ class Node:
         yield from preorder_iter(self, filter_condition=lambda _node: _node != self)
 
     def is_descendant_of(self, kls: type) -> bool:
+        """Returns True if any ancestor is of given type."""
         return any(isinstance(i, kls) for i in self.ancestors)
 
     @property

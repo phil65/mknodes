@@ -194,15 +194,15 @@ class Environment(jinja2.Environment):
         Arguments:
             parent: Node parent
         """
-        import mknodes
+        import mknodes as mk
 
         filters = {}
-        for kls_name in mknodes.__all__:
+        for kls_name in mk.__all__:
             if parent is not None:
-                kls = getattr(mknodes, kls_name)
+                kls = getattr(mk, kls_name)
                 fn = functools.partial(kls, parent=parent)
             else:
-                fn = getattr(mknodes, kls_name)
+                fn = getattr(mk, kls_name)
 
             def wrapped(ctx, *args, fn=fn, **kwargs):
                 node = fn(*args, **kwargs)
