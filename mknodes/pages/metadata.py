@@ -1,14 +1,16 @@
 from __future__ import annotations
 
-from typing import Literal, Self
+import re
 
-from mkdocs.utils import meta
+from typing import Literal, Self
 
 from mknodes.data import datatypes
 from mknodes.utils import yamlhelpers
 
 
 HEADER = "---\n{options}---\n"
+
+HEADER_RE = re.compile(r"\A-{3}\n([\S\s]*)^-{3}(\n|$)", re.MULTILINE)
 
 
 SectionStr = Literal["navigation", "toc", "path", "tags"]
@@ -163,8 +165,12 @@ class Metadata(dict):
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
         """Parse given text for metadata and return a (Metadata, Rest-from-text) tuple."""
-        text, metadata = meta.get_data(text)
-        return cls(**metadata), text
+        dct = {}
+        if match := HEADER_RE.match(text):
+            content = match[1]
+            dct = yamlhelpers.load_yaml(content)
+            text = text[match.span()[1] :]
+        return cls(**dct), text
 
     def __str__(self):
         dct = {k: v for k, v in self.items() if v is not None}
