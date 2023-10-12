@@ -258,6 +258,21 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
     def __or__(self, other):
         return self.merge(other)
 
+    def remove(self, *resources):
+        for resource in resources:
+            if resource in self.css:
+                self.css.remove(resource)
+            elif resource in self.templates:
+                self.templates.remove(resource)
+            elif resource in self.plugins:
+                self.plugins.remove(resource)
+            elif resource in self.js:
+                self.js.remove(resource)
+            elif resource in self.assets:
+                self.assets.remove(resource)
+            elif resource in self.markdown_extensions:
+                self.markdown_extensions.pop(resource)
+
     @property
     def js_files(self) -> list[JSText]:
         """All JavaScript files of this resource bundle."""
