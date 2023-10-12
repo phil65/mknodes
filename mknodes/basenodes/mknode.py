@@ -285,7 +285,15 @@ class MkNode(node.Node):
         for js_file in self.JS_FILES:
             if isinstance(js_file, resources.JSFile) and js_file.is_local():
                 text = self.env.render_template(js_file.link)
-                js_resource = resources.JSText(text, js_file.link)
+                js_resource = resources.JSText(
+                    text,
+                    js_file.link,
+                    defer=js_file.defer,
+                    async_=js_file.async_,
+                    crossorigin=js_file.crossorigin,
+                    typ=js_file.typ,
+                    is_library=js_file.is_library,
+                )
                 js_resources.append(js_resource)
             else:
                 js_resources.append(js_file)
