@@ -86,7 +86,7 @@ class MkBlog(mknav.MkNav):
         author = Author(name=name, description=description, avatar=avatar)
         self.authors[username] = author
 
-    def get_node_resources(self):
+    def get_node_resources(self) -> resources.Resources:
         authors_file = yamlfile.YamlFile()
         dct = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
         authors_file._data["authors"] = dct

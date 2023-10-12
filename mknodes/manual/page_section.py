@@ -61,15 +61,14 @@ def _(page: mk.MkPage):
     code = "information = 'You can even put MkNodes here!'"
     page.template.tabs.content = mk.MkCode(f"{code}")
     page.template.hero.content = mk.MkHeader("A header!")
-    page.template.styles.add_css(
-        {
-            ":root": {
-                "--md-primary-fg-color": "#FF0000",
-                "--md-primary-fg-color--light": "#FF0000",
-                "--md-primary-fg-color--dark": "#FF0000",
-            },
+    css = {
+        ":root": {
+            "--md-primary-fg-color": "#FF0000",
+            "--md-primary-fg-color--light": "#FF0000",
+            "--md-primary-fg-color--dark": "#FF0000",
         },
-    )
+    }
+    page.template.styles.add_css(css)
 
 
 @nav.route.page("Resources")
