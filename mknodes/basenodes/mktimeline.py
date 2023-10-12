@@ -107,8 +107,8 @@ class MkTimeline(mkcontainer.MkContainer):
 
     ICON = "material/timeline"
     JS_FILES = [
-        resources.JSFile(JQUERY_LINK),
-        resources.JSFile(SCROLLREVEAL_LINK),
+        resources.JSFile(JQUERY_LINK, is_library=True),
+        resources.JSFile(SCROLLREVEAL_LINK, is_library=True),
         resources.JSFile("js/timeline.js"),
     ]
     CSS = [resources.CSSFile("css/timeline.css")]
@@ -177,7 +177,7 @@ class MkTimeline(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkTimeline()
         for i in range(1, 6):
@@ -188,7 +188,7 @@ class MkTimeline(mkcontainer.MkContainer):
                 link="https://phil65.github.io/mknodes",
                 image=f"https://picsum.photos/40{i}",
             )
-            admonition = mknodes.MkAdmonition("test")
+            admonition = mk.MkAdmonition("test")
             node += MkTimelineItem(
                 title=f"Card {i}",
                 content=admonition,
@@ -199,9 +199,9 @@ class MkTimeline(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    node = mknodes.MkAdmonition("test")
+    node = mk.MkAdmonition("test")
     item = MkTimelineItem(
         title="Title",
         content=node,

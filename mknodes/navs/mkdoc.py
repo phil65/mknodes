@@ -74,7 +74,7 @@ class MkDoc(mknav.MkNav):
         return self.ctx.metadata.module if self._module is None else self._module
 
     @property
-    def module_name(self):
+    def module_name(self) -> str:
         return self.module.__name__.split(".")[-1]
 
     def collect_classes(
