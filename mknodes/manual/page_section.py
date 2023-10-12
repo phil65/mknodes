@@ -70,3 +70,8 @@ def _(page: mk.MkPage):
             },
         },
     )
+
+
+@nav.route.page("Resources")
+def _(page: mk.MkPage):
+    page += mk.MkJinjaTemplate("resources.jinja")

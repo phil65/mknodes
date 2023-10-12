@@ -13,7 +13,7 @@ class Logger:
     def __getattr__(self, val):
         return getattr(self.logger, val)
 
-    def log_dict(self, dct, level=logging.INFO):
+    def log_dict(self, dct: dict, level=logging.INFO):
         for k, v in dct.items():
             self.logger.log(level, "%s: %s", k, v)
 

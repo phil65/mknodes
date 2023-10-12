@@ -54,8 +54,7 @@ def _(nav: mk.MkNav):
 # @nav.route.nav("MkDefaultWebsite")
 def _(nav: mk.MkNav):
     proj = mk.Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
-    website_nav = mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
-    nav += website_nav
+    nav += mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
 
 
 @nav.route.nav("The MkDoc class")
@@ -66,3 +65,8 @@ def _(nav: mk.MkNav):
     mknodes_docs = nav.add_doc(module=mk, class_page=template)
     # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)
+
+
+@nav.route.page("Context propagation")
+def _(page: mk.MkPage):
+    page += mk.MkJinjaTemplate("context_propagation.jinja")

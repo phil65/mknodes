@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import Any
-
-from mkdocs import plugins
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import eventplugins
 from mknodes.utils import inspecthelpers, log, reprhelpers
+
+
+if TYPE_CHECKING:
+    from mkdocs import plugins
 
 
 logger = log.get_logger(__name__)
@@ -18,7 +20,11 @@ class MkPluginFlow(mkcontainer.MkContainer):
     ICON = "material/dev-to"
     STATUS = "new"
 
-    def __init__(self, plugin: type[plugins.BasePlugin] | None = None, **kwargs: Any):
+    def __init__(
+        self,
+        plugin: type[plugins.BasePlugin] | None = None,
+        **kwargs: Any,
+    ):
         """Constructor.
 
         Arguments:
