@@ -10,7 +10,6 @@ NAV_TEXT = """You can also use decorators to attach MkNavs. These navs then can 
 to build the tree without using decorators (by adding sub-navs).
 """
 
-# this is the nav we will populate via decorators.
 nav = mk.MkNav("Using decorators")
 
 
@@ -29,7 +28,7 @@ def routed_nested_page(page: mk.MkPage):
 @nav.route.nav("Routed", "Deeply", "Nested", "Nav")
 def routed_nav(nav: mk.MkNav):
     """Builds a nested MkNav and attaches it to the router MkNav."""
-    index_page = nav.add_index_page()
+    index_page = nav.add_page(is_index=True)
     index_page += mk.MkAdmonition(NAV_TEXT)
     page = nav.add_page("Routed section page")
     page += mk.MkAdmonition("Routed section page content")

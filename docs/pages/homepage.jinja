@@ -36,15 +36,10 @@ For pages with a hierarchical site navigation, you can usually reach the index p
     supports them natively.
 
 
-To create an index page for a section, you can use [MkNav.add_index_page][mknodes.MkNav.add_index_page]:
+To create an index page for a section, you can use the `is_index` keyword argument [MkNav.add_page][mknodes.MkNav.add_page]:
 
 
 ``` py title="Setting an index page"
-page = nav.add_index_page()
+page = nav.add_page(is_index=True)
 ...
 ```
-
-You can also use `add_index_page` on the root nav to set your homepage,
-using the `is_homepage` keyword argument is more flexible though because it also allows you to set a homepage which is not a direct child of the root nav.
-A common approach for example is to make the first page of the first section your homepage.
-

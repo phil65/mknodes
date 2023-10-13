@@ -91,24 +91,6 @@ CONTAINER_NODES = [
     mk.MkTaskList,
 ]
 
-nav = mk.MkNav("The nodes")
-
-
-def create_nodes_section(root_nav: mk.MkNav):
-    """Add the complete "The Nodes" section to given MkNav."""
-    # Basic structure: Theres one root MkNav, MkNavs can contain MkPages and other MkNavs,
-    # MkPages contain more atomic MkNodes, like MkText, MkTable, and MkDiagrams.
-    # These markup nodes in some cases can contain other Markup nodes.
-    # It`s all one big tree.
-
-    # first we create the menu on the left:
-    root_nav += nav
-    # and then we create the index page (the page you are lookin at right now)
-
-    page = nav.add_index_page(hide="toc")
-    page += mk.MkJinjaTemplate("nodes_index.jinja")
-    page.created_by = create_nodes_section
-
 
 def create_section_for_nodes(
     nav: mk.MkNav,
@@ -134,23 +116,31 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     page.created_by = create_class_page
 
 
+nav = mk.MkNav("The nodes")
+
+
+@nav.route.page(is_index=True)
+def _(page: mk.MkPage):
+    page += mk.MkJinjaTemplate("nodes_index.jinja")
+
+
 @nav.route.nav("Base nodes")
 def _(nav: mk.MkNav):
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, BASE_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Image nodes")
 def _(nav: mk.MkNav):
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, IMAGE_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Container nodes")
 def _(nav: mk.MkNav):
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, CONTAINER_NODES)
     page.created_by = create_section_for_nodes
 
@@ -158,21 +148,21 @@ def _(nav: mk.MkNav):
 @nav.route.nav("Presentation nodes")
 def _(nav: mk.MkNav):
     """Add a sub-MkNav containing all template node pages to given MkNav."""
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, PRESENTATION_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Documentation nodes")
 def _(nav: mk.MkNav):
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, DOCUMENTATION_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("About-the-project nodes")
 def _(nav: mk.MkNav):
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, ABOUT_THE_PROJECT_NODES)
     page.created_by = create_section_for_nodes
 
@@ -180,13 +170,13 @@ def _(nav: mk.MkNav):
 @nav.route.nav("Special nodes")
 def _(nav: mk.MkNav):
     klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, klasses)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Block nodes")
 def _(nav: mk.MkNav):
-    page = nav.add_index_page(hide="toc")
+    page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, BLOCK_NODES)
     page.created_by = create_section_for_nodes

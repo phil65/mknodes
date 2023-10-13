@@ -8,7 +8,7 @@ An index page shows when clicking on a menu item with children, or for the websi
 ## Page metadata
 
 MkPages have metadata attached, which can be set via the [MkPage.metadata][mknodes.Metadata] attribute.
-Metadata is also inherited from the parent MkNavs in case they have metadata set.
+[MkPage.metadata][mknodes.Metadata] is also inherited from the parent MkNavs in case they have metadata set.
 That metadata can alter the behaviour and appearance of given page. It can be used to
 show icons / subtitles in menus, to modify the search ranking, to set a reference to a [PageTemplate][mknodes.PageTemplate], and much more.
 
@@ -50,11 +50,10 @@ MkPages can get created in many ways:
 
   More information about routing can be found [here](Routing.md).
 
-* By using [MkNav.add_page][mknodes.MkNav.add_page] / [MkNav.add_index_page][mknodes.MkNav.add_index_page]:
+* By using [MkNav.add_page][mknodes.MkNav.add_page]:
 
-    ``` py title="Via add_page / add_index_page"
+    ``` py title="Via add_page"
     page = nav.add_page("My page")
-    index_page = nav.add_index_page("My index page")
     ```
 
 * By using the alternative constructor [MkPage.from_file][mknodes.MkPage.from_file]:

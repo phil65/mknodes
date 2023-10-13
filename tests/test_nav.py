@@ -15,7 +15,7 @@ def test_nav():
     nav = mknodes.MkNav()
     nav.add_doc(mknodes)
     nav.add_page("Test")
-    nav.add_index_page("Test Index page")
+    nav.add_page("Test Index page", is_index=True)
     nav.add_nav("sub")
 
 

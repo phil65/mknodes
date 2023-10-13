@@ -101,9 +101,9 @@ building the tree. Each MkNav has a dedicated slot for an index page.
 nav.index_page = my_mkpage_instance
 ```
 
-Alternatively, MkNavs have a separate method to create an index page:
+Alternatively, [MkNav.add_page][mknodes.MkNav.add_page] takes the keyword argument `is_index`:
 ``` py
-index_page = nav.add_index_page()
+index_page = nav.add_page(is_index=True, ...)
 ```
 
 

@@ -1,7 +1,13 @@
 import mknodes as mk
 
-from mknodes import manual
-from mknodes.manual import get_started_section
+from mknodes.manual import (
+    dev_section,
+    get_started_section,
+    navs_section,
+    nodes_section,
+    page_section,
+    templating_section,
+)
 
 
 def build(project: mk.Project[mk.MaterialTheme]) -> mk.MkNav:
@@ -13,10 +19,9 @@ def build(project: mk.Project[mk.MaterialTheme]) -> mk.MkNav:
     root_nav = project.get_root()
     root_nav.page_template.announcement_bar = mk.MkMetadataBadges("websites")
     root_nav += get_started_section.nav
-
-    manual.create_navs_section(root_nav)
-    manual.create_page_section(root_nav)
-    manual.create_nodes_section(root_nav)
-    manual.create_templating_section(root_nav)
-    manual.create_development_section(root_nav)
+    root_nav += navs_section.nav
+    root_nav += page_section.nav
+    root_nav += nodes_section.nav
+    root_nav += templating_section.nav
+    root_nav += dev_section.nav
     return root_nav

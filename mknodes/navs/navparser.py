@@ -223,7 +223,7 @@ class NavParser:
                     subnav = mknav.MkNav(m[1], parent=self._nav)
                     text = "\n".join(unindented)
                     subnav.parse.text(text, path=path, **kwargs)
-                    page = subnav.add_index_page(**kwargs)
+                    page = subnav.add_page(is_index=True, **kwargs)
                     page += pathlib.Path(m[2]).read_text()
                     msg = "Created subsection %s and loaded index page %s"
                     logger.debug(msg, m[1], m[2])

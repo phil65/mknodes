@@ -135,54 +135,6 @@ class MkNav(mknode.MkNode):
         self.nav.register(navi)
         return navi
 
-    def add_index_page(
-        self,
-        title: str | None = None,
-        *,
-        hide: str | list[str] | None = None,
-        search_boost: float | None = None,
-        exclude_from_search: bool | None = None,
-        icon: str | None = None,
-        status: PageStatusStr | None = None,
-        subtitle: str | None = None,
-        description: str | None = None,
-        path: str | None = None,
-        template: str | None = None,
-        tags: list[str] | None = None,
-    ) -> mk.MkPage:
-        """Register and return a index page with given title.
-
-        Arguments:
-            title: Title of the index page
-            hide: Hide parts of the website ("toc", "nav", "path")
-            search_boost: multiplier for search ranking
-            exclude_from_search: Exclude page from search index
-            icon: optional page icon
-            status: Page status
-            path: Optional path override
-            description: Page description
-            subtitle: Page subtitle
-            template: Page template
-            tags: tags to show above the main headline and within the search preview
-        """
-        page = mkpage.MkPage(
-            path=path or "index.md",
-            hide=hide,
-            search_boost=search_boost,
-            exclude_from_search=exclude_from_search,
-            icon=icon,
-            status=status,
-            title=title,
-            subtitle=subtitle,
-            description=description,
-            template=template,
-            tags=tags,
-            parent=self,
-        )
-        self.nav.index_page = page
-        self.nav.index_title = title or self.section or "Home"
-        return page
-
     def to_markdown(self) -> str:
         return self.nav.to_literate_nav()
 
@@ -190,7 +142,8 @@ class MkNav(mknode.MkNode):
         self,
         title: str | None = None,
         *,
-        as_index: bool = False,
+        is_index: bool = False,
+        is_homepage: bool = False,
         path: str | None = None,
         hide: list[str] | str | None = None,
         search_boost: float | None = None,
@@ -206,7 +159,8 @@ class MkNav(mknode.MkNode):
 
         Arguments:
             title: Page title
-            as_index: Whether the page should become the index page.
+            is_index: Whether the page should become the index page.
+            is_homepage: Whether the page should become the homepage.
             path: optional path override
             hide: Hide parts of the page ("toc", "nav", "path")
             search_boost: multiplier for search ranking
@@ -218,9 +172,10 @@ class MkNav(mknode.MkNode):
             template: Page template
             tags: tags to show above the main headline and within the search preview
         """
-        path = "index.md" if as_index else (path or f"{title}.md")
         page = mkpage.MkPage(
             title=title,
+            is_index=is_index,
+            is_homepage=is_homepage,
             path=path,
             parent=self,
             hide=hide,
@@ -233,7 +188,7 @@ class MkNav(mknode.MkNode):
             template=template,
             tags=tags,
         )
-        if as_index:
+        if is_index:
             self.index_page = page
             self.index_title = title or self.section or "Home"
         else:

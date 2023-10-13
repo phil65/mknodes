@@ -4,14 +4,12 @@ import mknodes as mk
 nav = mk.MkNav("MkPages")
 
 
-def create_page_section(root_nav: mk.MkNav):
-    root_nav += nav
-    page = nav.add_index_page()
+@nav.route.page(is_index=True)
+def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("pages/mkpage_index.jinja")
     page.footnotes[1] = r"Footnotes are numbered, can be set via \__setitem__."
     page.footnotes[2] = r"They can also get nested[^3]."
     page.footnotes[3] = mk.MkAdmonition("They can also contain other Markdown (nodes).")
-    page.created_by = create_page_section
 
 
 @nav.route.page("MkClassPage")

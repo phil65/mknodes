@@ -20,7 +20,7 @@ class MkDefaultWebsite(mk.MkNav):
     ):
         super().__init__(**kwargs)
 
-        page = self.add_index_page("Overview", hide="toc")
+        page = self.add_page(is_index=True, hide="toc")
         page += mk.MkText(page.ctx.metadata.description)
         static_pages = static_pages or {}
         self.parse.json(static_pages)

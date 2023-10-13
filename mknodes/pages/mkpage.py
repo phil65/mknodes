@@ -49,6 +49,7 @@ class MkPage(mkcontainer.MkContainer):
         inclusion_level: bool | None = None,
         tags: list[str] | None = None,
         edit_path: str | None = None,
+        is_index: bool | None = None,
         is_homepage: bool | None = None,
         **kwargs: Any,
     ):
@@ -70,11 +71,13 @@ class MkPage(mkcontainer.MkContainer):
             tags: tags to show above the main headline and within the search preview
             edit_path: Custom edit path for this page
             kwargs: Keyword arguments passed to parent
+            is_index: Whether this page should be the index page.
             is_homepage: Whether this page should be the homepage.
         """
         super().__init__(**kwargs)
         self._path = str(path) if path else None
         self._edit_path = edit_path
+        self._is_index = is_index
         self._is_homepage = is_homepage
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.created_by: Callable | None = None
@@ -109,7 +112,7 @@ class MkPage(mkcontainer.MkContainer):
 
     def is_index(self) -> bool:
         """Returns True if the page is the index page for the parent Nav."""
-        return self.parent.index_page is self if self.parent else False
+        return bool(self._is_index)
 
     @property
     def metadata(self) -> metadata.Metadata:
@@ -130,6 +133,8 @@ class MkPage(mkcontainer.MkContainer):
         if self._is_homepage:
             prefix = "../" * (len(self.parent_navs) - 1)
             return f"{prefix}index.md"
+        if self._is_index:
+            return "index.md"
         if self._path:
             path = self._path.removesuffix(".md") + ".md"
         else:
