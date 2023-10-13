@@ -189,6 +189,16 @@ class JSText(TextResource):
     typ: str = ""
     is_library: bool = False
 
+    def get_jsfile(self) -> JSFile:
+        return JSFile(
+            link=self.resolved_filename,
+            async_=self.async_,
+            defer=self.defer,
+            crossorigin=self.crossorigin,
+            typ=self.typ,
+            is_library=self.is_library,
+        )
+
 
 class Asset:
     """An asset resource."""
