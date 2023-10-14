@@ -91,6 +91,14 @@ CONTAINER_NODES = [
     mk.MkTaskList,
 ]
 
+SPECIAL_NODES = [
+    mk.MkSnippet,
+    mk.MkInclude,
+    mk.MkIFrame,
+    mk.MkCommandOutput,
+    mk.MkCallable,
+]
+
 
 def create_section_for_nodes(
     nav: mk.MkNav,
@@ -147,7 +155,6 @@ def _(nav: mk.MkNav):
 
 @nav.route.nav("Presentation nodes")
 def _(nav: mk.MkNav):
-    """Add a sub-MkNav containing all template node pages to given MkNav."""
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, PRESENTATION_NODES)
     page.created_by = create_section_for_nodes
@@ -169,9 +176,8 @@ def _(nav: mk.MkNav):
 
 @nav.route.nav("Special nodes")
 def _(nav: mk.MkNav):
-    klasses = [mk.MkSnippet, mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
     page = nav.add_page(is_index=True, hide="toc")
-    page += create_section_for_nodes(nav, klasses)
+    page += create_section_for_nodes(nav, SPECIAL_NODES)
     page.created_by = create_section_for_nodes
 
 

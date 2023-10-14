@@ -41,14 +41,14 @@ def add_page(
         name: Name for given MkPage
         kwargs: Additional metadata for MkPage
     """
-    import mknodes
+    import mknodes as mk
 
     path = os.fspath(path)
     logger.debug("Adding file %r", path)
     node_cls_name = path.removeprefix("->").strip().split("(")[0]
-    if path.startswith("->") and node_cls_name in mknodes.__all__:
-        node_cls = getattr(mknodes, node_cls_name)
-        page = mknodes.MkPage(name, **kwargs)
+    if path.startswith("->") and node_cls_name in mk.__all__:
+        node_cls = getattr(mk, node_cls_name)
+        page = mk.MkPage(name, **kwargs)
         if match := re.match(ARGS_KWARGS_RE, path):
             parts = match[1].split(",")
             args = [ast.literal_eval(i.strip()) for i in parts if "=" not in i]
@@ -60,7 +60,7 @@ def add_page(
         else:
             page += node_cls()
         return page
-    return mkpage.MkPage.from_file(path, title=name, **kwargs)
+    return mk.MkPage.from_file(path, title=name, **kwargs)
 
 
 def from_list(
@@ -171,7 +171,7 @@ class NavParser:
         path = pathlib.Path(path)
         if path.is_absolute():
             path = os.path.relpath(path, pathlib.Path().absolute())
-        path = pathlib.Path(path)
+            path = pathlib.Path(path)
         return self.text(
             path.read_text(),
             path=path,

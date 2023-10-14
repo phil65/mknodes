@@ -257,12 +257,13 @@ class MkDoc(mknav.MkNav):
             title: Override title for the section.
             kwargs: kwargs passed to MkModulePage.
         """
+        path = "index.md" if title is None else f"{title}.md"
         if isinstance(self.ModulePage, str):
             page = mkmodulepage.MkModulePage(
                 module=self.module,
                 klasses=self.klasses,
                 template_name=self.ModulePage,
-                path="index.md" if title is None else f"{title}.md",
+                path=path,
                 parent=self,
                 **kwargs,
             )
@@ -270,7 +271,7 @@ class MkDoc(mknav.MkNav):
             page = self.ModulePage(
                 module=self.module,
                 klasses=self.klasses,
-                path="index.md" if title is None else f"{title}.md",
+                path=path,
                 parent=self,
                 **kwargs,
             )
