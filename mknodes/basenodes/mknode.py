@@ -371,7 +371,7 @@ class MkNode(node.Node):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    section = "pre" >> mknodes.MkText("hello\n# Header\nfdsfds") >> "test" >> "xx"
+    section = "pre" >> mk.MkText("hello\n# Header\nfdsfds") >> "test" >> "xx"
     print(section)
