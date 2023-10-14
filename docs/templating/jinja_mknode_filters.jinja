@@ -34,6 +34,12 @@ A nice feature: If the caller (the node which renders a template) is a [MkJinjaT
 
 If that Node would go through the build pipeline afterwards, these extensions would be included for the markdown-HTML conversion.
 
-??? Limitations
-    When just using the pipe operator for filtering, everything is working perfectly fine. Sadly, the [MkNode][mknodes.MkNode] filters dont work with filter blocks (check the **jinja2** docs), apparently these are handled differently internally by **jinja2**.
+!!! info "Filter blocks"
+    When using **MkNodes** as filter blocks (check the **jinja2** docs), the result
+    needs to get stringified.
+    ``` jinja title="Example"
+    { % filter Mkheader | str % }
+    Example text.
+    { % endfilter % }
+    ```
 
