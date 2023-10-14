@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import contextlib
-import functools
 import os
 
 from typing import TYPE_CHECKING, Any
@@ -198,35 +197,32 @@ class Environment(jinja2.Environment):
 
         filters = {}
         for kls_name in mk.__all__:
-            if parent is not None:
-                kls = getattr(mk, kls_name)
-                fn = functools.partial(kls, parent=parent)
-            else:
-                fn = getattr(mk, kls_name)
 
-            def wrapped(ctx, *args, fn=fn, **kwargs):
-                node = fn(*args, **kwargs)
+            def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
+                kls = getattr(mk, kls_name)
+                node = (
+                    kls(*args, **kwargs)
+                    if parent is None
+                    else kls(*args, parent=parent, **kwargs)
+                )
                 self.rendered_nodes.append(node)
                 return node
 
-            new = functools.partial(wrapped, fn=fn)
-            filters[kls_name] = jinja2.pass_context(new)
+            filters[kls_name] = jinja2.pass_context(wrapped)
         self.filters.update(filters)
         # self.globals.update(filters)
 
 
 if __name__ == "__main__":
-    # from mknodes.project import Project
-
     env = Environment()
     env.set_mknodes_filters()
     text = env.render_string(r"{{ 'test' | MkHeader }}")
-    text = env.render_string(r"{{ 'test' | MkText }}")
+    text = env.render_string(r"{{ 50 | MkProgressBar }}")
     print(env.rendered_nodes)
-    # print(text)
-    # env.render_string(r"{{test('hallo')}}")
+    env.render_string(r"{{test('hallo')}}")
+    # import mknodes as mk
 
-    # proj = Project.for_mknodes()
+    # proj = mk.Project.for_mknodes()
     # ctx = proj.context.as_dict()
     # env.globals.update(ctx)
     # text = env.render_string("{{ 'TTset' | isinstance(str) }}")
