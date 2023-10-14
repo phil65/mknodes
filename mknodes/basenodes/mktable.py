@@ -34,14 +34,14 @@ class MkTable(mkbasetable.MkBaseTable):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node_1 = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
         # data can be given in different shapes.
-        page += mknodes.MkReprRawRendered(node_1, header="### From dict")
+        page += mk.MkReprRawRendered(node_1, header="### From dict")
         dicts = [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}]
         node_2 = MkTable(data=dicts)
-        page += mknodes.MkReprRawRendered(node_2, header="### From list")
+        page += mk.MkReprRawRendered(node_2, header="### From list")
 
 
 if __name__ == "__main__":

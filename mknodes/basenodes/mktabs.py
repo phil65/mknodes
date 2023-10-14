@@ -121,13 +121,13 @@ class MkTab(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         # We can add single tabs to a page by themselves.
         # It is recommended to use a Tab container though.
         tab = MkTab("A Title", content="Tab content(1)")
         tab.annotations[1] = "Tabs can carry annotations."
-        page += mknodes.MkReprRawRendered(tab, header="### With annotations")
+        page += mk.MkReprRawRendered(tab, header="### With annotations")
 
     def attach_annotations(self, text: str) -> str:
         # we deal with attaching annotations ourselves.

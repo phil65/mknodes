@@ -54,12 +54,12 @@ class MkArgParseHelp(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         from git_changelog import cli
 
-        import mknodes
+        import mknodes as mk
 
         parser = cli.get_parser()
 
         node = MkArgParseHelp(parser)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

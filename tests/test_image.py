@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED = """<figure markdown>
@@ -11,5 +11,5 @@ EXPECTED = """<figure markdown>
 
 
 def test_image():
-    image = mknodes.MkImage(path="something.png", caption="Caption", title="Image title")
+    image = mk.MkImage(path="something.png", caption="Caption", title="Image title")
     assert str(image) == EXPECTED

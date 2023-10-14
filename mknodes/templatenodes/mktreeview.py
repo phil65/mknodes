@@ -109,17 +109,17 @@ class MkTreeView(mkcode.MkCode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         # Different styles
         for style in get_args(treestyles.TreeStyleStr):
             node = MkTreeView("mknodes/manual", style=style)
-            page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
+            page += mk.MkReprRawRendered(node, header=f"### Style '{style}'")
 
         # Showing a remote tree structure (using fsspec package)
         # opts = dict(org="mkdocstrings", repo="mkdocstrings")
         # node = MkTreeView("github://", storage_options=opts, maximum_depth=2)
-        # page += mknodes.MkReprRawRendered(node, header="### From remote (FsSpec)")
+        # page += mk.MkReprRawRendered(node, header="### From remote (FsSpec)")
 
 
 if __name__ == "__main__":

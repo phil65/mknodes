@@ -47,10 +47,10 @@ class MkIFrame(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         frame = MkIFrame(url="https://phil65.github.io/mknodes/", width=600, height=600)
-        page += mknodes.MkReprRawRendered(frame)
+        page += mk.MkReprRawRendered(frame)
 
     def _to_markdown(self) -> str:
         if not self.url:

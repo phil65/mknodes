@@ -31,7 +31,7 @@ class AnnotationAppender:
         return re.sub(CLASS_REGEX, self, code) if "# (" not in code else code
 
     def append_annotations(self, node):
-        import mknodes
+        import mknodes as mk
 
         for index, dotted_path in self.matches:
-            node[index] = mknodes.MkDocStrings(dotted_path)
+            node[index] = mk.MkDocStrings(dotted_path)

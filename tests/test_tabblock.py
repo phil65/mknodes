@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED = """/// tab | Tab1
@@ -18,5 +18,5 @@ Another text
 
 def test_tabblock():
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = mknodes.MkTabbedBlocks(tabs)
+    tabblock = mk.MkTabbedBlocks(tabs)
     assert str(tabblock) == EXPECTED

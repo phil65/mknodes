@@ -303,7 +303,7 @@ def get_code_name(obj) -> str:
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    print(get_topmost_module_path(mknodes.MkCode.for_object))
-    print(mknodes.MkCode.for_object.__qualname__)
+    print(get_topmost_module_path(mk.MkCode.for_object))
+    print(mk.MkCode.for_object.__qualname__)

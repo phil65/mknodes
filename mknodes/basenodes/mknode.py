@@ -354,9 +354,9 @@ class MkNode(node.Node):
 
     @classmethod
     def with_default_context(cls, *args, **kwargs):
-        import mknodes
+        import mknodes as mk
 
-        proj = mknodes.Project.for_mknodes()
+        proj = mk.Project.for_mknodes()
         return cls(*args, **kwargs, project=proj)
 
     def to_html(self) -> str:

@@ -56,10 +56,10 @@ def get_repr(
         if _filter_false and v is False:
             continue
 
-        import mknodes
+        import mknodes as mk
 
         match v:
-            case (mknodes.MkNode(), *_):
+            case (mk.MkNode(), *_):
                 name = "[...]"
             case _:
                 name = my_repr(v)
@@ -85,9 +85,9 @@ def dataclass_repr(instance):
 
 
 def to_str_if_textnode(node):
-    import mknodes
+    import mknodes as mk
 
-    return str(node) if type(node) in {mknodes.MkText, mknodes.MkHeader} else node
+    return str(node) if type(node) in {mk.MkText, mk.MkHeader} else node
 
 
 if __name__ == "__main__":

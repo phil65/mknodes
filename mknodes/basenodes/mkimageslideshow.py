@@ -62,11 +62,11 @@ class MkImageSlideshow(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         images = ["https://picsum.photos/700", "https://picsum.photos/701"]
         node = MkImageSlideshow(images)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

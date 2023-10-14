@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 def test_page():
-    page = mknodes.MkPage()
+    page = mk.MkPage()
     page._metadata.pop("created")
     assert not str(page)
 
@@ -27,7 +27,7 @@ title: Some title
 
 
 def test_metadata():
-    page = mknodes.MkPage(
+    page = mk.MkPage(
         hide="toc,path",
         search_boost=2.0,
         exclude_from_search=False,

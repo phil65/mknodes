@@ -12,10 +12,10 @@ class MkEmptyWebsite(mknav.MkNav):
 
     def __init__(self, static_pages: dict | None = None, **kwargs):
         super().__init__(**kwargs)
-        import mknodes
+        import mknodes as mk
 
         page = self.add_page(is_index=True, title="Overview", hide="toc")
-        page += mknodes.MkText(r"metadata.description", is_jinja_expression=True)
+        page += mk.MkText(r"metadata.description", is_jinja_expression=True)
         static_pages = static_pages or {}
         self.parse.json(static_pages)
 
@@ -27,10 +27,10 @@ class MkEmptyWebsite(mknav.MkNav):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
     doc = MkEmptyWebsite.for_project(
-        mknodes.Project.for_mknodes(),
+        mk.Project.for_mknodes(),
         static_pages={
             "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
         },

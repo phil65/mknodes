@@ -68,17 +68,17 @@ class MkReprRawRendered(mktabcontainer.MkTabbed):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
-        example_node = mknodes.MkAdmonition("Some text")
+        example_node = mk.MkAdmonition("Some text")
         node = MkReprRawRendered(node=example_node)
         page += node
         page += MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    example_node = mknodes.MkAdmonition("Some text")
+    example_node = mk.MkAdmonition("Some text")
     node = MkReprRawRendered(node=example_node)
     print(node)

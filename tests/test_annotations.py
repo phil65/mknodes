@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED = """## Header
@@ -33,31 +33,31 @@ EXPECTED_SORTED = """1.  1
 
 
 def test_empty():
-    annotation = mknodes.MkAnnotations()
+    annotation = mk.MkAnnotations()
     assert not str(annotation)
 
 
 def test_if_annotations_get_sorted():
-    node = mknodes.MkAnnotations()
+    node = mk.MkAnnotations()
     node[2] = "2"
     node[1] = "1"
     assert str(node) == EXPECTED_SORTED
 
 
 def test_markdown():
-    annotation = mknodes.MkAnnotations(["abcde\nfghi"] * 10, header="Header")
+    annotation = mk.MkAnnotations(["abcde\nfghi"] * 10, header="Header")
     assert str(annotation) == EXPECTED
 
 
 def test_constructors():
-    annotation_1 = mknodes.MkAnnotations(["abc", "def"])
+    annotation_1 = mk.MkAnnotations(["abc", "def"])
     anns = {1: "abc", 2: "def"}
-    annotation_2 = mknodes.MkAnnotations(anns)
+    annotation_2 = mk.MkAnnotations(anns)
     assert str(annotation_1) == str(annotation_2)
 
 
 def test_mapping_interface():
-    ann = mknodes.MkAnnotations()
+    ann = mk.MkAnnotations()
     ann[1] = "test"
     assert str(ann[1]) == "1.  test\n"
 
@@ -73,7 +73,7 @@ def test_code_annotations_inside_admonition():
     1.  Some annotation
 
 """
-    code = mknodes.MkCode("test # (1)", language="python")
+    code = mk.MkCode("test # (1)", language="python")
     code.annotations[1] = "Some annotation"
-    admonition = mknodes.MkAdmonition(code)
+    admonition = mk.MkAdmonition(code)
     assert str(admonition) == expected

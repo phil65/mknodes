@@ -118,10 +118,10 @@ class PageTemplate:
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
     md = mdconverter.MdConverter()
     template = PageTemplate(filename="main.html")
-    template.announce.content = mknodes.MkAdmonition("test")
+    template.announce.content = mk.MkAdmonition("test")
     html = template.build_html(md)
     print(html)

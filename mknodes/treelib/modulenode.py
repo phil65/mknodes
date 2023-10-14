@@ -80,10 +80,10 @@ class ModuleNode(node.Node):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    folder = ModuleNode.from_module(mknodes)
+    folder = ModuleNode.from_module(mk)
     logger.warning(folder.get_tree_repr())
-    # node = ModuleNode(mknodes)
+    # node = ModuleNode(mk)
     # print(node.children)
     # logger.warning(node.get_tree_repr())

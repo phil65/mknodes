@@ -52,10 +52,10 @@ class MkDefinition(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkDefinition("test", content="hfkdlsjk")
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
+        page += mk.MkReprRawRendered(node, header="### Regular")
 
 
 class MkDefinitionList(mkcontainer.MkContainer):
@@ -115,15 +115,15 @@ class MkDefinitionList(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         defs_1 = dict(something="A definition", somethingelse="Another\ndefinition")
         node = MkDefinitionList(data=defs_1)
-        page += mknodes.MkReprRawRendered(node, header="### Regular")
+        page += mk.MkReprRawRendered(node, header="### Regular")
 
-        defs_2 = dict(admonition=mknodes.MkAdmonition("Nested markup"))
+        defs_2 = dict(admonition=mk.MkAdmonition("Nested markup"))
         node = MkDefinitionList(data=defs_2)
-        page += mknodes.MkReprRawRendered(node, header="### Nested markup")
+        page += mk.MkReprRawRendered(node, header="### Nested markup")
 
 
 if __name__ == "__main__":

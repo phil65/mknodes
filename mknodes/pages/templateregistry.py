@@ -24,9 +24,9 @@ class TemplateRegistry:
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    proj = mknodes.Project.for_mknodes()
+    proj = mk.Project.for_mknodes()
     registry = TemplateRegistry()
     a = registry["main.html"]
     for template in registry:

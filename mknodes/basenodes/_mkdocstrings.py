@@ -178,14 +178,14 @@ class MkDocStrings(mknode.MkNode):
 
     @property
     def options(self):
-        import mknodes
+        import mknodes as mk
 
         # The default section style does not work well inside Annotations,
         # so we switch to "list" when any parent is an MkAnnotation
         # and no style is explicitely set.
         opts = self._options.copy()
         style = opts.get("docstring_section_style")
-        if not style and self.is_descendant_of(mknodes.MkAnnotations):
+        if not style and self.is_descendant_of(mk.MkAnnotations):
             opts["docstring_section_style"] = "list"
             opts["show_root_heading"] = True
         return opts

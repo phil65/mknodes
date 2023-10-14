@@ -9,7 +9,7 @@ from typing import Any
 
 from griffe.dataclasses import Module
 
-import mknodes
+import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
@@ -322,7 +322,7 @@ default_package_context = PackageContext(
     required_python_version=">= 3.11",
     homepage="",
     cli="typer",
-    module=mknodes,
+    module=mk,
     repository_url="https://github.com/phil65/mknodes/",
     repository_username="phil65",
     repository_name="mknodes",

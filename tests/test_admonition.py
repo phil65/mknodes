@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED = """!!! info
@@ -9,10 +9,10 @@ EXPECTED = """!!! info
 
 
 def test_admonition():
-    admonition = mknodes.MkAdmonition("")
+    admonition = mk.MkAdmonition("")
     assert not str(admonition)
 
 
 def test_markdown():
-    admonition = mknodes.MkAdmonition("This is a test")
+    admonition = mk.MkAdmonition("This is a test")
     assert str(admonition) == EXPECTED

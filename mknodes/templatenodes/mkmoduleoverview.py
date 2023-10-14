@@ -84,7 +84,7 @@ class MkModuleOverview(mktreeview.MkTreeView):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    node = MkModuleOverview(mknodes, header="test", style="ascii")
+    node = MkModuleOverview(mk, header="test", style="ascii")
     print(node.to_markdown())

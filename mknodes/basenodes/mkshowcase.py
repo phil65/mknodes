@@ -79,7 +79,7 @@ class MkShowcase(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkShowcase()
         for i in range(9):
@@ -89,13 +89,13 @@ class MkShowcase(mkcontainer.MkContainer):
                 image="https://picsum.photos/300",
                 caption=f"Caption {i}",
             )
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    keys = mknodes.MkKeys(keys="Ctrl+A")
+    keys = mk.MkKeys(keys="Ctrl+A")
     grid = MkShowcase()
     grid.add_card("Tse", "td", "http://www.google.com")
     print(grid.items[0])

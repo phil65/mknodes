@@ -75,18 +75,18 @@ class MkDetailsBlock(mkblock.MkBlock):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "MkDetailsBlock is a markdown extension based on pymdownx block syntax."
         url = "https://facelessuser.github.io/pymdown-extensions/extensions/blocks/api/"
-        page += mknodes.MkLink(url, "More info", as_button=True)
+        page += mk.MkLink(url, "More info", as_button=True)
         # AdmonitionTypeStr is a Literal containing all Admonition types
         for typ in get_args(datatypes.AdmonitionTypeStr):
-            page += mknodes.MkHeader(f"Type '{typ}'", level=3)
+            page += mk.MkHeader(f"Type '{typ}'", level=3)
             title = f"Details block with type {typ!r}"
             content = f"This is type **{typ}**"
-            node = mknodes.MkDetailsBlock(typ=typ, content=content, title=title)
-            page += mknodes.MkReprRawRendered(node)
+            node = mk.MkDetailsBlock(typ=typ, content=content, title=title)
+            page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

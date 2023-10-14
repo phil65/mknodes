@@ -53,13 +53,13 @@ class MkCritic(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "The MkCritic node can be used to display text diffs."
         for typ in get_args(CriticMarkStr):
             node = MkCritic(f"This is type {typ}", mark=typ)
-            page += mknodes.MkHeader(f"Type {typ!r}", level=3)
-            page += mknodes.MkReprRawRendered(node)
+            page += mk.MkHeader(f"Type {typ!r}", level=3)
+            page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

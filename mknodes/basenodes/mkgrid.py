@@ -83,8 +83,8 @@ class MkGrid(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
-    keys = mknodes.MkKeys(keys="Ctrl+A")
+    keys = mk.MkKeys(keys="Ctrl+A")
     grid = MkGrid(cards=[keys, keys])
     print(grid)

@@ -95,13 +95,13 @@ class HtmlBlock(BaseBlock):
         Arguments:
             md: Markdown parser to use
         """
-        import mknodes
+        import mknodes as mk
 
         instance = md or mdconverter.MdConverter()
         result = ""
         for i in self.items:
             match i:
-                case mknodes.MkNode():
+                case mk.MkNode():
                     i.parent = self.parent
                     result += instance.convert(str(i))
                 case _:

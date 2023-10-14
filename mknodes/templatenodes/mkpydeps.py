@@ -124,10 +124,10 @@ class MkPyDeps(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkPyDeps("mknodes/data/tools.py", max_bacon=1, max_module_depth=1)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

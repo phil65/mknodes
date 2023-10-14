@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED_TABBED = """===! "Tab1"
@@ -13,7 +13,7 @@ EXPECTED_TABBED = """===! "Tab1"
 
 def test_mktabbed():
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    node = mknodes.MkTabbed(tabs)
+    node = mk.MkTabbed(tabs)
     assert len(node.items) == 2  # noqa: PLR2004
     # assert str(node["Tab1"]) == "Some text"
     # assert str(node[1]) == "Another text"

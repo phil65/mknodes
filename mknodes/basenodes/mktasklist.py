@@ -67,12 +67,12 @@ class MkTaskList(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkTaskList()
         node.add_item("True!", True)
         node.add_item("False!", False)
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

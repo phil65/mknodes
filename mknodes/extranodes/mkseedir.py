@@ -104,11 +104,11 @@ class MkSeeDir(mkcode.MkCode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         for style in get_args(DirectoryTreeStyleStr):
             node = MkSeeDir("mknodes/manual", style=style)
-            page += mknodes.MkReprRawRendered(node, header=f"### Style '{style}'")
+            page += mk.MkReprRawRendered(node, header=f"### Style '{style}'")
 
 
 if __name__ == "__main__":

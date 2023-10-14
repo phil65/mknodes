@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED_IN_ANNOTATIONS = """1.  ::: mknodes.basenodes._mkdocstrings.MkDocStrings.__init__
@@ -11,11 +11,11 @@ EXPECTED_IN_ANNOTATIONS = """1.  ::: mknodes.basenodes._mkdocstrings.MkDocString
 
 
 def test_docstrings():
-    docstrings = mknodes.MkDocStrings(obj=mknodes)
+    docstrings = mk.MkDocStrings(obj=mk)
     assert str(docstrings) == "::: mknodes\n"
 
 
 def test_auto_list_style_inside_annotations():
-    annotations = mknodes.MkAnnotations()
-    annotations[1] = mknodes.MkDocStrings(obj=mknodes.MkDocStrings.__init__)
+    annotations = mk.MkAnnotations()
+    annotations[1] = mk.MkDocStrings(obj=mk.MkDocStrings.__init__)
     assert str(annotations) == EXPECTED_IN_ANNOTATIONS

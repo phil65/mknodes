@@ -138,15 +138,15 @@ class MkFootNotes(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         node = MkFootNotes()
         page += "The MkFootNotes node aggregates footnotes[^1]."
         node[1] = r"Footnotes are numbered, can be set via \__setitem__."
         node[2] = r"They can also get nested[^3]."
-        node[3] = mknodes.MkAdmonition("And they can also contain other Markdown.")
+        node[3] = mk.MkAdmonition("And they can also contain other Markdown.")
         page += node
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
     def _to_markdown(self) -> str:
         if not self.items:
@@ -156,10 +156,10 @@ class MkFootNotes(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    import mknodes
+    import mknodes as mk
 
     # ann = MkFootNote(1, "test")
     # print(ann)
-    page = mknodes.MkPage()
+    page = mk.MkPage()
     MkFootNotes.create_example_page(page)
     print(page)

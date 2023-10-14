@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import mknodes
+import mknodes as mk
 
 
 EXPECTED = """/// tab | abc
@@ -27,7 +27,7 @@ inner_2 content
 
 
 def test_block():
-    node = mknodes.MkBlock(
+    node = mk.MkBlock(
         "tab",
         argument="abc",
         content="bcd",
@@ -37,7 +37,7 @@ def test_block():
 
 
 def test_nested_block():
-    inner_1 = mknodes.MkBlock("inner_1", content="inner_1 content")
-    inner_2 = mknodes.MkBlock("inner_2", content="inner_2 content")
-    outer = mknodes.MkBlock("outer", content=[inner_1, inner_2])
+    inner_1 = mk.MkBlock("inner_1", content="inner_1 content")
+    inner_2 = mk.MkBlock("inner_2", content="inner_2 content")
+    outer = mk.MkBlock("outer", content=[inner_1, inner_2])
     assert str(outer) == NESTED_EXPECTED
