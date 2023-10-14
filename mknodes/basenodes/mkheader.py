@@ -45,11 +45,11 @@ class MkHeader(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         for i in range(1, 7):
             node = MkHeader(f"Level {i}", level=i)
-            page += mknodes.MkReprRawRendered(node)
+            page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

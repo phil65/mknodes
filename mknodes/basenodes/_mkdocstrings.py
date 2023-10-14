@@ -200,7 +200,7 @@ class MkDocStrings(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        import mknodes
+        import mknodes as mk
 
         page += "The MkDocStrings node shows DocStrings from mkdocstrings addon."
         node = MkDocStrings(
@@ -209,7 +209,7 @@ class MkDocStrings(mknode.MkNode):
             header="DocStrings",
             heading_level=3,
         )
-        page += mknodes.MkReprRawRendered(node)
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
