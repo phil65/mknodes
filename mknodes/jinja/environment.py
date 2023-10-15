@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 import jinja2
 
+from mknodes.jinja import loaders
 from mknodes.utils import jinjahelpers, log, mergehelpers
 
 
@@ -28,13 +29,13 @@ class Environment(jinja2.Environment):
             undefined: Handling of "Undefined" errors
             load_templates: Whether to load the templates into environment.
         """
-        loader = jinjahelpers.resource_loader if load_templates else None
+        loader = loaders.resource_loader if load_templates else None
         behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
         self.extra_files: set[str] = set()
         self.extra_paths: set[str] = set()
         super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
-        self.filters.update(jinjahelpers.ENVIRONMENT_FILTERS)
-        self.globals.update(jinjahelpers.ENVIRONMENT_GLOBALS)
+        self.filters.update(jinjahelpers.ENV_FILTERS)
+        self.globals.update(jinjahelpers.ENV_GLOBALS)
         self.rendered_nodes: list[mk.MkNode] = list()
 
     def merge_globals(self, other: Mapping, additive: bool = False):
@@ -84,11 +85,11 @@ class Environment(jinja2.Environment):
             return
         self.extra_files.add(file)
         content = jinjahelpers.load_file(file)
-        new_loader = jinjahelpers.DictLoader({file: content})
+        new_loader = loaders.DictLoader({file: content})
         self._add_loader(new_loader)
 
     def add_template_path(self, path: str | os.PathLike | list[str]):
-        """Add a new template path runtime.
+        """Add a new template path during runtime.
 
         Will append a new FileSystemLoader by wrapping it and the the current loader into
         either an already-existing or a new Choiceloader.
@@ -100,17 +101,22 @@ class Environment(jinja2.Environment):
         if path in self.extra_paths:
             return
         self.extra_paths.add(path)
-        new_loader = jinjahelpers.FileSystemLoader(path)
+        new_loader = loaders.FileSystemLoader(path)
         self._add_loader(new_loader)
 
-    def _add_loader(self, new_loader):
+    def _add_loader(self, new_loader: jinja2.BaseLoader | dict | str | os.PathLike):
+        match new_loader:
+            case dict():
+                new_loader = loaders.DictLoader(new_loader)
+            case str() | os.PathLike():
+                new_loader = loaders.FileSystemLoader(new_loader)
         match self.loader:
             case jinja2.ChoiceLoader():
                 self.loader.loaders = [new_loader, *self.loader.loaders]
             case None:
                 self.loader = new_loader
             case _:
-                self.loader = jinjahelpers.ChoiceLoader(loaders=[new_loader, self.loader])
+                self.loader = loaders.ChoiceLoader(loaders=[new_loader, self.loader])
 
     def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
         """Helper to directly render a template from filesystem.
@@ -165,7 +171,7 @@ class Environment(jinja2.Environment):
         | Sequence[str | os.PathLike]
         | jinja2.BaseLoader
         | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Environment:
         """Override for jinja2.Environment.overlay.
 
@@ -180,14 +186,14 @@ class Environment(jinja2.Environment):
             loader = (
                 extra_loader
                 if isinstance(extra_loader, jinja2.BaseLoader)
-                else jinjahelpers.FileSystemLoader(extra_loader)
+                else loaders.FileSystemLoader(extra_loader)
             )
             if isinstance(self.loader, jinja2.ChoiceLoader):
-                loaders = [loader, *self.loader.loaders]
-                loader = jinjahelpers.ChoiceLoader(loaders)
+                loader_list = [loader, *self.loader.loaders]
+                loader = loaders.ChoiceLoader(loader_list)
             elif self.loader:
-                loaders = [loader, self.loader]
-                loader = jinjahelpers.ChoiceLoader(loaders)
+                loader_list = [loader, self.loader]
+                loader = loaders.ChoiceLoader(loader_list)
             kwargs["loader"] = loader
         return super().overlay(**kwargs)  # type: ignore[return-value]
 

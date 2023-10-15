@@ -11,36 +11,7 @@ from typing import Any
 import jinja2
 
 from mknodes import paths
-from mknodes.utils import helpers, inspecthelpers, log, reprhelpers, yamlhelpers
-
-
-class PackageLoader(jinja2.PackageLoader):
-    def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            package_name=self.package_name,
-            package_path=self.package_path,
-        )
-
-
-class FileSystemLoader(jinja2.FileSystemLoader):
-    def __repr__(self):
-        return reprhelpers.get_repr(self, searchpath=self.searchpath)
-
-
-class ChoiceLoader(jinja2.ChoiceLoader):
-    def __repr__(self):
-        return reprhelpers.get_repr(self, loaders=self.loaders)
-
-
-class DictLoader(jinja2.DictLoader):
-    def __repr__(self):
-        return reprhelpers.get_repr(self, mapping=self.mapping)
-
-
-resources_loader = PackageLoader("mknodes", "resources")
-docs_loader = FileSystemLoader(searchpath="docs/")
-resource_loader = ChoiceLoader([resources_loader, docs_loader])
+from mknodes.utils import helpers, inspecthelpers, log, yamlhelpers
 
 
 @functools.cache
@@ -48,14 +19,14 @@ def load_file(path: str | os.PathLike) -> str:
     return pathlib.Path(path).read_text(encoding="utf-8")
 
 
-ENVIRONMENT_GLOBALS = {
+ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
     "now": datetime.datetime.now,
     "str": str,
     "inspecthelpers": inspecthelpers,
     "resources_dir": paths.RESOURCES,
 }
-ENVIRONMENT_FILTERS = {
+ENV_FILTERS = {
     "dump_yaml": yamlhelpers.dump_yaml,
     "styled": helpers.styled,
     "str": str,
@@ -94,3 +65,7 @@ def set_markdown_exec_namespace(variables: dict[str, Any], namespace: str = "mkn
         from markdown_exec.formatters import python
 
         python._sessions_globals[namespace] = variables
+
+
+if __name__ == "__main__":
+    pass
