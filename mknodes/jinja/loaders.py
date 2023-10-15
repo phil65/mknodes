@@ -9,7 +9,7 @@ class LoaderMixin:
     loader: jinja2.BaseLoader
 
     def __or__(self, other: jinja2.BaseLoader):
-        own_loaders = self.loaders if isinstance(self, jinja2.ChoiceLoader) else [self]
+        own_loaders = self.loaders if isinstance(self, jinja2.ChoiceLoader) else [self]  # type: ignore[list-item]
         if isinstance(other, jinja2.ChoiceLoader):
             other_loaders = other.loaders
         else:
