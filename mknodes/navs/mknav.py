@@ -92,14 +92,9 @@ class MkNav(mknode.MkNode):
     def index_page(self, value):
         value.parent = self
         self.nav.index_page = value
-
-    @property
-    def index_title(self):
-        return self.nav.index_title
-
-    @index_title.setter
-    def index_title(self, value):
-        self.nav.index_title = value
+        self.nav.index_page._is_index = True
+        if not self.nav.index_page.title:
+            self.nav.index_page.title = self.section or "Home"
 
     @property
     def children(self):
@@ -169,7 +164,7 @@ class MkNav(mknode.MkNode):
             tags: tags to show above the main headline and within the search preview
         """
         page = mkpage.MkPage(
-            title=title,
+            title=title or self.section or "Home" if is_index else title,
             is_index=is_index,
             is_homepage=is_homepage,
             path=path,
@@ -186,7 +181,6 @@ class MkNav(mknode.MkNode):
         )
         if is_index:
             self.index_page = page
-            self.index_title = title or self.title or "Home"
         else:
             self.nav.register(page)
         return page

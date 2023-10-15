@@ -25,7 +25,6 @@ class Navigation(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.index_page: mkpage.MkPage | None = None
-        self.index_title: str | None = None
 
     def __setitem__(self, index: tuple | str, node: NavSubType):
         """Put a Navigation-type instance into the registry.
@@ -79,9 +78,9 @@ class Navigation(dict):
         import mknodes as mk
 
         dct: dict[str, str | dict] = {}
-        if self.index_page and self.index_title:
+        if self.index_page:
             index_path = pathlib.Path(self.index_page.resolved_file_path)
-            dct[self.index_title] = index_path.as_posix()
+            dct[self.index_page.title] = index_path.as_posix()
         for path, item in self.items():
             match item:
                 case mk.MkNav():
@@ -94,8 +93,8 @@ class Navigation(dict):
 
     def to_literate_nav(self) -> str:
         nav = navbuilder.NavBuilder()
-        if self.index_page and self.index_title:
-            nav[self.index_title] = pathlib.Path(self.index_page.path).as_posix()
+        if self.index_page:
+            nav[self.index_page.title] = pathlib.Path(self.index_page.path).as_posix()
         for path, item in self.items():
             if path is None:  # this check is just to make mypy happy
                 continue

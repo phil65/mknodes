@@ -189,6 +189,7 @@ class MkDoc(mknav.MkNav):
         if isinstance(self.ModulePage, str):
             page = mkmodulepage.MkModulePage(
                 module=self.module,
+                title=title or self.module_name,
                 klasses=self.klasses,
                 template_name=self.ModulePage,
                 path=path,
@@ -197,6 +198,7 @@ class MkDoc(mknav.MkNav):
             )
         else:
             page = self.ModulePage(
+                title=title or self.module_name,
                 module=self.module,
                 klasses=self.klasses,
                 path=path,
@@ -204,7 +206,6 @@ class MkDoc(mknav.MkNav):
                 **kwargs,
             )
         self.index_page = page
-        self.index_title = title or self.module_name
         return page
 
 
