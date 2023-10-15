@@ -268,25 +268,27 @@ class NavParser:
             kwargs: Keyword arguments passed to the pages to create.
                     Can be used to hide the TOC for all pages for example.
         """
+        import mknodes as mk
+
         folder = pathlib.Path(folder)
         nav = self._nav
         for path in folder.iterdir():
             is_hidden = path.name.startswith(("_", "."))
             if recursive and path.is_dir() and not is_hidden and any(path.iterdir()):
                 path = folder / path.parts[-1]
-                subnav = mknav.MkNav(path.name)
+                subnav = mk.MkNav(path.name)
                 subnav.parse.folder(folder=path, **kwargs)
                 nav += subnav
                 logger.debug("Loaded subnav from from %s", path)
             elif path.name == "index.md":
                 logger.debug("Loaded index page from %s", path)
                 text = path.read_text(encoding="utf-8")
-                nav.index_page = mkpage.MkPage(path=path.name, content=text, **kwargs)
+                nav.index_page = mk.MkPage(path=path.name, content=text, **kwargs)
                 nav.index_title = nav.section or "Home"
             elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
                 text = path.read_text(encoding="utf-8")
                 rel_path = path.relative_to(folder)
-                nav += mkpage.MkPage(path=rel_path, content=text, **kwargs)
+                nav += mk.MkPage(path=rel_path, content=text, **kwargs)
                 logger.debug("Loaded page from from %s", path)
         return nav
 

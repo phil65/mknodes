@@ -139,9 +139,19 @@ class MkNode(node.Node):
     @property
     def env(self) -> environment.Environment:
         """The node jinja environment."""
-        self.ctx.env.globals["mknode"] = self
-        self.ctx.env.set_mknodes_filters(parent=self)
-        return self.ctx.env
+        # paths = []
+        # path = inspecthelpers.get_file(self.__class__)
+        # paths.append(pathlib.Path(path).parent)
+        # if self.parent_navs:
+        #     nav = self.parent_navs[-1]
+        #     file = nav.resolved_file_path
+        #     path = pathlib.Path(file).parent
+        #     paths.append(path)
+        # env = self.ctx.env.overlay(extra_loader=paths)
+        env = self.ctx.env
+        env.globals["mknode"] = self
+        env.set_mknodes_filters(parent=self)
+        return env
 
     @property
     def parent_navs(self) -> list[mk.MkNav]:
@@ -237,10 +247,10 @@ class MkNode(node.Node):
     @property
     def resolved_parts(self) -> tuple[str, ...]:
         """Return a tuple containing all section names."""
-        from mknodes.navs import mknav
+        import mknodes as mk
 
         parts = [nav.section for nav in self.parent_navs if nav.section]
-        if isinstance(self, mknav.MkNav) and self.section:
+        if isinstance(self, mk.MkNav) and self.section:
             parts.append(self.section)
         return tuple(parts)
 

@@ -91,9 +91,9 @@ class PageTemplate:
 
     @announcement_bar.setter
     def announcement_bar(self, value):
-        from mknodes.basenodes import mknode
+        import mknodes as mk
 
-        if isinstance(value, mknode.MkNode):
+        if isinstance(value, mk.MkNode):
             value.associated_project = self.parent.associated_project
         self.announce.content = value
 

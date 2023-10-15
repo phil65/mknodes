@@ -10,7 +10,7 @@ from mknodes.utils import helpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from mknodes.navs import mknav
+    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -71,7 +71,7 @@ class MkShowcase(mkcontainer.MkContainer):
         self,
         title: str,
         image: str,
-        link: str | mkpage.MkPage | mknav.MkNav | None = None,
+        link: str | mk.MkPage | mk.MkNav | None = None,
         caption: str | None = None,
     ):
         card = mkcard.MkCard(target=link, title=title, image=image, caption=caption)

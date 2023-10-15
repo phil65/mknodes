@@ -297,7 +297,7 @@ class MaterialTheme(theme.Theme):
 
 
 if __name__ == "__main__":
-    from mknodes import project
+    import mknodes as mk
 
     theme = MaterialTheme()
-    proj = project.Project.for_mknodes()
+    proj = mk.Project.for_mknodes()

@@ -9,8 +9,7 @@ from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from mknodes.navs import mknav
-    from mknodes.pages import mkpage
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -25,7 +24,7 @@ class MkLink(mknode.MkNode):
 
     def __init__(
         self,
-        target: str | mkpage.MkPage | mknav.MkNav | type | types.ModuleType,
+        target: str | mk.MkPage | mk.MkNav | type | types.ModuleType,
         title: str | None = None,
         icon: str | None = None,
         as_button: bool = False,

@@ -9,8 +9,7 @@ from mknodes.utils import helpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from mknodes.navs import mknav
-    from mknodes.pages import mkpage
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -24,7 +23,7 @@ class MkImage(mknode.MkNode):
         self,
         path: str,
         *,
-        link: str | mkpage.MkPage | mknav.MkNav | None = None,
+        link: str | mk.MkPage | mk.MkNav | None = None,
         caption: str = "",
         title: str = "",
         align: Literal["left", "right"] | None = None,

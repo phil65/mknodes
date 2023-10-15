@@ -10,7 +10,7 @@ from mknodes.utils import helpers, mergehelpers, reprhelpers
 
 
 if TYPE_CHECKING:
-    from mknodes.pages import pagetemplate
+    import mknodes as mk
 
 
 @dataclasses.dataclass(frozen=True)
@@ -232,7 +232,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
 
     css: list[CSSType] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
-    templates: list[pagetemplate.PageTemplate] = dataclasses.field(default_factory=list)
+    templates: list[mk.PageTemplate] = dataclasses.field(default_factory=list)
     """A list of required templates."""
     markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
     """A extension_name->settings dictionary containing the required md extensions."""

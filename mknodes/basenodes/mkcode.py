@@ -6,12 +6,15 @@ import pathlib
 import textwrap
 import types
 
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.data import datatypes
 from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers, resources
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -32,7 +35,7 @@ class MkCode(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        code: str | mknode.MkNode | list = "",
+        code: str | mk.MkNode | list = "",
         language: str = "py",
         *,
         title: str = "",

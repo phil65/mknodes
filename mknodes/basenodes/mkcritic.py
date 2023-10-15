@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from typing import Any, Literal, get_args
+from typing import TYPE_CHECKING, Any, Literal, get_args
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, reprhelpers, resources
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -19,7 +22,7 @@ class MkCritic(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: str | mknode.MkNode | list,
+        content: str | mk.MkNode | list,
         *,
         mark: CriticMarkStr = "highlight",
         **kwargs: Any,

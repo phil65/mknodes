@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Mapping, Sequence
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, reprhelpers, resources
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -38,9 +41,7 @@ class MkBaseTable(mkcontainer.MkContainer):
         super().__init__(header=header, **kwargs)
         match data:
             case () | None:
-                self._data: dict[str, list[mknode.MkNode]] = {
-                    c: [] for c in columns or []
-                }
+                self._data: dict[str, list[mk.MkNode]] = {c: [] for c in columns or []}
             case Mapping():
                 self._data = {
                     str(k): [self.to_child_node(i) for i in v] for k, v in data.items()
@@ -104,7 +105,7 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def add_row(
         self,
-        row: Sequence[str | None | mknode.MkNode] | dict[str, str | None],
+        row: Sequence[str | None | mk.MkNode] | dict[str, str | None],
     ):
         if len(row) != len(self.columns):
             msg = "Row to add doesnt have same length as header"
@@ -117,7 +118,7 @@ class MkBaseTable(mkcontainer.MkContainer):
                 for i, key in enumerate(self.data.keys()):
                     self.data[key].append(self.to_child_node(row[i]))
 
-    def iter_rows(self) -> Iterator[list[mknode.MkNode]]:
+    def iter_rows(self) -> Iterator[list[mk.MkNode]]:
         data = self.data  # property
         length = min(len(i) for i in data.values())
         for j, _ in enumerate(range(length)):

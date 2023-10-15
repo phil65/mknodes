@@ -3,11 +3,14 @@ from __future__ import annotations
 from collections.abc import Mapping
 import textwrap
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mkcontainer, mknode, mktext
+from mknodes.basenodes import mkcontainer, mktext
 from mknodes.utils import log, reprhelpers, resources
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -21,7 +24,7 @@ class MkFootNote(mkcontainer.MkContainer):
     def __init__(
         self,
         num: int,
-        content: str | mknode.MkNode,
+        content: str | mk.MkNode,
         **kwargs: Any,
     ):
         """Constructor.
@@ -52,7 +55,7 @@ class MkFootNotes(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        footnotes: Mapping[int, str | mknode.MkNode]
+        footnotes: Mapping[int, str | mk.MkNode]
         | list[MkFootNote]
         | list[str]
         | None = None,
@@ -89,7 +92,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         super().__init__(content=items, **kwargs)
 
     def __repr__(self):
-        notes: list[mknode.MkNode | str] = []
+        notes: list[mk.MkNode | str] = []
         for item in self.items:
             if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
                 notes.append(str(item.items[0]))
@@ -121,14 +124,11 @@ class MkFootNotes(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.num == num)
         return self.items.index(item)
 
-    def __setitem__(self, index: int, value: mknode.MkNode | str):
+    def __setitem__(self, index: int, value: mk.MkNode | str):
         match value:
-            case str():
-                item = mktext.MkText(value)
-                node = MkFootNote(index, content=item, parent=self)
             case MkFootNote():
                 node = value
-            case mknode.MkNode():
+            case _:
                 node = MkFootNote(index, content=value, parent=self)
         if index in self:
             pos = self._get_item_pos(index)

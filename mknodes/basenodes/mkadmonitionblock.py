@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, get_args
+from typing import TYPE_CHECKING, Any, get_args
 
-from mknodes.basenodes import mkblock, mknode
+from mknodes.basenodes import mkblock
 from mknodes.data import datatypes
 from mknodes.utils import log, reprhelpers, resources
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -18,7 +21,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
 
     def __init__(
         self,
-        content: str | list | mknode.MkNode,
+        content: str | list | mk.MkNode,
         *,
         typ: datatypes.AdmonitionTypeStr = "info",
         title: str | None = None,

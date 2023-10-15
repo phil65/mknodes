@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import textwrap
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.utils import log
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 logger = log.get_logger(__name__)
 
@@ -19,7 +22,7 @@ class MkBlock(mkcontainer.MkContainer):
     def __init__(
         self,
         name: str,
-        content: list | str | mknode.MkNode = "",
+        content: list | str | mk.MkNode = "",
         *,
         argument: str = "",
         attributes: dict[str, Any] | None = None,

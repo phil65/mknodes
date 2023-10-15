@@ -1,10 +1,14 @@
 from __future__ import annotations as _annotations
 
 from collections.abc import Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mkcontainer, mknode, mktext
+from mknodes.basenodes import mkcontainer, mktext
 from mknodes.utils import log, reprhelpers, resources
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -18,7 +22,7 @@ class MkAnnotation(mkcontainer.MkContainer):
     def __init__(
         self,
         num: int,
-        content: str | mknode.MkNode,
+        content: str | mk.MkNode,
         **kwargs: Any,
     ):
         """Constructor.
@@ -52,7 +56,7 @@ class MkAnnotations(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        annotations: Mapping[int, str | mknode.MkNode]
+        annotations: Mapping[int, str | mk.MkNode]
         | list[MkAnnotation]
         | list[str]
         | None = None,
@@ -118,14 +122,16 @@ class MkAnnotations(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.num == num)
         return self.items.index(item)
 
-    def __setitem__(self, index: int, value: mknode.MkNode | str):
+    def __setitem__(self, index: int, value: mk.MkNode | str):
+        import mknodes as mk
+
         match value:
             case str():
-                item = mktext.MkText(value)
+                item = mk.MkText(value)
                 node = MkAnnotation(index, content=item, parent=self)
             case MkAnnotation():
                 node = value
-            case mknode.MkNode():
+            case mk.MkNode():
                 node = MkAnnotation(index, content=value, parent=self)
         if index in self:
             pos = self._get_item_pos(index)
