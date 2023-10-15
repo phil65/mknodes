@@ -9,7 +9,9 @@ from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
 
 logger = log.get_logger(__name__)
 
-SCROLLREVEAL_LINK = "https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"
+SCROLLREVEAL_LINK = (
+    "https://cdn.jsdelivr.net/npm/scrollreveal@3.4.0/dist/scrollreveal.min.js"
+)
 JQUERY_LINK = "https://code.jquery.com/jquery-2.2.4.min.js"
 
 STYLE = (
