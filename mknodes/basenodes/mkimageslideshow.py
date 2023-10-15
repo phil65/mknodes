@@ -13,11 +13,9 @@ logger = log.get_logger(__name__)
 JS_URL = "https://rawgit.com/ruyadorno/simple-slider/master/dist/simpleslider.min.js"
 
 SCRIPT = r"""
-<script>
   window.addEventListener('DOMContentLoaded', function () {
   simpleslider.getSlider();
 })
-</script>
 """
 
 
@@ -25,7 +23,10 @@ class MkImageSlideshow(mknode.MkNode):
     """Node to show an Image slideshow (in autoplay mode)."""
 
     ICON = "material/image-multiple"
-    JS_FILES = [resources.JSFile(JS_URL)]
+    JS_FILES: list[resources.JSFile | resources.JSText] = [
+        resources.JSFile(JS_URL),
+        resources.JSText(SCRIPT, "slideshow.js"),
+    ]
 
     def __init__(
         self,
