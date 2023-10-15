@@ -31,7 +31,6 @@ dependencies = [
     "pymdown-extensions",
     "markdown-exec[ansi]",
     "pygments",
-    "mkdocs-click",
     "pydeps",
 
     # Material Social addon
