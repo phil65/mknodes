@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 import contextlib
 import os
 
@@ -84,7 +84,7 @@ class Environment(jinja2.Environment):
             return
         self.extra_files.add(file)
         content = jinjahelpers.load_file(file)
-        new_loader = jinja2.DictLoader({file: content})
+        new_loader = jinjahelpers.DictLoader({file: content})
         self._add_loader(new_loader)
 
     def add_template_path(self, path: str | os.PathLike | list[str]):
@@ -100,7 +100,7 @@ class Environment(jinja2.Environment):
         if path in self.extra_paths:
             return
         self.extra_paths.add(path)
-        new_loader = jinja2.FileSystemLoader(path)
+        new_loader = jinjahelpers.FileSystemLoader(path)
         self._add_loader(new_loader)
 
     def _add_loader(self, new_loader):
@@ -110,7 +110,7 @@ class Environment(jinja2.Environment):
             case None:
                 self.loader = new_loader
             case _:
-                self.loader = jinja2.ChoiceLoader(loaders=[new_loader, self.loader])
+                self.loader = jinjahelpers.ChoiceLoader(loaders=[new_loader, self.loader])
 
     def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
         """Helper to directly render a template from filesystem.
@@ -137,6 +137,8 @@ class Environment(jinja2.Environment):
             variables: Extra variables for this render call
             parent_template: Optional parent template (to be used with super())
         """
+        # if pathlib.Path(template_name).as_posix() not in self.list_templates():
+        #     self.add_template(template_name)
         template = self.get_template(template_name, parent=parent_template)
         variables = variables or {}
         return template.render(**variables)
@@ -154,6 +156,40 @@ class Environment(jinja2.Environment):
             self.globals[k] = v
         yield
         self.globals.update(temp)
+
+    def overlay(  # type: ignore[override]
+        self,
+        *,
+        extra_loader: str
+        | os.PathLike
+        | Sequence[str | os.PathLike]
+        | jinja2.BaseLoader
+        | None = None,
+        **kwargs,
+    ) -> Environment:
+        """Override for jinja2.Environment.overlay.
+
+        The optional extra_loader keyword argument allows an easy way to add
+        extra template paths.
+
+        Arguments:
+            extra_loader: Optional additional paths or loaders.
+            kwargs: Keyword arguments passed to super().overlay.
+        """
+        if extra_loader:
+            loader = (
+                extra_loader
+                if isinstance(extra_loader, jinja2.BaseLoader)
+                else jinjahelpers.FileSystemLoader(extra_loader)
+            )
+            if isinstance(self.loader, jinja2.ChoiceLoader):
+                loaders = [loader, *self.loader.loaders]
+                loader = jinjahelpers.ChoiceLoader(loaders)
+            elif self.loader:
+                loaders = [loader, self.loader]
+                loader = jinjahelpers.ChoiceLoader(loaders)
+            kwargs["loader"] = loader
+        return super().overlay(**kwargs)  # type: ignore[return-value]
 
     @contextlib.contextmanager
     def with_fence(
@@ -216,10 +252,15 @@ class Environment(jinja2.Environment):
 if __name__ == "__main__":
     env = Environment()
     env.set_mknodes_filters()
-    text = env.render_string(r"{{ 'test' | MkHeader }}")
-    text = env.render_string(r"{{ 50 | MkProgressBar }}")
-    print(env.rendered_nodes)
-    env.render_string(r"{{test('hallo')}}")
+    txt = """{% filter MkHeader | str %}
+    test
+    {% endfilter %}
+    """
+    print(env.render_string(txt))
+    # text = env.render_string(r"{{ 'test' | MkHeader }}")
+    # text = env.render_string(r"{{ 50 | MkProgressBar }}")
+    # print(env.rendered_nodes)
+    # env.render_string(r"{{test('hallo')}}")
     # import mknodes as mk
 
     # proj = mk.Project.for_mknodes()

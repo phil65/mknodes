@@ -11,12 +11,36 @@ from typing import Any
 import jinja2
 
 from mknodes import paths
-from mknodes.utils import helpers, inspecthelpers, log, yamlhelpers
+from mknodes.utils import helpers, inspecthelpers, log, reprhelpers, yamlhelpers
 
 
-resources_loader = jinja2.PackageLoader("mknodes", "resources")
-docs_loader = jinja2.FileSystemLoader(searchpath="docs/")
-resource_loader = jinja2.ChoiceLoader([resources_loader, docs_loader])
+class PackageLoader(jinja2.PackageLoader):
+    def __repr__(self):
+        return reprhelpers.get_repr(
+            self,
+            package_name=self.package_name,
+            package_path=self.package_path,
+        )
+
+
+class FileSystemLoader(jinja2.FileSystemLoader):
+    def __repr__(self):
+        return reprhelpers.get_repr(self, searchpath=self.searchpath)
+
+
+class ChoiceLoader(jinja2.ChoiceLoader):
+    def __repr__(self):
+        return reprhelpers.get_repr(self, loaders=self.loaders)
+
+
+class DictLoader(jinja2.DictLoader):
+    def __repr__(self):
+        return reprhelpers.get_repr(self, mapping=self.mapping)
+
+
+resources_loader = PackageLoader("mknodes", "resources")
+docs_loader = FileSystemLoader(searchpath="docs/")
+resource_loader = ChoiceLoader([resources_loader, docs_loader])
 
 
 @functools.cache
@@ -46,7 +70,7 @@ ENVIRONMENT_FILTERS = {
     "path_join": os.path.join,
 }
 
-# material_partials_loader = jinja2.PackageLoader("material", "partials")
+# material_partials_loader = PackageLoader("material", "partials")
 
 
 class LaxUndefined(jinja2.Undefined):
