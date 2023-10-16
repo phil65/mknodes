@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import contextlib
 import os
 import types
 
 from typing import Any
 
+from mknodes.info import grifferegistry
 from mknodes.pages import mktemplatepage
 from mknodes.utils import classhelpers, log, reprhelpers
 
@@ -55,10 +55,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self) -> dict[str, Any]:
         variables: dict[str, Any] = dict(module=self.module, klasses=self.klasses)
-        if (mod := self.ctx.metadata.griffe_module) and self.module:
-            path = ".".join(self.module.__name__.split(".")[1:])
-            with contextlib.suppress(KeyError):
-                variables["griffe_obj"] = mod[path] if path else mod
+        if self.module:
+            variables["griffe_obj"] = grifferegistry.get_module(self.module)
         return variables
 
 

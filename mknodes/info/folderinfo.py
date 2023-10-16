@@ -10,15 +10,12 @@ import types
 
 from typing import TYPE_CHECKING, Self
 
-from griffe import Module
-from griffe.enumerations import Parser
-from griffe.loader import GriffeLoader
-
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
     # githubinfo,
     gitrepository,
+    grifferegistry,
     license,
     mkdocsconfigfile,
     packageregistry,
@@ -28,7 +25,10 @@ from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhel
 
 
 if TYPE_CHECKING:
+    import griffe
+
     from mknodes.info import packageinfo
+
 
 logger = log.get_logger(__name__)
 
@@ -91,13 +91,11 @@ class FolderInfo:
         return importlib.import_module(mod_name)
 
     @functools.cached_property
-    def griffe_module(self) -> Module:
+    def griffe_module(self) -> griffe.Module:
         """Return a griffe Module containing information about the module."""
         # Long-term ideally we would pull all information from here.
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
-        parser = Parser(self.docstring_style or "google")
-        griffe = GriffeLoader(docstring_parser=parser)
-        return griffe.load_module(mod_name)
+        return grifferegistry.get_module(mod_name)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
