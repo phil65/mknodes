@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 import functools
-import pathlib
 
 from typing import Any
 import xml.etree.ElementTree as etree
@@ -107,19 +106,29 @@ def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
     return el
 
 
-def get_material_icon_path(icon: str) -> pathlib.Path:
-    import material
-
-    if "/" not in icon:
-        icon = f"material/{icon}"
-    path = next(iter(material.__path__))
-    return pathlib.Path(path) / "templates" / ".icons" / f"{icon}.svg"
-
-
 def get_icon_svg(icon: str) -> str:
-    if icon.startswith(":") or ":" not in icon:
-        path = get_material_icon_path(icon)
-        return path.read_text()
+    """Return svg for given pyconify icon key.
+
+    Key should look like "mdi:file"
+    For compatibility, this method also supports compatibility for
+    emoji-slugs (":material-file:") as well as material-paths ("material/file")
+
+    If no group is supplied, mdi is assumed as group:
+
+    Example:
+        get_icon_svg("file")  # implicit mdi group
+        get_icon_svg("mdi:file")  # pyconify key
+        get_icon_svg("material/file")  # Material-style path
+        get_icon_svg(":material-file:")  # material-style emoji slug
+    """
+    for k, v in PYCONIFY_TO_PREFIXES.items():
+        path = f'{v.replace("-", "/")}/'
+        icon = icon.replace(path, f"{k}:")
+        icon = icon.replace(f":{v}-", f"{k}:")
+
+    icon = icon.strip(":")
+    if ":" not in icon:
+        icon = f"mdi:{icon}"
     import pyconify
 
     return pyconify.svg(icon).decode()
@@ -135,8 +144,3 @@ def get_icon_xml(icon: str) -> etree.Element:
     etree.register_namespace("", "http://www.w3.org/2000/svg")
     svg_text = get_icon_svg(icon)
     return etree.fromstring(svg_text)
-
-
-if __name__ == "__main__":
-    idx = get_collection_map("mdi")
-    print(idx)

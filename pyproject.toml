@@ -26,6 +26,7 @@ dependencies = [
 
     # Docs
     "mkdocs >=1.5",
+    "mkdocs-material >= 9.4",
     "mkdocs_mknodes",
     "mkdocs-literate-nav",
     "pymdown-extensions",
@@ -99,8 +100,6 @@ keywords = [
 
 requires-python = ">=3.11"
 dependencies = [
-    # MkDocs
-    "mkdocs-material >= 9.4",
 
     # Git(Hub)
     "gitpython",
