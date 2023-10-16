@@ -16,8 +16,6 @@ from mknodes.utils import log, resources
 if TYPE_CHECKING:
     import mknodes as mk
 
-    from mknodes.jinja import environment
-
 
 logger = log.get_logger(__name__)
 
@@ -137,7 +135,7 @@ class MkNode(node.Node):
         return self._context
 
     @property
-    def env(self) -> environment.Environment:
+    def env(self) -> mk.Environment:
         """The node jinja environment."""
         # paths = []
         # path = inspecthelpers.get_file(self.__class__)

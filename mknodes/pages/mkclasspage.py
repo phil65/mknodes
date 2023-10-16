@@ -6,9 +6,7 @@ import pathlib
 
 from typing import Any
 
-from mknodes.jinja import environment
 from mknodes.pages import mktemplatepage
-from mknodes.project import Project
 from mknodes.utils import classhelpers, log, reprhelpers
 
 
@@ -73,6 +71,8 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 
 
 if __name__ == "__main__":
-    proj = Project.for_mknodes()
-    doc = MkClassPage(environment.Environment, project=proj)
+    import mknodes as mk
+
+    proj = mk.Project.for_mknodes()
+    doc = MkClassPage(mk.Environment, project=proj)
     print(doc.to_markdown())

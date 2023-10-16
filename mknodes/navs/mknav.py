@@ -215,9 +215,9 @@ class MkNav(mknode.MkNode):
             module_page: Override for the default ModulePage
             flatten_nav: Whether classes should be put into top-level of the nav
         """
-        from mknodes.navs import mkdoc
+        import mknodes as mk
 
-        nav = mkdoc.MkDoc(
+        nav = mk.MkDoc(
             module=module,
             filter_by___all__=filter_by___all__,
             parent=self,

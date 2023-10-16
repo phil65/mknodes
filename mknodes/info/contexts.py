@@ -13,7 +13,6 @@ import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
-from mknodes.jinja import environment
 from mknodes.utils import log, resources, superdict
 
 
@@ -288,8 +287,8 @@ class ProjectContext(Context):
         default_factory=linkprovider.LinkProvider,
     )
     """Link source."""
-    env: environment.Environment = dataclasses.field(
-        default_factory=lambda: environment.Environment(
+    env: mk.Environment = dataclasses.field(
+        default_factory=lambda: mk.Environment(
             undefined="strict",
             load_templates=True,
         ),
@@ -357,7 +356,7 @@ default_project_context = ProjectContext(
     github=default_github_context,
     theme=default_theme_context,
     links=linkprovider.LinkProvider(),
-    env=environment.Environment(undefined="strict", load_templates=True),
+    env=mk.Environment(undefined="strict", load_templates=True),
     # resources=Resources(),
 )
 
