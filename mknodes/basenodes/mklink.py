@@ -5,7 +5,7 @@ import types
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import icons, log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -66,10 +66,9 @@ class MkLink(mknode.MkNode):
 
     @property
     def icon(self) -> str:
-        if not self._icon or self._icon.startswith(":"):
-            return self._icon
-        icon = self._icon if "/" in self._icon else f"material/{self._icon}"
-        return f':{icon.replace("/", "-")}:'
+        if not self._icon:
+            return ""
+        return icons.get_emoji_slug(self._icon)
 
     @property
     def url(self) -> str:

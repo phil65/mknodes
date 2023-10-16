@@ -124,6 +124,13 @@ def get_icon_svg(icon: str) -> str:
         get_icon_svg("material/file")  # Material-style path
         get_icon_svg(":material-file:")  # material-style emoji slug
     """
+    key = get_pyconify_key(icon)
+    import pyconify
+
+    return pyconify.svg(key).decode()
+
+
+def get_pyconify_key(icon: str):
     for k, v in PYCONIFY_TO_PREFIXES.items():
         path = f'{v.replace("-", "/")}/'
         icon = icon.replace(path, f"{k}:")
@@ -132,9 +139,11 @@ def get_icon_svg(icon: str) -> str:
     icon = icon.strip(":")
     if ":" not in icon:
         icon = f"mdi:{icon}"
-    import pyconify
+    return icon
 
-    return pyconify.svg(icon).decode()
+
+def get_emoji_slug(icon):
+    return f":{get_pyconify_key(icon).replace(':', '-')}:"
 
 
 def get_icon_xml(icon: str) -> etree.Element:
