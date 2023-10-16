@@ -54,11 +54,12 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
 
     @property
     def extra_variables(self) -> dict[str, Any]:
-        variables = dict(module=self.module, klasses=self.klasses)
-        if mod := self.ctx.metadata.griffe_module:
+        variables: dict[str, Any] = dict(module=self.module, klasses=self.klasses)
+        if (mod := self.ctx.metadata.griffe_module) and self.module:
             path = ".".join(self.module.__name__.split(".")[1:])
+            griffe_obj = mod[path] if path else mod
             with contextlib.suppress(KeyError):
-                variables["griffe_obj"] = mod[path]
+                variables["griffe_obj"] = griffe_obj
         return variables
 
 
