@@ -149,7 +149,7 @@ class TextResource:
 
     @property
     def resolved_filename(self) -> str:
-        hashed = hash(self.content)
+        hashed = helpers.get_hash(self.content)
         return (
             f"{self.filename.removesuffix(self.EXTENSION)}{hashed}{self.EXTENSION}"
             if self.filename

@@ -5,12 +5,19 @@ import itertools
 import os
 import re
 
-from typing import Literal, TypeVar
+from typing import Any, Literal, TypeVar
 
 from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
+
+
+def get_hash(obj: Any) -> str:
+    import hashlib
+
+    hash_md5 = hashlib.md5(str(obj).encode("utf-8"))
+    return hash_md5.hexdigest()[:7]
 
 
 def get_color_str(data: str | tuple) -> str:  # type: ignore[return]

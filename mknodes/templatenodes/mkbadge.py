@@ -123,7 +123,8 @@ class MkBadge(mkimage.MkImage):
 
     @property
     def path(self) -> str:
-        unique = f"{self.label}_{self.value}_{hash(repr(self))}.svg"
+        hashed = helpers.get_hash(repr(self))
+        unique = f"{self.label}_{self.value}_{hashed}.svg"
         return helpers.slugify(unique)
 
     @path.setter

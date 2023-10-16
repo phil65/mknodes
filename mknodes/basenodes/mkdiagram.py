@@ -8,7 +8,7 @@ from typing import Any, Literal
 from pymdownx import superfences
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import reprhelpers, resources
+from mknodes.utils import helpers, reprhelpers, resources
 
 
 GraphTypeStr = Literal["flow", "sequence", "state"]
@@ -107,9 +107,9 @@ class MkDiagram(mkcode.MkCode):
         """
         lines = list(self.names)
         if not self.connections:
-            lines = [f'{hash(i)}["{i}"]' for i in lines]
+            lines = [f'{helpers.get_hash(i)}["{i}"]' for i in lines]
             for prev, nxt in itertools.pairwise(self.names):
-                lines.append(f"{hash(prev)} --> {hash(nxt)}")
+                lines.append(f"{hash(prev)} --> {helpers.get_hash(nxt)}")
             return textwrap.indent("\n".join(lines), "  ")
         for connection in self.connections:
             if len(connection) == 2:  # noqa: PLR2004

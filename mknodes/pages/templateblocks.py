@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Literal
 from markdown import markdown
 
 from mknodes.basenodes import mknode
-from mknodes.utils import css as css_, mdconverter, resources
+from mknodes.utils import css as css_, helpers, mdconverter, resources
 
 
 if TYPE_CHECKING:
@@ -265,7 +265,7 @@ class StylesBlock(BaseBlock):
     def add_css(self, css: str | dict):
         if isinstance(css, dict):
             css = str(css_.CSS(css))
-        filename = f"{hash(css)}.css"
+        filename = f"{helpers.get_hash(css)}.css"
         text = resources.CSSText(filename=filename, content=css)
         self.styles.append(text)
 
