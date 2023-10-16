@@ -7,7 +7,7 @@ import types
 
 from typing import Any
 
-from griffe.dataclasses import Module
+from griffe.dataclasses import Alias, Module
 
 import mknodes as mk
 
@@ -138,7 +138,7 @@ class PackageContext(Context):
     # PackageInfo
     module: types.ModuleType | None = None
     """The module object itself."""
-    griffe_module: Module | None = None
+    griffe_module: Module | Alias | None = None
     """The module object itself."""
     docstring_style: str | None = None
     """The style used for DocStrings."""
