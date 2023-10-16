@@ -33,8 +33,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             module: ModuleType or path to model to show info for.
             klasses: klasses to use
             path: Filename/path for the Module page. defaults to [modulename].md
-            kwargs: further keyword arguments passed to parent
             template: Name of the template to load
+            kwargs: further keyword arguments passed to parent
         """
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
@@ -55,8 +55,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self) -> dict[str, Any]:
         variables: dict[str, Any] = dict(module=self.module, klasses=self.klasses)
-        if self.module:
-            variables["griffe_obj"] = grifferegistry.get_module(self.module)
+        variables["griffe_obj"] = grifferegistry.get_module(self.module)
         return variables
 
 
