@@ -59,7 +59,7 @@ def get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
 
 
 @functools.cache
-def _patch_index_for_locations(icon_sets: Sequence[str]) -> dict[str, Any]:
+def _patch_index_with_sets(icon_sets: Sequence[str]) -> dict[str, Any]:
     from pymdownx import twemoji_db
 
     # Copy the Twemoji index
@@ -77,7 +77,7 @@ def twemoji(options: dict[str, Any], md):
     """Provide a copied Twemoji index with additional codes for Pyconify icons."""
     default = list(PYCONIFY_TO_PREFIXES.keys())
     icon_sets = options.get("icon_sets", default)[:]
-    return _patch_index_for_locations(tuple(icon_sets))
+    return _patch_index_with_sets(tuple(icon_sets))
 
 
 def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
@@ -113,7 +113,7 @@ def get_icon_svg(icon: str) -> str:
     For compatibility, this method also supports compatibility for
     emoji-slugs (":material-file:") as well as material-paths ("material/file")
 
-    If no group is supplied, mdi is assumed as group:
+    If no group is supplied as part of the string, mdi is assumed as group:
 
     Example:
         get_icon_svg("file")  # implicit mdi group
@@ -144,3 +144,14 @@ def get_icon_xml(icon: str) -> etree.Element:
     etree.register_namespace("", "http://www.w3.org/2000/svg")
     svg_text = get_icon_svg(icon)
     return etree.fromstring(svg_text)
+
+
+if __name__ == "__main__":
+    import gzip
+    import json
+    import pathlib
+
+    mapping = get_pyconify_icon_index()
+    path = pathlib.Path() / "icons.json.gzip"
+    with gzip.open(path, "w") as file:
+        file.write(json.dumps(mapping).encode())
