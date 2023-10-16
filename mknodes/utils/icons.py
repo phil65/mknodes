@@ -6,6 +6,8 @@ import functools
 from typing import Any
 import xml.etree.ElementTree as etree
 
+from mknodes import paths
+
 
 PYCONIFY_TO_PREFIXES = {
     "mdi": "material",
@@ -17,7 +19,7 @@ PYCONIFY_TO_PREFIXES = {
 }
 
 
-def get_collection_map(*prefixes: str) -> dict[str, list[str]]:
+def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     """Return a dictionary with a mapping from pyconify name to icon prefixes.
 
     In order to provide compatibility with the materialx-icon-index,
@@ -33,7 +35,7 @@ def get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     return mapping
 
 
-def get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
+def _get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
     """Return a icon index for the pymdownx emoji extension containing pyconify icons.
 
     The dictionaries contain two key-value pairs:
@@ -44,7 +46,7 @@ def get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
     import pyconify
 
     index = {}
-    for coll, prefixes in get_collection_map(*collections).items():
+    for coll, prefixes in _get_collection_map(*collections).items():
         collection = pyconify.collection(coll)
         for icon_name in collection.get("uncategorized", []):
             for prefix in prefixes:
@@ -68,7 +70,8 @@ def _patch_index_with_sets(icon_sets: Sequence[str]) -> dict[str, Any]:
         "emoji": twemoji_db.emoji,
         "aliases": twemoji_db.aliases,
     }
-    icons = get_pyconify_icon_index(*icon_sets)
+    # icons = _get_pyconify_icon_index(*icon_sets)
+    icons = load_icon_index()
     index["emoji"].update(icons)
     return index
 
@@ -146,12 +149,25 @@ def get_icon_xml(icon: str) -> etree.Element:
     return etree.fromstring(svg_text)
 
 
-if __name__ == "__main__":
+def write_icon_index():
     import gzip
     import json
-    import pathlib
 
-    mapping = get_pyconify_icon_index()
-    path = pathlib.Path() / "icons.json.gzip"
+    mapping = _get_pyconify_icon_index()
+    path = paths.RESOURCES / "icons.json.gzip"
     with gzip.open(path, "w") as file:
         file.write(json.dumps(mapping).encode())
+
+
+def load_icon_index() -> dict:
+    import gzip
+    import json
+
+    path = paths.RESOURCES / "icons.json.gzip"
+    with gzip.open(path, "r") as file:
+        return json.loads(file.read())
+
+
+if __name__ == "__main__":
+    idx = load_icon_index()
+    print(idx)
