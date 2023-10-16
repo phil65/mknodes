@@ -27,7 +27,7 @@ PYCONIFY_TO_PREFIXES = {
 }
 
 
-def get_collection_map(*prefixes):
+def get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     """Return a dictionary with a mapping from pyconify name to icon prefixes.
 
     In order to provide compatibility with the materialx-icon-index,
@@ -43,7 +43,14 @@ def get_collection_map(*prefixes):
     return mapping
 
 
-def get_pyconify_icon_index(*collections) -> dict[str, dict[str, str]]:
+def get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
+    """Return a icon index for the pymdownx emoji extension containing pyconify icons.
+
+    The dictionaries contain two key-value pairs:
+    "name" is the emoji identifier,
+    "path" is the pyconify key
+
+    """
     import pyconify
 
     index = {}
@@ -62,7 +69,7 @@ def get_pyconify_icon_index(*collections) -> dict[str, dict[str, str]]:
 
 
 @functools.cache
-def _patch_index_for_locations(icon_locations: Sequence[str]) -> dict[str, Any]:
+def _patch_index_for_locations(icon_sets: Sequence[str]) -> dict[str, Any]:
     from pymdownx import twemoji_db
 
     # Copy the Twemoji index
@@ -71,16 +78,16 @@ def _patch_index_for_locations(icon_locations: Sequence[str]) -> dict[str, Any]:
         "emoji": twemoji_db.emoji,
         "aliases": twemoji_db.aliases,
     }
-    icons = get_pyconify_icon_index("mdi")
+    icons = get_pyconify_icon_index(*icon_sets)
     index["emoji"].update(icons)
     return index
 
 
 def twemoji(options: dict[str, Any], md):
     """Provide a copied Twemoji index with additional codes for Pyconify icons."""
-    icon_locations = options.get("custom_icons", [])[:]
-    icon_locations.append(str(RES_PATH))
-    return _patch_index_for_locations(tuple(icon_locations))
+    icon_sets = options.get("icon_sets", [])[:]
+    icon_sets.append(str(RES_PATH))
+    return _patch_index_for_locations(tuple(icon_sets))
 
 
 def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
