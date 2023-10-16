@@ -2,19 +2,10 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 import functools
-import inspect
 import pathlib
 
 from typing import Any
 import xml.etree.ElementTree as etree
-
-import material
-
-from pymdownx.emoji import TWEMOJI_SVG_CDN, add_attributes
-
-
-RESOURCES = pathlib.Path(inspect.getfile(material)).parent
-RES_PATH = RESOURCES / "templates" / ".icons"
 
 
 PYCONIFY_TO_PREFIXES = {
@@ -85,13 +76,15 @@ def _patch_index_for_locations(icon_sets: Sequence[str]) -> dict[str, Any]:
 
 def twemoji(options: dict[str, Any], md):
     """Provide a copied Twemoji index with additional codes for Pyconify icons."""
-    icon_sets = options.get("icon_sets", [])[:]
-    icon_sets.append(str(RES_PATH))
+    default = list(PYCONIFY_TO_PREFIXES.keys())
+    icon_sets = options.get("icon_sets", default)[:]
     return _patch_index_for_locations(tuple(icon_sets))
 
 
 def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
     """Return SVG element."""
+    from pymdownx.emoji import TWEMOJI_SVG_CDN, add_attributes
+
     is_unicode = uc is not None
     if is_unicode:
         image_path = options.get("image_path", TWEMOJI_SVG_CDN)

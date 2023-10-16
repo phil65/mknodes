@@ -51,7 +51,7 @@ class Theme:
         self.admonitions: list[AdmonitionType] = []
         self.add_admonition_type(
             name="theme",
-            material_icon="file",
+            icon="mdi:file",
             header_color=self.primary_color,
             icon_color="black",
             border_color="black",
@@ -64,7 +64,7 @@ class Theme:
     def add_admonition_type(
         self,
         name: str,
-        material_icon: str,
+        icon: str,
         header_color: datatypes.ColorType,
         icon_color: datatypes.ColorType | None = None,
         border_color: datatypes.ColorType | None = None,
@@ -74,7 +74,7 @@ class Theme:
 
         Arguments:
             name: Slug for new admonition type
-            material_icon: Material icon path
+            icon: Either a Pyconify icon key or an <svg> element
             header_color: Color for the admonition header
             icon_color: Color for the admonition icon
             border_color: Color for the admonition border
@@ -86,7 +86,7 @@ class Theme:
         font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
         adm = AdmonitionType(
             name=name,
-            svg=icons.get_icon_svg(material_icon),
+            svg=icons.get_icon_svg(icon) if not icon.startswith("<") else icon,
             header_color=header_col_str,
             icon_color=icon_col_str,
             border_color=border_col_str,
