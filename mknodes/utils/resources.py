@@ -151,7 +151,7 @@ class TextResource:
     def resolved_filename(self) -> str:
         hashed = helpers.get_hash(self.content)
         return (
-            f"{self.filename.removesuffix(self.EXTENSION)}{hashed}{self.EXTENSION}"
+            f"{self.filename.removesuffix(self.EXTENSION)}_{hashed}{self.EXTENSION}"
             if self.filename
             else f"{hashed}{self.EXTENSION}"
         )
