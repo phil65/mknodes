@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import codecs
+from collections.abc import Sequence
 import functools
-import glob
 import inspect
 import pathlib
+
+from typing import Any
 import xml.etree.ElementTree as etree
 
 import material
@@ -16,24 +17,52 @@ RESOURCES = pathlib.Path(inspect.getfile(material)).parent
 RES_PATH = RESOURCES / "templates" / ".icons"
 
 
-def get_pyconify_icon_index(*prefixes):
+PYCONIFY_TO_PREFIXES = {
+    "mdi": "material",
+    "simple-icons": "simple",
+    "octicon": "octicons",
+    "fa-regular": "fontawesome-regular",
+    "fa-brands": "fontawesome-brands",
+    "fa-solid": "fontawesome-solid",
+}
+
+
+def get_collection_map(*prefixes):
+    """Return a dictionary with a mapping from pyconify name to icon prefixes.
+
+    In order to provide compatibility with the materialx-icon-index,
+    we also add the prefixes used by that index, which is different from
+    the pyconify prefixes. (material vs mdi etc, see PYCONIFY_TO_PREFIXES)
+    """
+    import pyconify
+
+    mapping = {coll: [coll] for coll in pyconify.collections(*prefixes)}
+    for k, v in PYCONIFY_TO_PREFIXES.items():
+        if k in mapping:
+            mapping[k].append(v)
+    return mapping
+
+
+def get_pyconify_icon_index(*collections) -> dict[str, dict[str, str]]:
     import pyconify
 
     index = {}
-    for coll in pyconify.collections(*prefixes):
+    for coll, prefixes in get_collection_map(*collections).items():
         collection = pyconify.collection(coll)
         for icon_name in collection.get("uncategorized", []):
-            name = f":{coll}--{icon_name}:"
-            index[name] = {"name": name, "path": f"{coll}:{icon_name}"}
+            for prefix in prefixes:
+                name = f":{prefix}-{icon_name}:"
+                index[name] = {"name": name, "path": f"{coll}:{icon_name}"}
         for cat in pyconify.collection(coll).get("categories", {}).values():
             for icon_name in cat:
-                name = f":{coll}--{icon_name}:"
-                index[name] = {"name": name, "path": f"{coll}:{icon_name}"}
+                for prefix in prefixes:
+                    name = f":{prefix}-{icon_name}:"
+                    index[name] = {"name": name, "path": f"{coll}:{icon_name}"}
     return index
 
 
 @functools.cache
-def _patch_index_for_locations(icon_locations):
+def _patch_index_for_locations(icon_locations: Sequence[str]) -> dict[str, Any]:
     from pymdownx import twemoji_db
 
     # Copy the Twemoji index
@@ -42,21 +71,12 @@ def _patch_index_for_locations(icon_locations):
         "emoji": twemoji_db.emoji,
         "aliases": twemoji_db.aliases,
     }
-    for icon_path in icon_locations:
-        norm_base = icon_path.replace("\\", "/") + "/"
-        path = glob.escape(icon_path.replace("\\", "/"))
-        for result in glob.glob(path + "/**/*.svg", recursive=True):  # noqa: PTH207
-            slug = result.replace("\\", "/").replace(norm_base, "", 1).replace("/", "-")
-            name = f":{slug.lstrip('.')[:-4]}:"
-            if name not in index["emoji"] and name not in index["aliases"]:
-                # Easiest to just store the path and pull it out from the index
-                index["emoji"][name] = {"name": name, "path": result}
     icons = get_pyconify_icon_index("mdi")
     index["emoji"].update(icons)
     return index
 
 
-def twemoji(options, md):
+def twemoji(options: dict[str, Any], md):
     """Provide a copied Twemoji index with additional codes for Pyconify icons."""
     icon_locations = options.get("custom_icons", [])[:]
     icon_locations.append(str(RES_PATH))
@@ -80,21 +100,11 @@ def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
         add_attributes(options, attributes)
 
         return etree.Element("img", attributes)
-    if "--" in shortname:
-        el = etree.Element("span", {"class": options.get("classes", index)})
-        svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]
-        svg = get_icon_svg(svg_path)
-        el.text = md.htmlStash.store(svg)
-        return el
-
-    if shortname.startswith(":"):
-        # Handle Material SVG assets.
-        el = etree.Element("span", {"class": options.get("classes", index)})
-        svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]
-        with codecs.open(svg_path, "r", encoding="utf-8") as f:
-            el.text = md.htmlStash.store(f.read())
-        return el
-    return None
+    el = etree.Element("span", {"class": options.get("classes", index)})
+    svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]
+    svg = get_icon_svg(svg_path)
+    el.text = md.htmlStash.store(svg)
+    return el
 
 
 def get_material_icon_path(icon: str) -> pathlib.Path:
@@ -128,5 +138,5 @@ def get_icon_xml(icon: str) -> etree.Element:
 
 
 if __name__ == "__main__":
-    idx = get_pyconify_icon_index("mdi")
-    print(len(idx))
+    idx = get_collection_map("mdi")
+    print(idx)
