@@ -11,7 +11,7 @@ def build(project):
     root += sub_nav
 
 
-def test_templates(project):
+def test_templates():
     theme = mk.MaterialTheme()
     project = mk.Project(theme=theme, repo=".", build_fn=build)
     project.build()

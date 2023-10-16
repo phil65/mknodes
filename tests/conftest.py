@@ -55,7 +55,7 @@ def resources_dir():
 
 
 @pytest.fixture(scope="session")
-def project():
+def mknodes_project():
     proj = project_.Project.for_mknodes()
     # with utils.response_mock(
     #     [

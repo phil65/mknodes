@@ -3,11 +3,11 @@ from __future__ import annotations
 from mknodes.treelib import noderesolver
 
 
-def test_resolver(project):
+def test_resolver(mknodes_project):
     resolver = noderesolver.MkNodeResolver()
-    result = resolver.glob("*/*/MkAdm*", project._root)
+    result = resolver.glob("*/*/MkAdm*", mknodes_project._root)
     assert result
 
 
-def resolving_files(project):
-    project.all_files()
+def resolving_files(mknodes_project):
+    mknodes_project.all_files()
