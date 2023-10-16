@@ -160,10 +160,10 @@ class TextResource:
         return hash(self.content)
 
     def __repr__(self):
-        return reprhelpers.dataclass_repr(self)
+        return reprhelpers.get_repr(self, filename=self.resolved_filename)
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, repr=False)
 class CSSText(TextResource):
     """Class representing non-file-bound CSS."""
 
@@ -176,7 +176,7 @@ class CSSText(TextResource):
         return f"<style>\n{self.content}\n</style>"
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, repr=False)
 class JSText(TextResource):
     """Class representing non-file-bound JavaScript code."""
 
