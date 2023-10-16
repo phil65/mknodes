@@ -107,7 +107,8 @@ class Theme:
                 variables=tmpl_ctx,
             )
             req = [resources.CSSText(content=css_text, filename="mknodes_theme.css")]
-        return resources.Resources(css=req, templates=list(self.templates))
+        templates = [i for i in self.templates if i]
+        return resources.Resources(css=req, templates=templates)
 
     def get_template_context(self) -> dict[str, Any]:
         """Return variables used to resolve the CSS template.
