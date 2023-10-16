@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 import contextlib
 import os
+import pathlib
 
 from typing import TYPE_CHECKING, Any
 
@@ -37,6 +38,9 @@ class Environment(jinja2.Environment):
         self.filters.update(jinjahelpers.ENV_FILTERS)
         self.globals.update(jinjahelpers.ENV_GLOBALS)
         self.rendered_nodes: list[mk.MkNode] = list()
+
+    def __contains__(self, template: str | os.PathLike):
+        return pathlib.Path(template).as_posix() in self.list_templates()
 
     def merge_globals(self, other: Mapping, additive: bool = False):
         """Merge other into the environment globals with given strategy.
