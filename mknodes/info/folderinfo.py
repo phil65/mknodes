@@ -305,4 +305,4 @@ class FolderInfo:
 if __name__ == "__main__":
     info = FolderInfo()
     log.basic()
-    logger.warning(info.griffe_module.as_json())
+    logger.warning(info.griffe_module)
