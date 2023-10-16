@@ -20,6 +20,16 @@ STYLE = (
     " background-size: cover;"
 )
 
+SCRIPT = """
+window.sr = ScrollReveal();
+
+// Add class to <html> if ScrollReveal is supported
+// Note: only works in version 3
+if (sr.isSupported()) {
+document.documentElement.classList.add('sr');
+}
+"""
+
 
 class MkTimelineItem(mknode.MkNode):
     """Single Timeline item / card.
@@ -111,6 +121,7 @@ class MkTimeline(mkcontainer.MkContainer):
     JS_FILES = [
         resources.JSFile(JQUERY_LINK, is_library=True),
         resources.JSFile(SCROLLREVEAL_LINK, is_library=True),
+        resources.JSText(SCRIPT, "scrollreveal.js"),  # type: ignore[list-item]
         resources.JSFile("js/timeline.js"),
     ]
     CSS = [resources.CSSFile("css/timeline.css")]
