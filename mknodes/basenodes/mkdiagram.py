@@ -109,7 +109,7 @@ class MkDiagram(mkcode.MkCode):
         if not self.connections:
             lines = [f'{helpers.get_hash(i)}["{i}"]' for i in lines]
             for prev, nxt in itertools.pairwise(self.names):
-                lines.append(f"{hash(prev)} --> {helpers.get_hash(nxt)}")
+                lines.append(f"{helpers.get_hash(prev)} --> {helpers.get_hash(nxt)}")
             return textwrap.indent("\n".join(lines), "  ")
         for connection in self.connections:
             if len(connection) == 2:  # noqa: PLR2004
