@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import pathlib
+import types
+
 import jinja2
 
 from mknodes.utils import reprhelpers
@@ -18,6 +21,20 @@ class LoaderMixin:
 
 
 class PackageLoader(LoaderMixin, jinja2.PackageLoader):
+    def __init__(
+        self,
+        package: str | types.ModuleType,
+        package_path: str | None = None,
+        encoding: str = "utf-8",
+    ) -> None:
+        if isinstance(package, types.ModuleType):
+            package = package.__name__
+        parts = package.split(".")
+        path = "/".join(parts[1:])
+        if package_path:
+            path = (pathlib.Path(path) / package_path).as_posix()
+        super().__init__(parts[0], path, encoding)
+
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
@@ -55,10 +72,24 @@ class DictLoader(LoaderMixin, jinja2.DictLoader):
         return DictLoader(mapping)
 
 
+def get_loader(
+    module_paths: list[str] | None = None,
+    file_paths: list[str] | None = None,
+    static: dict[str, str] | None = None,
+) -> ChoiceLoader:
+    loaders: list[jinja2.BaseLoader] = [PackageLoader(p) for p in module_paths or []]
+    if file_paths:
+        loaders.append(FileSystemLoader(file_paths))
+    if static:
+        loaders.append(DictLoader(static))
+    return ChoiceLoader(loaders)
+
+
 resources_loader = PackageLoader("mknodes", "resources")
 docs_loader = FileSystemLoader(searchpath="docs/")
 resource_loader = ChoiceLoader([resources_loader, docs_loader])
 
 
 if __name__ == "__main__":
-    pass
+    loader = get_loader(module_paths=["mknodes.theme.material"])
+    print(loader.loaders)
