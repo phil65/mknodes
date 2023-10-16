@@ -16,7 +16,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-def get_module(module: str | types.ModuleType) -> griffe.Module:
+def get_module(module: str | types.ModuleType) -> griffe.Module | Alias:
     """Return info for given module from registry.
 
     Arguments:
