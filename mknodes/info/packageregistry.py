@@ -11,10 +11,20 @@ logger = log.get_logger(__name__)
 
 
 def get_info(mod_name: str) -> packageinfo.PackageInfo:
+    """Return info for given module from registry.
+
+    Arguments:
+        mod_name: Name of the module
+    """
     return registry.get_info(mod_name)
 
 
 class PackageRegistry(MutableMapping, metaclass=ABCMeta):
+    """Registry for PackageInfos.
+
+    Used for caching all loaded Package information.
+    """
+
     def __init__(self):
         self._packages: dict[str, packageinfo.PackageInfo] = {}
 
@@ -28,7 +38,7 @@ class PackageRegistry(MutableMapping, metaclass=ABCMeta):
         del self._packages[index]
 
     def __repr__(self):
-        return f"{type(self).__name__}({self.path!r})"
+        return f"{type(self).__name__}()"
 
     def __iter__(self):
         return iter(self._packages.keys())
@@ -37,6 +47,11 @@ class PackageRegistry(MutableMapping, metaclass=ABCMeta):
         return len(self._packages)
 
     def get_info(self, mod_name: str) -> packageinfo.PackageInfo:
+        """Get package information for given module.
+
+        Arguments:
+            mod_name: Name of the module
+        """
         mapping = packagehelpers.get_package_map()
         pkg_name = mapping[mod_name][0] if mod_name in mapping else mod_name
         pkg_name = pkg_name.lower()
@@ -46,6 +61,7 @@ class PackageRegistry(MutableMapping, metaclass=ABCMeta):
 
     @property
     def inventory_urls(self) -> set[str]:
+        """Return a set of inventory urls for all loaded packages."""
         return {v.inventory_url for v in self.values() if v.inventory_url is not None}
 
 
