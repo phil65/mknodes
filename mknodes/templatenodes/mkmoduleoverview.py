@@ -77,9 +77,10 @@ class MkModuleOverview(mktreeview.MkTreeView):
 
         node = MkModuleOverview(maximum_depth=2)
         page += mk.MkReprRawRendered(node, header="### From project")
-        import mkdocs
 
-        node = MkModuleOverview(mkdocs, maximum_depth=2)
+        import git
+
+        node = MkModuleOverview(git, maximum_depth=2)
         page += mk.MkReprRawRendered(node, header="### Explicit")
 
 
