@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import contextlib
 import os
 import pathlib
 
 from typing import Any
 
+from mknodes.info import grifferegistry
 from mknodes.pages import mktemplatepage
 from mknodes.utils import classhelpers, log, reprhelpers
 
@@ -62,11 +62,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         # right now, we inject the cls and the griffe Class into jinja namespace.
         subclasses = list(classhelpers.iter_subclasses(self.klass, recursive=False))
         variables = dict(cls=self.klass, subclasses=subclasses)
-        if mod := self.ctx.metadata.griffe_module:
-            path = ".".join(self.parts[1:]) + "." + self.klass.__qualname__
-            path = path.lstrip(".")
-            with contextlib.suppress(KeyError):
-                variables["griffe_obj"] = mod[path]
+        variables["griffe_obj"] = grifferegistry.registry.get_class(self.klass)
         return variables
 
 

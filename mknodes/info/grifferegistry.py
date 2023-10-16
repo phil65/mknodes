@@ -56,19 +56,44 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         module: str | types.ModuleType,
         docstring_style: str = "google",
     ) -> griffe.Module:
-        """Get package information for given module.
+        """Get griffe Module for given module.
 
         Arguments:
-            module: Name of the module
+            module: Module to get griffe object for
             docstring_style: Docstring style
         """
         if isinstance(module, types.ModuleType):
             module = module.__name__
-        if module not in self._modules:
+        if "." in module:
+            module_name, sub_mod_path = module.split(".", 1)
+        else:
+            module_name, sub_mod_path = module, ""
+        if module_name not in self._modules:
             parser = Parser(docstring_style)
             loader = GriffeLoader(docstring_parser=parser)
-            self._modules[module] = loader.load_module(module)
-        return self._modules[module]
+            self._modules[module_name] = loader.load_module(module_name)
+        griffe_mod = self._modules[module_name]
+        return griffe_mod[sub_mod_path] if sub_mod_path else griffe_mod
+
+    def get_class(
+        self,
+        klass: str | type,
+        docstring_style: str = "google",
+    ) -> griffe.Module:
+        """Get griffe Class for given class.
+
+        Arguments:
+            klass: Class to get Griffe object for
+            docstring_style: Docstring style
+        """
+        if isinstance(klass, type):
+            mod_name, sub_mod_path = klass.__module__.split(".", 1)
+            qual_name = klass.__qualname__
+            kls_name = f"{sub_mod_path}.{qual_name}" if sub_mod_path else qual_name
+        else:
+            mod_name, kls_name = klass.split(".", 1)
+        module = self.get_module(mod_name, docstring_style=docstring_style)
+        return module[kls_name]
 
 
 registry = GriffeRegistry()
@@ -76,5 +101,5 @@ registry = GriffeRegistry()
 
 if __name__ == "__main__":
     reg = GriffeRegistry()
-    info = reg.get_module("mknodes")
-    print(info.members)
+    reg.get_module("mknodes.basenodes")
+    info = reg.get_class("mknodes.MkAdmonition")
