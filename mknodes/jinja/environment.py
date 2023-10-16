@@ -192,12 +192,16 @@ class Environment(jinja2.Environment):
                 if isinstance(extra_loader, jinja2.BaseLoader)
                 else loaders.FileSystemLoader(extra_loader)
             )
-            if isinstance(self.loader, jinja2.ChoiceLoader):
-                loader_list = [loader, *self.loader.loaders]
-                loader = loaders.ChoiceLoader(loader_list)
-            elif self.loader:
-                loader_list = [loader, self.loader]
-                loader = loaders.ChoiceLoader(loader_list)
+            match self.loader:
+                case jinja2.ChoiceLoader() if isinstance(loader, jinja2.ChoiceLoader):
+                    loader_list = [*loader.loaders, *self.loader.loaders]
+                case jinja2.ChoiceLoader():
+                    loader_list = [loader, *self.loader.loaders]
+                case jinja2.BaseLoader():
+                    loader_list = [self.loader, loader]
+                case _:
+                    raise TypeError(self.loader)
+            loader = loaders.ChoiceLoader(loader_list)
             kwargs["loader"] = loader
         return super().overlay(**kwargs)  # type: ignore[return-value]
 

@@ -136,17 +136,26 @@ class MkNode(node.Node):
 
     @property
     def env(self) -> mk.Environment:
-        """The node jinja environment."""
-        # paths = []
-        # path = inspecthelpers.get_file(self.__class__)
-        # paths.append(pathlib.Path(path).parent)
-        # if self.parent_navs:
-        #     nav = self.parent_navs[-1]
-        #     file = nav.resolved_file_path
-        #     path = pathlib.Path(file).parent
-        #     paths.append(path)
-        # env = self.ctx.env.overlay(extra_loader=paths)
-        env = self.ctx.env
+        """The node jinja environment.
+
+        The environment contains additional loaders for the class file path
+        as well as the resolved parent nav file path.
+        """
+        import pathlib
+
+        from mknodes.utils import inspecthelpers
+
+        paths = []
+        path = inspecthelpers.get_file(self.__class__)  # type: ignore[arg-type]
+        assert path
+        paths.append(pathlib.Path(path).parent)
+        if self.parent_navs:
+            nav = self.parent_navs[-1]
+            file = nav.resolved_file_path
+            path = pathlib.Path(file).parent
+            paths.append(path)
+        env = self.ctx.env.overlay(extra_loader=paths)
+        # env = self.ctx.env
         env.globals["mknode"] = self
         env.set_mknodes_filters(parent=self)
         return env

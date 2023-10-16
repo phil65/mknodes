@@ -59,7 +59,7 @@ def _(nav: mk.MkNav):
 def _(nav: mk.MkNav):
     page = nav.add_page(is_index=True, hide="toc", icon="api")
     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
-    template = "docs/classpage_custom.jinja"
+    template = "classpage_custom.jinja"
     mknodes_docs = nav.add_doc(module=mk, class_page=template)
     # now we collect the stuff we want to document.
     mknodes_docs.collect_classes(recursive=True)
