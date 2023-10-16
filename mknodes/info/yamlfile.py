@@ -15,36 +15,36 @@ class YamlFile(configfile.ConfigFile):
         self,
         path: str | os.PathLike | None = None,
         mode: yamlhelpers.LoaderStr = "unsafe",
-        inherit_from: str | os.PathLike | None = None,
+        resolve_inherit_tag: bool = False,
     ):
         super().__init__(path)
-        if inherit_from:
-            self.resolve_inherit_tag(inherit_from, mode)
+        if resolve_inherit_tag:
+            self.resolve_inherit_tag(mode)
 
     def resolve_inherit_tag(
         self,
-        parent_path: str | os.PathLike,
         mode: yamlhelpers.LoaderStr = "unsafe",
     ):
-        """Merge the current data with data of of given parent_path file.
+        """Resolve INHERIT key-value pair for this YAML file.
+
+        If this YAML file contains a key-value pair like "INHERIT: path_to_config.yml",
+        this method will resolve that tag by using the config at given path as the
+        "parent config".
 
         Arguments:
-            parent_path: The path of the file which this file should inherit from.
             mode: The Yaml loader type
         """
+        if not self.path:
+            msg = "Config file needs file path (INHERIT path is relative to file path)"
+            raise ValueError(msg)
+        abspath = pathlib.Path(self.path).absolute()
         if "INHERIT" not in self._data:
             return
-        relpath = self._data.pop("INHERIT")
-        abspath = pathlib.Path(parent_path).absolute()
-        if not abspath.exists():
-            msg = f"Inherited config file '{relpath}' does not exist at '{abspath}'."
-            raise FileNotFoundError(msg)
-        logger.debug("Loading inherited configuration file: %s", abspath)
-        parent_cfg = abspath.parent / relpath
+        parent_cfg = abspath.parent / self._data.pop("INHERIT")
+        logger.debug("Loading inherited configuration file: %s", parent_cfg)
         with parent_cfg.open("rb") as fd:
             text = fd.read().decode()
             parent = yamlhelpers.load_yaml(text, mode)
-        # print(parent, self._data)
         self._data = mergehelpers.merge_dicts(parent, self._data)
 
     @classmethod
