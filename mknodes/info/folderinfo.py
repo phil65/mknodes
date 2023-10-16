@@ -27,6 +27,8 @@ from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhel
 if TYPE_CHECKING:
     import griffe
 
+    from griffe.dataclasses import Alias
+
     from mknodes.info import packageinfo
 
 
@@ -91,7 +93,7 @@ class FolderInfo:
         return importlib.import_module(mod_name)
 
     @functools.cached_property
-    def griffe_module(self) -> griffe.Module:
+    def griffe_module(self) -> griffe.Module | Alias:
         """Return a griffe Module containing information about the module."""
         # Long-term ideally we would pull all information from here.
         mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
