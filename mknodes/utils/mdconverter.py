@@ -19,7 +19,11 @@ class MdConverter(markdown.Markdown):
         output_format: Literal["xhtml", "html"] = "html",
         tab_length: int = 4,
     ):
-        exts = ["pymdownx.emoji", "md_in_html", "attr_list"]
+        exts: Sequence[str | markdown.Extension] = [
+            "pymdownx.emoji",
+            "md_in_html",
+            "attr_list",
+        ]
         if extensions:
             exts = list({*exts, *extensions})
         super().__init__(

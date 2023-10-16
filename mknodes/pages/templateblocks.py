@@ -4,13 +4,13 @@ import os
 
 from typing import TYPE_CHECKING, Literal
 
-from markdown import markdown
-
 from mknodes.basenodes import mknode
 from mknodes.utils import css as css_, helpers, mdconverter, resources
 
 
 if TYPE_CHECKING:
+    import markdown
+
     import mknodes as mk
 
 

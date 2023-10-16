@@ -6,6 +6,7 @@ import types
 
 import griffe
 
+from griffe.dataclasses import Alias
 from griffe.enumerations import Parser
 from griffe.loader import GriffeLoader
 
@@ -55,7 +56,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         self,
         module: str | types.ModuleType,
         docstring_style: str = "google",
-    ) -> griffe.Module:
+    ) -> griffe.Module | Alias:
         """Get griffe Module for given module.
 
         Arguments:
@@ -79,7 +80,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         self,
         klass: str | type,
         docstring_style: str = "google",
-    ) -> griffe.Module:
+    ) -> griffe.Class | Alias:
         """Get griffe Class for given class.
 
         Arguments:
