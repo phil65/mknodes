@@ -85,10 +85,10 @@ class MkNode(node.Node):
             self._name_registry[name] = self
         self.stats = contexts.NodeBuildStats()
         # ugly, but convenient.
-        from mknodes.basenodes import mkannotations
+        import mknodes as mk
 
-        if not isinstance(self, mkannotations.MkAnnotations):
-            self.annotations = mkannotations.MkAnnotations(parent=self)
+        if not isinstance(self, mk.MkAnnotations):
+            self.annotations = mk.MkAnnotations(parent=self)
         else:
             self.annotations = None
 
