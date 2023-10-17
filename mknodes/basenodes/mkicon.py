@@ -94,7 +94,7 @@ class MkIcon(mknode.MkNode):
         node = MkIcon(icon_name="mdi:file", rotate=90)
         page += mk.MkReprRawRendered(node, header="### Rotated")
 
-        node = MkIcon(icon_name="mdi:file", height=100, width=100)
+        node = MkIcon(icon_name="noto:wrench", height=100, width=100)
         page += mk.MkReprRawRendered(node, header="### Sized")
 
 

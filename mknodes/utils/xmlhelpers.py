@@ -37,11 +37,11 @@ class HTMLElement(Et.Element):
         if parent is not None:
             parent.append(self)
         if markdown:
-            parent = self
-            while parent is not None:
-                parent.set("markdown", "1")
-                if isinstance(parent, HTMLElement) and parent.parent:
-                    parent = parent.parent
+            node = self
+            while node is not None:
+                node.set("markdown", "1")
+                if isinstance(node, HTMLElement) and node.parent:
+                    node = node.parent
                 else:
                     break
 

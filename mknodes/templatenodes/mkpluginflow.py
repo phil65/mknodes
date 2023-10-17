@@ -94,11 +94,8 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
         import mknodes as mk
 
-        node = MkPluginFlow()
-        page += mk.MkReprRawRendered(node, header="### From project")
-
         node = MkPluginFlow(plugin=search.SearchPlugin)
-        page += mk.MkReprRawRendered(node, header="### Explicit")
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
