@@ -81,7 +81,7 @@ class MkPage(mkcontainer.MkContainer):
         self._is_homepage = is_homepage
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
         self.created_by: Callable | None = None
-        self._metadata = metadata.Metadata(
+        self.metadata = metadata.Metadata(
             hide=hide,
             search_boost=search_boost,
             exclude_from_search=exclude_from_search,
@@ -99,7 +99,7 @@ class MkPage(mkcontainer.MkContainer):
             extends="main.html",
         )
         if frame := inspect.currentframe():
-            self._metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
+            self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self):
@@ -115,17 +115,13 @@ class MkPage(mkcontainer.MkContainer):
         return bool(self._is_index)
 
     @property
-    def metadata(self) -> metadata.Metadata:
+    def resolved_metadata(self) -> metadata.Metadata:
         """Return page metadata, complemented with the parent Nav metadata objects."""
         meta = metadata.Metadata()
         for nav in self.parent_navs:
             meta.update(nav.metadata)
-        meta.update(self._metadata)
+        meta.update(self.metadata)
         return meta
-
-    @metadata.setter
-    def metadata(self, val: metadata.Metadata):
-        self._metadata = val
 
     @property
     def path(self) -> str:
@@ -160,7 +156,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @status.setter
     def status(self, value: datatypes.PageStatusStr):
-        self._metadata.status = value
+        self.metadata.status = value
 
     @property
     def title(self) -> str:
@@ -169,7 +165,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @title.setter
     def title(self, value: str):
-        self._metadata.title = value
+        self.metadata.title = value
 
     @property
     def subtitle(self) -> str | None:
@@ -178,7 +174,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @subtitle.setter
     def subtitle(self, value: str):
-        self._metadata.subtitle = value
+        self.metadata.subtitle = value
 
     @property
     def icon(self) -> str | None:
@@ -187,7 +183,7 @@ class MkPage(mkcontainer.MkContainer):
 
     @icon.setter
     def icon(self, value: str):
-        self._metadata.icon = value
+        self.metadata.icon = value
 
     @property
     def template(self) -> pagetemplate.PageTemplate:
@@ -204,10 +200,10 @@ class MkPage(mkcontainer.MkContainer):
             value: Page template to set.
         """
         if isinstance(value, pagetemplate.PageTemplate):
-            self._metadata.template = value.filename
+            self.metadata.template = value.filename
             self._template = value
         else:
-            self._metadata.template = value
+            self.metadata.template = value
             self._template = None
 
     @classmethod
@@ -246,7 +242,7 @@ class MkPage(mkcontainer.MkContainer):
     def get_processors(self) -> list[processors.TextProcessor]:
         """Override base MkNode processors."""
         return [
-            processors.PrependMetadataProcessor(self.metadata),
+            processors.PrependMetadataProcessor(self.resolved_metadata),
             processors.FootNotesProcessor(self),
             processors.AnnotationProcessor(self),
         ]
