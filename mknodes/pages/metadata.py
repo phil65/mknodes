@@ -13,7 +13,7 @@ HEADER = "---\n{options}---\n"
 HEADER_RE = re.compile(r"\A-{3}\n([\S\s]*)^-{3}(\n|$)", re.MULTILINE)
 
 
-SectionStr = Literal["navigation", "toc", "path", "tags"]
+SectionStr = Literal["navigation", "toc", "path", "tags", "footer"]
 
 
 class Metadata(dict):
@@ -49,7 +49,7 @@ class Metadata(dict):
         return self.get("hide")
 
     @hide.setter
-    def hide(self, val: list[str] | str | None):
+    def hide(self, val: list[SectionStr] | str | None):
         self["hide"] = val
 
     @property
