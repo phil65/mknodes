@@ -1,0 +1,30 @@
+## Emoji extension index
+
+MkNodes provides a custom emoji index for the [pymdownx.emoji](https://facelessuser.github.io/pymdown-extensions/extensions/emoji/) extension in order to provide access to [all > 180.000 icons provided by the Iconify framework](https://icon-sets.iconify.design).
+
+```
+:[ICONSET NAME]-[ICON NAME]:
+```
+Example:
+
+```
+:mdi-file:
+```
+becomes:
+
+:mdi-file:
+
+
+!!! info
+    For compatibility, icons can also be accessed from the same name as the [Material-MkDocs icon index](https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/), making
+    the `MkNodes` index a superset of the `MkDocs-Material` index.
+
+    ```
+    :material-file: is an alias for :mdi-file:
+    ```
+
+
+## Icon node
+
+MkNodes also includes a node for Pyconify-Icons named [MkIcon][mknodes.MkIcon].
+It can be used to include icons with custom color, rotation and size.
