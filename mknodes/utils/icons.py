@@ -13,9 +13,9 @@ PYCONIFY_TO_PREFIXES = {
     "mdi": "material",
     "simple-icons": "simple",
     "octicon": "octicons",
-    "fa-regular": "fontawesome-regular",
+    "fa6-regular": "fontawesome-regular",
     "fa-brands": "fontawesome-brands",
-    "fa-solid": "fontawesome-solid",
+    "fa6-solid": "fontawesome-solid",
 }
 
 Rotation = Literal["90", "180", "270", 90, 180, 270, "-90", 1, 2, 3]

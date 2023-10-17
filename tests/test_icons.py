@@ -15,6 +15,8 @@ def test_noto_key_conversion():
     assert icons.get_pyconify_key(":noto-wrench:") == "noto:wrench"
     assert icons.get_pyconify_key("simple/shieldsdotio") == "simple-icons:shieldsdotio"
     assert (
-        icons.get_pyconify_key(":fontawesome-regular-keyboard:") == "fa-regular:keyboard"
+        icons.get_pyconify_key(":fontawesome-regular-keyboard:") == "fa6-regular:keyboard"
     )
-    assert icons.get_pyconify_key("fontawesome/regular/keyboard") == "fa-regular:keyboard"
+    assert (
+        icons.get_pyconify_key("fontawesome/regular/keyboard") == "fa6-regular:keyboard"
+    )
