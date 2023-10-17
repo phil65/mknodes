@@ -289,7 +289,7 @@ class MaterialTheme(theme.Theme):
     def adapt_extras(self, extras: dict):
         for status in self.status_icons:
             if status.description:
-                extras["status"][status.name] = status.description
+                extras.setdefault("status", {})[status.name] = status.description
 
     @staticmethod
     def get_partial_path(partial: str) -> pathlib.Path:
