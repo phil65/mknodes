@@ -175,18 +175,19 @@ def get_icon_svg(
     ).decode()
 
 
-def get_pyconify_key(icon: str):
+def get_pyconify_key(icon: str) -> str:
     for k, v in PYCONIFY_TO_PREFIXES.items():
         path = f'{v.replace("-", "/")}/'
         icon = icon.replace(path, f"{k}:")
         icon = icon.replace(f":{v}-", f"{k}:")
-
     icon = icon.strip(":")
     mapping = {k: v[0] for k, v in _get_collection_map().items()}
     for prefix in mapping:
         if icon.startswith(f"{prefix}-"):
             icon = icon.replace(f"{prefix}-", f"{prefix}:")
             break
+    if (count := icon.count(":")) > 1:
+        icon = icon.replace(":", "-", count - 1)
     if ":" not in icon:
         icon = f"mdi:{icon}"
     return icon
