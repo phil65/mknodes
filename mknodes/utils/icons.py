@@ -88,7 +88,7 @@ def _patch_index_with_sets(icon_sets: Sequence[str]) -> dict[str, Any]:
     return index
 
 
-def twemoji(options: dict[str, Any], md):
+def twemoji(options: dict[str, Any], md) -> dict[str, Any]:
     """Provide a copied Twemoji index with additional codes for Pyconify icons."""
     default = list(PYCONIFY_TO_PREFIXES.keys())
     icon_sets = options.get("icon_sets", default)[:]
@@ -193,7 +193,7 @@ def get_pyconify_key(icon: str) -> str:
     return icon
 
 
-def get_emoji_slug(icon):
+def get_emoji_slug(icon: str) -> str:
     return f":{get_pyconify_key(icon).replace(':', '-')}:"
 
 
