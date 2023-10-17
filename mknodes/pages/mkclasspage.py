@@ -69,6 +69,5 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 if __name__ == "__main__":
     import mknodes as mk
 
-    proj = mk.Project.for_mknodes()
-    doc = MkClassPage(mk.Environment, project=proj)
+    doc = MkClassPage.with_default_context(mk.Environment)
     print(doc.to_markdown())

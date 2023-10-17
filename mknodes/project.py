@@ -154,4 +154,3 @@ if __name__ == "__main__":
 
     log.basic()
     root.build(project)
-    project.populate_linkprovider()

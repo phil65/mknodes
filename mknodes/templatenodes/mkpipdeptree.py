@@ -5,7 +5,6 @@ import types
 
 from typing import Any, Literal
 
-from mknodes import project
 from mknodes.basenodes import mkdiagram
 from mknodes.utils import log, reprhelpers
 
@@ -121,6 +120,5 @@ class MkPipDepTree(mkdiagram.MkDiagram):
 
 
 if __name__ == "__main__":
-    proj = project.Project.for_mknodes()
-    diagram = MkPipDepTree(project=proj)
+    diagram = MkPipDepTree.with_default_context()
     print(diagram)

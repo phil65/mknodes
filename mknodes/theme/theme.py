@@ -204,5 +204,4 @@ class Theme:
 
 if __name__ == "__main__":
     theme = Theme.get_theme("material")
-    proj = project.Project.for_mknodes()
     print(theme)
