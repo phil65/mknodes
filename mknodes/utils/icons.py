@@ -22,6 +22,7 @@ Rotation = Literal["90", "180", "270", 90, 180, 270, "-90", 1, 2, 3]
 Flip = Literal["horizontal", "vertical", "horizontal,vertical"]
 
 
+@functools.cache
 def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     """Return a dictionary with a mapping from pyconify name to icon prefixes.
 
@@ -54,12 +55,20 @@ def _get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
         for icon_name in collection.get("uncategorized", []):
             for prefix in prefixes:
                 name = f":{prefix}-{icon_name}:"
-                index[name] = {"name": name, "path": f"{coll}:{icon_name}"}
+                index[name] = {
+                    "name": name,
+                    "path": f"{coll}:{icon_name}",
+                    "set": coll,
+                }
         for cat in pyconify.collection(coll).get("categories", {}).values():
             for icon_name in cat:
                 for prefix in prefixes:
                     name = f":{prefix}-{icon_name}:"
-                    index[name] = {"name": name, "path": f"{coll}:{icon_name}"}
+                    index[name] = {
+                        "name": name,
+                        "path": f"{coll}:{icon_name}",
+                        "set": coll,
+                    }
     return index
 
 
@@ -173,6 +182,11 @@ def get_pyconify_key(icon: str):
         icon = icon.replace(f":{v}-", f"{k}:")
 
     icon = icon.strip(":")
+    mapping = {k: v[0] for k, v in _get_collection_map().items()}
+    for prefix in mapping:
+        if icon.startswith(f"{prefix}-"):
+            icon = icon.replace(f"{prefix}-", f"{prefix}:")
+            break
     if ":" not in icon:
         icon = f"mdi:{icon}"
     return icon
