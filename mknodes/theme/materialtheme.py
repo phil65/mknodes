@@ -269,14 +269,7 @@ class MaterialTheme(theme.Theme):
         """
         for k in dict(extensions).copy():
             ext = extensions[k]
-            if k == "pymdownx.emoji":
-                ext.update(
-                    {
-                        "emoji_index": icons.twemoji,
-                        "emoji_generator": icons.to_svg,
-                    },
-                )
-            elif k in ["pymdownx.blocks.tab", "pymdownx.tabbed"]:
+            if k in ["pymdownx.blocks.tab", "pymdownx.tabbed"]:
                 ext["alternate_style"] = True
             elif k == "pymdownx.tasklist":
                 ext["custom_checkbox"] = True

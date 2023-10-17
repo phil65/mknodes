@@ -10,7 +10,7 @@ from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
 from mknodes.treelib import node
-from mknodes.utils import log, resources
+from mknodes.utils import icons, log, resources
 
 
 if TYPE_CHECKING:
@@ -327,7 +327,10 @@ class MkNode(node.Node):
         extensions: dict[str, dict] = {
             "attr_list": {},
             "md_in_html": {},
-            "pymdownx.emoji": {},
+            "pymdownx.emoji": {
+                "emoji_index": icons.twemoji,
+                "emoji_generator": icons.to_svg,
+            },
             "pymdownx.magiclink": dict(
                 repo_url_shorthand=True,
                 user=self.ctx.metadata.repository_username,
