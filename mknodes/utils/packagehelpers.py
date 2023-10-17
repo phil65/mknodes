@@ -87,7 +87,6 @@ class EntryPoint:
     name: str
     dotted_path: str
     group: str
-    obj: types.ModuleType | type
 
     def load(self) -> types.ModuleType | type:
         if ":" in self.dotted_path:
@@ -117,13 +116,7 @@ def get_entry_points(
         eps = [i for i in _get_entry_points(dist) if i.group == group]
     dct = collections.defaultdict(list)
     for ep in eps:
-        if ":" in ep.value:
-            mod_name, kls_name = ep.value.split(":")
-        else:
-            mod_name, kls_name = ep.value, None
-        mod = importlib.import_module(mod_name)
-        obj = getattr(mod, kls_name) if kls_name else mod
-        ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group, obj=obj)
+        ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
         dct[ep.group].append(ep)
     return dct
 
