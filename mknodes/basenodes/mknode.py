@@ -151,9 +151,10 @@ class MkNode(node.Node):
         paths.append(pathlib.Path(path).parent)
         if self.parent_navs:
             nav = self.parent_navs[-1]
-            file = nav.resolved_file_path
-            path = pathlib.Path(file).parent
-            paths.append(path)
+            if "created" in nav.metadata:
+                file = nav.metadata["created"]["source_filename"]
+                path = pathlib.Path(file).parent
+                paths.append(path)
         env = self.ctx.env.overlay(extra_loader=paths)
         # env = self.ctx.env
         env.globals["mknode"] = self

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+import inspect
 import pathlib
 import types
 
@@ -10,7 +11,7 @@ from mknodes.basenodes import mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata, mkpage, pagetemplate
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import inspecthelpers, log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
@@ -60,6 +61,8 @@ class MkNav(mknode.MkNode):
         """Page Metadata."""
         self.page_template = pagetemplate.PageTemplate(parent=self, extends="main.html")
         super().__init__(**kwargs)
+        if frame := inspect.currentframe():
+            self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=1)
 
     def __repr__(self):
         section = self.section or "<root>"
