@@ -20,3 +20,15 @@ In addition, the [MaterialTheme][mknodes.MaterialTheme] class supports:
 
 During the build, a CSS file for these settings gets created and is added to the build resources.
 
+## Icons for MkDocs-Material
+
+By rewriting the MkDocs-Material templates, it is possible to use all Iconify icons instead of just the
+included ones from MkDocs-Material. As an example, you can now use "mdi:icon-name" for the page icon defined in Metadata.
+This also works for the theme settings:
+
+``` yaml title="mkdocs.yml"
+theme:
+  name: material
+  icon:
+    previous: "mdi:some-icon"
+```
