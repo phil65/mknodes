@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 
 AdmonitionTypeStr = Literal[
-    "node",
+    "note",
     "abstract",
     "info",
     "tip",

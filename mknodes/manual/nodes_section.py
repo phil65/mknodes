@@ -7,6 +7,7 @@ BASE_NODES = [
     mk.MkNode,
     mk.MkText,
     mk.MkHeader,
+    mk.MkCompactAdmonition,
     mk.MkCritic,
     mk.MkLink,
     mk.MkKeys,

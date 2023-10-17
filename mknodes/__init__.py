@@ -4,6 +4,7 @@ from .jinja.environment import Environment
 
 from .basenodes.mkblock import MkBlock
 from .basenodes.mkhtmlblock import MkHtmlBlock
+from .basenodes.mkcompactadmonition import MkCompactAdmonition
 from .basenodes.mkadmonitionblock import MkAdmonitionBlock
 from .basenodes.mkdetailsblock import MkDetailsBlock
 from .basenodes.mkadmonition import MkAdmonition
@@ -98,6 +99,7 @@ __all__ = [
     "MkBlock",
     "MkHtmlBlock",
     "MkAdmonitionBlock",
+    "MkCompactAdmonition",
     "MkDetailsBlock",
     "MkContainer",
     "MkNav",
