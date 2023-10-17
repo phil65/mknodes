@@ -33,7 +33,7 @@ class Metadata(dict):
         if search_dict:
             kwargs["search"] = search_dict
         super().__init__(*args, **kwargs)
-        if self.icon and "/" not in self.icon:
+        if self.icon and "/" not in self.icon and ":" not in self.icon:
             self.icon = f"material/{self.icon}"
         if isinstance(self.hide, str):
             self.hide = [i.strip() for i in self.hide.split(",")]
