@@ -62,5 +62,6 @@ if __name__ == "__main__":
     # dct_a = dict(a=[1, 2, 3], b={"test": "content"})
     # dct_b = dict(a=[1, 2, 3], b={"test2": "content"})
     # print(merge_dicts(dct_a, dct_b, strategy="additive"))
-    proj = mk.Project.for_mknodes()
+    theme = mk.MaterialTheme()
+    proj = mk.Project(theme=theme)
     manual.build(proj)

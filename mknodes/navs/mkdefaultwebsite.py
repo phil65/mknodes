@@ -70,8 +70,9 @@ class MkDefaultWebsite(mk.MkNav):
 
 
 if __name__ == "__main__":
+    theme = mk.MaterialTheme()
     doc = MkDefaultWebsite.for_project(
-        mk.Project.for_mknodes(),
+        mk.Project(theme=theme),
         static_pages={
             "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
         },

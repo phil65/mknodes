@@ -5,7 +5,9 @@ import pathlib
 import pytest
 
 # from responsemock import utils
-from mknodes import manual, project as project_
+import mknodes as mk
+
+from mknodes import manual
 
 
 RESPONSE_1 = """{
@@ -56,7 +58,8 @@ def resources_dir():
 
 @pytest.fixture(scope="session")
 def mknodes_project():
-    proj = project_.Project.for_mknodes()
+    theme = mk.MaterialTheme()
+    proj = mk.Project(theme=theme)
     # with utils.response_mock(
     #     [
     #         (

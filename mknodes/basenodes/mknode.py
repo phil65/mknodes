@@ -377,7 +377,8 @@ class MkNode(node.Node):
     def with_default_context(cls, *args, **kwargs):
         import mknodes as mk
 
-        proj = mk.Project.for_mknodes()
+        theme = mk.MaterialTheme()
+        proj = mk.Project(theme=theme)
         return cls(*args, **kwargs, project=proj)
 
     def to_html(self) -> str:

@@ -359,9 +359,13 @@ class MkNodeResolver(NodeResolver):
 
 
 if __name__ == "__main__":
-    from mknodes import manual, project
+    import mknodes as mk
 
-    proj = project.Project.for_mknodes()
+    from mknodes import manual
+
+    theme = mk.MaterialTheme()
+    proj = mk.Project(theme=theme)
     root = manual.build(proj)
     resolver = MkNodeResolver()
     result = resolver.glob("*/*/MkAdm*", root)
+    print(result)

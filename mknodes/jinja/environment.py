@@ -276,10 +276,3 @@ if __name__ == "__main__":
     # text = env.render_string(r"{{ 50 | MkProgressBar }}")
     # print(env.rendered_nodes)
     # env.render_string(r"{{test('hallo')}}")
-    # import mknodes as mk
-
-    # proj = mk.Project.for_mknodes()
-    # ctx = proj.context.as_dict()
-    # env.globals.update(ctx)
-    # text = env.render_string("{{ 'TTset' | isinstance(str) }}")
-    # print(text)

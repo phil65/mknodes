@@ -149,8 +149,11 @@ class Project(Generic[T]):
 
 
 if __name__ == "__main__":
-    project = Project.for_mknodes()
+    import mknodes as mk
+
     from mknodes.manual import root
 
+    theme = mk.MaterialTheme()
+    project = Project(theme=theme)
     log.basic()
     root.build(project)
