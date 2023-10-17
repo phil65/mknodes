@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 import functools
 
-from typing import Any
+from typing import Any, Literal
 import xml.etree.ElementTree as etree
 
 from mknodes import paths
@@ -17,6 +17,9 @@ PYCONIFY_TO_PREFIXES = {
     "fa-brands": "fontawesome-brands",
     "fa-solid": "fontawesome-solid",
 }
+
+Rotation = Literal["90", "180", "270", 90, 180, 270, "-90", 1, 2, 3]
+Flip = Literal["horizontal", "vertical", "horizontal,vertical"]
 
 
 def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
@@ -109,7 +112,15 @@ def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
     return el
 
 
-def get_icon_svg(icon: str) -> str:
+def get_icon_svg(
+    icon: str,
+    color: str | None = None,
+    height: str | int | None = None,
+    width: str | int | None = None,
+    flip: Flip | None = None,
+    rotate: Rotation | None = None,
+    box: bool | None = None,
+) -> str:
     """Return svg for given pyconify icon key.
 
     Key should look like "mdi:file"
@@ -117,6 +128,23 @@ def get_icon_svg(icon: str) -> str:
     emoji-slugs (":material-file:") as well as material-paths ("material/file")
 
     If no group is supplied as part of the string, mdi is assumed as group:
+
+    Arguments:
+        icon: Pyconify icon name
+        color: Icon color. Replaces currentColor with specific color, resulting in icon
+               with hardcoded palette.
+        height: Icon height. If only one dimension is specified, such as height, other
+                dimension will be automatically set to match it.
+        width: Icon width. If only one dimension is specified, such as height, other
+               dimension will be automatically set to match it.
+        flip: Flip icon.
+        rotate: Rotate icon. If an integer is provided, it is assumed to be in degrees.
+        box: Adds an empty rectangle to SVG that matches the icon's viewBox. It is needed
+            when importing SVG to various UI design tools that ignore viewBox. Those
+            tools, such as Sketch, create layer groups that automatically resize to fit
+            content. Icons usually have empty pixels around icon, so such software crops
+            those empty pixels and icon's group ends up being smaller than actual icon,
+            making it harder to align it in design.
 
     Example:
         get_icon_svg("file")  # implicit mdi group
@@ -127,7 +155,15 @@ def get_icon_svg(icon: str) -> str:
     key = get_pyconify_key(icon)
     import pyconify
 
-    return pyconify.svg(key).decode()
+    return pyconify.svg(
+        key,
+        color=color,
+        height=height,
+        width=width,
+        flip=flip,
+        rotate=rotate,
+        box=box,
+    ).decode()
 
 
 def get_pyconify_key(icon: str):
