@@ -13,7 +13,7 @@ HEADER = "---\n{options}---\n"
 HEADER_RE = re.compile(r"\A-{3}\n([\S\s]*)^-{3}(\n|$)", re.MULTILINE)
 
 
-SectionStr = Literal["navigation", "toc", "path", "tags", "footer"]
+SectionStr = Literal["navigation", "toc", "path", "tags", "footer", "feedback"]
 
 
 class Metadata(dict):
@@ -69,6 +69,24 @@ class Metadata(dict):
     @exclude_from_search.setter
     def exclude_from_search(self, val: bool | None):
         self["exclude_from_search"] = val
+
+    @property
+    def revision_date(self) -> bool | None:
+        """Date when page was last revised."""
+        return self.get("git_revision_date_localized")
+
+    @revision_date.setter
+    def revision_date(self, val: bool | None):
+        self["git_revision_date_localized"] = val
+
+    @property
+    def creation_date(self) -> bool | None:
+        """Page creation date."""
+        return self.get("git_creation_date_localized")
+
+    @creation_date.setter
+    def creation_date(self, val: bool | None):
+        self["git_creation_date_localized"] = val
 
     @property
     def icon(self) -> str | None:
