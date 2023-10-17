@@ -11,7 +11,7 @@ from typing import Any
 import jinja2
 
 from mknodes import paths
-from mknodes.utils import helpers, inspecthelpers, log, yamlhelpers
+from mknodes.utils import helpers, icons, inspecthelpers, log, yamlhelpers
 
 
 @functools.cache
@@ -28,6 +28,7 @@ ENV_GLOBALS = {
 }
 ENV_FILTERS = {
     "dump_yaml": yamlhelpers.dump_yaml,
+    "get_icon_svg": icons.get_icon_svg,
     "styled": helpers.styled,
     "str": str,
     "rstrip": str.rstrip,
