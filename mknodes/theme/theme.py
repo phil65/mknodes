@@ -198,6 +198,9 @@ class Theme:
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         pass
 
+    def adapt_extras(self, extras: dict):
+        pass
+
 
 if __name__ == "__main__":
     theme = Theme.get_theme("material")

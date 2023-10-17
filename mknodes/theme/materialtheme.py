@@ -63,8 +63,14 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
 
 @dataclasses.dataclass
 class StatusIcon:
+    """Page Status."""
+
     name: str
+    """Slug for referencing the status."""
     svg: str
+    """SVG xml for the icon."""
+    description: str | None = None
+    """Description used for tooltip."""
 
 
 class MaterialTheme(theme.Theme):
@@ -247,15 +253,21 @@ class MaterialTheme(theme.Theme):
         """
         self.default_icons[icon_type] = data
 
-    def add_status_icon(self, name: str, material_icon: str):
+    def add_status_icon(
+        self,
+        name: str,
+        material_icon: str,
+        description: str | None = None,
+    ):
         """Add a custom status icon.
 
         Arguments:
             name: slug for the status icon
             material_icon: Material icon name
+            description: Optional status description (used for tooltip)
         """
         data = icons.get_icon_svg(material_icon)
-        status_icon = StatusIcon(name, data)
+        status_icon = StatusIcon(name, data, description)
         self.status_icons.append(status_icon)
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
@@ -273,6 +285,11 @@ class MaterialTheme(theme.Theme):
                 ext["alternate_style"] = True
             elif k == "pymdownx.tasklist":
                 ext["custom_checkbox"] = True
+
+    def adapt_extras(self, extras: dict):
+        for status in self.status_icons:
+            if status.description:
+                extras["status"][status.name] = status.description
 
     @staticmethod
     def get_partial_path(partial: str) -> pathlib.Path:
