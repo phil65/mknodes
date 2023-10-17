@@ -197,7 +197,7 @@ class PackageInfo:
         if not eps:
             return None
         ep = eps[0]
-        return "typer" if ep.obj.__class__.__qualname__ == "Typer" else "click"
+        return "typer" if ep.load().__class__.__qualname__ == "Typer" else "click"
 
     @functools.cached_property
     def entry_points(self) -> dict[str, list[packagehelpers.EntryPoint]]:

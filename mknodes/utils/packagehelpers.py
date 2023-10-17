@@ -89,6 +89,14 @@ class EntryPoint:
     group: str
     obj: types.ModuleType | type
 
+    def load(self) -> types.ModuleType | type:
+        if ":" in self.dotted_path:
+            mod_name, kls_name = self.dotted_path.split(":")
+        else:
+            mod_name, kls_name = self.dotted_path, None
+        mod = importlib.import_module(mod_name)
+        return getattr(mod, kls_name) if kls_name else mod
+
 
 @functools.cache
 def get_entry_points(

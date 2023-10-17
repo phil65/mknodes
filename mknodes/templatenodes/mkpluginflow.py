@@ -44,7 +44,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
             case None:
                 ep_group = self.event_plugin.entry_point_group
                 eps = self.ctx.metadata.entry_points.get(ep_group, [])
-                return [i.obj for i in eps]
+                return [i.load() for i in eps]
             case _:
                 return [self._plugin]
 
