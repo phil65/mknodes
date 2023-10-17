@@ -57,7 +57,7 @@ class FileSystemLoader(LoaderMixin, jinja2.FileSystemLoader):
 
 class ChoiceLoader(LoaderMixin, jinja2.ChoiceLoader):
     def __repr__(self):
-        return reprhelpers.get_repr(self, loaders=self.loaders)
+        return reprhelpers.get_repr(self, loaders=self.loaders, _shorten=False)
 
 
 class DictLoader(LoaderMixin, jinja2.DictLoader):

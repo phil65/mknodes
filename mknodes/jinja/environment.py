@@ -139,7 +139,7 @@ class Environment(jinja2.Environment):
         template_name: str,
         variables: dict[str, Any] | None = None,
         parent_template: str | None = None,
-    ):
+    ) -> str:
         """Render a loaded template.
 
         Arguments:
