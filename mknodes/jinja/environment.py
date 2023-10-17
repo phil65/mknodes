@@ -260,7 +260,8 @@ class Environment(jinja2.Environment):
 
             filters[kls_name] = jinja2.pass_context(wrapped)
         self.filters.update(filters)
-        # self.globals.update(filters)
+        self.globals["mk"] = filters
+        self.globals["_mk"] = {i: getattr(mk, i) for i in mk.__all__}
 
 
 if __name__ == "__main__":
