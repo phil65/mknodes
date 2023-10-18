@@ -77,11 +77,11 @@ class MkClickDoc(mknode.MkNode):
         # import mknodes as mk
 
         page += "The MkClickDoc node shows DocStrings for Click / Typer."
-        page += MkClickDoc(target="mknodes.cli:cli")
+        page += MkClickDoc(target="mkdocs_mknodes.cli:cli")
         # node = MkClickDoc(module="cli", command="cli")
         # page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc.with_default_context("mknodes.cli:cli", prog_name="mkdocs")
+    docstrings = MkClickDoc.with_default_context("mkdocs_mknodes.cli:cli")
     print(docstrings)
