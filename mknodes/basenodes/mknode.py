@@ -102,11 +102,10 @@ class MkNode(node.Node):
         if not type(other) == type(self):
             return False
         dct_1 = self.__dict__.copy()
-        dct_1.pop("_parent")
-        # dct_1.pop("_annotations")
         dct_2 = other.__dict__.copy()
-        dct_2.pop("_parent")
-        # dct_2.pop("_annotations")
+        for attr in ["_parent", "stats"]:  # , "_annotations"]
+            dct_1.pop(attr)
+            dct_2.pop(attr)
         return dct_1 == dct_2
 
     def __rshift__(self, other, inverse: bool = False):
