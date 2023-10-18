@@ -147,10 +147,8 @@ class TitleBlock(BaseBlock):
         return f"<title>{self.content}</title>"
 
 
-class LibsBlock(BaseBlock):
+class BaseJSBlock(BaseBlock):
     """Block for additional libraries."""
-
-    block_id = "libs"
 
     def __init__(
         self,
@@ -185,16 +183,22 @@ class LibsBlock(BaseBlock):
         return f"{SUPER_TEXT}\n{scripts}" if self.include_super else scripts
 
 
+class LibsBlock(BaseJSBlock):
+    """Block for additional libraries."""
+
+    block_id = "libs"
+
+
+class ScriptsBlock(BaseJSBlock):
+    """Block for JavaScripts at end of BODY."""
+
+    block_id = "scripts"
+
+
 class AnalyticsBlock(Block):
     """Block for analytics-tags in HEAD."""
 
     block_id = "analytics"
-
-
-class ScriptsBlock(Block):
-    """Block for JavaScripts at end of BODY."""
-
-    block_id = "scripts"
 
 
 class SiteMetaBlock(Block):
