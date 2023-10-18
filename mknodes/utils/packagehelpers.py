@@ -96,6 +96,14 @@ class EntryPoint:
         mod = importlib.import_module(mod_name)
         return getattr(mod, kls_name) if kls_name else mod
 
+    @property
+    def module(self) -> str:
+        return self.dotted_path.split(":")[0]
+
+    @property
+    def obj_path(self) -> str:
+        return self.dotted_path.split(":")[1]
+
 
 @functools.cache
 def get_entry_points(
