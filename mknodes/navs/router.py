@@ -37,7 +37,7 @@ class Router:
 
         for path, (fn, kwargs, condition) in self._nav_registry.items():
             node = mknav.MkNav(path[-1], parent=nav, **kwargs)
-            if not (condition and condition(node)):
+            if condition and not condition(node):
                 continue
             node = fn(node) or node
             if fn.__name__ != "_":
@@ -50,7 +50,7 @@ class Router:
         for path, (fn, kwargs, condition) in self._page_registry.items():
             p = path[-1] if path else (nav.section or "Home")
             node = mkpage.MkPage(title=p, parent=nav, **kwargs)
-            if not (condition and condition(node)):
+            if condition and not condition(node):
                 continue
             node = fn(node) or node
             if fn.__name__ != "_":
