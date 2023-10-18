@@ -155,7 +155,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    from mknodes import manual
+    from mknodes.manual import root
 
-    node = MkCommentedCode(manual.build)
+    node = MkCommentedCode(root.build)
     print(node)

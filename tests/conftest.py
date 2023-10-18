@@ -7,7 +7,7 @@ import pytest
 # from responsemock import utils
 import mknodes as mk
 
-from mknodes import manual
+from mknodes.manual import root
 
 
 RESPONSE_1 = """{
@@ -80,5 +80,5 @@ def mknodes_project():
     #         ),
     #     ],
     # ):
-    manual.build(proj)
+    root.build(proj)
     return proj

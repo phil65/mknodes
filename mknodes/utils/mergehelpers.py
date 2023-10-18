@@ -57,11 +57,11 @@ def merge_extensions(dicts: list[dict[str, dict]]) -> list[dict[str, dict]]:
 if __name__ == "__main__":
     import mknodes as mk
 
-    from mknodes import manual
+    from mknodes.manual import root
 
     # dct_a = dict(a=[1, 2, 3], b={"test": "content"})
     # dct_b = dict(a=[1, 2, 3], b={"test2": "content"})
     # print(merge_dicts(dct_a, dct_b, strategy="additive"))
     theme = mk.MaterialTheme()
     proj = mk.Project(theme=theme)
-    manual.build(proj)
+    root.build(proj)
