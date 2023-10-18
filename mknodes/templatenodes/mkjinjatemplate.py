@@ -48,11 +48,12 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
     @property
     def items(self):
-        self.env.rendered_nodes = []
-        self.env.render_template(self.template, variables=self.variables)
-        for i in self.env.rendered_nodes:
+        env = self.env
+        env.rendered_nodes = []
+        env.render_template(self.template, variables=self.variables)
+        for i in env.rendered_nodes:
             i.parent = self
-        return self.env.rendered_nodes
+        return env.rendered_nodes
 
     @items.setter
     def items(self, val):
