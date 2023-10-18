@@ -293,6 +293,11 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         """All JavaScript links of this resource bundle."""
         return [i for i in self.js if isinstance(i, JSFile)]
 
+    @property
+    def js_libs(self) -> list[JSFile | JSText]:
+        """All JavaScript links of this resource bundle."""
+        return [i for i in self.js if i.is_library]
+
     def merge(self, other: collections.abc.Mapping, additive: bool = False):
         """Merge resources with another resources instance or dict.
 
