@@ -35,8 +35,10 @@ class Router:
                 node.index_page.created_by = fn
             nav.nav[path] = node
 
-        for path, (fn, kwargs) in self._nav_registry.items():
+        for path, (fn, kwargs, condition) in self._nav_registry.items():
             node = mknav.MkNav(path[-1], parent=nav, **kwargs)
+            if not (condition and condition(node)):
+                continue
             node = fn(node) or node
             if fn.__name__ != "_":
                 node._node_name = fn.__name__
@@ -45,9 +47,11 @@ class Router:
                 node.index_page.created_by = fn
             nav.nav[path] = node
 
-        for path, (fn, kwargs) in self._page_registry.items():
+        for path, (fn, kwargs, condition) in self._page_registry.items():
             p = path[-1] if path else (nav.section or "Home")
             node = mkpage.MkPage(title=p, parent=nav, **kwargs)
+            if not (condition and condition(node)):
+                continue
             node = fn(node) or node
             if fn.__name__ != "_":
                 node._node_name = fn.__name__
@@ -80,6 +84,7 @@ class Router:
     def nav(
         self,
         *path: str,
+        condition: Callable | None = None,
         **kwargs: Any,
     ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing Navs.
@@ -100,11 +105,17 @@ class Router:
 
         Arguments:
             path: The section path for the returned MkNav
+            condition: If passed, the nav is only included if the callable returns True
             kwargs: Keyword arguments passed to the MkNav constructor.
         """
 
-        def decorator(fn: Callable[..., mknav.MkNav], path=path, kwargs=kwargs):
-            self._nav_registry[path] = (fn, kwargs)
+        def decorator(
+            fn: Callable[..., mknav.MkNav],
+            path=path,
+            kwargs=kwargs,
+            condition=condition,
+        ):
+            self._nav_registry[path] = (fn, kwargs, condition)
             return fn
 
         return decorator
@@ -112,6 +123,7 @@ class Router:
     def route_page(
         self,
         *path: str,
+        condition: Callable | None = None,
         **kwargs: Any,
     ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing Pages.
@@ -134,11 +146,17 @@ class Router:
             ```
         Arguments:
             path: The section path for the returned MkPage
+            condition: If passed, the page is only included if the callable returns True
             kwargs: Keyword arguments passed to the MkPage constructor.
         """
 
-        def decorator(fn: Callable[..., mkpage.MkPage], path=path, kwargs=kwargs):
-            self._page_registry[path] = (fn, kwargs)
+        def decorator(
+            fn: Callable[..., mkpage.MkPage],
+            path=path,
+            kwargs=kwargs,
+            condition=condition,
+        ):
+            self._page_registry[path] = (fn, kwargs, condition)
             return fn
 
         return decorator
