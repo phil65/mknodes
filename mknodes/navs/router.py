@@ -84,7 +84,7 @@ class Router:
     def nav(
         self,
         *path: str,
-        condition: Callable | None = None,
+        condition: Callable | bool | None = None,
         **kwargs: Any,
     ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing Navs.
@@ -115,7 +115,8 @@ class Router:
             kwargs=kwargs,
             condition=condition,
         ):
-            self._nav_registry[path] = (fn, kwargs, condition)
+            if isinstance(condition, bool) and condition:
+                self._nav_registry[path] = (fn, kwargs, condition)
             return fn
 
         return decorator
@@ -123,7 +124,7 @@ class Router:
     def route_page(
         self,
         *path: str,
-        condition: Callable | None = None,
+        condition: Callable | bool | None = None,
         **kwargs: Any,
     ) -> Callable[[Callable], Callable]:
         """Decorator method to use for routing Pages.
@@ -156,7 +157,8 @@ class Router:
             kwargs=kwargs,
             condition=condition,
         ):
-            self._page_registry[path] = (fn, kwargs, condition)
+            if isinstance(condition, bool) and condition:
+                self._page_registry[path] = (fn, kwargs, condition)
             return fn
 
         return decorator
