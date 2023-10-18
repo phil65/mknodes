@@ -115,7 +115,7 @@ class Router:
             kwargs=kwargs,
             condition=condition,
         ):
-            if isinstance(condition, bool) and condition:
+            if condition is not False:
                 self._nav_registry[path] = (fn, kwargs, condition)
             return fn
 
@@ -157,7 +157,7 @@ class Router:
             kwargs=kwargs,
             condition=condition,
         ):
-            if isinstance(condition, bool) and condition:
+            if condition is not False:
                 self._page_registry[path] = (fn, kwargs, condition)
             return fn
 
