@@ -91,6 +91,12 @@ class MaterialTheme(theme.Theme):
         self.accent_fg_color = None
         self.primary_bg_color = None
         self.color_theme = None
+        self.alternate_selector: list[dict[str, str]] = []
+        """Layout:
+           - name: English
+             link: /en/
+             lang: en
+        """
         super().__init__(self.name, **kwargs)
 
     def get_template_context(self) -> dict[str, Any]:
@@ -287,6 +293,8 @@ class MaterialTheme(theme.Theme):
                 ext["custom_checkbox"] = True
 
     def adapt_extras(self, extras: dict):
+        if self.alternate_selector:
+            extras.setdefault("alternate", []).extend(self.alternate_selector)
         for status in self.status_icons:
             if status.description:
                 extras.setdefault("status", {})[status.name] = status.description
