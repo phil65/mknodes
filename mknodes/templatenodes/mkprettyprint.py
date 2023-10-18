@@ -26,25 +26,27 @@ class MkPrettyPrint(mkcode.MkCode):
 
     def __init__(
         self,
-        obj: dict
-        | list
-        | str
-        | tuple
-        | set
-        | bytes
-        | bytearray
-        | MappingProxyType
-        | SimpleNamespace
-        | ValuesView
-        | KeysView
-        | collections.Counter
-        | collections.ChainMap
-        | collections.deque
-        | collections.UserDict
-        | collections.UserList
-        | collections.UserString
-        | ItemsView
-        | IsDataclass,
+        obj: (
+            dict
+            | list
+            | str
+            | tuple
+            | set
+            | bytes
+            | bytearray
+            | MappingProxyType
+            | SimpleNamespace
+            | ValuesView
+            | KeysView
+            | collections.Counter
+            | collections.ChainMap
+            | collections.deque
+            | collections.UserDict
+            | collections.UserList
+            | collections.UserString
+            | ItemsView
+            | IsDataclass
+        ),
         *,
         indent: int = 1,
         depth: int | None = None,

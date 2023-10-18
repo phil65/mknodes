@@ -170,11 +170,9 @@ class Environment(jinja2.Environment):
     def overlay(  # type: ignore[override]
         self,
         *,
-        extra_loader: str
-        | os.PathLike
-        | Sequence[str | os.PathLike]
-        | jinja2.BaseLoader
-        | None = None,
+        extra_loader: (
+            str | os.PathLike | Sequence[str | os.PathLike] | jinja2.BaseLoader | None
+        ) = None,
         **kwargs: Any,
     ) -> Environment:
         """Override for jinja2.Environment.overlay.

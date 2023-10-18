@@ -22,13 +22,15 @@ class MkDocStrings(mknode.MkNode):
 
     def __init__(
         self,
-        obj: types.ModuleType
-        | str
-        | tuple[str, ...]
-        | list[str]
-        | os.PathLike
-        | type
-        | Callable,
+        obj: (
+            types.ModuleType
+            | str
+            | tuple[str, ...]
+            | list[str]
+            | os.PathLike
+            | type
+            | Callable
+        ),
         for_topmost: bool = True,
         allow_inspection: bool | None = None,
         show_bases: bool | None = None,

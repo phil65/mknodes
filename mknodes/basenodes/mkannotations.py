@@ -56,10 +56,9 @@ class MkAnnotations(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        annotations: Mapping[int, str | mk.MkNode]
-        | list[MkAnnotation]
-        | list[str]
-        | None = None,
+        annotations: (
+            Mapping[int, str | mk.MkNode] | list[MkAnnotation] | list[str] | None
+        ) = None,
         **kwargs: Any,
     ):
         """Constructor.

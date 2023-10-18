@@ -25,9 +25,11 @@ class MkCommitConventions(mkjinjatemplate.MkJinjaTemplate):
 
     def __init__(
         self,
-        commit_types: list[commitconventions.CommitTypeStr]
-        | commitconventions.ConventionTypeStr
-        | None = None,
+        commit_types: (
+            list[commitconventions.CommitTypeStr]
+            | commitconventions.ConventionTypeStr
+            | None
+        ) = None,
         **kwargs: Any,
     ):
         """Constructor.
