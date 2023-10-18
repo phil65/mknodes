@@ -199,6 +199,9 @@ class JSText(TextResource):
             is_library=self.is_library,
         )
 
+    def get_asset(self) -> Asset:
+        return Asset(filename=self.resolved_filename, content=self.content)
+
 
 class Asset:
     """An asset resource."""

@@ -236,5 +236,4 @@ if __name__ == "__main__":
         label="1 MAY 2016",
         link="https://phil65.github.io/mknodes",
     )
-    timeline = MkTimeline([item, item2, item])
-    print(timeline.to_html())
+    timeline = MkTimeline.with_default_context([item, item2, item])
