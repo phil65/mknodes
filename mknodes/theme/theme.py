@@ -71,7 +71,7 @@ class Theme:
         header_col_str = helpers.get_color_str(header_color)
         icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
         border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
-        font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
+        font_col_str = helpers.get_color_str(font_color or (255, 255, 255))
         adm = admonition.AdmonitionType(
             name=name,
             svg=icons.get_icon_svg(icon) if not icon.startswith("<") else icon,
