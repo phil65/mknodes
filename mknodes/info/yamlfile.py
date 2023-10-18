@@ -31,6 +31,8 @@ class YamlFile(configfile.ConfigFile):
         this method will resolve that tag by using the config at given path as the
         "parent config".
 
+        Also supports a list of files for INHERIT.
+
         Arguments:
             mode: The Yaml loader type
         """
@@ -40,12 +42,14 @@ class YamlFile(configfile.ConfigFile):
         abspath = pathlib.Path(self.path).absolute()
         if "INHERIT" not in self._data:
             return
-        parent_cfg = abspath.parent / self._data.pop("INHERIT")
-        logger.debug("Loading inherited configuration file: %s", parent_cfg)
-        with parent_cfg.open("rb") as fd:
-            text = fd.read().decode()
+        file_path = self._data.pop("INHERIT")
+        file_paths = [file_path] if isinstance(file_path, str) else file_path
+        for path in file_paths:
+            parent_cfg = abspath.parent / path
+            logger.debug("Loading inherited configuration file: %s", parent_cfg)
+            text = parent_cfg.read_text()
             parent = yamlhelpers.load_yaml(text, mode)
-        self._data = mergehelpers.merge_dicts(parent, self._data)
+            self._data = mergehelpers.merge_dicts(parent, self._data)
 
     @classmethod
     def _dump(cls, data: dict) -> str:
