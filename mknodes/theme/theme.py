@@ -1,28 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
-import dataclasses
-
 from typing import Any
 
 from mknodes import project
-from mknodes.data import datatypes
+from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import helpers, icons, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
-
-
-@dataclasses.dataclass
-class AdmonitionType:
-    name: str
-    svg: str
-    header_color: str
-    icon_color: str
-    border_color: str
-    font_color: str
 
 
 class Theme:
@@ -48,7 +36,7 @@ class Theme:
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
 
-        self.admonitions: list[AdmonitionType] = []
+        self.admonitions: list[admonition.AdmonitionType] = []
         self.add_admonition_type(
             name="theme",
             icon="mdi:file",
@@ -84,7 +72,7 @@ class Theme:
         icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
         border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
         font_col_str = helpers.get_color_str(border_color or (255, 255, 255))
-        adm = AdmonitionType(
+        adm = admonition.AdmonitionType(
             name=name,
             svg=icons.get_icon_svg(icon) if not icon.startswith("<") else icon,
             header_color=header_col_str,
