@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import dataclasses
 
+from mknodes.utils import resources
+
 
 SCRIPT = """
 var image = document.getElementsByClassName({class_name});
@@ -15,6 +17,10 @@ new simpleParallax(image, {
 });
 """
 
+LIB = "https://cdn.jsdelivr.net/npm/simple-parallax-js@5.5.1/dist/simpleParallax.min.js"
+
+file = resources.JSFile(LIB)
+
 
 def format_js_map(dct: dict) -> str:
     """Return JS map str for given dictionary.
@@ -27,6 +33,8 @@ def format_js_map(dct: dict) -> str:
         match v:
             case bool():
                 rows.append(f"    {k}: {str(v).lower()},")
+            case dict():
+                rows.append(f"    {k}: {format_js_map(v)},")
             case None:
                 rows.append(f"    {k}: null,")
             case _:
