@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import eventplugins
-from mknodes.utils import inspecthelpers, log, reprhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -22,7 +22,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        plugin: type[plugins.BasePlugin] | None = None,
+        plugin: type[plugins.BasePlugin] | str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -45,8 +45,12 @@ class MkPluginFlow(mkcontainer.MkContainer):
                 ep_group = self.event_plugin.entry_point_group
                 eps = self.ctx.metadata.entry_points.get(ep_group, [])
                 return [i.load() for i in eps]
-            case _:
+            case type():
                 return [self._plugin]
+            case str():
+                return [classhelpers.to_class(self._plugin)]
+            case _:
+                raise TypeError(self._plugin)
 
     @property
     def event_plugin(self):
