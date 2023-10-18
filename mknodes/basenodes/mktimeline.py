@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import os
+import pathlib
+import tomllib
+
 from typing import Any, Literal
 from xml.etree import ElementTree as Et
 
@@ -42,7 +46,7 @@ class MkTimelineItem(mknode.MkNode):
         self,
         title: str = "",
         content: str | mknode.MkNode | Et.Element = "",
-        date: str = "",
+        label: str = "",
         link: str = "",
         button_text: str = "More",
         image: str = "",
@@ -53,7 +57,7 @@ class MkTimelineItem(mknode.MkNode):
         Arguments:
             title: Item header / title
             content: Text / markdown for the content area
-            date: A date, displayed in an upper corner
+            label: A label, displayed in an upper corner
             link: An optional link for the "More" button
             button_text: allows to switch the button label from "More" to sth user-chosen.
             image: Optional image to display in upper half of the card
@@ -63,7 +67,7 @@ class MkTimelineItem(mknode.MkNode):
         self.title = title
         self.content = self.to_child_node(content)
         self.image = image
-        self.date = date
+        self.label = label
         self.link = link
         self.button_text = button_text
         self.fade_direction: Literal["left", "right"] | None = None
@@ -95,8 +99,8 @@ class MkTimelineItem(mknode.MkNode):
             xml.Header(2, self.title, parent=p)
         elif self.title:
             xml.Header(2, self.title, parent=content_div)
-        if self.date:
-            xml.Div("date", text=self.date, parent=content_div)
+        if self.label:
+            xml.Div("date", text=self.label, parent=content_div)
         p_text = xml.P(parent=content_div)
         match self.content:
             case str():
@@ -129,15 +133,19 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        items: list | None = None,
+        items: list | str | os.PathLike | None = None,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
-            items: Timeline items
+            items: Timeline items or a path to a TOML file containing timeline data
             kwargs: Keyword arguments passed to parent
         """
+        if isinstance(items, str | os.PathLike):
+            text = pathlib.Path(items).read_text()
+            data = tomllib.loads(text)
+            items = [MkTimelineItem(**step) for step in data.values()]
         super().__init__(items, **kwargs)
 
     def __repr__(self):
@@ -160,7 +168,7 @@ class MkTimeline(mkcontainer.MkContainer):
         self,
         title: str = "",
         content: str | mknode.MkNode = "",
-        date: str = "",
+        label: str = "",
         link: str = "",
         button_text: str = "More",
         image: str = "",
@@ -170,7 +178,7 @@ class MkTimeline(mkcontainer.MkContainer):
 
         title: Item header
         content: Markdown for content
-        date: Label to be displayed in small box at the top
+        label: Label to be displayed in small box at the top
         link: Optional button-link. Text of button can be set via button_text
         button_text: Text for the link button.
         image: Optional image for the item
@@ -179,7 +187,7 @@ class MkTimeline(mkcontainer.MkContainer):
         item = MkTimelineItem(
             title=title,
             content=content,
-            date=date,
+            label=label,
             link=link,
             button_text=button_text,
             image=image,
@@ -197,7 +205,7 @@ class MkTimeline(mkcontainer.MkContainer):
             node += MkTimelineItem(
                 title=f"Image card {i}",
                 content="A card with an image.",
-                date=f"{i} JANUARY 2023",
+                label=f"{i} JANUARY 2023",
                 link="https://phil65.github.io/mknodes",
                 image=f"https://picsum.photos/40{i}",
             )
@@ -205,7 +213,7 @@ class MkTimeline(mkcontainer.MkContainer):
             node += MkTimelineItem(
                 title=f"Card {i}",
                 content=admonition,
-                date=f"{i} JANUARY 2023",
+                label=f"{i} JANUARY 2023",
                 link="https://phil65.github.io/mknodes",
             )
         page += node
@@ -218,14 +226,14 @@ if __name__ == "__main__":
     item = MkTimelineItem(
         title="Title",
         content=node,
-        date="1 MAY 2016",
+        label="1 MAY 2016",
         link="https://phil65.github.io/mknodes",
         # image="https://picsum.photos/1000/800/?random",
     )
     item2 = MkTimelineItem(
         title="Title",
         content="fdsfs",
-        date="1 MAY 2016",
+        label="1 MAY 2016",
         link="https://phil65.github.io/mknodes",
     )
     timeline = MkTimeline([item, item2, item])
