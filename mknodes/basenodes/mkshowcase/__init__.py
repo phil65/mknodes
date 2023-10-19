@@ -74,6 +74,14 @@ class MkShowcase(mkcontainer.MkContainer):
         link: str | mk.MkPage | mk.MkNav | None = None,
         caption: str | None = None,
     ):
+        """Add an image card to the node.
+
+        Arguments:
+            title: Card title
+            image: link to the Image
+            link: Optional link for the card
+            caption: Image caption
+        """
         card = mkcard.MkCard(target=link, title=title, image=image, caption=caption)
         self.append(card)
 
