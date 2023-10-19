@@ -97,6 +97,13 @@ class MkIcon(mknode.MkNode):
         node = MkIcon(icon_name="noto:wrench", height=100, width=100)
         page += mk.MkReprRawRendered(node, header="### Sized")
 
+    def attach_css_classes(self, text: str):
+        if not self.mods.css_classes:
+            return text
+        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
+        text += f"\n{{: {classes}}}"
+        return text
+
 
 if __name__ == "__main__":
     img = MkIcon("mdi:file", rotate="90")

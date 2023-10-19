@@ -149,6 +149,13 @@ class MkTab(mkcontainer.MkContainer):
         lines = [f'==={mark} "{self.title}"', text]
         return "\n".join(lines) + "\n"
 
+    def attach_css_classes(self, text: str):
+        if not self.mods.css_classes:
+            return text
+        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
+        text += f"    {{: {classes}}}"
+        return text
+
 
 if __name__ == "__main__":
     tab = MkTabBlock(content="test", title="test", new=True)
