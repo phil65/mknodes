@@ -1,0 +1,17 @@
+[metadata]
+icon = "mdi:format-list-group"
+
+[requirements.package.git-changelog]
+
+[examples]
+"keepachangelog template" = """
+{{ "conventional" | MkChangelog(template="keepachangelog", shift_header_levels=2) | MkReprRawRendered }}
+"""
+
+"angular template" = """
+{{ "conventional" | MkChangelog(template="angular", shift_header_levels=2) | MkReprRawRendered }}
+"""
+
+"basic convention" = """
+{{ "basic" | MkChangelog(shift_header_levels=2) | MkReprRawRendered }}
+"""

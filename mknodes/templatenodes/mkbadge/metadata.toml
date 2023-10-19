@@ -1,0 +1,25 @@
+[metadata]
+icon = "simple-icons:shieldsdotio"
+
+[requirements.package.anybadge]
+
+[examples]
+Regular = """
+{{ ("Some", "Badge") | MkBadge | MkReprRawRendered }}
+"""
+
+"Font size" = """
+{{ ("Some", "Badge") | MkBadge(font_size=12) | MkReprRawRendered }}
+"""
+
+"Char padding" = """
+{{ ("Some", "Badge") | MkBadge(num_padding_chars=5) | MkReprRawRendered }}
+"""
+
+"Badge color" = """
+{{ ("Some", "Badge") | MkBadge(font_size=12) | MkReprRawRendered }}
+"""
+
+"Gitlab style" = """
+{{ ("Some", "Badge") | MkBadge(use_gitlab_style=True) | MkReprRawRendered }}
+"""

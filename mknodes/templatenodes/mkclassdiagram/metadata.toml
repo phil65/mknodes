@@ -1,0 +1,20 @@
+[metadata]
+icon = "mdi:graph-outline"
+
+[[requirements.extension."pymdownx.superfences".custom_fences]]
+name = "mermaid"
+class = "mermaid"
+format = "pymdownx.superfences.fence_code_format"
+
+[examples]
+"Base class diagram" = """
+{{ _mk.MkClassDiagram | MkClassDiagram(mode="baseclasses") | MkReprRawRendered }}
+"""
+
+"Subclass diagram" = """
+{{ _mk.MkContainer | MkClassDiagram(mode="subclasses", direction="LR") | MkReprRawRendered }}
+"""
+
+"MRO diagram" = """
+{{ _mk.MkTable | MkClassDiagram(mode="mro") | MkReprRawRendered }}
+"""
