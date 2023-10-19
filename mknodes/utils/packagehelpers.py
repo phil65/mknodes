@@ -8,6 +8,7 @@ import functools
 import importlib
 from importlib import metadata
 import types
+from typing import Any
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
@@ -88,8 +89,8 @@ def get_marker(marker):
 
 
 @functools.cache
-def _get_entry_points(dist: metadata.Distribution):
-    return dist.entry_points
+def _get_entry_points(dist: metadata.Distribution | None = None, **kwargs):
+    return dist.entry_points if dist else metadata.entry_points(**kwargs)
 
 
 def get_extras(markers: list) -> list[str]:
@@ -134,21 +135,24 @@ class EntryPoint:
 
 @functools.cache
 def get_entry_points(
-    dist: metadata.Distribution | str,
+    dist: metadata.Distribution | str | None = None,
     group: str | None = None,
+    **kwargs: Any,
 ) -> collections.defaultdict[str, list[EntryPoint]]:
     """Returns a dictionary with entry point group as key, entry points as value.
 
     Arguments:
-        dist: Distribution to get entry points for.
+        dist: Optional distribution filter.
         group: Optional group filter.
+        kwargs: Entry point filters
     """
-    if isinstance(dist, str):
-        dist = get_distribution(dist)
-    if not group:
-        eps = _get_entry_points(dist)
+    if dist:
+        if isinstance(dist, str):
+            dist = get_distribution(dist)
+        eps = [i for i in _get_entry_points(dist) if i.group == group or not group]
     else:
-        eps = [i for i in _get_entry_points(dist) if i.group == group]
+        kw_args = dict(group=group, **kwargs) if group else kwargs
+        eps = _get_entry_points(**kw_args)
     dct = collections.defaultdict(list)
     for ep in eps:
         ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
