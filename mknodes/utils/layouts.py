@@ -36,7 +36,7 @@ class CompactClassLayout(Layout):
         self.linkprovider = link_provider or linkprovider.LinkProvider()
         super().__init__()
 
-    def get_columns(self):
+    def get_columns(self) -> list[str]:
         return ["Class", "Module", "Description"]
 
     def get_row_for(self, kls: type) -> dict[str, str]:
@@ -103,7 +103,7 @@ class ExtendedClassLayout(Layout):
             # Description=desc,
         )
 
-    def get_columns(self):
+    def get_columns(self) -> list[str]:
         return ["Name", "Children", "Inherits"]
 
 
@@ -125,7 +125,7 @@ class ModuleLayout(Layout):
             ),
         )
 
-    def get_columns(self):
+    def get_columns(self) -> list[str]:
         return ["Name", "DocStrings", "Members"]
 
 
@@ -146,8 +146,7 @@ class BadgePackageLayout(Layout):
         summary = helpers.styled(package_info.metadata["Summary"], italic=True)
         info = mkmetadatabadges.MkMetadataBadges("websites", package=package_info.name)
         info.block_separator = "  "
-        container_1 = mkcontainer.MkContainer([link, marker_str])
-        container_1.block_separator = "\n"
+        container_1 = mkcontainer.MkContainer([link, marker_str], block_separator="\n")
         container_2 = mkcontainer.MkContainer([summary, info])
         return dict(Name=container_1, Summary=container_2)
 

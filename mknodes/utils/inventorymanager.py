@@ -9,7 +9,6 @@ import os
 import pathlib
 import posixpath
 import re
-from textwrap import dedent
 import types
 from typing import BinaryIO, Self
 import zlib
@@ -18,6 +17,14 @@ from mknodes.utils import downloadhelpers, helpers, log
 
 
 logger = log.get_logger(__name__)
+
+
+INV_HEADER = """\
+# Sphinx inventory version 2
+# Project: {project}
+# Version: {version}
+# The remainder of this file is compressed using zlib.
+"""
 
 
 class InventoryItem:
@@ -50,11 +57,7 @@ class InventoryItem:
         self.dispname: str = dispname or name
 
     def format_sphinx(self) -> str:
-        """Format this item as a Sphinx inventory line.
-
-        Returns:
-            A line formatted for an `objects.inv` file.
-        """
+        """Format this item as a Sphinx inventory line and return it."""
         dispname = self.dispname
         if dispname == self.name:
             dispname = "-"
@@ -67,7 +70,11 @@ class InventoryItem:
 
     @classmethod
     def parse_sphinx(cls, line: str) -> InventoryItem:
-        """Parse a line from a Sphinx v2 inventory file and return an `InventoryItem`."""
+        """Parse a line from a Sphinx v2 inventory file and return an `InventoryItem`.
+
+        Arguments:
+            line: The line to parse
+        """
         match = cls.sphinx_item_regex.search(line)
         if not match:
             raise ValueError(line)
@@ -131,26 +138,10 @@ class BaseInventory(dict):
         )
 
     def format_sphinx(self) -> bytes:
-        """Format this inventory as a Sphinx `objects.inv` file.
-
-        Returns:
-            The inventory as bytes.
-        """
-        header = (
-            dedent(
-                f"""
-                # Sphinx inventory version 2
-                # Project: {self.project}
-                # Version: {self.version}
-                # The remainder of this file is compressed using zlib.
-                """,
-            )
-            .lstrip()
-            .encode("utf8")
-        )
-
+        """Format this inventory as a Sphinx `objects.inv` file and return it."""
+        header = INV_HEADER.format(project=self.project, version=self.version).encode()
         lines = [
-            item.format_sphinx().encode("utf8")
+            item.format_sphinx().encode()
             for item in sorted(self.values(), key=lambda item: (item.domain, item.name))
         ]
         return header + zlib.compress(b"\n".join(lines) + b"\n", 9)
@@ -167,14 +158,11 @@ class BaseInventory(dict):
         Arguments:
             in_file: The binary file-like object to read from.
             domain_filter: A collection of domain values to allow.
-
-        Returns:
-            An inventory containing the collected items.
         """
         for _ in range(4):
             in_file.readline()
         lines = zlib.decompress(in_file.read()).splitlines()
-        items = [InventoryItem.parse_sphinx(line.decode("utf8")) for line in lines]
+        items = [InventoryItem.parse_sphinx(line.decode()) for line in lines]
         if domain_filter:
             items = [item for item in items if item.domain in domain_filter]
         return cls(items)
@@ -215,6 +203,13 @@ class Inventory(BaseInventory):
         base_url: str | None = None,
         domains: list[str] | None = None,
     ):
+        """Return an Inventory based on an inventory file located at given url.
+
+        Arguments:
+            url: Inventory file url
+            base_url: The base url for the inventory, if different from download url
+            domains: The domains to include
+        """
         data = downloadhelpers.download(url)
         buffer = io.BytesIO(data)
         if base_url is None:

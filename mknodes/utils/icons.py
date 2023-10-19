@@ -6,6 +6,8 @@ import functools
 from typing import Any, Literal
 import xml.etree.ElementTree as etree
 
+import markdown
+
 from mknodes import paths
 
 
@@ -95,7 +97,17 @@ def twemoji(options: dict[str, Any], md) -> dict[str, Any]:
     return _patch_index_with_sets(tuple(icon_sets))
 
 
-def to_svg(index, shortname, alias, uc, alt, title, category, options, md):
+def to_svg(
+    index: str,
+    shortname: str,
+    alias: str,
+    uc: str,
+    alt: str,
+    title: str,
+    category: str,
+    options: dict[str, str],
+    md: markdown.Markdown,
+):
     """Return SVG element."""
     from pymdownx.emoji import TWEMOJI_SVG_CDN, add_attributes
 
@@ -183,6 +195,14 @@ def get_icon_svg(
 
 
 def get_pyconify_key(icon: str) -> str:
+    """Convert given string to a pyconify key.
+
+    Converts the keys from MkDocs-Material ("material/sth" or ":material-sth:")
+    to their pyconify equivalent.
+
+    Arguments:
+        icon: The string which should be converted to a pyconify key.
+    """
     for k, v in PYCONIFY_TO_PREFIXES.items():
         path = f'{v.replace("-", "/")}/'
         icon = icon.replace(path, f"{k}:")
@@ -201,6 +221,13 @@ def get_pyconify_key(icon: str) -> str:
 
 
 def get_emoji_slug(icon: str) -> str:
+    """Return a icon string which can be used in markdown texts.
+
+    The icon string will get picked up by pymdownx.emoji extension.
+
+    Arguments:
+        icon: The string to convert to an emoji slug.
+    """
     return f":{get_pyconify_key(icon).replace(':', '-')}:"
 
 
@@ -217,6 +244,7 @@ def get_icon_xml(icon: str) -> etree.Element:
 
 
 def write_icon_index():
+    """Fetch the complete icon index and write it gzipped to disk."""
     import gzip
     import json
 
@@ -227,6 +255,7 @@ def write_icon_index():
 
 
 def load_icon_index() -> dict:
+    """Load the complete icon index from disk."""
     import gzip
     import json
 

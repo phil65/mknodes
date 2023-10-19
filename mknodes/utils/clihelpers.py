@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import dataclasses
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
+
+from click import types as clicktypes
 
 
 if TYPE_CHECKING:
@@ -16,25 +19,53 @@ from mknodes.basenodes import mkcode
 @dataclasses.dataclass
 class Param:
     count: bool = False
+    """Whether the parameter increments an integer."""
     default: Any = None
+    """The default value of the parameter."""
     envvar: str | None = None
+    """ the environment variable name for this parameter."""
     flag_value: bool = False
+    """ Value used for this flag if enabled."""
     help: str | None = None  # noqa: A003
+    """A formatted help text for this parameter."""
     hidden: bool = False
+    """Whether this parameter is hidden."""
     is_flag: bool = False
+    """Whether the parameter is a flag."""
     multiple: bool = False
+    """Whether the parameter is accepted multiple times and recorded."""
     name: str = ""
+    """The name of this parameter."""
     nargs: int = 1
+    """The number of arguments this parameter matches."""
     opts: list[str] = dataclasses.field(default_factory=list)
-    param_type_name: str = "option"
+    """Options for this parameter."""
+    param_type_name: Literal["option", "parameter", "argument"] = "option"
+    """The type of the parameter."""
     prompt: Any = None
+    """Whether user is prompted for this parameter."""
     required: bool = False
+    """Whether the parameter is required."""
     secondary_opts: list[str] = dataclasses.field(default_factory=list)
-    type: dict[str, str] = dataclasses.field(default_factory=dict)  # noqa: A003
+    """Secondary options for this parameter."""
+    type: clicktypes.ParamType | None = None  # noqa: A003
+    """The type object of the parameter."""
+    callback: Callable[[click.Context, click.Parameter, Any], Any] | None = None
+    """A method to further process the value after type conversion."""
+    expose_value: str = ""
+    """Whether value is passed onwards to the command callback and stored in context."""
+    is_eager: bool = False
+    """Whether the param is eager."""
+    metavar: str | None = None
+    """How value is represented in the help page."""
+
+    @property
+    def opt_str(self) -> str:
+        """A formatted and sorted string containing the the options."""
+        return ", ".join(f"`{i}`" for i in reversed(self.opts))
 
     def to_markdown(self):
-        opt_str = ", ".join(f"`{i}`" for i in reversed(self.opts))
-        lines = [f"### {opt_str}"]
+        lines = [f"### {self.opt_str}"]
         if self.required:
             lines.append("**REQUIRED**")
         if self.envvar:
@@ -53,13 +84,21 @@ class Param:
 @dataclasses.dataclass
 class CommandInfo:
     name: str
+    """The name of the command."""
     description: str
+    """A description for this command."""
     usage: str
+    """A formatted string containing a formatted "usage string" (placeholder example)"""
     subcommands: dict[str, CommandInfo] = dataclasses.field(default_factory=dict)
+    """A command-name->CommandInfo mapping containing all subcommands."""
     deprecated: bool = False
+    """Whether this command is deprecated."""
     epilog: str | None = None
+    """Epilog for this command."""
     hidden: bool = False
+    """Whether this command is hidden."""
     params: list[Param] = dataclasses.field(default_factory=list)
+    """A list of Params for this command."""
 
     def __getitem__(self, name):
         return self.subcommands[name]
@@ -81,6 +120,12 @@ def get_typer_info(
     instance: typer.Typer | click.Group,
     command: str | None = None,
 ) -> CommandInfo:
+    """Return a `CommmandInfo` object for command of given `Typer` instance.
+
+    Arguments:
+        instance: A `Typer` or **click** `Group` instance
+        command: The command to get info for.
+    """
     import typer
 
     from typer.main import get_command
@@ -95,7 +140,16 @@ def get_typer_info(
     return info
 
 
-def get_command_info(command: click.Command, parent=None) -> CommandInfo:
+def get_command_info(
+    command: click.Command,
+    parent: click.Context | None = None,
+) -> CommandInfo:
+    """Get a `CommandInfo` dataclass for given click `Command`.
+
+    Arguments:
+        command: The **click** `Command` to get info for.
+        parent: The optional parent context
+    """
     import typer
 
     ctx = typer.Context(command, parent=parent)
@@ -114,7 +168,11 @@ def get_command_info(command: click.Command, parent=None) -> CommandInfo:
 
 
 def _make_usage(ctx: click.Context) -> str:
-    """Create the Markdown lines from the command usage string."""
+    """Create the full command usage string.
+
+    Arguments:
+        ctx: The context to create a usage string for.
+    """
     # Gets the usual 'Usage' string without the prefix.
     formatter = ctx.make_formatter()
     pieces = ctx.command.collect_usage_pieces(ctx)

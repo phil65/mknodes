@@ -57,8 +57,7 @@ class MkClickDoc(mknode.MkNode):
                 module, command = self._target.split(":")
                 dct = dict(module=module, command=command, prog_name=self._prog_name)
             case None:
-                cli_eps = self.ctx.metadata.entry_points.get("console_scripts")
-                if cli_eps:
+                if cli_eps := self.ctx.metadata.entry_points.get("console_scripts"):
                     module, command = cli_eps[0].dotted_path.split(":")
                     dct = dict(module=module, command=command, prog_name=cli_eps[0].name)
         if not dct:

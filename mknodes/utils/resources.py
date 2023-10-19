@@ -91,9 +91,11 @@ class CSSFile:
         return self.link
 
     def is_local(self) -> bool:
+        """Whether the css file is a local resource."""
         return not helpers.is_url(self.link)
 
     def to_html(self) -> str:
+        """Return html "link" element which can be put into an HTML page."""
         if self.color_scheme == "light":
             media = ' media="(prefers-color-scheme:light)"'
         elif self.color_scheme == "dark":
@@ -126,9 +128,11 @@ class JSFile:
         return str(self)
 
     def is_local(self) -> bool:
+        """Whether the js file is a local resource."""
         return not helpers.is_url(self.link)
 
     def to_html(self) -> str:
+        """Return html "script" element which can be put into an HTML page."""
         html = f'<script src="{self.link}"'
         if self.typ:
             html += f' type="{self.typ}"'
@@ -149,6 +153,7 @@ class TextResource:
 
     @property
     def resolved_filename(self) -> str:
+        """Return a filename consisting of a user-set prefix + a hash value."""
         hashed = helpers.get_hash(self.content)
         return (
             f"{self.filename.removesuffix(self.EXTENSION)}_{hashed}{self.EXTENSION}"
