@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
+from mknodes.nodemods.modmanager import ModManager
 from mknodes.treelib import node
 from mknodes.utils import icons, log, resources
 
@@ -78,7 +79,8 @@ class MkNode(node.Node):
         self.indent = indent
         self.shift_header_levels = shift_header_levels
         self._files: dict[str, str | bytes] = {}
-        self._css_classes: set[str] = set(css_classes or [])
+        self.mods = ModManager()
+        self.mods._css_classes = list(css_classes) if css_classes else []
         self._associated_project = project
         self._node_name = name
         self.as_html = as_html
@@ -244,9 +246,9 @@ class MkNode(node.Node):
         Arguments:
             text: Markdown to annote
         """
-        if not self._css_classes:
+        if not self.mods.css_classes:
             return text
-        classes = " ".join(f".{kls_name}" for kls_name in self._css_classes)
+        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
         text += f" {{: {classes}}}"
         return text
 
@@ -284,7 +286,7 @@ class MkNode(node.Node):
         Arguments:
             class_name: CSS class to wrap the node with
         """
-        self._css_classes.add(class_name)
+        self.mods._css_classes.append(class_name)
 
     def get_node_resources(self) -> resources.Resources:
         """Return the resources specific for this node."""

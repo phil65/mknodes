@@ -88,7 +88,7 @@ class AppendCssClassesProcessor(TextProcessor):
         self.item = item
 
     def run(self, text: str) -> str:
-        return self.item.attach_css_classes(text) if self.item._css_classes else text
+        return self.item.attach_css_classes(text) if self.item.mods.css_classes else text
 
 
 class PrependMetadataProcessor(TextProcessor):

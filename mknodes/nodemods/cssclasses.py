@@ -20,6 +20,7 @@ new simpleParallax(image, {
 LIB = "https://cdn.jsdelivr.net/npm/simple-parallax-js@5.5.1/dist/simpleParallax.min.js"
 
 file = resources.JSFile(LIB)
+script = resources.JSText(SCRIPT, filename="parallax.js")
 
 
 def format_js_map(dct: dict) -> str:
@@ -50,7 +51,7 @@ class ParallaxEffect:
     overflow: bool = False
 
     def get_resources(self):
-        pass
+        return resources.Resources(js=[file, script])
 
 
 if __name__ == "__main__":
