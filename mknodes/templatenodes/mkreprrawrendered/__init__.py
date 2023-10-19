@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mknode, mktabcontainer, mktabs
+from mknodes.basenodes import mknode, mktabbed, mktabs
 from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
 
 
-class MkReprRawRendered(mktabcontainer.MkTabbed):
+class MkReprRawRendered(mktabbed.MkTabbed):
     """Node showing a tabbed block to visualize a node in different representations.
 
     It contains a tab for the repr, one for the rendered output,

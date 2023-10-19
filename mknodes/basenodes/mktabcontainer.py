@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktabs, mktext
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -133,46 +133,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         return "\n".join(str(i) for i in self.items)
 
 
-class MkTabbed(MkTabContainer):
-    """PyMdown-based Tab container."""
-
-    items: list[mktabs.MkTab]
-    REQUIRED_EXTENSIONS = [
-        resources.Extension("pymdownx.tabbed"),
-        resources.Extension("pymdownx.superfences"),
-    ]
-    Tab = mktabs.MkTab
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # this node is basically a container and manager for MkTabs nodes.
-        node = MkTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mk.MkReprRawRendered(node, header="### Regular")
-        admonition = mk.MkAdmonition("Nested admonition")
-        nested_node = MkTabbed(tabs={"Tabs": node, "Admonition": admonition})
-        page += mk.MkReprRawRendered(nested_node, header="### Nested")
-
-
-class MkTabbedBlocks(MkTabContainer):
-    """PyMdown Block Extension Tab."""
-
-    items: list[mktabs.MkTabBlock]
-    REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.blocks.tab")]
-    Tab = mktabs.MkTabBlock
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # this one is basically the same as MkTabbed,
-        # but based on new pymdownx block syntax.
-        node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mk.MkReprRawRendered(node, header="### Regular")
-
-
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")
-    tabblock = MkTabbedBlocks(tabs)
+    tabblock = MkTabContainer(tabs)
     print(tabblock)
