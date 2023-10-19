@@ -20,20 +20,38 @@ logger = log.get_logger(__name__)
 
 
 def install(package: str, editable: bool = False):
+    """Pip-Install distribution with given options.
+
+    Arguments:
+        package: Name of the package to install
+        editable: Whether to install in editable mode
+    """
     cmd = ["install", "-e", package] if editable else ["install", package]
     pip.main(cmd)
 
 
-def install_or_import(package: str) -> types.ModuleType:
+def install_or_import(module_name: str) -> types.ModuleType:
+    """If required, try to install given package and import it.
+
+    This method relies on module name == distribution_name
+
+    Arguments:
+        module_name: Name of the module to import / install
+    """
     try:
-        return importlib.import_module(package)
+        return importlib.import_module(module_name)
     except ImportError:
-        install(package)
-        return importlib.import_module(package)
+        install(module_name)
+        return importlib.import_module(module_name)
 
 
 @functools.cache
 def get_distribution(name: str) -> metadata.Distribution:
+    """Cached version of metadata.distribution.
+
+    Arguments:
+        name: Name of the distribution to get an object for.
+    """
     return metadata.distribution(name)
 
 
@@ -49,11 +67,17 @@ def get_requires(dist: metadata.Distribution) -> list[str]:
 
 @functools.cache
 def get_package_map() -> Mapping[str, list[str]]:
+    """Return a mapping of top-level packages to their distributions."""
     return metadata.packages_distributions()
 
 
 @functools.cache
 def distribution_to_package(dist: str):
+    """Return the top-level package for given distribution.
+
+    Arguments:
+        dist: Name of the distribution to get the package for.
+    """
     result = next((k for k, v in get_package_map().items() if dist in v), dist)
     return result.replace("-", "_").lower()
 
@@ -127,6 +151,15 @@ def get_entry_points(
         ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
         dct[ep.group].append(ep)
     return dct
+
+
+class EntryPointMap(collections.defaultdict):
+    def __init__(self):
+        super().__init__(list)
+
+    @property
+    def all_eps(self):
+        return [i for ls in self.values() for i in ls]
 
 
 class Dependency:
