@@ -63,9 +63,6 @@ class MkClickDoc(mknode.MkNode):
 
         if not self.attributes:
             return ""
-        app = self.ctx.metadata.cli
-        if not app:
-            return ""
         attrs = self.attributes
         mod = importlib.import_module(attrs["module"])
         instance = getattr(mod, attrs["command"])
