@@ -91,7 +91,10 @@ def _patch_index_with_sets(icon_sets: Sequence[str]) -> dict[str, Any]:
 
 
 def twemoji(options: dict[str, Any], md) -> dict[str, Any]:
-    """Provide a copied Twemoji index with additional codes for Pyconify icons."""
+    """Provide a copied Twemoji index with additional codes for Pyconify icons.
+
+    Used for pymdownx.emoji.
+    """
     default = list(PYCONIFY_TO_PREFIXES.keys())
     icon_sets = options.get("icon_sets", default)[:]
     return _patch_index_with_sets(tuple(icon_sets))
@@ -108,7 +111,10 @@ def to_svg(
     options: dict[str, str],
     md: markdown.Markdown,
 ):
-    """Return SVG element."""
+    """Return svg element (wrapped in a span element).
+
+    Used for pymdownx.emoji.
+    """
     from pymdownx.emoji import TWEMOJI_SVG_CDN, add_attributes
 
     is_unicode = uc is not None

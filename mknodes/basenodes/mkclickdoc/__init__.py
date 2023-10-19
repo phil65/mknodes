@@ -78,12 +78,12 @@ class MkClickDoc(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        # import mknodes as mk
+        import mknodes as mk
 
-        page += "The MkClickDoc node shows DocStrings for Click / Typer."
-        page += MkClickDoc(target="mkdocs_mknodes.cli:cli")
-        # node = MkClickDoc(module="cli", command="cli")
-        # page += mk.MkReprRawRendered(node)
+        node = MkClickDoc(target="mkdocs_mknodes.cli:cli")
+        page += mk.MkReprRawRendered(node)
+        node = MkClickDoc(target="mkdocs_mknodes.cli:cli", prog_name="build")
+        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
