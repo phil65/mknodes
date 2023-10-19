@@ -26,6 +26,8 @@ class MkLink(mknode.MkNode):
         self,
         target: str | mk.MkPage | mk.MkNav | type | types.ModuleType,
         title: str | None = None,
+        *,
+        tooltip: str | None = None,
         icon: str | None = None,
         as_button: bool = False,
         primary_color: bool = False,
@@ -36,6 +38,7 @@ class MkLink(mknode.MkNode):
         Arguments:
             target: Link target
             title: Title used for link
+            tooltip: Tooltip for the link
             icon: Optional icon to be displayed in front of title
             as_button: Whether link should be rendered as button
             primary_color: If rendered as button, use primary color as background.
@@ -44,6 +47,7 @@ class MkLink(mknode.MkNode):
         super().__init__(**kwargs)
         self.target = target
         self._title = title
+        self.tooltip = tooltip
         self.as_button = as_button
         self.primary_color = primary_color
         self._icon = icon or ""
@@ -57,6 +61,7 @@ class MkLink(mknode.MkNode):
             self,
             target=self.target,
             title=self._title,
+            tooltip=self.tooltip,
             icon=self._icon,
             as_button=self.as_button,
             primary_color=self.primary_color,
@@ -87,7 +92,8 @@ class MkLink(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""
-        return f"[{prefix}{self.title}]({self.url})"
+        tooltip = f" {self.tooltip!r}" if self.tooltip else ""
+        return f"[{prefix}{self.title}]({self.url}{tooltip})"
 
     @classmethod
     def create_example_page(cls, page):
@@ -102,6 +108,8 @@ class MkLink(mknode.MkNode):
         page += mk.MkReprRawRendered(node, header="### Colored")
         node = mk.MkLink(url, "With icon.", icon="octicons/link-24")
         page += mk.MkReprRawRendered(node, header="### With icon")
+        node = mk.MkLink(url, "With tooltip.", tooltip="Test")
+        page += mk.MkReprRawRendered(node, header="### With tooltip")
         node = mk.MkLink(page.parent.index_page, "To page.")
         page += mk.MkReprRawRendered(node, header="###To page")
 
