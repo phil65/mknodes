@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 
 
 class MkClickDoc(mknode.MkNode):
-    """Documentation for click / typer CLI apps."""
+    """Node for showing documentation for click / typer CLI apps."""
 
     ICON = "material/api"
 

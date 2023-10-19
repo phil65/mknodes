@@ -1,27 +1,5 @@
 from __future__ import annotations
 
-import dataclasses
-
-from mknodes.utils import resources
-
-
-SCRIPT = """
-var image = document.getElementsByClassName({class_name});
-new simpleParallax(image, {
-    orientation: 'right',
-    scale: 1.5,
-    overflow: true,
-    delay: .6,
-    transition: 'cubic-bezier(0,0,0,1)',
-    maxTransition: 60
-});
-"""
-
-LIB = "https://cdn.jsdelivr.net/npm/simple-parallax-js@5.5.1/dist/simpleParallax.min.js"
-
-file = resources.JSFile(LIB)
-script = resources.JSText(SCRIPT, filename="parallax.js")
-
 
 def format_js_map(dct: dict) -> str:
     """Return JS map str for given dictionary.
@@ -42,16 +20,6 @@ def format_js_map(dct: dict) -> str:
                 rows.append(f"    {k}: {v!r},")
     row_str = "\n" + "\n".join(rows) + "\n"
     return f"{{{row_str}}}"
-
-
-@dataclasses.dataclass(frozen=True)
-class ParallaxEffect:
-    orientation: str = "up"
-    scale: float = 1.2
-    overflow: bool = False
-
-    def get_resources(self):
-        return resources.Resources(js=[file, script])
 
 
 if __name__ == "__main__":

@@ -2,41 +2,42 @@ from __future__ import annotations
 
 import dataclasses
 
+from mknodes.nodemods import modhelpers
 from mknodes.utils import helpers, resources
 
 
-SCRIPT = """
-var image = document.getElementsByClassName({class_name});
-new simpleParallax(image, {
-    orientation: 'right',
-    scale: 1.5,
-    overflow: true,
-    delay: .6,
-    transition: 'cubic-bezier(0,0,0,1)',
-    maxTransition: 60
-});
+SCRIPT = """\
+var image = document.getElementsByClassName('%s');
+new simpleParallax(image, %s);
 """
 
 LIB = "https://cdn.jsdelivr.net/npm/simple-parallax-js@5.5.1/dist/simpleParallax.min.js"
-
-file = resources.JSFile(LIB)
-script = resources.JSText(SCRIPT, filename="parallax.js")
 
 
 @dataclasses.dataclass(frozen=True)
 class ParallaxEffect:
     orientation: str = "up"
-    scale: float = 1.2
+    scale: float = 1.5
     overflow: bool = False
+    delay: float = 0.6
+    transition: str = "cubic-bezier(0,0,0,1)"
+    # max_transition: int = 100
 
     def get_resources(self):
+        file = resources.JSFile(LIB, is_library=True)
+        dct = dataclasses.asdict(self)
+        js_map = modhelpers.format_js_map(dct)
+        script = resources.JSText(
+            SCRIPT % (self.css_class_names[0], js_map),
+            filename="parallax.js",
+        )
         return resources.Resources(js=[file, script])
 
     @property
-    def css_class_name(self):
-        return f"parallax_{helpers.get_hash(self)}"
+    def css_class_names(self):
+        return [f"parallax_{helpers.get_hash(self)}"]
 
 
 if __name__ == "__main__":
     effect = ParallaxEffect(orientation="down")
-    print(effect.css_class_name)
+    print(effect.css_class_names)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from mknodes.nodemods import parallax
-from mknodes.utils import log
+from mknodes.nodemods import parallax, scrollreveal
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -9,7 +9,7 @@ logger = log.get_logger(__name__)
 
 class ModManager:
     def __init__(self):
-        self.mods: list[parallax.ParallaxEffect] = []
+        self.mods = []
         self._css_classes = []
 
     def __hash__(self):
@@ -25,19 +25,26 @@ class ModManager:
         else:
             self.mods.append(other)
 
-    def get_resources(self):
-        return None
+    def get_resources(self) -> resources.Resources:
+        req = resources.Resources()
+        for mod in self.mods:
+            req.merge(mod.get_resources())
+        return req
 
     @property
-    def css_classes(self):
-        return self._css_classes + [mod.css_class_name for mod in self.mods]
+    def css_classes(self) -> list[str]:
+        cls_names = [cls_name for mod in self.mods for cls_name in mod.css_class_names]
+        return self._css_classes + cls_names
 
-    def add_parallax(self, orientation: str = "up"):
+    def add_parallax_effect(self, orientation: str = "up"):
         effect = parallax.ParallaxEffect(orientation=orientation)
+        self.mods.append(effect)
+
+    def add_scroll_effect(self, origin: str = "left"):
+        effect = scrollreveal.ScrollReveal(origin=origin)
         self.mods.append(effect)
 
 
 if __name__ == "__main__":
     manager = ModManager()
-    manager.add_parallax()
-    print(manager.css_classes)
+    print(manager.get_resources())

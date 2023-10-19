@@ -291,8 +291,9 @@ class MkNode(node.Node):
     def get_node_resources(self) -> resources.Resources:
         """Return the resources specific for this node."""
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
+        mod_resources = self.mods.get_resources()
         css_resources: list[resources.CSSType] = []
-        for css in self.CSS:
+        for css in self.CSS + mod_resources.css:
             if isinstance(css, resources.CSSFile) and css.is_local():
                 text = self.env.render_template(css.link)
                 css_resource = resources.CSSText(text, css.link)
@@ -300,7 +301,7 @@ class MkNode(node.Node):
             else:
                 css_resources.append(css)
         js_resources: list[resources.JSType] = []
-        for js_file in self.JS_FILES:
+        for js_file in self.JS_FILES + mod_resources.js:
             if isinstance(js_file, resources.JSFile) and js_file.is_local():
                 text = self.env.render_template(js_file.link)
                 js_resource = resources.JSText(
