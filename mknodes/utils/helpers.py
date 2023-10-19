@@ -201,7 +201,7 @@ def relative_url(url_a: str, url_b: str) -> str:
     return f"{relative}#{anchor}" if anchor else relative
 
 
-def get_output_from_call(call: Sequence[str]):
+def get_output_from_call(call: Sequence[str]) -> str | None:
     import subprocess
 
     try:
