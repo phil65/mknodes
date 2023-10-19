@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import collections
 import contextlib
+import json
+import pathlib
 
 from typing import Any, Literal
 
@@ -16,7 +18,7 @@ YAMLError = yaml.YAMLError
 LoaderStr = Literal["unsafe", "full", "safe"]
 
 
-def patch_dumper_to_not_order(dumper_cls):
+def _patch_dumper_to_not_order(dumper_cls):
     def map_representer(dumper_cls_, data):
         return dumper_cls_.represent_dict(data.items())
 
@@ -30,10 +32,23 @@ def patch_pyyaml_to_not_order_dicts():
         _cyaml = yaml.cyaml.__all__
         _dumpers += [getattr(yaml.cyaml, x) for x in _cyaml if x.endswith("Dumper")]
     for dumper in _dumpers:
-        patch_dumper_to_not_order(dumper)
+        _patch_dumper_to_not_order(dumper)
 
 
 # patch_pyyaml_to_not_order_dicts()
+
+
+def yaml_include_constructor(loader: yaml.BaseLoader, node: yaml.Node) -> Any:
+    """Include file referenced with !include node."""
+    scalar = loader.construct_scalar(node)
+    fp = pathlib.Path(loader.name).parent.joinpath(scalar).resolve()
+    fe = fp.suffix.lstrip(".")
+    with fp.open() as f:
+        if fe in ("yaml", "yml"):
+            return yaml.load(f, type(loader))
+        if fe in ("json", "jsn"):
+            return json.load(f)
+        return f.read()
 
 
 def get_safe_loader(base_loader_cls: type):
@@ -62,6 +77,7 @@ def get_default_loader(base_loader_cls: type):
         """Default Loader."""
 
     DefaultLoader.add_constructor("!ENV", yaml_env_tag.construct_env_tag)
+    DefaultLoader.add_constructor("!include", yaml_include_constructor)
     # Loader.add_constructor("!ENV", lambda loader, node: None)  # type: ignore
     # if config is not None:
     #     Loader.add_constructor(

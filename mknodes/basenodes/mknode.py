@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+import pathlib
 import re
 import time
 
@@ -140,8 +141,6 @@ class MkNode(node.Node):
         The environment contains additional loaders for the class file path
         as well as the resolved parent nav file path.
         """
-        import pathlib
-
         from mknodes.utils import inspecthelpers
 
         paths = []
