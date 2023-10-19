@@ -1,0 +1,18 @@
+icon = "mdi:api"
+
+[[plugins]]
+name = "mkdocstrings"
+
+[[packages]]
+name = "mkdocstrings"
+extras = "python"
+
+[examples]
+example_1 = """
+The MkDocStrings node shows DocStrings from mkdocstrings addon.
+
+
+## DocStrings
+
+{{ "mknodes.MkDocStrings" | MkDocStrings(show_if_no_docstring=True, heading_level=3) | MkReprRawRendered }}
+"""

@@ -1,0 +1,15 @@
+icon = "mdi:text"
+
+[examples]
+example_1 = """
+MkText is the most basic node and contains "plain" Markdown text.
+
+## Regular
+
+{{ "Some text" | MkText | MkReprRawRendered }}
+
+## From URL
+
+{{ _mk.MkText.from_url("https://raw.githubusercontent.com/phil65/mknodes/main/README.md") | MkReprRawRendered }}
+
+"""
