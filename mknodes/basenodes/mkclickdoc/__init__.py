@@ -38,7 +38,15 @@ class MkClickDoc(mknode.MkNode):
         self.show_subcommands = show_subcommands
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, target=self._target)
+        return reprhelpers.get_repr(
+            self,
+            target=self._target,
+            prog_name=self._prog_name,
+            show_hidden=self.show_hidden,
+            show_subcommands=self.show_subcommands,
+            _filter_false=True,
+            _filter_empty=True,
+        )
 
     @property
     def attributes(self) -> dict[str, Any]:
