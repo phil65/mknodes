@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import icons, log, reprhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -46,7 +46,8 @@ class MkMaterialBadge(mknode.MkNode):
         )
         root = xml.Span(classes)
         if self.icon:
-            xml.Span("mdx-badge__icon", parent=root, text=self.icon)
+            icon = icons.get_emoji_slug(self.icon)
+            xml.Span("mdx-badge__icon", parent=root, text=icon)
         if self.text:
             xml.Span("mdx-badge__text", parent=root, text=self.text)
         return root.to_string()
@@ -73,5 +74,5 @@ class MkMaterialBadge(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    img = MkMaterialBadge("Left", "right")
+    img = MkMaterialBadge("mdi:wrench", "right")
     print(img)
