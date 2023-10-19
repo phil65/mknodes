@@ -21,7 +21,11 @@ config = {
 
 
 class MkDiagram(mkcode.MkCode):
-    """Class representing a mermaid diagram. Can show DAGs."""
+    """Class representing a mermaid diagram.
+
+    MkDiagrams can show directed acyclic graphs and allows to manually
+    create diagrams.
+    """
 
     ICON = "material/graph-outline"
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.superfences", **config)]

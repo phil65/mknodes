@@ -1,12 +1,8 @@
+[metadata]
 icon = "mdi:file-image"
 
 [examples]
-example_1 = """
-A BinaryImage carries the image data by itself.
-A file containing the data will become part of the file tree later on.
-
-## From data
-
+"From data" = """
 {% set svg = '<svg width="90pt" height="90pt" version="1.1" viewBox="0 0 15.875 10.583" xmlns="http://www.w3.org/2000/svg">
                   <g fill="none" stroke="#F00" stroke-width=".3">
                       <path d="m6.1295 3.6601 3.2632 3.2632z"/>
@@ -15,8 +11,8 @@ A file containing the data will become part of the file tree later on.
               </svg>' %}
 
 {{ svg | MkBinaryImage(path="some_image.svg", caption="A simple cross") | MkReprRawRendered }}
+"""
 
-## From icon
-
+"From icon" = """
 {{ _mk.MkBinaryImage.for_icon("file-image", width=200) | MkReprRawRendered }}
 """
