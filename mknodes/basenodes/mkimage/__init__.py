@@ -121,6 +121,13 @@ class MkImage(mknode.MkNode):
             markdown_link = f"[{markdown_link}]({self.url})"
         return markdown_link
 
+    def attach_css_classes(self, text: str):
+        if not self.mods.css_classes:
+            return text
+        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
+        text += f"{{: {classes}}}"
+        return text
+
     @classmethod
     def create_example_page(cls, page):
         import mknodes as mk
