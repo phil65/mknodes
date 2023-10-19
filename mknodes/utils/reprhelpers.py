@@ -25,7 +25,16 @@ class LengthLimitRepr(reprlib.Repr):
 
 limit_repr = LengthLimitRepr()
 limit_repr.maxlist = 10
-limit_repr.maxstring = 80
+limit_repr.maxstring = 100
+limit_repr.maxlevel = 8
+limit_repr.maxtuple = 10
+limit_repr.maxarray = 10
+limit_repr.maxdict = 10
+limit_repr.maxset = 10
+limit_repr.maxfrozenset = 10
+limit_repr.maxdeque = 10
+limit_repr.maxlong = 60
+limit_repr.maxother = 60
 
 
 def get_repr(
@@ -59,7 +68,7 @@ def get_repr(
         import mknodes as mk
 
         match v:
-            case (mk.MkNode(), *_):
+            case (mk.MkNode(), *_) if len(v) > 1:
                 name = "[...]"
             case _:
                 name = my_repr(v)
