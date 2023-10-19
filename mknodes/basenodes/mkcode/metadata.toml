@@ -1,0 +1,30 @@
+[metadata]
+icon = "mdi:code-json"
+
+[requirements.extension."pymdownx.superfences"]
+[requirements.extension."pymdownx.highlight"]
+anchor_linenums = true
+line_spans="__span"
+pygments_lang_class = true
+
+
+[examples]
+
+"Default" = """
+By default, python syntax highlighting is used.
+
+{{ "a = 1 + 2" | MkCode | MkReprRawRendered }}
+"""
+
+"Syntax highlighting" = """
+{{ "var z = x + y;" | MkCode(language="js") | MkReprRawRendered }}
+"""
+
+"Highlighting lines" = """
+{{ "1\n2\n3\n4" | MkCode(highlight_lines=[1, 3]) | MkReprRawRendered }}
+"""
+
+"Line numbers" = """
+{{ "1\n2\n3\n4" | MkCode(linenums=10) | MkReprRawRendered }}
+
+"""

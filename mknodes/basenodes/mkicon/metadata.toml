@@ -1,0 +1,21 @@
+[metadata]
+icon = "mdi:image"
+status = "new"
+
+[examples]
+
+"With caption" = """
+{{ "mdi:file" | MkIcon | MkReprRawRendered }}
+"""
+
+Colored = """
+{{ "mdi:file" | MkIcon(color="red") | MkReprRawRendered }}
+"""
+
+Rotated = """
+{{ "mdi:file" | MkIcon(rotate=90) | MkReprRawRendered }}
+"""
+
+Sized = """
+{{ "noto:wrench" | MkIcon(height=100, width=100) | MkReprRawRendered }}
+"""
