@@ -21,7 +21,14 @@ from mknodes.info import (
     packageregistry,
     pyproject,
 )
-from mknodes.utils import log, packagehelpers, pathhelpers, reprhelpers, yamlhelpers
+from mknodes.utils import (
+    icons,
+    log,
+    packagehelpers,
+    pathhelpers,
+    reprhelpers,
+    yamlhelpers,
+)
 
 
 if TYPE_CHECKING:
@@ -33,20 +40,6 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
-
-
-SOCIALS = {
-    "gitter.im": "fontawesome/brands/gitter",
-    "matrix.to": "fontawesome/brands/gitter",
-    "twitter.com": "fontawesome/brands/twitter",
-    "docker.com": "fontawesome/brands/docker",
-    "fosstodon.org": "fontawesome/brands/mastodon",
-    "discord.gg": "fontawesome/brands/discord",
-    "discord.com": "fontawesome/brands/discord",
-    "linkedin.com": "fontawesome/brands/linkedin",
-    "dev.to": "fontawesome/brands/dev",
-    "medium.to": "fontawesome/brands/medium",
-}
 
 
 GITHUB_REGEX = re.compile(
@@ -230,15 +223,16 @@ class FolderInfo:
         result = []
         if url := self.repository_url:
             result.append(
-                dict(icon="fontawesome/brands/github", link=url),
+                dict(icon="fa-brands:github", link=url),
             )
         for link in self.info.urls.values():
-            result.extend(
-                dict(icon=v, link=link) for k, v in SOCIALS.items() if k in link
-            )
+            if "github" in link or "pypi.org" in link:
+                continue
+            if icon := icons.icon_for_url(link):
+                result.append(dict(icon=icon, link=link))
         result.append(
             dict(
-                icon="fontawesome/brands/python",
+                icon="fa-brands:python",
                 link=f"https://pypi.org/project/{self.module.__name__}/",
             ),
         )
@@ -305,4 +299,3 @@ class FolderInfo:
 if __name__ == "__main__":
     info = FolderInfo()
     log.basic()
-    logger.warning(info.griffe_module)

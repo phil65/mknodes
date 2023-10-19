@@ -24,6 +24,26 @@ Rotation = Literal["90", "180", "270", 90, 180, 270, "-90", 1, 2, 3]
 Flip = Literal["horizontal", "vertical", "horizontal,vertical"]
 
 
+def icon_for_url(url: str) -> str | None:
+    """Return a pyconify icon key for given url."""
+    from urllib import parse
+
+    socials = {
+        "matrix.to": "fa-brands:gitter",
+        "x.com": "fa-brands:twitter",
+        "fosstodon.org": "fa-brands:mastodon",
+    }
+    netloc = parse.urlsplit(url).netloc.lower()
+    stem = netloc.split(".")[-2]
+    for k, v in socials.items():
+        if k == netloc:
+            return v
+    idx = _get_pyconify_icon_index()
+    if (name := f":fa-brands-{stem}:") in idx:
+        return get_pyconify_key(idx[name]["name"])
+    return None
+
+
 @functools.cache
 def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     """Return a dictionary with a mapping from pyconify name to icon prefixes.
@@ -41,6 +61,7 @@ def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     return mapping
 
 
+@functools.cache
 def _get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
     """Return a icon index for the pymdownx emoji extension containing pyconify icons.
 
