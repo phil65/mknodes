@@ -55,12 +55,12 @@ class MkProgressBar(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         match self.title:
-            case None:
-                title = ""
             case str():
                 title = self.title.format(percentage=self.percentage)
             case True:
                 title = f"{self.percentage}%"
+            case _:
+                title = ""
         return rf'[={self.percentage}% "{title}"]'
 
     @classmethod
@@ -75,6 +75,13 @@ class MkProgressBar(mknode.MkNode):
         page += mk.MkReprRawRendered(node, header="### Candystripe")
         node = MkProgressBar(80, style="candystripe_animated")
         page += mk.MkReprRawRendered(node, header="### Animated")
+
+    def attach_css_classes(self, text: str):
+        if not self.mods.css_classes:
+            return text
+        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
+        text += f"{{: {classes}}}"
+        return text
 
 
 if __name__ == "__main__":

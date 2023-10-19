@@ -60,13 +60,13 @@ class MkList(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        list_1 = MkList(items=["Item 1", "Item 2", "Item 3"])
+        list_1 = MkList(["Item 1", "Item 2", "Item 3"])
         # list can also have a max length. they will get shortened with a "..." entry.
-        list_2 = MkList(items=["Item"] * 6, shorten_after=3)
+        list_2 = MkList(["Item"] * 6, shorten_after=3)
         # They can also be ordered.
-        list_3 = MkList(items=["Item 1", "Item 2", "Item 3"], ordered=True)
+        list_3 = MkList(["Item 1", "Item 2", "Item 3"], ordered=True)
         # and can contain markdown.
-        list_4 = MkList(items=[mk.MkAdmonition("Markup")] * 3)
+        list_4 = MkList([mk.MkAdmonition("Markup")] * 3)
 
         page += mk.MkReprRawRendered(list_1, header="### Regular")
         page += mk.MkReprRawRendered(list_2, header="### Shortened")
