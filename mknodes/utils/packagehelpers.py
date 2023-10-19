@@ -138,7 +138,7 @@ def get_entry_points(
     dist: metadata.Distribution | str | None = None,
     group: str | None = None,
     **kwargs: Any,
-) -> collections.defaultdict[str, list[EntryPoint]]:
+) -> EntryPointMap:  # [str, list[EntryPoint]]
     """Returns a dictionary with entry point group as key, entry points as value.
 
     Arguments:
@@ -153,20 +153,38 @@ def get_entry_points(
     else:
         kw_args = dict(group=group, **kwargs) if group else kwargs
         eps = _get_entry_points(**kw_args)
-    dct = collections.defaultdict(list)
-    for ep in eps:
-        ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
-        dct[ep.group].append(ep)
-    return dct
+    return EntryPointMap(eps)
 
 
 class EntryPointMap(collections.defaultdict):
-    def __init__(self):
+    def __init__(self, eps: list | None = None):
         super().__init__(list)
+        for ep in eps or []:
+            if not isinstance(ep, EntryPoint):
+                ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
+            self[ep.group].append(ep)
+
+    @classmethod
+    def from_system(cls):
+        eps = _get_entry_points()
+        kls = cls()
+        for group in eps.groups:
+            kls[group] = [
+                EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
+                for ep in eps.select(group=group)
+            ]
+        # kls.update([i for ls in eps.select() for i in ls])
+        return kls
 
     @property
     def all_eps(self):
         return [i for ls in self.values() for i in ls]
+
+    def by_name(self, name: str) -> EntryPoint | None:
+        return next((i for i in self.all_eps if i.name == name), None)
+
+    def by_dotted_path(self, dotted_path: str) -> EntryPoint | None:
+        return next((i for i in self.all_eps if i.dotted_path == dotted_path), None)
 
 
 class Dependency:
