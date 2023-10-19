@@ -6,7 +6,7 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -57,6 +57,8 @@ def get_mermaid(
 
 class MkPipDepTree(mkdiagram.MkDiagram):
     """Node to display a mermaid diagram for the dependencies."""
+
+    REQUIRED_PACKAGES = [resources.Package("pipdeptree")]
 
     def __init__(
         self,

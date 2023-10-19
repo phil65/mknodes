@@ -8,7 +8,7 @@ from typing import Any, Literal, get_args
 import seedir
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -25,6 +25,7 @@ class MkSeeDir(mkcode.MkCode):
     """
 
     ICON = "material/file-tree-outline"
+    REQUIRED_PACKAGES = [resources.Package("seedir")]
 
     def __init__(
         self,

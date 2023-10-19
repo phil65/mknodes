@@ -17,6 +17,7 @@ class MkDocStrings(mknode.MkNode):
     """Docstring section (powered by mkdocstrings)."""
 
     REQUIRED_PLUGINS = [resources.Plugin("mkdocstrings")]
+    REQUIRED_PACKAGES = [resources.Package("mkdocstrings", extras=["python"])]
     OPTIONS_DEFAULT: dict[str, Any] = {}
     ICON = "material/api"
 

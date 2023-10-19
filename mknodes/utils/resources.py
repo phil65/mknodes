@@ -245,6 +245,8 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
     """A list of JS file paths."""
     assets: list[Asset] = dataclasses.field(default_factory=list)
     """A list of additional assets required (static files which go into assets dir)."""
+    packages: list[Package] = dataclasses.field(default_factory=list)
+    """A list of required packages."""
 
     def __getitem__(self, value):
         return getattr(self, value)
@@ -275,15 +277,17 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         for resource in resources:
             if resource in self.css:
                 self.css.remove(resource)
-            elif resource in self.templates:
+            if resource in self.templates:
                 self.templates.remove(resource)
-            elif resource in self.plugins:
+            if resource in self.plugins:
                 self.plugins.remove(resource)
-            elif resource in self.js:
+            if resource in self.js:
                 self.js.remove(resource)
-            elif resource in self.assets:
+            if resource in self.assets:
                 self.assets.remove(resource)
-            elif resource in self.markdown_extensions:
+            if resource in self.packages:
+                self.packages.remove(resource)
+            if resource in self.markdown_extensions:
                 self.markdown_extensions.pop(resource)
 
     @property
@@ -319,6 +323,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         self.plugins = list(set(self.plugins + other["plugins"]))
         self.js = list(set(self.js + other["js"]))
         self.assets = list(set(self.assets + other["assets"]))
+        self.packages = list(set(self.packages + other["packages"]))
         return self
 
 
