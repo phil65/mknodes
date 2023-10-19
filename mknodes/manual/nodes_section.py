@@ -13,6 +13,7 @@ BASE_NODES = [
     mk.MkKeys,
     mk.MkProgressBar,
     mk.MkSpeechBubble,
+    mk.MkJinjaText,
     mk.MkJinjaTemplate,
 ]
 
