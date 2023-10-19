@@ -136,7 +136,10 @@ def get_icon_svg(
     For compatibility, this method also supports compatibility for
     emoji-slugs (":material-file:") as well as material-paths ("material/file")
 
-    If no group is supplied as part of the string, mdi is assumed as group:
+    If no icon group is supplied as part of the string, mdi is assumed as group.
+
+    When passing a string with "|" delimiters, the returned string will contain multiple
+    icons.
 
     Arguments:
         icon: Pyconify icon name
@@ -160,19 +163,23 @@ def get_icon_svg(
         get_icon_svg("mdi:file")  # pyconify key
         get_icon_svg("material/file")  # Material-style path
         get_icon_svg(":material-file:")  # material-style emoji slug
+        get_icon_svg("mdi:file|:material-file:")  # returns a string with two svgs
     """
-    key = get_pyconify_key(icon)
-    import pyconify
+    label = ""
+    for splitted in icon.split("|"):
+        key = get_pyconify_key(splitted)
+        import pyconify
 
-    return pyconify.svg(
-        key,
-        color=color,
-        height=height,
-        width=width,
-        flip=flip,
-        rotate=rotate,
-        box=box,
-    ).decode()
+        label += pyconify.svg(
+            key,
+            color=color,
+            height=height,
+            width=width,
+            flip=flip,
+            rotate=rotate,
+            box=box,
+        ).decode()
+    return label
 
 
 def get_pyconify_key(icon: str) -> str:
