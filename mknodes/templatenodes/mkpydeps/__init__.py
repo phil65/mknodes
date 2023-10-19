@@ -8,7 +8,7 @@ import types
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import inspecthelpers, log, reprhelpers
+from mknodes.utils import inspecthelpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -62,6 +62,7 @@ class MkPyDeps(mknode.MkNode):
     """Node for showing a Dependency graph."""
 
     ICON = "material/code-json"
+    REQUIRED_PACKAGES = [resources.Package("pydeps")]
 
     def __init__(
         self,

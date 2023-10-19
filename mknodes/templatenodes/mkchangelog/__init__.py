@@ -10,7 +10,7 @@ from typing import Any, Literal
 from git_changelog import cli
 
 from mknodes.basenodes import mktext
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -44,6 +44,7 @@ class MkChangelog(mktext.MkText):
     """
 
     ICON = "material/format-list-group"
+    REQUIRED_PACKAGES = [resources.Package("git-changelog")]
 
     def __init__(
         self,
