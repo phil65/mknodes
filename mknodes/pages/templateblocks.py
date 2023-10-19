@@ -5,7 +5,8 @@ import os
 from typing import TYPE_CHECKING, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import css as css_, helpers, mdconverter, resources
+from mknodes.mdlib import mdconverter
+from mknodes.utils import css as css_, helpers, resources
 
 
 if TYPE_CHECKING:

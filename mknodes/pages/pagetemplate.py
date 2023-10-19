@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from mknodes.mdlib import mdconverter
 from mknodes.pages import templateblocks
-from mknodes.utils import mdconverter, reprhelpers
+from mknodes.utils import reprhelpers
 
 
 if TYPE_CHECKING:
