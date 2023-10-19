@@ -1,0 +1,19 @@
+[metadata]
+icon = "mdi:square-medium"
+status = "new"
+
+[requirements.css.file]
+path = "css/grid.css"
+
+[examples]
+"With link" = """
+{{ "Title" | MkCard("https://picsum.photos/300", target="https://phil65.github.io/mknodes/") | MkReprRawRendered }}
+"""
+
+"With caption" = """
+{{ "Title" | MkCard("https://picsum.photos/300", caption="Caption") | MkReprRawRendered }}
+"""
+
+"Separate dark mode image" = """
+{{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") | MkReprRawRendered }}
+"""

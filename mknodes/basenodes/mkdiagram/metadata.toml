@@ -8,12 +8,10 @@ format = "pymdownx.superfences.fence_code_format"
 
 [examples]
 Regular = """
-
 {{ ["1", "2", "3"] | MkDiagram(connections=[("1", "2"), ("2", "3")]) }}
 """
 
 Direction = """
-
 {{ ["1", "2", "3"] | MkDiagram(connections=[("1", "2"), ("2", "3", "comment")], direction="LR") }}
 """
 

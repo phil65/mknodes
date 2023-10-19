@@ -1,0 +1,22 @@
+[metadata]
+icon = "fa6-regular:keyboard"
+
+[requirements.extension."pymdownx.keys"]
+
+[examples]
+"Single key" = """
+{{ "M" | MkKeys | MkReprRawRendered }}
+"""
+
+"Multiple keys" = """
+{{ "M+k+K+e+y+s" | MkKeys | MkReprRawRendered }}
+"""
+
+Modifiers = """
+{{ "Ctrl+A" | MkKeys | MkReprRawRendered }}
+"""
+
+"As list" = """
+{{ ["Alt", "X"] | MkKeys | MkReprRawRendered }}
+"""
+
