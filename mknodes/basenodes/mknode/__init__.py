@@ -41,6 +41,7 @@ class MkNode(node.Node):
     # METADATA (should be set by subclasses)
 
     ICON = "material/puzzle-outline"
+    ATTR_LIST_SEPARATOR = " "
     REQUIRED_EXTENSIONS: list[resources.Extension] = []
     REQUIRED_PLUGINS: list[resources.Plugin] = []
     STATUS: datatypes.PageStatusStr | None = None
@@ -249,7 +250,7 @@ class MkNode(node.Node):
         if not self.mods.css_classes:
             return text
         classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
-        text += f" {{: {classes}}}"
+        text += f"{self.ATTR_LIST_SEPARATOR}{{: {classes}}}"
         return text
 
     @property

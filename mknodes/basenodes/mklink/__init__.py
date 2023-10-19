@@ -21,6 +21,7 @@ class MkLink(mknode.MkNode):
     """
 
     ICON = "octicons/link-24"
+    ATTR_LIST_SEPARATOR = ""
 
     def __init__(
         self,
@@ -82,13 +83,6 @@ class MkLink(mknode.MkNode):
     @property
     def title(self) -> str:
         return self.url if self._title is None else self._title
-
-    def attach_css_classes(self, text: str):
-        if not self.mods.css_classes:
-            return text
-        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
-        text += f"{{: {classes}}}"
-        return text
 
     def _to_markdown(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""

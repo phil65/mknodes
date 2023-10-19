@@ -76,6 +76,7 @@ class MkTab(mkcontainer.MkContainer):
 
     ICON = "material/tab"
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.tabbed")]
+    ATTR_LIST_SEPARATOR = "    "
 
     def __init__(
         self,
@@ -148,13 +149,6 @@ class MkTab(mkcontainer.MkContainer):
             mark = ""
         lines = [f'==={mark} "{self.title}"', text]
         return "\n".join(lines) + "\n"
-
-    def attach_css_classes(self, text: str):
-        if not self.mods.css_classes:
-            return text
-        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
-        text += f"    {{: {classes}}}"
-        return text
 
 
 if __name__ == "__main__":

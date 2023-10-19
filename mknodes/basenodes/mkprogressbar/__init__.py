@@ -16,6 +16,7 @@ class MkProgressBar(mknode.MkNode):
     ICON = "fontawesome/solid/bars-progress"
     STATUS = "new"
     CSS = [resources.CSSFile("css/progressbar.css")]
+    ATTR_LIST_SEPARATOR = ""
 
     def __init__(
         self,
@@ -75,13 +76,6 @@ class MkProgressBar(mknode.MkNode):
         page += mk.MkReprRawRendered(node, header="### Candystripe")
         node = MkProgressBar(80, style="candystripe_animated")
         page += mk.MkReprRawRendered(node, header="### Animated")
-
-    def attach_css_classes(self, text: str):
-        if not self.mods.css_classes:
-            return text
-        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
-        text += f"{{: {classes}}}"
-        return text
 
 
 if __name__ == "__main__":

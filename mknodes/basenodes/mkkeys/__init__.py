@@ -17,6 +17,7 @@ class MkKeys(mknode.MkNode):
 
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.keys")]
     ICON = "fontawesome/regular/keyboard"
+    ATTR_LIST_SEPARATOR = ""
 
     def __init__(
         self,
@@ -51,14 +52,8 @@ class MkKeys(mknode.MkNode):
         page += mk.MkReprRawRendered(MkKeys("M+k+K+e+y+s"))
         page += mk.MkReprRawRendered(MkKeys("Ctrl+A"))
 
-    def attach_css_classes(self, text: str):
-        if not self.mods.css_classes:
-            return text
-        classes = " ".join(f".{kls_name}" for kls_name in self.mods.css_classes)
-        text += f"{{: {classes}}}"
-        return text
-
 
 if __name__ == "__main__":
     keys = MkKeys(keys="Ctrl+A")
-    print(keys)
+    keys.add_css_class("test")
+    print(keys.to_html())
