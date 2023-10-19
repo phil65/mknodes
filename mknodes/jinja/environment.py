@@ -69,7 +69,7 @@ class Environment(jinja2.Environment):
         try:
             return template.render(**variables)
         except jinja2.exceptions.UndefinedError:
-            logger.exception("Error when rendering template.")
+            logger.exception("Error when rendering template \n%r", markdown)
             return ""
 
     def add_template(self, file: str | os.PathLike):
