@@ -24,8 +24,8 @@ def build_html_card(
     size: int = CARD_DEFAULT_SIZE,
     caption: str | None = None,
     path_dark_mode: str | None = None,
-) -> xml.A:
-    root = xml.A(href=link)
+) -> xml.HTMLElement:
+    root = xml.A(href=link) if link else xml.Div()
     card_div = xml.Div("card", parent=root)
     container_div = xml.Div("showcase-container", parent=card_div)
     src = f"{image}#only-light" if path_dark_mode else image
