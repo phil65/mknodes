@@ -1,0 +1,14 @@
+[metadata]
+icon = "simple-icons:shieldsdotio"
+
+[[resources.css]]
+filename = "css/materialbadge.css"
+
+[examples]
+"Regular" = """
+{{ "mdi:wrench" | MkMaterialBadge(text="text") | MkReprRawRendered }}
+"""
+
+"Heart type" = """
+{{ "mdi:file" | MkMaterialBadge(text="text", typ="heart") | MkReprRawRendered }}
+"""

@@ -1,0 +1,15 @@
+[metadata]
+icon = "mdi:format-header-pound"
+
+[examples]
+Regular = """
+{{ "Header with level 2" | MkHeader(level=2) | MkReprRawRendered }}
+"""
+
+"Header levels" = """
+{% for i in range(1, 7) %}
+
+{{ ("Header level " ~ i) | MkHeader(level=i) }}
+
+{% endfor %}
+"""
