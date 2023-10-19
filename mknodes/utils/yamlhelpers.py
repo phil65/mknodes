@@ -40,8 +40,9 @@ def patch_pyyaml_to_not_order_dicts():
 
 def yaml_include_constructor(loader: yaml.BaseLoader, node: yaml.Node) -> Any:
     """Include file referenced with !include node."""
-    scalar = loader.construct_scalar(node)
-    fp = pathlib.Path(loader.name).parent.joinpath(scalar).resolve()
+    scalar = loader.construct_scalar(node)  # type: ignore[arg-type]
+    folder = pathlib.Path(loader.name).parent
+    fp = folder.joinpath(scalar).resolve()  # type: ignore[arg-type]
     fe = fp.suffix.lstrip(".")
     with fp.open() as f:
         if fe in ("yaml", "yml"):
