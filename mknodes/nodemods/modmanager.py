@@ -36,6 +36,11 @@ class ModManager:
         cls_names = [cls_name for mod in self.mods for cls_name in mod.css_class_names]
         return self._css_classes + cls_names
 
+    @property
+    def attr_list_str(self):
+        classes = " ".join(self.css_classes)
+        return f"{{: .{classes}}}"
+
     def add_parallax_effect(self, orientation: str = "up"):
         effect = parallax.ParallaxEffect(orientation=orientation)
         self.mods.append(effect)
