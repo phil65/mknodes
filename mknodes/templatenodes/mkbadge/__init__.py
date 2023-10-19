@@ -6,7 +6,7 @@ import html
 from typing import Any, Literal
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -49,11 +49,13 @@ class MkBadge(mkimage.MkImage):
     """
 
     ICON = "simple/shieldsdotio"
+    REQUIRED_PACKAGES = [resources.Package("anybadge")]
 
     def __init__(
         self,
-        label: str,
-        value: str,
+        label: str | tuple[str, str],
+        value: str | None = None,
+        *,
         font_size: Literal[10, 11, 12] | None = None,
         font_name: str | None = None,
         num_padding_chars: int | None = None,
@@ -65,7 +67,7 @@ class MkBadge(mkimage.MkImage):
         """Constructor.
 
         Arguments:
-            label: Left part of the badge
+            label: Left part of the badge. If given a tuple, use 2nd item as value.
             value: Right part of the badge
             font_size: Size of font to use
             font_name: Name of font to use
@@ -76,8 +78,11 @@ class MkBadge(mkimage.MkImage):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__("", **kwargs)
-        self.label = label
-        self.value = value
+        if isinstance(label, tuple):
+            self.label, self.value = label
+        else:
+            self.label = label
+            self.value = value
         self.font_size = font_size
         self.font_name = font_name
         self.num_padding_chars = num_padding_chars
