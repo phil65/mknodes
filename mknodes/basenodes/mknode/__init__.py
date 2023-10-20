@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import Iterable
 import pathlib
 import re
-import time
 
 from typing import TYPE_CHECKING, Any
 
@@ -87,7 +86,6 @@ class MkNode(node.Node):
         self.as_html = as_html
         if name is not None:
             self._name_registry[name] = self
-        self.stats = contexts.NodeBuildStats()
         # ugly, but convenient.
         import mknodes as mk
 
@@ -107,7 +105,7 @@ class MkNode(node.Node):
             return False
         dct_1 = self.__dict__.copy()
         dct_2 = other.__dict__.copy()
-        for attr in ["_parent", "stats"]:  # , "_annotations"]
+        for attr in ["_parent"]:  # , "_annotations"]
             dct_1.pop(attr)
             dct_2.pop(attr)
         return dct_1 == dct_2
@@ -209,12 +207,9 @@ class MkNode(node.Node):
 
     def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
-        now = time.perf_counter()
         text = self._to_markdown()
         for proc in self.get_processors():
             text = proc.run(text)
-        self.stats.render_duration = now - time.perf_counter()
-        self.stats.render_count += 1
         return text
 
     def get_processors(self) -> list[processors.TextProcessor]:

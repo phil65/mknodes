@@ -99,14 +99,6 @@ class ThemeContext(Context):
 
 
 @dataclasses.dataclass
-class NodeBuildStats:
-    """Node stats collected during rendering."""
-
-    render_duration: float = 0
-    render_count: int = 0
-
-
-@dataclasses.dataclass
 class PackageContext(Context):
     """Information about a package."""
 
