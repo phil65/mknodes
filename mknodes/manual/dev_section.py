@@ -9,11 +9,6 @@ def _(page: mk.MkPage):
     page += mk.MkModuleOverview(maximum_depth=2)
 
 
-@nav.route.page("Changelog", icon="format-list-group")
-def _(page: mk.MkPage):
-    page += mk.MkChangelog()
-
-
 @nav.route.page("Code of conduct", icon="octicons/code-of-conduct-24")
 def _(page: mk.MkPage):
     page += mk.MkCodeOfConduct()

@@ -32,3 +32,8 @@ def _(page: mk.MkPage):
 @nav.route.page("A quick node tour", hide="toc")
 def _(page: mk.MkPage):
     a_quick_tour(page)
+
+
+@nav.route.page("Changelog", icon="format-list-group")
+def _(page: mk.MkPage):
+    page += mk.MkChangelog()
