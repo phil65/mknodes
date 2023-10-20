@@ -19,17 +19,17 @@ def _(page: mk.MkPage):
     page += node
 
 
-@nav.route.page("Installation", hide="toc")
+@nav.route.page("Installation", hide="toc", icon="grommet-icons:install")
 def _(page: mk.MkPage):
     page += mk.MkInstallGuide()
 
 
-@nav.route.page("Why should I use MkNodes?", hide="toc")
+@nav.route.page("Why should I use MkNodes?", hide="toc", icon="ri:question-line")
 def _(page: mk.MkPage):
     page += mk.MkJinjaTemplate("why_mknodes.jinja")
 
 
-@nav.route.page("A quick node tour", hide="toc")
+@nav.route.page("A quick node tour", hide="toc", icon="ic:outline-tour")
 def _(page: mk.MkPage):
     a_quick_tour(page)
 
