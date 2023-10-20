@@ -32,8 +32,8 @@ class Environment(jinja2.Environment):
         """
         loader = loaders.resource_loader if load_templates else None
         behavior = undefined_.UNDEFINED_BEHAVIOR[undefined]
-        self.extra_files: set[str] = set()
-        self.extra_paths: set[str] = set()
+        self._extra_files: set[str] = set()
+        self._extra_paths: set[str] = set()
         super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
         self.filters.update(jinjahelpers.ENV_FILTERS)
         self.globals.update(jinjahelpers.ENV_GLOBALS)
@@ -66,9 +66,9 @@ class Environment(jinja2.Environment):
         """
         # we keep track of already added extra files to not add things multiple times.
         file = str(file)
-        if file in self.extra_files:
+        if file in self._extra_files:
             return
-        self.extra_files.add(file)
+        self._extra_files.add(file)
         content = pathhelpers.load_file_cached(file)
         new_loader = loaders.DictLoader({file: content})
         self._add_loader(new_loader)
@@ -83,9 +83,9 @@ class Environment(jinja2.Environment):
             path: Template serch patch to add
         """
         path = str(path)
-        if path in self.extra_paths:
+        if path in self._extra_paths:
             return
-        self.extra_paths.add(path)
+        self._extra_paths.add(path)
         new_loader = loaders.FileSystemLoader(path)
         self._add_loader(new_loader)
 

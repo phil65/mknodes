@@ -83,6 +83,8 @@ def find_file_in_folder_or_parent(
 
 @functools.cache
 def load_file_cached(path: str | os.PathLike) -> str:
+    if "://" in str(path):
+        return fsspec_get(str(path))
     return pathlib.Path(path).read_text(encoding="utf-8")
 
 
@@ -105,6 +107,14 @@ def download_from_github(
     fs = fsspec.filesystem("github", org=org, repo=repo)
     logger.info("Copying files from Github: %s", path)
     fs.get(fs.ls(str(path)), destination.as_posix(), recursive=recursive)
+
+
+@functools.cache
+def fsspec_get(path: str) -> str:
+    import fsspec
+
+    with fsspec.open(path) as file:
+        return file.read().decode()
 
 
 if __name__ == "__main__":
