@@ -86,9 +86,6 @@ class MkNav(mknode.MkNode):
     def __iter__(self):
         yield from self.nav.all_items
 
-    def get_node_resources(self) -> resources.Resources:
-        return resources.Resources(templates=[self.page_template])
-
     @property
     def index_page(self) -> mk.MkPage | None:
         """Get the current index page if set."""

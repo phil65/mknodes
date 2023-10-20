@@ -11,14 +11,7 @@ from urllib import parse
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import (
-    downloadhelpers,
-    helpers,
-    inspecthelpers,
-    log,
-    reprhelpers,
-    resources,
-)
+from mknodes.utils import downloadhelpers, helpers, inspecthelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -105,9 +98,6 @@ class MkPage(mkcontainer.MkContainer):
     def __repr__(self):
         kwargs = {k: v for k, v in self.metadata.items() if v is not None}
         return reprhelpers.get_repr(self, path=str(self.path), **kwargs)
-
-    def get_node_resources(self) -> resources.Resources:
-        return resources.Resources(templates=[self.template])
 
     def is_index(self) -> bool:
         """Returns True if the page is the index page for the parent Nav."""
