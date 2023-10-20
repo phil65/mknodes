@@ -53,25 +53,6 @@ class Environment(jinja2.Environment):
         mapping = mergehelpers.merge_dicts(self.variables, other, strategy=strategy)
         self.variables = dict(mapping)
 
-    def render_string(self, markdown: str, variables: dict | None = None):
-        """Render a template string.
-
-        Arguments:
-            markdown: String to render
-            variables: Extra variables for the environment
-        """
-        try:
-            template = self.from_string(markdown)
-        except jinja2.exceptions.TemplateSyntaxError:
-            logger.exception("Error when loading template.")
-            return markdown
-        variables = variables or {}
-        try:
-            return template.render(**variables)
-        except jinja2.exceptions.UndefinedError:
-            logger.exception("Error when rendering template \n%r", markdown)
-            return ""
-
     def add_template(self, file: str | os.PathLike):
         """Add a new template during runtime.
 
@@ -121,6 +102,25 @@ class Environment(jinja2.Environment):
                 self.loader = new_loader
             case _:
                 self.loader = loaders.ChoiceLoader(loaders=[new_loader, self.loader])
+
+    def render_string(self, markdown: str, variables: dict | None = None):
+        """Render a template string.
+
+        Arguments:
+            markdown: String to render
+            variables: Extra variables for the environment
+        """
+        try:
+            template = self.from_string(markdown)
+        except jinja2.exceptions.TemplateSyntaxError:
+            logger.exception("Error when loading template.")
+            return markdown
+        variables = variables or {}
+        try:
+            return template.render(**variables)
+        except jinja2.exceptions.UndefinedError:
+            logger.exception("Error when rendering template \n%r", markdown)
+            return ""
 
     def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
         """Helper to directly render a template from filesystem.
