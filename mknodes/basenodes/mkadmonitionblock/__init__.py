@@ -50,7 +50,13 @@ class MkAdmonitionBlock(mkblock.MkBlock):
             content = reprhelpers.to_str_if_textnode(self.items[0])
         else:
             content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
-        return reprhelpers.get_repr(self, content=content, typ=self.typ, title=self.title)
+        return reprhelpers.get_repr(
+            self,
+            content=content,
+            typ=self.typ,
+            title=self.title,
+            _filter_empty=True,
+        )
 
     @property
     def typ(self) -> datatypes.AdmonitionTypeStr:

@@ -57,7 +57,16 @@ class MkAdmonition(mkcontainer.MkContainer):
             content = reprhelpers.to_str_if_textnode(self.items[0])
         else:
             content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
-        return reprhelpers.get_repr(self, content=content, typ=self.typ, title=self.title)
+        return reprhelpers.get_repr(
+            self,
+            content=content,
+            typ=self.typ,
+            title=self.title,
+            collapsible=self.collapsible,
+            expanded=self.expanded,
+            _filter_empty=True,
+            _filter_false=True,
+        )
 
     def attach_annotations(self, text: str) -> str:
         # we deal with attaching annotations ourselves.
