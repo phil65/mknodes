@@ -87,8 +87,7 @@ class MkNav(mknode.MkNode):
         yield from self.nav.all_items
 
     def get_node_resources(self) -> resources.Resources:
-        templates = [self.page_template] if self.page_template else []
-        return resources.Resources(templates=templates)
+        return resources.Resources(templates=[self.page_template])
 
     @property
     def index_page(self) -> mk.MkPage | None:

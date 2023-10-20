@@ -17,4 +17,4 @@ def test_templates():
     project.build()
     assert project._root
     resources = project._root.get_resources()
-    assert len(resources.templates) == 1
+    assert len([i for i in resources.templates if i]) == 1

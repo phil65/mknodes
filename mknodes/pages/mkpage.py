@@ -107,8 +107,7 @@ class MkPage(mkcontainer.MkContainer):
         return reprhelpers.get_repr(self, path=str(self.path), **kwargs)
 
     def get_node_resources(self) -> resources.Resources:
-        templates = [self.template] if self.template else []
-        return resources.Resources(templates=templates)
+        return resources.Resources(templates=[self.template])
 
     def is_index(self) -> bool:
         """Returns True if the page is the index page for the parent Nav."""
