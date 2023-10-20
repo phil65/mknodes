@@ -87,7 +87,7 @@ class MaterialTheme(theme.Theme):
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None
         self.default_icons = {}
-        self.status_icons = []
+        self.status_icons = {}
         self.accent_fg_color = None
         self.primary_bg_color = None
         self.color_theme = None
@@ -109,7 +109,7 @@ class MaterialTheme(theme.Theme):
             tooltip_width=self.tooltip_width,
             content_area_width=self.content_area_width,
             default_icons=self.default_icons,
-            status_icons=self.status_icons,
+            status_icons=list(self.status_icons.values()),
             accent_fg_color=self.accent_fg_color,
             primary_bg_color=self.primary_bg_color,
             color_theme=self.color_theme,
@@ -273,8 +273,7 @@ class MaterialTheme(theme.Theme):
             description: Optional status description (used for tooltip)
         """
         data = icons.get_icon_svg(material_icon)
-        status_icon = StatusIcon(name, data, description)
-        self.status_icons.append(status_icon)
+        self.status_icons[name] = StatusIcon(name, data, description)
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         """MkDocs-Material needs some custom configuration for extensions.
@@ -295,7 +294,7 @@ class MaterialTheme(theme.Theme):
     def adapt_extras(self, extras: dict):
         if self.alternate_selector:
             extras.setdefault("alternate", []).extend(self.alternate_selector)
-        for status in self.status_icons:
+        for status in self.status_icons.values():
             if status.description:
                 extras.setdefault("status", {})[status.name] = status.description
 
