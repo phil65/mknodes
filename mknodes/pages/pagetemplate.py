@@ -53,7 +53,7 @@ class PageTemplate:
         self.announce = templateblocks.HtmlBlock("announce", parent=parent)
 
     def __bool__(self):
-        return any(self.blocks)
+        return any(self.blocks)  # or self.extends
 
     def __hash__(self):
         return hash(self.build_html())

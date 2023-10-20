@@ -14,6 +14,7 @@ class MkIcon(mknode.MkNode):
 
     ICON = "material/image"
     ATTR_LIST_SEPARATOR = "\n"
+    STATUS = "new"
 
     def __init__(
         self,
