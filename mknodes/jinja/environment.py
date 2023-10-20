@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 import jinja2
 
-from mknodes.jinja import loaders
+from mknodes.jinja import loaders, undefined as undefined_
 from mknodes.utils import jinjahelpers, log, mergehelpers, pathhelpers
 
 
@@ -31,7 +31,7 @@ class Environment(jinja2.Environment):
             load_templates: Whether to load the templates into environment.
         """
         loader = loaders.resource_loader if load_templates else None
-        behavior = jinjahelpers.UNDEFINED_BEHAVIOR[undefined]
+        behavior = undefined_.UNDEFINED_BEHAVIOR[undefined]
         self.extra_files: set[str] = set()
         self.extra_paths: set[str] = set()
         super().__init__(undefined=behavior, loader=loader, trim_blocks=True)

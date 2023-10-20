@@ -88,6 +88,7 @@ def get_loader(
 resources_loader = PackageLoader("mknodes", "resources")
 docs_loader = FileSystemLoader(searchpath="docs/")
 resource_loader = ChoiceLoader([resources_loader, docs_loader])
+# material_partials_loader = PackageLoader("material", "partials")
 
 
 if __name__ == "__main__":
