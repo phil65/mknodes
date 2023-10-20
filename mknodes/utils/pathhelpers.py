@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+import functools
 import os
 import pathlib
 import shutil
@@ -78,6 +79,11 @@ def find_file_in_folder_or_parent(
     while not (path / filename).exists() and len(path.parts) > 1:
         path = path.parent
     return file if (file := (path / filename)).exists() else None
+
+
+@functools.cache
+def load_file_cached(path: str | os.PathLike) -> str:
+    return pathlib.Path(path).read_text(encoding="utf-8")
 
 
 def download_from_github(

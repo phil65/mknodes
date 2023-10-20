@@ -6,7 +6,6 @@ import functools
 from importlib import util
 import json
 import os
-import pathlib
 import tomllib
 from typing import Any
 
@@ -14,12 +13,7 @@ import jinja2
 import tomli_w
 
 from mknodes import paths
-from mknodes.utils import helpers, icons, inspecthelpers, log, yamlhelpers
-
-
-@functools.cache
-def load_file(path: str | os.PathLike) -> str:
-    return pathlib.Path(path).read_text(encoding="utf-8")
+from mknodes.utils import helpers, icons, inspecthelpers, log, pathhelpers, yamlhelpers
 
 
 ENV_GLOBALS = {
@@ -47,7 +41,7 @@ ENV_FILTERS = {
     "load_json": json.loads,
     "joad_toml": tomllib.loads,
     "load_yaml": yamlhelpers.load_yaml,
-    "load_file": load_file,
+    "load_file": pathhelpers.load_file_cached,
     "path_join": os.path.join,
 }
 

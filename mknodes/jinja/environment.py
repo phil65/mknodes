@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any
 import jinja2
 
 from mknodes.jinja import loaders
-from mknodes.utils import jinjahelpers, log, mergehelpers
+from mknodes.utils import jinjahelpers, log, mergehelpers, pathhelpers
 
 
 if TYPE_CHECKING:
@@ -88,7 +88,7 @@ class Environment(jinja2.Environment):
         if file in self.extra_files:
             return
         self.extra_files.add(file)
-        content = jinjahelpers.load_file(file)
+        content = pathhelpers.load_file_cached(file)
         new_loader = loaders.DictLoader({file: content})
         self._add_loader(new_loader)
 
@@ -131,7 +131,7 @@ class Environment(jinja2.Environment):
             file: Template file to load
             variables: Extra variables for the environment
         """
-        content = jinjahelpers.load_file(str(file))
+        content = pathhelpers.load_file_cached(str(file))
         return self.render_string(content, variables)
 
     def render_template(
