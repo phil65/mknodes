@@ -60,7 +60,7 @@ plugins:
     build_fn: mknodes.manual.root:build
     show_page_info: true
     # render_all_pages: false
-    # build_fn: mknodes.navs.mkdefaultwebsite:MkDefaultWebsite.for_project
+    # build_fn: mknodes:MkDefaultWebsite.for_project
     # repo_path: https://github.com/pallets/jinja2.git
 - mkdocstrings:
     default_handler: python
