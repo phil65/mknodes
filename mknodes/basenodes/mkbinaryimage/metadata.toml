@@ -1,8 +1,8 @@
 [metadata]
 icon = "mdi:file-image"
 
-[examples]
-"From data" = """
+[examples."From data"]
+jinja = """
 {% set svg = '<svg width="90pt" height="90pt" version="1.1" viewBox="0 0 15.875 10.583" xmlns="http://www.w3.org/2000/svg">
                   <g fill="none" stroke="#F00" stroke-width=".3">
                       <path d="m6.1295 3.6601 3.2632 3.2632z"/>
@@ -13,6 +13,7 @@ icon = "mdi:file-image"
 {{ svg | MkBinaryImage(path="some_image.svg", caption="A simple cross") | MkReprRawRendered }}
 """
 
-"From icon" = """
+[examples."From icon"]
+jinja = """
 {{ _mk.MkBinaryImage.for_icon("file-image", width=200) | MkReprRawRendered }}
 """

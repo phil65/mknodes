@@ -6,15 +6,17 @@ name = "mermaid"
 class = "mermaid"
 format = "pymdownx.superfences.fence_code_format"
 
-[examples]
-"Base class diagram" = """
+[examples."Baseclass diagram"]
+jinja = """
 {{ _mk.MkClassDiagram | MkClassDiagram(mode="baseclasses") | MkReprRawRendered }}
 """
 
-"Subclass diagram" = """
+[examples."Subclass diagram"]
+jinja = """
 {{ _mk.MkContainer | MkClassDiagram(mode="subclasses", direction="LR") | MkReprRawRendered }}
 """
 
-"MRO diagram" = """
+[examples."MRO diagram"]
+jinja = """
 {{ _mk.MkTable | MkClassDiagram(mode="mro") | MkReprRawRendered }}
 """

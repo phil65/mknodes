@@ -3,20 +3,23 @@ icon = "fa6-regular:keyboard"
 
 [requirements.extension."pymdownx.keys"]
 
-[examples]
-"Single key" = """
+[examples."Single key"]
+jinja = """
 {{ "M" | MkKeys | MkReprRawRendered }}
 """
 
-"Multiple keys" = """
+[examples."Multiple keys"]
+jinja = """
 {{ "M+k+K+e+y+s" | MkKeys | MkReprRawRendered }}
 """
 
-Modifiers = """
+[examples."Modifiers"]
+jinja = """
 {{ "Ctrl+A" | MkKeys | MkReprRawRendered }}
 """
 
-"As list" = """
+[examples."As list"]
+jinja = """
 {{ ["Alt", "X"] | MkKeys | MkReprRawRendered }}
 """
 

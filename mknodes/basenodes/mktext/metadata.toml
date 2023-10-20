@@ -1,11 +1,12 @@
 [metadata]
 icon = "mdi:text"
 
-[examples]
-Regular = """
+[examples."Regular"]
+jinja = """
 {{ "Some text" | MkText | MkReprRawRendered }}
 """
 
-"From URL" = """
+[examples."From URL"]
+jinja = """
 {{ _mk.MkText.from_url("https://raw.githubusercontent.com/phil65/mknodes/main/README.md") | MkReprRawRendered }}
 """

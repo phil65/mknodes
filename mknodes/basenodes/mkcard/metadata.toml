@@ -5,15 +5,17 @@ status = "new"
 [requirements.css.file]
 path = "css/grid.css"
 
-[examples]
-"With link" = """
+[examples."With link"]
+jinja = """
 {{ "Title" | MkCard("https://picsum.photos/300", target="https://phil65.github.io/mknodes/") | MkReprRawRendered }}
 """
 
-"With caption" = """
+[examples."With caption"]
+jinja = """
 {{ "Title" | MkCard("https://picsum.photos/300", caption="Caption") | MkReprRawRendered }}
 """
 
-"Separate dark mode image" = """
+[examples."Separate dark mode image"]
+jinja = """
 {{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") | MkReprRawRendered }}
 """

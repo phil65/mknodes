@@ -6,9 +6,8 @@ icon = "octicon:info-16"
 [requirements.extension."pymdownx.superfences"]
 
 
-[examples]
-
-Annotations = """
+[examples."Annotations"]
+jinja = """
 !!! note annotate
 
     MkAdmonitions can carry annotations(1).
@@ -22,7 +21,8 @@ page += mk.MkReprRawRendered(node)
 ```
 """
 
-Types = """
+[examples."Types"]
+jinja = """
 {{ "Different types." | MkAdmonition(typ="warning") | MkReprRawRendered }}
 """
 
@@ -30,6 +30,7 @@ Types = """
 {{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
 """
 
-Inlined = """
+[examples."Inlined"]
+jinja = """
 {{ "Inlined" | MkAdmonition(inline="left") | MkReprRawRendered }}
 """

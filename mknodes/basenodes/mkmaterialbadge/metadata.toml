@@ -4,11 +4,12 @@ icon = "simple-icons:shieldsdotio"
 [[resources.css]]
 filename = "css/materialbadge.css"
 
-[examples]
-"Regular" = """
+[examples."Regular"]
+jinja = """
 {{ "mdi:wrench" | MkMaterialBadge(text="text") | MkReprRawRendered }}
 """
 
-"Heart type" = """
+[examples."Heart type"]
+jinja = """
 {{ "mdi:file" | MkMaterialBadge(text="text", typ="heart") | MkReprRawRendered }}
 """
