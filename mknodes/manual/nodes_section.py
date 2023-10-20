@@ -123,6 +123,10 @@ def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
     page += "## Examples"
     if kls.STATUS:
         page.metadata.status = kls.STATUS
+    elif kls.JS_FILES:
+        page.metadata.status = "js"
+    elif kls.CSS:
+        page.metadata.status = "css"
     kls.create_example_page(page)
     page.created_by = create_class_page
 

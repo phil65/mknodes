@@ -144,7 +144,7 @@ class MkPage(mkcontainer.MkContainer):
         return path.lstrip("/")
 
     @property
-    def status(self) -> datatypes.PageStatusStr | None:
+    def status(self) -> datatypes.PageStatusStr | str | None:
         """Return page status from metadata."""
         return self.metadata.status
 

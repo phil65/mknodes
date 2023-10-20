@@ -100,7 +100,7 @@ class Metadata(dict):
         self["icon"] = val
 
     @property
-    def status(self) -> datatypes.PageStatusStr | None:
+    def status(self) -> datatypes.PageStatusStr | str | None:
         """The status of the page.
 
         MkDocs-Material supports `"new"`, `"deprecated"` and `"encrypted"` by default
