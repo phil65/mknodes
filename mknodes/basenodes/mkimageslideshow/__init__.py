@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 
 JS_URL = "https://rawgit.com/ruyadorno/simple-slider/master/dist/simpleslider.min.js"
 
-SCRIPT = r"""\
+SCRIPT = """\
 window.addEventListener('DOMContentLoaded', function () {
   simpleslider.getSlider();
 })
