@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import collections
 import dataclasses
 import pathlib
 import types
@@ -13,7 +12,7 @@ import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
-from mknodes.utils import log, resources, superdict
+from mknodes.utils import log, superdict
 
 
 logger = log.get_logger(__name__)
@@ -105,30 +104,6 @@ class NodeBuildStats:
 
     render_duration: float = 0
     render_count: int = 0
-
-
-@dataclasses.dataclass
-class BuildContext(Context):
-    """Information about a website build."""
-
-    page_mapping: dict = dataclasses.field(default_factory=dict)
-    """A dictionary mapping all page filenames to the corresponding MkPages."""
-    resources: resources.Resources = dataclasses.field(
-        default_factory=resources.Resources,
-    )
-    """All resources (JS, CSS, extensions) inferred from the build."""
-    node_stats: list[NodeBuildStats] = dataclasses.field(default_factory=list)
-    """Some stats about nodes construction."""
-    build_files: dict = dataclasses.field(default_factory=dict)
-    """A mapping of filepaths -> Markdown."""
-    node_counter: collections.Counter = dataclasses.field(
-        default_factory=collections.Counter,
-    )
-    """Counter containing the amount of creations for each node class."""
-
-    # original_config: dict = dataclasses.field(default_factory=dict)
-    # config_override: dict = dataclasses.field(default_factory=dict)
-    # final_config: dict[str, str] = dataclasses.field(default_factory=dict)
 
 
 @dataclasses.dataclass

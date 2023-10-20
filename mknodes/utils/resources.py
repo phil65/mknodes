@@ -4,13 +4,9 @@ import abc
 import collections.abc
 import dataclasses
 
-from typing import TYPE_CHECKING, Any, ClassVar, Literal
+from typing import Any, ClassVar, Literal
 
 from mknodes.utils import helpers, mergehelpers, reprhelpers
-
-
-if TYPE_CHECKING:
-    import mknodes as mk
 
 
 @dataclasses.dataclass(frozen=True)
@@ -240,8 +236,6 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
 
     css: list[CSSType] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
-    templates: list[mk.PageTemplate] = dataclasses.field(default_factory=list)
-    """A list of required templates."""
     markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: list[Plugin] = dataclasses.field(default_factory=list)
@@ -282,8 +276,6 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         for resource in resources:
             if resource in self.css:
                 self.css.remove(resource)
-            if resource in self.templates:
-                self.templates.remove(resource)
             if resource in self.plugins:
                 self.plugins.remove(resource)
             if resource in self.js:
@@ -319,7 +311,6 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
             other: The resources to merge into this one.
             additive: Merge strategy. Either additive or replace.
         """
-        self.templates += other["templates"]
         if other_exts := other["markdown_extensions"]:
             exts = [self.markdown_extensions, other_exts]
             merged = mergehelpers.merge_extensions(exts)
