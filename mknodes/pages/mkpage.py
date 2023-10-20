@@ -141,6 +141,11 @@ class MkPage(mkcontainer.MkContainer):
         self._path = value
 
     @property
+    def edit_url(self) -> str:
+        base_url = parse.urljoin(self.ctx.metadata.repository_url, "edit/main/")
+        return parse.urljoin(base_url, self._edit_path)
+
+    @property
     def resolved_file_path(self) -> str:
         """Returns the resulting section/subsection/../filename.xyz path."""
         if self._is_homepage:
