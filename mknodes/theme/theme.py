@@ -188,6 +188,14 @@ class Theme:
     def adapt_extras(self, extras: dict):
         pass
 
+    def get_template_loader(self):
+        from mkdocs import utils
+
+        from mknodes.jinja import loaders
+
+        path = utils.get_theme_dir(self.theme_name)
+        return loaders.FileSystemLoader(path)
+
 
 if __name__ == "__main__":
     theme = Theme.get_theme("material")

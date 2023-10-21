@@ -170,8 +170,6 @@ resources_loader = PackageLoader("mknodes", "resources")
 docs_loader = FileSystemLoader(searchpath="docs/")
 fsspec_protocol_loader = FsSpecProtocolPathLoader()
 resource_loader = ChoiceLoader([resources_loader, docs_loader, fsspec_protocol_loader])
-# material_partials_loader = PackageLoader("material", "partials")
-
 
 if __name__ == "__main__":
     from mknodes.jinja import environment
