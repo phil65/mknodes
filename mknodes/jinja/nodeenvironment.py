@@ -25,7 +25,7 @@ class NodeEnvironment(environment.Environment):
     - collects rendered nodes
     """
 
-    def __init__(self, node, env: jinja2.Environment | None = None, **kwargs):
+    def __init__(self, node: mk.MkNode, env: jinja2.Environment | None = None, **kwargs):
         """Constructor.
 
         Arguments:
@@ -60,9 +60,22 @@ class NodeEnvironment(environment.Environment):
         self.globals["mk"] = filters
         self.globals["_mk"] = {i: getattr(mk, i) for i in mk.__all__}
 
-        # path = inspecthelpers.get_file(self.__class__)  # type: ignore[arg-type]
-        # assert path
-        # paths.append(pathlib.Path(path).parent)
+    def get_extra_paths(self) -> list[str]:
+        import pathlib
+
+        from mknodes.utils import inspecthelpers
+
+        paths = []
+        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
+        assert path
+        paths.append(pathlib.Path(path).parent.as_posix())
+        if self.node.parent_navs:
+            nav = self.node.parent_navs[-1]
+            if "created" in nav.metadata:
+                file = nav.metadata["created"]["source_filename"]
+                path = pathlib.Path(file).parent
+                paths.append(path.as_posix())
+        return paths
 
     def render_template(
         self,
