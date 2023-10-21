@@ -13,7 +13,7 @@ from mknodes.info import contexts, folderinfo, linkprovider
 from mknodes.jinja import environment
 from mknodes.navs import mknav
 from mknodes.theme import theme as theme_
-from mknodes.utils import classhelpers, helpers, jinjahelpers, log, reprhelpers
+from mknodes.utils import classhelpers, helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -76,7 +76,6 @@ class Project(Generic[T]):
             links=self.linkprovider,
             env=self.env,
         )
-        jinjahelpers.set_markdown_exec_namespace(self.env.globals)
 
     def build(self):
         logger.debug("Building page...")

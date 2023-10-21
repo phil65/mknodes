@@ -1,12 +1,12 @@
 ## Context propagation
 
-MkNodes which are part of the node tree can have a context attached. If this is the case,
+**MkNodes** which are part of the node tree can have a context attached. If this is the case,
 the context gets propagated to all children of given node.
 
 The most common case is to have one single context for one website. That context usually contains information
 about the package you want to document. It is set automatically for the root nav.
 
-```
+``` py
 def build(project):
     root = project.get_root()
     assert root.ctx.metadata.distribution_name == "mknodes"
