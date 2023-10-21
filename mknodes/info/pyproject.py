@@ -92,6 +92,11 @@ class PyProject(tomlfile.TomlFile):
         return self.mknodes_section.get("docstring-style")
 
     @property
+    def argparser_path(self) -> str | None:
+        """Return path to an ArgumentParser, used for documenting the CLI."""
+        return self.mknodes_section.get("argparser-path")
+
+    @property
     def line_length(self) -> int | None:
         # sourcery skip: assign-if-exp, reintroduce-else
         """Return the line length (taken from black / ruff / isort config)."""
