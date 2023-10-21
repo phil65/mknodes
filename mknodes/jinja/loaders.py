@@ -4,6 +4,8 @@ from collections.abc import Callable
 import pathlib
 import types
 
+import fsspec
+import fsspec.core
 import jinja2
 
 from mknodes.utils import pathhelpers, reprhelpers
@@ -78,6 +80,13 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
 
     This loader allows to access templates from an fsspec protocol path,
     like "github://phil65:mknodes@main/README.md"
+
+    Examples:
+        ``` py
+        loader = FsSpecProtocolPathLoader()
+        env = Environment(loader=loader)
+        env.get_template("github://phil65:mknodes@main/docs/icons.jinja").render()
+        ```
     """
 
     def get_source(
@@ -104,11 +113,23 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
     Template paths must be relative to the filesystem root.
     In order to access templates via protocol path, see `FsSpecProtocolPathLoader`.
 
-    Example:
+    Examples:
         ``` py
+        # protocol path
         loader = FsSpecFileSystemLoader("dir::github://phil65:mknodes@main/docs")
         env = Environment(loader=loader)
-        env.load_template()
+        env.get_template("icons.jinja").render()
+
+        # protocol and storage options
+        loader = FsSpecFileSystemLoader("github", org="phil65", repo="mknodes")
+        env = Environment(loader=loader)
+        env.get_template("docs/icons.jinja").render()
+
+        # fsspec filesystem
+        fs = fsspec.filesystem("github", org="phil65", repo="mknodes")
+        loader = FsSpecFileSystemLoader(fs)
+        env = Environment(loader=loader)
+        env.get_template("docs/icons.jinja").render()
         ```
 
     """
@@ -122,12 +143,11 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
             kwargs: Optional storage options for the filesystem.
         """
         super().__init__()
-        import fsspec
-        import fsspec.core
-
         if isinstance(fs, str):
-            self.fs, self.path = fsspec.core.url_to_fs(fs)
-            print(self.fs, self.path)
+            if "://" in fs:
+                self.fs, self.path = fsspec.core.url_to_fs(fs)
+            else:
+                self.fs = fsspec.filesystem(fs, **kwargs)
         else:
             self.fs = fsspec.filesystem(fs, **kwargs) if isinstance(fs, str) else fs
             self.path = ""
@@ -171,11 +191,21 @@ docs_loader = FileSystemLoader(searchpath="docs/")
 fsspec_protocol_loader = FsSpecProtocolPathLoader()
 resource_loader = ChoiceLoader([resources_loader, docs_loader, fsspec_protocol_loader])
 
+
+LOADERS = dict(
+    fsspec=FsSpecFileSystemLoader,
+    filesystem=FileSystemLoader,
+    package=PackageLoader,
+    dictionary=DictLoader,
+)
+
+
 if __name__ == "__main__":
     from mknodes.jinja import environment
 
     loader = FsSpecFileSystemLoader("dir::github://phil65:mknodes@main/docs")
-    env = environment.Environment(loader=loader)
+    env = environment.Environment()
+    env.loader = loader
     template = env.get_template("icons.jinja")
     print(template.render())
     loader = FsSpecProtocolPathLoader()

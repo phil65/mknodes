@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
+
+import jinja2
+
 from mknodes.info import yamlfile
 
 
@@ -20,9 +24,9 @@ class MkDocsConfigFile(yamlfile.YamlFile):
         return self.get_section("plugins") or []
 
     @property
-    def mknodes_config(self) -> dict | None:
+    def mknodes_config(self) -> dict:
         """Return our very own config section."""
-        return self.get_section("plugins", "mknodes")
+        return self.get_section("plugins", "mknodes") or {}
 
     @property
     def mkdocstrings_config(self) -> dict:
@@ -51,8 +55,23 @@ class MkDocsConfigFile(yamlfile.YamlFile):
                 if clone_depth is not None:
                     plugin["mknodes"]["clone_depth"] = clone_depth
 
+    def get_loaders(self) -> Sequence[jinja2.BaseLoader]:
+        from mknodes.jinja import loaders
+
+        jinja_loaders: list[jinja2.BaseLoader] = [
+            loaders.FileSystemLoader(searchpath=self._data.get("docs_dir", "docs")),
+        ]
+        for loader_dct in self.mknodes_config.get("loaders", []):
+            dct = loader_dct.copy()
+            kls = loaders.LOADERS[dct.pop("name")]
+            loader = kls(**dct)
+            jinja_loaders.append(loader)
+        return jinja_loaders
+
     def get_inventory_infos(self) -> list[dict]:
         """Returns list of dicts containing inventory info.
+
+        Links are taken from mkdocstrings section.
 
         Shape: [{"url": inventory_url, "domains": ["std", "py"]}, ...]
         """
@@ -69,4 +88,4 @@ class MkDocsConfigFile(yamlfile.YamlFile):
 
 if __name__ == "__main__":
     info = MkDocsConfigFile("mkdocs.yml")
-    print(info.mkdocstrings_config)
+    print(info.get_loaders())
