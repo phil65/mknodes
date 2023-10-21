@@ -27,7 +27,7 @@ class Theme:
         project: project.Project | None = None,
         template_registry: templateregistry.TemplateRegistry | None = None,
     ):
-        self.associated_project = project
+        self.ctx = project.context if project else contexts.ProjectContext()
 
         self.name = name
         self.data = data or {}
@@ -91,9 +91,9 @@ class Theme:
         Usually, the resources consist of static templates and CSS.
         """
         req: list[resources.CSSFile | resources.CSSText] = []
-        if self.css_template and (proj := self.associated_project):
+        if self.css_template and self.ctx:
             tmpl_ctx = self.get_css_context()
-            css_text = proj.context.env.render_template(
+            css_text = self.ctx.env.render_template(
                 self.css_template,
                 variables=tmpl_ctx,
             )

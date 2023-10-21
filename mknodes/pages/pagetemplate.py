@@ -95,7 +95,7 @@ class PageTemplate:
         import mknodes as mk
 
         if isinstance(value, mk.MkNode):
-            value.associated_project = self.parent.associated_project
+            value._ctx = self.parent.ctx
         self.announce.content = value
 
     @property

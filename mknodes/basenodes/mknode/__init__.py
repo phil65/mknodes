@@ -81,7 +81,7 @@ class MkNode(node.Node):
         self._files: dict[str, str | bytes] = {}
         self.mods = ModManager()
         self.mods._css_classes = list(css_classes) if css_classes else []
-        self._associated_project = project
+        self._ctx = project.context if project else None
         self._node_name = name
         self.as_html = as_html
         if name is not None:
@@ -137,11 +137,21 @@ class MkNode(node.Node):
     def __rrshift__(self, other):
         return self.__rshift__(other, inverse=True)
 
+    # @property
+    # def ctx(self):
+    #     """The tree context."""
+    #     if root := self.ctx_root:
+    #         return root._ctx
+    #     return contexts.ProjectContext()
+
     @property
     def ctx(self):
         """The tree context."""
-        if self.associated_project:
-            return self.associated_project.context
+        if self._ctx:
+            return self._ctx
+        for ancestor in self.ancestors:
+            if ancestor._ctx:
+                return ancestor._ctx
         return contexts.ProjectContext()
 
     @property
@@ -341,19 +351,6 @@ class MkNode(node.Node):
         node = mk.MkText("Every node can also append annotations (1)")
         node.annotations[1] = "Nice!"
         page += mk.MkReprRawRendered(node, header="### Append annotations")
-
-    @property
-    def associated_project(self) -> mk.Project | None:
-        if proj := self._associated_project:
-            return proj
-        for ancestor in self.ancestors:
-            if proj := ancestor._associated_project:
-                return proj
-        return None
-
-    @associated_project.setter
-    def associated_project(self, value: mk.Project):
-        self._associated_project = value
 
     @classmethod
     def with_default_context(cls, *args, **kwargs):

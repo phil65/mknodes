@@ -56,7 +56,6 @@ class Project(Generic[T]):
         self.build_kwargs = build_kwargs or {}
         self.env = environment.Environment(load_templates=True)
         self.theme: T = theme
-        self.theme.associated_project = self
         match repo:
             case folderinfo.FolderInfo():
                 self.folderinfo = repo
@@ -76,6 +75,7 @@ class Project(Generic[T]):
             links=self.linkprovider,
             env=self.env,
         )
+        self.theme.ctx = self.context
 
     def build(self):
         logger.debug("Building page...")
@@ -119,7 +119,7 @@ class Project(Generic[T]):
     def set_root(self, nav: mknav.MkNav):
         """Set the root MkNav."""
         self._root = nav
-        nav.associated_project = self
+        nav._ctx = self.context
 
     def get_root(self, **kwargs: Any) -> mknav.MkNav:
         """Return the root MkNav.
