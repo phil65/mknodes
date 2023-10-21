@@ -10,7 +10,7 @@ class LaxUndefined(jinja2.Undefined):
         return ""
 
 
-UNDEFINED_BEHAVIOR = {
+UNDEFINED_BEHAVIOR: dict[str, type[jinja2.Undefined]] = {
     "keep": jinja2.DebugUndefined,
     "silent": jinja2.Undefined,
     "strict": jinja2.StrictUndefined,

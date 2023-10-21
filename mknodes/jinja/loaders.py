@@ -74,6 +74,12 @@ class DictLoader(LoaderMixin, jinja2.DictLoader):
 
 
 class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
+    """A jinja loader for fsspec filesystems.
+
+    This loader allows to access templates from an fsspec protocol path,
+    like "github://phil65:mknodes@main/README.md"
+    """
+
     def get_source(
         self,
         environment: jinja2.Environment,
@@ -83,7 +89,7 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
         path = pathlib.Path(template).as_posix()
         return src, path, lambda: True
 
-    def list_templates(self):
+    def list_templates(self) -> list[str]:
         return []
 
     def __repr__(self):
@@ -91,17 +97,46 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
 
 
 class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
+    """A jinja loader for fsspec filesystems.
+
+    This loader allows to access templates from an fsspec filesystem.
+
+    Template paths must be relative to the filesystem root.
+    In order to access templates via protocol path, see `FsSpecProtocolPathLoader`.
+
+    Example:
+        ``` py
+        loader = FsSpecFileSystemLoader("dir::github://phil65:mknodes@main/docs")
+        env = Environment(loader=loader)
+        env.load_template()
+        ```
+
+    """
+
     def __init__(self, fs, **kwargs):
+        """Constructor.
+
+        Arguments:
+            fs: Either a protocol path string or an fsspec filesystem instance.
+                Also supports "::dir" prefix to set the root path.
+            kwargs: Optional storage options for the filesystem.
+        """
         super().__init__()
         import fsspec
+        import fsspec.core
 
-        self.fs = fsspec.filesystem(fs, **kwargs) if isinstance(fs, str) else fs
+        if isinstance(fs, str):
+            self.fs, self.path = fsspec.core.url_to_fs(fs)
+            print(self.fs, self.path)
+        else:
+            self.fs = fsspec.filesystem(fs, **kwargs) if isinstance(fs, str) else fs
+            self.path = ""
 
     def __repr__(self):
         return reprhelpers.get_repr(self, fs=self.fs.protocol)
 
-    # def list_templates(self):
-    #     return self.fs.ls("")
+    def list_templates(self) -> list[str]:
+        return self.fs.ls("")
 
     def get_source(
         self,
@@ -139,15 +174,12 @@ resource_loader = ChoiceLoader([resources_loader, docs_loader, fsspec_protocol_l
 
 
 if __name__ == "__main__":
-    env = jinja2.Environment()
+    from mknodes.jinja import environment
 
-    import fsspec
-
-    fs = fsspec.filesystem("github", org="phil65", repo="mknodes")
-    loader = FsSpecFileSystemLoader(fs)
-    result = loader.get_source(env, "README.md")
-    print(result)
-
+    loader = FsSpecFileSystemLoader("dir::github://phil65:mknodes@main/docs")
+    env = environment.Environment(loader=loader)
+    template = env.get_template("icons.jinja")
+    print(template.render())
     loader = FsSpecProtocolPathLoader()
     result = loader.get_source(env, "github://phil65:mknodes@main/README.md")
     print(repr(loader))

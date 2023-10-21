@@ -21,20 +21,35 @@ logger = log.get_logger(__name__)
 
 
 class Environment(jinja2.Environment):
-    """Jinja environment."""
+    """An enhanced Jinja environment."""
 
-    def __init__(self, *, undefined: str = "silent", load_templates: bool = False):
+    def __init__(
+        self,
+        *,
+        undefined: str | type[jinja2.Undefined] = "silent",
+        trim_blocks: bool = True,
+        load_templates: bool = False,
+        **kwargs: Any,
+    ):
         """Constructor.
 
         Arguments:
             undefined: Handling of "Undefined" errors
+            trim_blocks: Whitespace handling. Changes jinja default to `True`.
             load_templates: Whether to load the templates into environment.
+            kwargs: Keyword arguments passed to parent
         """
         loader = loaders.resource_loader if load_templates else None
-        behavior = undefined_.UNDEFINED_BEHAVIOR[undefined]
+        if isinstance(undefined, str):
+            undefined = undefined_.UNDEFINED_BEHAVIOR[undefined]
         self._extra_files: set[str] = set()
         self._extra_paths: set[str] = set()
-        super().__init__(undefined=behavior, loader=loader, trim_blocks=True)
+        super().__init__(
+            undefined=undefined,
+            loader=loader,
+            trim_blocks=trim_blocks,
+            **kwargs,
+        )
         self.filters.update(jinjahelpers.ENV_FILTERS)
         self.globals.update(jinjahelpers.ENV_GLOBALS)
         self.rendered_nodes: list[mk.MkNode] = list()
