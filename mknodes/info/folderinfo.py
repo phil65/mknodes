@@ -284,6 +284,7 @@ class FolderInfo:
             tools=self.tools,
             entry_points=self.info.entry_points,
             cli=self.info.cli,
+            cli_info=self.info.cli_info,
             mkdocs_config=self.mkdocs_config,
             pyproject_file=self.pyproject,
             social_info=self.social_info,

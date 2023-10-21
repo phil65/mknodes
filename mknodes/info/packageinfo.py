@@ -3,7 +3,7 @@ from __future__ import annotations
 import contextlib
 import functools
 
-from mknodes.utils import log, packagehelpers, reprhelpers
+from mknodes.utils import clihelpers, log, packagehelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -196,8 +196,20 @@ class PackageInfo:
         eps = self.entry_points.get("console_scripts")
         if not eps:
             return None
-        ep = eps[0]
-        return "typer" if ep.load().__class__.__qualname__ == "Typer" else "click"
+        ep = eps[0].load()
+        return "typer" if ep.__class__.__qualname__ == "Typer" else "click"
+
+    @functools.cached_property
+    def cli_info(self) -> clihelpers.CommandInfo | None:
+        """Return a CLI info object containing infos about all CLI commands / options."""
+        eps = self.entry_points.get("console_scripts")
+        if not eps:
+            return None
+        ep = eps[0].load()
+        qual_name = ep.__class__.__module__.lower()
+        if qual_name.startswith(("typer", "click")):
+            return clihelpers.get_typer_info(ep)
+        return None
 
     @functools.cached_property
     def entry_points(self) -> dict[str, list[packagehelpers.EntryPoint]]:

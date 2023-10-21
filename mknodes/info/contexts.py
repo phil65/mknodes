@@ -12,7 +12,7 @@ import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import linkprovider, mkdocsconfigfile, packageregistry, pyproject
-from mknodes.utils import log, superdict
+from mknodes.utils import clihelpers, log, superdict
 
 
 logger = log.get_logger(__name__)
@@ -172,7 +172,9 @@ class PackageContext(Context):
     entry_points: dict = dataclasses.field(default_factory=dict)
     """A dictionary containing the entry points of the distribution."""
     cli: str | None = None
-    """The cli package used by the distribution."""
+    """The cli package name used by the distribution."""
+    cli_info: clihelpers.CommandInfo | None = None
+    """An object containing information about all cli commands."""
 
     # required_packages: dict[PackageInfo, packagehelpers.Dependency] =
 

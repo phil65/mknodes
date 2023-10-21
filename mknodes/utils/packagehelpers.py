@@ -113,7 +113,7 @@ class EntryPoint:
     dotted_path: str
     group: str
 
-    def load(self) -> types.ModuleType | type:
+    def load(self) -> Any:
         """Import and return the EntryPoint object."""
         if ":" in self.dotted_path:
             mod_name, kls_name = self.dotted_path.split(":")

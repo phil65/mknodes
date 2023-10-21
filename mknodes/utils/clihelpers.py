@@ -5,15 +5,12 @@ import dataclasses
 
 from typing import TYPE_CHECKING, Any, Literal
 
-from click import types as clicktypes
-
 
 if TYPE_CHECKING:
     import click
+
+    from click import types as clicktypes
     import typer
-
-
-from mknodes.basenodes import mkcode
 
 
 @dataclasses.dataclass
@@ -104,8 +101,10 @@ class CommandInfo:
         return self.subcommands[name]
 
     def to_markdown(self, recursive: bool = False):
+        import mknodes as mk
+
         header = f"## {self.name}\n\n"
-        text = header + self.description + "\n\n" + str(mkcode.MkCode(self.usage))
+        text = header + self.description + "\n\n" + str(mk.MkCode(self.usage))
         params = [i.to_markdown() for i in self.params]
         cmd_text = text + "\n\n\n" + "\n\n\n".join(params)
         if not recursive:
