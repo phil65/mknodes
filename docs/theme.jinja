@@ -6,6 +6,7 @@ Both classes support:
 
 * Adding custom admonitions with user-chosen colors / icons
 * Modifying the `404` error page via a static template.
+* Setting alternating row colors for tables
 
 
 In addition, the [MaterialTheme][mknodes.MaterialTheme] class supports:
@@ -14,13 +15,12 @@ In addition, the [MaterialTheme][mknodes.MaterialTheme] class supports:
 * Setting custom color palettes
 * Changing the icon for several theme elements
 * Switching to the "classic" admonition style
-* setting alternating row colors for tables
 * Setting the tooltip width
 * Setting the content area width
 
 During the build, a CSS file for these settings gets created and is added to the build resources.
 
-## Icons for MkDocs-Material
+## Additional features for MkDocs-Material
 
 By rewriting the MkDocs-Material templates, it is possible to use all Iconify icons instead of just the
 included ones from MkDocs-Material. As an example, you can now use "mdi:icon-name" for the page icon defined in Metadata.
@@ -32,3 +32,12 @@ theme:
   icon:
     previous: "mdi:some-icon"
 ```
+
+## Additional features for MkDocs Theme
+
+The MkDocs theme is modified in order to support hiding the Table of contents via Page metadata, like it can
+be done with MkDocs-Material, too.
+``` py title="Hiding the TOC"
+page.metadata["hide"] = ["toc"]
+```
+In addition, the TOC automatically is hidden if it does not contain any items.
