@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import pathlib
 
 import fsspec
 import jinja2
@@ -12,7 +13,11 @@ logger = log.get_logger(__name__)
 
 
 class JinjaLoaderFileSystem(fsspec.AbstractFileSystem):
-    """A FsSpec Filesystem implementation for jinja environment templates."""
+    """A FsSpec Filesystem implementation for jinja environment templates.
+
+    This virtual file system allows to browse and access all available templates of an
+    environment by utilizing loader.list_templates and loader.get_source.
+    """
 
     protocol = "jinja"
 
@@ -24,7 +29,13 @@ class JinjaLoaderFileSystem(fsspec.AbstractFileSystem):
         if not self.env.loader:
             return []
         paths = self.env.loader.list_templates()
-        return [p for p in paths if p.startswith(path)]
+        if not path:
+            return paths
+        path = pathlib.Path(path).as_posix().rstrip("/")
+        folders = [i for i in paths if i.rsplit("/", 1)[0] == path]
+        if not folders:
+            raise FileNotFoundError(path)
+        return folders
 
     def _open(self, path: str, mode="rb", **kwargs) -> io.BytesIO:
         if not self.env.loader:
