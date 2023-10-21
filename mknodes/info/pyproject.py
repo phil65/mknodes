@@ -89,6 +89,8 @@ class PyProject(tomlfile.TomlFile):
     @property
     def docstring_style(self) -> str | None:
         """Return the style used for docstring."""
+        if convention := self.tool["pydocstyle"].get("convention"):
+            return convention
         return self.mknodes_section.get("docstring-style")
 
     @property
