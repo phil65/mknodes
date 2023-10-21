@@ -73,14 +73,8 @@ class PackageInfo:
     @functools.cached_property
     def repository_url(self) -> str | None:
         """Return repository URL from metadata."""
-        return next(
-            (
-                self.urls[tag]
-                for tag in ["Source", "Repository", "Source Code"]
-                if tag in self.urls
-            ),
-            None,
-        )
+        tags = ["Source", "Repository", "Source Code"]
+        return next((self.urls[tag] for tag in tags if tag in self.urls), None)
 
     @functools.cached_property
     def homepage(self) -> str | None:
