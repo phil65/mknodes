@@ -127,15 +127,11 @@ class Environment(jinja2.Environment):
         """
         try:
             template = self.from_string(markdown)
-        except jinja2.exceptions.TemplateSyntaxError:
-            logger.exception("Error when loading template.")
-            return markdown
-        variables = variables or {}
-        try:
+            variables = variables or {}
             return template.render(**variables)
-        except jinja2.exceptions.UndefinedError:
+        except (jinja2.exceptions.TemplateSyntaxError, jinja2.exceptions.UndefinedError):
             logger.exception("Error when rendering template \n%r", markdown)
-            return ""
+            return markdown
 
     def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
         """Helper to directly render a template from filesystem.
