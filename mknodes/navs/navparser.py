@@ -6,13 +6,17 @@ import pathlib
 
 from posixpath import join as urljoin
 import re
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib import parse
 
 from mknodes.basenodes import mkcode
 from mknodes.navs import mknav
 from mknodes.pages import mkpage
 from mknodes.utils import classhelpers, helpers, log
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -26,18 +30,18 @@ SECTION_RE = r"^\* (.*)"
 ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 
 
-def add_page(
+def str2page(
     path: str | os.PathLike,
     name: str | None = None,
     **kwargs,
-) -> mkpage.MkPage:
+) -> mk.MkPage:
     """Parse given path, check for our -> syntax, and return a MkPage.
 
     If -> is detected, return a MkPage containing given MkNode. Otherwise
     open / download the markdown file from given path and put that into an MkPage.
 
     Arguments:
-        path: Path to build a MkPage for
+        path: Path to build a MkPage for (Either path / URL or "-> MkNode")
         name: Name for given MkPage
         kwargs: Additional metadata for MkPage
     """
@@ -65,7 +69,7 @@ def add_page(
 
 def from_list(
     ls: list,
-    nav: mknav.MkNav,
+    nav: mk.MkNav,
     base_path: str = "",
 ):
     """Parse given list recursively and add found content to given MkNav.
@@ -85,7 +89,7 @@ def from_list(
                         from_dict(val, nav.add_nav(name), base_path=base_path)
                     case str():
                         path = urljoin(base_path, val)
-                        nav += add_page(path=path, name=name)
+                        nav += str2page(path=path, name=name)
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
@@ -101,7 +105,7 @@ def from_list(
 
 def from_dict(
     dct: dict[str, str | list | dict],
-    nav: mknav.MkNav,
+    nav: mk.MkNav,
     base_path: str = "",
 ):
     """Parse given dict recursively and add found content to given MkNav.
@@ -116,7 +120,7 @@ def from_dict(
         match v:
             case str():
                 path = urljoin(base_path, v)
-                nav += add_page(path=path, name=k)
+                nav += str2page(path=path, name=k)
             case dict():
                 logger.debug("Adding nav %r", k)
                 from_dict(v, nav.add_nav(k), base_path=base_path)
@@ -128,7 +132,7 @@ def from_dict(
 class NavParser:
     """Class used for constructing MkNavs."""
 
-    def __init__(self, nav: mknav.MkNav):
+    def __init__(self, nav: mk.MkNav):
         """Constructor.
 
         Arguments:
@@ -156,7 +160,7 @@ class NavParser:
         self,
         path: str | os.PathLike,
         **kwargs: Any,
-    ) -> mknav.MkNav:
+    ) -> mk.MkNav:
         """Load an existing SUMMARY.md style file.
 
         For each indentation level in SUMMARY.md, a new sub-nav is created.
@@ -183,7 +187,7 @@ class NavParser:
         text: str,
         path: pathlib.Path,
         **kwargs: Any,
-    ) -> mknav.MkNav:
+    ) -> mk.MkNav:
         """Create a nav based on a SUMMARY.md-style list, given as text.
 
         For each indentation level, a new sub-nav is created.
@@ -232,7 +236,7 @@ class NavParser:
                 # if not, add as regular page:
                 else:
                     p = m[2] if m[2].startswith("->") else path.parent / m[2]
-                    page = add_page(path=p, name=m[1], parent=self._nav, **kwargs)
+                    page = str2page(path=p, name=m[1], parent=self._nav, **kwargs)
                     self._nav[m[1]] = page
                     logger.debug("Created page %s from %s", m[1], m[2])
 
@@ -253,7 +257,7 @@ class NavParser:
         *,
         recursive: bool = True,
         **kwargs: Any,
-    ) -> mknav.MkNav:
+    ) -> mk.MkNav:
         """Load a MkNav tree from Folder.
 
         SUMMARY.mds are ignored.
@@ -298,7 +302,7 @@ class NavParser:
         *,
         recursive: bool = True,
         **kwargs: Any,
-    ) -> mknav.MkNav:
+    ) -> mk.MkNav:
         """Load a MkNav tree from a Module.
 
         Will add a page for each module showing the code in a code box.
