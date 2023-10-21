@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import MutableMapping
 import dataclasses
 import functools
-import pathlib
 
 from typing import Any, Literal
 
@@ -294,18 +293,6 @@ class MaterialTheme(theme.Theme):
         for status in self.status_icons.values():
             if status.description:
                 extras.setdefault("status", {})[status.name] = status.description
-
-    @staticmethod
-    def get_partial_path(partial: str) -> pathlib.Path:
-        """Return the path to the MkDocs-Material partial file.
-
-        Arguments:
-            partial: The partial to get a path for.
-        """
-        import material
-
-        path = pathlib.Path(material.__path__[0])
-        return path / "partials" / f"{partial.removesuffix('.html')}.html"
 
 
 if __name__ == "__main__":
