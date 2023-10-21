@@ -186,7 +186,13 @@ class Theme:
         return "#333333"
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
-        pass
+        if self.name.lower() != "mkdocs":
+            return
+        for k in dict(extensions).copy():
+            ext = extensions[k]
+            if k == "pymdownx.highlight":
+                # default style "table" looks broken with mkdocs
+                ext["pymdownx.highlight"]["linenums_style"] = "inline"  # pymdownx-inline
 
     def adapt_extras(self, extras: dict):
         pass
