@@ -40,10 +40,11 @@ class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
         return {}
 
     def to_markdown(self) -> str:
-        with self.env.with_globals(**self.extra_variables):
+        env = self.env
+        with env.with_globals(**self.extra_variables):
             if isinstance(self.template_main, os.PathLike):
-                return self.env.render_file(self.template_main)
-            return self.env.render_template(
+                return env.render_file(self.template_main)
+            return env.render_template(
                 self.template_main,
                 parent_template=self.template_parent,
             )

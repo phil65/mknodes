@@ -36,7 +36,7 @@ class NodeEnvironment(environment.Environment):
         super().__init__(**kwargs)
         if env:
             self.__dict__.update(env.__dict__)
-            self.linded_to = env
+            self.linked_to = env
             self.overlayed = True
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
@@ -58,7 +58,6 @@ class NodeEnvironment(environment.Environment):
         self.filters.update(filters)
         self.globals["mknode"] = self
         self.globals["mk"] = filters
-        self.globals["_mk"] = {i: getattr(mk, i) for i in mk.__all__}
 
     def get_extra_paths(self) -> list[str]:
         import pathlib
@@ -85,6 +84,8 @@ class NodeEnvironment(environment.Environment):
     ) -> str:
         """Render a loaded template.
 
+        Rendered nodes can be collected from `rendered_nodes` attribute after this call.
+
         Arguments:
             template_name: Template name
             variables: Extra variables for this render call
@@ -98,6 +99,8 @@ class NodeEnvironment(environment.Environment):
 
     def render_string(self, markdown: str, variables: dict | None = None):
         """Render a template string.
+
+        Rendered nodes can be collected from `rendered_nodes` attribute after this call.
 
         Arguments:
             markdown: String to render

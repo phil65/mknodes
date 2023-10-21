@@ -336,15 +336,16 @@ default_github_context = GitHubContext(
 )
 
 
-default_project_context = ProjectContext(
-    metadata=default_package_context,
-    git=default_git_context,
-    github=default_github_context,
-    theme=default_theme_context,
-    links=linkprovider.LinkProvider(),
-    env=mk.Environment(load_templates=True),
-    # resources=Resources(),
-)
+def get_default_project_context():
+    return ProjectContext(
+        metadata=default_package_context,
+        git=default_git_context,
+        github=default_github_context,
+        theme=default_theme_context,
+        links=linkprovider.LinkProvider(),
+        env=mk.Environment(load_templates=True),
+        # resources=Resources(),
+    )
 
 
 if __name__ == "__main__":

@@ -50,8 +50,8 @@ class Environment(jinja2.Environment):
             trim_blocks=trim_blocks,
             **kwargs,
         )
-        self.filters.update(jinjahelpers.ENV_FILTERS)
-        self.globals.update(jinjahelpers.ENV_GLOBALS)
+        self.filters.update(jinjahelpers.get_filters())
+        self.globals.update(jinjahelpers.get_globals())
         self.rendered_nodes: list[mk.MkNode] = list()
 
     def __contains__(self, template: str | os.PathLike):
@@ -275,13 +275,11 @@ class Environment(jinja2.Environment):
 
 if __name__ == "__main__":
     env = Environment()
-    env.set_mknodes_filters()
-    txt = """{% filter MkHeader | str %}
+    txt = """{% filter styled(bold=True) %}
     test
     {% endfilter %}
     """
     print(env.render_string(txt))
     # text = env.render_string(r"{{ 'test' | MkHeader }}")
     # text = env.render_string(r"{{ 50 | MkProgressBar }}")
-    # print(env.rendered_nodes)
     # env.render_string(r"{{test('hallo')}}")

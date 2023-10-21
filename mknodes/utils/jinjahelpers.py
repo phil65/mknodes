@@ -74,6 +74,20 @@ ENV_FILTERS = {
 }
 
 
+def get_globals():
+    import mknodes as mk
+
+    node_klasses = {i: getattr(mk, i) for i in mk.__all__}
+    return ENV_GLOBALS | node_klasses
+
+
+def get_filters():
+    import mknodes as mk
+
+    node_klasses = {i: getattr(mk, i) for i in mk.__all__}
+    return dict(mk=node_klasses, _mk=node_klasses) | ENV_FILTERS
+
+
 def set_markdown_exec_namespace(variables: dict[str, Any], namespace: str = "mknodes"):
     if util.find_spec("markdown_exec"):
         from markdown_exec.formatters import python
