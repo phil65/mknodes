@@ -1,9 +1,42 @@
 ## Context propagation
 
 MkNodes which are part of the node tree can have a context attached. If this is the case,
-the context gets propagated to all children of given node. The following graph illustrates this
-behavior.
+the context gets propagated to all children of given node.
 
+The most common case is to have one single context for one website. That context usually contains information
+about the package you want to document. It is set automatically for the root nav.
+
+```
+def build(project):
+    root = project.get_root()
+    assert root.ctx.metadata.distribution_name == "mknodes"
+```
+
+Once a node has access to the context, that context will become injected into the jinja2 namespace of given node.
+
+
+``` py
+@nav.route_page("My page")
+def _(page):
+    node = mk.MkJinjaText("{ { metadata.required_python_version } }")
+    assert str(node) == ""  # not connected to any context, so returns empty string
+    page += node  # Add node to the nav and allow accessing its context (assuming that nav is connected to root nav).
+    assert str(node) != ""  # this now returns the required python version for the context.
+```
+
+Some nodes will also show the context metadata by default if no other data is explicitely set.
+
+``` py
+@nav.route_page("My page")
+def _(page):
+    node = MkLicense()
+    assert str(node) == ""  # not connected to any context, so returns empty string
+    page += node  # Add MkLicense to the nav and allow accessing its context (assuming that nav is connected to root nav).
+    assert str(node) != ""  # this now returns the license text for the context.
+```
+
+
+The following graph illustrates how the context propagation works.
 Any element from the tree can be attached to a context, no matter whether it is a nav, a page or any other node.
 
 
