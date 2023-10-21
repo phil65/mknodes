@@ -5,16 +5,12 @@ import contextlib
 import os
 import pathlib
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import jinja2
 
 from mknodes.jinja import loaders, undefined as undefined_
 from mknodes.utils import jinjahelpers, log, mergehelpers, pathhelpers
-
-
-if TYPE_CHECKING:
-    import mknodes as mk
 
 
 logger = log.get_logger(__name__)
@@ -52,7 +48,6 @@ class Environment(jinja2.Environment):
         )
         self.filters.update(jinjahelpers.get_filters())
         self.globals.update(jinjahelpers.get_globals())
-        self.rendered_nodes: list[mk.MkNode] = list()
 
     def __contains__(self, template: str | os.PathLike):
         return pathlib.Path(template).as_posix() in self.list_templates()
@@ -88,21 +83,21 @@ class Environment(jinja2.Environment):
         new_loader = loaders.DictLoader({file: content})
         self._add_loader(new_loader)
 
-    def add_template_path(self, path: str | os.PathLike | list[str]):
+    def add_template_path(self, *path: str | os.PathLike):
         """Add a new template path during runtime.
 
         Will append a new FileSystemLoader by wrapping it and the the current loader into
         either an already-existing or a new Choiceloader.
 
         Arguments:
-            path: Template serch patch to add
+            path: Template serch path(s) to add
         """
-        path = str(path)
-        if path in self._extra_paths:
-            return
-        self._extra_paths.add(path)
-        new_loader = loaders.FileSystemLoader(path)
-        self._add_loader(new_loader)
+        for p in path:
+            if p in self._extra_paths:
+                return
+            self._extra_paths.add(str(p))
+            new_loader = loaders.FileSystemLoader(p)
+            self._add_loader(new_loader)
 
     def _add_loader(self, new_loader: jinja2.BaseLoader | dict | str | os.PathLike):
         match new_loader:
@@ -243,34 +238,6 @@ class Environment(jinja2.Environment):
         self.block_end_string = old_end_block
         self.variable_start_string = old_start_var
         self.variable_end_string = old_end_var
-
-    def set_mknodes_filters(self, parent: mk.MkNode | None = None):
-        """Set our MkNode filters.
-
-        The filters are a partial with the parent already set, if parent is given.
-
-        Arguments:
-            parent: Node parent
-        """
-        import mknodes as mk
-
-        filters = {}
-        for kls_name in mk.__all__:
-
-            def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
-                kls = getattr(mk, kls_name)
-                node = (
-                    kls(*args, **kwargs)
-                    if parent is None
-                    else kls(*args, parent=parent, **kwargs)
-                )
-                self.rendered_nodes.append(node)
-                return node
-
-            filters[kls_name] = jinja2.pass_context(wrapped)
-        self.filters.update(filters)
-        self.globals["mk"] = filters
-        self.globals["_mk"] = {i: getattr(mk, i) for i in mk.__all__}
 
 
 if __name__ == "__main__":

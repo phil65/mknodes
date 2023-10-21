@@ -48,12 +48,8 @@ class MkJinjaText(mkcontainer.MkContainer):
 
     @property
     def items(self):
-        env = self.env
-        env.rendered_nodes = []
-        env.render_string(self.text, variables=self.variables)
-        for i in env.rendered_nodes:
-            i.parent = self
-        return env.rendered_nodes
+        self.env.render_string(self.text, variables=self.variables)
+        return self.env.rendered_nodes
 
     @items.setter
     def items(self, val):

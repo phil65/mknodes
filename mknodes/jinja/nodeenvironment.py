@@ -25,22 +25,23 @@ class NodeEnvironment(environment.Environment):
     - collects rendered nodes
     """
 
-    def __init__(self, node: mk.MkNode, env: jinja2.Environment | None = None, **kwargs):
+    def __init__(self, node: mk.MkNode, **kwargs: Any):
         """Constructor.
 
         Arguments:
             node: Node this environment belongs to.
-            env: Optional environment this one should get overlayed on
             kwargs: Optional keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
-        if env:
-            self.__dict__.update(env.__dict__)
-            self.linked_to = env
+        super().__init__(load_templates=True, **kwargs)
+        if node.ctx.env:
+            self.__dict__.update(node.ctx.env.__dict__)
+            self.linked_to = node.ctx.env
             self.overlayed = True
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.setup_environment()
+        self._paths = self.get_extra_paths()
+        self.add_template_path(*self._paths)
 
     def setup_environment(self):
         import mknodes as mk
@@ -58,6 +59,11 @@ class NodeEnvironment(environment.Environment):
         self.filters.update(filters)
         self.globals["mknode"] = self
         self.globals["mk"] = filters
+
+    def update_env_from_context(self):
+        self.filters["get_link"] = self.node.ctx.links.get_link
+        self.filters["get_url"] = self.node.ctx.links.get_url
+        self.globals |= self.node.ctx.as_dict()
 
     def get_extra_paths(self) -> list[str]:
         import pathlib
@@ -94,7 +100,7 @@ class NodeEnvironment(environment.Environment):
         # if pathlib.Path(template_name).as_posix() not in self.list_templates():
         #     self.add_template(template_name)
         self.rendered_nodes = []
-        self.globals |= self.node.ctx.as_dict()
+        self.update_env_from_context()
         return super().render_template(template_name, variables, parent_template)
 
     def render_string(self, markdown: str, variables: dict | None = None):
@@ -107,8 +113,25 @@ class NodeEnvironment(environment.Environment):
             variables: Extra variables for the environment
         """
         self.rendered_nodes = []
-        self.globals |= self.node.ctx.as_dict()
+        self.update_env_from_context()
         return super().render_string(markdown, variables)
+
+    def set_mknodes_filters(self):
+        """Set our MkNode filters."""
+        import mknodes as mk
+
+        filters = {}
+        for kls_name in mk.__all__:
+
+            def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
+                kls = getattr(mk, kls_name)
+                node = kls(*args, parent=self.node, **kwargs)
+                self.rendered_nodes.append(node)
+                return node
+
+            filters[kls_name] = jinja2.pass_context(wrapped)
+        self.filters.update(filters)
+        self.globals["mk"] = filters
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-import pathlib
+import functools
 import re
 
 from typing import TYPE_CHECKING, Any
@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
 from mknodes.info import contexts
+from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
 from mknodes.treelib import node
 from mknodes.utils import icons, log, resources
@@ -93,6 +94,15 @@ class MkNode(node.Node):
         else:
             self.annotations = None
 
+    @functools.cached_property
+    def env(self):
+        """The node jinja environment.
+
+        The environment has additional loaders for the class file path
+        as well as the resolved parent nav file path.
+        """
+        return nodeenvironment.NodeEnvironment(self)
+
     def __str__(self):
         return self.to_html() if self.as_html else self.to_markdown()
 
@@ -133,31 +143,6 @@ class MkNode(node.Node):
         if self.associated_project:
             return self.associated_project.context
         return contexts.ProjectContext()
-
-    @property
-    def env(self) -> mk.Environment:
-        """The node jinja environment.
-
-        The environment contains additional loaders for the class file path
-        as well as the resolved parent nav file path.
-        """
-        from mknodes.utils import inspecthelpers
-
-        paths = []
-        path = inspecthelpers.get_file(self.__class__)  # type: ignore[arg-type]
-        assert path
-        paths.append(pathlib.Path(path).parent)
-        if self.parent_navs:
-            nav = self.parent_navs[-1]
-            if "created" in nav.metadata:
-                file = nav.metadata["created"]["source_filename"]
-                path = pathlib.Path(file).parent
-                paths.append(path)
-        env = self.ctx.env.overlay(extra_loader=paths)
-        # env = self.ctx.env
-        env.globals["mknode"] = self
-        env.set_mknodes_filters(parent=self)
-        return env
 
     @property
     def parent_navs(self) -> list[mk.MkNav]:
