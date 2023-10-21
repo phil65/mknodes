@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 import contextlib
 import os
 import pathlib
@@ -51,6 +51,11 @@ class Environment(jinja2.Environment):
 
     def __contains__(self, template: str | os.PathLike):
         return pathlib.Path(template).as_posix() in self.list_templates()
+
+    def inherit_from(self, env: jinja2.Environment):
+        self.__dict__.update(env.__dict__)
+        self.linked_to = env
+        self.overlayed = True
 
     def merge_globals(self, other: Mapping, additive: bool = False):
         """Merge other into the environment globals with given strategy.
@@ -172,42 +177,6 @@ class Environment(jinja2.Environment):
             self.globals[k] = v
         yield
         self.globals.update(temp)
-
-    def overlay(  # type: ignore[override]
-        self,
-        *,
-        extra_loader: (
-            str | os.PathLike | Sequence[str | os.PathLike] | jinja2.BaseLoader | None
-        ) = None,
-        **kwargs: Any,
-    ) -> Environment:
-        """Override for jinja2.Environment.overlay.
-
-        The optional extra_loader keyword argument allows an easy way to add
-        extra template paths.
-
-        Arguments:
-            extra_loader: Optional additional paths or loaders.
-            kwargs: Keyword arguments passed to super().overlay.
-        """
-        if extra_loader:
-            loader = (
-                extra_loader
-                if isinstance(extra_loader, jinja2.BaseLoader)
-                else loaders.FileSystemLoader(extra_loader)
-            )
-            match self.loader:
-                case jinja2.ChoiceLoader() if isinstance(loader, jinja2.ChoiceLoader):
-                    loader_list = [*loader.loaders, *self.loader.loaders]
-                case jinja2.ChoiceLoader():
-                    loader_list = [loader, *self.loader.loaders]
-                case jinja2.BaseLoader():
-                    loader_list = [self.loader, loader]
-                case _:
-                    raise TypeError(self.loader)
-            loader = loaders.ChoiceLoader(loader_list)
-            kwargs["loader"] = loader
-        return super().overlay(**kwargs)  # type: ignore[return-value]
 
     @contextlib.contextmanager
     def with_fence(

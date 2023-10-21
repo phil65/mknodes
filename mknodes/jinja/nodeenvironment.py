@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import pathlib
+
 from typing import TYPE_CHECKING, Any
 
 import jinja2
 
 from mknodes.jinja import environment
-from mknodes.utils import log
+from mknodes.utils import inspecthelpers, log
 
 
 if TYPE_CHECKING:
@@ -33,15 +35,14 @@ class NodeEnvironment(environment.Environment):
             kwargs: Optional keyword arguments passed to parent
         """
         super().__init__(load_templates=True, **kwargs)
-        if node.ctx.env:
-            self.__dict__.update(node.ctx.env.__dict__)
-            self.linked_to = node.ctx.env
-            self.overlayed = True
+        self.inherit_from(node.ctx.env)
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.setup_environment()
-        self._paths = self.get_extra_paths()
-        self.add_template_path(*self._paths)
+        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
+        self.class_path = pathlib.Path(path or "").parent.as_posix()
+        paths = self.get_extra_paths()
+        self.add_template_path(*paths)
 
     def setup_environment(self):
         import mknodes as mk
@@ -66,14 +67,7 @@ class NodeEnvironment(environment.Environment):
         self.globals |= self.node.ctx.as_dict()
 
     def get_extra_paths(self) -> list[str]:
-        import pathlib
-
-        from mknodes.utils import inspecthelpers
-
-        paths = []
-        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
-        assert path
-        paths.append(pathlib.Path(path).parent.as_posix())
+        paths = [self.class_path]
         if self.node.parent_navs:
             nav = self.node.parent_navs[-1]
             if "created" in nav.metadata:
