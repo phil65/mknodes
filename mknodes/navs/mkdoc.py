@@ -119,6 +119,8 @@ class MkDoc(mknav.MkNav):
                        or whether it should also include classes from submodules.
             predicate: filter classes based on a predicate.
         """
+        if isinstance(submodule, list):
+            submodule = tuple(submodule)
         mod = classhelpers.to_module(submodule) if submodule else self.module
         if mod is None:
             return
