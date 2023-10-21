@@ -51,10 +51,10 @@ class Project(Generic[T]):
             use_directory_urls=use_directory_urls,
             include_stdlib=True,
         )
+        self._root: mknav.MkNav | None = None
+        self.build_fn = classhelpers.to_callable(build_fn)
+        self.build_kwargs = build_kwargs or {}
         self.env = environment.Environment(undefined="strict", load_templates=True)
-        self.env.filters["get_link"] = self.linkprovider.get_link
-        self.env.filters["get_url"] = self.linkprovider.get_url
-        jinjahelpers.set_markdown_exec_namespace(self.env.globals)
         self.theme: T = theme
         self.theme.associated_project = self
         match repo:
@@ -76,11 +76,7 @@ class Project(Generic[T]):
             links=self.linkprovider,
             env=self.env,
         )
-
-        self.env.globals |= self.context.as_dict()
-        self._root: mknav.MkNav | None = None
-        self.build_fn = classhelpers.to_callable(build_fn)
-        self.build_kwargs = build_kwargs or {}
+        jinjahelpers.set_markdown_exec_namespace(self.env.globals)
 
     def build(self):
         logger.debug("Building page...")

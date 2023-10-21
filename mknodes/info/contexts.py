@@ -265,6 +265,11 @@ class ProjectContext(Context):
     #     default_factory=pyproject.PyProject,
     # )
 
+    def __post_init__(self):
+        self.env.filters["get_link"] = self.links.get_link
+        self.env.filters["get_url"] = self.links.get_url
+        self.env.globals |= self.as_dict()
+
     def as_dict(self):
         return dict(
             metadata=self.metadata,
