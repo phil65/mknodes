@@ -59,7 +59,7 @@ class MkNode(node.Node):
         shift_header_levels: int = 0,
         css_classes: Iterable[str] | None = None,
         as_html: bool = False,
-        project: mk.Project | None = None,
+        context: contexts.ProjectContext | None = None,
         parent: MkNode | None = None,
     ):
         """Constructor.
@@ -71,7 +71,7 @@ class MkNode(node.Node):
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
             css_classes: A sequence of css class names to use for this node
             as_html: Converts node to HTML on stringifying.
-            project: Project this Nav is connected to.
+            context: Context this Nav is connected to.
             parent: Parent for building the tree
         """
         super().__init__(parent=parent)
@@ -81,7 +81,7 @@ class MkNode(node.Node):
         self._files: dict[str, str | bytes] = {}
         self.mods = ModManager()
         self.mods._css_classes = list(css_classes) if css_classes else []
-        self._ctx = project.context if project else None
+        self._ctx = context
         self._node_name = name
         self.as_html = as_html
         if name is not None:
@@ -358,7 +358,7 @@ class MkNode(node.Node):
 
         theme = mk.MaterialTheme()
         proj = mk.Project(theme=theme)
-        return cls(*args, **kwargs, project=proj)
+        return cls(*args, **kwargs, context=proj.context)
 
     def to_html(self) -> str:
         """Convert node to HTML using the resources from node + children."""

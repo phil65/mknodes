@@ -21,7 +21,7 @@ class MkEmptyWebsite(mknav.MkNav):
 
     @classmethod
     def for_project(cls, project, **kwargs):
-        root = cls(project=project, **kwargs)
+        root = cls(context=project.context, **kwargs)
         project.set_root(root)
         return root
 

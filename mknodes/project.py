@@ -130,7 +130,7 @@ class Project(Generic[T]):
         Arguments:
             kwargs: Keyword arguments passed to MkNav constructor.
         """
-        self._root = mknav.MkNav(project=self, **kwargs)
+        self._root = mknav.MkNav(context=self.context, **kwargs)
         return self._root
 
 

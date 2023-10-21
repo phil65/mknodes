@@ -52,7 +52,7 @@ def _(nav: mk.MkNav):
 # @nav.route.nav("MkDefaultWebsite")
 def _(nav: mk.MkNav):
     proj = mk.Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
-    nav += mk.MkDefaultWebsite(section="MkDocStrings", project=proj)
+    nav += mk.MkDefaultWebsite(section="MkDocStrings", context=proj.context)
 
 
 @nav.route.nav("The MkDoc class")
