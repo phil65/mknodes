@@ -61,14 +61,9 @@ class PackageInfo:
         """Get name of the license."""
         if license_name := self.metadata.get("License-Expression", "").strip():
             return license_name
-        return next(
-            (
-                value.rsplit("::", 1)[1].strip()
-                for header, value in self.metadata.items()
-                if header == "Classifier" and value.startswith("License ::")
-            ),
-            None,
-        )
+        if license_names := self.classifier_map.get("License"):
+            return license_names[0].split(" :: ")[-1]
+        return None
 
     @functools.cached_property
     def repository_url(self) -> str | None:
@@ -93,7 +88,7 @@ class PackageInfo:
         return self.metadata.get("Keywords", "").split(",")
 
     @functools.cached_property
-    def classifier_map(self) -> dict[str, list[str]]:
+    def classifier_map(self) -> collections.defaultdict[str, list[str]]:
         """Return a dict containing the classifier categories and values from metadata.
 
         {category_1: [classifier_1, ...],
@@ -101,15 +96,12 @@ class PackageInfo:
          ...
          }
         """
-        classifiers: dict[str, list[str]] = {}
+        classies: collections.defaultdict[str, list[str]] = collections.defaultdict(list)
         for k, v in self.metadata.items():
             if k == "Classifier":
                 category, value = v.split(" :: ", 1)
-                if category in classifiers:
-                    classifiers[category].append(value)
-                else:
-                    classifiers[category] = [value]
-        return classifiers
+                classies[category].append(value.strip())
+        return classies
 
     @functools.cached_property
     def required_package_names(self) -> list[str]:
@@ -146,9 +138,9 @@ class PackageInfo:
         return authors
 
     @functools.cached_property
-    def extras(self) -> dict[str, list[str]]:
+    def extras(self) -> collections.defaultdict[str, list[str]]:
         """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
-        extras: collections.defaultdict = collections.defaultdict(list)
+        extras: collections.defaultdict[str, list[str]] = collections.defaultdict(list)
         for dep in self._required_deps:
             for extra in dep.extras:
                 extras[extra].append(dep.name)
@@ -211,4 +203,4 @@ class PackageInfo:
 
 if __name__ == "__main__":
     info = PackageInfo("mknodes")
-    print(info.cli)
+    print(info.license_name)
