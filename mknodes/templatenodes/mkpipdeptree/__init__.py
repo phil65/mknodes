@@ -15,21 +15,44 @@ logger = log.get_logger(__name__)
 @functools.cache
 def get_mermaid(
     package: str | tuple[str] | None = None,
-    local_only: bool = False,
+    local_only: bool = True,
     user_only: bool = False,
+    include_editables: bool = True,
+    editables_only: bool = False,
     reverse: bool = False,
     exclude: str = "",
 ) -> str:
+    """Return mermaid diagram code of dependency tree.
+
+    Mermaid graph code is returned without fences
+
+    Arguments:
+        package: package / packages to get a graph for. If None, include all packages
+        local_only: Whether to return installs local to the current virtualenv if used
+        user_only: If True, only report installation in the user
+        include_editables: Whether to include editable installs
+        editables_only: Only return editable installs
+        reverse: Whether to reverse the graph
+        exclude: Packages to exclude from the graph
+    """
     import warnings
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
 
-        from pipdeptree._discovery import get_installed_distributions
+        from pip._internal.metadata import pkg_resources
         from pipdeptree._models import PackageDAG
         from pipdeptree._render import render_mermaid
 
-    pkgs = get_installed_distributions(local_only=local_only, user_only=user_only)
+    dists = pkg_resources.Environment.from_paths(None).iter_installed_distributions(
+        local_only=local_only,
+        skip=(),
+        user_only=user_only,
+        include_editables=include_editables,
+        editables_only=editables_only,
+    )
+    pkgs = [d._dist for d in dists]  # type: ignore[attr-defined]
+
     tree = PackageDAG.from_pkgs(pkgs)
     # Reverse the tree (if applicable) before filtering,
     # thus ensuring, that the filter will be applied on ReverseTree
@@ -37,15 +60,15 @@ def get_mermaid(
         tree = tree.reverse()
     match package:
         case str():
-            show_only = package.split(",")
+            include_list = package.split(",")
         case list() | tuple():
-            show_only = list(package)
+            include_list = list(package)
         case None:
-            show_only = None
+            include_list = None
     exclude_list = set(exclude.split(",")) if exclude else None
-    if show_only is not None or exclude_list is not None:
+    if include_list is not None or exclude_list is not None:
         try:
-            tree = tree.filter_nodes(show_only, exclude_list)
+            tree = tree.filter_nodes(include_list, exclude_list)
         except ValueError:
             msg = "Error when filtering nodes for pipdeptree. Is the package on PyPi?."
             logger.exception(msg)
@@ -66,6 +89,8 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         local_only: bool = False,
         user_only: bool = False,
+        include_editables: bool = True,
+        editables_only: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
@@ -75,19 +100,26 @@ class MkPipDepTree(mkdiagram.MkDiagram):
             direction: diagram direction
             local_only: Show ony local packages
             user_only: Show only user packages
+            include_editables: Whether to include editable installs
+            editables_only: Only return editable installs
             kwargs: Keyword arguments passed to parent
         """
         self._package = package
         self.local_only = local_only
         self.user_only = user_only
+        self.include_editables = include_editables
+        self.editables_only = editables_only
         super().__init__(graph_type="flow", direction=direction, **kwargs)
 
     def __repr__(self):
+        include_editables = self.include_editables if not self.include_editables else None
         return reprhelpers.get_repr(
             self,
             package=self._package,
             local_only=self.local_only,
             user_only=self.user_only,
+            include_editables=include_editables,
+            editables_only=self.editables_only,
             direction=self.direction,
             _filter_empty=True,
             _filter_false=True,
@@ -118,6 +150,8 @@ class MkPipDepTree(mkdiagram.MkDiagram):
             tuple(self.package) if isinstance(self.package, list) else self.package,
             local_only=self.local_only,
             user_only=self.user_only,
+            include_editables=self.include_editables,
+            editables_only=self.editables_only,
         )
 
 
