@@ -34,6 +34,7 @@ class Project(Generic[T]):
         base_url: str = "",
         use_directory_urls: bool = True,
         clone_depth: int = 100,
+        jinja_extensions: list[str] | None = None,
     ):
         """The main project to create a website.
 
@@ -45,6 +46,7 @@ class Project(Generic[T]):
             base_url: Base url of the website
             use_directory_urls: Whether urls are in directory-style
             clone_depth: Amount of commits to clone in case repository is remote.
+            jinja_extensions: Optional additional jinja extensions to load.
         """
         self.linkprovider = linkprovider.LinkProvider(
             base_url=base_url,
