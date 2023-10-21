@@ -6,7 +6,7 @@ import collections
 import re
 import urllib.parse
 
-from mknodes.utils import helpers, log
+from mknodes.utils import log, pathhelpers
 
 
 logger = log.get_logger(__name__)
@@ -35,7 +35,7 @@ class LinkReplacer:
         if len(filenames) > 1:
             text = "%s: %s has %s targets"
             logger.debug(text, self.page_url, len(filenames), match.group(3))
-        new_link = helpers.relative_url(self.page_url, filenames[0])
+        new_link = pathhelpers.relative_url(self.page_url, filenames[0])
         return match.group(0).replace(match.group(2), new_link)
         # new_text = new_text.replace("\\", "/")
         # text = "LinkReplacer: : %s -> %s"
