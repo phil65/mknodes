@@ -315,11 +315,11 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
             exts = [self.markdown_extensions, other_exts]
             merged = mergehelpers.merge_extensions(exts)
             self.markdown_extensions = mergehelpers.merge_dicts(*merged)
-        self.css = list(set(self.css + other["css"]))
-        self.plugins = list(set(self.plugins + other["plugins"]))
-        self.js = list(set(self.js + other["js"]))
-        self.assets = list(set(self.assets + other["assets"]))
-        self.packages = list(set(self.packages + other["packages"]))
+        self.css = helpers.reduce_list(self.css + other["css"])
+        self.plugins = helpers.reduce_list(self.plugins + other["plugins"])
+        self.js = helpers.reduce_list(self.js + other["js"])
+        self.assets = helpers.reduce_list(self.assets + other["assets"])
+        self.packages = helpers.reduce_list(self.packages + other["packages"])
         return self
 
 

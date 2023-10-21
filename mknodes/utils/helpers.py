@@ -13,6 +13,14 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
+T = TypeVar("T")
+
+
+def reduce_list(data_set: Iterable[T]) -> list[T]:
+    """Reduce duplicate items in a list and preserve order."""
+    return list(dict.fromkeys(data_set))
+
+
 def get_hash(obj: Any) -> str:
     import hashlib
 
