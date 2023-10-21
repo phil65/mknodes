@@ -19,12 +19,13 @@ def build(project: mk.Project[mk.MaterialTheme]) -> mk.MkNav:
 
 
 class Build:
-    def on_theme(self, theme: mk.MaterialTheme):
+    def on_theme(self, theme: mk.Theme):
         theme.error_page.content = mk.MkAdmonition("Page does not exist!")
-        theme.content_area_width = 1300
-        theme.tooltip_width = 800
-        theme.add_status_icon("js", "fa6-brands:js", "Uses JavaScript")
-        theme.add_status_icon("css", "vaadin:css", "Uses CSS")
+        if isinstance(theme, mk.MaterialTheme):
+            theme.content_area_width = 1300
+            theme.tooltip_width = 800
+            theme.add_status_icon("js", "fa6-brands:js", "Uses JavaScript")
+            theme.add_status_icon("css", "vaadin:css", "Uses CSS")
 
     def on_root(self, nav: mk.MkNav):
         nav.page_template.announcement_bar = mk.MkMetadataBadges("websites")
