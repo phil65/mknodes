@@ -6,7 +6,6 @@ from typing import Any
 from mknodes import project
 from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
-from mknodes.jinja import loaders
 from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import helpers, icons, log, reprhelpers, resources
 
@@ -198,11 +197,11 @@ class Theme:
     def adapt_extras(self, extras: dict):
         pass
 
-    def get_template_loader(self) -> loaders.FileSystemLoader:
+    @property
+    def template_path(self) -> str:
         from mkdocs import utils
 
-        path = utils.get_theme_dir(self.name)
-        return loaders.FileSystemLoader(path)
+        return utils.get_theme_dir(self.name)
 
 
 if __name__ == "__main__":
