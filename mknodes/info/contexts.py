@@ -11,7 +11,13 @@ from griffe.dataclasses import Alias, Module
 import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
-from mknodes.info import linkprovider, mkdocsconfigfile, packageregistry, pyproject
+from mknodes.info import (
+    folderinfo,
+    linkprovider,
+    mkdocsconfigfile,
+    packageregistry,
+    pyproject,
+)
 from mknodes.utils import clihelpers, log, superdict
 
 
@@ -135,7 +141,7 @@ class PackageContext(Context):
     """The names of the dependencies."""
     required_packages: dict = dataclasses.field(default_factory=dict)
     """PackageInfos for the dependencies."""
-    extras: dict[str, list[str]] = dataclasses.field(default_factory=dict)
+    extras: dict[str, folderinfo.PackageExtra] = dataclasses.field(default_factory=dict)
     """The extras of the distribution."""
     urls: dict[str, str] = dataclasses.field(default_factory=dict)
     """A set of URLs related to the distribution."""
@@ -197,8 +203,6 @@ class PackageContext(Context):
         default_factory=list,
     )
     """Commit types defined in pyproject mknodes section *[pyproject]*"""
-    extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
-    """Descriptions for the extras, defined in pyproject mknodes section *[pyproject]*"""
     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
         default_factory=list,
     )

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import functools
 import importlib
 import os
@@ -51,6 +52,21 @@ GITHUB_REGEX = re.compile(
     r"([\w\-]*)"
     r"(?:\/|$)?"  # noqa: COM812
 )
+
+
+@dataclasses.dataclass
+class PackageExtra:
+    """A class describing a package extra, used to define additional dependencies."""
+
+    name: str
+    """Name of the extra."""
+    packages: list[str] = dataclasses.field(default_factory=list)
+    """List of packages which are part of the extra."""
+    description: str = ""
+    """Optional description for the extra.
+
+    Must be defined in pyproject mknodes section.
+    """
 
 
 class FolderInfo:
@@ -125,6 +141,18 @@ class FolderInfo:
     def info(self) -> packageinfo.PackageInfo:
         """Return a PackageInfo object for given distribution."""
         return packageregistry.get_info(self.pyproject.name or self.git.repo_name)
+
+    @functools.cached_property
+    def extras(self) -> dict[str, PackageExtra]:
+        """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
+        dct = {}
+        for k, v in self.info.extras.items():
+            dct[k] = PackageExtra(
+                k,
+                packages=v,
+                description=self.pyproject.extras_descriptions.get(k, ""),
+            )
+        return dct
 
     @functools.cached_property
     def repository_url(self) -> str:
@@ -280,7 +308,7 @@ class FolderInfo:
             required_python_version=self.info.required_python_version,
             required_packages=self.info.required_packages,
             required_package_names=self.info.required_package_names,
-            extras=self.info.extras,
+            extras=self.extras,
             tools=self.tools,
             entry_points=self.info.entry_points,
             cli=self.info.cli,
@@ -298,7 +326,6 @@ class FolderInfo:
             configured_build_systems=self.pyproject.configured_build_systems,
             tool_section=self.pyproject.tool,
             commit_types=self.pyproject.allowed_commit_types,
-            extras_descriptions=self.pyproject.extras_descriptions,
             package_repos=self.pyproject.package_repos,
             line_length=self.pyproject.line_length,
         )
