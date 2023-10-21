@@ -84,7 +84,7 @@ class PyProject(tomlfile.TomlFile):
     @property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         """Return a list of package repositories the package is available on."""
-        return self.mknodes_section.get("package-repositories", ["pip"])
+        return self.mknodes_section.get("package-repositories", [])
 
     @property
     def docstring_style(self) -> str | None:

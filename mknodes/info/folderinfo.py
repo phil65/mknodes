@@ -171,8 +171,15 @@ class FolderInfo:
 
     @functools.cached_property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
-        """Return package repositories this distribution is hosted on."""
-        return self.pyproject.package_repos
+        """Return a list of package repositories the package is available on."""
+        repos = self.pyproject.package_repos or ["pip"]
+        if (
+            "pip" in repos
+            and "pipx" not in repos
+            and "console_scripts" in self.info.entry_points
+        ):
+            repos.append("pipx")
+        return repos
 
     @functools.cached_property
     def commit_types(self) -> list[commitconventions.CommitTypeStr]:
