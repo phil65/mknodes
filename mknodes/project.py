@@ -77,7 +77,11 @@ class Project(Generic[T]):
         )
         self.theme.ctx = self.context
 
-    def build(self):
+    def build(
+        self,
+        build_fn: str | Callable = paths.DEFAULT_BUILD_FN,
+        build_kwargs: dict[str, Any] | None = None,
+    ):
         logger.debug("Building page...")
         self.build_fn(project=self, **self.build_kwargs)
         logger.debug("Finished building page.")
