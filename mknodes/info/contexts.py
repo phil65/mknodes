@@ -255,10 +255,7 @@ class ProjectContext(Context):
     )
     """Link source."""
     env: mk.Environment = dataclasses.field(
-        default_factory=lambda: mk.Environment(
-            undefined="strict",
-            load_templates=True,
-        ),
+        default_factory=lambda: mk.Environment(load_templates=True),
     )
     # resources: Resources = dataclasses.field(default_factory=Resources)
     # pyproject: pyproject.PyProject = dataclasses.field(
@@ -339,7 +336,7 @@ default_project_context = ProjectContext(
     github=default_github_context,
     theme=default_theme_context,
     links=linkprovider.LinkProvider(),
-    env=mk.Environment(undefined="strict", load_templates=True),
+    env=mk.Environment(load_templates=True),
     # resources=Resources(),
 )
 

@@ -1,5 +1,5 @@
 /*required: admonitions, status_icons, accent_fg_color, primary_bg_color, tooltip_width
-content_area_width, classic_admonition_style, show_annotation_numbers, default_icons, color_theme*/
+content_area_width, classic_admonition_style, default_icons, color_theme*/
 :root {
 {% for admonition in admonitions %}
     --md-admonition-icon--{{ admonition.name }}: url('data:image/svg+xml;charset=utf-8,{{ admonition.svg }}');
@@ -76,46 +76,10 @@ content_area_width, classic_admonition_style, show_annotation_numbers, default_i
 }
 {% endif %}
 
-
-{% if show_annotation_numbers %}
-.md-typeset .md-annotation__index > ::before {
-    --content: attr(data-md-annotation-id);
-}
-.md-typeset :focus-within > .md-annotation__index > ::before {
-    --transform: none;
-}
-{% endif %}
-
-
 {% if alternating_table_colors %}
-th, td {
-    border: 1px solid var(--md-typeset-table-color);
-    border-spacing: 0;
-    border-bottom: none;
-    border-left: none;
-    border-top: none;
-}
-
-.md-typeset__table {
-    line-height: 1;
-}
-
-.md-typeset__table table:not([class]) {
-    font-size: .74rem;
-    border-right: none;
-}
-
-.md-typeset__table table:not([class]) td,
-.md-typeset__table table:not([class]) th {
-    padding: 9px;
-}
-
-/* light mode alternating table bg colors */
 .md-typeset__table tr:nth-child(2n) {
     background-color: #f8f8f8;
 }
-
-/* dark mode alternating table bg colors */
 [data-md-color-scheme="slate"] .md-typeset__table tr:nth-child(2n) {
     background-color: hsla(var(--md-hue),25%,25%,1)
 }

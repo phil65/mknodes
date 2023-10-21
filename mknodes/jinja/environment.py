@@ -26,7 +26,7 @@ class Environment(jinja2.Environment):
     def __init__(
         self,
         *,
-        undefined: str | type[jinja2.Undefined] = "silent",
+        undefined: undefined_.UndefinedStr | type[jinja2.Undefined] = "strict",
         trim_blocks: bool = True,
         load_templates: bool = False,
         **kwargs: Any,

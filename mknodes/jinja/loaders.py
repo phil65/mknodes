@@ -4,6 +4,8 @@ from collections.abc import Callable
 import pathlib
 import types
 
+from typing import Any
+
 import fsspec
 import fsspec.core
 import jinja2
@@ -134,7 +136,7 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
 
     """
 
-    def __init__(self, fs, **kwargs):
+    def __init__(self, fs: fsspec.AbstractFileSystem | str, **kwargs: Any):
         """Constructor.
 
         Arguments:

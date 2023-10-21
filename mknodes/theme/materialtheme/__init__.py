@@ -81,7 +81,6 @@ class MaterialTheme(theme.Theme):
 
     def __init__(self, **kwargs):
         self._foreground_color = None
-        self.show_annotation_numbers = False
         self.classic_admonition_style = True
         self.alternating_table_colors = False
         self.tooltip_width: int | None = None
@@ -99,11 +98,10 @@ class MaterialTheme(theme.Theme):
         """
         super().__init__(self.name, **kwargs)
 
-    def get_template_context(self) -> dict[str, Any]:
+    def get_css_context(self) -> dict[str, Any]:
         """Return template context (used to render the CSS template."""
         return dict(
             admonitions=self.admonitions,
-            show_annotation_numbers=self.show_annotation_numbers,
             classic_admonition_style=self.classic_admonition_style,
             alternating_table_colors=self.alternating_table_colors,
             tooltip_width=self.tooltip_width,

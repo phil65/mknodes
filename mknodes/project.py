@@ -54,7 +54,7 @@ class Project(Generic[T]):
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
-        self.env = environment.Environment(undefined="strict", load_templates=True)
+        self.env = environment.Environment(load_templates=True)
         self.theme: T = theme
         self.theme.associated_project = self
         match repo:

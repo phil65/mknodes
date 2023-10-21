@@ -20,7 +20,7 @@ class Theme:
 
     def __init__(
         self,
-        theme_name: str,
+        name: str,
         *,
         data: dict[str, Any] | None = None,
         project: project.Project | None = None,
@@ -28,7 +28,7 @@ class Theme:
     ):
         self.associated_project = project
 
-        self.theme_name = theme_name
+        self.name = name
         self.data = data or {}
         self.features = self.data.get("features")
 
@@ -47,7 +47,7 @@ class Theme:
         )
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, theme_name=self.theme_name)
+        return reprhelpers.get_repr(self, name=self.name)
 
     def add_admonition_type(
         self,
@@ -89,7 +89,7 @@ class Theme:
         """
         req: list[resources.CSSFile | resources.CSSText] = []
         if self.css_template and (proj := self.associated_project):
-            tmpl_ctx = self.get_template_context()
+            tmpl_ctx = self.get_css_context()
             css_text = proj.context.env.render_template(
                 self.css_template,
                 variables=tmpl_ctx,
@@ -97,7 +97,7 @@ class Theme:
             req = [resources.CSSText(content=css_text, filename="mknodes_theme.css")]
         return resources.Resources(css=req)
 
-    def get_template_context(self) -> dict[str, Any]:
+    def get_css_context(self) -> dict[str, Any]:
         """Return variables used to resolve the CSS template.
 
         Can be overridden by subclasses.
@@ -114,6 +114,25 @@ class Theme:
             css_accent_bg=self.primary_color,
             css_default_fg="#222222",
             css_default_bg="#DDDDDD",
+        )
+
+    @property
+    def context(self):
+        ctx = self.get_css_context()
+        return contexts.ThemeContext(
+            name=self.name,
+            data=self.data,
+            primary_color=self.primary_color,
+            text_color=self.text_color,
+            admonitions=self.admonitions,
+            css_primary_fg=ctx["css_primary_fg"],
+            css_primary_bg=ctx["css_primary_bg"],
+            css_primary_bg_light=ctx["css_primary_bg_light"],
+            css_accent_fg=ctx["css_accent_fg"],
+            css_accent_fg_transparent=ctx["css_accent_fg_transparent"],
+            css_accent_bg=ctx["css_accent_bg"],
+            css_default_fg=ctx["css_default_fg"],
+            css_default_bg=ctx["css_default_bg"],
         )
 
     @classmethod
@@ -163,25 +182,6 @@ class Theme:
         """
         return "#333333"
 
-    @property
-    def context(self):
-        ctx = self.get_template_context()
-        return contexts.ThemeContext(
-            name=self.theme_name,
-            data=self.data,
-            primary_color=self.primary_color,
-            text_color=self.text_color,
-            admonitions=self.admonitions,
-            css_primary_fg=ctx["css_primary_fg"],
-            css_primary_bg=ctx["css_primary_bg"],
-            css_primary_bg_light=ctx["css_primary_bg_light"],
-            css_accent_fg=ctx["css_accent_fg"],
-            css_accent_fg_transparent=ctx["css_accent_fg_transparent"],
-            css_accent_bg=ctx["css_accent_bg"],
-            css_default_fg=ctx["css_default_fg"],
-            css_default_bg=ctx["css_default_bg"],
-        )
-
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         pass
 
@@ -193,7 +193,7 @@ class Theme:
 
         from mknodes.jinja import loaders
 
-        path = utils.get_theme_dir(self.theme_name)
+        path = utils.get_theme_dir(self.name)
         return loaders.FileSystemLoader(path)
 
 
