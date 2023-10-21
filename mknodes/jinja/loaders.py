@@ -83,8 +83,11 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
         path = pathlib.Path(template).as_posix()
         return src, path, lambda: True
 
+    def list_templates(self):
+        return []
+
     def __repr__(self):
-        return reprhelpers.get_repr(self, fs=self.fs.protocol)
+        return reprhelpers.get_repr(self)
 
 
 class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
@@ -96,6 +99,9 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
 
     def __repr__(self):
         return reprhelpers.get_repr(self, fs=self.fs.protocol)
+
+    # def list_templates(self):
+    #     return self.fs.ls("")
 
     def get_source(
         self,
