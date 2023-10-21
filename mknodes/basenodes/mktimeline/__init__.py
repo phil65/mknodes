@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import os
-import pathlib
 import tomllib
 
 from typing import Any, Literal
 from xml.etree import ElementTree as Et
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import log, pathhelpers, reprhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -143,7 +142,7 @@ class MkTimeline(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to parent
         """
         if isinstance(items, str | os.PathLike):
-            text = pathlib.Path(items).read_text()
+            text = pathhelpers.load_file_cached(str(items))
             data = tomllib.loads(text)
             items = [MkTimelineItem(**step) for step in data.values()]
         super().__init__(items, **kwargs)

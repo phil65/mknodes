@@ -221,8 +221,7 @@ class MkPage(mkcontainer.MkContainer):
         """
         if "://" in (url := str(path)):
             file_content = pathhelpers.load_file_cached(url)
-            split = parse.urlsplit(url)
-            path = f"{title}.md" if title else pathlib.Path(split.path).name
+            path = f"{title}.md" if title else pathlib.Path(parse.urlsplit(url).path).name
             path = pathlib.Path(path)
         else:
             path = pathlib.Path(path)
