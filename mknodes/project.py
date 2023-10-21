@@ -9,7 +9,7 @@ import pathlib
 from typing import Any, Generic, TypeVar
 
 from mknodes import paths
-from mknodes.info import contexts, folderinfo, linkprovider, packageregistry
+from mknodes.info import contexts, folderinfo, linkprovider
 from mknodes.jinja import environment
 from mknodes.navs import mknav
 from mknodes.theme import theme as theme_
@@ -133,15 +133,6 @@ class Project(Generic[T]):
         """
         self._root = mknav.MkNav(project=self, **kwargs)
         return self._root
-
-    def populate_linkprovider(self):
-        invs = self.folderinfo.mkdocs_config.get_inventory_infos()
-        mk_urls = {i["url"]: i.get("base_url") for i in invs if "url" in i}
-        for url, base_url in mk_urls.items():
-            self.linkprovider.add_inv_file(url, base_url=base_url)
-        for url in packageregistry.registry.inventory_urls:
-            if url not in mk_urls:
-                self.linkprovider.add_inv_file(url)
 
 
 if __name__ == "__main__":

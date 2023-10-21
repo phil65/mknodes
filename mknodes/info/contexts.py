@@ -11,7 +11,7 @@ from griffe.dataclasses import Alias, Module
 import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
-from mknodes.info import linkprovider, mkdocsconfigfile, pyproject
+from mknodes.info import linkprovider, mkdocsconfigfile, packageregistry, pyproject
 from mknodes.utils import log, superdict
 
 
@@ -269,6 +269,17 @@ class ProjectContext(Context):
         self.env.filters["get_link"] = self.links.get_link
         self.env.filters["get_url"] = self.links.get_url
         self.env.globals |= self.as_dict()
+
+    def populate_linkprovider(self):
+        if self.metadata.mkdocs_config is None:
+            return
+        invs = self.metadata.mkdocs_config.get_inventory_infos()
+        mk_urls = {i["url"]: i.get("base_url") for i in invs if "url" in i}
+        for url, base_url in mk_urls.items():
+            self.links.add_inv_file(url, base_url=base_url)
+        for url in packageregistry.registry.inventory_urls:
+            if url not in mk_urls:
+                self.links.add_inv_file(url)
 
     def as_dict(self):
         return dict(
