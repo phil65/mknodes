@@ -9,7 +9,7 @@ from typing import Any, Literal
 
 from mknodes.data import datatypes
 from mknodes.theme import colortheme, theme
-from mknodes.theme.material import palette
+from mknodes.theme.materialtheme import palette
 from mknodes.utils import helpers, icons, log, reprhelpers
 
 
