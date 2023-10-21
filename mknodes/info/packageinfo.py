@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 import contextlib
 import functools
 
@@ -153,13 +154,10 @@ class PackageInfo:
     @functools.cached_property
     def extras(self) -> dict[str, list[str]]:
         """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
-        extras: dict[str, list[str]] = {}
+        extras: collections.defaultdict = collections.defaultdict(list)
         for dep in self._required_deps:
             for extra in dep.extras:
-                if extra in extras:
-                    extras[extra].append(dep.name)
-                else:
-                    extras[extra] = [dep.name]
+                extras[extra].append(dep.name)
         return extras
 
     @functools.cached_property
