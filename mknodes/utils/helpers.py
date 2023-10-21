@@ -54,7 +54,7 @@ def extract_header_section(markdown: str, section_name: str) -> str | None:
         return None
     section_level = len(header_match[1])
     start_index = header_match.span()[1] + 1
-    end_pattern = re.compile(f"^#{{2,{section_level}}} ", re.MULTILINE)
+    end_pattern = re.compile(f"^#{{1,{section_level}}} ", re.MULTILINE)
     end_match = end_pattern.search(markdown[start_index:])
     if end_match is None:
         return markdown[start_index:]

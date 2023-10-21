@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import downloadhelpers, helpers, log, reprhelpers
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -82,15 +82,15 @@ class MkText(mknode.MkNode):
         If the URL contains a "#" (http://.../markdown.md#section),
         it will try to extract the given section.
 
+        All fsspec protocols are supported as URL.
+
         Arguments:
             url: URL to get markdown from.
         """
-        if "#" in url:
-            url, section = url.split("#")
-            text = downloadhelpers.download(url).decode()
-            text = helpers.extract_header_section(text, section)
-        else:
-            text = downloadhelpers.download(url).decode()
+        url, *section = url.split("#")
+        text = pathhelpers.load_file_cached(url)
+        if section:
+            text = helpers.extract_header_section(text, section[0])
         return cls(text) if text is not None else None
 
 
