@@ -60,7 +60,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         return reprhelpers.get_repr(
             self,
             content=content,
-            typ=self.typ,
+            typ=self.typ if self.typ != "info" else None,
             title=self.title,
             collapsible=self.collapsible,
             expanded=self.expanded,
