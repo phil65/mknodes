@@ -11,7 +11,7 @@ from urllib import parse
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import downloadhelpers, helpers, inspecthelpers, log, reprhelpers
+from mknodes.utils import helpers, inspecthelpers, log, pathhelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -213,14 +213,14 @@ class MkPage(mkcontainer.MkContainer):
         Parses and reads header metadata.
 
         Arguments:
-            path: Path to load file from
+            path: Path to load file from, either a local path or a fsspec protocol path.
             title: Optional title to use
                    If None, title will be infered from metadata or filename
             parent: Optional parent for new page
             kwargs: Additional metadata for MkPage. Will override parsed metadata.
         """
-        if helpers.is_url(url := str(path)):
-            file_content = downloadhelpers.download(url).decode()
+        if "://" in (url := str(path)):
+            file_content = pathhelpers.load_file_cached(url)
             split = parse.urlsplit(url)
             path = f"{title}.md" if title else pathlib.Path(split.path).name
             path = pathlib.Path(path)
