@@ -24,6 +24,8 @@ class MkArgParseHelp(mkcontainer.MkContainer):
 
     @property
     def items(self):
+        # ArgumentParser.format_usage()
+        # ArgumentParser.format_help()
         items = [
             mkheader.MkHeader(self.parser.prog),
             mktext.MkText(self.parser.description),

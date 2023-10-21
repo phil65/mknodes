@@ -14,6 +14,8 @@ from mknodes.utils import pathhelpers, reprhelpers
 
 
 class LoaderMixin:
+    """Loader mixin which allows to OR loaders into a choice loader."""
+
     loader: jinja2.BaseLoader
 
     def __or__(self, other: jinja2.BaseLoader):
@@ -26,6 +28,8 @@ class LoaderMixin:
 
 
 class PackageLoader(LoaderMixin, jinja2.PackageLoader):
+    """A loader for loading templates from a package."""
+
     def __init__(
         self,
         package: str | types.ModuleType,
@@ -49,6 +53,8 @@ class PackageLoader(LoaderMixin, jinja2.PackageLoader):
 
 
 class FileSystemLoader(LoaderMixin, jinja2.FileSystemLoader):
+    """A loader to load templates from the file system."""
+
     def __repr__(self):
         return reprhelpers.get_repr(self, searchpath=self.searchpath)
 
@@ -61,11 +67,15 @@ class FileSystemLoader(LoaderMixin, jinja2.FileSystemLoader):
 
 
 class ChoiceLoader(LoaderMixin, jinja2.ChoiceLoader):
+    """A loader which combines multiple other loaders."""
+
     def __repr__(self):
         return reprhelpers.get_repr(self, loaders=self.loaders, _shorten=False)
 
 
 class DictLoader(LoaderMixin, jinja2.DictLoader):
+    """A loader to load static content from a path->template-str mapping."""
+
     def __repr__(self):
         return reprhelpers.get_repr(self, mapping=self.mapping)
 

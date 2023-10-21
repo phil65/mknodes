@@ -13,10 +13,10 @@ logger = log.get_logger(__name__)
 
 
 class JinjaLoaderFileSystem(fsspec.AbstractFileSystem):
-    """A FsSpec Filesystem implementation for jinja environment templates.
+    """A **FsSpec** Filesystem implementation for jinja environment templates.
 
     This virtual file system allows to browse and access all available templates of an
-    environment by utilizing loader.list_templates and loader.get_source.
+    environment by utilizing `BaseLoader.list_templates` and `BaseLoader.get_source`.
     """
 
     protocol = "jinja"
