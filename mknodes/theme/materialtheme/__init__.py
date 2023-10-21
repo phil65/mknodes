@@ -82,7 +82,6 @@ class MaterialTheme(theme.Theme):
     def __init__(self, **kwargs):
         self._foreground_color = None
         self.classic_admonition_style = True
-        self.alternating_table_colors = False
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None
         self.default_icons = {}

@@ -5,3 +5,9 @@
     border-color: {{ admonition.border_color }};
 }
 {% endfor %}
+
+{% if alternating_table_colors %}
+.table tr:nth-child(2n) {
+    background-color: #CCCCCCAA;
+}
+{% endif %}

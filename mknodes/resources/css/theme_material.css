@@ -54,14 +54,12 @@ content_area_width, classic_admonition_style, default_icons, color_theme*/
 
 {% endfor %}
 
-
 {% for status_icon in status_icons %}
 .md-status--{{ status_icon.name }}:after {
     -webkit-mask-image: var(--md-status--{{ status_icon.name }});
     mask-image: var(--md-status--{{ status_icon.name }});
 }
 {% endfor %}
-
 
 {% if content_area_width %}
 .md-grid {

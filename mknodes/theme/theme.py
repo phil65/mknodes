@@ -36,6 +36,8 @@ class Theme:
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
 
+        self.alternating_table_colors = False
+
         self.admonitions: list[admonition.AdmonitionType] = []
         self.add_admonition_type(
             name="theme",
@@ -106,6 +108,7 @@ class Theme:
             admonitions=self.admonitions,
             primary_color=self.primary_color,
             text_color=self.text_color,
+            alternating_table_colors=self.alternating_table_colors,
             css_primary_fg=self.text_color,
             css_primary_bg=self.primary_color,
             css_primary_bg_light=self.primary_color,
