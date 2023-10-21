@@ -5,7 +5,7 @@ import itertools
 import os
 import re
 
-from typing import Any, Literal, TypeVar
+from typing import Any, Literal, ParamSpec, TypeVar
 
 from mknodes.utils import log
 
@@ -188,6 +188,25 @@ def get_output_from_call(call: Sequence[str]) -> str | None:
     except subprocess.CalledProcessError:
         logger.warning("Executing %s failed", call)
         return None
+
+
+P = ParamSpec("P")
+R = TypeVar("R")
+
+
+def list_to_tuple(fn: Callable[P, R]) -> Callable[P, R]:
+    """Decorater to convert lists to tuples in the arguments."""
+
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        safe_args = [tuple(item) if isinstance(item, list) else item for item in args]
+        if kwargs:
+            kwargs = {
+                key: tuple(value) if isinstance(value, list) else value
+                for key, value in kwargs.items()
+            }  # type: ignore[assignment]
+        return fn(*safe_args, **kwargs)  # type: ignore[arg-type]
+
+    return wrapper
 
 
 if __name__ == "__main__":
