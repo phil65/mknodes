@@ -23,10 +23,10 @@ class Theme:
         name: str,
         *,
         data: dict[str, Any] | None = None,
-        project: project.Project | None = None,
+        context: project.Project | None = None,
         template_registry: templateregistry.TemplateRegistry | None = None,
     ):
-        self.ctx = project.context if project else contexts.ProjectContext()
+        self.ctx = context or contexts.ProjectContext()
 
         self.name = name
         self.data = data or {}

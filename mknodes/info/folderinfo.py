@@ -40,6 +40,8 @@ if TYPE_CHECKING:
     from mknodes.info import packageinfo
 
 
+_REPOS = {}
+
 logger = log.get_logger(__name__)
 
 
@@ -134,6 +136,7 @@ class FolderInfo:
         repo = git.Repo.clone_from(url, directory.name, depth=depth)
         logger.info("Finished cloning.")
         kls = cls(repo.working_dir)
+        _REPOS[repo.working_dir] = directory
         kls._temp_directory = directory
         return kls
 
