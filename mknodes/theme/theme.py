@@ -3,9 +3,9 @@ from __future__ import annotations
 from collections.abc import MutableMapping
 from typing import Any
 
-from mknodes import project
 from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
+from mknodes.jinja import environment
 from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import helpers, icons, log, reprhelpers, resources
 
@@ -23,15 +23,12 @@ class Theme:
         name: str,
         *,
         data: dict[str, Any] | None = None,
-        context: project.Project | None = None,
         template_registry: templateregistry.TemplateRegistry | None = None,
     ):
-        self.ctx = context or contexts.ProjectContext()
-
         self.name = name
         self.data = data or {}
         self.features = self.data.get("features")
-
+        self.env = environment.Environment(load_templates=True)
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
@@ -90,9 +87,9 @@ class Theme:
         Usually, the resources consist of static templates and CSS.
         """
         req: list[resources.CSSFile | resources.CSSText] = []
-        if self.css_template and self.ctx:
+        if self.css_template:
             tmpl_ctx = self.get_css_context()
-            css_text = self.ctx.env.render_template(
+            css_text = self.env.render_template(
                 self.css_template,
                 variables=tmpl_ctx,
             )

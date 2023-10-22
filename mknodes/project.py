@@ -56,7 +56,6 @@ class Project(Generic[T]):
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.build_kwargs = build_kwargs or {}
-        self.env = environment.Environment(load_templates=True)
         self.theme: T = theme
         git_repo = reporegistry.get_repo(str(repo or "."), clone_depth=clone_depth)
         self.folderinfo = folderinfo.FolderInfo(git_repo.working_dir)
@@ -66,9 +65,8 @@ class Project(Generic[T]):
             # github=self.folderinfo.github.context,
             theme=self.theme.context,
             links=self.linkprovider,
-            env=self.env,
+            env=environment.Environment(load_templates=True),
         )
-        self.theme.ctx = self.context
 
     def build(
         self,
