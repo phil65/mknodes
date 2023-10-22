@@ -6,6 +6,7 @@ from operator import attrgetter
 import reprlib
 from typing import Any
 
+from mknodes.data import datatypes
 from mknodes.utils import log
 
 
@@ -77,7 +78,7 @@ def get_repr(
     return f"{classname}({sig})"
 
 
-def dataclass_repr(instance):
+def dataclass_repr(instance: datatypes.DataclassInstance) -> str:
     """Return repr for dataclass, filtered by non-default values.
 
     Arguments:
@@ -93,12 +94,29 @@ def dataclass_repr(instance):
     return f"{instance.__class__.__name__}({nodef_f_repr})"
 
 
-def to_str_if_textnode(node):
+def to_str_if_textnode(node) -> str:
     import mknodes as mk
 
     return str(node) if type(node) in {mk.MkText, mk.MkHeader} else node
 
 
+def get_nondefault_repr(instance: object) -> str:
+    import inspect
+
+    spec = inspect.getfullargspec(instance.__init__)
+    spec.args.remove("self")
+    args = [getattr(instance, "items" if arg == "content" else arg) for arg in spec.args]
+    dct = spec.kwonlydefaults or {}
+    kwargs = {
+        k: getattr(instance, k)
+        for k, v in dct.items()
+        if k in instance.__dict__ and v != getattr(instance, k)
+    }
+    return get_repr(instance, *args, **kwargs)
+
+
 if __name__ == "__main__":
-    strings = get_repr([str(i) for i in range(1000)])
-    print(limit_repr.repr(strings))
+    import mknodes as mk
+
+    instance = mk.MkAdmonition("test", typ="info")
+    print(get_nondefault_repr(instance))

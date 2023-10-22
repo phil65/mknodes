@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import Field
 import types
 
-from typing import Any, Literal
+from typing import Any, ClassVar, Literal, Protocol
 
 
 AdmonitionTypeStr = Literal[
@@ -67,6 +68,10 @@ MetadataTypeStr = (
     ]
     | ClassifierStr
 )
+
+
+class DataclassInstance(Protocol):
+    __dataclass_fields__: ClassVar[dict[str, Field[Any]]]
 
 
 PageStatusStr = Literal["new", "deprecated", "encrypted"]
