@@ -29,6 +29,16 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
     """Registry for PackageInfos.
 
     Used for caching all loaded Package information.
+    The registry will always only create the Griffe module for the top-level module
+    and then use griffe_module[submodule] or griffe_module[klass] to get the
+    griffe instances. That should enable the best cache behaviour.
+
+    Examples:
+        ``` py
+        reg = GriffeRegistry()
+        griffe_module = reg.get_module("my_module")
+        another_module = reg.get_module("my_module.submodule")
+        ```
     """
 
     def __init__(self):

@@ -134,63 +134,6 @@ class MkDoc(mknav.MkNav):
             if self.module_name in klass.__module__.split("."):
                 yield klass
 
-    # def collect_modules(
-    #     self,
-    #     *,
-    #     recursive: bool = False,
-    #     predicate: Callable[[types.ModuleType], bool] | None = None,
-    #     submodule: types.ModuleType | str | tuple | list | None = None,
-    # ):
-    #     """Collect submodules.
-
-    #     Arguments:
-    #         recursive: Collect recursively
-    #         predicate: Module filter predicate
-    #         submodule: Module to collect from. If None, collect from project module.
-    #     """
-    #     for module in self.iter_modules(
-    #         recursive=recursive,
-    #         predicate=predicate,
-    #         submodule=submodule,
-    #     ):
-    #         self.submodules.add(module)
-
-    # def iter_modules(
-    #     self,
-    #     *,
-    #     submodule: types.ModuleType | str | tuple | list | None = None,
-    #     recursive: bool = False,
-    #     predicate: Callable[[types.ModuleType], bool] | None = None,
-    #     _seen: set | None = None,
-    # ) -> Iterator[types.ModuleType]:
-    #     """Iterate over all submodules of the module.
-
-    #     Arguments:
-    #         submodule: filter based on a submodule
-    #         recursive: whether to only iterate over members of current module
-    #                    or whether it should also include modules from submodules.
-    #         predicate: filter modules based on a predicate.
-    #     """
-    #     mod = classhelpers.to_module(submodule) if submodule else self.module
-    #     seen = _seen or set()
-    #     if mod is None:
-    #         return
-    #     for submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
-    #         not_in_all = hasattr(mod, "__all__") and submod_name not in mod.__all__
-    #         filtered_by_all = self.filter_by___all__ and not_in_all
-    #         not_filtered_by_pred = predicate(submod) if predicate else True
-    #         # if self.module_name in mod.__name__.split(".")
-    #         if not filtered_by_all and not_filtered_by_pred:
-    #             yield submod
-    #         if recursive and submod not in seen:
-    #             seen.add(submod)
-    #             yield from self.iter_modules(
-    #                 submodule=submod,
-    #                 recursive=True,
-    #                 predicate=predicate,
-    #                 _seen=seen,
-    #             )
-
     def add_class_page(
         self,
         klass: type,
