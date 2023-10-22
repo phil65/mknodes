@@ -9,11 +9,11 @@ import pathlib
 from typing import Any, Generic, TypeVar
 
 from mknodes import paths
-from mknodes.info import contexts, folderinfo, linkprovider
+from mknodes.info import contexts, folderinfo, linkprovider, reporegistry
 from mknodes.jinja import environment
 from mknodes.navs import mknav
 from mknodes.theme import theme as theme_
-from mknodes.utils import classhelpers, helpers, log, reprhelpers
+from mknodes.utils import classhelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -58,17 +58,8 @@ class Project(Generic[T]):
         self.build_kwargs = build_kwargs or {}
         self.env = environment.Environment(load_templates=True)
         self.theme: T = theme
-        match repo:
-            case folderinfo.FolderInfo():
-                self.folderinfo = repo
-            case _ if helpers.is_url(str(repo)):
-                self.folderinfo = folderinfo.FolderInfo.clone_from(
-                    str(repo),
-                    depth=clone_depth,
-                )
-            case _:
-                self.folderinfo = folderinfo.FolderInfo(repo)
-
+        git_repo = reporegistry.get_repo(str(repo or "."), clone_depth=clone_depth)
+        self.folderinfo = folderinfo.FolderInfo(git_repo.working_dir)
         self.context = contexts.ProjectContext(
             metadata=self.folderinfo.context,
             git=self.folderinfo.git.context,

@@ -9,18 +9,18 @@ import pathlib
 import re
 import types
 
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
     # githubinfo,
-    gitrepository,
     grifferegistry,
     license,
     mkdocsconfigfile,
     packageregistry,
     pyproject,
+    reporegistry,
 )
 from mknodes.utils import (
     icons,
@@ -38,9 +38,6 @@ if TYPE_CHECKING:
     from griffe.dataclasses import Alias
 
     from mknodes.info import packageinfo
-
-
-_REPOS = {}
 
 logger = log.get_logger(__name__)
 
@@ -80,10 +77,10 @@ class FolderInfo:
         Arguments:
             path: Path to the repo.
         """
-        self.path = pathlib.Path(path or ".")
-        self.pyproject = pyproject.PyProject(self.path)
         # packagehelpers.install_or_import(mod_name)
-        self.git = gitrepository.GitRepository(self.path)
+        self.git = reporegistry.get_repo(path or ".")
+        self.path = pathlib.Path(self.git.working_dir)
+        self.pyproject = pyproject.PyProject(self.path)
         self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile()
         if (mk_path := self.path / "mkdocs.yml").exists():
             with contextlib.suppress(yamlhelpers.YAMLError):
@@ -112,33 +109,6 @@ class FolderInfo:
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
-
-    @classmethod
-    def clone_from(
-        cls,
-        url: str,
-        # path: str | os.PathLike,
-        depth: int = 100,
-    ) -> Self:
-        """Create a FolderInfo from a remote repository url.
-
-        Arguments:
-            url: Url of the repository
-            depth: Amount of commits to clone. Useful for changelog generation.
-        """
-        import tempfile
-
-        import git
-
-        directory = tempfile.TemporaryDirectory(prefix="mknodes_repo_")
-        logger.info("Created temporary directory %s", directory.name)
-        logger.info("Cloning %s with depth %s", url, depth)
-        repo = git.Repo.clone_from(url, directory.name, depth=depth)
-        logger.info("Finished cloning.")
-        kls = cls(repo.working_dir)
-        _REPOS[repo.working_dir] = directory
-        kls._temp_directory = directory
-        return kls
 
     @functools.cached_property
     def info(self) -> packageinfo.PackageInfo:
@@ -335,5 +305,6 @@ class FolderInfo:
 
 
 if __name__ == "__main__":
-    info = FolderInfo()
+    info = FolderInfo("https://github.com/mkdocs/mkdocs.git")
+    print(info.context)
     log.basic()

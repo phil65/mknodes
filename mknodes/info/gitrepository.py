@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from functools import cached_property
+import tempfile
+
 from typing import Self
 from urllib import parse
 
@@ -15,6 +17,11 @@ logger = log.get_logger(__name__)
 
 class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # to keep a reference to a TempDirectory instance
+        self.temp_directory: tempfile.TemporaryDirectory | None = None
 
     def __len__(self):
         return len(list(self.iter_commits("HEAD")))
