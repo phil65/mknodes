@@ -1,0 +1,24 @@
+[metadata]
+icon = "mdi:file-tree-outline"
+
+[requirements.package.seedir]
+
+[examples."Dash style"]
+jinja = """
+{{ "mknodes/manual" | MkSeeDir(style="dash") | MkReprRawRendered }}
+"""
+
+[examples."Arrow style"]
+jinja = """
+{{ "mknodes/manual" | MkSeeDir(style="arrow") | MkReprRawRendered }}
+"""
+
+[examples."Spaces style"]
+jinja = """
+{{ "mknodes/manual" | MkSeeDir(style="spaces") | MkReprRawRendered }}
+"""
+
+[examples."Plus style"]
+jinja = """
+{{ "mknodes/manual" | MkSeeDir(style="plus") | MkReprRawRendered }}
+"""
