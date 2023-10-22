@@ -84,6 +84,7 @@ class NodeEnvironment(environment.Environment):
         self,
         template_name: str,
         variables: dict[str, Any] | None = None,
+        block_name: str | None = None,
         parent_template: str | None = None,
     ) -> str:
         """Render a loaded template.
@@ -93,13 +94,19 @@ class NodeEnvironment(environment.Environment):
         Arguments:
             template_name: Template name
             variables: Extra variables for this render call
+            block_name: Render specific block from the template
             parent_template: Optional parent template (to be used with super())
         """
         # if pathlib.Path(template_name).as_posix() not in self.list_templates():
         #     self.add_template(template_name)
         self.rendered_nodes = []
         self.update_env_from_context()
-        return super().render_template(template_name, variables, parent_template)
+        return super().render_template(
+            template_name,
+            variables=variables,
+            block_name=block_name,
+            parent_template=parent_template,
+        )
 
     def render_string(self, markdown: str, variables: dict | None = None):
         """Render a template string.

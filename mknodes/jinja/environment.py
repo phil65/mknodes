@@ -131,13 +131,9 @@ class Environment(jinja2.Environment):
             markdown: String to render
             variables: Extra variables for the environment
         """
-        try:
-            template = self.from_string(markdown)
-            variables = variables or {}
-            return template.render(**variables)
-        except (jinja2.exceptions.TemplateSyntaxError, jinja2.exceptions.UndefinedError):
-            logger.exception("Error when rendering template \n%r", markdown)
-            return markdown
+        template = self.from_string(markdown)
+        variables = variables or {}
+        return template.render(**variables)
 
     def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
         """Helper to directly render a template from filesystem.
@@ -155,20 +151,30 @@ class Environment(jinja2.Environment):
         self,
         template_name: str,
         variables: dict[str, Any] | None = None,
+        block_name: str | None = None,
         parent_template: str | None = None,
     ) -> str:
-        """Render a loaded template.
+        """Render a loaded template (or a block of a template).
 
         Arguments:
             template_name: Template name
             variables: Extra variables for this render call
+            block_name: Render specific block from the template
             parent_template: Optional parent template (to be used with super())
         """
-        # if pathlib.Path(template_name).as_posix() not in self.list_templates():
-        #     self.add_template(template_name)
         template = self.get_template(template_name, parent=parent_template)
-        variables = variables or {}
-        return template.render(**variables)
+        if not block_name:
+            variables = variables or {}
+            return template.render(**variables)
+        try:
+            block_render_func = template.blocks[block_name]
+        except KeyError:
+            raise BlockNotFoundError(block_name, template_name) from KeyError
+
+        ctx = template.new_context(variables or {})
+        return self.concat(block_render_func(ctx))  # type: ignore
+        # except Exception:
+        #     self.handle_exception()
 
     @contextlib.contextmanager
     def with_globals(self, **kwargs: Any):
@@ -213,6 +219,21 @@ class Environment(jinja2.Environment):
         self.block_end_string = old_end_block
         self.variable_start_string = old_start_var
         self.variable_end_string = old_end_var
+
+
+class BlockNotFoundError(Exception):
+    def __init__(
+        self,
+        block_name: str,
+        template_name: str,
+        message: str | None = None,
+    ):
+        self.block_name = block_name
+        self.template_name = template_name
+        super().__init__(
+            message
+            or f"Block {self.block_name!r} not found in template {self.template_name!r}",
+        )
 
 
 if __name__ == "__main__":
