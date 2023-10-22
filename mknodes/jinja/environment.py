@@ -55,6 +55,9 @@ class Environment(jinja2.Environment):
     def __contains__(self, template: str | os.PathLike):
         return pathlib.Path(template).as_posix() in self.list_templates()
 
+    def __getitem__(self, val: str) -> jinja2.Template:
+        return self.get_template(val)
+
     def inherit_from(self, env: jinja2.Environment):
         self.__dict__.update(env.__dict__)
         self.linked_to = env
