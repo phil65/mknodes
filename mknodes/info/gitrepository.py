@@ -16,6 +16,9 @@ logger = log.get_logger(__name__)
 class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
+    def __len__(self):
+        return len(list(self.iter_commits("HEAD")))
+
     @cached_property
     def main_branch(self) -> str:
         """The default branch of the repository."""
