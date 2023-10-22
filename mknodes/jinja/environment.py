@@ -48,6 +48,9 @@ class Environment(jinja2.Environment):
         )
         self.filters.update(jinjahelpers.get_filters())
         self.globals.update(jinjahelpers.get_globals())
+        self.filters["render_template"] = self.render_template
+        self.filters["render_string"] = self.render_string
+        self.filters["render_file"] = self.render_file
 
     def __contains__(self, template: str | os.PathLike):
         return pathlib.Path(template).as_posix() in self.list_templates()
