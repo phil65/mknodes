@@ -3,6 +3,7 @@ from __future__ import annotations
 import dataclasses
 
 from operator import attrgetter
+import os
 import reprlib
 from typing import Any
 
@@ -71,6 +72,8 @@ def get_repr(
         match v:
             case (mk.MkNode(), *_) if len(v) > 1:
                 name = "[...]"
+            case os.PathLike():
+                name = repr(os.fspath(v))
             case _:
                 name = my_repr(v)
         kw_parts.append(f"{k}={name}")

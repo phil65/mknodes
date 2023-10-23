@@ -18,26 +18,21 @@ class MkSnippet(mknode.MkNode):
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.snippets")]
     ICON = "material/paperclip"
 
-    def __init__(
-        self,
-        path: str | os.PathLike,
-        *,
-        header: str = "",
-    ):
+    def __init__(self, path: str | os.PathLike, **kwargs):
         """Constructor.
 
         Arguments:
-            path: Path to markdown file.
-            header: Section header
+            path: Path to markdown file
+            kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header)
+        super().__init__(**kwargs)
         self.path = path
 
     def __str__(self):
         return self.to_markdown()
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, path=str(self.path))
+        return reprhelpers.get_repr(self, path=self.path)
 
     @classmethod
     def create_example_page(cls, page):

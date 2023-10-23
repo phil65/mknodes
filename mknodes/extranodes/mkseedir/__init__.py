@@ -90,7 +90,7 @@ class MkSeeDir(mkcode.MkCode):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            path=str(self.directory),
+            path=self.directory,
             style=self.style,
             indent=self.print_indent,
             depth_limit=self.depth_limit,
