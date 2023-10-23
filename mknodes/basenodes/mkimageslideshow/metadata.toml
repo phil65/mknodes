@@ -1,0 +1,22 @@
+[metadata]
+icon = "mdi:image-multiple"
+
+[[resources.js]]
+link = "https://rawgit.com/ruyadorno/simple-slider/master/dist/simpleslider.min.js"
+
+[[resources.js]]
+filename = "slideshow.js"
+content = """
+window.addEventListener('DOMContentLoaded', function () {
+  simpleslider.getSlider();
+})
+"""
+
+[[resources.css]]
+filename = "https://unpkg.com/img-comparison-slider@7/dist/styles.css"
+
+
+[examples."Regular"]
+jinja = """
+{{ ["https://picsum.photos/700", "https://picsum.photos/701"] | MkImageSlideshow | MkReprRawRendered }}
+"""

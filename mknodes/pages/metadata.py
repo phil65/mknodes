@@ -163,9 +163,9 @@ class Metadata(dict):
         self["template"] = val
 
     @property
-    def tags(self) -> list[str] | None:
+    def tags(self) -> list[str]:
         """A list of tags associated with the page."""
-        return self.get("tags")
+        return self.get("tags", [])
 
     @tags.setter
     def tags(self, val: list[str] | None):
