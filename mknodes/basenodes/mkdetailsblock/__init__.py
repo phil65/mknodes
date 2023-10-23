@@ -23,7 +23,7 @@ class MkDetailsBlock(mkblock.MkBlock):
 
     def __init__(
         self,
-        content: str | list | mk.MkNode,
+        content: str | list | mk.MkNode | None = None,
         *,
         typ: datatypes.AdmonitionTypeStr = "info",
         expand: bool | None = None,
@@ -41,7 +41,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         """
         super().__init__(
             "details",
-            content=content,
+            content=content or [],
             argument=title or "",
             attributes=dict(type=typ, open=expand),
             **kwargs,

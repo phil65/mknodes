@@ -19,8 +19,8 @@ class MkTabBlock(mkblock.MkBlock):
 
     def __init__(
         self,
-        title: str,
-        content: str | mknode.MkNode | list,
+        title: str = "",
+        content: str | mknode.MkNode | list | None = None,
         *,
         new: bool | None = None,
         select: bool | None = None,
@@ -37,7 +37,7 @@ class MkTabBlock(mkblock.MkBlock):
         """
         super().__init__(
             "tab",
-            content=content,
+            content=content or [],
             argument=title,
             **kwargs,
         )

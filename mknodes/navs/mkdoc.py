@@ -56,7 +56,8 @@ class MkDoc(mknav.MkNav):
         self.filter_by___all__ = filter_by___all__
         self._exclude = exclude_modules or []
         # self.root_path = pathlib.Path(f"./{self.module_name}")
-        super().__init__(section=section_name or self.module_name, **kwargs)
+        super().__init__(**kwargs)
+        self.section = section_name or self.module_name
         self._collect_classes()
 
     def __repr__(self):
@@ -73,7 +74,7 @@ class MkDoc(mknav.MkNav):
 
     @property
     def module_name(self) -> str:
-        return self.module.__name__.split(".")[-1]
+        return self.module.__name__.split(".")[-1] if self.module else ""
 
     def _collect_classes(self):
         """Collect classes from given module."""

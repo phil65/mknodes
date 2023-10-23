@@ -21,7 +21,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
 
     def __init__(
         self,
-        content: str | list | mk.MkNode,
+        content: str | list | mk.MkNode | None = None,
         *,
         typ: datatypes.AdmonitionTypeStr = "info",
         title: str | None = None,
@@ -37,7 +37,7 @@ class MkAdmonitionBlock(mkblock.MkBlock):
         """
         super().__init__(
             "admonition",
-            content=content,
+            content=content or [],
             argument=title or "",
             attributes=dict(type=typ),
             **kwargs,
