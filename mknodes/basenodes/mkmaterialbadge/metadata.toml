@@ -20,8 +20,8 @@ jinja = """
 {{ "mdi:file" | MkMaterialBadge(text="text", align_right=True) | MkReprRawRendered }}
 """
 
-[output]
-xml = """
+[output.xml]
+template = """
 <span class="md-typeset mdx-badge{{ " mdx-badge--right" if align_right else "" }}{{ " mdx-badge--heart" if animated else "" }}">
   {% if icon %}<span class="mdx-badge__icon">{{ icon }}</span>{% endif %}
   {% if text %}<span class="mdx-badge__text">{{ text }}</span>{% endif %}

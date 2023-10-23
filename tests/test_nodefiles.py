@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 
+import jinja2
 import pytest
 
 import mknodes as mk
@@ -13,8 +14,11 @@ def node_instances():
     theme = mk.Theme("mkdocs")
     proj = mk.Project(theme=theme)
     for cls in classhelpers.iter_subclasses(mk.MkNode):
-        with contextlib.suppress(TypeError):
+        try:
             yield cls(context=proj.context)
+        except TypeError:
+            with contextlib.suppress(Exception):
+                yield cls("mknodes", context=proj.context)
 
 
 @pytest.mark.parametrize("node", node_instances())
@@ -35,12 +39,10 @@ def test_output(node):
     except FileNotFoundError:
         pass
     else:
-        if (output := nodefile.get("output")) and (xml := output.get("xml")):
-            raise ValueError(xml)
-            result = node.env.render_string(xml)
-            assert result
-
-
-# theme = mk.MaterialTheme()
-# proj = mk.Project(theme=theme)
-# test_output(proj)
+        if output := nodefile.output:
+            for v in output.values():
+                try:
+                    result = node.env.render_string(v["template"])
+                    assert result
+                except jinja2.exceptions.UndefinedError:
+                    pass

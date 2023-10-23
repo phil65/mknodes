@@ -37,6 +37,6 @@ jinja = """
 """
 
 [output.markdown]
-output = """
+template = """
 {{ "!!!" if collapsible else "???"}}{{ typ }}
 """
