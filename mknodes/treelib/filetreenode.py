@@ -78,7 +78,7 @@ class FileTreeNode(node.Node):
         show_icon: bool = True,
     ) -> str:
         lines = []
-        for pre_str, fill_str, _node in self.yield_tree(
+        for pre_str, fill_str, _node in self._yield_tree(
             max_depth=max_depth,
             style=style or "ascii",
         ):

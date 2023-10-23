@@ -45,6 +45,7 @@ class Node:
 
     @property
     def parent(self):
+        """The parent node of this node."""
         return self._parent
 
     @parent.setter
@@ -69,10 +70,21 @@ class Node:
         return result
 
     def append_child(self, item: Self):
+        """Append a node as a child.
+
+        Arguments:
+            item: Node to add as a child
+        """
         item.parent = self
         self.children.append(item)
 
     def insert_children(self, idx: int, items: Sequence[Self]):
+        """Insert a list of child nodes at given index.
+
+        Arguments:
+            idx: The index of insertion
+            items: A sequence of nodes to add as children
+        """
         self.children[idx:idx] = items
         for item in items:
             item.parent = self
@@ -171,6 +183,7 @@ class Node:
         )
 
     def row(self) -> int:  # sourcery skip: assign-if-exp
+        """Return the position of this node inside the parent's children list."""
         if self._parent:
             return self._parent.children.index(self)  # type: ignore
         return 0
@@ -200,18 +213,26 @@ class Node:
 
         lines = [
             f"{pre_str}{fill_str}{formatter(_node)}"
-            for pre_str, fill_str, _node in self.yield_tree(
+            for pre_str, fill_str, _node in self._yield_tree(
                 max_depth=max_depth,
                 style=style or "ascii",
             )
         ]
         return formatter(self) + "\n" + "\n".join(lines[1:])
 
-    def yield_tree(
+    def _yield_tree(
         self,
         max_depth: int | None = None,
         style: treestyles.TreeStyleStr | tuple = "const",
     ) -> Iterable[tuple[str, str, Node]]:
+        """Yield a tuple for prettyprinting the tree.
+
+        Tuple consists of two strings to be used as a prefix, and the node itself.
+
+        Arguments:
+            max_depth: The maxium depth of nodes to yield
+            style: The prefix style.
+        """
         if isinstance(style, tuple):
             custom_style: list[str] = list(style)
             parent_last, filename_middle, filename_last = custom_style
