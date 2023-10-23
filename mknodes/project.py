@@ -6,7 +6,7 @@ from collections.abc import Callable
 import os
 import pathlib
 
-from typing import Any, Generic, TypeVar
+from typing import Generic, TypeVar
 
 from mknodes import paths
 from mknodes.info import contexts, folderinfo, linkprovider, reporegistry
@@ -51,7 +51,6 @@ class Project(Generic[T]):
             use_directory_urls=use_directory_urls,
             include_stdlib=True,
         )
-        self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
         self.theme: T = theme
         git_repo = reporegistry.get_repo(str(repo or "."), clone_depth=clone_depth)
@@ -64,13 +63,14 @@ class Project(Generic[T]):
             links=self.linkprovider,
             env=environment.Environment(load_templates=True),
         )
+        self._root = mknav.MkNav(context=self.context)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
 
     @property
     def root(self) -> mknav.MkNav:
-        return self.get_root()
+        return self._root
 
     @root.setter
     def root(self, nav: mknav.MkNav):
@@ -104,7 +104,7 @@ class Project(Generic[T]):
         self._root = nav
         nav._ctx = self.context
 
-    def get_root(self, **kwargs: Any) -> mknav.MkNav:
+    def get_root(self) -> mknav.MkNav:
         """Return the root MkNav.
 
         This MkNav should get populated in order to build
@@ -113,7 +113,6 @@ class Project(Generic[T]):
         Arguments:
             kwargs: Keyword arguments passed to MkNav constructor.
         """
-        self._root = mknav.MkNav(context=self.context, **kwargs)
         return self._root
 
 
