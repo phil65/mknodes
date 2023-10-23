@@ -54,6 +54,7 @@ EXT_TO_PYGMENTS_STYLE = {
     ".yaml": "yaml",
     ".toml": "toml",
     ".md": "md",
+    ".jinja": "jinja",
 }
 
 MetadataTypeStr = (

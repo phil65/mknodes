@@ -68,7 +68,7 @@ def to_module(
     module: str | Sequence[str] | types.ModuleType,
     return_none: bool = True,
 ) -> types.ModuleType | None:
-    """Returns a module for given module path. If module is given, just return it.
+    """Return a module for given module path. If module is given, just return it.
 
     Arguments:
         module: A ModuleType, str or sequence.
@@ -96,6 +96,9 @@ def to_class(klass: type | str | tuple[str, ...] | list[str]):
     """Convert given input to a class.
 
     If input is a string or Sequence, interpret it as a dotted path.
+
+    Arguments:
+        klass: Name / path to get a klass for
     """
     match klass:
         case type():
@@ -247,13 +250,24 @@ def get_submodules(
 
 
 @functools.cache
-def import_module(mod: str):
+def import_module(mod: str) -> types.ModuleType:
+    """Cached version of importlib.import_module.
+
+    Arguments:
+        mod: The module to import.
+    """
     return importlib.import_module(mod)
 
 
 @functools.cache
-def get_members(module, predicate=None):
-    return inspect.getmembers(module, predicate)
+def get_members(obj: object, predicate: Callable | None = None):
+    """Cached version of inspect.getmembers.
+
+    Arguments:
+        obj: Object to get members for
+        predicate: Optional predicate for the members
+    """
+    return inspect.getmembers(obj, predicate)
 
 
 @functools.cache
@@ -275,9 +289,17 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
 
 @functools.cache
 def to_callable(path: str | Callable) -> Callable:
+    """Return a callable from a string describing the path to a Callable.
+
+    If path already is a callable, return it without changes.
+    Must be of format "module.path:object.fn"
+
+    Arguments:
+        path: The path to the callable to return.
+    """
     if callable(path):
         return path
-    modname, _qualname_separator, qualname = path.partition(":")
+    modname, _sep, qualname = path.partition(":")
     obj = import_file(modname) if modname.endswith(".py") else import_module(modname)
     for attr in qualname.split("."):
         obj = getattr(obj, attr)
@@ -288,7 +310,11 @@ def to_callable(path: str | Callable) -> Callable:
 
 
 def get_code_name(obj) -> str:
-    """Get a title for an object representing code."""
+    """Get a title for an object representing code.
+
+    Arguments:
+        obj: The object to get a name for.
+    """
     match obj:
         case types.CodeType():
             return obj.co_name

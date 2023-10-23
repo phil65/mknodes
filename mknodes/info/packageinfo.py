@@ -11,7 +11,14 @@ logger = log.get_logger(__name__)
 
 
 class PackageInfo:
+    """Class containing metadata.distribution-related information."""
+
     def __init__(self, pkg_name: str):
+        """Constructor.
+
+        Arguments:
+            pkg_name: Name of the package
+        """
         self.package_name = pkg_name
         self.distribution = packagehelpers.get_distribution(pkg_name)
         logger.debug("Loaded package info: '%s'", pkg_name)

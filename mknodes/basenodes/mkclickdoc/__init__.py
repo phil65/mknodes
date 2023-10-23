@@ -32,16 +32,16 @@ class MkClickDoc(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self._target = target
-        self._prog_name = prog_name
+        self.target = target
+        self.prog_name = prog_name
         self.show_hidden = show_hidden
         self.show_subcommands = show_subcommands
 
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            target=self._target,
-            prog_name=self._prog_name,
+            target=self.target,
+            prog_name=self.prog_name,
             show_hidden=self.show_hidden,
             show_subcommands=self.show_subcommands,
             _filter_false=True,
@@ -52,10 +52,10 @@ class MkClickDoc(mknode.MkNode):
     def attributes(self) -> dict[str, Any]:
         # sourcery skip: use-named-expression
         dct: dict[str, Any] = {}
-        match self._target:
+        match self.target:
             case str():
-                module, command = self._target.split(":")
-                dct = dict(module=module, command=command, prog_name=self._prog_name)
+                module, command = self.target.split(":")
+                dct = dict(module=module, command=command, prog_name=self.prog_name)
             case None:
                 if cli_eps := self.ctx.metadata.entry_points.get("console_scripts"):
                     module, command = cli_eps[0].dotted_path.split(":")

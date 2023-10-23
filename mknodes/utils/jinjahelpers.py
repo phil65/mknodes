@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import datetime
 import functools
+import importlib
 
 from importlib import util
 import json
@@ -75,6 +76,7 @@ ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
     "now": datetime.datetime.now,
     "str": str,
+    "importlib": importlib,
     "inspecthelpers": inspecthelpers,
     "resources_dir": paths.RESOURCES,
 }
