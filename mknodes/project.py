@@ -30,7 +30,6 @@ class Project(Generic[T]):
         theme: T,
         repo: str | os.PathLike | None | folderinfo.FolderInfo = None,
         build_fn: str | Callable = paths.DEFAULT_BUILD_FN,
-        build_kwargs: dict[str, Any] | None = None,
         base_url: str = "",
         use_directory_urls: bool = True,
         clone_depth: int = 100,
@@ -42,7 +41,6 @@ class Project(Generic[T]):
             theme: The theme to use
             repo: Path to the git repository
             build_fn: Callable to create the website with
-            build_kwargs: Keyword arguments for the build function
             base_url: Base url of the website
             use_directory_urls: Whether urls are in directory-style
             clone_depth: Amount of commits to clone in case repository is remote.
@@ -55,7 +53,6 @@ class Project(Generic[T]):
         )
         self._root: mknav.MkNav | None = None
         self.build_fn = classhelpers.to_callable(build_fn)
-        self.build_kwargs = build_kwargs or {}
         self.theme: T = theme
         git_repo = reporegistry.get_repo(str(repo or "."), clone_depth=clone_depth)
         self.folderinfo = folderinfo.FolderInfo(git_repo.working_dir)
@@ -68,48 +65,39 @@ class Project(Generic[T]):
             env=environment.Environment(load_templates=True),
         )
 
-    def build(
-        self,
-        build_fn: str | Callable = paths.DEFAULT_BUILD_FN,
-        build_kwargs: dict[str, Any] | None = None,
-    ):
-        logger.debug("Building page...")
-        self.build_fn(project=self, **self.build_kwargs)
-        logger.debug("Finished building page.")
-        if not self._root:
-            msg = "No root for project created."
-            raise RuntimeError(msg)
-        paths = [
-            pathlib.Path(node.resolved_file_path).stem
-            for _level, node in self._root.iter_nodes()
-            if hasattr(node, "resolved_file_path")
-        ]
-        self.linkprovider.set_excludes(paths)
-
     def __repr__(self):
         return reprhelpers.get_repr(self, repo_path=str(self.folderinfo.path))
 
-    @classmethod
-    def for_mknodes(cls) -> Project:
-        kls = cls(
-            base_url="",
-            use_directory_urls=True,
-            theme=theme_.Theme.get_theme("material", data={}),
-            build_fn=paths.DEFAULT_BUILD_FN,
-        )
-        kls.build()
-        return kls
+    @property
+    def root(self) -> mknav.MkNav:
+        return self.get_root()
+
+    @root.setter
+    def root(self, nav: mknav.MkNav):
+        self._root = nav
+        nav._ctx = self.context
 
     @classmethod
     def for_path(cls, path: str) -> Project:
-        kls = cls(
+        instance = cls(
             base_url="",
             use_directory_urls=True,
             theme=theme_.Theme.get_theme("material", data={}),
             repo=path,
         )
-        kls.build()
-        return kls
+        logger.debug("Building page...")
+        instance.build_fn(project=instance)
+        logger.debug("Finished building page.")
+        if not instance._root:
+            msg = "No root for project created."
+            raise RuntimeError(msg)
+        paths = [
+            pathlib.Path(node.resolved_file_path).stem
+            for _level, node in instance._root.iter_nodes()
+            if hasattr(node, "resolved_file_path")
+        ]
+        instance.linkprovider.set_excludes(paths)
+        return instance
 
     def set_root(self, nav: mknav.MkNav):
         """Set the root MkNav."""
