@@ -8,5 +8,5 @@ jinja = """
 
 [output.xml]
 xml = """
-<iframe frameborder="0" width="{width}" height="{height}" src="{url}"></iframe>
+<iframe frameborder="0" width="{{width}}" height="{{height}}" src="{{url}}"></iframe>
 """

@@ -19,6 +19,10 @@ class NodeFile(tomlfile.TomlFile):
     def examples(self) -> dict[str, str]:
         return self._data.get("examples", {})
 
+    @property
+    def output(self) -> dict[str, str]:
+        return self._data.get("output", {})
+
     # @property
     # def resources(self) -> resources.Resources:
     #     """Return the resources specific for this node."""
