@@ -24,24 +24,24 @@ class MkCritic(mkcontainer.MkContainer):
         self,
         content: str | mk.MkNode | list,
         *,
-        mark: CriticMarkStr = "highlight",
+        typ: CriticMarkStr = "highlight",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             content: Content to mark
-            mark: type of mark
+            typ: Mark type
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(content=content, **kwargs)
-        self.mark = mark
+        self.typ = typ
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, content=self.items, mark=self.mark)
+        return reprhelpers.get_repr(self, content=self.items, typ=self.typ)
 
     def _to_markdown(self) -> str:
-        match self.mark:
+        match self.typ:
             case "addition":
                 left, right = ("++", "++")
             case "deletion":
@@ -51,7 +51,7 @@ class MkCritic(mkcontainer.MkContainer):
             case "comment":
                 left, right = (">>", "<<")
             case _:
-                raise TypeError(self.mark)
+                raise TypeError(self.typ)
         return f"{{{left}\n\n{super()._to_markdown()}\n\n{right}}}"
 
     @classmethod
@@ -60,7 +60,7 @@ class MkCritic(mkcontainer.MkContainer):
 
         page += "The MkCritic node can be used to display text diffs."
         for typ in get_args(CriticMarkStr):
-            node = MkCritic(f"This is type {typ}", mark=typ)
+            node = MkCritic(f"This is type {typ}", typ=typ)
             page += mk.MkHeader(f"Type {typ!r}", level=3)
             page += mk.MkReprRawRendered(node)
 

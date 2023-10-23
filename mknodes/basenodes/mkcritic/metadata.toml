@@ -1,0 +1,24 @@
+[metadata]
+icon = "mdi:format-text"
+
+[resources.extension."pymdownx.critic"]
+
+[examples."Addition"]
+jinja = """
+{{ "Type `addition`" | MkCritic(typ="addition") | MkReprRawRendered }}
+"""
+
+[examples."Deletion"]
+jinja = """
+{{ "Type `deletion`" | MkCritic(typ="deletion") | MkReprRawRendered }}
+"""
+
+[examples."Highlight"]
+jinja = """
+{{ "Type `highlight`" | MkCritic(typ="highlight") | MkReprRawRendered }}
+"""
+
+[examples."Comment"]
+jinja = """
+{{ "Type `comment`" | MkCritic(typ="comment") | MkReprRawRendered }}
+"""
