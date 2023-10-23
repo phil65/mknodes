@@ -5,5 +5,5 @@ icon = "mdi:library"
 
 [examples."Regular"]
 jinja = """
-{{ [_mk.MkTask("Item 1", True), _mk.MkTask("Item 2", True)] | MkTaskList | MkReprRawRendered }}
+{{ [_mk.MkTask(True, "Item 1"), _mk.MkTask(True, "Item 2")] | MkTaskList | MkReprRawRendered }}
 """
