@@ -26,7 +26,8 @@ jinja = """
 {{ "Different types." | MkAdmonition(typ="warning") | MkReprRawRendered }}
 """
 
-"Collapsible and expandable" = """
+[examples."Collapsible and expandable"]
+jinja = """
 {{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
 """
 

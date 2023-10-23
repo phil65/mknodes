@@ -4,6 +4,9 @@ icon = "mdi:timeline"
 [[resources.css]]
 filename = "timeline.css"
 
+[[resources.js]]
+filename = "timeline.js"
+
 [examples."From TOML format"]
 jinja = """
 {{

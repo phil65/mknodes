@@ -2,8 +2,8 @@
 icon = "mdi:square-medium"
 status = "new"
 
-[requirements.css.file]
-path = "css/grid.css"
+[[resources.css]]
+filename = "grid.css"
 
 [examples."With link"]
 jinja = """

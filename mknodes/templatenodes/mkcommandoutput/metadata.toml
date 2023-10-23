@@ -1,0 +1,5 @@
+[metadata]
+icon = "mdi:bash"
+
+[[resources.css]]
+filename = "terminal.css"

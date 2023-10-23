@@ -14,7 +14,7 @@ class MkCompactAdmonition(mknode.MkNode):
     """Compact admonition info box."""
 
     ICON = "octicons/info-16"
-    CSS = [resources.CSSFile("css/compactadmonition.css")]
+    CSS = [resources.CSSFile("compactadmonition.css")]
 
     def __init__(
         self,

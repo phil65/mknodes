@@ -51,7 +51,7 @@ class MkCard(mknode.MkNode):
 
     ICON = "material/square-medium"
     STATUS = "new"
-    CSS = [resources.CSSFile("css/grid.css")]
+    CSS = [resources.CSSFile("grid.css")]
 
     def __init__(
         self,

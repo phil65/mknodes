@@ -1,0 +1,17 @@
+[metadata]
+icon = "octicon:info-16"
+status = "new"
+
+[[resources.css]]
+filename = "compactadmonition.css"
+
+
+[examples."Types"]
+jinja = """
+{{ "Different types." | MkCompactAdmonition(typ="warning") | MkReprRawRendered }}
+"""
+
+[examples."Collapsible and expandable"]
+jinja = """
+{{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
+"""

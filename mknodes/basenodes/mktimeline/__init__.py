@@ -125,7 +125,7 @@ class MkTimeline(mkcontainer.MkContainer):
         resources.JSFile(JQUERY_LINK, is_library=True),
         resources.JSFile(SCROLLREVEAL_LINK, is_library=True),
         resources.JSText(SCRIPT, "scrollreveal.js"),  # type: ignore[list-item]
-        resources.JSFile("js/timeline.js"),
+        resources.JSFile("timeline.js"),
     ]
     CSS = [resources.CSSFile("timeline.css")]
     items: list[MkTimelineItem]

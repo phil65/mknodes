@@ -23,7 +23,7 @@ class MkCommandOutput(mknode.MkNode):
 
     ICON = "material/bash"
     STATUS = "new"
-    CSS = [resources.CSSFile("css/terminal.css")]
+    CSS = [resources.CSSFile("terminal.css")]
 
     def __init__(self, call: Sequence[str], **kwargs: Any):
         """Constructor.
