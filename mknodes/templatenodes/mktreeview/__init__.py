@@ -99,7 +99,7 @@ class MkTreeView(mkcode.MkCode):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            path=str(self.tree),
+            path=self.tree if isinstance(self.tree, mknode.MkNode) else str(self.tree),
             style=self._style,
             maximum_depth=self.maximum_depth,
             exclude_folders=self.exclude_folders,
