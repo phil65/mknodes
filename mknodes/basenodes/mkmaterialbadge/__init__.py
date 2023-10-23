@@ -72,6 +72,9 @@ class MkMaterialBadge(mknode.MkNode):
         node = MkMaterialBadge(icon=":material-file:", text="text", typ="heart")
         page += mk.MkReprRawRendered(node)
 
+        node = MkMaterialBadge(icon=":material-file:", text="text", typ="right")
+        page += mk.MkReprRawRendered(node)
+
 
 if __name__ == "__main__":
     img = MkMaterialBadge("mdi:wrench", "right")

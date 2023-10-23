@@ -13,3 +13,8 @@ jinja = """
 jinja = """
 {{ "mdi:file" | MkMaterialBadge(text="text", typ="heart") | MkReprRawRendered }}
 """
+
+[examples."Right aligned"]
+jinja = """
+{{ "mdi:file" | MkMaterialBadge(text="text", typ="right") | MkReprRawRendered }}
+"""
