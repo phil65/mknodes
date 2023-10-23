@@ -1,0 +1,7 @@
+[metadata]
+icon = "mdi:chat"
+
+[[resources.css]]
+filename = "speechbubble.css"
+
+[requirements.extension."pymdownx.progressbar"]

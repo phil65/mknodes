@@ -13,7 +13,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     """Node for showing a css-based speech bubble."""
 
     ICON = "material/chat"
-    CSS = [resources.CSSFile("css/speechbubble.css")]
+    CSS = [resources.CSSFile("speechbubble.css")]
 
     def __init__(
         self,

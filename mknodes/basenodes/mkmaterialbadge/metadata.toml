@@ -2,7 +2,7 @@
 icon = "simple-icons:shieldsdotio"
 
 [[resources.css]]
-filename = "css/materialbadge.css"
+filename = "materialbadge.css"
 
 [examples."Regular"]
 jinja = """

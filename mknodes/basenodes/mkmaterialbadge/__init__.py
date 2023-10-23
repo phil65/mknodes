@@ -13,7 +13,7 @@ class MkMaterialBadge(mknode.MkNode):
     """Node for a CSS-based badge a la MkDocs-Material."""
 
     ICON = "simple/shieldsdotio"
-    CSS = [resources.CSSFile("css/materialbadge.css")]
+    CSS = [resources.CSSFile("materialbadge.css")]
 
     def __init__(
         self,

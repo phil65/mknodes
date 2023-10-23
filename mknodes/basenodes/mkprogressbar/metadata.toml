@@ -1,0 +1,27 @@
+[metadata]
+icon = "fa6-solid:bars-progress"
+
+[[resources.css]]
+filename = "progressbar.css"
+
+[requirements.extension."pymdownx.progressbar"]
+
+[examples."Regular"]
+jinja = """
+{{ 60 | MkProgressBar | MkReprRawRendered }}
+"""
+
+[examples."Style thin"]
+jinja = """
+{{ 60 | MkProgressBar(style="thin") | MkReprRawRendered }}
+"""
+
+[examples."Style candystripe"]
+jinja = """
+{{ 70 | MkProgressBar(style="candystripe") | MkReprRawRendered }}
+"""
+
+[examples."Style candystripe_animated"]
+jinja = """
+{{ 80 | MkProgressBar(style="candystripe_animated") | MkReprRawRendered }}
+"""

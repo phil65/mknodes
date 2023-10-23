@@ -127,7 +127,7 @@ class MkTimeline(mkcontainer.MkContainer):
         resources.JSText(SCRIPT, "scrollreveal.js"),  # type: ignore[list-item]
         resources.JSFile("js/timeline.js"),
     ]
-    CSS = [resources.CSSFile("css/timeline.css")]
+    CSS = [resources.CSSFile("timeline.css")]
     items: list[MkTimelineItem]
 
     def __init__(
