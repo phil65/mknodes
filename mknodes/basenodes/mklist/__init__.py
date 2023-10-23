@@ -23,7 +23,7 @@ class MkList(mkcontainer.MkContainer):
         ordered: bool = False,
         shorten_after: int | None = None,
         as_links: bool = False,
-        header: str = "",
+        **kwargs,
     ):
         """Constructor.
 
@@ -32,7 +32,7 @@ class MkList(mkcontainer.MkContainer):
             ordered: whether the list should be numbered
             shorten_after: will clip the list after n items and append a "..."
             as_links: will convert the label to links which will get replaced by plugin
-            header: Section header
+            kwargs: Keyword arguments passed to parent
         """
         # if as_links:
         #     items = [link.Link(i) for i in items]
@@ -40,7 +40,7 @@ class MkList(mkcontainer.MkContainer):
         self.ordered = ordered
         self.shorten_after = shorten_after
         self.as_links = as_links
-        super().__init__(content=list(items), header=header)
+        super().__init__(content=list(items), **kwargs)
 
     def __len__(self):
         return len(self.items)
