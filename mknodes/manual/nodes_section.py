@@ -32,7 +32,6 @@ PRESENTATION_NODES = [
     mk.MkTreeView,
     mk.MkPrettyPrint,
     mk.MkReprRawRendered,
-    mk.MkCodeImage,
     mk.MkDiagram,
     mk.MkTimeline,
 ]

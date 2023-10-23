@@ -122,7 +122,6 @@ dependencies = [
     "fsspec",
     "deepmerge",
     "coloraide",
-    "rich",
     "pyconify",
 
     # TODO: make these optional

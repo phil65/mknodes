@@ -126,7 +126,4 @@ class GitHubRepo:
 
 if __name__ == "__main__":
     g = GitHubRepo("phil65", "mknodes")
-    import rich
-
     node = g.main.get_user()
-    rich.inspect(node)
