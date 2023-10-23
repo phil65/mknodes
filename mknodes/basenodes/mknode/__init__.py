@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import processors
 from mknodes.data import datatypes
-from mknodes.info import contexts
+from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
 from mknodes.treelib import node
@@ -192,6 +192,16 @@ class MkNode(node.Node):
                 raise TypeError(other)
 
     @classmethod
+    @functools.lru_cache(maxsize=32)
+    def get_nodefile(cls):
+        from mknodes.utils import inspecthelpers
+
+        path = inspecthelpers.get_file(cls)  # type: ignore[arg-type]
+        assert path
+        # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
+        return nodefile.NodeFile(path.parent / "metadata.toml")
+
+    @classmethod
     def get_node(cls, name: str) -> MkNode:
         """Get a node from name registry."""
         return cls._name_registry[name]
@@ -367,7 +377,8 @@ class MkNode(node.Node):
         reqs = self.get_resources()
         configs = reqs.markdown_extensions
         exts = list(configs.keys())
-        return markdown.Markdown(extensions=exts, extension_configs=configs).convert(md)
+        converter = markdown.Markdown(extensions=exts, extension_configs=configs)
+        return converter.convert(md)
 
 
 if __name__ == "__main__":

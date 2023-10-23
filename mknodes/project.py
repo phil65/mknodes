@@ -99,19 +99,6 @@ class Project(Generic[T]):
         instance.linkprovider.set_excludes(paths)
         return instance
 
-    def set_root(self, nav: mknav.MkNav):
-        """Set the root MkNav."""
-        self._root = nav
-        nav._ctx = self.context
-
-    def get_root(self) -> mknav.MkNav:
-        """Return the root MkNav.
-
-        This MkNav should get populated in order to build
-        the website.
-        """
-        return self._root
-
 
 if __name__ == "__main__":
     import mknodes as mk

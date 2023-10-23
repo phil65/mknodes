@@ -35,3 +35,8 @@ jinja = """
 jinja = """
 {{ "Inlined" | MkAdmonition(inline="left") | MkReprRawRendered }}
 """
+
+[output.markdown]
+output = """
+{{ "!!!" if collapsible else "???"}}{{ typ }}
+"""
