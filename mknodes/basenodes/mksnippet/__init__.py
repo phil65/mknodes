@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log, reprhelpers, resources
@@ -18,7 +19,7 @@ class MkSnippet(mknode.MkNode):
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.snippets")]
     ICON = "material/paperclip"
 
-    def __init__(self, path: str | os.PathLike, **kwargs):
+    def __init__(self, path: str | os.PathLike, **kwargs: Any):
         """Constructor.
 
         Arguments:

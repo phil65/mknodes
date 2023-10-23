@@ -109,9 +109,6 @@ class Project(Generic[T]):
 
         This MkNav should get populated in order to build
         the website.
-
-        Arguments:
-            kwargs: Keyword arguments passed to MkNav constructor.
         """
         return self._root
 
