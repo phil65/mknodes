@@ -1,0 +1,26 @@
+[metadata]
+name = "MkList"
+group = "container"
+icon = "octicon:list-unordered-24"
+
+[requirements.extension.def_list]
+
+[examples."Regular"]
+jinja = """
+{{ ["Item 1", "Item 2", "Item 3"] | MkList | MkReprRawRendered }}
+"""
+
+[examples."Shorten"]
+jinja = """
+{{ ["Item 1", "Item 2", "Item 3"] | MkList(shorten_after=2) | MkReprRawRendered }}
+"""
+
+[examples."Ordered"]
+jinja = """
+{{ ["Item 1", "Item 2", "Item 3"] | MkList(ordered=True) | MkReprRawRendered }}
+"""
+
+[examples."Nested"]
+jinja = """
+{{ [_mk.MkAdmonition("Nested!")] | MkList | MkReprRawRendered }}
+"""
