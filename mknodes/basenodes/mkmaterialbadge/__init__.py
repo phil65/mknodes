@@ -72,16 +72,16 @@ class MkMaterialBadge(mknode.MkNode):
         import mknodes as mk
 
         icon = ":mdi-file:"
-        node = MkMaterialBadge(icon=icon, text="text")
+        node = MkMaterialBadge(icon, text="text")
         page += mk.MkReprRawRendered(node)
 
-        node = MkMaterialBadge(icon=icon, text="text", align_right=True)
+        node = MkMaterialBadge(icon, text="text", align_right=True)
         page += mk.MkReprRawRendered(node)
 
-        node = MkMaterialBadge(icon=icon, text="text", animated=True)
+        node = MkMaterialBadge(icon, text="text", animated=True)
         page += mk.MkReprRawRendered(node)
 
-        node = MkMaterialBadge(icon=icon, text="text", animated=True, align_right=True)
+        node = MkMaterialBadge(icon, text="text", animated=True, align_right=True)
         page += mk.MkReprRawRendered(node)
 
 

@@ -12,17 +12,17 @@ jinja = """
 
 [examples."Heart type"]
 jinja = """
-{{ "mdi:file" | MkMaterialBadge(text="text", typ="heart") | MkReprRawRendered }}
+{{ "mdi:file" | MkMaterialBadge(text="text", animated=True) | MkReprRawRendered }}
 """
 
 [examples."Right aligned"]
 jinja = """
-{{ "mdi:file" | MkMaterialBadge(text="text", typ="right") | MkReprRawRendered }}
+{{ "mdi:file" | MkMaterialBadge(text="text", align_right=True) | MkReprRawRendered }}
 """
 
 [output]
 xml = """
-<span class="md-typeset mdx-badge{{ " mdx-badge--right" if right_aligned else "" }}{{ " mdx-badge--heart" if animated else "" }}">
+<span class="md-typeset mdx-badge{{ " mdx-badge--right" if align_right else "" }}{{ " mdx-badge--heart" if animated else "" }}">
   {% if icon %}<span class="mdx-badge__icon">{{ icon }}</span>{% endif %}
   {% if text %}<span class="mdx-badge__text">{{ text }}</span>{% endif %}
 </span>
