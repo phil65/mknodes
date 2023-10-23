@@ -189,7 +189,7 @@ class Theme:
             ext = extensions[k]
             if k == "pymdownx.highlight":
                 # default style "table" looks broken with mkdocs
-                ext["pymdownx.highlight"]["linenums_style"] = "inline"  # pymdownx-inline
+                ext["linenums_style"] = "inline"  # pymdownx-inline
 
     def adapt_extras(self, extras: dict):
         pass
