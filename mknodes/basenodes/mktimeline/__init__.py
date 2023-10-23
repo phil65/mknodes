@@ -145,6 +145,8 @@ class MkTimeline(mkcontainer.MkContainer):
             text = pathhelpers.load_file_cached(str(items))
             data = tomllib.loads(text)
             items = [MkTimelineItem(**step) for step in data.values()]
+        elif isinstance(items, dict):
+            items = [MkTimelineItem(**step) for step in items.values()]
         super().__init__(items, **kwargs)
 
     def __repr__(self):
@@ -235,4 +237,4 @@ if __name__ == "__main__":
         label="1 MAY 2016",
         link="https://phil65.github.io/mknodes",
     )
-    timeline = MkTimeline.with_default_context([item, item2, item])
+    timeline = MkTimeline([item, item2, item])
