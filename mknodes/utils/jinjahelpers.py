@@ -97,7 +97,7 @@ ENV_FILTERS = {
     "dump_json": json.dumps,
     "dump_toml": tomli_w.dumps,
     "load_json": json.loads,
-    "joad_toml": tomllib.loads,
+    "load_toml": tomllib.loads,
     "load_yaml": yamlhelpers.load_yaml,
     "load_file": pathhelpers.load_file_cached,
     "path_join": os.path.join,
