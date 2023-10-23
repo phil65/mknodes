@@ -18,7 +18,15 @@ from markupsafe import Markup
 import tomli_w
 
 from mknodes import paths
-from mknodes.utils import helpers, icons, inspecthelpers, log, pathhelpers, yamlhelpers
+from mknodes.utils import (
+    classhelpers,
+    helpers,
+    icons,
+    inspecthelpers,
+    log,
+    pathhelpers,
+    yamlhelpers,
+)
 
 
 logger = log.get_logger(__name__)
@@ -109,14 +117,14 @@ ENV_FILTERS = {
 def get_globals():
     import mknodes as mk
 
-    node_klasses = {i: getattr(mk, i) for i in mk.__all__}
+    node_klasses = {k.__name__: k for k in classhelpers.iter_subclasses(mk.MkNode)}
     return dict(mk=node_klasses, _mk=node_klasses) | ENV_GLOBALS
 
 
 def get_filters():
     import mknodes as mk
 
-    node_klasses = {i: getattr(mk, i) for i in mk.__all__}
+    node_klasses = {k.__name__: k for k in classhelpers.iter_subclasses(mk.MkNode)}
     return ENV_FILTERS | node_klasses
 
 

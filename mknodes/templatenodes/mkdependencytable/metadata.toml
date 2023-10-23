@@ -3,7 +3,7 @@ icon = "mdi:database"
 
 [examples."From Project"]
 jinja = """
-{{ _mk.mkdocs() }}
+{{ _mk.MkDependencyTable() }}
 """
 
 [examples."Explicit package"]

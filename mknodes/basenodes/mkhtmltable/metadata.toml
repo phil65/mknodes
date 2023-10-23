@@ -9,5 +9,4 @@ jinja = """
 {% set tabs = [_mk.MkTabbed(dict(A=["Tab a"], B=["Tab b"])), _mk.MkTabbed(dict(A=["Tab a"], B=["Tab b"]))] %}
 {% set data = {"Code": code_col, "Admonitions": admonitions, "Tabs": tabs} %}
 {{ data | MkHtmlTable | MkReprRawRendered }}
-{% endfor %}
 """

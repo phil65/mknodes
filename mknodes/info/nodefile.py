@@ -16,7 +16,7 @@ class NodeFile(tomlfile.TomlFile):
         return self._data["metadata"].get("status")
 
     @property
-    def examples(self) -> str:
+    def examples(self) -> dict[str, str]:
         return self._data.get("examples", {})
 
     # @property
