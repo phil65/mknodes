@@ -60,7 +60,7 @@ ICON_TYPE: dict[IconTypeStr, str] = dict(
 )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class StatusIcon:
     """Page Status."""
 
@@ -70,6 +70,18 @@ class StatusIcon:
     """SVG xml for the icon."""
     description: str | None = None
     """Description used for tooltip."""
+
+
+@dataclasses.dataclass(frozen=True)
+class Tag:
+    """Page tag."""
+
+    identifier: str
+    """Slug for referencing the tag."""
+    tag: str
+    """Name of the Tag."""
+    icon: str | None = None
+    """Icon to show for the tag."""
 
 
 class MaterialTheme(theme.Theme):
@@ -84,10 +96,11 @@ class MaterialTheme(theme.Theme):
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None
         self.default_icons = {}
-        self.status_icons = {}
+        self.status_icons: dict[str, StatusIcon] = {}
         self.accent_fg_color = None
         self.primary_bg_color = None
         self.color_theme = None
+        self.tags: dict[str, Tag] = {}
         self.alternate_selector: list[dict[str, str]] = []
         """Layout:
            - name: English
@@ -258,18 +271,36 @@ class MaterialTheme(theme.Theme):
     def add_status_icon(
         self,
         name: str,
-        material_icon: str,
+        icon: str,
         description: str | None = None,
     ):
         """Add a custom status icon.
 
         Arguments:
             name: slug for the status icon
-            material_icon: Material icon name
+            icon: Iconify icon name
             description: Optional status description (used for tooltip)
         """
-        data = icons.get_icon_svg(material_icon)
+        data = icons.get_icon_svg(icon)
         self.status_icons[name] = StatusIcon(name, data, description)
+
+    def add_tag(
+        self,
+        identifier: str,
+        tag: str,
+        icon: str | None = None,
+    ):
+        """Add a page tag.
+
+        The tag identifier must be set in page metadata.
+        This requires the "tags" plugin to be included.
+
+        Arguments:
+            identifier: Slug for the tag
+            tag: Tag name
+            icon: Optional Iconify icon identifier
+        """
+        self.status_icons[identifier] = Tag(identifier, tag, icon)
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         """MkDocs-Material needs some custom configuration for extensions.
@@ -293,6 +324,8 @@ class MaterialTheme(theme.Theme):
         for status in self.status_icons.values():
             if status.description:
                 extras.setdefault("status", {})[status.name] = status.description
+        for tag in self.tags.values():
+            extras.setdefault("tags", {})[tag.tag] = tag.identifier
 
 
 if __name__ == "__main__":
