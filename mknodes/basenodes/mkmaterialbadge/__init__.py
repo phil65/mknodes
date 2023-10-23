@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.utils import icons, log, reprhelpers, resources, xmlhelpers as xml
@@ -19,7 +19,9 @@ class MkMaterialBadge(mknode.MkNode):
         self,
         icon: str,
         text: str = "",
-        typ: Literal["heart", "right", ""] = "",
+        *,
+        animated: bool = False,
+        align_right: bool = False,
         link: str | None = None,
         **kwargs: Any,
     ):
@@ -28,22 +30,24 @@ class MkMaterialBadge(mknode.MkNode):
         Arguments:
             icon: Icon to display
             text: Text to display
-            typ: Optional badge type
-            link: Optional URL to link to
+            animated: Optional animated style
+            align_right: Right-align badge
+            link: An optional link for the badge
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self.icon = icon
         self.text = text
-        self.typ = typ
+        self.animated = animated
+        self.align_right = align_right
         self.link = link
 
     def _to_markdown(self):
-        classes = (
-            f"md-typeset mdx-badge mdx-badge--{self.typ}"
-            if self.typ
-            else "mdx-badge md-typeset"
-        )
+        classes = "md-typeset mdx-badge"
+        if self.animated:
+            classes += " mdx-badge--heart"
+        if self.align_right:
+            classes += " mdx-badge--right"
         root = xml.Span(classes)
         if self.icon:
             icon = icons.get_emoji_slug(self.icon)
@@ -57,7 +61,8 @@ class MkMaterialBadge(mknode.MkNode):
             self,
             icon=self.icon,
             text=self.text,
-            typ=self.typ,
+            animated=self.animated,
+            align_right=self.align_right,
             link=self.link,
             _filter_empty=True,
         )
@@ -66,16 +71,20 @@ class MkMaterialBadge(mknode.MkNode):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        node = MkMaterialBadge(icon=":material-file:", text="text")
+        icon = ":mdi-file:"
+        node = MkMaterialBadge(icon=icon, text="text")
         page += mk.MkReprRawRendered(node)
 
-        node = MkMaterialBadge(icon=":material-file:", text="text", typ="heart")
+        node = MkMaterialBadge(icon=icon, text="text", align_right=True)
         page += mk.MkReprRawRendered(node)
 
-        node = MkMaterialBadge(icon=":material-file:", text="text", typ="right")
+        node = MkMaterialBadge(icon=icon, text="text", animated=True)
+        page += mk.MkReprRawRendered(node)
+
+        node = MkMaterialBadge(icon=icon, text="text", animated=True, align_right=True)
         page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    img = MkMaterialBadge("mdi:wrench", "right")
+    img = MkMaterialBadge("mdi:wrench", "test", align_right=True, animated=True)
     print(img)
