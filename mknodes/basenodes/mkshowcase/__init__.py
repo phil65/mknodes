@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import textwrap
 
+import tomllib
+import os
 from typing import TYPE_CHECKING
 
 from mknodes.basenodes import mkcard, mkcontainer, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log, pathhelpers, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -29,14 +31,20 @@ class MkShowcase(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        cards: list[str | mknode.MkNode] | None = None,
+        items: list[str | mknode.MkNode] | None = None,
         column_count: int = 3,
         *,
         header: str = "",
         **kwargs,
     ):
         self.column_count = column_count
-        super().__init__(content=cards or [], header=header, **kwargs)
+        if isinstance(items, str | os.PathLike):
+            text = pathhelpers.load_file_cached(str(items))
+            data = tomllib.loads(text)
+            items = [mkcard.MkCard(**dct) for dct in data.values()]
+        elif isinstance(items, dict):
+            items = [mkcard.MkCard(**dct) for dct in items.values()]
+        super().__init__(content=items or [], header=header, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, cards=self.items)
