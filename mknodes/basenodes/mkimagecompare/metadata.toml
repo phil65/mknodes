@@ -13,3 +13,11 @@ filename = "https://unpkg.com/img-comparison-slider@7/dist/styles.css"
 jinja = """
 {{ "https://picsum.photos/700" | MkImageCompare(after_image="https://picsum.photos/701") | MkReprRawRendered }}
 """
+
+[output.xml]
+xml = """
+<img-comparison-slider>
+  <img src="{before}" slot="first">
+  <img src="{after}" slot="second">
+</img-comparison-slider>
+"""

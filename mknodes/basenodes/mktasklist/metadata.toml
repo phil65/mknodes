@@ -1,0 +1,9 @@
+[metadata]
+icon = "mdi:library"
+
+[requirements.extension."pymdownx.tasklist"]
+
+[examples."Regular"]
+jinja = """
+{{ [_mk.MkTask("Item 1", True), _mk.MkTask("Item 2", True)] | MkTaskList | MkReprRawRendered }}
+"""

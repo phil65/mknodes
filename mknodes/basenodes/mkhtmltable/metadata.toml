@@ -1,0 +1,13 @@
+[metadata]
+icon = "octicon:table-24"
+status = "new"
+
+[examples."Regular"]
+jinja = """
+{% set code_col = [_mk.MkCode("print('hello world')\nsys.exit()"), _mk.MkCode("print('hello world')\nsys.exit()")] %}
+{% set admonitions = [_mk.MkAdmonition("Admonition inside cell"), _mk.MkAdmonition("Admonition inside cell")] %}
+{% set tabs = [_mk.MkTabbed(dict(A=["Tab a"], B=["Tab b"])), _mk.MkTabbed(dict(A=["Tab a"], B=["Tab b"]))] %}
+{% set data = {"Code": code_col, "Admonitions": admonitions, "Tabs": tabs} %}
+{{ data | MkHtmlTable | MkReprRawRendered }}
+{% endfor %}
+"""
