@@ -283,10 +283,9 @@ class MkNode(node.Node):
         extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
         mod_resources = self.mods.get_resources()
         css_resources: list[resources.CSSType] = []
-        env = self.env
         for css in self.CSS + mod_resources.css:
             if isinstance(css, resources.CSSFile) and css.is_local():
-                text = env.render_template(css.link)
+                text = self.env.render_template(css.link)
                 css_resource = resources.CSSText(text, css.link)
                 css_resources.append(css_resource)
             else:
@@ -294,7 +293,7 @@ class MkNode(node.Node):
         js_resources: list[resources.JSType] = []
         for js_file in self.JS_FILES + mod_resources.js:
             if isinstance(js_file, resources.JSFile) and js_file.is_local():
-                text = env.render_template(js_file.link)
+                text = self.env.render_template(js_file.link)
                 js_resource = resources.JSText(
                     text,
                     js_file.link,

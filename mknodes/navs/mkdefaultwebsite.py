@@ -63,9 +63,8 @@ class MkDefaultWebsite(mk.MkNav):
 
     @classmethod
     def for_project(cls, project, **kwargs):
-        root = cls(context=project.context, **kwargs)
-        project.set_root(root)
-        return root
+        project.root = cls(context=project.context, **kwargs)
+        return project.root
 
 
 if __name__ == "__main__":
