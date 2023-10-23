@@ -20,10 +20,10 @@ jinja = """
 {{ "mdi:file" | MkMaterialBadge(text="text", align_right=True) | MkReprRawRendered }}
 """
 
-[output.xml]
-template = """
-<span class="md-typeset mdx-badge{{ " mdx-badge--right" if align_right else "" }}{{ " mdx-badge--heart" if animated else "" }}">
-  {% if icon %}<span class="mdx-badge__icon">{{ icon }}</span>{% endif %}
-  {% if text %}<span class="mdx-badge__text">{{ text }}</span>{% endif %}
-</span>
-"""
+# [output.xml]
+# template = """
+# <span class="md-typeset mdx-badge{{ " mdx-badge--right" if node.align_right else "" }}{{ " mdx-badge--heart" if node.animated else "" }}">
+#   {% if node.icon %}<span class="mdx-badge__icon">{{ node.icon | get_emoji_slug }}</span>{% endif %}
+#   {% if node.text %}<span class="mdx-badge__text">{{ node.text }}</span>{% endif %}
+# </span>
+# """

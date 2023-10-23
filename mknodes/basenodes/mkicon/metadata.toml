@@ -21,3 +21,8 @@ jinja = """
 jinja = """
 {{ "noto:wrench" | MkIcon(height=100, width=100) | MkReprRawRendered }}
 """
+
+[output.markdown]
+template = """
+{{ node.svg }}
+"""

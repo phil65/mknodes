@@ -90,6 +90,7 @@ ENV_GLOBALS = {
 }
 ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,
+    "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
     "str": str,
     "rstrip": str.rstrip,

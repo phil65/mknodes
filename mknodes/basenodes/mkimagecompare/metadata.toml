@@ -17,7 +17,7 @@ jinja = """
 [output.xml]
 template = """
 <img-comparison-slider>
-  <img src="{{before}}" slot="first">
-  <img src="{{after}}" slot="second">
+  <img src="{{ node.before }}" slot="first">
+  <img src="{{ node.after }}" slot="second">
 </img-comparison-slider>
 """

@@ -36,7 +36,7 @@ jinja = """
 {{ "Inlined" | MkAdmonition(inline="left") | MkReprRawRendered }}
 """
 
-[output.markdown]
-template = """
-{{ "!!!" if collapsible else "???"}}{{ typ }}
-"""
+# [output.markdown]
+# template = """
+# {{ "???" if node.collapsible else "!!!"}} {{ node.typ }} {{ node.title }}
+# """

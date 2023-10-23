@@ -30,3 +30,10 @@ jinja = """
 {{ "1\n2\n3\n4" | MkCode(linenums=10) | MkReprRawRendered }}
 
 """
+
+[output.markdown]
+template = """
+{{ node.fence_boundary }} {{ node.fence_title }}
+{{ node.text }}
+{{ node.fence_boundary }}
+"""

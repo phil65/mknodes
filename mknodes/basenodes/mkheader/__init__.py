@@ -33,14 +33,14 @@ class MkHeader(mknode.MkNode):
         super().__init__(**kwargs)
         self.text = str(text or "")
         self.level = level
-        self._exclude_from_search = exclude_from_search
+        self.exclude_from_search = exclude_from_search
 
     def __repr__(self):
         return reprhelpers.get_repr(self, text=self.text, level=self.level)
 
     def _to_markdown(self) -> str:
         level_str = "#" * self.level
-        suffix = " { data-search-exclude }" if self._exclude_from_search else ""
+        suffix = " { data-search-exclude }" if self.exclude_from_search else ""
         return f"{level_str} {self.text}{suffix}"
 
     @classmethod

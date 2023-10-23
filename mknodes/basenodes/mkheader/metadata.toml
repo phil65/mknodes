@@ -14,3 +14,8 @@ jinja = """
 
 {% endfor %}
 """
+
+[output.markdown]
+template = """
+{{ "#" * node.level }} {{ node.text }}{% if node.exclude_from_search %} { data-search-exclude }{% endif %}
+"""

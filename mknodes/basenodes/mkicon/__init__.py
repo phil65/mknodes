@@ -72,16 +72,26 @@ class MkIcon(mknode.MkNode):
             _filter_false=True,
         )
 
+    @property
+    def svg(self) -> str:
+        import requests.exceptions
+
+        try:
+            return icons.get_icon_svg(
+                self.icon_name,
+                color=self.color,
+                height=self.height,
+                width=self.width,
+                flip=self.flip,
+                rotate=self.rotate,
+                box=self.box,
+            )
+        except requests.exceptions.HTTPError:
+            logger.warning("Could not find icon %r", self.icon_name)
+            return ""
+
     def _to_markdown(self) -> str:
-        return icons.get_icon_svg(
-            self.icon_name,
-            color=self.color,
-            height=self.height,
-            width=self.width,
-            flip=self.flip,
-            rotate=self.rotate,
-            box=self.box,
-        )
+        return self.svg
 
     @classmethod
     def create_example_page(cls, page):

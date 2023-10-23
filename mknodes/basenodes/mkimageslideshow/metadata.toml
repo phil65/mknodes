@@ -24,8 +24,8 @@ jinja = """
 [output.xml]
 template = """
 <div style="width: 100%; padding-bottom: 25%" data-simple-slider="">
-  {% for image_url in images %}
+{% for image_url in node.images %}
   <img src="{{ image_url }}">
-  {% endfor %}
+{% endfor %}
 </div>
 """

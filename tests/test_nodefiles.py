@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 
-import jinja2
 import pytest
 
 import mknodes as mk
@@ -33,7 +32,7 @@ def test_examples(node):
 
 
 @pytest.mark.parametrize("node", node_instances())
-def test_output(node):
+def test_output(node: mk.MkNode):
     try:
         nodefile = node.get_nodefile()
     except FileNotFoundError:
@@ -41,8 +40,5 @@ def test_output(node):
     else:
         if output := nodefile.output:
             for v in output.values():
-                try:
-                    result = node.env.render_string(v["template"])
-                    assert result
-                except jinja2.exceptions.UndefinedError:
-                    pass
+                result = node.env.render_string(v["template"], dict(node=node))
+                assert result == str(node)
