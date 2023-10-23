@@ -45,6 +45,8 @@ class MkImageCompare(mknode.MkNode):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
+            before_image=self.before_image,
+            after_image=self.after_image,
             _filter_empty=True,
             _filter_false=True,
         )
