@@ -1,0 +1,17 @@
+[metadata]
+icon = "mdi:database"
+
+[examples."From Project"]
+jinja = """
+{{ _mk.mkdocs() }}
+"""
+
+[examples."Explicit package"]
+jinja = """
+{{ "jinja2" | MkDependencyTable }}
+"""
+
+[examples."Badge style"]
+jinja = """
+{{ "mkdocs" | MkDependencyTable("badge") }}
+"""
