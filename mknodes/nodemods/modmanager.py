@@ -37,16 +37,60 @@ class ModManager:
         return self._css_classes + cls_names
 
     @property
-    def attr_list_str(self):
+    def attr_list_str(self) -> str:
         classes = " ".join(self.css_classes)
         return f"{{: .{classes}}}"
 
-    def add_parallax_effect(self, orientation: str = "up"):
-        effect = parallax.ParallaxEffect(orientation=orientation)
+    def add_parallax_effect(
+        self,
+        orientation: str = "up",
+        scale: float = 1.5,
+        overflow: bool = False,
+        delay: float = 0.6,
+        transition: str = "cubic-bezier(0,0,0,1)",
+    ):
+        """Add a parallax effect to the node.
+
+        Arguments:
+            orientation: Orientation of the effect
+            scale: Effect scale
+            overflow: Overflow
+            delay: Effect delay
+            transition: transition as CSS string
+        """
+        effect = parallax.ParallaxEffect(
+            orientation=orientation,
+            scale=scale,
+            overflow=overflow,
+            delay=delay,
+            transition=transition,
+        )
         self.mods.append(effect)
 
-    def add_scroll_effect(self, origin: str = "left"):
-        effect = scrollreveal.ScrollReveal(origin=origin)
+    def add_scroll_effect(
+        self,
+        origin: str = "left",
+        distance: str = "300px",
+        easing: str = "ease-in-out",
+        reset: bool = True,
+        duration: int = 800,
+    ):
+        """Add a scroll-reveal effect to the node.
+
+        Arguments:
+            origin: Origin of the effect
+            distance: Distance of the slide effect
+            easing: Animation easing
+            reset: Whether animation should be reversed when element leaves visible area.
+            duration: Effect duration
+        """
+        effect = scrollreveal.ScrollReveal(
+            origin=origin,
+            distance=distance,
+            easing=easing,
+            reset=reset,
+            duration=duration,
+        )
         self.mods.append(effect)
 
 
