@@ -14,7 +14,7 @@ logger = log.get_logger(__name__)
 
 
 class FileTreeNode(node.Node):
-    def __init__(self, path, **kwargs):
+    def __init__(self, path: pathlib.Path, **kwargs):
         self.path = path
         self.name = self.path.name
         super().__init__(**kwargs)
@@ -66,7 +66,7 @@ class FileTreeNode(node.Node):
         return node
 
     def get_folder_count(self) -> int:
-        return sum(i.path.is_folder() for i in self.descendants)
+        return sum(i.path.is_dir() for i in self.descendants)
 
     def get_file_count(self) -> int:
         return sum(i.path.is_file() for i in self.descendants)
@@ -94,13 +94,15 @@ class FileTreeNode(node.Node):
 
 
 if __name__ == "__main__":
+    import upath
+
     folder = FileTreeNode.from_folder(
-        pathlib.Path(),
+        upath.UPath("github://mknodes/docs/", org="phil65", repo="mknodes"),
         exclude_folders=["__pycache__", ".git", ".mypy_cache"],
         sort=False,
         maximum_depth=2,
     )
-    logger.warning(folder.get_tree_repr())
+    print(folder.get_tree_repr())
     # for node in folder.descendants:
     #     logger.warning(node.displayable())
     # print(get_tree_repr(folder))

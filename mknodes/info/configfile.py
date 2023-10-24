@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import os
-import pathlib
+
+import upath
 
 from mknodes.utils import downloadhelpers, helpers, superdict
 
@@ -60,13 +61,20 @@ class ConfigFile(superdict.SuperDict):
         """Dump to string with dumper of given file type."""
         return self._dump(self._data)
 
-    def load_file(self, path: str | os.PathLike):
+    def load_file(
+        self,
+        path: str | os.PathLike,
+        **storage_options,
+    ):
         """Load a file with loader of given file type.
 
         Arguments:
-            path: Path to the config file
+            path: Path to the config file (also supports fsspec protocol URLs)
+            storage_options: Options for fsspec backend
         """
-        text = pathlib.Path(path).read_text(encoding="utf-8")
+        opts = storage_options or {}
+        file = upath.UPath(path, **opts)
+        text = file.read_text(encoding="utf-8")
         self.load_config(text)
 
     @classmethod

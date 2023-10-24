@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import pathlib
+import upath
 
 from typing import Any, Self
 
@@ -72,15 +72,22 @@ class MkBinaryImage(mkimage.MkImage):
         return cls(data=content, path=path, **kwargs)
 
     @classmethod
-    def for_file(cls, path: str | os.PathLike, **kwargs: Any) -> Self:
+    def for_file(
+        cls,
+        path: str | os.PathLike,
+        storage_options: dict | None = None,
+        **kwargs: Any,
+    ) -> Self:
         """Return a MkBinaryImage with data for given icon.
 
         Arguments:
-            path: Icon to get a MkBinaryImage for (example: material/file-image)
+            path: Path to an image (also takes fsspec protocol URLs)
+            storage_options: Options for fsspec backend
             kwargs: Keyword arguments passed to constructor
         """
-        path = pathlib.Path(path)
-        return cls(data=path.read_bytes(), path=path.name, **kwargs)
+        opts = storage_options or {}
+        file = upath.UPath(path, **opts)
+        return cls(data=file.read_bytes(), path=file.name, **kwargs)
 
 
 if __name__ == "__main__":

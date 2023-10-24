@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import os
-import pathlib
 import textwrap
 
 from typing import Any, Self
+
+import upath
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
@@ -75,20 +76,22 @@ class MkCodeImage(mknode.MkNode):
         cls,
         path: str | os.PathLike,
         *,
+        storage_options: dict | None = None,
         title: str | None = None,
         **kwargs: Any,
     ):
         """Create a MkCode node based on a code file.
 
         Arguments:
-            path: Path to the code file
+            path: Path to the code file (also takes fsspec protocol URLs)
+            storage_options: Options for fsspec backend
             title: title to use for the code box. If None is set, filename will be used.
             kwargs: Keyword arguments passed to MkCode ctor
         """
-        path = pathlib.Path(path)
-        with path.open() as file:
-            content = file.read()
-        title = path.name if title is None else title
+        opts = storage_options or {}
+        file = upath.UPath(path, **opts)
+        content = file.read_text()
+        title = file.name if title is None else title
         return cls(content, title=title, **kwargs)
 
     @classmethod
@@ -125,5 +128,5 @@ class MkCodeImage(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkCodeImage(language="python", code="a = 1 + 2")
+    node = MkCodeImage.for_file("https://docs.python.org/index.html")
     print(node)

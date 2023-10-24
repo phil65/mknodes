@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import os
-import pathlib
 import upath
 
 from typing import Any, get_args
@@ -62,16 +61,9 @@ class MkTreeView(mkcode.MkCode):
     @property
     def text(self):
         match self.tree:
-            case str() if "://" in self.tree:
-                node = treelib.FileTreeNode.from_folder(
-                    upath.UPath(self.tree, **self.storage_options),
-                    predicate=self.predicate,
-                    exclude_folders=self.exclude_folders,
-                    maximum_depth=self.maximum_depth,
-                )
             case str() | os.PathLike():
                 node = treelib.FileTreeNode.from_folder(
-                    pathlib.Path(self.tree),
+                    upath.UPath(self.tree, **self.storage_options),
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                     maximum_depth=self.maximum_depth,
