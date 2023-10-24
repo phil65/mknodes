@@ -33,7 +33,6 @@ from .basenodes.mkhtmltable import MkHtmlTable
 from .basenodes.mktabcontainer import MkTabContainer
 from .basenodes.mktabbedblocks import MkTabbedBlocks
 from .basenodes.mktabbed import MkTabbed
-from .basenodes.mksnippet import MkSnippet
 from .basenodes.mkcritic import MkCritic
 from .basenodes.mkannotations import MkAnnotations
 from .basenodes.mkfootnotes import MkFootNotes
@@ -139,7 +138,6 @@ __all__ = [
     "MkTabContainer",
     "MkTabbedBlocks",
     "MkTabbed",
-    "MkSnippet",
     "MkShields",
     "MkInclude",
     "MkCritic",
