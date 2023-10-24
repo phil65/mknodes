@@ -7,7 +7,7 @@ from typing import cast
 
 from mknodes.data import treestyles
 from mknodes.treelib import node
-from mknodes.utils import fsspecpath, log
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -25,7 +25,7 @@ class FileTreeNode(node.Node):
     @classmethod
     def from_folder(
         cls,
-        folder: pathlib.Path | fsspecpath.FsSpecPath,
+        folder: pathlib.Path,
         *,
         predicate: Callable | None = None,
         exclude_folders: list[str] | None = None,

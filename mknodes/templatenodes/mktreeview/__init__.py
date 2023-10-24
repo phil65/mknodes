@@ -3,13 +3,14 @@ from __future__ import annotations
 from collections.abc import Callable
 import os
 import pathlib
+import upath
 
 from typing import Any, get_args
 
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
 from mknodes.data import treestyles
-from mknodes.utils import fsspecpath, log, reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -62,9 +63,8 @@ class MkTreeView(mkcode.MkCode):
     def text(self):
         match self.tree:
             case str() if "://" in self.tree:
-                protocol, path = self.tree.split("://", 1)
                 node = treelib.FileTreeNode.from_folder(
-                    fsspecpath.FsSpecPath(path, protocol, **self.storage_options),
+                    upath.UPath(self.tree, **self.storage_options),
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                     maximum_depth=self.maximum_depth,
@@ -125,7 +125,7 @@ class MkTreeView(mkcode.MkCode):
 if __name__ == "__main__":
     opts = dict(org="mkdocstrings", repo="mkdocstrings")
     node = MkTreeView(
-        "github://",
+        "github://mknodes",
         storage_options=opts,
         header="test",
         style="ascii",

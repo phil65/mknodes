@@ -120,6 +120,7 @@ dependencies = [
     "jinja2",
     "griffe",
     "fsspec",
+    "universal_pathlib @ git+https://github.com/juftin/universal_pathlib.git",
     "deepmerge",
     "coloraide",
     "pyconify",

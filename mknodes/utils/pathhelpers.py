@@ -5,10 +5,13 @@ import functools
 import os
 import pathlib
 import posixpath
+import re
 import shutil
 
 from mknodes.utils import log
 
+
+_RFC_3986_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+\-+.]*://")
 
 logger = log.get_logger(__name__)
 
@@ -87,6 +90,15 @@ def load_file_cached(path: str | os.PathLike) -> str:
     if "://" in str(path):
         return fsspec_get(str(path))
     return pathlib.Path(path).read_text(encoding="utf-8")
+
+
+def is_fsspec_url(url: str | os.PathLike[str]) -> bool:
+    """Returns true if the given URL looks like something fsspec can handle."""
+    return (
+        isinstance(url, str)
+        and bool(_RFC_3986_PATTERN.match(url))
+        and not url.startswith(("http://", "https://"))
+    )
 
 
 def download_from_github(
