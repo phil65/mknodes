@@ -19,7 +19,7 @@ class MkTabContainer(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        tabs: Mapping[str, str | mknode.MkNode | list] | list[mktabs.MkTab],
+        tabs: Mapping[str, str | mknode.MkNode | list] | list[mktabs.MkTab] | None = None,
         *,
         header: str = "",
         select_tab: int | str | None = None,
@@ -33,16 +33,19 @@ class MkTabContainer(mkcontainer.MkContainer):
             select_tab: Tab which should be selected initially
             kwargs: Keyword arguments passed to parent
         """
-        if isinstance(tabs, list):
-            items = tabs
-        else:
-            items = [
-                self.Tab(
-                    title=k,
-                    content=mktext.MkText(v) if isinstance(v, str) else v,
-                )
-                for k, v in tabs.items()
-            ]
+        match tabs:
+            case None:
+                items = []
+            case list():
+                items = tabs
+            case _:
+                items = [
+                    self.Tab(
+                        title=k,
+                        content=mktext.MkText(v) if isinstance(v, str) else v,
+                    )
+                    for k, v in tabs.items()
+                ]
         self.select_tab = select_tab
         super().__init__(content=items, header=header, **kwargs)
 
