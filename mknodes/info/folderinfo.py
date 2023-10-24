@@ -120,11 +120,8 @@ class FolderInfo:
         """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
         dct = {}
         for k, v in self.info.extras.items():
-            dct[k] = PackageExtra(
-                k,
-                packages=v,
-                description=self.pyproject.extras_descriptions.get(k, ""),
-            )
+            desc = self.pyproject.extras_descriptions.get(k, "")
+            dct[k] = PackageExtra(k, packages=v, description=desc)
         return dct
 
     @functools.cached_property
@@ -174,11 +171,8 @@ class FolderInfo:
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         """Return a list of package repositories the package is available on."""
         repos = self.pyproject.package_repos or ["pip"]
-        if (
-            "pip" in repos
-            and "pipx" not in repos
-            and "console_scripts" in self.info.entry_points
-        ):
+        has_script = "console_scripts" in self.info.entry_points
+        if "pip" in repos and "pipx" not in repos and has_script:
             repos.append("pipx")
         return repos
 
