@@ -8,6 +8,8 @@ import posixpath
 import re
 import shutil
 
+import upath
+
 from mknodes.utils import log
 
 
@@ -69,7 +71,15 @@ def write_files(mapping: Mapping[str | os.PathLike, str | bytes]):
         write_file(v, k)
 
 
+# deprecated
 def find_file_in_folder_or_parent(
+    filename: str | pathlib.Path,
+    folder: os.PathLike | str = ".",
+) -> pathlib.Path | None:
+    return find_cfg_for_folder(filename, folder)
+
+
+def find_cfg_for_folder(
     filename: str | pathlib.Path,
     folder: os.PathLike | str = ".",
 ) -> pathlib.Path | None:
@@ -79,10 +89,13 @@ def find_file_in_folder_or_parent(
         filename: File to search
         folder: Folder to start searching from
     """
-    path = pathlib.Path(folder).absolute()
-    while not (path / filename).exists() and len(path.parts) > 1:
+    if folder and folder != ".":
+        path = upath.UPath(folder).absolute() / filename
+    else:
+        path = upath.UPath(filename)
+    while not path.exists() and len(path.parts) > 1:
         path = path.parent
-    return file if (file := (path / filename)).exists() else None
+    return path if path.exists() else None
 
 
 @functools.cache
@@ -200,5 +213,4 @@ def relative_url(url_a: str, url_b: str) -> str:
 
 
 if __name__ == "__main__":
-    file = download_from_github("phil65", "mknodes", "mknodes", "testus/")
-    print(file)
+    file = find_file_in_folder_or_parent("github://phil65:mknodes@main/docs/icons.jinja")

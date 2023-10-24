@@ -247,8 +247,7 @@ class FolderInfo:
             runner
             for runner in taskrunners.TASK_RUNNERS.values()
             if any(
-                pathhelpers.find_file_in_folder_or_parent(i, self.path)
-                for i in runner.filenames
+                pathhelpers.find_cfg_for_folder(i, self.path) for i in runner.filenames
             )
         ]
 

@@ -99,10 +99,10 @@ class PreCommit(Tool):
     cfg_file = ".pre-commit-config.yaml"
 
     def is_used(self, folder: folderinfo.FolderInfo):
-        return bool(pathhelpers.find_file_in_folder_or_parent(self.cfg_file, folder.path))
+        return bool(pathhelpers.find_cfg_for_folder(self.cfg_file, folder.path))
 
     def get_config(self, folder):
-        path = pathhelpers.find_file_in_folder_or_parent(self.cfg_file, folder.path)
+        path = pathhelpers.find_cfg_for_folder(self.cfg_file, folder.path)
         return path.read_text(encoding="utf-8") if path else None
 
 

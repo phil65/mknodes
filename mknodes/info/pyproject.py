@@ -25,7 +25,7 @@ class PyProject(tomlfile.TomlFile):
                   Otherwise, take file from explicit path.
         """
         if path is None:
-            path = pathhelpers.find_file_in_folder_or_parent("pyproject.toml")
+            path = pathhelpers.find_cfg_for_folder("pyproject.toml")
         if path is None:
             msg = "Could not find pyproject.toml"
             raise FileNotFoundError(msg)
