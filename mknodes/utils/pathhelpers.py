@@ -92,10 +92,12 @@ def find_cfg_for_folder(
     if folder and folder != ".":
         path = upath.UPath(folder).absolute() / filename
     else:
-        path = upath.UPath(filename)
-    while not path.exists() and len(path.parts) > 1:
+        path = upath.UPath(filename).absolute()
+    while len(path.parts) > 1:
         path = path.parent
-    return path if path.exists() else None
+        if (file := path / filename).exists():
+            return file
+    return None
 
 
 @functools.cache
