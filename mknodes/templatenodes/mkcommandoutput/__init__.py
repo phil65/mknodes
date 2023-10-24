@@ -42,10 +42,13 @@ class MkCommandOutput(mknode.MkNode):
 
     @property
     def output(self) -> str:
+        import pathlib
+
         key = " ".join(self.call)
         if key in self._cache:
             return self._cache[key]
-        if output := helpers.get_output_from_call(self.call):
+        cwd = self.ctx.metadata.repository_path or pathlib.Path.cwd()
+        if output := helpers.get_output_from_call(key, cwd=cwd):
             self._cache[key] = output  # .replace("\n", "<br>").replace(" ", "&nbsp;")
             return self._cache[key]
         return "**Command failed**"
@@ -67,5 +70,5 @@ class MkCommandOutput(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    text = MkCommandOutput(["make", "help"])
+    text = MkCommandOutput.with_context(["dir"])
     print(text)

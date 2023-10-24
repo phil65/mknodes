@@ -180,11 +180,22 @@ def is_url(path: str) -> bool:
     return path.startswith(("http:/", "https:/", "www."))
 
 
-def get_output_from_call(call: Sequence[str]) -> str | None:
+def get_output_from_call(
+    call: str | Sequence[str],
+    cwd: str | os.PathLike | None,
+) -> str | None:
     import subprocess
 
+    if not isinstance(call, str):
+        call = " ".join(call)
     try:
-        return subprocess.check_output(call).decode()
+        return subprocess.run(
+            call,
+            stdout=subprocess.PIPE,
+            text=True,
+            shell=True,
+            cwd=cwd,
+        ).stdout
     except subprocess.CalledProcessError:
         logger.warning("Executing %s failed", call)
         return None
