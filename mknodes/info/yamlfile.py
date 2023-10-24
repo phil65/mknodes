@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import os
-import pathlib
+
+import upath
 
 from mknodes.info import configfile
 from mknodes.utils import log, mergehelpers, yamlhelpers
@@ -39,7 +40,7 @@ class YamlFile(configfile.ConfigFile):
         if not self.path:
             msg = "Config file needs file path (INHERIT path is relative to file path)"
             raise ValueError(msg)
-        abspath = pathlib.Path(self.path).absolute()
+        abspath = upath.UPath(self.path).absolute()
         if "INHERIT" not in self._data:
             return
         file_path = self._data.pop("INHERIT")

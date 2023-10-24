@@ -17,10 +17,7 @@ class ConfigFile(superdict.SuperDict):
             path: Path to the config file (supports fsspec protocol URLs)
         """
         super().__init__()
-        self.path = path
-        if self.path is None:
-            return
-        self.path = str(path)
+        self.path = str(path or "")
         if self.path:
             self.load_file(self.path)
 
