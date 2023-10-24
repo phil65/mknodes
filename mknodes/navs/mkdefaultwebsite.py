@@ -68,11 +68,6 @@ class MkDefaultWebsite(mk.MkNav):
 
 
 if __name__ == "__main__":
-    theme = mk.MaterialTheme()
-    doc = MkDefaultWebsite.for_project(
-        mk.Project(theme=theme),
-        static_pages={
-            "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
-        },
-    )
+    url = "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md"
+    doc = MkDefaultWebsite.with_default_context(static_pages={"Usage": url})
     print(doc)

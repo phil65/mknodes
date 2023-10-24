@@ -26,13 +26,6 @@ class MkEmptyWebsite(mknav.MkNav):
 
 
 if __name__ == "__main__":
-    import mknodes as mk
-
-    theme = mk.MaterialTheme()
-    doc = MkEmptyWebsite.for_project(
-        mk.Project(theme=theme),
-        static_pages={
-            "Usage": "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
-        },
-    )
+    url = "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md"
+    doc = MkEmptyWebsite.with_default_context(static_pages={"Usage": url})
     print(doc)
