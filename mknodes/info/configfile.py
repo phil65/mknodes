@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import os
 
+from typing import Any
+
 import upath
 
 from mknodes.utils import superdict
@@ -61,7 +63,7 @@ class ConfigFile(superdict.SuperDict):
     def load_file(
         self,
         path: str | os.PathLike,
-        **storage_options,
+        **storage_options: Any,
     ):
         """Load a file with loader of given file type.
 
