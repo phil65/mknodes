@@ -50,9 +50,13 @@ def _(nav: mk.MkNav):
 
 
 # @nav.route.nav("MkDefaultWebsite")
-def _(nav: mk.MkNav):
-    proj = mk.Project.for_path("https://github.com/mkdocstrings/mkdocstrings.git")
-    nav += mk.MkDefaultWebsite(section="MkDocStrings", context=proj.context)
+# def _(nav: mk.MkNav):
+#     from mknodes.theme import theme as theme_
+
+#     theme = theme_.Theme.get_theme("material", data={})
+#     path = "https://github.com/mkdocstrings/mkdocstrings.git"
+#     proj = mk.Project(theme=theme, repo=path)
+#     nav += mk.MkDefaultWebsite(section="MkDocStrings", context=proj.context)
 
 
 @nav.route.nav("The MkDoc class")

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import os
-import pathlib
 
 from typing import Generic, TypeVar
 
@@ -79,25 +78,15 @@ class Project(Generic[T]):
 
     @classmethod
     def for_path(cls, path: str) -> Project:
-        instance = cls(
-            base_url="",
-            use_directory_urls=True,
-            theme=theme_.Theme.get_theme("material", data={}),
-            repo=path,
-        )
-        logger.debug("Building page...")
-        instance.build_fn(project=instance)
-        logger.debug("Finished building page.")
-        if not instance._root:
-            msg = "No root for project created."
-            raise RuntimeError(msg)
-        paths = [
-            pathlib.Path(node.resolved_file_path).stem
-            for _level, node in instance._root.iter_nodes()
-            if hasattr(node, "resolved_file_path")
-        ]
-        instance.linkprovider.set_excludes(paths)
-        return instance
+        theme = theme_.Theme.get_theme("material", data={})
+        return cls(theme=theme, repo=path)
+        # excludes = [
+        #     pathlib.Path(node.resolved_file_path).stem
+        #     for _level, node in instance.root.iter_nodes()
+        #     if hasattr(node, "resolved_file_path")
+        # ]
+        # instance.linkprovider.set_excludes(excludes)
+        # return instance
 
 
 if __name__ == "__main__":
