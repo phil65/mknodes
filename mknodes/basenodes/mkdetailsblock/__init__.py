@@ -26,7 +26,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         content: str | list | mk.MkNode | None = None,
         *,
         typ: datatypes.AdmonitionTypeStr = "info",
-        expand: bool | None = None,
+        expanded: bool | None = None,
         title: str | None = None,
         **kwargs: Any,
     ):
@@ -35,7 +35,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         Arguments:
             content: Admonition content
             typ: Admonition type
-            expand: Whether the details block should be expanded initially
+            expanded: Whether the details block should be expanded initially
             title: Optional Admonition title
             kwargs: Keyword arguments passed to parent
         """
@@ -43,7 +43,7 @@ class MkDetailsBlock(mkblock.MkBlock):
             "details",
             content=content or [],
             argument=title or "",
-            attributes=dict(type=typ, open=expand),
+            attributes=dict(type=typ, open=expanded),
             **kwargs,
         )
 
@@ -57,7 +57,7 @@ class MkDetailsBlock(mkblock.MkBlock):
             content=content,
             typ=self.typ,
             title=self.argument,
-            expand=self.expand,
+            expanded=self.expanded,
             _filter_empty=True,
         )
 
@@ -70,11 +70,11 @@ class MkDetailsBlock(mkblock.MkBlock):
         self.attributes["type"] = value
 
     @property
-    def expand(self) -> bool:
+    def expanded(self) -> bool:
         return self.attributes["open"]
 
-    @expand.setter
-    def expand(self, value: bool):
+    @expanded.setter
+    def expanded(self, value: bool):
         self.attributes["open"] = value
 
     @classmethod
