@@ -142,7 +142,7 @@ class NodeEnvironment(environment.Environment):
 if __name__ == "__main__":
     import mknodes as mk
 
-    node = mk.MkText.with_default_context()
+    node = mk.MkText.with_context()
     env = NodeEnvironment(node)
     txt = "{{ metadata.required_python_version | MkAdmonition }}"
     print(env.render_string(txt))

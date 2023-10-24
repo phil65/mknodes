@@ -156,5 +156,5 @@ class MkPipDepTree(mkdiagram.MkDiagram):
 
 
 if __name__ == "__main__":
-    diagram = MkPipDepTree.with_default_context()
+    diagram = MkPipDepTree.with_context()
     print(diagram)

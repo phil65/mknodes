@@ -103,5 +103,5 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    node = MkPluginFlow.with_default_context()
+    node = MkPluginFlow.with_context()
     print(node)

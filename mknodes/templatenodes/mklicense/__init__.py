@@ -57,5 +57,5 @@ class MkLicense(mktext.MkText):
 
 
 if __name__ == "__main__":
-    lic = MkLicense.with_default_context("GPL-3.0")
+    lic = MkLicense.with_context("GPL-3.0")
     print(lic.text)

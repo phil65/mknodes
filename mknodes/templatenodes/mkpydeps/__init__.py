@@ -132,5 +132,5 @@ class MkPyDeps(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkPyDeps.with_default_context("mknodes/data/tools.py", max_bacon=1)
+    node = MkPyDeps.with_context("mknodes/data/tools.py", max_bacon=1)
     print(node)

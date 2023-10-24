@@ -19,13 +19,8 @@ class MkEmptyWebsite(mknav.MkNav):
         static_pages = static_pages or {}
         self.parse.json(static_pages)
 
-    @classmethod
-    def for_project(cls, project, **kwargs):
-        project.root = cls(context=project.context, **kwargs)
-        return project.root
-
 
 if __name__ == "__main__":
     url = "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md"
-    doc = MkEmptyWebsite.with_default_context(static_pages={"Usage": url})
+    doc = MkEmptyWebsite.with_context(static_pages={"Usage": url})
     print(doc)

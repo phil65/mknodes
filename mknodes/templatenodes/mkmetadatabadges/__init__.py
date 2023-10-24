@@ -174,5 +174,5 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    node = MkMetadataBadges.with_default_context("websites")
+    node = MkMetadataBadges.with_context("websites")
     print(node)

@@ -362,12 +362,18 @@ class MkNode(node.Node):
         page += mk.MkReprRawRendered(node, header="### Append annotations")
 
     @classmethod
-    def with_default_context(cls, *args, **kwargs):
+    def for_project(cls, project, **kwargs):
+        project.root = cls(context=project.context, **kwargs)
+        return project.root
+
+    @classmethod
+    def with_context(cls, *args, repo_url: str | None = None, **kwargs):
+        """Same as the Ctor, but auto-adds a context for the repo url (or the cwd)."""
         import mknodes as mk
 
         theme = mk.MaterialTheme()
-        proj = mk.Project(theme=theme)
-        return cls(*args, **kwargs, context=proj.context)
+        context = mk.Project(theme=theme, repo=repo_url).context
+        return cls(*args, **kwargs, context=context)
 
     def to_html(self) -> str:
         """Convert node to HTML using the resources from node + children."""

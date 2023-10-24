@@ -61,13 +61,8 @@ class MkDefaultWebsite(mk.MkNav):
         page = nav.add_page("License", hide="toc")
         page += node
 
-    @classmethod
-    def for_project(cls, project, **kwargs):
-        project.root = cls(context=project.context, **kwargs)
-        return project.root
-
 
 if __name__ == "__main__":
     url = "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md"
-    doc = MkDefaultWebsite.with_default_context(static_pages={"Usage": url})
+    doc = MkDefaultWebsite.with_context(static_pages={"Usage": url})
     print(doc)

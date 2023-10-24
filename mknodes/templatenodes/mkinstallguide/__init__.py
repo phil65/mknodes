@@ -101,5 +101,5 @@ class MkInstallGuide(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    guide = MkInstallGuide.with_default_context()
+    guide = MkInstallGuide.with_context()
     print(guide)
