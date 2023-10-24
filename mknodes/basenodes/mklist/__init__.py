@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.info import linkprovider
@@ -23,7 +24,7 @@ class MkList(mkcontainer.MkContainer):
         ordered: bool = False,
         shorten_after: int | None = None,
         as_links: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 
