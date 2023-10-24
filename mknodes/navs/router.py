@@ -81,7 +81,7 @@ class Router:
 
         return decorator
 
-    def nav(
+    def route_nav(
         self,
         *path: str,
         condition: Callable | bool | None = None,
