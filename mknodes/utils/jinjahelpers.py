@@ -111,6 +111,7 @@ ENV_FILTERS = {
     "load_file": pathhelpers.load_file_cached,
     "path_join": os.path.join,
     "url": url_filter,
+    "check_output": helpers.get_output_from_call,
     "script_tag": script_tag_filter,
 }
 
