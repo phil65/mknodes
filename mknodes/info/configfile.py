@@ -4,7 +4,7 @@ import os
 
 import upath
 
-from mknodes.utils import downloadhelpers, helpers, superdict
+from mknodes.utils import superdict
 
 
 class ConfigFile(superdict.SuperDict):
@@ -12,17 +12,14 @@ class ConfigFile(superdict.SuperDict):
         """Constructor.
 
         Arguments:
-            path: Path to the config file
+            path: Path to the config file (supports fsspec protocol URLs)
         """
         super().__init__()
         self.path = path
         if self.path is None:
             return
         self.path = str(path)
-        if helpers.is_url(self.path):
-            content = downloadhelpers.download(self.path)
-            self.load_config(content.decode())
-        else:
+        if self.path:
             self.load_file(self.path)
 
     def __repr__(self):
@@ -99,6 +96,6 @@ class ConfigFile(superdict.SuperDict):
 if __name__ == "__main__":
     from mknodes.info import tomlfile
 
-    info = tomlfile.TomlFile("pyproject.toml")
+    info = tomlfile.TomlFile("github://phil65:mknodes@main/pyproject.toml")
     text = info.get_section_text("tool", "hatch", keep_path=True)
     print(text)
