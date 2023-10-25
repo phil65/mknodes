@@ -72,9 +72,7 @@ class MkFootNotes(mkcontainer.MkContainer):
             case list():
                 items = [
                     (
-                        ann
-                        if isinstance(ann, MkFootNote)
-                        else MkFootNote(i, ann)  # type: ignore
+                        ann if isinstance(ann, MkFootNote) else MkFootNote(i, ann)  # type: ignore
                     )
                     for i, ann in enumerate(footnotes, start=1)
                 ]
