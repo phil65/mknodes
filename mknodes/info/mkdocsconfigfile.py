@@ -8,6 +8,8 @@ from mknodes.info import yamlfile
 
 
 class MkDocsConfigFile(yamlfile.YamlFile):
+    SCHEMA = "https://json.schemastore.org/mkdocs-1.0.json"
+
     @property
     def theme(self):
         """Return theme section."""
