@@ -25,8 +25,8 @@ class MkHtmlBlock(mkblock.MkBlock):
     def __init__(
         self,
         content: str | mknode.MkNode = "",
-        *,
         block_type: BlockTypeStr = "div",
+        *,
         markdown_mode: MarkdownModeStr | None = None,
         attributes: dict[str, Any] | None = None,
         **kwargs: Any,
@@ -48,7 +48,6 @@ class MkHtmlBlock(mkblock.MkBlock):
             **kwargs,
         )
         self.markdown_mode = markdown_mode
-        self.indent = "    "
 
     def __repr__(self):
         if len(self.items) == 1:

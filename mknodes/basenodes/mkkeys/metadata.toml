@@ -23,3 +23,8 @@ jinja = """
 {{ ["Alt", "X"] | MkKeys | MkReprRawRendered }}
 """
 
+[output.markdown]
+template = """
+++{{ node.keys | join("+") }}++
+"""
+

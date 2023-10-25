@@ -20,7 +20,7 @@ class MkProgressBar(mknode.MkNode):
     def __init__(
         self,
         percentage: int,
-        title: str | None | Literal[True] = True,
+        label: str | None | Literal[True] = True,
         style: Literal["thin", "candystripe", "candystripe_animated"] | None = None,
         **kwargs: Any,
     ):
@@ -28,12 +28,12 @@ class MkProgressBar(mknode.MkNode):
 
         Arguments:
             percentage: Percentage value for the progress bar
-            title: Title to display on top of progress bar
+            label: Label to display on top of progress bar
             style: Progress bar style
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.title = title
+        self._label = label
         self.percentage = percentage
         self.style = style
         match self.style:
@@ -49,19 +49,22 @@ class MkProgressBar(mknode.MkNode):
         return reprhelpers.get_repr(
             self,
             percentage=self.percentage,
-            title=self.title,
+            label=self._label,
             style=self.style,
         )
 
-    def _to_markdown(self) -> str:
-        match self.title:
+    @property
+    def label(self) -> str:
+        match self._label:
             case str():
-                title = self.title.format(percentage=self.percentage)
+                return self._label.format(percentage=self.percentage)
             case True:
-                title = f"{self.percentage}%"
+                return f"{self.percentage}%"
             case _:
-                title = ""
-        return rf'[={self.percentage}% "{title}"]'
+                return ""
+
+    def _to_markdown(self) -> str:
+        return rf'[={self.percentage}% "{self.label}"]'
 
     @classmethod
     def create_example_page(cls, page):
@@ -71,12 +74,12 @@ class MkProgressBar(mknode.MkNode):
         page += mk.MkReprRawRendered(node, header="### Regular")
         node = MkProgressBar(60, style="thin")
         page += mk.MkReprRawRendered(node, header="### Thin")
-        node = MkProgressBar(70, style="candystripe", title="We reached {percentage}!")
+        node = MkProgressBar(70, style="candystripe", label="We reached {percentage}!")
         page += mk.MkReprRawRendered(node, header="### Candystripe")
         node = MkProgressBar(80, style="candystripe_animated")
         page += mk.MkReprRawRendered(node, header="### Animated")
 
 
 if __name__ == "__main__":
-    bar = MkProgressBar(percentage=30, title=None)
+    bar = MkProgressBar(percentage=30, label=None)
     print(bar)

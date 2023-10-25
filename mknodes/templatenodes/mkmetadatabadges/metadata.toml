@@ -1,0 +1,53 @@
+[metadata]
+name = "MkMetadataBadges"
+icon = "simpleicon:shieldsdotio"
+status = "new"
+
+[requirements.package.anybadge]
+
+[examples.Classifiers]
+jinja = """
+{{ "classifiers" | MkMetadataBadges | MkReprRawRendered }}
+"""
+
+[examples.Keywords]
+jinja = """
+{{ "keywords" | MkMetadataBadges | MkReprRawRendered }}
+"""
+
+[examples."Keywords combined"]
+jinja = """
+{{ "keywords_combined" | MkMetadataBadges | MkReprRawRendered }}
+"""
+
+[examples.Websites]
+jinja = """
+{{ "websites" | MkMetadataBadges | MkReprRawRendered }}
+"""
+
+[examples.Dependencies]
+jinja = """
+{{ "dependencies" | MkMetadataBadges | MkReprRawRendered }}
+"""
+
+[examples."For other packages"]
+jinja = """
+{{ "dependencies" | MkMetadataBadges(package="mkdocs") | MkReprRawRendered }}
+"""
+
+[examples."Gitlab style"]
+jinja = """
+{{ "classifiers" | MkMetadataBadges(use_gitlab_style=True) | MkReprRawRendered }}
+"""
+
+[examples.Colored]
+jinja = """
+{{ "required_python" | MkMetadataBadges(badge_color="red") | MkReprRawRendered }}
+"""
+
+# [output.markdown]
+# template = """
+# {% for label, value, link in node.badge_content %}
+# {{ label | MkBadge(value=value, link=link, font_size=node.font_size, font_name=node.font_name, badge_color=node.badge_color, text_color=node.text_color, num_padding_chars=node.num_padding_chars, use_gitlab_style=node.use_gitlab_style, title=label) }}
+# {% endfor %}
+# """

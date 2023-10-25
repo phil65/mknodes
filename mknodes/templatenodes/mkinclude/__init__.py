@@ -4,7 +4,7 @@ import os
 
 from typing import Any
 
-from mknodes.basenodes import mknode
+from mknodes.basenodes import mktext
 from mknodes.pages import mkpage
 from mknodes.utils import log, pathhelpers, reprhelpers
 
@@ -15,7 +15,7 @@ EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
 logger = log.get_logger(__name__)
 
 
-class MkInclude(mknode.MkNode):
+class MkInclude(mktext.MkText):
     """Node to include the text of other Markdown files / MkNodes.
 
     This node only keeps a reference to given target and resolves it when needed.
@@ -27,7 +27,7 @@ class MkInclude(mknode.MkNode):
 
     def __init__(
         self,
-        target: str | os.PathLike | mknode.MkNode,
+        target: str | os.PathLike | mktext.MkText,
         **kwargs: Any,
     ):
         """Constructor.
@@ -42,11 +42,12 @@ class MkInclude(mknode.MkNode):
     def __repr__(self):
         return reprhelpers.get_repr(self, target=self.target)
 
-    def _to_markdown(self) -> str:  # type: ignore[return]
+    @property
+    def text(self) -> str:
         match self.target:
             case os.PathLike() | str():
                 return pathhelpers.load_file_cached(str(self.target))
-            case mknode.MkNode():
+            case mktext.MkText():
                 return str(self.target)
             case _:
                 raise TypeError(self.target)

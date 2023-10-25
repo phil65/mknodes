@@ -25,3 +25,8 @@ jinja = """
 jinja = """
 {{ 80 | MkProgressBar(style="candystripe_animated") | MkReprRawRendered }}
 """
+
+[output.markdown]
+template = """
+[={{ node.percentage }}% "{{ node.label }}"]
+"""

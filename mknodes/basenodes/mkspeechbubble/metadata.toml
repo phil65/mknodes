@@ -5,3 +5,18 @@ icon = "mdi:chat"
 filename = "speechbubble.css"
 
 [requirements.extension."pymdownx.progressbar"]
+
+[examples."Regular"]
+jinja = """
+{{ "some text" | MkSpeechBubble }}
+"""
+
+[examples."No arrow"]
+jinja = """
+{{ "some text" | MkSpeechBubble(arrow=None) }}
+"""
+
+[output.html]
+template = """
+<div class="speech{{ node.arrow | add(prefix=' ') }}" markdown="1">{{node.items  | join(node.block_separator) }}</div>
+"""
