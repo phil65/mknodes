@@ -90,7 +90,7 @@ def slugify(text: str | os.PathLike) -> str:
     """
     text = str(text).lower()
     text = re.sub("[^0-9a-zA-Z_.]", "_", text)
-    return re.sub("^[^a-zA-Z_#]+", "", text)
+    return re.sub("^[^0-9a-zA-Z_#]+", "", text)
 
 
 def groupby(data, keyfunc: Callable | None = None) -> dict[str, list]:
