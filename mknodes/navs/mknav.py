@@ -49,6 +49,7 @@ class MkNav(mknode.MkNode):
             filename: FileName for the resulting nav
             kwargs: Keyword arguments passed to parent
         """
+        self.title = section
         self.section = section
         self.filename = filename
         self.nav = navigation.Navigation()
@@ -65,7 +66,7 @@ class MkNav(mknode.MkNode):
             self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=1)
 
     def __repr__(self):
-        section = self.section or "<root>"
+        section = self.title or "<root>"
         return reprhelpers.get_repr(self, section=section, filename=self.filename)
 
     # The child items are managed by the Navigation object. We forward relevant calls
@@ -189,7 +190,7 @@ class MkNav(mknode.MkNode):
         )
         if is_index:
             self.index_page = page
-            self.index_title = title or self.section or "Home"
+            self.index_title = title or self.title or "Home"
         else:
             self.nav.register(page)
         return page

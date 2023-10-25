@@ -257,9 +257,9 @@ class MkNode(node.Node):
         """Return a tuple containing all section names."""
         import mknodes as mk
 
-        parts = [nav.section for nav in self.parent_navs if nav.section]
-        if isinstance(self, mk.MkNav) and self.section:
-            parts.append(self.section)
+        parts = [nav.title for nav in self.parent_navs if nav.title]
+        if isinstance(self, mk.MkNav) and self.title:
+            parts.append(self.title)
         return tuple(parts)
 
     @property

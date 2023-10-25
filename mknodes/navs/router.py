@@ -48,7 +48,7 @@ class Router:
             nav.nav[path] = node
 
         for path, (fn, kwargs, condition) in self._page_registry.items():
-            p = path[-1] if path else (nav.section or "Home")
+            p = path[-1] if path else (nav.title or "Home")
             node = mkpage.MkPage(title=p, parent=nav, **kwargs)
             if condition and not condition(node):
                 continue
@@ -57,7 +57,7 @@ class Router:
                 node._node_name = fn.__name__
             node.parent = nav  # in case a new MkPage was generated
             node.created_by = fn
-            nav.nav[path or nav.section or "Home"] = node
+            nav.nav[path or nav.title or "Home"] = node
 
     def route(
         self,

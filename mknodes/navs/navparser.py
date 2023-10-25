@@ -288,7 +288,7 @@ class NavParser:
                 logger.debug("Loaded index page from %s", path)
                 text = path.read_text(encoding="utf-8")
                 nav.index_page = mk.MkPage(path=path.name, content=text, **kwargs)
-                nav.index_title = nav.section or "Home"
+                nav.index_title = nav.title or "Home"
             elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
                 text = path.read_text(encoding="utf-8")
                 rel_path = path.relative_to(folder)

@@ -351,7 +351,7 @@ class MkNodeResolver(NodeResolver):
 
         match node:
             case mk.MkNav():
-                return node.section
+                return node.title
             case mk.MkPage():
                 return node.path
             case _:

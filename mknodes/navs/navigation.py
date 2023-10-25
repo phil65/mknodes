@@ -49,10 +49,8 @@ class Navigation(dict):
 
     def register(self, node: NavSubType):
         match node:
-            case mknav.MkNav():
-                self[(node.section,)] = node
-            case mkpage.MkPage() | mklink.MkLink():
-                self[node.title] = node
+            case mknav.MkNav() | mkpage.MkPage() | mklink.MkLink():
+                self[(node.title,)] = node
             case _:
                 raise TypeError(node)
 
@@ -88,7 +86,7 @@ class Navigation(dict):
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()
                 case mknav.MkNav():
-                    nav[path] = f"{item.section}/"
+                    nav[path] = f"{item.title}/"
                 case mklink.MkLink():
                     nav[path] = str(item.target)
                 case _:

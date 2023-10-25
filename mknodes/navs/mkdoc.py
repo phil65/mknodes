@@ -57,14 +57,14 @@ class MkDoc(mknav.MkNav):
         self._exclude = exclude_modules or []
         # self.root_path = pathlib.Path(f"./{self.module_name}")
         super().__init__(**kwargs)
-        self.section = section_name or self.module_name
+        self.title = section_name or self.module_name
         self._collect_classes()
 
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
             module=self.module_name,
-            section=self.section or "<root>",
+            section=self.title or "<root>",
             filename=self.filename,
         )
 
