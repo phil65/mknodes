@@ -18,8 +18,7 @@ jinja = """
 
 [output.html]
 template = """
-{% set class = " mdx-admo--" ~ node.typ if node.typ else "" %}
-<div class="mdx-grid-wrapper{{ class }}">
+<div class="mdx-grid-wrapper{{ node.typ | add(prefix=" mdx-admo--") }}">
   <div class="mdx-grid-child mdx-grid-child--icon"></div>
   <div class="mdx-grid-child">{{ node.text }}</div>
 </div>
