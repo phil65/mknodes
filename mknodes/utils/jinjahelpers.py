@@ -80,6 +80,12 @@ def evaluate(
     return val
 
 
+def add(text, prefix: str = "", suffix: str = ""):
+    if not text:
+        return ""
+    return f"{prefix}{text}{suffix}"
+
+
 ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
     "now": datetime.datetime.now,
@@ -97,6 +103,7 @@ ENV_FILTERS = {
     "lstrip": str.lstrip,
     "removesuffix": str.removesuffix,
     "removeprefix": str.removeprefix,
+    "add": add,
     "issubclass": issubclass,
     "isinstance": isinstance,
     "hasattr": hasattr,

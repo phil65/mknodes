@@ -16,7 +16,7 @@ jinja = """
 {{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
 """
 
-[output.xml]
+[output.html]
 template = """
 {% set class = " mdx-admo--" ~ node.typ if node.typ else "" %}
 <div class="mdx-grid-wrapper{{ class }}">

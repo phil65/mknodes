@@ -6,7 +6,7 @@ jinja = """
 {{ "https://phil65.github.io/mknodes/" | MkIFrame(width=600, height=800) | MkReprRawRendered }}
 """
 
-[output.xml]
+[output.html]
 template = """
 <iframe frameborder="0" width="{{width}}" height="{{height}}" src="{{url}}"></iframe>
 """

@@ -4,7 +4,7 @@ icon = "mdi:bash"
 [[resources.css]]
 filename = "terminal.css"
 
-[output.xml]
+[output.html]
 template = """
 <div data-terminal>
   <span data-ty="input">{{ node.call | join(" ") }}</span>

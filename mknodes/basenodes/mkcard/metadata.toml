@@ -20,7 +20,7 @@ jinja = """
 {{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") | MkReprRawRendered }}
 """
 
-[output.xml]
+[output.html]
 template = """
 {% if node.url %}<a href="{{ node.url }}"{% endif %}
 <div class="card">

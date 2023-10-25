@@ -21,7 +21,7 @@ jinja = """
 {{ ["https://picsum.photos/700", "https://picsum.photos/701"] | MkImageSlideshow | MkReprRawRendered }}
 """
 
-[output.xml]
+[output.html]
 template = """
 <div style="width: 100%; padding-bottom: 25%" data-simple-slider="">
 {% for image_url in node.images %}

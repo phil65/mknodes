@@ -26,8 +26,12 @@ jinja = """
 jinja = """
 {{ "https://www.google.com" | MkLink("With tooltip.", as_button=True) | MkReprRawRendered }}
 """
-
 # [examples."To page"]
 # jinja = """
 # {{ page.parent.index_page | MkLink("To page.") | MkReprRawRendered }}
 # """
+
+[output.markdown]
+template = """
+[{{ node.icon | add(suffix=" ") }}{{ node.title }}]({{ node.url }}{{ node.tooltip | add(prefix=" '", suffix="'")}})
+"""

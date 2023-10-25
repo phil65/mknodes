@@ -14,7 +14,7 @@ jinja = """
 {{ "https://picsum.photos/700" | MkImageCompare(after_image="https://picsum.photos/701") | MkReprRawRendered }}
 """
 
-[output.xml]
+[output.html]
 template = """
 <img-comparison-slider>
   <img src="{{ node.before }}" slot="first">
