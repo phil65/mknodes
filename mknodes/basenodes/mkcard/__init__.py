@@ -25,8 +25,7 @@ def build_html_card(
     caption: str | None = None,
     path_dark_mode: str | None = None,
 ) -> xml.HTMLElement:
-    root = xml.A(href=link) if link else xml.Div()
-    card_div = xml.Div("card", parent=root)
+    card_div = xml.Div("card")
     container_div = xml.Div("showcase-container", parent=card_div)
     src = f"{image}#only-light" if path_dark_mode else image
     style = f"width:{size}px,height:{size}px"
@@ -40,7 +39,11 @@ def build_html_card(
     p = xml.P(parent=card_div)
     button = xml.Button(parent=p)
     button.text = title
-    return root
+    if link:
+        tag = xml.A(href=link)
+        tag.append(card_div)
+        return tag
+    return card_div
 
 
 class MkCard(mknode.MkNode):
