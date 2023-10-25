@@ -89,7 +89,7 @@ class PyProject(tomlfile.TomlFile):
     @property
     def docstring_style(self) -> str | None:
         """Return the style used for docstring."""
-        if convention := self.tool["pydocstyle"].get("convention"):
+        if convention := self.tool.get("pydocstyle", {}).get("convention"):
             return convention
         return self.mknodes_section.get("docstring-style")
 
@@ -102,11 +102,11 @@ class PyProject(tomlfile.TomlFile):
     def line_length(self) -> int | None:
         # sourcery skip: assign-if-exp, reintroduce-else
         """Return the line length (taken from black / ruff / isort config)."""
-        if length := self.tool["ruff"].get("line-length"):
+        if length := self.tool.get("ruff", {}).get("line-length"):
             return int(length)
-        if length := self.tool["isort"].get("line_length"):
+        if length := self.tool.get("isort", {}).get("line_length"):
             return int(length)
-        if length := self.tool["black"].get("line-length"):
+        if length := self.tool.get("black", {}).get("line-length"):
             return int(length)
         return None
 
@@ -116,11 +116,11 @@ class PyProject(tomlfile.TomlFile):
 
         Taken from black / ruff / mypy config.
         """
-        if version := self.tool["mypy"].get("python_version"):
+        if version := self.tool.get("mypy", {}).get("python_version"):
             return (3, int(version[-2:]))
-        if version := self.tool["black"].get("target-version"):
+        if version := self.tool.get("black", {}).get("target-version"):
             return (3, int(version[-2:]))
-        if version := self.tool["ruff"].get("target-version"):
+        if version := self.tool.get("ruff", {}).get("target-version"):
             return (3, int(version[-2:]))
         return None
 
