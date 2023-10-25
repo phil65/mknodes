@@ -19,3 +19,17 @@ jinja = """
 jinja = """
 {{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") | MkReprRawRendered }}
 """
+
+[output.xml]
+template = """
+{% if node.url %}<a href="{{ node.url }}"{% endif %}
+<div class="card">
+  <div class="showcase-container">
+    <img src="{{ node.image }}" alt="{{ node.title }}" style="width:{{ node.size }}px,height:{{ node.size }}px">
+  </div>
+  <p>
+    <button>{{ node.title }}</button>
+  </p>
+</div>
+{% if node.url %}</a>{% endif %}
+"""
