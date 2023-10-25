@@ -1,0 +1,10 @@
+[metadata]
+icon = "mdi:square-medium"
+status = "new"
+
+[examples."Regular"]
+jinja = """
+{% set item_1 = ["Item 1", "Item 2", "Item 3"] | MkList %}
+{% set item_2 = ["Ctrl+A"] | MkKeys %}
+{{ [item_1, item_2] | MkGrid | MkReprRawRendered }}
+"""
