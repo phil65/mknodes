@@ -145,6 +145,28 @@ class MkPage(mkcontainer.MkContainer):
         return self.ctx.links.get_url(self)
 
     @property
+    def previous_page(self) -> MkPage | None:
+        if not self.root:
+            return None
+        pages = [i[1] for i in self.root.iter_nodes()]
+        index = pages.index(self)
+        for node in reversed(pages[:index]):
+            if isinstance(node, MkPage):
+                return node
+        return None
+
+    @property
+    def next_page(self) -> MkPage | None:
+        if not self.root:
+            return None
+        pages = [i[1] for i in self.root.iter_nodes()]
+        index = pages.index(self)
+        for node in pages[index + 1 :]:
+            if isinstance(node, MkPage):
+                return node
+        return None
+
+    @property
     def status(self) -> datatypes.PageStatusStr | str | None:
         """Return page status from metadata."""
         return self.metadata.status
