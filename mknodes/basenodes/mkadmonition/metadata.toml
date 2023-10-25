@@ -39,4 +39,17 @@ jinja = """
 # [output.markdown]
 # template = """
 # {{ "???" if node.collapsible else "!!!"}} {{ node.typ }} {{ node.title }}
+# {{ node.items | join | indent(width="> ")}}
 # """
+
+# [output.block]
+# template = """
+# /// admonition {{ node.typ }} | {{ node.title }}
+# {{ node.items | join | indent(width="> ")}}
+# ///
+# """
+
+# [output.github]
+# template = """
+# > [!{{ node.typ | upper }}]\
+# {{ node.items | join | indent(width="> ")}}
