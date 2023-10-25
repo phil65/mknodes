@@ -120,11 +120,8 @@ class MkPage(mkcontainer.MkContainer):
             return f"{prefix}index.md"
         if self._is_index:
             return "index.md"
-        if self._path:
-            path = self._path.removesuffix(".md") + ".md"
-        else:
-            path = f"{self.metadata.title}.md"
-        return helpers.slugify(path)
+        path = self._path.removesuffix(".md") if self._path else self.metadata.title
+        return helpers.slugify(path or "") + ".md"
 
     @path.setter
     def path(self, value: str | None):
@@ -142,6 +139,10 @@ class MkPage(mkcontainer.MkContainer):
             return "index.md"
         path = "/".join(self.resolved_parts) + "/" + self.path
         return path.lstrip("/")
+
+    @property
+    def url(self) -> str:
+        return self.ctx.links.get_url(self)
 
     @property
     def status(self) -> datatypes.PageStatusStr | str | None:
