@@ -15,7 +15,6 @@ virtual = ".hatch"
 python = "3.11"
 dependencies = [
     # Linting
-    "black",
     "mypy",
     "ruff",
 
@@ -52,12 +51,12 @@ test-cov-xml = "pytest --cov-report=xml"
 test-cov-html = "pytest --cov-report=html"
 lint = [
   "hatch run ruff --fix .",
-  "hatch run black .",
+  "hatch run ruff format .",
   "hatch run mypy mknodes/",
 ]
 lint-check = [
   "hatch run ruff .",
-  "hatch run black --check .",
+  "hatch run ruff format --check .",
   "hatch run mypy mknodes/",
 ]
 
@@ -254,11 +253,16 @@ ignore = [
     "SLF001",# Private member accessed
     "RUF012", # Mutable class attributes should be annotated
     "TRY003", # Avoid specifying long messages outside the exception class
+    "COM812", "COM819", "D206", "E501", "ISC001", "Q000", "Q001", "Q002", "Q003", "W191",  # for ruff-format
 ]
 extend-exclude = [
     'docs',
 ]
 target-version = "py311"
+
+[tool.ruff.format]
+# Enable preview style formatting.
+preview = true
 
 [tool.ruff.flake8-quotes]
 docstring-quotes = "double"
@@ -272,27 +276,6 @@ combine-as-imports = true
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402", "I001"]
-
-[tool.black]
-line-length = 90
-target-version = ['py311']
-include = '\.pyi?$'
-preview = true
-extend-exclude = '''
-/(
-    \.hatch
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | tests/.*/setup.py
-)/
-'''
 
 [tool.mknodes]
 allowed-commit-types = [

@@ -1,4 +1,4 @@
-.PHONY: help clean lint test docs serve update
+.PHONY: help clean lint format test docs serve update
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -23,6 +23,9 @@ test: ## run tests
 
 lint: ## run mypy type checking
 	hatch run lint-check
+
+format: ## run mypy type checking
+	hatch run lint
 
 docs: ## builds the documentation
 	hatch run mkdocs build
