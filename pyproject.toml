@@ -26,7 +26,6 @@ dependencies = [
     "mkdocs >=1.5",
     "mkdocs-material >= 9.4",
     "mkdocs_mknodes",
-    "mkdocs-literate-nav",
     "pymdown-extensions",
     "markdown-exec[ansi]",
     "pygments",

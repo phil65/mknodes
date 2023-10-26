@@ -56,7 +56,6 @@ plugins:
     enabled: !ENV [CI, false]
 - tags
 - markdown-exec
-- literate-nav
 - mknodes:
     build_fn: mknodes.manual.root:build
     show_page_info: true

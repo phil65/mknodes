@@ -11,7 +11,7 @@ from mknodes.basenodes import mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata, mkpage, pagetemplate
-from mknodes.utils import inspecthelpers, log, reprhelpers, resources
+from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -30,10 +30,6 @@ class MkNav(mknode.MkNode):
     """
 
     ICON = "material/navigation-outline"
-    REQUIRED_PLUGINS = [
-        resources.Plugin("literate_nav"),
-        resources.Plugin("section_index"),
-    ]
 
     def __init__(
         self,
