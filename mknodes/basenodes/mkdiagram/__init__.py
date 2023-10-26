@@ -35,17 +35,10 @@ class MkDiagram(mkcode.MkCode):
         sequence="sequenceDiagram",
         state="stateDiagram-v2",
     )
-    ORIENTATION = dict(
-        default="",
-        left_right="LR",
-        top_down="TD",
-        right_left="RL",
-        down_top="DT",
-    )
 
     def __init__(
         self,
-        items: list | None = None,
+        names: list[str] | None = None,
         connections: list[tuple] | None = None,
         *,
         graph_type: GraphTypeStr = "flow",
@@ -56,28 +49,30 @@ class MkDiagram(mkcode.MkCode):
         """Constructor.
 
         Arguments:
+            names: names which should be part of the diagram
+            connections: tuples indicating the connections of the names
             graph_type: Type of the graph
-            items: items which should be part of the diagram
-            connections: tuples indicating the connections of the items
             direction: diagram direction
-            attributes: Optional attributes for the items
+            attributes: Optional attributes for the names
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(language="mermaid", **kwargs)
         self._graph_type = graph_type
-        self._direction = direction
-        # Preserve order. Useful if only items are passed, order is important then.
-        self.names = sorted(set(items or []), key=items.index) if items else []
+        self.direction = direction
+        # Preserve order. Useful if only names are passed, order is important then.
+        self.names = helpers.reduce_list(names or [])
         self.connections = set(connections or [])
         self.attributes = attributes or {}
 
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            graph_type=self.graph_type,
-            items=self.names,
+            names=self.names,
             connections=self.connections,
+            graph_type=self.graph_type,
             direction=self.direction,
+            attributes=self.attributes,
+            _filter_empty=True,
         )
 
     @property
@@ -87,15 +82,6 @@ class MkDiagram(mkcode.MkCode):
             self._graph_type
             if self._graph_type not in self.TYPE_MAP
             else self.TYPE_MAP[self._graph_type]
-        )
-
-    @property
-    def direction(self):
-        """The graph direction."""
-        return (
-            self._direction
-            if self._direction not in self.ORIENTATION
-            else self.ORIENTATION[self._direction]
         )
 
     @property
@@ -137,10 +123,10 @@ class MkDiagram(mkcode.MkCode):
         import mknodes as mk
 
         page += "MkDiagrams can be used to create Mermaid diagrams manually."
-        diagram = MkDiagram(items=["1", "2", "3"], connections=[("1", "2"), ("2", "3")])
+        diagram = MkDiagram(["1", "2", "3"], connections=[("1", "2"), ("2", "3")])
         page += mk.MkReprRawRendered(diagram, header="### Regular")
         diagram = MkDiagram(
-            items=["1", "2", "3"],
+            ["1", "2", "3"],
             connections=[("1", "2"), ("1", "3", "comment")],
             direction="LR",
         )
