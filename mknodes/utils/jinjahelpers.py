@@ -120,6 +120,7 @@ ENV_FILTERS = {
     "url": url_filter,
     "check_output": helpers.get_output_from_call,
     "script_tag": script_tag_filter,
+    "getenv": os.getenv,
 }
 
 
