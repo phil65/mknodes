@@ -1,0 +1,20 @@
+[metadata]
+icon = "octicon:info-16"
+name = "MkHtmlBlock"
+
+[requirements.extension."pymdownx.blocks.details"]
+
+
+[examples."Regular"]
+jinja = """
+{{ "Different types." | MkHtmlBlock("div") | MkReprRawRendered }}
+"""
+
+[output.markdown]
+template = """
+{{ node.fence_boundary }} html{% if node.argument %}{{ node.argument | add(prefix=' | ')}}{% endif %}
+{{ node.attributes_block }}
+{{ node.content_block }}
+{{ node.fence_boundary }}
+
+"""
