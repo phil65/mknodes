@@ -44,7 +44,7 @@ class MkCodeImage(mknode.MkNode):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            code=self._code,
+            self._code,
             language=self.language,
             title=self.title,
             _filter_empty=True,
@@ -68,7 +68,7 @@ class MkCodeImage(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        node = MkCodeImage(language="python", code="a = 1 + 2", title="Window title")
+        node = MkCodeImage("a = 1 + 2", language="python", title="Window title")
         page += node
 
     @classmethod
@@ -124,7 +124,7 @@ class MkCodeImage(mknode.MkNode):
             code = inspecthelpers.get_source(obj)
         code = textwrap.dedent(code) if dedent else code
         code_title = title if title is not None else classhelpers.get_code_name(obj)
-        return cls(code=code, title=code_title, **kwargs)
+        return cls(code, title=code_title, **kwargs)
 
 
 if __name__ == "__main__":

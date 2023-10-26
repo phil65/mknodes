@@ -76,7 +76,7 @@ class MkDiagram(mkcode.MkCode):
         )
 
     @property
-    def graph_type(self):
+    def graph_type(self) -> str:
         """The type of the graph (usually flow)."""
         return (
             self._graph_type
@@ -85,7 +85,7 @@ class MkDiagram(mkcode.MkCode):
         )
 
     @property
-    def text(self):
+    def text(self) -> str:
         """MkCode override."""
         return f"{self.graph_type} {self.direction}\n{self.mermaid_code}"
 
@@ -114,7 +114,7 @@ class MkDiagram(mkcode.MkCode):
         return textwrap.indent("\n".join(lines), "  ")
 
     @property
-    def fence_title(self):
+    def fence_title(self) -> str:
         """MkCode override."""
         return "mermaid"
 

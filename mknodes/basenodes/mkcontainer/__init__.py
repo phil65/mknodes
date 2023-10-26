@@ -88,7 +88,7 @@ class MkContainer(mknode.MkNode):
 
         page += "MkContainers are usually only used as a base class"
         page += "It basically only carries other nodes and stringifies them sequentially."
-        item_1 = mk.MkCode(code="a = 1 + 2")
+        item_1 = mk.MkCode("a = 1 + 2")
         item_2 = mk.MkText("abc")
         node = MkContainer(content=[item_1, item_2])
         page += mk.MkReprRawRendered(node)
