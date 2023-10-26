@@ -75,6 +75,23 @@ class Navigation(dict):
         """Return all registered links."""
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
 
+    def to_nav_dict(self) -> dict[str, str | dict]:
+        import mknodes as mk
+
+        dct: dict[str, str | dict] = {}
+        if self.index_page and self.index_title:
+            index_path = pathlib.Path(self.index_page.resolved_file_path)
+            dct[self.index_title] = index_path.as_posix()
+        for path, item in self.items():
+            match item:
+                case mk.MkNav():
+                    dct["/".join(path)] = item.nav.to_nav_dict()
+                case mk.MkPage():
+                    dct["/".join(path)] = item.resolved_file_path
+                case mklink.MkLink():
+                    dct["/".join(path)] = str(item.target)
+        return dct
+
     def to_literate_nav(self) -> str:
         nav = navbuilder.NavBuilder()
         if self.index_page and self.index_title:
@@ -92,3 +109,13 @@ class Navigation(dict):
                 case _:
                     raise TypeError(item)
         return "".join(nav.build_literate_nav())
+
+
+if __name__ == "__main__":
+    import mknodes as mk
+
+    nav_tree_path = pathlib.Path(__file__).parent.parent.parent / "tests/data/nav_tree/"
+    nav_file = nav_tree_path / "SUMMARY.md"
+    nav = mk.MkNav()
+    nav.parse.file(nav_file)
+    print(nav.nav.to_nav_dict())
