@@ -23,6 +23,7 @@ class MdConverter(markdown.Markdown):
             "pymdownx.emoji",
             "md_in_html",
             "attr_list",
+            "admonition",
         ]
         if extensions:
             exts = list({*exts, *extensions})

@@ -12,7 +12,7 @@ from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
 from mknodes.treelib import node
-from mknodes.utils import icons, log, resources
+from mknodes.utils import icons, log, mdconverter, resources
 
 
 if TYPE_CHECKING:
@@ -377,13 +377,11 @@ class MkNode(node.Node):
 
     def to_html(self) -> str:
         """Convert node to HTML using the resources from node + children."""
-        import markdown
-
         md = self.to_markdown()
         reqs = self.get_resources()
         configs = reqs.markdown_extensions
         exts = list(configs.keys())
-        converter = markdown.Markdown(extensions=exts, extension_configs=configs)
+        converter = mdconverter.MdConverter(extensions=exts, extension_configs=configs)
         return converter.convert(md)
 
 
