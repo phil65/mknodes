@@ -104,6 +104,23 @@ def to_str_if_textnode(node) -> str:
 
 
 def get_nondefault_repr(instance: object) -> str:
+    """Get a repr for an instance containing all nondefault (keyword) arguments.
+
+    The instance is checked for keyword-named attributes with "_" prepended first.
+    If that doesnt exist, it fallbacks to keyword-name = argument name.
+
+    Examples:
+        Here the repr will contain the kwarg `some_value` with type `int` because
+        "_"-prefixed is preferred.
+        ```
+        def __init__(self, some_value: int = 0):
+            self._some_value = some_value
+            self.some_value = str(some_value)
+        ```
+
+    Arguments:
+        instance: The instance to get a repr for
+    """
     import inspect
 
     spec = inspect.getfullargspec(instance.__init__)
@@ -111,7 +128,8 @@ def get_nondefault_repr(instance: object) -> str:
     args = [getattr(instance, "items" if arg == "content" else arg) for arg in spec.args]
     dct = spec.kwonlydefaults or {}
     kwargs = {
-        k: getattr(instance, k)
+        # check for hidden attribute first, then for attribute named like kwarg
+        k: getattr(instance, f"_{k}", getattr(instance, k))
         for k, v in dct.items()
         if k in instance.__dict__ and v != getattr(instance, k)
     }
