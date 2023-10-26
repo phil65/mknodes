@@ -180,6 +180,15 @@ class Metadata(dict):
     def search(self, val: dict | None):
         self["search"] = val
 
+    @property
+    def render_macros(self) -> bool | None:
+        """Whether this page should get rendered by the templating engine."""
+        return self.get("render_macros")
+
+    @render_macros.setter
+    def render_macros(self, val: bool | None):
+        self["render_macros"] = val
+
     @classmethod
     def parse(cls, text: str) -> tuple[Self, str]:
         """Parse given text for metadata and return a (Metadata, Rest-from-text) tuple."""
