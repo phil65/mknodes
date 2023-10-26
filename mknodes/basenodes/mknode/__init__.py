@@ -137,13 +137,6 @@ class MkNode(node.Node):
     def __rrshift__(self, other):
         return self.__rshift__(other, inverse=True)
 
-    # @property
-    # def ctx(self):
-    #     """The tree context."""
-    #     if root := self.ctx_root:
-    #         return root._ctx
-    #     return contexts.ProjectContext()
-
     @property
     def ctx(self):
         """The tree context."""
@@ -192,7 +185,7 @@ class MkNode(node.Node):
                 raise TypeError(other)
 
     @classmethod
-    @functools.lru_cache(maxsize=32)
+    @functools.lru_cache
     def get_nodefile(cls):
         from mknodes.utils import inspecthelpers
 

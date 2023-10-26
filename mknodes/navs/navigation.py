@@ -55,8 +55,8 @@ class Navigation(dict):
                 raise TypeError(node)
 
     @property
-    def all_items(self):
-        nodes = [self.index_page] if self.index_page else []
+    def all_items(self) -> list[NavSubType]:
+        nodes: list[NavSubType] = [self.index_page] if self.index_page else []
         nodes += list(self.values())
         return nodes
 
