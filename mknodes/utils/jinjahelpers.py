@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import ast
+import contextlib
 import datetime
 import functools
 import importlib
 
 from importlib import util
+import io
 import json
 import os
 import time
@@ -58,26 +60,34 @@ def script_tag_filter(context, extra_script):
 
 
 def evaluate(
-    text: str,
+    code: str,
     context: dict[str, Any] | None = None,
-    return_val: str | None = None,
-):
-    """Evaluate several lines of input, returning the result of the last line."""
+) -> str:
+    """Evaluate python code and return the caught stdout + return value of last line.
+
+    Arguments:
+        code: The code to execute
+        context: Globals for the execution evironment
+    """
+    import mknodes as mk
+
     now = time.time()
     if context is None:
-        context = locals()
-    code = str(text) if return_val is None else f"{text}\n{return_val}"
-    logger.debug("Evaluating code:\n%s", text)
+        context = {"mk": mk}
+    logger.debug("Evaluating code:\n%s", code)
     tree = ast.parse(code)
     eval_expr = ast.Expression(tree.body[-1].value)  # type: ignore
     # exec_expr = ast.Module(tree.body[:-1])  # type: ignore
     exec_expr = ast.parse("")
     exec_expr.body = tree.body[:-1]
     compiled = compile(exec_expr, "file", "exec")
-    exec(compiled, context)
-    val = eval(compile(eval_expr, "file", "eval"), context)
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        exec(compiled, context)
+        val = eval(compile(eval_expr, "file", "eval"), context)
     logger.debug("Code evaluation took %s seconds.", time.time() - now)
-    return val
+    # result = mk.MkContainer([buffer.getvalue(), val])
+    return val or ""
 
 
 def add(text, prefix: str = "", suffix: str = ""):
