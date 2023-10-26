@@ -98,7 +98,7 @@ class PreCommit(Tool):
     config_syntax = "yaml"
     cfg_file = ".pre-commit-config.yaml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return bool(pathhelpers.find_cfg_for_folder(self.cfg_file, folder.path))
 
     def get_config(self, folder):
@@ -114,7 +114,7 @@ class Ruff(Tool):
     setup_cmd = RUFF_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return "ruff" in folder.pyproject.tool
 
     def get_config(self, folder):
@@ -129,7 +129,7 @@ class Black(Tool):
     setup_cmd = BLACK_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return "black" in folder.pyproject.tool
 
     def get_config(self, folder):
@@ -144,7 +144,7 @@ class MyPy(Tool):
     setup_cmd = MYPY_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return "mypy" in folder.pyproject.tool
 
     def get_config(self, folder):
@@ -159,7 +159,7 @@ class Coverage(Tool):
     setup_cmd = COVERAGE_CODE
     config_syntax = "toml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return (
             "coverage" in folder.pyproject.tool or (folder.path / ".coveragerc").exists()
         )
@@ -179,7 +179,7 @@ class MkDocs(Tool):
     setup_cmd = MKDOCS_CODE
     config_syntax = "yaml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return bool(folder.mkdocs_config)
 
     def get_config(self, folder):
@@ -194,7 +194,7 @@ class MkDocsMaterial(Tool):
     setup_cmd = None
     config_syntax = "yaml"
 
-    def is_used(self, folder: folderinfo.FolderInfo):
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         if (
             folder
             and folder.mkdocs_config

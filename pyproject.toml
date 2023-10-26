@@ -21,7 +21,6 @@ dependencies = [
     # Testing
     "pytest",
     "pytest-cov",
-    "pytest-responsemock",
 
     # Docs
     "mkdocs >=1.5",

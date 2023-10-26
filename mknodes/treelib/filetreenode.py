@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 import pathlib
 
-from typing import cast
+from typing import Any, Self, cast
 
 from mknodes.data import treestyles
 from mknodes.treelib import node
@@ -14,7 +14,7 @@ logger = log.get_logger(__name__)
 
 
 class FileTreeNode(node.Node):
-    def __init__(self, path: pathlib.Path, **kwargs):
+    def __init__(self, path: pathlib.Path, **kwargs: Any):
         self.path = path
         self.name = self.path.name
         super().__init__(**kwargs)
@@ -33,7 +33,7 @@ class FileTreeNode(node.Node):
         max_items: int | None = None,
         maximum_depth: int | None = None,
         parent: FileTreeNode | None = None,
-    ):
+    ) -> Self:
         node = cls(folder, parent=parent)
         children = list(folder.iterdir())
         if sort:
