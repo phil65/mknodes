@@ -49,6 +49,9 @@ def get_repr(
 ) -> str:
     """Get a suitable __repr__ string for an object.
 
+    This function can be used to manually construct reprs. For automatic reprs,
+    see `get_nondefault_repr` and `get_dataclass_repr`.
+
     Args:
         _obj: The object to get a repr for.
         *args: Arguments for the repr
@@ -59,7 +62,7 @@ def get_repr(
     """
     my_repr = limit_repr.repr if _shorten else repr
     classname = type(_obj).__name__
-    parts = [my_repr(val) for val in args]
+    parts = [list_repr(val) if isinstance(val, list) else my_repr(val) for val in args]
     kw_parts = []
     for k, v in kwargs.items():
         if _filter_empty and (v is None or v == "" or v == {}):
@@ -70,8 +73,8 @@ def get_repr(
         import mknodes as mk
 
         match v:
-            case (mk.MkNode(), *_) if len(v) > 1:
-                name = "[...]"
+            case (mk.MkNode(), *_):
+                name = list_repr(v)
             case os.PathLike():
                 name = repr(os.fspath(v))
             case _:
@@ -81,7 +84,21 @@ def get_repr(
     return f"{classname}({sig})"
 
 
-def dataclass_repr(instance: datatypes.DataclassInstance) -> str:
+def list_repr(v, shorten: bool = True):
+    import mknodes as mk
+
+    my_repr = limit_repr.repr if shorten else repr
+    match v:
+        case (mk.MkNode(), *_) if len(v) > 1:
+            return "[...]"
+        case (mk.MkNode(),):
+            val = str(v[0]) if type(v[0]) in {mk.MkText, mk.MkHeader} else v[0]
+            return my_repr(val)
+        case _:
+            return my_repr(v)
+
+
+def get_dataclass_repr(instance: datatypes.DataclassInstance) -> str:
     """Return repr for dataclass, filtered by non-default values.
 
     Arguments:
@@ -140,7 +157,5 @@ def get_nondefault_repr(instance: object) -> str:
 if __name__ == "__main__":
     import mknodes as mk
 
-    instance = mk.MkAdmonition("test", typ="info", collapsible=True)
-    node = mk.MkText("log()", is_jinja_expression=True)
-    print(get_nondefault_repr(node))
+    node = mk.MkAdmonition("test", typ="info", collapsible=True)
     print(repr(node))

@@ -78,7 +78,7 @@ class CSSFile:
     onload: str | None = None
 
     def __repr__(self):
-        return reprhelpers.dataclass_repr(self)
+        return reprhelpers.get_dataclass_repr(self)
 
     def __str__(self):
         return self.link
@@ -115,7 +115,7 @@ class JSFile:
     is_library: bool = False
 
     def __repr__(self):
-        return reprhelpers.dataclass_repr(self)
+        return reprhelpers.get_dataclass_repr(self)
 
     def __str__(self):
         return self.link
