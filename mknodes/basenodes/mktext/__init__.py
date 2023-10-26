@@ -23,9 +23,8 @@ class MkText(mknode.MkNode):
     def __init__(
         self,
         text: str | mknode.MkNode | None = "",
-        is_jinja_expression: bool = False,
         *,
-        header: str = "",
+        is_jinja_expression: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
@@ -33,10 +32,9 @@ class MkText(mknode.MkNode):
         Arguments:
             text: Markup text
             is_jinja_expression: Whether text is a jinja expression
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         self._text = str(text or "")
         self.is_jinja_expression = is_jinja_expression
 
@@ -95,5 +93,5 @@ class MkText(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkText("log", is_jinja_expression=True)
-    print(node)
+    node = MkText("log()", is_jinja_expression=True)
+    print(repr(node))

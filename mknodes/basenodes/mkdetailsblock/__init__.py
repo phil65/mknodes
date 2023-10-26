@@ -56,10 +56,18 @@ class MkDetailsBlock(mkblock.MkBlock):
             self,
             content=content,
             typ=self.typ,
-            title=self.argument,
+            title=self.title,
             expanded=self.expanded,
             _filter_empty=True,
         )
+
+    @property
+    def title(self) -> str:
+        return self.argument
+
+    @title.setter
+    def title(self, value: str):
+        self.argument = value
 
     @property
     def typ(self) -> datatypes.AdmonitionTypeStr:

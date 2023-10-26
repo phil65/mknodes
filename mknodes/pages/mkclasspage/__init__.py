@@ -40,11 +40,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
             kwargs: keyword arguments passed to base class
         """
         self.klass = klass
-        match module_path:
-            case None:
-                self.parts = klass.__module__.split(".")
-            case _:
-                self.parts = classhelpers.to_module_parts(module_path)
+        self.module_path = module_path
         # if user chooses custom template, we make default the parent
         tpl = template or DEFAULT_TPL
         super().__init__(
@@ -53,6 +49,14 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
             template_parent=DEFAULT_TPL if tpl != DEFAULT_TPL else None,
             **kwargs,
         )
+
+    @property
+    def parts(self) -> tuple[str, ...]:
+        match self.module_path:
+            case None:
+                return tuple(self.klass.__module__.split("."))
+            case _:
+                return classhelpers.to_module_parts(self.module_path)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, klass=self.klass, path=self.path)

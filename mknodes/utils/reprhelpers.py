@@ -131,7 +131,8 @@ def get_nondefault_repr(instance: object) -> str:
         # check for hidden attribute first, then for attribute named like kwarg
         k: getattr(instance, f"_{k}", getattr(instance, k))
         for k, v in dct.items()
-        if k in instance.__dict__ and v != getattr(instance, k)
+        if (k in instance.__dict__ and v != getattr(instance, k))
+        or (f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"))
     }
     return get_repr(instance, *args, **kwargs)
 
@@ -139,5 +140,7 @@ def get_nondefault_repr(instance: object) -> str:
 if __name__ == "__main__":
     import mknodes as mk
 
-    instance = mk.MkAdmonition("test", typ="info")
-    print(get_nondefault_repr(instance))
+    instance = mk.MkAdmonition("test", typ="info", collapsible=True)
+    node = mk.MkText("log()", is_jinja_expression=True)
+    print(get_nondefault_repr(node))
+    print(repr(node))
