@@ -60,6 +60,7 @@ class MkCard(mknode.MkNode):
         self,
         title: str,
         image: str,
+        *,
         caption: str | None = None,
         target: str | mkpage.MkPage | mknav.MkNav | None = None,
         size: int = CARD_DEFAULT_SIZE,

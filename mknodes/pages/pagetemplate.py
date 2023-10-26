@@ -19,6 +19,7 @@ class PageTemplate:
     def __init__(
         self,
         filename: str | None = None,
+        *,
         extends: str | None = "base.html",
         parent: mk.MkPage | mk.MkNav | None = None,
     ):

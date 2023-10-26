@@ -19,6 +19,7 @@ StyleStr = Literal["default", "gitlab-scoped"]
 def get_badge(
     label: str = "",
     value: str = "",
+    *,
     font_size: int | None = None,
     font_name: str | None = None,
     num_padding_chars: int | None = None,
