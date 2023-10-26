@@ -17,7 +17,8 @@ dependencies = [
     # Linting
     "mypy",
     "ruff",
-
+    # black is used by mkdocstrings to format signatures
+    "black",
     # Testing
     "pytest",
     "pytest-cov",
