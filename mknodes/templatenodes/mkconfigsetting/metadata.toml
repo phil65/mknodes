@@ -1,0 +1,28 @@
+[metadata]
+name = "MkConfigSetting"
+icon = "mdi:library"
+
+
+[examples.yaml]
+title = "YAML format"
+jinja = """
+{% set setting = {"plugins": {"mknodes": {"path": "path.to.module"}}} %}
+{% set desc = "Some **markdown** to describe the setting" %}
+{{ "path" | MkConfigSetting(mode="yaml", setting=setting, description=desc, default="path.to.module") | MkReprRawRendered}}
+"""
+
+[examples.json]
+title = "JSON format"
+jinja = """
+{% set setting = {"plugins": {"mknodes": {"path": "path.to.module"}}} %}
+{% set desc = "Some **markdown** to describe the setting" %}
+{{ "path" | MkConfigSetting(mode="json", setting=setting, description=desc, default="path.to.module") | MkReprRawRendered}}
+"""
+
+[examples.toml]
+title = "TOML format"
+jinja = """
+{% set setting = {"plugins": {"mknodes": {"path": "path.to.module"}}} %}
+{% set desc = "Some **markdown** to describe the setting" %}
+{{ "path" | MkConfigSetting(mode="toml", setting=setting, description=desc, default="path.to.module") | MkReprRawRendered}}
+"""
