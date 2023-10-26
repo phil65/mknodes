@@ -45,6 +45,7 @@ def get_repr(
     _shorten: bool = True,
     _filter_empty: bool = False,
     _filter_false: bool = False,
+    _char_width: int | None = None,
     **kwargs: Any,
 ) -> str:
     """Get a suitable __repr__ string for an object.
@@ -58,11 +59,12 @@ def get_repr(
         _shorten: Whether to shorten the repr.
         _filter_empty: Filter kwargs  with None, empty str / empty dicts as value
         _filter_false: Filter False values
+        _char_width: If set, then repr will be formatted with black to given char width
         **kwargs: Keyword arguments for the repr
     """
     my_repr = limit_repr.repr if _shorten else repr
     classname = type(_obj).__name__
-    parts = [list_repr(val) if isinstance(val, list) else my_repr(val) for val in args]
+    parts = [list_repr(v) if isinstance(v, list) else my_repr(v) for v in args]
     kw_parts = []
     for k, v in kwargs.items():
         if _filter_empty and (v is None or v == "" or v == {}):
@@ -81,7 +83,12 @@ def get_repr(
                 name = my_repr(v)
         kw_parts.append(f"{k}={name}")
     sig = ", ".join(parts + kw_parts)
-    return f"{classname}({sig})"
+    text = f"{classname}({sig})"
+    if _char_width:
+        from mkdocstrings_handlers.python import rendering
+
+        return rendering.do_format_code(text, _char_width)
+    return text
 
 
 def list_repr(v, shorten: bool = True):
@@ -98,11 +105,15 @@ def list_repr(v, shorten: bool = True):
             return my_repr(v)
 
 
-def get_dataclass_repr(instance: datatypes.DataclassInstance) -> str:
+def get_dataclass_repr(
+    instance: datatypes.DataclassInstance,
+    char_width: int | None = None,
+) -> str:
     """Return repr for dataclass, filtered by non-default values.
 
     Arguments:
         instance: dataclass instance
+        char_width: If set, then repr will be formatted with black to given char width
     """
     nodef_f_vals = (
         (f.name, attrgetter(f.name)(instance))
@@ -111,7 +122,12 @@ def get_dataclass_repr(instance: datatypes.DataclassInstance) -> str:
     )
 
     nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in nodef_f_vals)
-    return f"{instance.__class__.__name__}({nodef_f_repr})"
+    text = f"{instance.__class__.__name__}({nodef_f_repr})"
+    if char_width:
+        from mkdocstrings_handlers.python import rendering
+
+        return rendering.do_format_code(text, char_width)
+    return text
 
 
 def to_str_if_textnode(node) -> str:
@@ -120,7 +136,10 @@ def to_str_if_textnode(node) -> str:
     return str(node) if type(node) in {mk.MkText, mk.MkHeader} else node
 
 
-def get_nondefault_repr(instance: object) -> str:
+def get_nondefault_repr(
+    instance: object,
+    char_width: int | None = None,
+) -> str:
     """Get a repr for an instance containing all nondefault (keyword) arguments.
 
     The instance is checked for keyword-named attributes with "_" prepended first.
@@ -137,6 +156,7 @@ def get_nondefault_repr(instance: object) -> str:
 
     Arguments:
         instance: The instance to get a repr for
+        char_width: If set, then repr will be formatted with black to given char width
     """
     import inspect
 
@@ -151,7 +171,7 @@ def get_nondefault_repr(instance: object) -> str:
         if (k in instance.__dict__ and v != getattr(instance, k))
         or (f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"))
     }
-    return get_repr(instance, *args, **kwargs)
+    return get_repr(instance, *args, **kwargs, _char_width=char_width)
 
 
 if __name__ == "__main__":
