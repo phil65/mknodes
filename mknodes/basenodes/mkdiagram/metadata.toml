@@ -6,12 +6,14 @@ name = "mermaid"
 class = "mermaid"
 format = "pymdownx.superfences.fence_code_format"
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ ["1", "2", "3"] | MkDiagram(connections=[("1", "2"), ("2", "3")]) }}
 """
 
-[examples."Direction"]
+[examples.direction]
+title = "Direction"
 jinja = """
 {{ ["1", "2", "3"] | MkDiagram(connections=[("1", "2"), ("2", "3", "comment")], direction="LR") }}
 """

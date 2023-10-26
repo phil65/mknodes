@@ -6,12 +6,14 @@ filename = "speechbubble.css"
 
 [requirements.extension."pymdownx.progressbar"]
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ "some text" | MkSpeechBubble }}
 """
 
-[examples."No arrow"]
+[examples.no_arrow]
+title = "No arrow"
 jinja = """
 {{ "some text" | MkSpeechBubble(arrow=None) }}
 """

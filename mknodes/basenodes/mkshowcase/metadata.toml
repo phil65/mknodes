@@ -1,7 +1,8 @@
 [metadata]
 icon = "mdi:view-grid"
 
-[examples."From TOML format"]
+[examples.toml]
+title = "From TOML format"
 jinja = """
 {{
 '

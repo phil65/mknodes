@@ -5,7 +5,8 @@ name = "MkHtmlBlock"
 [requirements.extension."pymdownx.blocks.details"]
 
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ "Different types." | MkHtmlBlock("div") | MkReprRawRendered }}
 """

@@ -2,22 +2,26 @@
 icon = "mdi:image"
 status = "new"
 
-[examples."With caption"]
+[examples.with_caption]
+title = "With caption"
 jinja = """
 {{ "mdi:file" | MkIcon | MkReprRawRendered }}
 """
 
-[examples."Colored"]
+[examples.colored]
+title = "Colored"
 jinja = """
 {{ "mdi:file" | MkIcon(color="red") | MkReprRawRendered }}
 """
 
-[examples."Rotated"]
+[examples.rotated]
+title = "Rotated"
 jinja = """
 {{ "mdi:file" | MkIcon(rotate=90) | MkReprRawRendered }}
 """
 
-[examples."Sized"]
+[examples.sized]
+title = "Sized"
 jinja = """
 {{ "noto:wrench" | MkIcon(height=100, width=100) | MkReprRawRendered }}
 """

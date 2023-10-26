@@ -1,12 +1,14 @@
 [metadata]
 icon = "mdi:format-header-pound"
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ "Header with level 2" | MkHeader(level=2) | MkReprRawRendered }}
 """
 
-[examples."Header levels"]
+[examples.header_levels]
+title = "Header levels"
 jinja = """
 {% for i in range(1, 7) %}
 

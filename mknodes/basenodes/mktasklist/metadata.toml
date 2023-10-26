@@ -3,7 +3,8 @@ icon = "mdi:library"
 
 [requirements.extension."pymdownx.tasklist"]
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ [_mk.MkTask(True, "Item 1"), _mk.MkTask(True, "Item 2")] | MkTaskList | MkReprRawRendered }}
 """

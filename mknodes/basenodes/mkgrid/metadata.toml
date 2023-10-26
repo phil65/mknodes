@@ -2,7 +2,8 @@
 icon = "mdi:square-medium"
 status = "new"
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {% set item_1 = ["Item 1", "Item 2", "Item 3"] | MkList %}
 {% set item_2 = ["Ctrl+A"] | MkKeys %}

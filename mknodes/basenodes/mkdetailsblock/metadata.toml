@@ -5,12 +5,14 @@ name = "MkDetailsBlock"
 [requirements.extension."pymdownx.blocks.details"]
 
 
-[examples."Default"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ "Different types." | MkDetailsBlock(typ="warning") | MkReprRawRendered }}
 """
 
-[examples."Collapsible and expandable"]
+[examples.collapsible]
+title = "Collapsible and expandable"
 jinja = """
 {{ "MkDetailsBlocks can also be expanded." | MkDetailsBlock(expanded=True) | MkReprRawRendered }}
 """

@@ -2,7 +2,8 @@
 icon = "octicon:table-24"
 status = "new"
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {% set code_col = [_mk.MkCode("print('hello world')\nsys.exit()"), _mk.MkCode("print('hello world')\nsys.exit()")] %}
 {% set admonitions = [_mk.MkAdmonition("Admonition inside cell"), _mk.MkAdmonition("Admonition inside cell")] %}

@@ -2,7 +2,8 @@
 name = "MkInclude"
 icon = "octicon:file-symlink-file-24"
 
-[examples."Include from URL"]
+[examples.url]
+title = "Include from URL"
 jinja = """
 {{ "https://raw.githubusercontent.com/phil65/mknodes/main/README.md" | MkInclude | MkReprRawRendered }}
 """

@@ -8,24 +8,28 @@ line_spans="__span"
 pygments_lang_class = true
 
 
-[examples."Default"]
+[examples.title]
+title = "Default"
 jinja = """
 By default, python syntax highlighting is used.
 
 {{ "a = 1 + 2" | MkCode | MkReprRawRendered }}
 """
 
-[examples."Syntax highlighting"]
+[examples.syntax_highlight]
+title = "Syntax highlighting"
 jinja = """
 {{ "var z = x + y;" | MkCode(language="js") | MkReprRawRendered }}
 """
 
-[examples."Highlighting lines"]
+[examples.hl_lines]
+title = "Highlighting lines"
 jinja = """
 {{ "1\n2\n3\n4" | MkCode(highlight_lines=[1, 3]) | MkReprRawRendered }}
 """
 
-[examples."Line numbers"]
+[examples.line_numbers]
+title = "Line numbers"
 jinja = """
 {{ "1\n2\n3\n4" | MkCode(linenums=10) | MkReprRawRendered }}
 

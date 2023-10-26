@@ -5,42 +5,50 @@ status = "new"
 
 [requirements.package.anybadge]
 
-[examples.Classifiers]
+[examples.classifiers]
+title = "Classifiers"
 jinja = """
 {{ "classifiers" | MkMetadataBadges | MkReprRawRendered }}
 """
 
-[examples.Keywords]
+[examples.keywords]
+title = "Keywords"
 jinja = """
 {{ "keywords" | MkMetadataBadges | MkReprRawRendered }}
 """
 
-[examples."Keywords combined"]
+[examples.keywords_combined]
+title = "Keywords combined"
 jinja = """
 {{ "keywords_combined" | MkMetadataBadges | MkReprRawRendered }}
 """
 
-[examples.Websites]
+[examples.websites]
+title = "Websites"
 jinja = """
 {{ "websites" | MkMetadataBadges | MkReprRawRendered }}
 """
 
-[examples.Dependencies]
+[examples.dependencies]
+title = "Dependencies"
 jinja = """
 {{ "dependencies" | MkMetadataBadges | MkReprRawRendered }}
 """
 
-[examples."For other packages"]
+[examples.other_packages]
+title = "For other packages"
 jinja = """
 {{ "dependencies" | MkMetadataBadges(package="mkdocs") | MkReprRawRendered }}
 """
 
-[examples."Gitlab style"]
+[examples.gitlab]
+title = "Gitlab style"
 jinja = """
 {{ "classifiers" | MkMetadataBadges(use_gitlab_style=True) | MkReprRawRendered }}
 """
 
-[examples.Colored]
+[examples.colored]
+title = "Colored"
 jinja = """
 {{ "required_python" | MkMetadataBadges(badge_color="red") | MkReprRawRendered }}
 """

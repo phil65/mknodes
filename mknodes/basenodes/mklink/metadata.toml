@@ -2,31 +2,37 @@
 icon = "octicon:link-24"
 
 
-[examples."Regular"]
+[examples.regular]
+title = "Regular"
 jinja = """
 {{ "https://www.google.com" | MkLink("This is a link") | MkReprRawRendered }}
 """
 
-[examples."Button"]
+[examples.button]
+title = "Button"
 jinja = """
 {{ "https://www.google.com" | MkLink("Disguised as button.", as_button=True) | MkReprRawRendered }}
 """
 
-[examples."Colored"]
+[examples.colored]
+title = "Colored"
 jinja = """
 {{ "https://www.google.com" | MkLink("Colored.", as_button=True, primary_color=True) | MkReprRawRendered }}
 """
 
-[examples."With icon"]
+[examples.with_icon]
+title = "With icon"
 jinja = """
 {{ "https://www.google.com" | MkLink("With icon.", icon="octicon:link-24") | MkReprRawRendered }}
 """
 
-[examples."With tooltip"]
+[examples.with_tooltip]
+title = "With tooltip"
 jinja = """
 {{ "https://www.google.com" | MkLink("With tooltip.", as_button=True) | MkReprRawRendered }}
 """
-# [examples."To page"]
+# [examples.to_page]
+# title = "To Page"
 # jinja = """
 # {{ page.parent.index_page | MkLink("To page.") | MkReprRawRendered }}
 # """

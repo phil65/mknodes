@@ -6,7 +6,8 @@ icon = "octicon:info-16"
 [requirements.extension."pymdownx.superfences"]
 
 
-[examples."Annotations"]
+[examples.annotations]
+title = "Annotations"
 jinja = """
 !!! note annotate
 
@@ -21,17 +22,20 @@ page += mk.MkReprRawRendered(node)
 ```
 """
 
-[examples."Types"]
+[examples.types]
+title = "Types"
 jinja = """
 {{ "Different types." | MkAdmonition(typ="warning") | MkReprRawRendered }}
 """
 
-[examples."Collapsible and expandable"]
+[examples.collapsible]
+title = "Collapsible and expandable"
 jinja = """
 {{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
 """
 
-[examples."Inlined"]
+[examples.inlined]
+title = "Inlined"
 jinja = """
 {{ "Inlined" | MkAdmonition(inline="left") | MkReprRawRendered }}
 """
