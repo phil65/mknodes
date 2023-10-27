@@ -53,16 +53,14 @@ def iter_subclasses(
 
 
 @typing.overload
-def to_module(module, return_none: typing.Literal[False] = ...) -> types.ModuleType:
-    ...
+def to_module(module, return_none: typing.Literal[False] = ...) -> types.ModuleType: ...
 
 
 @typing.overload
 def to_module(
     module,
     return_none: typing.Literal[True] = ...,
-) -> types.ModuleType | None:
-    ...
+) -> types.ModuleType | None: ...
 
 
 @functools.cache
