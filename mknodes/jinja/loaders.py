@@ -157,7 +157,7 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
         super().__init__()
         if isinstance(fs, str):
             if "://" in fs:
-                self.fs, self.path = fsspec.core.url_to_fs(fs)
+                self.fs, self.path = fsspec.core.url_to_fs(fs, **kwargs)
             else:
                 self.fs = fsspec.filesystem(fs, **kwargs)
         else:
