@@ -7,7 +7,7 @@ from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
 
 
 if TYPE_CHECKING:
-    from mknodes.navs import mknav
+    from mknodes.info import linkprovider
     from mknodes.pages import mkpage
 
 
@@ -62,7 +62,7 @@ class MkCard(mknode.MkNode):
         image: str,
         *,
         caption: str | None = None,
-        target: str | mkpage.MkPage | mknav.MkNav | None = None,
+        target: linkprovider.LinkableType | None = None,
         size: int = CARD_DEFAULT_SIZE,
         path_dark_mode: str | None = None,
         **kwargs: Any,

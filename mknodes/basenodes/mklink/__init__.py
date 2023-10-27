@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import types
-
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
@@ -9,7 +7,7 @@ from mknodes.utils import icons, log, reprhelpers
 
 
 if TYPE_CHECKING:
-    import mknodes as mk
+    from mknodes.info import linkprovider
 
 logger = log.get_logger(__name__)
 
@@ -25,7 +23,7 @@ class MkLink(mknode.MkNode):
 
     def __init__(
         self,
-        target: str | mk.MkPage | mk.MkNav | type | types.ModuleType,
+        target: linkprovider.LinkableType,
         title: str | None = None,
         *,
         tooltip: str | None = None,

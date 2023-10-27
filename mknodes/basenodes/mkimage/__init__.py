@@ -9,7 +9,8 @@ from mknodes.utils import helpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
-    import mknodes as mk
+    from mknodes.info import linkprovider
+
 
 logger = log.get_logger(__name__)
 
@@ -24,7 +25,7 @@ class MkImage(mknode.MkNode):
         self,
         path: str,
         *,
-        target: str | mk.MkPage | mk.MkNav | None = None,
+        target: linkprovider.LinkableType | None = None,
         caption: str = "",
         title: str = "",
         align: Literal["left", "right"] | None = None,

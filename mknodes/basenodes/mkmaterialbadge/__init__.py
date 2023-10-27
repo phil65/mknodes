@@ -10,7 +10,7 @@ logger = log.get_logger(__name__)
 
 
 if TYPE_CHECKING:
-    import mknodes as mk
+    from mknodes.info import linkprovider
 
 
 class MkMaterialBadge(mknode.MkNode):
@@ -26,7 +26,7 @@ class MkMaterialBadge(mknode.MkNode):
         *,
         animated: bool = False,
         align_right: bool = False,
-        target: str | mk.MkPage | mk.MkNav | None = None,
+        target: linkprovider.LinkableType | None = None,
         **kwargs: Any,
     ):
         """Constructor.
