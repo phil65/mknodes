@@ -35,7 +35,7 @@ class MkCode(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        code: str | mk.MkNode | list = "",
+        content: str | mk.MkNode | list = "",
         language: str = "py",
         *,
         title: str = "",
@@ -48,7 +48,7 @@ class MkCode(mkcontainer.MkContainer):
         """Constructor.
 
         Arguments:
-            code: Code to show
+            content: Content to show inside code box
             language: language for syntax highlighting
             title: Code block title
             linenums: If set, use as start linenumber
@@ -63,7 +63,7 @@ class MkCode(mkcontainer.MkContainer):
         self.linenums = linenums
         self.highlight_lines = highlight_lines
         self._fence_level = fence_level
-        super().__init__(content=code, header=header, **kwargs)
+        super().__init__(content=content, header=header, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(

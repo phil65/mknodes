@@ -22,7 +22,7 @@ jinja = """
 [examples.hyperlinked]
 title = "Hyperlinked"
 jinja = """
-{{ "https://picsum.photos/200" | MkImage(link="https://phil65.github.io/mknodes") | MkReprRawRendered }}
+{{ "https://picsum.photos/200" | MkImage(target="https://phil65.github.io/mknodes") | MkReprRawRendered }}
 """
 
 [examples.dark_mode_image]

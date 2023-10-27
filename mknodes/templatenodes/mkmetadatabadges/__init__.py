@@ -132,7 +132,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             mkbadge.MkBadge(
                 label=label,
                 value=value,
-                link=link,
+                target=link,
                 font_size=self.font_size,
                 font_name=self.font_name,
                 badge_color=self.badge_color,

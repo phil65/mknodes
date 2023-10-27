@@ -87,7 +87,7 @@ class MkShields(mkcontainer.MkContainer):
         return [
             mkimage.MkImage(
                 s.get_image_url(user=self.user, project=self.project, branch=self.branch),
-                link=s.get_url(user=self.user, project=self.project),
+                target=s.get_url(user=self.user, project=self.project),
                 title=s.title,
                 parent=self,
             )

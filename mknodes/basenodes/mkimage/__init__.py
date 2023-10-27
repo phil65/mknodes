@@ -24,7 +24,7 @@ class MkImage(mknode.MkNode):
         self,
         path: str,
         *,
-        link: str | mk.MkPage | mk.MkNav | None = None,
+        target: str | mk.MkPage | mk.MkNav | None = None,
         caption: str = "",
         title: str = "",
         align: Literal["left", "right"] | None = None,
@@ -37,7 +37,7 @@ class MkImage(mknode.MkNode):
 
         Arguments:
             path: path of the image
-            link: Optional url the image should link to
+            target: Optional URL or node the image should link to
             caption: Image caption
             title: Image title
             align: Image alignment
@@ -49,7 +49,7 @@ class MkImage(mknode.MkNode):
         super().__init__(**kwargs)
         self.title = title
         self.caption = caption
-        self.target = link
+        self.target = target
         self.align = align
         self.width = width
         self.lazy = lazy
@@ -135,17 +135,17 @@ class MkImage(mknode.MkNode):
         node = MkImage(path="https://picsum.photos/200", width=500)
         page += mk.MkReprRawRendered(node, header="### Fixed width")
 
-        node = MkImage(path="https://picsum.photos/200", link="https://www.google.com")
+        node = MkImage(path="https://picsum.photos/200", target="https://www.google.com")
         page += mk.MkReprRawRendered(node, header="### Linked")
 
         node = MkImage(
             path="https://picsum.photos/200",
-            link="https://www.google.com",
+            target="https://www.google.com",
             path_dark_mode="https://picsum.photos/300",
         )
         page += mk.MkReprRawRendered(node, header="### Separate dark mode")
 
 
 if __name__ == "__main__":
-    img = MkImage("Some path", link="http://www.google.de", title="test")
+    img = MkImage("Some path", target="http://www.google.de", title="test")
     print(img)

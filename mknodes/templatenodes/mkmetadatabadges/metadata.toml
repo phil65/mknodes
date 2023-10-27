@@ -56,6 +56,6 @@ jinja = """
 # [output.markdown]
 # template = """
 # {% for label, value, link in node.badge_content %}
-# {{ label | MkBadge(value=value, link=link, font_size=node.font_size, font_name=node.font_name, badge_color=node.badge_color, text_color=node.text_color, num_padding_chars=node.num_padding_chars, use_gitlab_style=node.use_gitlab_style, title=label) }}
+# {{ label | MkBadge(value=value, target=link, font_size=node.font_size, font_name=node.font_name, badge_color=node.badge_color, text_color=node.text_color, num_padding_chars=node.num_padding_chars, use_gitlab_style=node.use_gitlab_style, title=label) }}
 # {% endfor %}
 # """
