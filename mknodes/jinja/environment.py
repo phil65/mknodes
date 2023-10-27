@@ -190,6 +190,20 @@ class Environment(jinja2.Environment):
         yield
         self.globals.update(temp)
 
+    def setup_loader(
+        self,
+        dir_paths: list[str] | None = None,
+        module_paths: list[str] | None = None,
+        static: dict[str, str] | None = None,
+        fsspec_paths: bool = True,
+    ):
+        self.loader = loaders.registry.get_loader(
+            dir_paths=dir_paths,
+            module_paths=module_paths,
+            static=static,
+            fsspec_paths=fsspec_paths,
+        )
+
 
 class BlockNotFoundError(Exception):
     def __init__(
