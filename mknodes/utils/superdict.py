@@ -20,10 +20,10 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
         self._data: dict[str, V] = data or {}
         self._data |= kwargs
 
-    def __getitem__(self, value: str) -> V:
+    def __getitem__(self, value: str | tuple) -> V:
         if isinstance(value, str):
             return self._data.__getitem__(value)
-        return self.get_section(value)
+        return self.get_section(*value)
 
     def __setitem__(self, index: str, value: V):
         self._data[index] = value
