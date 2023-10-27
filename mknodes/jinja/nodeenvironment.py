@@ -59,9 +59,7 @@ class NodeEnvironment(environment.Environment):
             filters[kls_name] = jinja2.pass_context(wrapped)
         self.filters.update(filters)
         self.globals["parent_page"] = self.node.parent_page
-        self.globals["parent_nav"] = (
-            self.node.parent_navs[-1] if self.node.parent_navs else None
-        )
+        self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
         self.globals["mknode"] = self.node
         self.globals["mk"] = filters
 
