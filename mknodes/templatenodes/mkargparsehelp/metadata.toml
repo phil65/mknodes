@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:bash"
 status = "new"
+name = "MkArgParseHelp"
 
 [examples.git_changelog]
 title = "Changelog for git_changelog"

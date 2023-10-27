@@ -1,6 +1,6 @@
 [metadata]
-icon = "mdi:cube"
-status = "new"
+icon = "mdi:format-quote-open"
+name = "MkBlockQuote"
 
 [examples.regular]
 title = "Regular"

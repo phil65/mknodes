@@ -1,0 +1,16 @@
+[metadata]
+icon = "octicon:list-ordered-16"
+name = "MkFootNotes"
+
+[requirements.extension.footnotes]
+
+[examples.regular]
+title = "Regular"
+python = """
+node = MkFootNotes()
+page += "The MkFootNotes node aggregates footnotes[^1]."
+node[1] = r"Footnotes are numbered, can be set via `__setitem__`."
+node[2] = r"They can also get nested[^3]."
+node[3] = mk.MkAdmonition("And they can also contain other Markdown.")
+node
+"""

@@ -1,0 +1,12 @@
+[metadata]
+name = "MkAnnotations"
+icon = "mdi:alert-box"
+
+[requirements.extension."pymdownx.superfences"]
+
+[output.markdown]
+template = """
+{% for item in node.items | sort(attribute="num") %}
+{{ item }}
+{% endfor %}
+"""

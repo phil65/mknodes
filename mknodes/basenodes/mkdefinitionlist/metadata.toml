@@ -1,0 +1,17 @@
+[metadata]
+icon = "mdi:library"
+name = "MkDefinitionList"
+
+[requirements.extension.def_list]
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ {"something": "A definition", "something_else": "Another\ndefinition"} | MkDefinitionList | MkReprRawRendered }}
+"""
+
+[examples.nested]
+title = "Nested markdown"
+jinja = """
+{{ {"something": "A definition", "something_else": ("Nested" | MkAdmonition)} | MkDefinitionList | MkReprRawRendered }}
+"""

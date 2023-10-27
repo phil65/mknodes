@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:file-image"
+name = "MkBinaryImage"
 
 [examples.from_data]
 title = "From data"

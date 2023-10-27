@@ -1,10 +1,9 @@
 [metadata]
 icon = "mdi:chat"
+name = "MkSpeechBubble"
 
 [[resources.css]]
 filename = "speechbubble.css"
-
-[requirements.extension."pymdownx.progressbar"]
 
 [examples.regular]
 title = "Regular"

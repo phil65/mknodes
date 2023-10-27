@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:bash"
+name = "MkCommandOutput"
 
 [[resources.css]]
 filename = "terminal.css"

@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -19,7 +19,6 @@ class MkBaseTable(mkcontainer.MkContainer):
     Subclasses can use other mechanisms for the rendering, like external libraries.
     """
 
-    REQUIRED_EXTENSIONS = [resources.Extension("tables")]
     ICON = "octicons/table-24"
 
     def __init__(

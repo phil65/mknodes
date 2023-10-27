@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:graph-outline"
+name = "MkClassDiagram"
 
 [[requirements.extension."pymdownx.superfences".custom_fences]]
 name = "mermaid"

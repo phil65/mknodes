@@ -1,0 +1,9 @@
+[metadata]
+icon = "mdi:database"
+name = "MkContainer"
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ [("a = 1 + 2" | MkCode), ("abc" | MkText)] | MkContainer | MkReprRawRendered }}
+"""

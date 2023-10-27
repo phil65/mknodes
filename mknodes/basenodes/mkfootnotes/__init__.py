@@ -19,7 +19,6 @@ class MkFootNote(mkcontainer.MkContainer):
     """Represents a single footnote. It gets managed by an MkFootNotes node."""
 
     REQUIRED_EXTENSIONS = [resources.Extension("footnotes")]
-    STATUS = "new"
 
     def __init__(
         self,

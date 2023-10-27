@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:code-json"
+name = "MkCode"
 
 [requirements.extension."pymdownx.superfences"]
 [requirements.extension."pymdownx.highlight"]

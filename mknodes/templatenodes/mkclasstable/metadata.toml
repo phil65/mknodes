@@ -1,0 +1,17 @@
+[metadata]
+icon = "octicon:table-24"
+name = "MkClassTable"
+
+[requirements.extension.tables]
+
+[examples.compact]
+title = "Compact layout"
+jinja = """
+{{ [_mk.MkTable, _mk.MkClassTable, _mk.MkNav] | MkClassTable(layout="compact") | MkReprRawRendered }}
+"""
+
+[examples.extended]
+title = "Extended layout"
+jinja = """
+{{ [_mk.MkTable, _mk.MkClassTable, _mk.MkNav] | MkClassTable(layout="extended") | MkReprRawRendered }}
+"""

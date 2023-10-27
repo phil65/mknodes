@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:library"
+name = "MkTaskList"
 
 [requirements.extension."pymdownx.tasklist"]
 

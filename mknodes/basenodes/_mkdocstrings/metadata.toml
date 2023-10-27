@@ -1,7 +1,8 @@
 [metadata]
 icon = "mdi:api"
+name = "MkDocStrings"
 
-[requirements.extension.mkdocstrings]
+[requirements.plugin.mkdocstrings]
 [requirements.package.mkdocstrings]
 extras = "python"
 

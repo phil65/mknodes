@@ -1,8 +1,8 @@
 [metadata]
-icon = "octicon:info-16"
+icon = "octicon:code-16"
 name = "MkHtmlBlock"
 
-[requirements.extension."pymdownx.blocks.details"]
+[requirements.extension."pymdownx.blocks.html"]
 
 
 [examples.regular]

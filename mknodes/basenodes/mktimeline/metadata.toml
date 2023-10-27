@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:timeline"
+name = "MkTimeline"
 
 [[resources.css]]
 filename = "timeline.css"

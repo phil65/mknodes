@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:square-medium"
 status = "new"
+name = "MkCard"
 
 [[resources.css]]
 filename = "grid.css"

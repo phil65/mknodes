@@ -1,5 +1,6 @@
 [metadata]
 icon = "fa6-solid:bars-progress"
+name = "MkProgressBar"
 
 [[resources.css]]
 filename = "progressbar.css"

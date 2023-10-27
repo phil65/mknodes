@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:image"
 status = "new"
+name = "MkIcon"
 
 [examples.with_caption]
 title = "With caption"

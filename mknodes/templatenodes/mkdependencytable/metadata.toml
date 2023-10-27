@@ -1,5 +1,8 @@
 [metadata]
 icon = "mdi:database"
+name = "MkDependencyTable"
+
+[requirements.extension.tables]
 
 [examples.from_project]
 title = "From Project"

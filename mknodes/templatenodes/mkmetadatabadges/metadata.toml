@@ -1,6 +1,6 @@
 [metadata]
 name = "MkMetadataBadges"
-icon = "simpleicon:shieldsdotio"
+icon = "simple-icons:shieldsdotio"
 status = "new"
 
 [requirements.package.anybadge]

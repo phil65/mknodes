@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:text"
+name = "MkText"
 
 [examples.regular]
 title = "Regular"

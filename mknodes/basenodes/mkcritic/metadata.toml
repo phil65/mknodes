@@ -1,7 +1,8 @@
 [metadata]
 icon = "mdi:format-text"
+name = "MkCritic"
 
-[resources.extension."pymdownx.critic"]
+[requirements.extension."pymdownx.critic"]
 
 [examples.addition]
 title = "Addition"

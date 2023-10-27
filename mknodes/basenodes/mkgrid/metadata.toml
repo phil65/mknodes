@@ -1,6 +1,7 @@
 [metadata]
-icon = "mdi:square-medium"
+icon = "mdi:view-grid"
 status = "new"
+name = "MkGrid"
 
 [examples.regular]
 title = "Regular"

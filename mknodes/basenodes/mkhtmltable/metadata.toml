@@ -1,6 +1,7 @@
 [metadata]
 icon = "octicon:table-24"
 status = "new"
+name = "MkHtmlTable"
 
 [examples.regular]
 title = "Regular"

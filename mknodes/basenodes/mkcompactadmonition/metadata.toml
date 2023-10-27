@@ -1,6 +1,7 @@
 [metadata]
 icon = "octicon:info-16"
 status = "new"
+name = "MkCompactAdmonition"
 
 [[resources.css]]
 filename = "compactadmonition.css"

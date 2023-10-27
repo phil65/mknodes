@@ -1,5 +1,6 @@
 [metadata]
 icon = "octicon:info-16"
+name = "MkAdmonition"
 
 [requirements.extension.admonition]
 [requirements.extension."pymdownx.details"]

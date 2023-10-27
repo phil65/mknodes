@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:api"
+name = "MkClickDoc"
 
 [examples.cli]
 title = "MkDocs-MkNodes CLI"

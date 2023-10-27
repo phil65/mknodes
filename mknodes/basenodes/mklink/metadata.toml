@@ -1,6 +1,6 @@
 [metadata]
 icon = "octicon:link-24"
-
+name = "MkLink"
 
 [examples.regular]
 title = "Regular"

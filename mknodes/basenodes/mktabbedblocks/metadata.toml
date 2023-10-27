@@ -3,7 +3,6 @@ name = "MkTabbedBlocks"
 icon = "mdi:tab"
 
 [requirements.extension."pymdownx.blocks.tab"]
-[requirements.extension."pymdownx.superfences"]
 
 [examples.regular]
 title = "Regular"

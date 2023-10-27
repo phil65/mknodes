@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:file-tree-outline"
+name = "MkSeeDir"
 
 [requirements.package.seedir]
 

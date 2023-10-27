@@ -20,7 +20,7 @@ def node_instances():
                 yield cls("mknodes", context=proj.context)
 
 
-@pytest.mark.parametrize("node", node_instances())
+@pytest.mark.parametrize("node", node_instances(), ids=lambda x: x.__class__.__name__)
 def test_examples(node):
     try:
         nodefile = node.get_nodefile()
@@ -32,7 +32,7 @@ def test_examples(node):
             node.env.render_string(text)
 
 
-@pytest.mark.parametrize("node", node_instances())
+@pytest.mark.parametrize("node", node_instances(), ids=lambda x: x.__class__.__name__)
 def test_output(node: mk.MkNode):
     try:
         nodefile = node.get_nodefile()

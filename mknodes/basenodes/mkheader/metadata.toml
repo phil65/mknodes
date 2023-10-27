@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:format-header-pound"
+name = "MkHeader"
 
 [examples.regular]
 title = "Regular"

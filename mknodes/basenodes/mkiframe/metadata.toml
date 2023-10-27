@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:web-box"
+name = "MkIFrame"
 
 [examples.with_caption]
 title = "With caption"

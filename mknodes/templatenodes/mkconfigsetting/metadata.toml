@@ -2,6 +2,7 @@
 name = "MkConfigSetting"
 icon = "mdi:library"
 
+[requirements.extension.def_list]
 
 [examples.yaml]
 title = "YAML format"

@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 
 from mknodes.info import tomlfile
+from mknodes.utils import resources
 
 
 # from mknodes.utils import resources
@@ -30,12 +31,25 @@ class NodeFile(tomlfile.TomlFile):
         return self._data["metadata"].get("status")
 
     @property
+    def name(self) -> str:
+        return self._data["metadata"].get("name")
+
+    @property
     def examples(self) -> dict[str, str]:
         return self._data.get("examples", {})
 
     @property
     def output(self) -> dict[str, str]:
         return self._data.get("output", {})
+
+    @property
+    def requirements(self):
+        return self._data.get("requirements", {})
+
+    @property
+    def extensions(self):
+        extensions = self.requirements.get("extension", {})
+        return [resources.Extension(k, **v) for k, v in extensions.items()]
 
     # @property
     # def resources(self) -> resources.Resources:
@@ -78,4 +92,4 @@ if __name__ == "__main__":
     import mknodes as mk
 
     info = NodeFile(mk.MkCode)
-    print(info.examples)
+    print(info.extensions)

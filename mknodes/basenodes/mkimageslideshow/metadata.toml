@@ -1,5 +1,6 @@
 [metadata]
 icon = "mdi:image-multiple"
+name = "MkImageSlideshow"
 
 [[resources.js]]
 link = "https://rawgit.com/ruyadorno/simple-slider/master/dist/simpleslider.min.js"

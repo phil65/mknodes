@@ -13,7 +13,11 @@ logger = log.get_logger(__name__)
 
 
 class MkContainer(mknode.MkNode):
-    """A base class for Nodes containing other MkNodes."""
+    """A node containing other MkNodes.
+
+    This node class is often used as a base class, and can be treated like a list.
+    Nodes added to a container are automatically re-parented.
+    """
 
     ICON = "material/database"
 
@@ -86,8 +90,6 @@ class MkContainer(mknode.MkNode):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        page += "MkContainers are usually only used as a base class"
-        page += "It basically only carries other nodes and stringifies them sequentially."
         item_1 = mk.MkCode("a = 1 + 2")
         item_2 = mk.MkText("abc")
         node = MkContainer(content=[item_1, item_2])
