@@ -17,6 +17,7 @@ class LoaderMixin:
     """Loader mixin which allows to OR loaders into a choice loader."""
 
     loader: jinja2.BaseLoader
+    list_templates: Callable
 
     def __or__(self, other: jinja2.BaseLoader):
         own_loaders = self.loaders if isinstance(self, jinja2.ChoiceLoader) else [self]  # type: ignore[list-item]
@@ -25,6 +26,21 @@ class LoaderMixin:
         else:
             other_loaders = [other]
         return ChoiceLoader([*own_loaders, *other_loaders])
+
+    def __contains__(self, path):
+        return pathlib.Path(path).as_posix() in self.list_templates()
+
+    def prefixed_with(self, prefix: str):
+        """Return loader wrapped in a PrefixLoader instance with given prefix.
+
+        Arguments:
+            prefix: The prefix to use
+        """
+        return PrefixLoader({prefix: self})  # type: ignore[dict-item]
+
+
+class PrefixLoader(LoaderMixin, jinja2.PrefixLoader):
+    """A loader for prefixing other loaders."""
 
 
 class PackageLoader(LoaderMixin, jinja2.PackageLoader):
@@ -103,7 +119,7 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
 
     def get_source(
         self,
-        environment: jinja2.Environment,
+        environment: jinja2.Environment | None,
         template: str,
     ) -> tuple[str, str, Callable[[], bool] | None]:
         src = pathhelpers.fsspec_get(template)
@@ -112,6 +128,14 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
 
     def list_templates(self) -> list[str]:
         return []
+
+    def __contains__(self, path):
+        try:
+            self.get_source(None, path)
+        except FileNotFoundError:
+            return False
+        else:
+            return True
 
     def __repr__(self):
         return reprhelpers.get_repr(self)
