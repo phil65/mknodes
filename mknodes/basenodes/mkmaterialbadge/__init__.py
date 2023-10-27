@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
 from mknodes.utils import icons, log, reprhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 class MkMaterialBadge(mknode.MkNode):
@@ -22,17 +26,17 @@ class MkMaterialBadge(mknode.MkNode):
         *,
         animated: bool = False,
         align_right: bool = False,
-        link: str | None = None,
+        target: str | mk.MkPage | mk.MkNav | None = None,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
-            icon: Icon to display
+            icon: Icon to display. Can either be an iconify or an emoji slug
             text: Text to display
             animated: Optional animated style
             align_right: Right-align badge
-            link: An optional link for the badge
+            target: An optional URL / page target for the badge
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
@@ -40,7 +44,7 @@ class MkMaterialBadge(mknode.MkNode):
         self.text = text
         self.animated = animated
         self.align_right = align_right
-        self.link = link
+        self.target = target
 
     def _to_markdown(self):
         classes = "md-typeset mdx-badge"
@@ -51,10 +55,15 @@ class MkMaterialBadge(mknode.MkNode):
         root = xml.Span(classes)
         if self.icon:
             icon = icons.get_emoji_slug(self.icon)
-            xml.Span("mdx-badge__icon", parent=root, text=icon)
+            icon_str = f"[{icon}]({self.url})" if self.url else icon
+            xml.Span("mdx-badge__icon", parent=root, text=icon_str)
         if self.text:
             xml.Span("mdx-badge__text", parent=root, text=self.text)
         return root.to_string()
+
+    @property
+    def url(self) -> str:
+        return self.ctx.links.get_url(self.target) if self.target else ""
 
     def __repr__(self):
         return reprhelpers.get_repr(
@@ -63,7 +72,7 @@ class MkMaterialBadge(mknode.MkNode):
             text=self.text,
             animated=self.animated,
             align_right=self.align_right,
-            link=self.link,
+            target=self.target,
             _filter_empty=True,
         )
 
