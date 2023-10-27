@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+
 from mknodes.info import tomlfile
 
 
@@ -7,6 +9,18 @@ from mknodes.info import tomlfile
 
 
 class NodeFile(tomlfile.TomlFile):
+    def __init__(self, path_or_cls: str | os.PathLike | type):
+        from mknodes.utils import inspecthelpers
+
+        if isinstance(path_or_cls, type):
+            path = inspecthelpers.get_file(path_or_cls)  # type: ignore[arg-type]
+            assert path
+            path = path.parent / "metadata.toml"
+        else:
+            path = path_or_cls
+        # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
+        super().__init__(path)
+
     @property
     def icon(self) -> str:
         return self._data["metadata"]["icon"]
@@ -61,6 +75,7 @@ class NodeFile(tomlfile.TomlFile):
 
 
 if __name__ == "__main__":
-    info = NodeFile("pyproject.toml")
-    text = info.get_section_text("tool", "hatch", keep_path=True)
-    print(text)
+    import mknodes as mk
+
+    info = NodeFile(mk.MkCode)
+    print(info.examples)

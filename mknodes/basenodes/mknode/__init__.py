@@ -187,12 +187,7 @@ class MkNode(node.Node):
     @classmethod
     @functools.lru_cache
     def get_nodefile(cls):
-        from mknodes.utils import inspecthelpers
-
-        path = inspecthelpers.get_file(cls)  # type: ignore[arg-type]
-        assert path
-        # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
-        return nodefile.NodeFile(path.parent / "metadata.toml")
+        return nodefile.NodeFile(cls)
 
     @classmethod
     def get_node(cls, name: str) -> MkNode:
