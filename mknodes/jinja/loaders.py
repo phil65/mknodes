@@ -11,7 +11,7 @@ import fsspec
 import fsspec.core
 import jinja2
 
-from mknodes.utils import pathhelpers, reprhelpers
+from mknodes.utils import helpers, pathhelpers, reprhelpers
 
 
 class LoaderMixin:
@@ -315,10 +315,9 @@ class LoaderRegistry:
             static: A dictionary containing a path-> template mapping
             fsspec_paths: Whether a loader for FsSpec protcol paths should be added
         """
-        loaders: list[jinja2.BaseLoader] = [
-            self.get_package_loader(p) for p in module_paths or []
-        ]
-        for file in dir_paths or []:
+        m_paths = helpers.reduce_list(module_paths or [])
+        loaders: list[jinja2.BaseLoader] = [self.get_package_loader(p) for p in m_paths]
+        for file in helpers.reduce_list(dir_paths or []):
             if "://" in file:
                 loaders.append(self.get_fsspec_loader(file))
             else:
