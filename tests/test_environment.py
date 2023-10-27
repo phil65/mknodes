@@ -4,13 +4,16 @@ from mknodes.jinja import environment, loaders
 
 
 def test_fsspec_protocol_loader():
-    env = environment.Environment(load_templates=True)
+    env = environment.Environment()
+    env.loader = loaders.FsSpecProtocolPathLoader()
     assert env.get_template("file://docs/icons.jinja").render()
 
 
 def test_fsspec_filesystem_loader():
     env = environment.Environment()
     env.loader = loaders.FsSpecFileSystemLoader("file")
+    assert env.get_template("docs/icons.jinja").render()
+    env.loader = loaders.FsSpecFileSystemLoader("file://")
     assert env.get_template("docs/icons.jinja").render()
 
 

@@ -43,9 +43,13 @@ class LoaderMixin:
 class PrefixLoader(LoaderMixin, jinja2.PrefixLoader):
     """A loader for prefixing other loaders."""
 
+    ID = "prefix"
+
 
 class PackageLoader(LoaderMixin, jinja2.PackageLoader):
     """A loader for loading templates from a package."""
+
+    ID = "package"
 
     def __init__(
         self,
@@ -81,6 +85,8 @@ class PackageLoader(LoaderMixin, jinja2.PackageLoader):
 class FileSystemLoader(LoaderMixin, jinja2.FileSystemLoader):
     """A loader to load templates from the file system."""
 
+    ID = "filesystem"
+
     def __repr__(self):
         return reprhelpers.get_repr(self, searchpath=self.searchpath)
 
@@ -95,12 +101,16 @@ class FileSystemLoader(LoaderMixin, jinja2.FileSystemLoader):
 class ChoiceLoader(LoaderMixin, jinja2.ChoiceLoader):
     """A loader which combines multiple other loaders."""
 
+    ID = "choice"
+
     def __repr__(self):
         return reprhelpers.get_repr(self, loaders=self.loaders, _shorten=False)
 
 
 class DictLoader(LoaderMixin, jinja2.DictLoader):
     """A loader to load static content from a path->template-str mapping."""
+
+    ID = "dict"
 
     def __repr__(self):
         return reprhelpers.get_repr(self, mapping=self.mapping)
@@ -126,6 +136,8 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
         env.get_template("github://phil65:mknodes@main/docs/icons.jinja").render()
         ```
     """
+
+    ID = "fsspec_protocol_path"
 
     def get_source(
         self,
@@ -179,6 +191,8 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
         ```
 
     """
+
+    ID = "fsspec"
 
     def __init__(self, fs: fsspec.AbstractFileSystem | str, **kwargs: Any):
         """Constructor.
