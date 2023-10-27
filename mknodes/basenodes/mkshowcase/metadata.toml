@@ -17,3 +17,17 @@ caption = "Some **markdown**"
 ' | load_toml | MkShowcase
 }}
 """
+
+[examples.cards]
+title = "Manual"
+python = """
+node = MkShowcase()
+for i in range(9):
+    node.add_card(
+        link="https://phil65.github.io/mknodes/",
+        title=f"Title {i}",
+        image="https://picsum.photos/300",
+        caption=f"Caption {i}",
+    )
+node
+"""

@@ -28,7 +28,8 @@ def test_examples(node):
         pass
     else:
         for v in nodefile.examples.values():
-            node.env.render_string(v["jinja"])
+            text = v["jinja"] if "jinja" in v else v["python"]
+            node.env.render_string(text)
 
 
 @pytest.mark.parametrize("node", node_instances())
