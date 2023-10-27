@@ -4,7 +4,7 @@ from abc import ABCMeta
 from collections.abc import Iterator, MutableMapping
 import os
 
-from typing import Any, Literal, TypeVar
+from typing import Any, Literal, Self, TypeVar
 
 from mknodes.utils import pathhelpers
 
@@ -39,6 +39,17 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
 
     def __len__(self):
         return len(self._data)
+
+    def rename_key(self, old: str, new: str) -> Self:
+        """Rename a key of the dict while preserving key order.
+
+        Arguments:
+            old: the old key
+            new: the new key
+        """
+        dct = {new if k == old else k: v for k, v in self.items()}
+        self.update(dct)
+        return self
 
     def get_section(self, *sections: str, keep_path: bool = False) -> Any:
         """Try to get data with given section path.
