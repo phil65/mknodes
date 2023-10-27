@@ -6,10 +6,12 @@ import datetime
 import functools
 import importlib
 
-from importlib import util
+from importlib import metadata, util
 import io
 import json
 import os
+import platform
+import sys
 import time
 import tomllib
 from typing import Any
@@ -32,6 +34,16 @@ from mknodes.utils import (
 
 
 logger = log.get_logger(__name__)
+
+
+version_info = dict(
+    python_version=sys.version.split("(")[0].strip(),
+    jinja_version=metadata.version("jinja2"),
+    mknodes_version=metadata.version("mknodes"),
+    system=platform.system(),
+    architecture=platform.architecture(),
+    python_implementation=platform.python_implementation(),
+)
 
 
 @jinja2.pass_context
@@ -103,6 +115,7 @@ ENV_GLOBALS = {
     "importlib": importlib,
     "inspecthelpers": inspecthelpers,
     "resources_dir": paths.RESOURCES,
+    "environment": version_info,
 }
 ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,

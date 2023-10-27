@@ -190,36 +190,6 @@ class Environment(jinja2.Environment):
         yield
         self.globals.update(temp)
 
-    @contextlib.contextmanager
-    def with_fence(
-        self,
-        start_variable: str = r"{{",
-        end_variable: str = r"}}",
-        start_block: str = "{%",
-        end_block: str = "%}",
-    ):
-        """Context manager to temporarily set custom fences for jinja blocks.
-
-        Arguments:
-            start_variable: The string marking the beginning of a print statement
-            end_variable: The string marking the end of a print statement
-            start_block: The string marking the end of a block
-            end_block: The string marking the end of a block
-        """
-        old_start_block = self.block_start_string
-        old_end_block = self.block_end_string
-        old_start_var = self.variable_start_string
-        old_end_var = self.variable_end_string
-        self.block_start_string = start_block
-        self.block_end_string = end_block
-        self.variable_start_string = start_variable
-        self.variable_end_string = end_variable
-        yield
-        self.block_start_string = old_start_block
-        self.block_end_string = old_end_block
-        self.variable_start_string = old_start_var
-        self.variable_end_string = old_end_var
-
 
 class BlockNotFoundError(Exception):
     def __init__(
