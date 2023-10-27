@@ -139,7 +139,11 @@ class MkNode(node.Node):
 
     @property
     def ctx(self):
-        """The tree context."""
+        """The tree context.
+
+        Will return the attached context or the closest context from parents.
+        If no context is found, return an "empty" ProjectContext.
+        """
         if self._ctx:
             return self._ctx
         for ancestor in self.ancestors:
@@ -157,6 +161,7 @@ class MkNode(node.Node):
 
     @property
     def parent_page(self) -> mk.MkPage | None:
+        """Return the page which contains this node if existing."""
         import mknodes as mk
 
         return next((i for i in self.ancestors if isinstance(i, mk.MkPage)), None)
