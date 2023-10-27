@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Literal
-
 from mknodes.info import folderinfo
 from mknodes.utils import pathhelpers, yamlhelpers
 
@@ -21,6 +19,13 @@ MYPY_CODE = """
 """
 
 MYPY_TEXT = """**MyPy** is used for type checking. You can find the configuration in the
+`pyproject.toml` file."""
+
+PYRIGHT_CODE = """
+{{metadata.build_system.run_prefix}}pyright --help
+"""
+
+PYRIGHT_TEXT = """**PyRight** is used for type checking. You can find the configuration in the
 `pyproject.toml` file."""
 
 RUFF_CODE = """
@@ -61,12 +66,13 @@ MATERIAL_TEXT = """**Material for MkDocs** is used as the Website theme."""
 
 
 class Tool:
-    identifier: ToolStr
+    identifier: str
     title: str
     url: str
     description: str
     setup_cmd: str | None
     config_syntax: str
+    pre_commit_repo: str | None = None
 
     def __init__(self, folderinfo):
         self.used = self.is_used(folderinfo)
@@ -97,6 +103,7 @@ class PreCommit(Tool):
     setup_cmd = PRE_COMMIT_CODE
     config_syntax = "yaml"
     cfg_file = ".pre-commit-config.yaml"
+    pre_commit_repo = "https://github.com/pre-commit/pre-commit-hooks"
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return bool(pathhelpers.find_cfg_for_folder(self.cfg_file, folder.path))
@@ -113,6 +120,7 @@ class Ruff(Tool):
     description = RUFF_TEXT
     setup_cmd = RUFF_CODE
     config_syntax = "toml"
+    pre_commit_repo = "https://github.com/charliermarsh/ruff-pre-commit"
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return "ruff" in folder.pyproject.tool
@@ -128,6 +136,7 @@ class Black(Tool):
     description = BLACK_TEXT
     setup_cmd = BLACK_CODE
     config_syntax = "toml"
+    pre_commit_config = "https://github.com/psf/black-pre-commit-mirror"
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return "black" in folder.pyproject.tool
@@ -143,12 +152,29 @@ class MyPy(Tool):
     description = MYPY_TEXT
     setup_cmd = MYPY_CODE
     config_syntax = "toml"
+    pre_commit_repo = "https://github.com/pre-commit/mirrors-mypy"
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         return "mypy" in folder.pyproject.tool
 
     def get_config(self, folder):
         return folder.pyproject.get_section_text("tool", "mypy")
+
+
+class PyRight(Tool):
+    identifier = "pyright"
+    title = "PyRight"
+    url = "https://microsoft.github.io/pyright/"
+    description = PYRIGHT_TEXT
+    setup_cmd = PYRIGHT_CODE
+    config_syntax = "toml"
+    pre_commit_repo = "https://github.com/RobertCraigie/pyright-python"
+
+    def is_used(self, folder: folderinfo.FolderInfo) -> bool:
+        return "pyright" in folder.pyproject.tool
+
+    def get_config(self, folder):
+        return folder.pyproject.get_section_text("tool", "pyright")
 
 
 class Coverage(Tool):
@@ -211,23 +237,13 @@ class MkDocsMaterial(Tool):
         return folder and yamlhelpers.dump_yaml(folder.mkdocs_config.get("theme"))
 
 
-ToolStr = Literal[
-    "pre-commit",
-    "ruff",
-    "mypy",
-    "coverage",
-    "mkdocs",
-    "mkdocs-material",
-    "black",
-]
-
-
-TOOLS: dict[ToolStr, type[Tool]] = {
+TOOLS: dict[str, type[Tool]] = {
     p.identifier: p
     for p in [
         PreCommit,
         Ruff,
         Black,
+        PyRight,
         MyPy,
         Coverage,
         MkDocs,
