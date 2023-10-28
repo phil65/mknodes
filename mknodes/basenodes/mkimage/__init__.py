@@ -75,18 +75,7 @@ class MkImage(mknode.MkNode):
                 return None
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            path=self.path,
-            caption=self.caption,
-            link=self.url,
-            align=self.align,
-            width=self.width,
-            lazy=self.lazy,
-            path_dark_mode=self.path_dark_mode,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def url(self) -> str:

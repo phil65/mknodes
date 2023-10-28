@@ -38,12 +38,7 @@ class MkIFrame(mknode.MkNode):
         self.height = height
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            url=self.url,
-            width=self.width,
-            height=self.height,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

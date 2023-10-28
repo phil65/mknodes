@@ -138,19 +138,7 @@ class MkBadge(mkimage.MkImage):
         pass
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            label=self.label,
-            value=self.value,
-            font_size=self.font_size,
-            font_name=self.font_name,
-            badge_color=self.badge_color,
-            text_color=self.text_color,
-            num_padding_chars=self.num_padding_chars,
-            use_gitlab_style=self.use_gitlab_style,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

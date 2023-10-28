@@ -87,16 +87,7 @@ class MkCard(mknode.MkNode):
         self.path_dark_mode = path_dark_mode
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            title=self.title,
-            image=self.image,
-            caption=self.caption,
-            target=self.target,
-            size=self.size if self.size != CARD_DEFAULT_SIZE else None,
-            path_dark_mode=self.path_dark_mode,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def url(self) -> str:

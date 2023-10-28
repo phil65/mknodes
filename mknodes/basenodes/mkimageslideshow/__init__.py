@@ -43,12 +43,7 @@ class MkImageSlideshow(mknode.MkNode):
         self.images = images
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            images=self.images,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     def get_element(self) -> xml.Div:
         attrs = {"data-simple-slider": ""}

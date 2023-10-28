@@ -32,7 +32,7 @@ class MkSeeDir(mkcode.MkCode):
         directory: str | os.PathLike,
         *,
         style: DirectoryTreeStyleStr | None = None,
-        indent: int = 4,
+        print_indent: int = 4,
         depth_limit: int | None = None,
         item_limit: int | None = None,
         beyond: Literal["ellipsis", "content"] = "ellipsis",
@@ -47,7 +47,7 @@ class MkSeeDir(mkcode.MkCode):
         Arguments:
             directory: Folder path to prettyprint content from
             style: Print style
-            indent: Specifies the amount of indentation added for each nesting level
+            print_indent: Amount of indentation added for each nesting level
             depth_limit: Maximum nesting depth to print
             item_limit: Maximum amount of items to print
             beyond: String to indicate directory contents beyond the limits.
@@ -60,7 +60,7 @@ class MkSeeDir(mkcode.MkCode):
         super().__init__(header, **kwargs)
         self.directory = pathlib.Path(directory)
         self.style = style or "lines"
-        self.print_indent = indent
+        self.print_indent = print_indent
         self.depth_limit = depth_limit
         self.item_limit = item_limit
         self.beyond = beyond
@@ -88,20 +88,7 @@ class MkSeeDir(mkcode.MkCode):
         self.obj = text
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            path=self.directory,
-            style=self.style,
-            indent=self.print_indent,
-            depth_limit=self.depth_limit,
-            item_limit=self.item_limit,
-            beyond=self.beyond,
-            first=self.first,
-            sort=self.sort,
-            exclude_folders=self.exclude_folders,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):
