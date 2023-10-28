@@ -166,13 +166,13 @@ def get_nondefault_repr(
     spec.args.remove("self")
     args = [getattr(instance, "items" if arg == "content" else arg) for arg in spec.args]
     dct = spec.kwonlydefaults or {}
-    kwargs = {
+    kwargs = {}
+    for k, v in dct.items():
         # check for hidden attribute first, then for attribute named like kwarg
-        k: getattr(instance, f"_{k}", getattr(instance, k))
-        for k, v in dct.items()
-        if (k in instance.__dict__ and v != getattr(instance, k))
-        or (f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"))
-    }
+        if f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"):
+            kwargs[k] = getattr(instance, f"_{k}")
+        if k in instance.__dict__ and v != getattr(instance, k):
+            kwargs[k] = getattr(instance, k)
     return get_repr(instance, *args, **kwargs, _char_width=char_width, _shorten=shorten)
 
 

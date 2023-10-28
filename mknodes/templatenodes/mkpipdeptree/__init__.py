@@ -86,6 +86,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
     def __init__(
         self,
         package: types.ModuleType | str | None = None,
+        *,
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         local_only: bool = False,
         user_only: bool = False,
@@ -112,18 +113,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         super().__init__(graph_type="flow", direction=direction, **kwargs)
 
     def __repr__(self):
-        include_editables = self.include_editables if not self.include_editables else None
-        return reprhelpers.get_repr(
-            self,
-            package=self._package,
-            local_only=self.local_only,
-            user_only=self.user_only,
-            include_editables=include_editables,
-            editables_only=self.editables_only,
-            direction=self.direction,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

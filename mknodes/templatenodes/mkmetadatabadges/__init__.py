@@ -54,7 +54,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         super().__init__(**kwargs)
         self.block_separator = "\n"
         self._package = package
-        self._typ = typ
+        self.typ = typ
         self.font_size = font_size
         self.font_name = font_name
         self.num_padding_chars = num_padding_chars
@@ -63,19 +63,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.use_gitlab_style = use_gitlab_style
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            typ=self._typ,
-            package=self._package,
-            font_size=self.font_size,
-            font_name=self.font_name,
-            badge_color=self.badge_color,
-            text_color=self.text_color,
-            num_padding_chars=self.num_padding_chars,
-            use_gitlab_style=self.use_gitlab_style,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def badge_content(self) -> list[tuple]:
@@ -85,7 +73,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             if self._package
             else self.ctx.metadata
         )
-        match self._typ:
+        match self.typ:
             case "classifiers":
                 dct = ctx.classifier_map
                 for category, labels in dct.items():
@@ -120,10 +108,10 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     (package.name, package.version, package.homepage) for package in pkgs
                 )
             case str():
-                raise ValueError(self._typ)
-            case _ if self._typ in datatypes.CLASSIFIERS:
-                labels = ctx.classifier_map.get(self._typ, [])
-                items.extend([(i, self._typ, None) for i in labels])
+                raise ValueError(self.typ)
+            case _ if self.typ in datatypes.CLASSIFIERS:
+                labels = ctx.classifier_map.get(self.typ, [])
+                items.extend([(i, self.typ, None) for i in labels])
         return items
 
     @property

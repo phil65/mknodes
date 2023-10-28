@@ -55,13 +55,7 @@ class MkCallable(mknode.MkNode):
         return node
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            fn=self.fn,
-            args=self.args,
-            kw_args=self.kw_args,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def files(self):

@@ -29,11 +29,8 @@ class MkSnippet(mknode.MkNode):
         super().__init__(**kwargs)
         self.path = path
 
-    def __str__(self):
-        return self.to_markdown()
-
     def __repr__(self):
-        return reprhelpers.get_repr(self, path=self.path)
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):
