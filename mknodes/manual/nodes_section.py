@@ -48,12 +48,6 @@ DOCUMENTATION_NODES = [
     mk.MkClickDoc,
 ]
 
-BLOCK_NODES = [
-    mk.MkDetailsBlock,
-    mk.MkHtmlBlock,
-    mk.MkTabbedBlocks,
-]
-
 ABOUT_THE_PROJECT_NODES = [
     mk.MkChangelog,
     mk.MkCodeOfConduct,
@@ -83,7 +77,9 @@ CONTAINER_NODES = [
     mk.MkTable,
     mk.MkHtmlTable,
     mk.MkDefinitionList,
-    # mk.MkTab,
+    mk.MkDetailsBlock,
+    mk.MkHtmlBlock,
+    mk.MkTabbedBlocks,
     mk.MkTabbed,
     mk.MkAnnotations,
     mk.MkFootNotes,
@@ -176,11 +172,4 @@ def _(nav: mk.MkNav):
 def _(nav: mk.MkNav):
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, SPECIAL_NODES)
-    page.created_by = create_section_for_nodes
-
-
-@nav.route.nav("Block nodes")
-def _(nav: mk.MkNav):
-    page = nav.add_page(is_index=True, hide="toc")
-    page += create_section_for_nodes(nav, BLOCK_NODES)
     page.created_by = create_section_for_nodes
