@@ -65,15 +65,7 @@ class MkDiagram(mkcode.MkCode):
         self.attributes = attributes or {}
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            names=self.names,
-            connections=self.connections,
-            graph_type=self.graph_type,
-            direction=self.direction,
-            attributes=self.attributes,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def graph_type(self) -> str:

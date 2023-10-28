@@ -36,7 +36,7 @@ class MkHeader(mknode.MkNode):
         self.exclude_from_search = exclude_from_search
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, text=self.text, level=self.level)
+        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         level_str = "#" * self.level

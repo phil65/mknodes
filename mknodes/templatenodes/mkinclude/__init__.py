@@ -40,7 +40,7 @@ class MkInclude(mktext.MkText):
         self.target = target
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, target=self.target)
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def text(self) -> str:

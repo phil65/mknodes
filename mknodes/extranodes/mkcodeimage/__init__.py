@@ -42,13 +42,7 @@ class MkCodeImage(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            self._code,
-            language=self.language,
-            title=self.title,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def code(self) -> str:

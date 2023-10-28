@@ -15,12 +15,12 @@ class MkArgParseHelp(mkcontainer.MkContainer):
     ICON = "material/bash"
     STATUS = "new"
 
-    def __init__(self, parser, **kwargs):
+    def __init__(self, parser: argparse.ArgumentParser, **kwargs):
         self.parser = parser
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, parser=self.parser)
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def items(self):
