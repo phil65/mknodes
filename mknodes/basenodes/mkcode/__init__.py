@@ -68,7 +68,7 @@ class MkCode(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            code=self.items,
+            content=self.items,
             language=self.language,
             title=self.title,
             linenums=self.linenums,

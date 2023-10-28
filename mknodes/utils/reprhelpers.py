@@ -138,7 +138,7 @@ def to_str_if_textnode(node) -> str:
 
 def get_nondefault_repr(
     instance: object,
-    char_width: int | None = None,
+    char_width: int | None = 60,
 ) -> str:
     """Get a repr for an instance containing all nondefault (keyword) arguments.
 
@@ -171,7 +171,7 @@ def get_nondefault_repr(
         if (k in instance.__dict__ and v != getattr(instance, k))
         or (f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"))
     }
-    return get_repr(instance, *args, **kwargs, _char_width=char_width)
+    return get_repr(instance, *args, **kwargs, _char_width=char_width, _shorten=False)
 
 
 if __name__ == "__main__":

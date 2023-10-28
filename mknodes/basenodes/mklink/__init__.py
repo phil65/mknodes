@@ -49,7 +49,7 @@ class MkLink(mknode.MkNode):
         self.tooltip = tooltip
         self.as_button = as_button
         self.primary_color = primary_color
-        self._icon = icon or ""
+        self._icon = icon
         if as_button:
             self.add_css_class("md-button")
         if primary_color:
