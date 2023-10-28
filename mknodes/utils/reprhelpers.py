@@ -171,7 +171,7 @@ def get_nondefault_repr(
         # check for hidden attribute first, then for attribute named like kwarg
         if f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"):
             kwargs[k] = getattr(instance, f"_{k}")
-        if k in instance.__dict__ and v != getattr(instance, k):
+        elif k in instance.__dict__ and v != getattr(instance, k):
             kwargs[k] = getattr(instance, k)
     return get_repr(instance, *args, **kwargs, _char_width=char_width, _shorten=shorten)
 
