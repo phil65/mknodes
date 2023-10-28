@@ -49,7 +49,6 @@ DOCUMENTATION_NODES = [
 ]
 
 BLOCK_NODES = [
-    mk.MkBlock,
     mk.MkDetailsBlock,
     mk.MkHtmlBlock,
     mk.MkTabbedBlocks,
