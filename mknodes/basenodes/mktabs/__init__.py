@@ -19,8 +19,8 @@ class MkTabBlock(mkblock.MkBlock):
 
     def __init__(
         self,
-        title: str = "",
         content: str | mknode.MkNode | list | None = None,
+        title: str = "",
         *,
         new: bool | None = None,
         select: bool | None = None,
@@ -80,8 +80,8 @@ class MkTab(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        title: str,
         content: list | str | mknode.MkNode | None = None,
+        title: str = "",
         *,
         new: bool = False,
         select: bool = False,
@@ -126,7 +126,7 @@ class MkTab(mkcontainer.MkContainer):
 
         # We can add single tabs to a page by themselves.
         # It is recommended to use a Tab container though.
-        tab = MkTab("A Title", content="Tab content(1)")
+        tab = MkTab("Tab content(1)", title="A Title")
         tab.annotations[1] = "Tabs can carry annotations."
         page += mk.MkReprRawRendered(tab, header="### With annotations")
 

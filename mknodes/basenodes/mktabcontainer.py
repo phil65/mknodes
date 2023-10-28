@@ -83,7 +83,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             content: content of the new tab
             select: Whether new tab should get selected initially
         """
-        tab = self.Tab(title, content, select=select)
+        tab = self.Tab(title=title, content=content, select=select)
         self.append(tab)
         return tab
 
@@ -105,11 +105,11 @@ class MkTabContainer(mkcontainer.MkContainer):
         match value:
             case str():
                 item = mktext.MkText(value)
-                tab = self.Tab(index, content=item)
+                tab = self.Tab(title=index, content=item)
             case mktabs.MkTab() | mktabs.MkTabBlock():
                 tab = value
             case mknode.MkNode():
-                tab = self.Tab(index, content=value)
+                tab = self.Tab(title=index, content=value)
         if index in self:
             pos = self._get_tab_pos(index)
             self.items[pos] = tab

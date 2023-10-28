@@ -20,7 +20,7 @@ class MkReprRawRendered(mktabbed.MkTabbed):
 
     def __init__(
         self,
-        node: mknode.MkNode,
+        node: mknode.MkNode | None = None,
         select_tab: int | str | None = 3,
         **kwargs: Any,
     ):
@@ -41,6 +41,8 @@ class MkReprRawRendered(mktabbed.MkTabbed):
     def items(self):
         import mknodes as mk
 
+        if self.node is None:
+            return []
         html_node = self.node.__copy__()
         html_node.as_html = True
         tabs: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
@@ -51,7 +53,7 @@ class MkReprRawRendered(mktabbed.MkTabbed):
         )
         if len(self.node.children) > 0:
             tabs["Repr tree"] = mk.MkTreeView(self.node)
-        items = [mktabs.MkTab(k, v, parent=self) for k, v in tabs.items()]
+        items = [mktabs.MkTab(content=v, title=k, parent=self) for k, v in tabs.items()]
         items[0].new = True
         if self.select_tab is not None:
             pos = (

@@ -122,6 +122,7 @@ ENV_FILTERS = {
     "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
     "str": str,
+    "repr": repr,
     "rstrip": str.rstrip,
     "lstrip": str.lstrip,
     "removesuffix": str.removesuffix,
