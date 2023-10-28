@@ -7,7 +7,7 @@ name = "MkDependencyTable"
 [examples.from_project]
 title = "From Project"
 jinja = """
-{{ _mk.MkDependencyTable() }}
+{{ mk.MkDependencyTable() }}
 """
 
 [examples.explicit_package]

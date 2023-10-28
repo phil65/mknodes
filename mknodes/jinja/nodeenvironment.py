@@ -46,6 +46,8 @@ class NodeEnvironment(environment.Environment):
 
     @classmethod
     def get_nodes_from_string(cls, text: str, context=None) -> list[mk.MkNode]:
+        import mknodes as mk
+
         node = mk.MkNode(context=context)
         env = cls(node)
         env.render_string(text)

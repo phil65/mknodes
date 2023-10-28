@@ -10,5 +10,5 @@ jinja = """
 
 [output.html]
 template = """
-<iframe frameborder="0" width="{{width}}" height="{{height}}" src="{{url}}"></iframe>
+<iframe frameborder="0" width="{{ node.width }}" height="{{ node.height }}" src="{{ node.url }}"></iframe>
 """
