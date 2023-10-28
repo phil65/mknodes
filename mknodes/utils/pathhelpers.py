@@ -46,6 +46,21 @@ def copy(
         shutil.copyfile(source_path, output_path)
 
 
+def clean_directory(directory: str | os.PathLike, remove_hidden: bool = False) -> None:
+    """Remove the content of a directory recursively but not the directory itself."""
+    folder_to_remove = upath.UPath(directory)
+    if not folder_to_remove.exists():
+        return
+    for entry in folder_to_remove.iterdir():
+        if entry.name.startswith(".") and not remove_hidden:
+            continue
+        path = folder_to_remove / entry
+        if path.is_dir():
+            shutil.rmtree(path, True)
+        else:
+            path.unlink()
+
+
 def write_file(content: str | bytes, output_path: str | os.PathLike):
     """Write content to output_path, making sure any parent directories exist.
 
