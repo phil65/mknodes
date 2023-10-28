@@ -39,12 +39,7 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
         self.variables = variables or {}
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            template=self.template,
-            variables=self.variables,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def items(self):

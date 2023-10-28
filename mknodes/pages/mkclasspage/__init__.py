@@ -59,7 +59,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
                 return classhelpers.to_module_parts(self.module_path)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, klass=self.klass, path=self.path)
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def extra_variables(self) -> dict[str, Any]:

@@ -38,7 +38,7 @@ class MkCommandOutput(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, call=self.call)
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def output(self) -> str:

@@ -41,12 +41,7 @@ class MkCodeOfConduct(mktext.MkText):
         self.contact_email = contact_email
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            contact_email=self.contact_email,
-            version=self.version,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def text(self) -> str:

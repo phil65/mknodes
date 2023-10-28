@@ -26,7 +26,7 @@ class MkClassTable(mktable.MkTable):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, layout=self.layout, klasses=self.klasses)
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def layouter(self):

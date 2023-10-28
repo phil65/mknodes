@@ -90,12 +90,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         super().__init__(graph_type="flow", direction=direction, **kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            klass=self.klass,
-            mode=self.mode,
-            direction=self.direction,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

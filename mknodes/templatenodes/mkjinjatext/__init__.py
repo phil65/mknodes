@@ -39,12 +39,7 @@ class MkJinjaText(mkcontainer.MkContainer):
         self.variables = variables or {}
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            text=self.text,
-            variables=self.variables,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def items(self):
