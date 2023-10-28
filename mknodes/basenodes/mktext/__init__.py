@@ -93,5 +93,5 @@ class MkText(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    node = MkText("log()", is_jinja_expression=True)
+    node = MkText("Test")
     print(repr(node))
