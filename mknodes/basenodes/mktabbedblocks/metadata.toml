@@ -19,7 +19,7 @@ jinja = """
 
 [output.markdown]
 template = """
-{% for i in node.items %}
+{% for item in node.items %}
 {{ item }}
 {% endfor %}
 """
