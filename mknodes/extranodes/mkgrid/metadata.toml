@@ -10,3 +10,11 @@ jinja = """
 {% set item_2 = ["Ctrl+A"] | MkKeys %}
 {{ [item_1, item_2] | MkGrid }}
 """
+
+# [output.markdown]
+# template = """
+# <div class="grid cards" markdown="1">
+
+# {{ node.items | join }}
+# </div>
+# """

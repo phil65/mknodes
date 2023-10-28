@@ -71,7 +71,7 @@ CONTAINER_NODES = [
     mk.MkBlockQuote,
     mk.MkAdmonition,
     mk.MkContainer,
-    mk.MkGrid,
+    # mk.MkGrid,
     mk.MkCode,
     mk.MkList,
     mk.MkTable,
