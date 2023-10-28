@@ -7,29 +7,29 @@ name = "MkBadge"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ ("Some", "Badge") | MkBadge | MkReprRawRendered }}
+{{ ("Some", "Badge") | MkBadge }}
 """
 
 [examples.font_size]
 title = "Font size"
 jinja = """
-{{ ("Some", "Badge") | MkBadge(font_size=12) | MkReprRawRendered }}
+{{ ("Some", "Badge") | MkBadge(font_size=12) }}
 """
 
 [examples.char_padding]
 title = "Char padding"
 jinja = """
-{{ ("Some", "Badge") | MkBadge(num_padding_chars=5) | MkReprRawRendered }}
+{{ ("Some", "Badge") | MkBadge(num_padding_chars=5) }}
 """
 
 [examples.badge_color]
 title = "Badge color"
 jinja = """
-{{ ("Some", "Badge") | MkBadge(font_size=12) | MkReprRawRendered }}
+{{ ("Some", "Badge") | MkBadge(font_size=12) }}
 """
 
 [examples.gitlab_style]
 title = "GitLab style"
 jinja = """
-{{ ("Some", "Badge") | MkBadge(use_gitlab_style=True) | MkReprRawRendered }}
+{{ ("Some", "Badge") | MkBadge(use_gitlab_style=True) }}
 """

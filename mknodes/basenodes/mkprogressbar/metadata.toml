@@ -10,25 +10,25 @@ filename = "progressbar.css"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ 60 | MkProgressBar | MkReprRawRendered }}
+{{ 60 | MkProgressBar }}
 """
 
 [examples.style_thin]
 title = "Style thin"
 jinja = """
-{{ 60 | MkProgressBar(style="thin") | MkReprRawRendered }}
+{{ 60 | MkProgressBar(style="thin") }}
 """
 
 [examples.style_candystripe]
 title = "Style candystripe"
 jinja = """
-{{ 70 | MkProgressBar(style="candystripe") | MkReprRawRendered }}
+{{ 70 | MkProgressBar(style="candystripe") }}
 """
 
 [examples.style_candystripe_animated]
 title = "Style candystripe_animated"
 jinja = """
-{{ 80 | MkProgressBar(style="candystripe_animated") | MkReprRawRendered }}
+{{ 80 | MkProgressBar(style="candystripe_animated") }}
 """
 
 [output.markdown]

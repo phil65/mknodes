@@ -10,17 +10,17 @@ format = "pymdownx.superfences.fence_code_format"
 [examples.baseclass_diagram]
 title = "Baseclass diagram"
 jinja = """
-{{ _mk.MkClassDiagram | MkClassDiagram(mode="baseclasses") | MkReprRawRendered }}
+{{ _mk.MkClassDiagram | MkClassDiagram(mode="baseclasses") }}
 """
 
 [examples.subclass_diagram]
 title = "Subclass diagram"
 jinja = """
-{{ _mk.MkContainer | MkClassDiagram(mode="subclasses", direction="LR") | MkReprRawRendered }}
+{{ _mk.MkContainer | MkClassDiagram(mode="subclasses", direction="LR") }}
 """
 
 [examples.mro_diagram]
 title = "MRO diagram"
 jinja = """
-{{ _mk.MkTable | MkClassDiagram(mode="mro") | MkReprRawRendered }}
+{{ _mk.MkTable | MkClassDiagram(mode="mro") }}
 """

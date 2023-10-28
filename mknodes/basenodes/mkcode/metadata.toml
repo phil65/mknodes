@@ -14,25 +14,25 @@ title = "Default"
 jinja = """
 By default, python syntax highlighting is used.
 
-{{ "a = 1 + 2" | MkCode | MkReprRawRendered }}
+{{ "a = 1 + 2" | MkCode }}
 """
 
 [examples.syntax_highlight]
 title = "Syntax highlighting"
 jinja = """
-{{ "var z = x + y;" | MkCode(language="js") | MkReprRawRendered }}
+{{ "var z = x + y;" | MkCode(language="js") }}
 """
 
 [examples.hl_lines]
 title = "Highlighting lines"
 jinja = """
-{{ "1\n2\n3\n4" | MkCode(highlight_lines=[1, 3]) | MkReprRawRendered }}
+{{ "1\n2\n3\n4" | MkCode(highlight_lines=[1, 3]) }}
 """
 
 [examples.line_numbers]
 title = "Line numbers"
 jinja = """
-{{ "1\n2\n3\n4" | MkCode(linenums=10) | MkReprRawRendered }}
+{{ "1\n2\n3\n4" | MkCode(linenums=10) }}
 
 """
 

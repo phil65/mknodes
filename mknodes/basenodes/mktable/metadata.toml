@@ -7,12 +7,12 @@ name = "MkTable"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ {"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]} | MkTable | MkReprRawRendered }}
+{{ {"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]} | MkTable }}
 """
 
 [example.list_of_dicts]
 title = "From list of dicts"
 jinja = """
-{{ [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}] | MkTable | MkReprRawRendered }}
+{{ [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}] | MkTable }}
 """
 

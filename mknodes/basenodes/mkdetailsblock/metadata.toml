@@ -8,13 +8,13 @@ name = "MkDetailsBlock"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "Different types." | MkDetailsBlock(typ="warning") | MkReprRawRendered }}
+{{ "Different types." | MkDetailsBlock(typ="warning") }}
 """
 
 [examples.collapsible]
 title = "Collapsible and expandable"
 jinja = """
-{{ "MkDetailsBlocks can also be expanded." | MkDetailsBlock(expanded=True) | MkReprRawRendered }}
+{{ "MkDetailsBlocks can also be expanded." | MkDetailsBlock(expanded=True) }}
 """
 [output.markdown]
 template = """

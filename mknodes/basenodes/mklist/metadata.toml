@@ -8,23 +8,23 @@ icon = "octicon:list-unordered-24"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ ["Item 1", "Item 2", "Item 3"] | MkList | MkReprRawRendered }}
+{{ ["Item 1", "Item 2", "Item 3"] | MkList }}
 """
 
 [examples.shorten]
 title = "Shorten"
 jinja = """
-{{ ["Item 1", "Item 2", "Item 3"] | MkList(shorten_after=2) | MkReprRawRendered }}
+{{ ["Item 1", "Item 2", "Item 3"] | MkList(shorten_after=2) }}
 """
 
 [examples.ordered]
 title = "Ordered"
 jinja = """
-{{ ["Item 1", "Item 2", "Item 3"] | MkList(ordered=True) | MkReprRawRendered }}
+{{ ["Item 1", "Item 2", "Item 3"] | MkList(ordered=True) }}
 """
 
 [examples.nested]
 title = "Nested"
 jinja = """
-{{ [_mk.MkAdmonition("Nested!")] | MkList | MkReprRawRendered }}
+{{ [_mk.MkAdmonition("Nested!")] | MkList }}
 """

@@ -5,12 +5,12 @@ name = "MkBlockQuote"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "Some text" | MkBlockQuote | MkReprRawRendered }}
+{{ "Some text" | MkBlockQuote }}
 """
 
 [examples.nested]
 title = "Nested"
 jinja = """
 We can also nest blocks, they will adjust their delimiters automatically.
-{{ "Nested!" | MkBlockQuote | MkBlockQuote | MkReprRawRendered}}
+{{ "Nested!" | MkBlockQuote | MkBlockQuote}}
 """

@@ -26,19 +26,19 @@ name = "MkAdmonition"
 [examples.types]
 title = "Types"
 jinja = """
-{{ "Different types." | MkAdmonition(typ="warning") | MkReprRawRendered }}
+{{ "Different types." | MkAdmonition(typ="warning") }}
 """
 
 [examples.collapsible]
 title = "Collapsible and expandable"
 jinja = """
-{{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
+{{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) }}
 """
 
 [examples.inlined]
 title = "Inlined"
 jinja = """
-{{ "Inlined" | MkAdmonition(inline="left") | MkReprRawRendered }}
+{{ "Inlined" | MkAdmonition(inline="left") }}
 """
 
 # [output.markdown]

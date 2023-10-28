@@ -5,11 +5,11 @@ name = "MkText"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "Some text" | MkText | MkReprRawRendered }}
+{{ "Some text" | MkText }}
 """
 
 [examples.from_url]
 title = "From URL"
 jinja = """
-{{ _mk.MkText.from_url("https://raw.githubusercontent.com/phil65/mknodes/main/README.md") | MkReprRawRendered }}
+{{ _mk.MkText.from_url("https://raw.githubusercontent.com/phil65/mknodes/main/README.md") }}
 """

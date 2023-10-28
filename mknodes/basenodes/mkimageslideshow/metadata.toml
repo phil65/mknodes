@@ -20,7 +20,7 @@ filename = "https://unpkg.com/img-comparison-slider@7/dist/styles.css"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ ["https://picsum.photos/700", "https://picsum.photos/701"] | MkImageSlideshow | MkReprRawRendered }}
+{{ ["https://picsum.photos/700", "https://picsum.photos/701"] | MkImageSlideshow }}
 """
 
 [output.html]

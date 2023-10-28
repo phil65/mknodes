@@ -9,19 +9,19 @@ filename = "grid.css"
 [examples.with_link]
 title = "With link"
 jinja = """
-{{ "Title" | MkCard("https://picsum.photos/300", target="https://phil65.github.io/mknodes/") | MkReprRawRendered }}
+{{ "Title" | MkCard("https://picsum.photos/300", target="https://phil65.github.io/mknodes/") }}
 """
 
 [examples.with_caption]
 title = "With caption"
 jinja = """
-{{ "Title" | MkCard("https://picsum.photos/300", caption="Caption") | MkReprRawRendered }}
+{{ "Title" | MkCard("https://picsum.photos/300", caption="Caption") }}
 """
 
 [examples.dark_mode_image]
 title = "Separate dark mode image"
 jinja = """
-{{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") | MkReprRawRendered }}
+{{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") }}
 """
 
 [output.html]

@@ -8,14 +8,14 @@ icon = "mdi:tab"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ {"Tab 1": "Some markdown", "Tab 2": "Other Markdown"} | MkTabbed | MkReprRawRendered}}
+{{ {"Tab 1": "Some markdown", "Tab 2": "Other Markdown"} | MkTabbed}}
 """
 
 [examples.nested]
 title = "Nested"
 jinja = """
-{% set node = {"Tab 1": "Some markdown", "Tab 2": "Other Markdown"} | MkTabbed | MkReprRawRendered %}
-{{ {"Tabs": node, "Admonition": mk.MkAdmonition("Nested admonition")} | MkTabbed | MkReprRawRendered }}
+{% set node = {"Tab 1": "Some markdown", "Tab 2": "Other Markdown"} | MkTabbed %}
+{{ {"Tabs": node, "Admonition": mk.MkAdmonition("Nested admonition")} | MkTabbed }}
 """
 
 [output.markdown]

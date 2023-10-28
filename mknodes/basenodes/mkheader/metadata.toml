@@ -5,7 +5,7 @@ name = "MkHeader"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "Header with level 2" | MkHeader(level=2) | MkReprRawRendered }}
+{{ "Header with level 2" | MkHeader(level=2) }}
 """
 
 [examples.header_levels]

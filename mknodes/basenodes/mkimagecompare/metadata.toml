@@ -13,7 +13,7 @@ filename = "https://unpkg.com/img-comparison-slider@7/dist/styles.css"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "https://picsum.photos/700" | MkImageCompare(after_image="https://picsum.photos/701") | MkReprRawRendered }}
+{{ "https://picsum.photos/700" | MkImageCompare(after_image="https://picsum.photos/701") }}
 """
 
 [output.html]

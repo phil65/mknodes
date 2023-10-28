@@ -8,7 +8,7 @@ name = "MkHtmlBlock"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "Different types." | MkHtmlBlock("div") | MkReprRawRendered }}
+{{ "Different types." | MkHtmlBlock("div") }}
 """
 
 [output.markdown]

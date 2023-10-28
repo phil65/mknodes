@@ -12,11 +12,11 @@ jinja = """
                   </g>
               </svg>' %}
 
-{{ svg | MkBinaryImage(path="some_image.svg", caption="A simple cross") | MkReprRawRendered }}
+{{ svg | MkBinaryImage(path="some_image.svg", caption="A simple cross") }}
 """
 
 [examples.from_icon]
 title = "From icon"
 jinja = """
-{{ _mk.MkBinaryImage.for_icon("file-image", width=200) | MkReprRawRendered }}
+{{ _mk.MkBinaryImage.for_icon("file-image", width=200) }}
 """

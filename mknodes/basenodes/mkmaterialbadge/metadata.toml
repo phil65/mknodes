@@ -8,19 +8,19 @@ filename = "materialbadge.css"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "mdi:wrench" | MkMaterialBadge(text="text") | MkReprRawRendered }}
+{{ "mdi:wrench" | MkMaterialBadge(text="text") }}
 """
 
 [examples.heart_type]
 title = "Heart type"
 jinja = """
-{{ "mdi:file" | MkMaterialBadge(text="text", animated=True) | MkReprRawRendered }}
+{{ "mdi:file" | MkMaterialBadge(text="text", animated=True) }}
 """
 
 [examples.right_aligned]
 title = "Right aligned"
 jinja = """
-{{ "mdi:file" | MkMaterialBadge(text="text", align_right=True) | MkReprRawRendered }}
+{{ "mdi:file" | MkMaterialBadge(text="text", align_right=True) }}
 """
 
 [output.html]

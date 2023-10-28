@@ -7,11 +7,11 @@ name = "MkDefinitionList"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ {"something": "A definition", "something_else": "Another\ndefinition"} | MkDefinitionList | MkReprRawRendered }}
+{{ {"something": "A definition", "something_else": "Another\ndefinition"} | MkDefinitionList }}
 """
 
 [examples.nested]
 title = "Nested markdown"
 jinja = """
-{{ {"something": "A definition", "something_else": ("Nested" | MkAdmonition)} | MkDefinitionList | MkReprRawRendered }}
+{{ {"something": "A definition", "something_else": ("Nested" | MkAdmonition)} | MkDefinitionList }}
 """

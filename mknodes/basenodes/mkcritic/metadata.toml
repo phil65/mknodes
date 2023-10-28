@@ -7,23 +7,23 @@ name = "MkCritic"
 [examples.addition]
 title = "Addition"
 jinja = """
-{{ "Type `addition`" | MkCritic(typ="addition") | MkReprRawRendered }}
+{{ "Type `addition`" | MkCritic(typ="addition") }}
 """
 
 [examples.deletion]
 title = "Deletion"
 jinja = """
-{{ "Type `deletion`" | MkCritic(typ="deletion") | MkReprRawRendered }}
+{{ "Type `deletion`" | MkCritic(typ="deletion") }}
 """
 
 [examples.highlight]
 title = "Highlight"
 jinja = """
-{{ "Type `highlight`" | MkCritic(typ="highlight") | MkReprRawRendered }}
+{{ "Type `highlight`" | MkCritic(typ="highlight") }}
 """
 
 [examples.comment]
 title = "Comment"
 jinja = """
-{{ "Type `comment`" | MkCritic(typ="comment") | MkReprRawRendered }}
+{{ "Type `comment`" | MkCritic(typ="comment") }}
 """

@@ -8,49 +8,49 @@ status = "new"
 [examples.classifiers]
 title = "Classifiers"
 jinja = """
-{{ "classifiers" | MkMetadataBadges | MkReprRawRendered }}
+{{ "classifiers" | MkMetadataBadges }}
 """
 
 [examples.keywords]
 title = "Keywords"
 jinja = """
-{{ "keywords" | MkMetadataBadges | MkReprRawRendered }}
+{{ "keywords" | MkMetadataBadges }}
 """
 
 [examples.keywords_combined]
 title = "Keywords combined"
 jinja = """
-{{ "keywords_combined" | MkMetadataBadges | MkReprRawRendered }}
+{{ "keywords_combined" | MkMetadataBadges }}
 """
 
 [examples.websites]
 title = "Websites"
 jinja = """
-{{ "websites" | MkMetadataBadges | MkReprRawRendered }}
+{{ "websites" | MkMetadataBadges }}
 """
 
 [examples.dependencies]
 title = "Dependencies"
 jinja = """
-{{ "dependencies" | MkMetadataBadges | MkReprRawRendered }}
+{{ "dependencies" | MkMetadataBadges }}
 """
 
 [examples.other_packages]
 title = "For other packages"
 jinja = """
-{{ "dependencies" | MkMetadataBadges(package="mkdocs") | MkReprRawRendered }}
+{{ "dependencies" | MkMetadataBadges(package="mkdocs") }}
 """
 
 [examples.gitlab]
 title = "Gitlab style"
 jinja = """
-{{ "classifiers" | MkMetadataBadges(use_gitlab_style=True) | MkReprRawRendered }}
+{{ "classifiers" | MkMetadataBadges(use_gitlab_style=True) }}
 """
 
 [examples.colored]
 title = "Colored"
 jinja = """
-{{ "required_python" | MkMetadataBadges(badge_color="red") | MkReprRawRendered }}
+{{ "required_python" | MkMetadataBadges(badge_color="red") }}
 """
 
 # [output.markdown]

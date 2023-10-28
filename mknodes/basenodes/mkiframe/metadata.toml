@@ -5,7 +5,7 @@ name = "MkIFrame"
 [examples.with_caption]
 title = "With caption"
 jinja = """
-{{ "https://phil65.github.io/mknodes/" | MkIFrame(width=600, height=800) | MkReprRawRendered }}
+{{ "https://phil65.github.io/mknodes/" | MkIFrame(width=600, height=800) }}
 """
 
 [output.html]

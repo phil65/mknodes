@@ -10,13 +10,13 @@ filename = "compactadmonition.css"
 [examples.types]
 title = "Types"
 jinja = """
-{{ "Different types." | MkCompactAdmonition(typ="warning") | MkReprRawRendered }}
+{{ "Different types." | MkCompactAdmonition(typ="warning") }}
 """
 
 [examples.collapsible]
 title = "Collapsible and expandable"
 jinja = """
-{{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) | MkReprRawRendered }}
+{{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) }}
 """
 
 [output.html]

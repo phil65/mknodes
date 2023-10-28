@@ -6,25 +6,25 @@ name = "MkIcon"
 [examples.with_caption]
 title = "With caption"
 jinja = """
-{{ "mdi:file" | MkIcon | MkReprRawRendered }}
+{{ "mdi:file" | MkIcon }}
 """
 
 [examples.colored]
 title = "Colored"
 jinja = """
-{{ "mdi:file" | MkIcon(color="red") | MkReprRawRendered }}
+{{ "mdi:file" | MkIcon(color="red") }}
 """
 
 [examples.rotated]
 title = "Rotated"
 jinja = """
-{{ "mdi:file" | MkIcon(rotate=90) | MkReprRawRendered }}
+{{ "mdi:file" | MkIcon(rotate=90) }}
 """
 
 [examples.sized]
 title = "Sized"
 jinja = """
-{{ "noto:wrench" | MkIcon(height=100, width=100) | MkReprRawRendered }}
+{{ "noto:wrench" | MkIcon(height=100, width=100) }}
 """
 
 [output.markdown]

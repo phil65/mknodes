@@ -7,25 +7,25 @@ name = "MkKeys"
 [examples.single_key]
 title = "Single key"
 jinja = """
-{{ "M" | MkKeys | MkReprRawRendered }}
+{{ "M" | MkKeys }}
 """
 
 [examples.multiple_keys]
 title = "Multiple keys"
 jinja = """
-{{ "M+k+K+e+y+s" | MkKeys | MkReprRawRendered }}
+{{ "M+k+K+e+y+s" | MkKeys }}
 """
 
 [examples.modifiers]
 title = "Modifiers"
 jinja = """
-{{ "Ctrl+A" | MkKeys | MkReprRawRendered }}
+{{ "Ctrl+A" | MkKeys }}
 """
 
 [examples.as_list]
 title = "As list"
 jinja = """
-{{ ["Alt", "X"] | MkKeys | MkReprRawRendered }}
+{{ ["Alt", "X"] | MkKeys }}
 """
 
 [output.markdown]

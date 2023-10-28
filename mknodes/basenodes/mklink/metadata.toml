@@ -5,36 +5,36 @@ name = "MkLink"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "https://www.google.com" | MkLink("This is a link") | MkReprRawRendered }}
+{{ "https://www.google.com" | MkLink("This is a link") }}
 """
 
 [examples.button]
 title = "Button"
 jinja = """
-{{ "https://www.google.com" | MkLink("Disguised as button.", as_button=True) | MkReprRawRendered }}
+{{ "https://www.google.com" | MkLink("Disguised as button.", as_button=True) }}
 """
 
 [examples.colored]
 title = "Colored"
 jinja = """
-{{ "https://www.google.com" | MkLink("Colored.", as_button=True, primary_color=True) | MkReprRawRendered }}
+{{ "https://www.google.com" | MkLink("Colored.", as_button=True, primary_color=True) }}
 """
 
 [examples.with_icon]
 title = "With icon"
 jinja = """
-{{ "https://www.google.com" | MkLink("With icon.", icon="octicon:link-24") | MkReprRawRendered }}
+{{ "https://www.google.com" | MkLink("With icon.", icon="octicon:link-24") }}
 """
 
 [examples.with_tooltip]
 title = "With tooltip"
 jinja = """
-{{ "https://www.google.com" | MkLink("With tooltip.", as_button=True) | MkReprRawRendered }}
+{{ "https://www.google.com" | MkLink("With tooltip.", as_button=True) }}
 """
 # [examples.to_page]
 # title = "To Page"
 # jinja = """
-# {{ page.parent.index_page | MkLink("To page.") | MkReprRawRendered }}
+# {{ page.parent.index_page | MkLink("To page.") }}
 # """
 
 [output.markdown]
