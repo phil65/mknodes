@@ -21,6 +21,7 @@ class MkProgressBar(mknode.MkNode):
         self,
         percentage: int,
         label: str | None | Literal[True] = True,
+        *,
         style: Literal["thin", "candystripe", "candystripe_animated"] | None = None,
         **kwargs: Any,
     ):
@@ -46,12 +47,7 @@ class MkProgressBar(mknode.MkNode):
                 self.add_css_class("candystripe-animate")
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            percentage=self.percentage,
-            label=self._label,
-            style=self.style,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def label(self) -> str:

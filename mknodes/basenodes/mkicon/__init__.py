@@ -59,18 +59,7 @@ class MkIcon(mknode.MkNode):
         self.box = box
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            icon_name=self.icon_name,
-            color=self.color,
-            height=self.height,
-            width=self.width,
-            flip=self.flip,
-            rotate=self.rotate,
-            box=self.box,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def svg(self) -> str:

@@ -38,7 +38,7 @@ class MkKeys(mknode.MkNode):
                 self.keys = [i.lower() for i in keys]
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, keys=self.keys)
+        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         key_str = "+".join(self.keys)

@@ -38,7 +38,7 @@ class MkCritic(mkcontainer.MkContainer):
         self.typ = typ
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, content=self.items, typ=self.typ)
+        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         match self.typ:

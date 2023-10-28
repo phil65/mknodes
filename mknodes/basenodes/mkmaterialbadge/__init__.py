@@ -66,15 +66,7 @@ class MkMaterialBadge(mknode.MkNode):
         return self.ctx.links.get_url(self.target) if self.target else ""
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            icon=self.icon,
-            text=self.text,
-            animated=self.animated,
-            align_right=self.align_right,
-            target=self.target,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

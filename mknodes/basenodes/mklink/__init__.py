@@ -56,17 +56,7 @@ class MkLink(mknode.MkNode):
             self.add_css_class("md-button--primary")
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            target=self.target,
-            title=self._title,
-            tooltip=self.tooltip,
-            icon=self._icon,
-            as_button=self.as_button,
-            primary_color=self.primary_color,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def icon(self) -> str:

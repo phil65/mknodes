@@ -35,7 +35,7 @@ class MkCompactAdmonition(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, text=self.text, typ=self.typ)
+        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         kls = f"mdx-grid-wrapper mdx-admo--{self.typ}" if self.typ else "mdx-grid-wrapper"
