@@ -102,7 +102,7 @@ dependencies = [
 
     # Git(Hub)
     "gitpython",
-    "pygithub>=2.0.dev0",
+    "pygithub",
 
     # Serialization
     "PyYAML >=5.1",
