@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from mknodes.basenodes import mknode
 from mknodes.utils import log, reprhelpers
 
@@ -20,7 +22,7 @@ class MkIFrame(mknode.MkNode):
         *,
         width: int = 300,
         height: int = 150,
-        **kwargs,
+        **kwargs: Any,
     ):
         """Constructor.
 

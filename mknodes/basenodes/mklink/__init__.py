@@ -60,9 +60,7 @@ class MkLink(mknode.MkNode):
 
     @property
     def icon(self) -> str:
-        if not self._icon:
-            return ""
-        return icons.get_emoji_slug(self._icon)
+        return icons.get_emoji_slug(self._icon) if self._icon else ""
 
     @property
     def url(self) -> str:
@@ -70,7 +68,7 @@ class MkLink(mknode.MkNode):
 
     @property
     def title(self) -> str:
-        return self.url if self._title is None else self._title
+        return self._title or self.url
 
     def _to_markdown(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""
