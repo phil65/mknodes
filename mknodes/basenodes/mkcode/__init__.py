@@ -142,7 +142,7 @@ class MkCode(mkcontainer.MkContainer):
         creating and if yes, it will highlight that line.
 
         Arguments:
-            path: Path to the code file
+            path: Path to the code file (also supports fsspec-protocol URLs)
             linenums: Whether to show line numbers
             highlight_caller: Whether we want to try to highlight the line which called
                               this method.

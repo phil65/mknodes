@@ -3,9 +3,10 @@ from __future__ import annotations
 import collections
 import functools
 import os
-import pathlib
 
 from typing import Any
+
+import upath
 
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.info import tomlfile
@@ -29,10 +30,10 @@ class PyProject(tomlfile.TomlFile):
         if path is None:
             msg = "Could not find pyproject.toml"
             raise FileNotFoundError(msg)
-        path = pathlib.Path(path)
-        if path.is_dir():
-            path = path / "pyproject.toml"
-        super().__init__(path)
+        p = upath.UPath(path)
+        if p.is_dir():
+            p = p / "pyproject.toml"
+        super().__init__(p)
 
     @property
     def mknodes_section(self) -> dict[str, Any]:

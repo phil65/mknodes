@@ -9,6 +9,8 @@ import re
 from typing import TYPE_CHECKING, Any
 from urllib import parse
 
+import upath
+
 from mknodes.basenodes import mkcode
 from mknodes.navs import mknav
 from mknodes.pages import mkpage
@@ -228,7 +230,7 @@ class NavParser:
                     text = "\n".join(unindented)
                     subnav.parse.text(text, path=path, **kwargs)
                     page = subnav.add_page(is_index=True, **kwargs)
-                    page += pathlib.Path(m[2]).read_text()
+                    page += upath.UPath(m[2]).read_text()
                     msg = "Created subsection %s and loaded index page %s"
                     logger.debug(msg, m[1], m[2])
                     self._nav += subnav

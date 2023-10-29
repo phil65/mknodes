@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import pathlib
+import upath
 
 from typing import Any, Literal, get_args
 
@@ -58,7 +58,7 @@ class MkSeeDir(mkcode.MkCode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, **kwargs)
-        self.directory = pathlib.Path(directory)
+        self.directory = upath.UPath(directory)
         self.style = style or "lines"
         self.print_indent = print_indent
         self.depth_limit = depth_limit

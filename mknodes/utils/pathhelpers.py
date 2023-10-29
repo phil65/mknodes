@@ -32,18 +32,18 @@ def copy(
         output_path: path where file should get copied to.
         exist_ok: Whether exception should be raised in case stuff would get overwritten
     """
-    output_path = pathlib.Path(output_path)
-    source_path = pathlib.Path(source_path)
-    output_path.parent.mkdir(parents=True, exist_ok=exist_ok)
-    if source_path.is_dir():
-        if output_path.is_dir():
+    output_p = upath.UPath(output_path)
+    source_p = upath.UPath(source_path)
+    output_p.parent.mkdir(parents=True, exist_ok=exist_ok)
+    if source_p.is_dir():
+        if output_p.is_dir():
             msg = "Cannot copy folder to file!"
             raise RuntimeError(msg)
-        shutil.copytree(source_path, output_path, dirs_exist_ok=exist_ok)
+        shutil.copytree(source_p, output_p, dirs_exist_ok=exist_ok)
     else:
-        if output_path.is_dir():
-            output_path = output_path / source_path.name
-        shutil.copyfile(source_path, output_path)
+        if output_p.is_dir():
+            output_p = output_p / source_p.name
+        shutil.copyfile(source_p, output_p)
 
 
 def clean_directory(directory: str | os.PathLike, remove_hidden: bool = False) -> None:
@@ -68,11 +68,11 @@ def write_file(content: str | bytes, output_path: str | os.PathLike):
         content: Content to write
         output_path: path where file should get written to.
     """
-    output_path = pathlib.Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_p = upath.UPath(output_path)
+    output_p.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
     encoding = None if "b" in mode else "utf-8"
-    with output_path.open(mode=mode, encoding=encoding) as f:
+    with output_p.open(mode=mode, encoding=encoding) as f:
         f.write(content)
 
 
@@ -145,11 +145,12 @@ def download_from_github(
     token = token or os.environ.get("GITHUB_TOKEN")
     if token and not username:
         token = None
-    destination = pathlib.Path(destination)
-    destination.mkdir(exist_ok=True, parents=True)
+    dest = upath.UPath(destination)
+    dest.mkdir(exist_ok=True, parents=True)
     fs = fsspec.filesystem("github", org=org, repo=repo)
     logger.info("Copying files from Github: %s", path)
-    fs.get(fs.ls(str(path)), destination.as_posix(), recursive=recursive)
+    files = fs.ls(str(path))
+    fs.get(files, dest.as_posix(), recursive=recursive)
 
 
 @functools.cache
