@@ -27,7 +27,7 @@ jinja = """
 {{ "noto:wrench" | MkIcon(height=100, width=100) }}
 """
 
-[output.markdown]
+[output.html]
 template = """
 {{ node.svg }}
 """
