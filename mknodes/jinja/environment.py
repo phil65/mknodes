@@ -135,7 +135,11 @@ class Environment(jinja2.Environment):
         variables = variables or {}
         return template.render(**variables)
 
-    def render_file(self, file: str | os.PathLike, variables: dict | None = None) -> str:
+    def render_file(
+        self,
+        file: str | os.PathLike,
+        variables: dict | None = None,
+    ) -> str:
         """Helper to directly render a template from filesystem.
 
         Note: The file we pull in gets cached. That should be fine for our case though.

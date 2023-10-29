@@ -89,10 +89,7 @@ class Theme:
         req: list[resources.CSSFile | resources.CSSText] = []
         if self.css_template:
             tmpl_ctx = self.get_css_context()
-            css_text = self.env.render_template(
-                self.css_template,
-                variables=tmpl_ctx,
-            )
+            css_text = self.env.render_template(self.css_template, variables=tmpl_ctx)
             req = [resources.CSSText(content=css_text, filename="mknodes_theme.css")]
         return resources.Resources(css=req)
 

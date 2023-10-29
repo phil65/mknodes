@@ -18,9 +18,9 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
 
     def get_element(self) -> xml.Table | None:
         table_data = self.data  # property
-        root = xml.Table(markdown=True)
         if not any(table_data[k] for k in table_data):
             return None
+        root = xml.Table(markdown=True)
         data = [[str(k) for k in row] for row in self.iter_rows()]
         headers = list(table_data.keys())
         data.insert(0, headers)

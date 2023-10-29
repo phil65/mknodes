@@ -35,11 +35,9 @@ class MkDocsConfigFile(yamlfile.YamlFile):
         """Return the MkDocStrings config section."""
         return self.get_section("plugins", "mkdocstrings", "handlers", "python") or {}
 
-    def remove_plugin(self, plugin_name: str):
+    def remove_plugin(self, name: str):
         for plg in self.plugins:
-            if plg == plugin_name or (
-                isinstance(plg, dict) and next(iter(plg.keys())) == plugin_name
-            ):
+            if plg == name or (isinstance(plg, dict) and next(iter(plg.keys())) == name):
                 self.plugins.remove(plg)
 
     def update_mknodes_section(
