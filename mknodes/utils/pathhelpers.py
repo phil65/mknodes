@@ -18,6 +18,38 @@ _RFC_3986_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+\-+.]*://")
 logger = log.get_logger(__name__)
 
 
+def fsspec_copy(
+    source_path: str | os.PathLike,
+    output_path: str | os.PathLike,
+    exist_ok: bool = True,
+):
+    """Copy source_path to output_path, making sure any parent directories exist.
+
+    The output_path may be a directory.
+
+    Arguments:
+        source_path: File to copy
+        output_path: path where file should get copied to.
+        exist_ok: Whether exception should be raised in case stuff would get overwritten
+    """
+    import fsspec
+
+    if isinstance(source_path, upath.UPath):
+        src = fsspec.FSMap(source_path.path, source_path.fs)
+    else:
+        src = fsspec.get_mapper(str(source_path))
+    if isinstance(output_path, upath.UPath):
+        target = fsspec.FSMap(output_path.path, output_path.fs)
+    else:
+        target = fsspec.get_mapper(str(output_path))
+    if not exist_ok and any(key in target for key in src):
+        msg = "cannot overwrite if exist_ok is set to False"
+        raise RuntimeError(msg)
+    for k in src:
+        target[k] = src[k]
+
+
+#
 def copy(
     source_path: str | os.PathLike,
     output_path: str | os.PathLike,
