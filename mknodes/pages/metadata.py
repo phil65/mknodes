@@ -111,7 +111,7 @@ class Metadata(dict):
         return self.get("status")
 
     @status.setter
-    def status(self, val: datatypes.PageStatusStr | None):
+    def status(self, val: datatypes.PageStatusStr | str | None):
         self["status"] = val
 
     @property

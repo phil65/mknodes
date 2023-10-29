@@ -44,7 +44,7 @@ class MkNode(node.Node):
     ATTR_LIST_SEPARATOR = " "
     REQUIRED_EXTENSIONS: list[resources.Extension] = []
     REQUIRED_PLUGINS: list[resources.Plugin] = []
-    STATUS: datatypes.PageStatusStr | None = None
+    STATUS: datatypes.PageStatusStr | str | None = None
     CSS: list[resources.CSSFile | resources.CSSText] = []
     JS_FILES: list[resources.JSFile] = []
     children: list[MkNode]
