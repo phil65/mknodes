@@ -57,7 +57,19 @@ class NodeEnvironment(environment.Environment):
         import mknodes as mk
 
         filters = {}
+        # wrapped_klasses = {}
         for kls_name in mk.__all__:
+            # kls = getattr(mk, kls_name)
+
+            # class WrappedMkNode(kls):
+            #     def __init__(_self, *args, **kwargs):
+            #         super().__init__(*args, parent=self.node, **kwargs)
+            #         self.rendered_nodes.append(_self)
+
+            # import inspect
+
+            # WrappedMkNode.__init__.__signature__ = inspect.signature(kls.__init__)
+            # wrapped_klasses[kls_name] = WrappedMkNode
 
             def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
                 kls = getattr(mk, kls_name)
@@ -70,7 +82,7 @@ class NodeEnvironment(environment.Environment):
         self.globals["parent_page"] = self.node.parent_page
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
         self.globals["mknode"] = self.node
-        self.globals["mk"] = filters
+        self.globals["mk"] = filters  # wrapped_klasses
 
     def update_env_from_context(self):
         self.filters["get_link"] = self.node.ctx.links.get_link
