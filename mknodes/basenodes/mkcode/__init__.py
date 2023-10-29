@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import inspect
 import os
-import pathlib
 import textwrap
 import types
 
 from typing import TYPE_CHECKING, Any, Self
+
+import upath
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import datatypes
@@ -149,20 +150,19 @@ class MkCode(mkcontainer.MkContainer):
             language: Syntax highlighting language. If None, try to infer from extension.
             kwargs: Keyword arguments passed to MkCode ctor
         """
-        path = pathlib.Path(path)
-        with path.open() as file:
-            content = file.read()
+        file_path = upath.UPath(path)
+        content = file_path.read_text()
         hl_lines = None
         if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
             call_file = frame.f_back.f_code.co_filename
-            if call_file == str(path.absolute()):
+            if call_file == str(file_path.absolute()):
                 line_count = content.count("\n")
                 line = frame.f_back.f_lineno
                 hl_lines = [line] if 0 <= line <= line_count else None
         start_line = 1 if linenums else None
-        title = path.name if title is None else title
+        title = file_path.name if title is None else title
         if language is None:
-            language = datatypes.EXT_TO_PYGMENTS_STYLE.get(path.suffix, "")
+            language = datatypes.EXT_TO_PYGMENTS_STYLE.get(file_path.suffix, "")
         return cls(
             content,
             linenums=start_line,
