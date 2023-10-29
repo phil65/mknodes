@@ -4,6 +4,8 @@ import collections
 import contextlib
 import functools
 
+from requests import structures
+
 from mknodes.utils import clihelpers, log, packagehelpers, reprhelpers
 
 
@@ -34,7 +36,7 @@ class PackageInfo:
         return hash(self.package_name)
 
     @functools.cached_property
-    def urls(self) -> dict[str, str]:
+    def urls(self) -> structures.CaseInsensitiveDict:
         """A dictionary containing the type of URL and and URL itself.
 
         Example: {"Documentation": "http://github.io/...", ...}
@@ -46,7 +48,7 @@ class PackageInfo:
         }
         if "Home-page" in self.metadata:
             urls["Home-page"] = self.metadata["Home-page"].strip()
-        return urls
+        return structures.CaseInsensitiveDict(urls)
 
     @functools.cached_property
     def inventory_url(self) -> str | None:
@@ -81,13 +83,8 @@ class PackageInfo:
     @functools.cached_property
     def homepage(self) -> str | None:
         """The URL of the homepage associated to this package."""
-        if "Home-page" in self.urls:
-            return self.urls["Home-page"]
-        if "Homepage" in self.urls:
-            return self.urls["Homepage"]
-        if "Documentation" in self.urls:
-            return self.urls["Documentation"]
-        return self.repository_url
+        keys = ["Home-page", "Homepage", "Documentation"]
+        return next((self.urls[k] for k in keys if k in self.urls), self.repository_url)
 
     @functools.cached_property
     def keywords(self) -> list[str]:
@@ -209,5 +206,5 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = PackageInfo("mknodes")
-    print(info.license_name)
+    info = PackageInfo("pyconify")
+    print(info.urls)
