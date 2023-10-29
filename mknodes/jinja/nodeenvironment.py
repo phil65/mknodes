@@ -54,22 +54,26 @@ class NodeEnvironment(environment.Environment):
         return env.rendered_nodes
 
     def setup_environment(self):
+        """Set up the environment by adding node/context specific filters / globals.
+
+        Mainly this adds wrapper functions / classes for all the MkNodes in order
+        to auto-set the node parent (and that way the context) and to collect
+        the rendered nodes.
+        """
         import mknodes as mk
 
         filters = {}
-        # wrapped_klasses = {}
+        wrapped_klasses = {}
         for kls_name in mk.__all__:
-            # kls = getattr(mk, kls_name)
+            kls = getattr(mk, kls_name)
 
-            # class WrappedMkNode(kls):
-            #     def __init__(_self, *args, **kwargs):
-            #         super().__init__(*args, parent=self.node, **kwargs)
-            #         self.rendered_nodes.append(_self)
+            class WrappedMkNode(kls):
+                def __post_init__(_self):  # noqa: N805
+                    _self.parent = self.node
+                    self.rendered_nodes.append(_self)
 
-            # import inspect
-
-            # WrappedMkNode.__init__.__signature__ = inspect.signature(kls.__init__)
-            # wrapped_klasses[kls_name] = WrappedMkNode
+            WrappedMkNode.__name__ = kls.__name__
+            wrapped_klasses[kls_name] = WrappedMkNode
 
             def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
                 kls = getattr(mk, kls_name)
@@ -82,7 +86,7 @@ class NodeEnvironment(environment.Environment):
         self.globals["parent_page"] = self.node.parent_page
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
         self.globals["mknode"] = self.node
-        self.globals["mk"] = filters  # wrapped_klasses
+        self.globals["mk"] = wrapped_klasses
 
     def update_env_from_context(self):
         self.filters["get_link"] = self.node.ctx.links.get_link
@@ -139,23 +143,6 @@ class NodeEnvironment(environment.Environment):
         self.rendered_nodes = []
         self.update_env_from_context()
         return super().render_string(markdown, variables)
-
-    def set_mknodes_filters(self):
-        """Set our MkNode filters."""
-        import mknodes as mk
-
-        filters = {}
-        for kls_name in mk.__all__:
-
-            def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
-                kls = getattr(mk, kls_name)
-                node = kls(*args, parent=self.node, **kwargs)
-                self.rendered_nodes.append(node)
-                return node
-
-            filters[kls_name] = jinja2.pass_context(wrapped)
-        self.filters.update(filters)
-        self.globals["mk"] = filters
 
 
 if __name__ == "__main__":

@@ -93,6 +93,10 @@ class MkNode(node.Node):
             self.annotations = mk.MkAnnotations(parent=self)
         else:
             self.annotations = None
+        self.__post_init__()
+
+    def __post_init__(self):
+        pass
 
     @functools.cached_property
     def env(self):
