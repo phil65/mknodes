@@ -3,9 +3,10 @@ from __future__ import annotations
 import os
 import upath
 
-from typing import Any, Self
+from typing import Any, Literal, Self
 
 from mknodes.basenodes import mkimage
+from mknodes.info import linkprovider
 from mknodes.utils import helpers, icons, log
 
 
@@ -22,15 +23,39 @@ class MkBinaryImage(mkimage.MkImage):
 
     ICON = "material/file-image"
 
-    def __init__(self, data: bytes | str, path: str, **kwargs: Any):
+    def __init__(
+        self,
+        data: bytes | str,
+        path: str,
+        *,
+        target: linkprovider.LinkableType | None = None,
+        caption: str = "",
+        title: str = "",
+        align: Literal["left", "right"] | None = None,
+        width: int | None = None,
+        **kwargs: Any,
+    ):
         """Constructor.
 
         Arguments:
             data: Image data
             path: path for the image (including extension)
+            target: Optional URL or node the image should link to
+            caption: Image caption
+            title: Image title
+            align: Image alignment
+            width: Image width in pixels
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(path=path, **kwargs)
+        super().__init__(
+            path=path,
+            target=target,
+            caption=caption,
+            title=title,
+            align=align,
+            width=width,
+            **kwargs,
+        )
         self.data = data
 
     @property
