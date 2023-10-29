@@ -72,9 +72,8 @@ class MkAdmonition(mkcontainer.MkContainer):
         # we deal with attaching annotations ourselves.
         return text
 
-    def _to_markdown(self) -> str:
-        if not self.items and not self.title:
-            return ""
+    @property
+    def title_line(self):
         block_start = "???" if self.collapsible else "!!!"
         if self.collapsible and self.expanded:
             block_start += "+"
@@ -82,17 +81,18 @@ class MkAdmonition(mkcontainer.MkContainer):
             inline_label = " inline" if self.inline == "left" else " inline end"
         else:
             inline_label = ""
-        if self.annotations:
-            ann_marker = " annotate"
-            annotations = f"\n{self.annotations}\n"
-        else:
-            ann_marker = ""
-            annotations = ""
+        ann_marker = " annotate" if self.annotations else ""
         title = f' "{self.title}"' if self.title is not None else ""
+        optional = ann_marker + inline_label
+        return f"{block_start} {self.typ}{optional}{title}"
+
+    def _to_markdown(self) -> str:
+        if not self.items and not self.title:
+            return ""
+        annotations = f"\n{self.annotations}\n" if self.annotations else ""
         text = "\n".join(i.to_markdown() for i in self.items)
         indented = textwrap.indent(text, "    ")
-        optional = ann_marker + inline_label
-        return f"{block_start} {self.typ}{optional}{title}\n{indented}\n{annotations}"
+        return f"{self.title_line}\n{indented}\n{annotations}"
 
     @classmethod
     def create_example_page(cls, page):

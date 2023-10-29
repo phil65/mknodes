@@ -41,20 +41,22 @@ jinja = """
 {{ "Inlined" | MkAdmonition(inline="left") }}
 """
 
-# [output.markdown]
-# template = """
-# {{ "???" if node.collapsible else "!!!"}} {{ node.typ }} {{ node.title }}
-# {{ node.items | join | indent(width="> ")}}
-# """
+[output.markdown]
+template = """
+{{ node.title_line }}
+{{ node.items | join(node.block_separator) | indent(first=True) }}
+
+"""
 
 # [output.block]
 # template = """
 # /// admonition {{ node.typ }} | {{ node.title }}
-# {{ node.items | join | indent(width="> ")}}
+# {{ node.items | join }}
 # ///
 # """
 
 # [output.github]
 # template = """
 # > [!{{ node.typ | upper }}]\
-# {{ node.items | join | indent(width="> ")}}
+# {{ node.items | join | indent(width="> ", first=True) }}
+# """
