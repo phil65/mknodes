@@ -54,15 +54,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
         super().__init__(content=None, header=header, **kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            code=self._code,
-            language=self.language,
-            linenums=self.linenums,
-            style=self._style,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def code(self) -> str:
