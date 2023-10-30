@@ -2,6 +2,7 @@
 icon = "mdi:image"
 status = "new"
 name = "MkIcon"
+group = "image"
 
 [examples.with_caption]
 title = "With caption"

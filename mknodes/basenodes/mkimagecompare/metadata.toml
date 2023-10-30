@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:image-off"
 name = "MkImageCompare"
+group = "image"
 
 [[resources.js]]
 link = "https://unpkg.com/img-comparison-slider@7/dist/index.js"

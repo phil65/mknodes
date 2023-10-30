@@ -1,6 +1,7 @@
 [metadata]
 icon = "simple-icons:shieldsdotio"
 name = "MkBadge"
+group = "badge"
 
 [requirements.package.anybadge]
 

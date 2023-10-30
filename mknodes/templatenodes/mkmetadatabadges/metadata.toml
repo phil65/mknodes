@@ -2,6 +2,7 @@
 name = "MkMetadataBadges"
 icon = "simple-icons:shieldsdotio"
 status = "new"
+group = "badge"
 
 [requirements.package.anybadge]
 

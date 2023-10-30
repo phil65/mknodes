@@ -1,6 +1,7 @@
 [metadata]
 name = "MkMaterialBadge"
 icon = "simple-icons:shieldsdotio"
+group = "badge"
 
 [[resources.css]]
 filename = "materialbadge.css"

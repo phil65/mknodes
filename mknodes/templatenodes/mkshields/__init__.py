@@ -97,11 +97,11 @@ class MkShields(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        node = MkShields(shields=["version", "status", "codecov"])
+        node = MkShields(["version", "status", "codecov"])
         page += mk.MkReprRawRendered(node)
-        node = MkShields(user="phil65", project="mknodes", shields=None)
+        node = MkShields(user="phil65", project="mknodes")
         page += mk.MkReprRawRendered(node)
-        node = MkShields(user="mkdocs", project="mkdocs", shields=None)
+        node = MkShields(user="mkdocs", project="mkdocs")
         page += mk.MkReprRawRendered(node)
 
 

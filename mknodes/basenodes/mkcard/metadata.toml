@@ -2,6 +2,7 @@
 icon = "mdi:square-medium"
 status = "new"
 name = "MkCard"
+group = "image"
 
 [[resources.css]]
 filename = "grid.css"
