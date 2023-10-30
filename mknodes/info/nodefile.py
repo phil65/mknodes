@@ -9,17 +9,18 @@ from mknodes.utils import resources
 # from mknodes.utils import resources
 
 
+def find_file(klass: type) -> os.PathLike:
+    from mknodes.utils import inspecthelpers
+
+    path = inspecthelpers.get_file(klass)  # type: ignore[arg-type]
+    assert path
+    # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
+    return path.parent / "metadata.toml"
+
+
 class NodeFile(tomlfile.TomlFile):
     def __init__(self, path_or_cls: str | os.PathLike | type):
-        from mknodes.utils import inspecthelpers
-
-        if isinstance(path_or_cls, type):
-            path = inspecthelpers.get_file(path_or_cls)  # type: ignore[arg-type]
-            assert path
-            path = path.parent / "metadata.toml"
-        else:
-            path = path_or_cls
-        # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
+        path = find_file(path_or_cls) if isinstance(path_or_cls, type) else path_or_cls
         super().__init__(path)
 
     @property
