@@ -70,14 +70,7 @@ class MkChangelog(mktext.MkText):
         self._repository = repository
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            convention=self.convention,
-            template=self.template,
-            sections=self.sections,
-            repository=str(self.repository),
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def repository(self):
