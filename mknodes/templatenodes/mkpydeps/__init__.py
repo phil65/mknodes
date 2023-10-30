@@ -104,7 +104,8 @@ class MkPyDeps(mknode.MkNode):
             case _:
                 return self.ctx.metadata.distribution_name
 
-    def _to_markdown(self) -> str:
+    @property
+    def svg(self):
         content = get_dependency_svg(
             self.module,
             max_bacon=self.max_bacon,
@@ -112,8 +113,10 @@ class MkPyDeps(mknode.MkNode):
             only_cycles=self.only_cycles,
             clusters=self.clusters,
         )
-        content = insert_links(content, self.ctx.links.inv_manager)
-        return f"<body>\n\n{content}\n\n</body>\n"
+        return insert_links(content, self.ctx.links.inv_manager)
+
+    def _to_markdown(self) -> str:
+        return f"<body>\n\n{self.svg}\n\n</body>\n"
 
     @classmethod
     def create_example_page(cls, page):

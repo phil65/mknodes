@@ -1,0 +1,20 @@
+[metadata]
+name = "MkPyDeps"
+icon = "mdi:code-json"
+group = "documentation"
+
+# [examples.regular]
+# title = "Regular"
+# jinja = """
+# {{ "mknodes/data/tools.py" | MkPyDeps(max_bacon=1, max_module_depth=1) }}
+# """
+
+[output.markdown]
+template = """
+<body>
+
+{{ node.svg }}
+
+</body>
+
+"""
