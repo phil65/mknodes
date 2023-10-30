@@ -164,7 +164,15 @@ def get_nondefault_repr(
 
     spec = inspect.getfullargspec(instance.__init__)
     spec.args.remove("self")
-    args = [getattr(instance, "items" if arg == "content" else arg) for arg in spec.args]
+    args = []
+    for arg in spec.args:
+        if arg == "content":
+            val = getattr(instance, "items", None)
+        elif hasattr(instance, f"_{arg}"):
+            val = getattr(instance, f"_{arg}")
+        else:
+            val = getattr(instance, arg)
+        args.append(val)
     dct = spec.kwonlydefaults or {}
     kwargs = {}
     for k, v in dct.items():
