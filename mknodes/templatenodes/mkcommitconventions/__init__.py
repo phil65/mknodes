@@ -43,11 +43,7 @@ class MkCommitConventions(mkjinjatemplate.MkJinjaTemplate):
         self._commit_types = commit_types
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            commit_types=self._commit_types,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def variables(self):

@@ -18,6 +18,7 @@ class MkHeader(mknode.MkNode):
     def __init__(
         self,
         text: str | mknode.MkNode | None = "",
+        *,
         level: int = 2,
         exclude_from_search: bool = False,
         **kwargs: Any,

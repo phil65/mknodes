@@ -20,8 +20,8 @@ class MkProgressBar(mknode.MkNode):
     def __init__(
         self,
         percentage: int,
-        label: str | None | Literal[True] = True,
         *,
+        label: str | None | Literal[True] = True,
         style: Literal["thin", "candystripe", "candystripe_animated"] | None = None,
         **kwargs: Any,
     ):
