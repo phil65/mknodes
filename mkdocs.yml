@@ -59,7 +59,7 @@ plugins:
 - mknodes:
     build_fn: mknodes.manual.root:build
     show_page_info: true
-    # render_all_pages: false
+    render_by_default: false
 - mkdocstrings:
     default_handler: python
     handlers:
