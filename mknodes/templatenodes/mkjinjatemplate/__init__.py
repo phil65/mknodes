@@ -24,6 +24,7 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
         self,
         template: str,
         *,
+        block: str | None = None,
         variables: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
@@ -31,11 +32,13 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
         Arguments:
             template: Jinja template name.
+            block: Name of a specific block of the template which should get rendered
             variables: Variables to use for rendering
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self.template = template
+        self.block = block
         self.variables = variables or {}
 
     def __repr__(self):
@@ -43,7 +46,11 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
     @property
     def items(self):
-        self.env.render_template(self.template, variables=self.variables)
+        self.env.render_template(
+            self.template,
+            variables=self.variables,
+            block_name=self.block,
+        )
         return self.env.rendered_nodes
 
     @items.setter
@@ -55,7 +62,11 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
         page += MkJinjaTemplate(template="nodes_index.jinja")
 
     def _to_markdown(self) -> str:
-        return self.env.render_template(self.template, variables=self.variables)
+        return self.env.render_template(
+            self.template,
+            variables=self.variables,
+            block_name=self.block,
+        )
 
 
 if __name__ == "__main__":
