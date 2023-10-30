@@ -67,6 +67,7 @@ class MkPyDeps(mknode.MkNode):
     def __init__(
         self,
         module: str | os.PathLike | types.ModuleType | None = None,
+        *,
         max_bacon: int | None = None,
         max_module_depth: int | None = None,
         only_cycles: bool = False,
@@ -91,16 +92,7 @@ class MkPyDeps(mknode.MkNode):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            module=self.module,
-            max_bacon=self.max_bacon,
-            max_module_depth=self.max_module_depth,
-            only_cycles=self.only_cycles,
-            clusters=self.clusters,
-            _filter_empty=True,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def module(self):

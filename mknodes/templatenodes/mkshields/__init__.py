@@ -19,6 +19,7 @@ class MkShields(mkcontainer.MkContainer):
     def __init__(
         self,
         shields: Sequence[badges.BadgeTypeStr] | None = None,
+        *,
         user: str | None = None,
         project: str | None = None,
         branch: str | None = None,
@@ -41,14 +42,7 @@ class MkShields(mkcontainer.MkContainer):
         self._shields = shields
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            shields=self._shields,
-            user=self._user,
-            project=self._project,
-            branch=self._branch,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def user(self):

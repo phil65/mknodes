@@ -63,12 +63,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         self._build_backend = build_backend
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            repo_url=self._repo_url,
-            build_backend=self._build_backend,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def repo_url(self) -> str:

@@ -39,12 +39,7 @@ class MkText(mknode.MkNode):
         self.is_jinja_expression = is_jinja_expression
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            text=self.text,
-            is_jinja_expression=self.is_jinja_expression,
-            _filter_false=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     def __getitem__(self, section_name: str) -> Self | None:
         markdown = self._to_markdown()

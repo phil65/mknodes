@@ -18,6 +18,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
     def __init__(
         self,
         distribution: str | None = None,
+        *,
         package_repos: list[installmethods.InstallMethodStr] | None = None,
         header_level: int = 3,
         **kwargs: Any,
@@ -79,13 +80,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
         return mkcontainer.MkContainer(items, parent=self)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            distribution=self._distribution,
-            package_repos=self._package_repos,
-            header_level=self.header_level,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

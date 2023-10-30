@@ -18,6 +18,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         self,
         title: str,
         description: str,
+        *,
         setting: dict[str, Any] | str | None = None,
         default: str | int | None = None,
         version_added: str | None = None,
@@ -46,16 +47,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         self.mode = mode
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            title=self.title,
-            description=self.description,
-            default=self.default,
-            version_added=self.version_added,
-            optional=self.optional,
-            mode=self.mode,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def title(self) -> str:
