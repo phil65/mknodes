@@ -354,6 +354,36 @@ fsspec_protocol_loader = FsSpecProtocolPathLoader()
 resource_loader = ChoiceLoader([docs_loader, fsspec_protocol_loader])
 
 
+def from_json(dct_or_list) -> jinja2.BaseLoader | None:
+    if not dct_or_list:
+        return None
+    loaders = []
+    ls = dct_or_list if isinstance(dct_or_list, list) else [dct_or_list]
+    for item in ls:
+        if isinstance(item, jinja2.BaseLoader):
+            loaders.append(item)
+            continue
+        if isinstance(item, str):
+            if "://" in item:
+                loaders.append(FsSpecFileSystemLoader(item))
+            else:
+                loaders.append(FileSystemLoader(item))
+            continue
+        for kls in jinja2.BaseLoader.__subclasses__():
+            if not issubclass(kls, LoaderMixin):
+                continue
+            dct_copy = item.copy()
+            if dct_copy.pop("type") == kls.ID:  # type: ignore[attr-defined]
+                path = dct_copy.pop("path")
+                instance = kls(path, **dct_copy)  # type: ignore[call-arg]
+                loaders.append(instance)
+    if len(loaders) == 1:
+        return loaders[0]
+    if len(loaders) > 1:
+        return ChoiceLoader(loaders)
+    return None
+
+
 LOADERS = dict(
     fsspec=FsSpecFileSystemLoader,
     filesystem=FileSystemLoader,
