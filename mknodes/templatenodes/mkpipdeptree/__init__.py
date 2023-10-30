@@ -82,6 +82,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
     """Node to display a mermaid diagram for the dependencies."""
 
     REQUIRED_PACKAGES = [resources.Package("pipdeptree")]
+    ICON = "material/dependency"
 
     def __init__(
         self,

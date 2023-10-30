@@ -74,6 +74,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         self,
         title: str,
         content: str | mknode.MkNode | list[str] | list[mknode.MkNode],
+        *,
         select: bool = False,
     ) -> mktabs.MkTab | mktabs.MkTabBlock:
         """Append a tab to existing ones.

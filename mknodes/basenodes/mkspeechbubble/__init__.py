@@ -18,6 +18,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     def __init__(
         self,
         content: str | mknode.MkNode | list | None = None,
+        *,
         arrow: Literal["top", "bottom", "left", "right"] | None = "bottom",
         **kwargs,
     ):

@@ -68,7 +68,8 @@ class MkDocsConfigFile(yamlfile.YamlFile):
         jinja_loaders: list[jinja2.BaseLoader] = [
             loaders.registry.get_loader(self._data.get("docs_dir", "docs")),
         ]
-        for loader_dct in self.mknodes_config.get("loaders", []):
+        loader_list = self.mknodes_config.get("loaders", [])
+        for loader_dct in loader_list:
             dct = loader_dct.copy()
             kls = loaders.LOADERS[dct.pop("type")]
             loader = kls(**dct)
