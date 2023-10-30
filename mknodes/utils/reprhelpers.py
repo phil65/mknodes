@@ -24,6 +24,9 @@ class LengthLimitRepr(reprlib.Repr):
     def repr_function(self, obj, level):
         return obj.__name__
 
+    def repr_method(self, obj, level):
+        return f"{obj.__self__.__class__.__name__}.{obj.__name__}"
+
 
 limit_repr = LengthLimitRepr()
 limit_repr.maxlist = 10
