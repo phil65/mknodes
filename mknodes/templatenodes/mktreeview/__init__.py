@@ -77,15 +77,7 @@ class MkTreeView(mkcode.MkCode):
         return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            path=self.tree if isinstance(self.tree, mknode.MkNode) else str(self.tree),
-            style=self.style if self.style != "rounded" else None,
-            maximum_depth=self.maximum_depth,
-            exclude_folders=self.exclude_folders,
-            storage_options=self.storage_options,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):
@@ -107,7 +99,6 @@ if __name__ == "__main__":
     node = MkTreeView(
         "github://mknodes",
         storage_options=opts,
-        header="test",
         style="ascii",
         maximum_depth=2,
     )
