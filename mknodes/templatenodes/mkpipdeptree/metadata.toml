@@ -1,0 +1,20 @@
+[metadata]
+name = "MkPipDepTree"
+icon = "mdi:dependency"
+status = "new"
+group = "documentation"
+
+[requirements.package.pipdeptree]
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ "jinja2" | MkPipDepTree }}
+"""
+
+[output.markdown]
+template = """
+{{ node.fence_boundary }} {{ node.fence_title }}
+{{ node.text }}
+{{ node.fence_boundary }}
+"""

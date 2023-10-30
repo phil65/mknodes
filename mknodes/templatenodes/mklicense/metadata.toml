@@ -1,0 +1,21 @@
+[metadata]
+name = "MkLicense"
+icon = "mdi:license"
+group = "documentation"
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ mk.MkLicense() }}
+"""
+
+[examples.explicit]
+title = "Explicit"
+jinja = """
+{{ "GPL-3.0" | MkLicense }}
+"""
+
+[output.markdown]
+template = """
+{{ node.text }}
+"""

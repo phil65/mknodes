@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:text"
 name = "MkText"
+group = "base"
 
 [examples.regular]
 title = "Regular"
@@ -13,3 +14,8 @@ jinja = """
 # jinja = """
 # {{ mk.MkText.from_url("https://raw.githubusercontent.com/phil65/mknodes/main/README.md") }}
 # """
+
+[output.markdown]
+template = """
+{{ node.text }}
+"""
