@@ -132,6 +132,8 @@ ENV_FILTERS = {
     "add": add,
     "issubclass": issubclass,
     "isinstance": isinstance,
+    "import_module": importlib.import_module,
+    "to_class": classhelpers.to_class,
     "hasattr": hasattr,
     "evaluate": evaluate,
     "partial": functools.partial,
