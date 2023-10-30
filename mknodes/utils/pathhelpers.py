@@ -10,12 +10,32 @@ import shutil
 
 import upath
 
+from upath import core, registry
+
 from mknodes.utils import log
 
 
 _RFC_3986_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+\-+.]*://")
 
 logger = log.get_logger(__name__)
+
+
+class _GitHubAccessor(core._FSSpecAccessor):
+    """FSSpecAccessor for GitHub."""
+
+    def _format_path(self, path: core.UPath) -> str:
+        """Remove the leading slash from the path."""
+        return path._path.lstrip("/")
+
+
+class GitHubPath(core.UPath):
+    """GitHubPath supporting the fsspec.GitHubFileSystem."""
+
+    _default_accessor = _GitHubAccessor
+
+
+cls_path = "mknodes.utils.pathhelpers.GitHubPath"
+registry._Registry.known_implementations["github"] = cls_path
 
 
 def fsspec_copy(
