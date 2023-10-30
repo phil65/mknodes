@@ -35,17 +35,14 @@ class Environment(jinja2.Environment):
             load_templates: Whether to load the templates into environment.
             kwargs: Keyword arguments passed to parent
         """
-        loader = loaders.resource_loader if load_templates else None
         if isinstance(undefined, str):
             undefined = undefined_.UNDEFINED_BEHAVIOR[undefined]
+        kwargs = dict(undefined=undefined, trim_blocks=trim_blocks, **kwargs)
+        if load_templates:
+            kwargs["loader"] = loaders.resource_loader
         self._extra_files: set[str] = set()
         self._extra_paths: set[str] = set()
-        super().__init__(
-            undefined=undefined,
-            loader=loader,
-            trim_blocks=trim_blocks,
-            **kwargs,
-        )
+        super().__init__(**kwargs)
         self.filters.update(jinjahelpers.get_filters())
         self.globals.update(jinjahelpers.get_globals())
         self.filters["render_template"] = self.render_template

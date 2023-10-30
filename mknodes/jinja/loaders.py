@@ -331,10 +331,9 @@ class LoaderRegistry:
 
 registry = LoaderRegistry()
 
-resources_loader = registry.get_package_loader("mknodes.resources")
 docs_loader = registry.get_filesystem_loader("docs/")
 fsspec_protocol_loader = FsSpecProtocolPathLoader()
-resource_loader = ChoiceLoader([resources_loader, docs_loader, fsspec_protocol_loader])
+resource_loader = ChoiceLoader([docs_loader, fsspec_protocol_loader])
 
 
 LOADERS = dict(

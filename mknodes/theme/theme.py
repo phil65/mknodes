@@ -5,7 +5,7 @@ from typing import Any
 
 from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
-from mknodes.jinja import environment
+from mknodes.jinja import environment, loaders
 from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import helpers, icons, log, reprhelpers, resources
 
@@ -28,7 +28,8 @@ class Theme:
         self.name = name
         self.data = data or {}
         self.features = self.data.get("features")
-        self.env = environment.Environment(load_templates=True)
+        loader = loaders.registry.get_package_loader("mknodes.resources")
+        self.env = environment.Environment(loader=loader)
         self.templates = template_registry or templateregistry.TemplateRegistry()
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
