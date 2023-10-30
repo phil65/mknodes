@@ -5,13 +5,13 @@ import os
 import pathlib
 import types
 
-from typing import Any
+from typing import Any, Self
 
 import fsspec
 import fsspec.core
 import jinja2
 
-from mknodes.utils import helpers, pathhelpers, reprhelpers
+from mknodes.utils import helpers, inspecthelpers, pathhelpers, reprhelpers
 
 
 class LoaderMixin:
@@ -96,6 +96,19 @@ class FileSystemLoader(LoaderMixin, jinja2.FileSystemLoader):
         else:
             paths = [other]
         return FileSystemLoader([*self.searchpath, *paths])
+
+    @classmethod
+    def for_class(cls, klass: type) -> Self:
+        """Return a FileSystem loader for given class.
+
+         The path will be set to the folder the class's file is contained in.
+
+        Arguments:
+            klass: The class to get a loader for.
+        """
+        path = inspecthelpers.get_file(klass)
+        assert path
+        return cls(path.parent.as_posix())
 
 
 class ChoiceLoader(LoaderMixin, jinja2.ChoiceLoader):
