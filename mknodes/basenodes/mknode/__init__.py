@@ -58,6 +58,7 @@ class MkNode(node.Node):
         name: str | None = None,
         shift_header_levels: int = 0,
         css_classes: Iterable[str] | None = None,
+        variables: dict[str, Any] | None = None,
         as_html: bool = False,
         context: contexts.ProjectContext | None = None,
         parent: MkNode | None = None,
@@ -70,6 +71,7 @@ class MkNode(node.Node):
             name: An optional unique identifier (allows getting node via MkNode.get_node)
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
             css_classes: A sequence of css class names to use for this node
+            variables: Variables to use for rendering
             as_html: Converts node to HTML on stringifying.
             context: Context this Nav is connected to.
             parent: Parent for building the tree
@@ -84,6 +86,7 @@ class MkNode(node.Node):
         self._ctx = context
         self._node_name = name
         self.as_html = as_html
+        self.variables = variables or {}
         if name is not None:
             self._name_registry[name] = self
         # ugly, but convenient.

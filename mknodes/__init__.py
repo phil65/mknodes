@@ -79,7 +79,6 @@ from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mkargparsehelp import MkArgParseHelp
 from .templatenodes.mkjinjatemplate import MkJinjaTemplate
-from .templatenodes.mkjinjatext import MkJinjaText
 from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
 
@@ -171,7 +170,6 @@ __all__ = [
     "MkTaskList",
     "MkTimeline",
     "MkJinjaTemplate",
-    "MkJinjaText",
     "MkPyDeps",
     "MkPipDepTree",
     "Router",

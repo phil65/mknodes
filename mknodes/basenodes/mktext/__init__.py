@@ -24,19 +24,19 @@ class MkText(mknode.MkNode):
         self,
         text: str | mknode.MkNode | None = "",
         *,
-        is_jinja_expression: bool = False,
+        render_jinja: bool = False,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             text: Markup text
-            is_jinja_expression: Whether text is a jinja expression
+            render_jinja: Whether text should get rendered by this node
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
         self._text = str(text or "")
-        self.is_jinja_expression = is_jinja_expression
+        self.render_jinja = render_jinja
 
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
@@ -48,9 +48,9 @@ class MkText(mknode.MkNode):
 
     @property
     def text(self) -> str:
-        if not self.is_jinja_expression:
+        if not self.render_jinja:
             return self._text
-        return self.env.render_string(f"{{{{ {self._text} }}}}")
+        return self.env.render_string(self._text)
 
     @text.setter
     def text(self, value):
@@ -58,6 +58,17 @@ class MkText(mknode.MkNode):
 
     def _to_markdown(self) -> str:
         return self.text
+
+    @property
+    def children(self):
+        if not self.render_jinja:
+            return []
+        self.env.render_string(self.text, variables=self.variables)
+        return self.env.rendered_nodes
+
+    @children.setter
+    def children(self, val):
+        pass
 
     @classmethod
     def create_example_page(cls, page):

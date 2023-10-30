@@ -18,7 +18,7 @@ Once a node has access to the context, that context will become injected into th
 ``` py
 @nav.route_page("My page")
 def _(page):
-    node = mk.MkJinjaText("{ { metadata.required_python_version } }")
+    node = mk.MkText("{{ metadata.required_python_version }}", render_jinja=True)
     assert str(node) == ""  # not connected to any context, so returns empty string
     page += node  # Add node to the nav and allow accessing its context (assuming that nav is connected to root nav).
     assert str(node) != ""  # this now returns the required python version for the context.
