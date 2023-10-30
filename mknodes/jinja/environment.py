@@ -24,6 +24,11 @@ class Environment(jinja2.Environment):
         *,
         undefined: undefined_.UndefinedStr | type[jinja2.Undefined] = "strict",
         trim_blocks: bool = True,
+        loader: jinja2.BaseLoader
+        | list[jinja2.BaseLoader]
+        | dict
+        | list[dict]
+        | None = None,
         load_templates: bool = False,
         **kwargs: Any,
     ):
@@ -32,14 +37,20 @@ class Environment(jinja2.Environment):
         Arguments:
             undefined: Handling of "Undefined" errors
             trim_blocks: Whitespace handling. Changes jinja default to `True`.
-            load_templates: Whether to load the templates into environment.
+            loader: Loader to use (Also accepts a JSON representation of loaders)
+            load_templates: Adds additional loaders to the env (deprecated).
             kwargs: Keyword arguments passed to parent
         """
         if isinstance(undefined, str):
             undefined = undefined_.UNDEFINED_BEHAVIOR[undefined]
         kwargs = dict(undefined=undefined, trim_blocks=trim_blocks, **kwargs)
-        if load_templates:
+        loader = loaders.from_json(loader)
+        if load_templates and loader:
+            kwargs["loader"] = loaders.resource_loader | loader
+        elif load_templates:
             kwargs["loader"] = loaders.resource_loader
+        else:
+            kwargs["loader"] = loader
         self._extra_files: set[str] = set()
         self._extra_paths: set[str] = set()
         super().__init__(**kwargs)
