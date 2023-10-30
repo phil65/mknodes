@@ -11,6 +11,7 @@ import io
 import json
 import os
 import platform
+import pprint
 import sys
 import time
 import tomllib
@@ -121,6 +122,7 @@ ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,
     "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
+    "pformat": pprint.pformat,
     "str": str,
     "repr": repr,
     "rstrip": str.rstrip,
