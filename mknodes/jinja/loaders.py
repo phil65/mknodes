@@ -17,6 +17,7 @@ from mknodes.utils import helpers, inspecthelpers, pathhelpers, reprhelpers
 class LoaderMixin:
     """Loader mixin which allows to OR loaders into a choice loader."""
 
+    ID: str
     loader: jinja2.BaseLoader
     list_templates: Callable
 
@@ -227,9 +228,10 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
         else:
             self.fs = fsspec.filesystem(fs, **kwargs) if isinstance(fs, str) else fs
             self.path = ""
+        self.storage_options = kwargs
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, fs=self.fs.protocol)
+        return reprhelpers.get_repr(self, fs=self.fs.protocol, **self.storage_options)
 
     def list_templates(self) -> list[str]:
         return self.fs.ls("")
