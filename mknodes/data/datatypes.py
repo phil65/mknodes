@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+import collections
+
+from collections.abc import Callable, ItemsView, KeysView, ValuesView
 from dataclasses import Field
 import types
-
-from typing import Any, ClassVar, Literal, Protocol
+from types import MappingProxyType, SimpleNamespace
+from typing import Any, ClassVar, Literal, Protocol, runtime_checkable
 
 
 AdmonitionTypeStr = Literal[
@@ -71,8 +73,32 @@ MetadataTypeStr = (
 )
 
 
+@runtime_checkable
 class DataclassInstance(Protocol):
     __dataclass_fields__: ClassVar[dict[str, Field[Any]]]
+
+
+PrettyPrintableType = (
+    dict
+    | list
+    | str
+    | tuple
+    | set
+    | bytes
+    | bytearray
+    | MappingProxyType
+    | SimpleNamespace
+    | ValuesView
+    | KeysView
+    | collections.Counter
+    | collections.ChainMap
+    | collections.deque
+    | collections.UserDict
+    | collections.UserList
+    | collections.UserString
+    | ItemsView
+    | DataclassInstance
+)
 
 
 PageStatusStr = Literal["new", "deprecated", "encrypted"]
