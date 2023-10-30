@@ -67,13 +67,13 @@ class NodeEnvironment(environment.Environment):
         for kls_name in mk.__all__:
             kls = getattr(mk, kls_name)
 
-            class WrappedMkNode(kls):
+            class _WrappedMkNode(kls):
                 def __post_init__(_self):  # noqa: N805
                     _self.parent = self.node
                     self.rendered_nodes.append(_self)
 
-            WrappedMkNode.__name__ = kls.__name__
-            wrapped_klasses[kls_name] = WrappedMkNode
+            _WrappedMkNode.__name__ = kls.__name__
+            wrapped_klasses[kls_name] = _WrappedMkNode
 
             def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
                 kls = getattr(mk, kls_name)
