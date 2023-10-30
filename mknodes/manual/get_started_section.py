@@ -31,6 +31,7 @@ def _(page: mk.MkPage):
 
 @nav.route.page("A quick node tour", hide="toc", icon="ic:outline-tour")
 def _(page: mk.MkPage):
+    page.metadata.render_macros = True
     a_quick_tour(page)
 
 
