@@ -6,7 +6,7 @@ from typing import Any
 
 from mknodes import treelib
 from mknodes.templatenodes import mktreeview
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import classhelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -24,7 +24,7 @@ class MkModuleOverview(mktreeview.MkTreeView):
 
     def __init__(
         self,
-        module: types.ModuleType | None = None,
+        module: types.ModuleType | str | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -41,6 +41,8 @@ class MkModuleOverview(mktreeview.MkTreeView):
         match self._module:
             case types.ModuleType():
                 return self._module
+            case str():
+                return classhelpers.to_module(self._module)
             case _:
                 return self.ctx.metadata.module
 
@@ -63,13 +65,7 @@ class MkModuleOverview(mktreeview.MkTreeView):
         )
 
     def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            module=self.tree,
-            style=self._style,
-            maximum_depth=self.maximum_depth,
-            _filter_empty=True,
-        )
+        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):
