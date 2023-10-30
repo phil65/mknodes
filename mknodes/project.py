@@ -60,7 +60,7 @@ class Project(Generic[T]):
             # github=self.folderinfo.github.context,
             theme=self.theme.context,
             links=self.linkprovider,
-            env=environment.Environment(load_templates=True, trim_blocks=True),
+            env=environment.Environment(load_templates=True),
         )
         self._root = mknav.MkNav(context=self.context)
 
