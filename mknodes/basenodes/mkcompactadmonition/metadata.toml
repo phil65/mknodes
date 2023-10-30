@@ -13,12 +13,6 @@ jinja = """
 {{ "Different types." | MkCompactAdmonition(typ="warning") }}
 """
 
-[examples.collapsible]
-title = "Collapsible and expandable"
-jinja = """
-{{ "Admonitions can also be collapsible." | MkAdmonition(collapsible=True, title="Expand me!", expanded=True) }}
-"""
-
 [output.html]
 template = """
 <div class="mdx-grid-wrapper{{ node.typ | add(prefix=" mdx-admo--") }}">

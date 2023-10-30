@@ -101,7 +101,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         for i, item in enumerate(self.items):
             item.select = i == self.select_tab
 
-    def __setitem__(self, index: str, value: mktabs.MkTab | mktabs.MkTabBlock | str):
+    def __setitem__(self, index: str, value: mknode.MkNode | str):
         match value:
             case str():
                 item = mktext.MkText(value)
