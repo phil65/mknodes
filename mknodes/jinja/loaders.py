@@ -144,7 +144,10 @@ class FsSpecProtocolPathLoader(LoaderMixin, jinja2.BaseLoader):
         environment: jinja2.Environment | None,
         template: str,
     ) -> tuple[str, str, Callable[[], bool] | None]:
-        src = pathhelpers.fsspec_get(template)
+        url, *section = template.split("#")
+        src = pathhelpers.fsspec_get(url)
+        if section:
+            src = helpers.extract_header_section(src, section[0]) or src
         path = pathlib.Path(template).as_posix()
         return src, path, lambda: True
 
