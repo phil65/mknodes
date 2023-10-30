@@ -47,7 +47,7 @@ class SubclassConnector(BaseClassConnector):
         self.connections = [(i[1], i[0]) for i in self.connections]
 
     def get_children(self, item: type) -> list[type]:
-        return item.__subclasses__()
+        return list(classhelpers.iter_subclasses(item, recursive=False))
 
 
 class ParentClassConnector(BaseClassConnector):
