@@ -28,7 +28,7 @@ class MkTreeView(mkcode.MkCode):
         self,
         tree: str | os.PathLike | treelib.Node,
         *,
-        style: treestyles.TreeStyleStr | tuple[str, str, str, str] | None = None,
+        style: treestyles.TreeStyleStr | tuple[str, str, str, str] = "rounded",
         maximum_depth: int | None = None,
         predicate: Callable | None = None,
         exclude_folders: list[str] | str | None = None,
@@ -50,7 +50,7 @@ class MkTreeView(mkcode.MkCode):
         """
         super().__init__(header, language="", **kwargs)
         self.tree = tree
-        self._style = style
+        self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
         self.storage_options = storage_options or {}
@@ -76,23 +76,11 @@ class MkTreeView(mkcode.MkCode):
                 raise TypeError(self.tree)
         return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
 
-    @text.setter
-    def text(self, text):
-        self.obj = text
-
-    @property
-    def style(self) -> treestyles.TreeStyleStr | tuple[str, str, str, str]:
-        return self._style or "rounded"
-
-    @style.setter
-    def style(self, value: treestyles.TreeStyleStr | tuple[str, str, str, str] | None):
-        self._style = value
-
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
             path=self.tree if isinstance(self.tree, mknode.MkNode) else str(self.tree),
-            style=self._style,
+            style=self.style if self.style != "rounded" else None,
             maximum_depth=self.maximum_depth,
             exclude_folders=self.exclude_folders,
             storage_options=self.storage_options,
