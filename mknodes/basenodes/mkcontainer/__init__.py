@@ -24,6 +24,7 @@ class MkContainer(mknode.MkNode):
     def __init__(
         self,
         content: list | None | str | mknode.MkNode = None,
+        *,
         block_separator: str | None = None,
         **kwargs: Any,
     ):
