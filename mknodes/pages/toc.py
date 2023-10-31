@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
+import dataclasses
+
 from typing import TypedDict
 
 
@@ -24,26 +26,23 @@ def get_toc(md: str) -> TableOfContents:
     return TableOfContents(toc)
 
 
+@dataclasses.dataclass
 class AnchorLink:
     """A single entry in the table of contents."""
 
-    def __init__(self, title: str, id: str, level: int) -> None:  # noqa: A002
-        self.title, self.id, self.level = title, id, level
-        self.children = []
-
     title: str
     """The text of the item."""
+    id: str  # noqa: A003
+    """The slug used as part of the URL."""
+    level: int
+    """The zero-based level of the item."""
+    children: list[AnchorLink] = dataclasses.field(default_factory=list)
+    """An iterable of any child items."""
 
     @property
     def url(self) -> str:
         """The hash fragment of a URL pointing to the item."""
         return "#" + self.id
-
-    level: int
-    """The zero-based level of the item."""
-
-    children: list[AnchorLink]
-    """An iterable of any child items."""
 
     def __str__(self) -> str:
         return self.indent_print()
@@ -73,7 +72,5 @@ class TableOfContents(Iterable[AnchorLink]):
 
 
 def _parse_toc_token(token: _TocToken) -> AnchorLink:
-    anchor = AnchorLink(token["name"], token["id"], token["level"])
-    for i in token["children"]:
-        anchor.children.append(_parse_toc_token(i))
-    return anchor
+    tokens = [_parse_toc_token(i) for i in token["children"]]
+    return AnchorLink(token["name"], token["id"], token["level"], tokens)

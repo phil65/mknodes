@@ -155,22 +155,16 @@ class MkPage(mkcontainer.MkContainer):
         if not self.root:
             return None
         pages = [i[1] for i in self.root.iter_nodes()]
-        index = pages.index(self)
-        for node in reversed(pages[:index]):
-            if isinstance(node, MkPage):
-                return node
-        return None
+        idx = pages.index(self)
+        return next((i for i in reversed(pages[:idx]) if isinstance(i, MkPage)), None)
 
     @property
     def next_page(self) -> MkPage | None:
         if not self.root:
             return None
         pages = [i[1] for i in self.root.iter_nodes()]
-        index = pages.index(self)
-        for node in pages[index + 1 :]:
-            if isinstance(node, MkPage):
-                return node
-        return None
+        idx = pages.index(self)
+        return next((i for i in pages[idx + 1 :] if isinstance(i, MkPage)), None)
 
     @property
     def status(self) -> datatypes.PageStatusStr | str | None:
