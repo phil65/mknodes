@@ -9,7 +9,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkJinjaTemplate(mkcontainer.MkContainer):
+class MkTemplate(mkcontainer.MkContainer):
     """Node representing a jinja template.
 
     Renders templates with the context-aware MkNodes jinja environment.
@@ -56,7 +56,7 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
     @classmethod
     def create_example_page(cls, page):
-        page += MkJinjaTemplate(template="nodes_index.jinja")
+        page += MkTemplate(template="nodes_index.jinja")
 
     def _to_markdown(self) -> str:
         return self.env.render_template(
@@ -67,5 +67,5 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    node = MkJinjaTemplate("nodes_index.jinja")
+    node = MkTemplate("nodes_index.jinja")
     print(node.get_resources())

@@ -78,7 +78,7 @@ from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mkargparsehelp import MkArgParseHelp
-from .templatenodes.mkjinjatemplate import MkJinjaTemplate
+from .templatenodes.mkjinjatemplate import MkTemplate, MkTemplate as MkJinjaTemplate
 from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
 
@@ -169,6 +169,7 @@ __all__ = [
     "MkSpeechBubble",
     "MkTaskList",
     "MkTimeline",
+    "MkTemplate",
     "MkJinjaTemplate",
     "MkPyDeps",
     "MkPipDepTree",

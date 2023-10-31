@@ -9,7 +9,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkPullRequestGuidelines(mkjinjatemplate.MkJinjaTemplate):
+class MkPullRequestGuidelines(mkjinjatemplate.MkTemplate):
     """Node showing pull request guidelines."""
 
     ICON = "octicons/git-pull-request-24"

@@ -30,7 +30,7 @@ All approx. 70 different **MkNodes** are available as filters in the **MkNodes**
 "mknodes.MkNode" | MkClassDiagram(mode="subclasses") | MkAdmonition
 ```
 
-A nice feature: If the caller (the node which renders a template) is a [MkJinjaTemplate][mknodes.MkJinjaTemplate] (which is the most common case), then it will collect the rendered nodes and can infer the required resources. In the example above, that would mean that the [MkJinjaTemplate][mknodes.MkJinjaTemplate] knows that it needs the `Admonition` extension as well as the `Superfence` extension including the correct custom mermaid fences in order to render its content correctly.
+A nice feature: If the caller (the node which renders a template) is a [MkTemplate][mknodes.MkTemplate] (which is the most common case), then it will collect the rendered nodes and can infer the required resources. In the example above, that would mean that the [MkTemplate][mknodes.MkTemplate] knows that it needs the `Admonition` extension as well as the `Superfence` extension including the correct custom mermaid fences in order to render its content correctly.
 
 If that Node would go through the build pipeline afterwards, these extensions would be included for the markdown-HTML conversion.
 

@@ -21,7 +21,7 @@ Using this mechanism is optional, it is still possible to include the resources 
 Inferred resources and directly included resources will get merged then.
 
 ??? info
-    This mechanism only works when **MkNodes** "knows" about the nodes you used. That is the case when adding **MkNodes** directly to the tree as Python object, or by applying them as **jinja2** filters / macros using the [MkJinjaTemplate][mknodes.MkJinjaTemplate] node. In both cases, the resources get collected.
+    This mechanism only works when **MkNodes** "knows" about the nodes you used. That is the case when adding **MkNodes** directly to the tree as Python object, or by applying them as **jinja2** filters / macros using the [MkTemplate][mknodes.MkTemplate] node. In both cases, the resources get collected.
     What *won't* work: Adding markdown in text form as an [MkText][mknodes.MkText] node which needs resources, or when using [MkPage.from_file][mknodes.MkPage.from_file] for example. **MkNodes** is not a parser, so it cant know which extensions etc. your Markdown needs in order to get rendered correctly. In that case you have to add the required extensions etc manually to the **MkDocs** config, like you did before.
 
 As examples, you can check the "Page information" box on all websites of this documentation.

@@ -17,7 +17,7 @@ STYLES = {
 }
 
 
-class MkCommitConventions(mkjinjatemplate.MkJinjaTemplate):
+class MkCommitConventions(mkjinjatemplate.MkTemplate):
     """Text node containing Commit message conventions."""
 
     ICON = "simple/conventionalcommits"

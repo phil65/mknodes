@@ -26,7 +26,7 @@ def _(page: mk.MkPage):
 
 @nav.route.page("Why should I use MkNodes?", hide="toc", icon="ri:question-line")
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("why_mknodes.jinja")
+    page += mk.MkTemplate("why_mknodes.jinja")
 
 
 @nav.route.page("A quick node tour", hide="toc", icon="ic:outline-tour")

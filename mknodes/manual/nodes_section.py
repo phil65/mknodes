@@ -13,7 +13,7 @@ BASE_NODES = [
     mk.MkKeys,
     mk.MkProgressBar,
     mk.MkSpeechBubble,
-    mk.MkJinjaTemplate,
+    mk.MkTemplate,
 ]
 
 IMAGE_NODES = [
@@ -122,7 +122,7 @@ nav = mk.MkNav("The nodes")
 
 @nav.route.page(is_index=True)
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("nodes_index.jinja")
+    page += mk.MkTemplate("nodes_index.jinja")
 
 
 @nav.route.nav("Base nodes")

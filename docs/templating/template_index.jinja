@@ -15,7 +15,7 @@ via code of course though), but has a much larger built-in set of macros and fil
     - *The MkDocs-specific template environment*: This one is used to resolve the mentioned Page / Static templates and is used by **MkDocs** itself. This environment can be modified during the event hooks by all add-ons.
     - *The **MkNodes**-specific template environment*: This one is used for resolving CSS files as well as content
       pages. In fact, the page you are looking at was rendered with the **MkNodes** environment.
-      The [MkJinjaTemplate][mknodes.MkJinjaTemplate] node is mainly used to render stuff with the **MkNodes**
+      The [MkTemplate][mknodes.MkTemplate] node is mainly used to render stuff with the **MkNodes**
       environment. When speaking about the "Jinja environment" on this page, then this one is usually meant.
 
       You can find more general information about the used python templating engine **jinja2**
@@ -43,14 +43,14 @@ via code of course though), but has a much larger built-in set of macros and fil
     * Example: `{ { metadata.license_name } }`
 
 
-* Nodes rendered with [MkJinjaTemplate][mknodes.MkJinjaTemplate] actually become virtual children of that node.
+* Nodes rendered with [MkTemplate][mknodes.MkTemplate] actually become virtual children of that node.
   This means that they will get iterated when the tree is traversed.
   In other words: If you use a node which requires resources (CSS, JS, static files, ...) inside a template,
   then these resources will automatically get added to the website build (aka to the config and the page templates) without any further interaction.
 
     A short example:
     ``` py
-    node = MkJinjaTemplate("my_template.jinja")
+    node = MkTemplate("my_template.jinja")
     # lets assume "my_template.jinja" uses an MkBadge node right at the start as a filter.
     # This could look like { { "A label" | MkBadge } } at the very start of the template file.
     # These assertions would pass then:

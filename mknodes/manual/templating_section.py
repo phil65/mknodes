@@ -24,7 +24,7 @@ nav = mk.MkNav("Templating")
 
 @nav.route.page(is_index=True)
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("templating/template_index.jinja")
+    page += mk.MkTemplate("templating/template_index.jinja")
 
 
 @nav.route.nav("Jinja Namespace")
@@ -45,14 +45,14 @@ def _(nav: mk.MkNav):
     page = nav.add_page(is_index=True, hide="toc")
     variables = dict(namespaces=NAMESPACES)
     template = "templating/template_namespace_index.jinja"
-    page += mk.MkJinjaTemplate(template, variables=variables)
+    page += mk.MkTemplate(template, variables=variables)
 
 
 @nav.route.page("Utility filters")
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("templating/template_filters.jinja")
+    page += mk.MkTemplate("templating/template_filters.jinja")
 
 
 @nav.route.page("MkNode filters")
 def _(page: mk.MkPage):
-    page += mk.MkJinjaTemplate("templating/jinja_mknode_filters.jinja")
+    page += mk.MkTemplate("templating/jinja_mknode_filters.jinja")
