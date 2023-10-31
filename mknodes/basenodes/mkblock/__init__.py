@@ -51,7 +51,8 @@ class MkBlock(mkcontainer.MkContainer):
     @property
     def content_block(self) -> str:
         """Returns the block content. Can be reimplemented by subclasses."""
-        return textwrap.indent(super()._to_markdown(), self.indent).rstrip("\n") + "\n"
+        text = super()._to_markdown()
+        return textwrap.indent(text, self.indent).rstrip("\n") + "\n"
 
     @property
     def attributes_block(self) -> str:

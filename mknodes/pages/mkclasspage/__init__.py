@@ -43,12 +43,9 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         self.module_path = module_path
         # if user chooses custom template, we make default the parent
         tpl = template or DEFAULT_TPL
-        super().__init__(
-            path=path or pathlib.Path(f"{klass.__name__}.md"),
-            template=tpl,
-            template_parent=DEFAULT_TPL if tpl != DEFAULT_TPL else None,
-            **kwargs,
-        )
+        p = path or pathlib.Path(f"{klass.__name__}.md")
+        tpl_parent = DEFAULT_TPL if tpl != DEFAULT_TPL else None
+        super().__init__(path=p, template=tpl, template_parent=tpl_parent, **kwargs)
 
     @property
     def parts(self) -> tuple[str, ...]:
