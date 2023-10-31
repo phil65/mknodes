@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers
+from mknodes.utils import helpers, log, pathhelpers
 
 
 logger = log.get_logger(__name__)
@@ -37,9 +37,6 @@ class MkText(mknode.MkNode):
         super().__init__(**kwargs)
         self._text = str(text or "")
         self.render_jinja = render_jinja
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     def __getitem__(self, section_name: str) -> Self | None:
         markdown = self._to_markdown()

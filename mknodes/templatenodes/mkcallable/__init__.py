@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 if TYPE_CHECKING:
@@ -53,9 +53,6 @@ class MkCallable(mknode.MkNode):
         node = self.fn(*self.args, **self.kw_args)
         node.parent = self.parent
         return node
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def files(self):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkbinaryimage, mknode
-from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import log, resources, xmlhelpers as xml
 
 
 if TYPE_CHECKING:
@@ -85,9 +85,6 @@ class MkCard(mknode.MkNode):
         self.caption = caption
         self.size = size
         self.path_dark_mode = path_dark_mode
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def url(self) -> str:

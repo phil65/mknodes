@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import inspecthelpers, log, reprhelpers, resources
+from mknodes.utils import inspecthelpers, log, resources
 
 
 logger = log.get_logger(__name__)
@@ -52,9 +52,6 @@ class MkCommentedCode(mkcontainer.MkContainer):
         self.linenums = linenums
         self._style = style
         super().__init__(content=None, header=header, **kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def code(self) -> str:

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import log, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -24,9 +24,6 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     ):
         self.arrow = arrow
         super().__init__(content=content or [], **kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self, content=self.items, arrow=self.arrow)
 
     def get_element(self) -> xml.Div:
         klass = f"speech {self.arrow}" if self.arrow else "speech"

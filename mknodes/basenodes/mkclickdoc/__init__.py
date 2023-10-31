@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import clihelpers, log, reprhelpers
+from mknodes.utils import clihelpers, log
 
 
 logger = log.get_logger(__name__)
@@ -37,9 +37,6 @@ class MkClickDoc(mknode.MkNode):
         self.prog_name = prog_name
         self.show_hidden = show_hidden
         self.show_subcommands = show_subcommands
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def attributes(self) -> dict[str, Any]:

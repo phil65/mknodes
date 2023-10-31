@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import icons, log, reprhelpers
+from mknodes.utils import icons, log
 
 
 logger = log.get_logger(__name__)
@@ -57,9 +57,6 @@ class MkIcon(mknode.MkNode):
         self.flip = flip
         self.rotate = rotate
         self.box = box
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def svg(self) -> str:

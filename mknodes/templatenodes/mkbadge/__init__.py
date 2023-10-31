@@ -6,7 +6,7 @@ import html
 from typing import Any, Literal
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import helpers, log, resources
 
 
 logger = log.get_logger(__name__)
@@ -136,9 +136,6 @@ class MkBadge(mkimage.MkImage):
     @path.setter
     def path(self, value):
         pass
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

@@ -4,7 +4,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import buildsystems
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -61,9 +61,6 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
         super().__init__(header=header, **kwargs)
         self._repo_url = repo_url
         self._build_backend = build_backend
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def repo_url(self) -> str:

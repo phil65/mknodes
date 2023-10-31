@@ -6,7 +6,7 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -112,9 +112,6 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         self.include_editables = include_editables
         self.editables_only = editables_only
         super().__init__(graph_type="flow", direction=direction, **kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

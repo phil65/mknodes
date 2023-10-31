@@ -10,7 +10,7 @@ from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
 from mknodes.info import packageregistry
 from mknodes.templatenodes import mkbadge
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -61,9 +61,6 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.badge_color = badge_color
         self.text_color = text_color
         self.use_gitlab_style = use_gitlab_style
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def badge_content(self) -> list[tuple]:

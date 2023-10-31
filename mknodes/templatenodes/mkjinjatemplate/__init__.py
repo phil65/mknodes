@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mkcontainer
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -40,9 +40,6 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
         self.template = template
         self.block = block
         self.variables = variables or {}
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def items(self):

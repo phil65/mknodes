@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -36,9 +36,6 @@ class MkKeys(mknode.MkNode):
                 self.keys = keys.lower().split("+")
             case list():
                 self.keys = [i.lower() for i in keys]
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         key_str = "+".join(self.keys)

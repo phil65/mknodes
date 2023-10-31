@@ -6,7 +6,7 @@ from typing import Any
 
 from mknodes import treelib
 from mknodes.templatenodes import mktreeview
-from mknodes.utils import classhelpers, log, reprhelpers
+from mknodes.utils import classhelpers, log
 
 
 logger = log.get_logger(__name__)
@@ -61,9 +61,6 @@ class MkModuleOverview(mktreeview.MkTreeView):
         )
         max_depth = self.maximum_depth or 0
         return node.get_tree_repr(style=self.style, max_depth=max_depth)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

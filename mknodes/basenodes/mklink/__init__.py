@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import icons, log, reprhelpers
+from mknodes.utils import icons, log
 
 
 if TYPE_CHECKING:
@@ -54,9 +54,6 @@ class MkLink(mknode.MkNode):
             self.add_css_class("md-button")
         if primary_color:
             self.add_css_class("md-button--primary")
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def icon(self) -> str:

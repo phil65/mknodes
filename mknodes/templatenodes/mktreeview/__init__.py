@@ -9,7 +9,7 @@ from typing import Any, get_args
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
 from mknodes.data import treestyles
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -73,9 +73,6 @@ class MkTreeView(mkcode.MkCode):
             case _:
                 raise TypeError(self.tree)
         return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -35,9 +35,6 @@ class MkHeader(mknode.MkNode):
         self.text = str(text or "")
         self.level = level
         self.exclude_from_search = exclude_from_search
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         level_str = "#" * self.level

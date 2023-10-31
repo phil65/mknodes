@@ -8,7 +8,7 @@ import types
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import inspecthelpers, log, reprhelpers, resources
+from mknodes.utils import inspecthelpers, log, resources
 
 
 logger = log.get_logger(__name__)
@@ -90,9 +90,6 @@ class MkPyDeps(mknode.MkNode):
         self.only_cycles = only_cycles
         self.clusters = clusters
         super().__init__(**kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def module(self):

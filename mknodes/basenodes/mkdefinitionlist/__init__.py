@@ -40,9 +40,6 @@ class MkDefinition(mkcontainer.MkContainer):
     def title(self, value):
         self._title = value
 
-    def __repr__(self):
-        return reprhelpers.get_repr(self, title=self._title, content=self.items)
-
     def _to_markdown(self) -> str:
         lines = super()._to_markdown().split("\n")
         result = [f"{self.title}", f":   {lines[0]}"]

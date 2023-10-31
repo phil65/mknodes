@@ -10,7 +10,7 @@ from typing import Any, Literal
 from git_changelog import cli
 
 from mknodes.basenodes import mktext
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -68,9 +68,6 @@ class MkChangelog(mktext.MkText):
         self.template = template
         self.sections = sections
         self._repository = repository
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def repository(self):

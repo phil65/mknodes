@@ -4,7 +4,7 @@ from typing import Any, get_args
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
-from mknodes.utils import log, reprhelpers, resources, xmlhelpers
+from mknodes.utils import log, resources, xmlhelpers
 
 
 logger = log.get_logger(__name__)
@@ -33,9 +33,6 @@ class MkCompactAdmonition(mknode.MkNode):
         self.text = text
         self.typ = typ
         super().__init__(**kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         kls = f"mdx-grid-wrapper mdx-admo--{self.typ}" if self.typ else "mdx-grid-wrapper"

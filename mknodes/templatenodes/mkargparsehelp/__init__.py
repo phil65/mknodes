@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 
 from mknodes.basenodes import mkcontainer, mkheader, mktext
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -18,9 +18,6 @@ class MkArgParseHelp(mkcontainer.MkContainer):
     def __init__(self, parser: argparse.ArgumentParser, **kwargs):
         self.parser = parser
         super().__init__(**kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def items(self):

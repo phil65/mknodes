@@ -8,7 +8,7 @@ from typing import Any, Literal, get_args
 import seedir
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -86,9 +86,6 @@ class MkSeeDir(mkcode.MkCode):
     @text.setter
     def text(self, text):
         self.obj = text
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

@@ -6,7 +6,7 @@ import pathlib
 from typing import Any, Literal
 
 from mknodes.basenodes import mktext
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -39,9 +39,6 @@ class MkCodeOfConduct(mktext.MkText):
         super().__init__(**kwargs)
         self.version = version
         self.contact_email = contact_email
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def text(self) -> str:

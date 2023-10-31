@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mkdefinitionlist
-from mknodes.utils import helpers, log, reprhelpers, superdict
+from mknodes.utils import helpers, log, superdict
 
 
 logger = log.get_logger(__name__)
@@ -45,9 +45,6 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         self.description = description
         self.optional = optional
         self.mode = mode
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def title(self) -> str:

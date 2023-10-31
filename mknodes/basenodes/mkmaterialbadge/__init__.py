@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import icons, log, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import icons, log, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -64,9 +64,6 @@ class MkMaterialBadge(mknode.MkNode):
     @property
     def url(self) -> str:
         return self.ctx.links.get_url(self.target) if self.target else ""
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

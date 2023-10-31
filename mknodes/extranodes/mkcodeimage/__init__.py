@@ -9,7 +9,7 @@ import upath
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers, richhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log, richhelpers
 
 
 logger = log.get_logger(__name__)
@@ -40,9 +40,6 @@ class MkCodeImage(mknode.MkNode):
         self.title = title
         self._code = code
         super().__init__(**kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def code(self) -> str:

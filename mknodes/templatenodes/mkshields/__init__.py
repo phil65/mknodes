@@ -5,7 +5,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcontainer, mkimage, mknode
 from mknodes.data import badges
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -40,9 +40,6 @@ class MkShields(mkcontainer.MkContainer):
         self._project = project
         self._branch = branch
         self._shields = shields
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def user(self):

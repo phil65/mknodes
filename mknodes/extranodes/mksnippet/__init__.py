@@ -4,7 +4,7 @@ import os
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -28,9 +28,6 @@ class MkSnippet(mknode.MkNode):
         """
         super().__init__(**kwargs)
         self.path = path
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

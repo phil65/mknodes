@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Literal, get_args
 
 from mknodes.basenodes import mkcontainer
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 if TYPE_CHECKING:
@@ -36,9 +36,6 @@ class MkCritic(mkcontainer.MkContainer):
         """
         super().__init__(content=content, **kwargs)
         self.typ = typ
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     def _to_markdown(self) -> str:
         match self.typ:

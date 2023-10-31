@@ -5,7 +5,7 @@ import pprint
 
 from mknodes.basenodes import mkcode
 from mknodes.data import datatypes
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -62,9 +62,6 @@ class MkPrettyPrint(mkcode.MkCode):
             sort_dicts=self.sort_dicts,
             underscore_numbers=self.underscore_numbers,
         )
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

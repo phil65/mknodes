@@ -5,7 +5,7 @@ from collections.abc import Iterator
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -57,10 +57,6 @@ class MkContainer(mknode.MkNode):
 
     def __iter__(self) -> Iterator[mknode.MkNode]:  # type: ignore
         return iter(self.items)
-
-    def __repr__(self):
-        content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
-        return reprhelpers.get_repr(self, content=content)
 
     @classmethod
     def create_example_page(cls, page):

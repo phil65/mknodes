@@ -5,7 +5,7 @@ import pathlib
 from typing import TYPE_CHECKING, Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import helpers, log
 
 
 if TYPE_CHECKING:
@@ -73,9 +73,6 @@ class MkImage(mknode.MkNode):
                 return pathlib.Path(self._path_dark_mode).name
             case _:
                 return None
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def url(self) -> str:

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from mknodes.basenodes import mkcard, mkcontainer, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, log, pathhelpers, reprhelpers
+from mknodes.utils import helpers, log, pathhelpers
 
 
 if TYPE_CHECKING:
@@ -44,9 +44,6 @@ class MkShowcase(mkcontainer.MkContainer):
         elif isinstance(items, dict):
             items = [mkcard.MkCard(**dct) for dct in items.values()]
         super().__init__(content=items or [], **kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self, cards=self.items)
 
     def to_child_node(self, item) -> mknode.MkNode:
         match item:

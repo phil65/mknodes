@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -45,9 +45,6 @@ class MkProgressBar(mknode.MkNode):
             case "candystripe_animated":
                 self.add_css_class("candystripe")
                 self.add_css_class("candystripe-animate")
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def label(self) -> str:

@@ -6,7 +6,7 @@ import os
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, reprhelpers, resources
+from mknodes.utils import helpers, log, resources
 
 
 logger = log.get_logger(__name__)
@@ -36,9 +36,6 @@ class MkCommandOutput(mknode.MkNode):
         # caching on instance level as a compromise
         self._cache: dict[str, str] = {}  # {call: output}
         super().__init__(**kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def output(self) -> str:

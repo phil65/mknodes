@@ -5,7 +5,7 @@ from typing import Any
 from mknodes.basenodes import mklist
 from mknodes.data import commitconventions
 from mknodes.templatenodes import mkjinjatemplate
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -41,9 +41,6 @@ class MkCommitConventions(mkjinjatemplate.MkJinjaTemplate):
         """
         super().__init__(template="commit_conventions.jinja", **kwargs)
         self._commit_types = commit_types
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def variables(self):

@@ -4,7 +4,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcode, mkcontainer, mkheader, mknode, mktext
 from mknodes.data import installmethods
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -78,9 +78,6 @@ class MkInstallGuide(mkcontainer.MkContainer):
         #     code = mkcode.MkCode(text)
         #     items.append(code)
         return mkcontainer.MkContainer(items, parent=self)
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @classmethod
     def create_example_page(cls, page):

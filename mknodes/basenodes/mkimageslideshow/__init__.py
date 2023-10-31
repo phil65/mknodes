@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import log, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -41,9 +41,6 @@ class MkImageSlideshow(mknode.MkNode):
         """
         super().__init__(**kwargs)
         self.images = images
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     def get_element(self) -> xml.Div:
         attrs = {"data-simple-slider": ""}

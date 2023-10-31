@@ -11,7 +11,7 @@ import upath
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import datatypes
-from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers, resources
+from mknodes.utils import classhelpers, inspecthelpers, log, resources
 
 
 if TYPE_CHECKING:
@@ -65,17 +65,6 @@ class MkCode(mkcontainer.MkContainer):
         self.highlight_lines = highlight_lines
         self._fence_level = fence_level
         super().__init__(content=content, header=header, **kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_repr(
-            self,
-            content=self.items,
-            language=self.language,
-            title=self.title,
-            linenums=self.linenums,
-            highlight_lines=self.highlight_lines,
-            _filter_empty=True,
-        )
 
     @property
     def text(self) -> str:

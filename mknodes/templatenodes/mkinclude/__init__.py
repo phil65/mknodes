@@ -6,7 +6,7 @@ from typing import Any
 
 from mknodes.basenodes import mktext
 from mknodes.pages import mkpage
-from mknodes.utils import log, pathhelpers, reprhelpers
+from mknodes.utils import log, pathhelpers
 
 
 EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
@@ -34,9 +34,6 @@ class MkInclude(mktext.MkText):
         """
         super().__init__(**kwargs)
         self.target = target
-
-    def __repr__(self):
-        return reprhelpers.get_nondefault_repr(self)
 
     @property
     def text(self) -> str:

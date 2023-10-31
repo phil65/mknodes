@@ -22,7 +22,7 @@ class Node:
         self.children: list[Self] = []
 
     def __repr__(self):
-        return reprhelpers.get_repr(self)
+        return reprhelpers.get_nondefault_repr(self)
 
     def __iter__(self) -> Iterator[Self]:
         yield from self.children
