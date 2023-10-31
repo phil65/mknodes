@@ -10,7 +10,7 @@ jinja = """
 
 [examples.nested]
 title = "Nested"
+description = "We can also nest blocks, they will adjust their delimiters automatically."
 jinja = """
-We can also nest blocks, they will adjust their delimiters automatically.
-{{ "Nested!" | MkBlockQuote | MkBlockQuote}}
+{{ "Nested!" | MkBlockQuote | MkBlockQuote }}
 """

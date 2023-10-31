@@ -11,9 +11,8 @@ pygments_lang_class = true
 
 [examples.title]
 title = "Default"
+description = "By default, python syntax highlighting is used."
 jinja = """
-By default, python syntax highlighting is used.
-
 {{ "a = 1 + 2" | MkCode }}
 """
 
