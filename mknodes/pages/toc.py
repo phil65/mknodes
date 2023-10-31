@@ -42,7 +42,7 @@ class AnchorLink:
     @property
     def url(self) -> str:
         """The hash fragment of a URL pointing to the item."""
-        return "#" + self.id
+        return f"#{self.id}"
 
     def __str__(self) -> str:
         return self.indent_print()
@@ -55,11 +55,11 @@ class AnchorLink:
         return ret
 
 
+@dataclasses.dataclass
 class TableOfContents(Iterable[AnchorLink]):
     """Represents the table of contents for a given page."""
 
-    def __init__(self, items: list[AnchorLink]) -> None:
-        self.items = items
+    items: list[AnchorLink]
 
     def __iter__(self) -> Iterator[AnchorLink]:
         return iter(self.items)
