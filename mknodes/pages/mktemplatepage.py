@@ -35,6 +35,15 @@ class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
         self.template_parent = template_parent
 
     @property
+    def children(self):
+        self.to_markdown()
+        return self.env.rendered_children
+
+    @children.setter
+    def children(self, val):
+        pass
+
+    @property
     def extra_variables(self) -> dict[str, Any]:
         """Extra variables for the environment. Can be overridden by subclasses."""
         return {}
