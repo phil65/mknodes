@@ -70,8 +70,6 @@ class MkTreeView(mkcode.MkCode):
                 )
             case mknode.MkNode():
                 node = self.tree
-            case None:
-                return ""
             case _:
                 raise TypeError(self.tree)
         return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)

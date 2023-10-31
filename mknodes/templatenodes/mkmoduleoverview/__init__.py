@@ -59,10 +59,8 @@ class MkModuleOverview(mktreeview.MkTreeView):
             predicate=self.predicate,
             exclude=self.exclude_folders,
         )
-        return node.get_tree_repr(
-            style=self.style,
-            max_depth=self.maximum_depth or 0,
-        )
+        max_depth = self.maximum_depth or 0
+        return node.get_tree_repr(style=self.style, max_depth=max_depth)
 
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)

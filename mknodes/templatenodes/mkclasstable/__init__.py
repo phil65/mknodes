@@ -20,8 +20,6 @@ class MkClassTable(mktable.MkTable):
         **kwargs,
     ):
         self.klasses = klasses
-        # STRIP_CODE = r"```[^\S\r\n]*[a-z]*\n.*?\n```"
-        # docs = [re.sub(STRIP_CODE, '', k.__module__, 0, re.DOTALL) for k in klasses]
         self.layout = layout
         super().__init__(**kwargs)
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-import contextlib
 
 from typing import Any
 
@@ -63,30 +62,6 @@ class MkContainer(mknode.MkNode):
         content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
         return reprhelpers.get_repr(self, content=content)
 
-    @contextlib.contextmanager
-    def in_html_tag(self, tag_name: str, **attributes: Any):
-        """Will wrap the content in html tags with tag name.
-
-        Examples:
-            with node.in_html_tag("div", **{"class": "css_class"}):
-                node += mk.MkSomething()
-
-        Arguments:
-            tag_name: Tag to use for wrapping
-            attributes: addtional attributes for the XML element
-        """
-        if attributes:
-            attr_txt = " " + " ".join(f"{k!r}={v!r}" for k, v in attributes.items())
-        else:
-            attr_txt = ""
-        text = f"<{tag_name}{attr_txt}>"
-        self.append(text)
-        container = MkContainer(parent=self)
-        yield container
-        for item in container:
-            self.append(item)
-        self.append(f"</{tag_name}>")
-
     @classmethod
     def create_example_page(cls, page):
         import mknodes as mk
@@ -129,6 +104,4 @@ class MkContainer(mknode.MkNode):
 
 if __name__ == "__main__":
     section = MkContainer(header="fff")
-    with section.in_html_tag("ab", c="e"):
-        section += "hello"
     print(section)

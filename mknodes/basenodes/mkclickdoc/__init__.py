@@ -17,6 +17,7 @@ class MkClickDoc(mknode.MkNode):
     def __init__(
         self,
         target: str | None = None,
+        *,
         prog_name: str | None = None,
         show_hidden: bool = False,
         show_subcommands: bool = False,

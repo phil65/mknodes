@@ -32,9 +32,8 @@ class MkShowcase(mkcontainer.MkContainer):
     def __init__(
         self,
         items: list[str | mknode.MkNode] | None = None,
-        column_count: int = 3,
         *,
-        header: str = "",
+        column_count: int = 3,
         **kwargs,
     ):
         self.column_count = column_count
@@ -44,7 +43,7 @@ class MkShowcase(mkcontainer.MkContainer):
             items = [mkcard.MkCard(**dct) for dct in data.values()]
         elif isinstance(items, dict):
             items = [mkcard.MkCard(**dct) for dct in items.values()]
-        super().__init__(content=items or [], header=header, **kwargs)
+        super().__init__(content=items or [], **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, cards=self.items)
