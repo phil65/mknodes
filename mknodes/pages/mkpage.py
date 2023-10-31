@@ -104,6 +104,16 @@ class MkPage(mkcontainer.MkContainer):
         return bool(self._is_index)
 
     @property
+    def toc(self):
+        import markdown
+
+        from mknodes.pages import toc
+
+        converter = markdown.Markdown(extensions=["toc"])
+        converter.convert(self.to_markdown())
+        return toc.get_toc(getattr(converter, "toc_tokens", []))
+
+    @property
     def resolved_metadata(self) -> metadata.Metadata:
         """Return page metadata, complemented with the parent Nav metadata objects."""
         meta = metadata.Metadata()
