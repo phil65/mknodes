@@ -172,7 +172,7 @@ class Environment(jinja2.Environment):
             template_name: Template name
             variables: Extra variables for this render call
             block_name: Render specific block from the template
-            parent_template: Optional parent template (to be used with super())
+            parent_template: The name of the parent template importing this template
         """
         template = self.get_template(template_name, parent=parent_template)
         if not block_name:

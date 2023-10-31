@@ -119,7 +119,7 @@ class NodeEnvironment(environment.Environment):
             template_name: Template name
             variables: Extra variables for this render call
             block_name: Render specific block from the template
-            parent_template: Optional parent template (to be used with super())
+            parent_template: The name of the parent template importing this template
         """
         # if pathlib.Path(template_name).as_posix() not in self.list_templates():
         #     self.add_template(template_name)
