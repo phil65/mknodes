@@ -1,0 +1,11 @@
+[metadata]
+icon = "mdi:view-module-outline"
+name = "MkModuleTable"
+group = "documentation"
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ ["mknodes.info"] | MkModuleTable }}
+"""
+
