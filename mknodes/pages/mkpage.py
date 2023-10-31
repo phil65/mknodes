@@ -105,13 +105,9 @@ class MkPage(mkcontainer.MkContainer):
 
     @property
     def toc(self):
-        import markdown
-
         from mknodes.pages import toc
 
-        converter = markdown.Markdown(extensions=["toc"])
-        converter.convert(self.to_markdown())
-        return toc.get_toc(getattr(converter, "toc_tokens", []))
+        return toc.get_toc(self.to_markdown())
 
     @property
     def resolved_metadata(self) -> metadata.Metadata:

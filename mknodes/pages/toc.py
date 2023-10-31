@@ -11,7 +11,12 @@ class _TocToken(TypedDict):
     children: list[_TocToken]
 
 
-def get_toc(toc_tokens: list[_TocToken]) -> TableOfContents:
+def get_toc(md: str) -> TableOfContents:
+    import markdown
+
+    converter = markdown.Markdown(extensions=["toc"])
+    converter.convert(md)
+    toc_tokens = getattr(converter, "toc_tokens", [])
     toc = [_parse_toc_token(i) for i in toc_tokens]
     # For the table of contents, always mark the first element as active
     if len(toc):
