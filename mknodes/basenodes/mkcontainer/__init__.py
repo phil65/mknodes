@@ -24,7 +24,7 @@ class MkContainer(mknode.MkNode):
         self,
         content: list | None | str | mknode.MkNode = None,
         *,
-        block_separator: str | None = None,
+        block_separator: str = "\n\n",
         **kwargs: Any,
     ):
         """Constructor.
@@ -35,7 +35,7 @@ class MkContainer(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.block_separator = "\n\n" if block_separator is None else block_separator
+        self.block_separator = block_separator
         match content:
             case None:
                 self.items: list[mknode.MkNode] = []

@@ -38,6 +38,7 @@ class NodeEnvironment(environment.Environment):
         self.inherit_from(node.ctx.env)
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
+        self.rendered_children: list[mk.MkNode] = list()
         self.setup_environment()
         path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
         self.class_path = pathlib.Path(path or "").parent.as_posix()
@@ -124,12 +125,14 @@ class NodeEnvironment(environment.Environment):
         #     self.add_template(template_name)
         self.rendered_nodes = []
         self.update_env_from_context()
-        return super().render_template(
+        result = super().render_template(
             template_name,
             variables=variables,
             block_name=block_name,
             parent_template=parent_template,
         )
+        self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
+        return result
 
     def render_string(self, markdown: str, variables: dict | None = None):
         """Render a template string.
@@ -142,7 +145,9 @@ class NodeEnvironment(environment.Environment):
         """
         self.rendered_nodes = []
         self.update_env_from_context()
-        return super().render_string(markdown, variables)
+        result = super().render_string(markdown, variables)
+        self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
+        return result
 
 
 if __name__ == "__main__":

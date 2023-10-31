@@ -48,7 +48,7 @@ class MkJinjaTemplate(mkcontainer.MkContainer):
             variables=self.variables,
             block_name=self.block,
         )
-        return self.env.rendered_nodes
+        return self.env.rendered_children
 
     @items.setter
     def items(self, val):

@@ -60,8 +60,8 @@ class MkText(mknode.MkNode):
     def children(self):
         if not self.render_jinja:
             return []
-        self.env.render_string(self.text, variables=self.variables)
-        return self.env.rendered_nodes
+        self.env.render_string(self._text, variables=self.variables)
+        return self.env.rendered_children
 
     @children.setter
     def children(self, val):
