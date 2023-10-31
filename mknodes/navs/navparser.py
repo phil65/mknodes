@@ -327,7 +327,7 @@ class NavParser:
             elif path.suffix in [".py"]:
                 page = mkpage.MkPage(path=path.name, title=path.name, **kwargs)
                 content = path.read_text(encoding="utf-8")
-                page += mkcode.MkCode(content, language="py", linenums=1)
+                page += mkcode.MkCode(content, linenums=1)
                 self._nav += page
                 logger.debug("Loaded page from from %s", path)
         return self._nav

@@ -71,7 +71,7 @@ def get_svg_for_code(
     text: str,
     title: str = "",
     width: int = 80,
-    language: str = "python",
+    language: str = "py",
     pygments_style: str = "material",
 ) -> str:
     from rich.console import Console

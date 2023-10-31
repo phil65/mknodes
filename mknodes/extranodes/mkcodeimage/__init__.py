@@ -59,7 +59,7 @@ class MkCodeImage(mknode.MkNode):
 
     @classmethod
     def create_example_page(cls, page):
-        node = MkCodeImage("a = 1 + 2", language="python", title="Window title")
+        node = MkCodeImage("a = 1 + 2", language="py", title="Window title")
         page += node
 
     @classmethod

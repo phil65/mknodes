@@ -37,8 +37,8 @@ class MkCode(mkcontainer.MkContainer):
     def __init__(
         self,
         content: str | mk.MkNode | list = "",
-        language: str = "py",
         *,
+        language: str = "py",
         title: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
@@ -98,7 +98,7 @@ class MkCode(mkcontainer.MkContainer):
         import mknodes as mk
 
         page += mk.MkHeader("Regular", level=3)
-        node_1 = MkCode("a = 1 + 2", language="python")
+        node_1 = MkCode("a = 1 + 2", language="py")
         page += mk.MkReprRawRendered(node_1)
 
         page += mk.MkHeader("Syntax highlighting", level=3)
