@@ -118,13 +118,22 @@ def get_dataclass_repr(
         instance: dataclass instance
         char_width: If set, then repr will be formatted with black to given char width
     """
-    nodef_f_vals = (
-        (f.name, attrgetter(f.name)(instance))
-        for f in dataclasses.fields(instance)
-        if attrgetter(f.name)(instance) != f.default
-    )
-
-    nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in nodef_f_vals)
+    vals = []
+    for f in dataclasses.fields(instance):
+        no_default = isinstance(f.default, dataclasses._MISSING_TYPE)
+        no_default_factory = isinstance(f.default_factory, dataclasses._MISSING_TYPE)
+        if not no_default:
+            val = attrgetter(f.name)(instance)
+            if val != f.default:
+                vals.append((f.name, val))
+        if not no_default_factory:
+            val = attrgetter(f.name)(instance)
+            if val != f.default_factory():
+                vals.append((f.name, val))
+        if no_default and no_default_factory:
+            val = attrgetter(f.name)(instance)
+            vals.append((f.name, val))
+    nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in vals)
     text = f"{instance.__class__.__name__}({nodef_f_repr})"
     if char_width:
         from mkdocstrings_handlers.python import rendering
