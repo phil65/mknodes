@@ -7,16 +7,19 @@ from typing import TypedDict
 
 
 class _TocToken(TypedDict):
+    """The shape of the dict created by the "toc" markdown extension."""
+
     level: int
     id: str
     name: str
     children: list[_TocToken]
 
 
-def get_toc(md: str) -> TableOfContents:
+def get_toc(md: str, toc_config: dict | None = None) -> TableOfContents:
     import markdown
 
-    converter = markdown.Markdown(extensions=["toc"])
+    cfg = {"toc": toc_config} if toc_config else None
+    converter = markdown.Markdown(extensions=["toc"], extension_configs=cfg)
     converter.convert(md)
     toc_tokens = getattr(converter, "toc_tokens", [])
     toc = [_parse_toc_token(i) for i in toc_tokens]
