@@ -20,6 +20,9 @@ class MdConverter(markdown.Markdown):
         tab_length: int = 4,
     ):
         exts: Sequence[str | markdown.Extension] = [
+            "toc",
+            "tables",
+            # "fenced_code",
             "pymdownx.emoji",
             "md_in_html",
             "attr_list",
