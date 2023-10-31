@@ -112,7 +112,6 @@ def add(text, prefix: str = "", suffix: str = ""):
 ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
     "now": datetime.datetime.now,
-    "str": str,
     "importlib": importlib,
     "inspecthelpers": inspecthelpers,
     "resources_dir": paths.RESOURCES,
@@ -123,7 +122,6 @@ ENV_FILTERS = {
     "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
     "pformat": pprint.pformat,
-    "str": str,
     "repr": repr,
     "rstrip": str.rstrip,
     "lstrip": str.lstrip,

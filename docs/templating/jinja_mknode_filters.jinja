@@ -38,7 +38,7 @@ If that Node would go through the build pipeline afterwards, these extensions wo
     When using **MkNodes** as filter blocks (check the **jinja2** docs), the result
     needs to get stringified.
     ``` jinja title="Example"
-    { % filter Mkheader | str % }
+    { % filter Mkheader | string % }
     Example text.
     { % endfilter % }
     ```
