@@ -14,13 +14,15 @@ class MkReprRawRendered(mktabbed.MkTabbed):
 
     It contains a tab for the repr, one for the rendered output,
     one for the markdown and a Repr tree in case the node has children.
+    The node can also be a string with a jinja macro returning an MkNode.
+    In that case a "Jinja" tab containing the macro is prepended to the other tabs.
     """
 
     ICON = "material/presentation"
 
     def __init__(
         self,
-        node: mknode.MkNode | None = None,
+        node: mknode.MkNode | str | None = None,
         select_tab: int | str | None = 3,
         **kwargs: Any,
     ):
@@ -41,18 +43,26 @@ class MkReprRawRendered(mktabbed.MkTabbed):
     def items(self):
         import mknodes as mk
 
-        if self.node is None:
-            return []
-        html_node = self.node.__copy__()
+        match self.node:
+            case None:
+                return []
+            case str():
+                self.env.render_string(self.node)
+                node = self.env.rendered_children[0]
+            case _:
+                node = self.node
+        html_node = node.__copy__()
         html_node.as_html = True
         tabs: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
-            Repr=mk.MkCode(repr(self.node)),
-            Raw=mk.MkCode(self.node, language="markdown"),
+            Repr=mk.MkCode(repr(node)),
+            Raw=mk.MkCode(node, language="markdown"),
             Html=mk.MkCode(html_node, language="html"),
-            Rendered=self.node.__copy__(),
+            Rendered=node.__copy__(),
         )
-        if len(self.node.children) > 0:
-            tabs["Repr tree"] = mk.MkTreeView(self.node)
+        if isinstance(self.node, str):
+            tabs = {"Jinja": self.node, **tabs}
+        if len(node.children) > 0:
+            tabs["Repr tree"] = mk.MkTreeView(node)
         items = [mktabs.MkTab(content=v, title=k, parent=self) for k, v in tabs.items()]
         items[0].new = True
         if self.select_tab is not None:
