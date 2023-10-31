@@ -48,9 +48,36 @@ class NodeFile(tomlfile.TomlFile):
         return self._data.get("requirements", {})
 
     @property
-    def extensions(self):
+    def extensions(self) -> list[resources.Extension]:
         extensions = self.requirements.get("extension", {})
         return [resources.Extension(k, **v) for k, v in extensions.items()]
+
+    @property
+    def packages(self) -> list[resources.Package]:
+        packages = self.requirements.get("package", {})
+        return [resources.Package(k, **v) for k, v in packages.items()]
+
+    @property
+    def css(self) -> list[resources.CSSFile]:
+        css: list[resources.CSSFile] = []
+        res = self._data.get("resources", {})
+        for item in res.get("css", []):
+            if "filename" in item:
+                instance = resources.CSSFile(item["filename"])
+                css.append(instance)
+        return css
+
+    @property
+    def js(self) -> list[resources.JSFile]:
+        js: list[resources.JSFile] = []
+        res = self._data.get("resources", {})
+        for item in res.get("js", []):
+            if "link" in item:
+                item = item.copy()
+                name = item.pop("link")
+                instance = resources.JSFile(name, **item)
+                js.append(instance)
+        return js
 
     # @property
     # def resources(self) -> resources.Resources:
