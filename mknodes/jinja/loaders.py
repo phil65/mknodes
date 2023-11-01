@@ -234,7 +234,7 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
         return reprhelpers.get_repr(self, fs=self.fs.protocol, **self.storage_options)
 
     def list_templates(self) -> list[str]:
-        return self.fs.ls("")
+        return self.fs.ls(self.fs.root_marker)
 
     def get_source(
         self,
