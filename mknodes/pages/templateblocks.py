@@ -268,6 +268,11 @@ class StylesBlock(BaseBlock):
         self.styles.append(stylesheet)
 
     def add_css(self, css: str | dict):
+        """Add CSS in form of a string or a CSS-rule like dictionary.
+
+        Arguments:
+            css: A string or dict containing CSS
+        """
         if isinstance(css, dict):
             css = str(css_.CSS(css))
         filename = f"{helpers.get_hash(css)}.css"
