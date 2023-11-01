@@ -10,6 +10,14 @@ def build(project):
     project.root += sub_nav
 
 
+def test_build():
+    theme = mk.MaterialTheme()
+    from mknodes.manual import root
+
+    proj = mk.Project(theme=theme)
+    root.build(proj)
+
+
 # def test_templates():
 #     theme = mk.MaterialTheme()
 #     project = mk.Project(theme=theme, repo=".", build_fn=build)

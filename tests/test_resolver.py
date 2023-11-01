@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import mknodes as mk
+
 from mknodes.treelib import noderesolver
 
 
-def test_resolver(mknodes_project):
+def test_resolver():
     resolver = noderesolver.MkNodeResolver()
-    result = resolver.glob("*/*/MkAdm*", mknodes_project._root)
+    root = mk.MkNav()
+    sub = root.add_nav("SubNav")
+    page = sub.add_page("Test")
+    page += mk.MkAdmonition("Test")
+    result = resolver.glob("*/*/MkAdm*", root)
     assert result
-
-
-def resolving_files(mknodes_project):
-    mknodes_project.all_files()

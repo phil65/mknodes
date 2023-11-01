@@ -9,12 +9,12 @@ group = "documentation"
 # {{ "mknodes/data/tools.py" | MkPyDeps(max_bacon=1, max_module_depth=1) }}
 # """
 
-[output.markdown]
-template = """
-<body>
+# [output.markdown]
+# template = """
+# <body>
 
-{{ node.svg }}
+# {{ node.svg }}
 
-</body>
+# </body>
 
-"""
+# """

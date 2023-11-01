@@ -22,7 +22,7 @@ dependencies = [
     # Testing
     "pytest",
     "pytest-cov",
-
+    "pytest-codspeed",
     # Docs
     "mkdocs >=1.5",
     "mkdocs-material >= 9.4",
