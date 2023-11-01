@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import functools
 import os
+import pathlib
 
 from mknodes.info import tomlfile
 from mknodes.utils import resources
@@ -9,13 +11,39 @@ from mknodes.utils import resources
 # from mknodes.utils import resources
 
 
-def find_file(klass: type) -> os.PathLike:
+@functools.cache
+def get_nodefile(klass: type) -> NodeFile | None:
+    file = find_file(klass)
+    if file.exists():
+        return NodeFile(file)
+    return None
+
+
+def find_file(klass: type) -> pathlib.Path:
     from mknodes.utils import inspecthelpers
 
     path = inspecthelpers.get_file(klass)  # type: ignore[arg-type]
     assert path
     # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
     return path.parent / "metadata.toml"
+
+
+def get_representations(jinja: str, parent) -> dict[str, str | mk.MkNode]:
+    import mknodes as mk
+
+    parent.env.render_string(jinja)
+    nodes = parent.env.rendered_nodes
+    node = mk.MkContainer(nodes) if len(nodes) > 1 else nodes[0]
+    dct: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
+        Jinja=mk.MkCode(jinja, language="jinja"),
+        Repr=mk.MkCode(repr(node)),
+        Rendered=node.__copy__(),
+        Markdown=mk.MkCode(node, language="markdown"),
+        Html=mk.MkCode(node.to_html(), language="html"),
+    )
+    if len(node.children) > 0:
+        dct["Repr tree"] = mk.MkTreeView(node)
+    return dct
 
 
 class NodeFile(tomlfile.TomlFile):
@@ -38,6 +66,13 @@ class NodeFile(tomlfile.TomlFile):
     @property
     def examples(self) -> dict[str, str]:
         return self._data.get("examples", {})
+
+    def get_examples(self, parent) -> dict[str, dict]:
+        examples = {}
+        for v in self._data.get("examples", {}).values():
+            if "jinja" in v:
+                examples[v["title"]] = get_representations(v["jinja"], parent)
+        return examples
 
     @property
     def output(self) -> dict[str, str]:

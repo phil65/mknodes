@@ -35,3 +35,10 @@ class Build:
         nav += templating_section.nav
         nav += dev_section.nav
         return nav
+
+
+if __name__ == "__main__":
+    import mknodes as mk
+
+    project = mk.Project(theme=mk.MaterialTheme())
+    build(project)
