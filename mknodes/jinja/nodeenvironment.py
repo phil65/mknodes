@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import pathlib
 
 from typing import TYPE_CHECKING, Any
@@ -73,7 +74,7 @@ class NodeEnvironment(environment.Environment):
                     _self.parent = self.node
                     self.rendered_nodes.append(_self)
 
-            _WrappedMkNode.__name__ = kls.__name__
+            functools.update_wrapper(_WrappedMkNode, kls, updated=[])
             wrapped_klasses[kls_name] = _WrappedMkNode
 
             def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
