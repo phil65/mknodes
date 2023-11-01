@@ -8,17 +8,17 @@ jinja = """
 {{ "Some text" | MkAdmonition | MkReprRawRendered }}
 """
 
-[output.markdown]
-template = """
-{% if node.node %}
-{% set html_node = node.node.__copy__() %}
-{% set html_node.as_html = True %}
-{{ node.node | repr | MkCode | MkTab(title="Repr") }}
-{{ node.node | MkCode(language="markdown") | MkTab(title="Raw") }}
-{{ html_node | MkCode(language="html") | MkTab(title="Html") }}
-{{ node.node | MkTab(title="Rendered") }}
-{% if node.node.children %}
-    {{ node.node | MkTreeView | MkTab(title="Repr tree") }}
-{% endif %}
-{% endif %}
-"""
+# [output.markdown]
+# template = """
+# {% if node.node %}
+# {% set html_node = node.node.__copy__() %}
+# {% set html_node.as_html = True %}
+# {{ node.node | repr | MkCode | MkTab(title="Repr") }}
+# {{ node.node | MkCode(language="markdown") | MkTab(title="Raw") }}
+# {{ html_node | MkCode(language="html") | MkTab(title="Html") }}
+# {{ node.node | MkTab(title="Rendered") }}
+# {% if node.node.children %}
+#     {{ node.node | MkTreeView | MkTab(title="Repr tree") }}
+# {% endif %}
+# {% endif %}
+# """

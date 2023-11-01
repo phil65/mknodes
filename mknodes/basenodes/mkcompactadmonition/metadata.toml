@@ -10,7 +10,9 @@ filename = "compactadmonition.css"
 [examples.types]
 title = "Types"
 jinja = """
-{{ "Different types." | MkCompactAdmonition(typ="warning") }}
+{% for typ in ["info", "warning", "bug"] %}
+{{ "Different types." | MkCompactAdmonition(typ=typ) }}
+{% endfor %}
 """
 
 [output.html]

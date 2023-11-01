@@ -89,7 +89,7 @@ class NodeEnvironment(environment.Environment):
         self.filters.update(filters)
         self.globals["parent_page"] = self.node.parent_page
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
-        self.globals["mknode"] = self.node
+        self.globals["node"] = self.node
         self.globals["mk"] = wrapped_klasses
 
     def update_env_from_context(self):
