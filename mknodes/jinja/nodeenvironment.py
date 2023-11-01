@@ -75,6 +75,8 @@ class NodeEnvironment(environment.Environment):
                     self.rendered_nodes.append(_self)
 
             functools.update_wrapper(_WrappedMkNode, kls, updated=[])
+            # we add <locals> here so that the classes get filtered in iter_subclasses
+            _WrappedMkNode.__qualname__ = "<locals>." + _WrappedMkNode.__qualname__
             wrapped_klasses[kls_name] = _WrappedMkNode
 
             def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
