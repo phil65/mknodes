@@ -22,12 +22,9 @@ class LoaderMixin:
     list_templates: Callable
 
     def __or__(self, other: jinja2.BaseLoader):
-        own_loaders = self.loaders if isinstance(self, jinja2.ChoiceLoader) else [self]  # type: ignore[list-item]
-        if isinstance(other, jinja2.ChoiceLoader):
-            other_loaders = other.loaders
-        else:
-            other_loaders = [other]
-        return ChoiceLoader([*own_loaders, *other_loaders])
+        own = self.loaders if isinstance(self, jinja2.ChoiceLoader) else [self]  # type: ignore[list-item]
+        others = other.loaders if isinstance(other, jinja2.ChoiceLoader) else [other]
+        return ChoiceLoader([*own, *others])
 
     def __contains__(self, path):
         return pathlib.Path(path).as_posix() in self.list_templates()
@@ -334,17 +331,17 @@ class LoaderRegistry:
             fsspec_paths: Whether a loader for FsSpec protcol paths should be added
         """
         m_paths = helpers.reduce_list(module_paths or [])
-        loaders: list[jinja2.BaseLoader] = [self.get_package_loader(p) for p in m_paths]
+        loader = ChoiceLoader([self.get_package_loader(p) for p in m_paths])
         for file in helpers.reduce_list(dir_paths or []):
             if "://" in file:
-                loaders.append(self.get_fsspec_loader(file))
+                loader |= self.get_fsspec_loader(file)
             else:
-                loaders.append(self.get_filesystem_loader(file))
+                loader |= self.get_filesystem_loader(file)
         if static:
-            loaders.append(DictLoader(static))
+            loader |= DictLoader(static)
         if fsspec_paths:
-            loaders.append(FsSpecProtocolPathLoader())
-        return ChoiceLoader(loaders)
+            loader |= FsSpecProtocolPathLoader()
+        return loader
 
 
 registry = LoaderRegistry()
