@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mknodes.pages import metadata
+import mknodes as mk
 
 
 EXPECTED = """---
@@ -18,7 +18,7 @@ title: Some title
 ---
 """
 
-example_metadata = metadata.Metadata(
+example_metadata = mk.Metadata(
     hide=["toc", "path"],
     search_boost=2.0,
     exclude_from_search=False,
@@ -35,10 +35,27 @@ def test_metadata():
 
 
 def test_no_string_if_empty():
-    data = metadata.Metadata()
+    data = mk.Metadata()
     assert not data.as_page_header()
 
 
 def test_parsing_metadata():
-    parsed, _rest = metadata.Metadata.parse(EXPECTED)
+    parsed, _rest = mk.Metadata.parse(EXPECTED)
     assert parsed.as_page_header() == EXPECTED
+
+
+def test_metadata_inheritance():
+    nav = mk.MkNav()
+    nav.metadata["test"] = "Test"
+    page = nav.add_page("Test")
+    page.metadata["test_2"] = "Test 2"
+    assert page.resolved_metadata["test"] == "Test"
+    assert page.resolved_metadata["test_2"] == "Test 2"
+
+
+def test_overwriting_inherited_metadata():
+    nav = mk.MkNav()
+    nav.metadata["test"] = "Test"
+    page = nav.add_page("Test")
+    page.metadata["test"] = "Test 2"
+    assert page.resolved_metadata["test"] == "Test 2"
