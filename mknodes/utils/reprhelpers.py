@@ -99,11 +99,16 @@ def list_repr(v, shorten: bool = True):
 
     my_repr = limit_repr.repr if shorten else repr
     match v:
-        case (mk.MkNode(), *_) if len(v) > 1:
+        case (mk.MkNode(), *_) if len(v) > 1 and any(i.children for i in v):
             return "[...]"
         case (mk.MkNode(),):
-            val = str(v[0]) if type(v[0]) in {mk.MkText, mk.MkHeader} else v[0]
-            return my_repr(val)
+            if type(v[0]) in {mk.MkText, mk.MkHeader}:
+                return my_repr(str(v[0]))
+            # if isinstance(v[0], mk.MkContainer) and len(v[0].items) == 1:
+            #     pass
+            return f"[{v.__class__.__name__}([...])]"
+            # val = str(v[0]) if type(v[0]) in {mk.MkText, mk.MkHeader} else v[0]
+            # return my_repr(val)
         case _:
             return my_repr(v)
 
