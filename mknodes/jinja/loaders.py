@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 import os
 import pathlib
 import types
@@ -243,6 +243,63 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
 
         path = pathlib.Path(template).as_posix()
         return src, path, lambda: True
+
+
+def flatten_dict(dct: Mapping, sep: str = "/", parent_key: str = "") -> Mapping:
+    items: list[tuple[str, str]] = []
+    for k, v in dct.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, Mapping):
+            items.extend(flatten_dict(v, parent_key=new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
+
+
+class NestedDictLoader(LoaderMixin, jinja2.BaseLoader):
+    """A jinja loader for loading templates from nested dicts.
+
+    This loader allows to access templates from nested dicts.
+    Can be used to load templates defined with markup like TOML.
+
+    Examples:
+        ``` toml
+        [example]
+        template = "{{ something }}"
+        ```
+
+        content = tomllib.load(toml_file)
+        loader = NestedDictLoader(content)
+        env = Environment(loader=loader)
+        env.get_template("example/template")
+    """
+
+    ID = "nested_dict"
+
+    def __init__(self, mapping: Mapping):
+        """Constructor.
+
+        Arguments:
+            mapping: A nested dict containing templates
+        """
+        super().__init__()
+        self._data = mapping
+
+    def __repr__(self):
+        return reprhelpers.get_repr(self, mapping=self._data)
+
+    def list_templates(self) -> list[str]:
+        return list(flatten_dict(self._data).keys())
+
+    def get_source(
+        self,
+        environment: jinja2.Environment,
+        template: str,
+    ) -> tuple[str, str, Callable[[], bool] | None]:
+        data: Any = self._data
+        for part in template.split("/"):
+            data = data[part]
+        return data, None, lambda: True  # type: ignore[return-value]
 
 
 class LoaderRegistry:
