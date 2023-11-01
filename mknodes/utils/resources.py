@@ -157,6 +157,9 @@ class TextResource:
             else f"{hashed}{self.EXTENSION}"
         )
 
+    def get_asset(self) -> Asset:
+        return Asset(filename=self.resolved_filename, content=self.content)
+
     def __hash__(self):
         return hash(self.content)
 
@@ -175,6 +178,9 @@ class CSSText(TextResource):
     def to_html(self) -> str:
         # content = self.content.replace("\n", "")
         return f"<style>\n{self.content}\n</style>"
+
+    def get_cssfile(self) -> CSSFile:
+        return CSSFile(link=self.resolved_filename)
 
 
 @dataclasses.dataclass(frozen=True, repr=False)
@@ -199,9 +205,6 @@ class JSText(TextResource):
             typ=self.typ,
             is_library=self.is_library,
         )
-
-    def get_asset(self) -> Asset:
-        return Asset(filename=self.resolved_filename, content=self.content)
 
 
 class Asset:
