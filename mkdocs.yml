@@ -59,6 +59,7 @@ plugins:
 - mknodes:
     build_fn: mknodes.manual.root:build
     show_page_info: !ENV [CI, false]
+    global_resources: false
     render_by_default: false
 - mkdocstrings:
     default_handler: python
