@@ -29,6 +29,9 @@ class LoaderMixin:
     def __contains__(self, path):
         return pathlib.Path(path).as_posix() in self.list_templates()
 
+    def __rtruediv__(self, path):
+        return self.prefixed_with(path)
+
     def prefixed_with(self, prefix: str):
         """Return loader wrapped in a PrefixLoader instance with given prefix.
 
@@ -42,6 +45,9 @@ class PrefixLoader(LoaderMixin, jinja2.PrefixLoader):
     """A loader for prefixing other loaders."""
 
     ID = "prefix"
+
+    def __repr__(self):
+        return reprhelpers.get_repr(self, self.mapping)
 
 
 class PackageLoader(LoaderMixin, jinja2.PackageLoader):
@@ -217,14 +223,13 @@ class FsSpecFileSystemLoader(LoaderMixin, jinja2.BaseLoader):
             kwargs: Optional storage options for the filesystem.
         """
         super().__init__()
-        if isinstance(fs, str):
-            if "://" in fs:
+        match fs:
+            case str() if "://" in fs:
                 self.fs, self.path = fsspec.core.url_to_fs(fs, **kwargs)
-            else:
-                self.fs = fsspec.filesystem(fs, **kwargs)
-        else:
-            self.fs = fsspec.filesystem(fs, **kwargs) if isinstance(fs, str) else fs
-            self.path = ""
+            case str():
+                self.fs, self.path = fsspec.filesystem(fs, **kwargs), ""
+            case _:
+                self.fs, self.path = fs, ""
         self.storage_options = kwargs
 
     def __repr__(self):
@@ -414,28 +419,29 @@ def from_json(dct_or_list) -> jinja2.BaseLoader | None:
     loaders = []
     ls = dct_or_list if isinstance(dct_or_list, list) else [dct_or_list]
     for item in ls:
-        if isinstance(item, jinja2.BaseLoader):
-            loaders.append(item)
-            continue
-        if isinstance(item, str):
-            if "://" in item:
+        match item:
+            case jinja2.BaseLoader():
+                loaders.append(item)
+            case str() if "://" in item:
                 loaders.append(FsSpecFileSystemLoader(item))
-            else:
+            case str():
                 loaders.append(FileSystemLoader(item))
-            continue
-        for kls in jinja2.BaseLoader.__subclasses__():
-            if not issubclass(kls, LoaderMixin):
-                continue
-            dct_copy = item.copy()
-            if dct_copy.pop("type") == kls.ID:  # type: ignore[attr-defined]
-                path = dct_copy.pop("path")
-                instance = kls(path, **dct_copy)  # type: ignore[call-arg]
-                loaders.append(instance)
-    if len(loaders) == 1:
-        return loaders[0]
-    if len(loaders) > 1:
-        return ChoiceLoader(loaders)
-    return None
+            case dict():
+                for kls in jinja2.BaseLoader.__subclasses__():
+                    if not issubclass(kls, LoaderMixin):
+                        continue
+                    dct_copy = item.copy()
+                    if dct_copy.pop("type") == kls.ID:  # type: ignore[attr-defined]
+                        path = dct_copy.pop("path")
+                        instance = kls(path, **dct_copy)  # type: ignore[call-arg]
+                        loaders.append(instance)
+    match len(loaders):
+        case 1:
+            return loaders[0]
+        case 0:
+            return None
+        case _:
+            return ChoiceLoader(loaders)
 
 
 LOADERS = dict(

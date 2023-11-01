@@ -221,16 +221,8 @@ class MkDocsMaterial(Tool):
     config_syntax = "yaml"
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
-        if (
-            folder
-            and folder.mkdocs_config
-            and (theme := folder.mkdocs_config.get("theme"))
-        ):
-            return (
-                theme == "material"
-                if isinstance(theme, str)
-                else theme.get("name") == "material"
-            )
+        if folder and (cfg := folder.mkdocs_config):
+            return cfg.theme_name == "material"
         return False
 
     def get_config(self, folder):
