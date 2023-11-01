@@ -94,7 +94,7 @@ class MkShowcase(mkcontainer.MkContainer):
         import mknodes as mk
 
         node = MkShowcase()
-        for i in range(9):
+        for i in range(6):
             node.add_card(
                 link="https://phil65.github.io/mknodes/",
                 title=f"Title {i}",
