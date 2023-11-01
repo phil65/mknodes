@@ -12,7 +12,7 @@ from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
 from mknodes.treelib import node
-from mknodes.utils import icons, log, mdconverter, resources
+from mknodes.utils import classproperty, icons, log, mdconverter, resources
 
 
 if TYPE_CHECKING:
@@ -172,6 +172,10 @@ class MkNode(node.Node):
         import mknodes as mk
 
         return next((i for i in self.ancestors if isinstance(i, mk.MkPage)), None)
+
+    @classproperty.classproperty
+    def nodefile(cls) -> nodefile.NodeFile | None:  # noqa: N805
+        return nodefile.get_nodefile(cls)
 
     def to_child_node(self, other: Any):  # type: ignore[return]
         """Convert given nodes / strings to child nodes.
