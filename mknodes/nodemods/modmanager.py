@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 from mknodes.nodemods import parallax, scrollreveal
-from mknodes.utils import log, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
 
 
 class ModManager:
-    def __init__(self):
-        self.mods = []
-        self._css_classes = []
+    def __init__(self, mods=None, css_classes: list[str] | None = None):
+        self.mods = mods or []
+        self._css_classes = css_classes or []
 
     def __hash__(self):
         return sum([hash(i) for i in self.css_classes])
@@ -18,6 +18,9 @@ class ModManager:
     def __eq__(self, other):
         """Needed for Mknode comparison."""
         return hash(self) == hash(other)
+
+    def __repr__(self):
+        return reprhelpers.get_repr(self, mods=self.mods, css_classes=self._css_classes)
 
     def append(self, other):
         if isinstance(other, str):
