@@ -53,21 +53,44 @@ class NodeFile(tomlfile.TomlFile):
 
     @property
     def icon(self) -> str:
+        """Return the icon from metadata."""
         return self._data["metadata"]["icon"]
 
     @property
     def status(self) -> str:
+        """Return the status from metadata."""
         return self._data["metadata"].get("status")
 
     @property
     def name(self) -> str:
+        """Return the name from metadata."""
         return self._data["metadata"].get("name")
 
     @property
+    def group(self) -> str:
+        """Return the group from metadata."""
+        return self._data["metadata"].get("group")
+
+    @property
     def examples(self) -> dict[str, str]:
+        """Return the examples section."""
         return self._data.get("examples", {})
 
     def get_examples(self, parent) -> dict[str, dict]:
+        """Return a dictionary containing examples.
+
+        Contains example-name->dict-with-representations key-value pairs.
+        Representations are Markdown, Html, Repr tree, jinja, rendered
+
+        Arguments:
+            parent: Parent for the created MkNodes
+                    (most representations are wrapped in MkCode nodes)
+
+        Examples:
+            ```
+            {"Example 1": {"Html": ..., "Markdown": ...}, ...}
+            ```
+        """
         examples = {}
         for v in self._data.get("examples", {}).values():
             if "jinja" in v:
@@ -82,24 +105,29 @@ class NodeFile(tomlfile.TomlFile):
 
     @property
     def output(self) -> dict[str, str]:
+        """Return the `output` section of the file."""
         return self._data.get("output", {})
 
     @property
     def requirements(self):
+        """Return the `requirements` section of the file."""
         return self._data.get("requirements", {})
 
     @property
     def extensions(self) -> list[resources.Extension]:
+        """Return the required extensions defined in the file."""
         extensions = self.requirements.get("extension", {})
         return [resources.Extension(k, **v) for k, v in extensions.items()]
 
     @property
     def packages(self) -> list[resources.Package]:
+        """Return the required packages defined in the file."""
         packages = self.requirements.get("package", {})
         return [resources.Package(k, **v) for k, v in packages.items()]
 
     @property
     def css(self) -> list[resources.CSSFile]:
+        """Return the CSS resources defined in the file."""
         css: list[resources.CSSFile] = []
         res = self._data.get("resources", {})
         for item in res.get("css", []):
@@ -110,6 +138,7 @@ class NodeFile(tomlfile.TomlFile):
 
     @property
     def js(self) -> list[resources.JSFile]:
+        """Return the JavaScript resources defined in the file."""
         js: list[resources.JSFile] = []
         res = self._data.get("resources", {})
         for item in res.get("js", []):
