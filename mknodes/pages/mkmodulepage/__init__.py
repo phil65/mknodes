@@ -7,7 +7,7 @@ from typing import Any
 
 from mknodes.info import grifferegistry
 from mknodes.pages import mktemplatepage
-from mknodes.utils import classhelpers, log, reprhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
 
 
 DEFAULT_TPL = "modulepage.md"
@@ -55,6 +55,11 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self) -> dict[str, Any]:
         variables: dict[str, Any] = dict(module=self.module, klasses=self.klasses)
+        mod = self.module.__name__.replace(".", "/")
+        path = inspecthelpers.get_file(self.module).as_posix()  # type: ignore[union-attr]
+        idx = path.rfind(mod)
+        mod_url = f"https://github.com/phil65/mknodes/blob/main/{path[idx:]}"
+        variables["github_url"] = mod_url
         variables["griffe_obj"] = grifferegistry.get_module(self.module)
         return variables
 
