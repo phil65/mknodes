@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from mknodes.utils import log
 import re
+from typing import TYPE_CHECKING
 import textwrap
-
 from mknodes.pages.metadata import Metadata
 
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
 
@@ -94,11 +97,11 @@ class AppendCssClassesProcessor(TextProcessor):
 class PrependMetadataProcessor(TextProcessor):
     ID = "prepend_metadata"
 
-    def __init__(self, metadata: Metadata):
-        self.metadata = metadata
+    def __init__(self, meta: mk.MkPage | Metadata):
+        self.meta = meta if isinstance(meta, Metadata) else meta.resolved_metadata
 
     def run(self, text: str) -> str:
-        header = self.metadata.as_page_header()
+        header = self.meta.as_page_header()
         return f"{header}\n{text}" if header else text
 
 
