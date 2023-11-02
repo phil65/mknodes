@@ -66,7 +66,8 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         mod = self.klass.__module__.replace(".", "/")
         path = inspecthelpers.get_file(self.klass).as_posix()  # type: ignore[union-attr]
         idx = path.rfind(mod)
-        klass_url = f"https://github.com/phil65/mknodes/blob/main/{path[idx:]}"
+        url = self.ctx.metadata.repository_url
+        klass_url = f"{url}blob/main/{path[idx:]}"
         variables["github_url"] = klass_url
         variables["griffe_obj"] = grifferegistry.registry.get_class(self.klass)
         return variables
