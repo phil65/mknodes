@@ -72,6 +72,29 @@ def script_tag_filter(context, extra_script):
     return Markup(html).format(url_filter(context, str(extra_script)), extra_script)
 
 
+def format_js_map(dct: dict, indent: int = 4) -> str:
+    """Return JS map str for given dictionary.
+
+    Arguments:
+        dct: Dictionary to dump
+        indent: The amount of indentation for the key-value pairs
+    """
+    rows = []
+    indent_str = " " * indent
+    for k, v in dct.items():
+        match v:
+            case bool():
+                rows.append(f"{indent_str}{k}: {str(v).lower()},")
+            case dict():
+                rows.append(f"{indent_str}{k}: {format_js_map(v)},")
+            case None:
+                rows.append(f"{indent_str}{k}: null,")
+            case _:
+                rows.append(f"{indent_str}{k}: {v!r},")
+    row_str = "\n" + "\n".join(rows) + "\n"
+    return f"{{{row_str}}}"
+
+
 def evaluate(
     code: str,
     context: dict[str, Any] | None = None,
@@ -144,6 +167,7 @@ ENV_FILTERS = {
     "load_file": pathhelpers.load_file_cached,
     "path_join": os.path.join,
     "url": url_filter,
+    "format_js_map": format_js_map,
     "check_output": helpers.get_output_from_call,
     "script_tag": script_tag_filter,
     "getenv": os.getenv,

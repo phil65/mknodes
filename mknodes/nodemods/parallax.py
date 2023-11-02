@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 
-from mknodes.nodemods import modhelpers
-from mknodes.utils import helpers, resources
+from mknodes.utils import helpers, jinjahelpers, resources
 
 
 SCRIPT = """\
@@ -26,7 +25,7 @@ class ParallaxEffect:
     def get_resources(self):
         file = resources.JSFile(LIB, is_library=True)
         dct = dataclasses.asdict(self)
-        js_map = modhelpers.format_js_map(dct)
+        js_map = jinjahelpers.format_js_map(dct)
         text = SCRIPT % (self.css_class_names[0], js_map)
         script = resources.JSText(text, filename="parallax.js")
         return resources.Resources(js=[file, script])
