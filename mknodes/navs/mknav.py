@@ -46,7 +46,6 @@ class MkNav(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         self.title = section
-        self.section = section
         self.filename = filename
         self.nav = navigation.Navigation()
         """Navigation object containing all child items."""
@@ -62,8 +61,8 @@ class MkNav(mknode.MkNode):
             self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=1)
 
     def __repr__(self):
-        section = self.title or "<root>"
-        return reprhelpers.get_repr(self, section=section, filename=self.filename)
+        title = self.title or "<root>"
+        return reprhelpers.get_repr(self, section=title, filename=self.filename)
 
     # The child items are managed by the Navigation object. We forward relevant calls
     # to the Navigation instance.
@@ -94,7 +93,7 @@ class MkNav(mknode.MkNode):
         self.nav.index_page = value
         self.nav.index_page._is_index = True
         if not self.nav.index_page.title:
-            self.nav.index_page.title = self.section or "Home"
+            self.nav.index_page.title = self.title or "Home"
 
     @property
     def children(self):
@@ -164,7 +163,7 @@ class MkNav(mknode.MkNode):
             tags: tags to show above the main headline and within the search preview
         """
         page = mkpage.MkPage(
-            title=title or self.section or "Home" if is_index else title,
+            title=title or self.title or "Home" if is_index else title,
             is_index=is_index,
             is_homepage=is_homepage,
             path=path,

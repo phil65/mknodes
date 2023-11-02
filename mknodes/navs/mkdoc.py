@@ -37,7 +37,7 @@ class MkDoc(mknav.MkNav):
             filter_by___all__: Whether to filter stuff according to "__all__"
             recursive: Whether to search modules recursively
             exclude_modules: List of modules to exclude
-            section_name: Optional section name override
+            section_name: Optional section title override
             class_page: Override for the default ClassPage
             module_page: Override for the default ModulePage
             flatten_nav: Whether classes should be put into top-level of the nav
