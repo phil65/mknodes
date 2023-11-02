@@ -29,7 +29,17 @@ def test_rendered_children():
     num_desc = 3  # 2 * MkAdmonition, 1 * MkText
     assert len(node.children) == 1
     assert len(list(node.descendants)) == num_desc
+    admon_inner = node.children[0]
+    text_inner = node.children[0].children[0]
+    assert admon_inner == text_inner.parent
+    assert node == admon_inner.parent
+    assert node.parent is None
 
     node = mk.MkText("{{ mk.MkAdmonition(mk.MkAdmonition('test')) }}", render_jinja=True)
     assert len(node.children) == 1
     assert len(list(node.descendants)) == num_desc
+    admon_inner = node.children[0]
+    text_inner = node.children[0].children[0]
+    assert admon_inner == text_inner.parent
+    assert node == admon_inner.parent
+    assert node.parent is None
