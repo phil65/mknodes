@@ -10,3 +10,9 @@ This is an example for an MkClassPage with the default layout:
 <div style='border: 1px solid red;' markdown="1">
  {{ example_class | MkClassPage(inclusion_level=False) }}
 </div>
+
+And this is an alternate tabbed layout:
+
+<div style='border: 1px solid red;' markdown="1">
+ {{ example_class | MkClassPage(template="classpage_tabbed.md", inclusion_level=False) }}
+</div>
