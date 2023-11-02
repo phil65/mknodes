@@ -201,11 +201,6 @@ class MkNode(node.Node):
                 raise TypeError(other)
 
     @classmethod
-    @functools.lru_cache
-    def get_nodefile(cls):
-        return nodefile.NodeFile(cls)
-
-    @classmethod
     def get_node(cls, name: str) -> MkNode:
         """Get a node from name registry."""
         return cls._name_registry[name]

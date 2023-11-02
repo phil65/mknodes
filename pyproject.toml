@@ -108,16 +108,16 @@ dependencies = [
     "PyYAML >=5.1",
     "tomli-w",
 
-    # HTTP
+    # HTTP / Remote
     "requests",
+    "fsspec",
+    "universal_pathlib",
     "aiohttp",  # for fsspec http://
     "requests_cache",
 
     # Tools
     "jinja2",
     "griffe",
-    "fsspec",
-    "universal_pathlib",
     "deepmerge",
     "coloraide",
     "pyconify",
