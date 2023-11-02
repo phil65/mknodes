@@ -31,16 +31,6 @@ $(window).load(function(){
 
 """
 
-#   window.sr = ScrollReveal();
-#   sr.reveal('.%s', {
-#       origin: 'left',
-#       distance: '300px',
-#       easing: 'ease-in-out',
-#       reset: true,
-#       duration: 800,
-#     });
-# });
-
 
 @dataclasses.dataclass(frozen=True)
 class ScrollReveal:
@@ -52,20 +42,13 @@ class ScrollReveal:
 
     def get_resources(self):
         jquery_res = resources.JSFile(JQUERY_LINK, is_library=True)
-        scrollreveal_res = resources.JSFile(SCROLLREVEAL_LINK, is_library=True)
+        sr_res = resources.JSFile(SCROLLREVEAL_LINK, is_library=True)
         res1 = resources.JSText(SCRIPT, "scrollreveal.js")
         dct = dataclasses.asdict(self)
         js_map = modhelpers.format_js_map(dct)
         script_text = SCRIPT_2 % (self.css_class_names[-1], js_map)
         res2 = resources.JSText(script_text, "script.js")
-        return resources.Resources(
-            js=[
-                jquery_res,
-                scrollreveal_res,
-                res1,
-                res2,
-            ],
-        )
+        return resources.Resources(js=[jquery_res, sr_res, res1, res2])
 
     @property
     def css_class_names(self):

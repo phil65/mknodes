@@ -27,10 +27,8 @@ class ParallaxEffect:
         file = resources.JSFile(LIB, is_library=True)
         dct = dataclasses.asdict(self)
         js_map = modhelpers.format_js_map(dct)
-        script = resources.JSText(
-            SCRIPT % (self.css_class_names[0], js_map),
-            filename="parallax.js",
-        )
+        text = SCRIPT % (self.css_class_names[0], js_map)
+        script = resources.JSText(text, filename="parallax.js")
         return resources.Resources(js=[file, script])
 
     @property
