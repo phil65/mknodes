@@ -82,13 +82,16 @@ class Navigation(dict):
             index_path = pathlib.Path(self.index_page.resolved_file_path)
             dct[self.index_page.title] = index_path.as_posix()
         for path, item in self.items():
+            data = dct
+            for part in path[:-1]:
+                data = data.setdefault(part, {})
             match item:
                 case mk.MkNav():
-                    dct["/".join(path)] = item.nav.to_nav_dict()
+                    data[path[-1]] = item.nav.to_nav_dict()
                 case mk.MkPage():
-                    dct["/".join(path)] = item.resolved_file_path
+                    data[path[-1]] = item.resolved_file_path
                 case mklink.MkLink():
-                    dct["/".join(path)] = str(item.target)
+                    data[path[-1]] = str(item.target)
         return dct
 
     def to_literate_nav(self) -> str:
