@@ -75,12 +75,18 @@ class Navigation(dict):
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
 
     def to_nav_dict(self) -> dict[str, str | dict]:
+        """Return a nested dictionary ready to be used in the Mkocs nav section.
+
+        The nav dict is a nested mapping describing the complete site navigation
+        and contains all relative links to the markdown files of the pages
+        as well as (external) URLs.
+
+        """
         import mknodes as mk
 
         dct: dict[str, str | dict] = {}
-        if self.index_page:
-            index_path = pathlib.Path(self.index_page.resolved_file_path)
-            dct[self.index_page.title] = index_path.as_posix()
+        if idx := self.index_page:
+            dct[idx.title] = pathlib.Path(idx.resolved_file_path).as_posix()
         for path, item in self.items():
             data = dct
             for part in path[:-1]:
@@ -95,9 +101,16 @@ class Navigation(dict):
         return dct
 
     def to_literate_nav(self) -> str:
+        """Return a literate-nav-style str representation of the nav.
+
+        Literate-Nav indexes equal to a (possibly nested) markdown link list.
+
+        That markdown list only contains the direct child links of this nav, sub-navs
+        are referenced to as subfolders.
+        """
         nav = navbuilder.NavBuilder()
-        if self.index_page:
-            nav[self.index_page.title] = pathlib.Path(self.index_page.path).as_posix()
+        if idx := self.index_page:
+            nav[idx.title] = pathlib.Path(idx.path).as_posix()
         for path, item in self.items():
             if path is None:  # this check is just to make mypy happy
                 continue
