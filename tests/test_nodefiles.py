@@ -4,7 +4,7 @@ import pytest
 
 import mknodes as mk
 
-from mknodes.utils import classhelpers
+from mknodes.utils import classhelpers, jinjahelpers
 
 
 def example_instances():
@@ -17,15 +17,17 @@ def example_instances():
 
 
 @pytest.mark.parametrize("node", example_instances(), ids=lambda x: x.__class__.__name__)
-def test_examples(node):
+def test_if_example_can_get_rendered(node):
     if nodefile := node.nodefile:
         for v in nodefile.examples.values():
-            text = v["jinja"] if "jinja" in v else v["python"]
-            node.env.render_string(text)
+            if "jinja" in v:
+                node.env.render_string(v["jinja"])
+            if "python" in v:
+                jinjahelpers.evaluate(v["python"])
 
 
 @pytest.mark.parametrize("node", example_instances(), ids=lambda x: x.__class__.__name__)
-def test_output(node: mk.MkNode):
+def test_if_template_output_equals_code_output(node: mk.MkNode):
     if (nodefile := node.nodefile) and (output := nodefile.output):
         for v in output.values():
             result = node.env.render_string(v["template"], dict(node=node))

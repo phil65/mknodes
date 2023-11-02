@@ -22,7 +22,9 @@ caption = "Some **markdown**"
 [examples.cards]
 title = "Manual"
 python = """
-node = MkShowcase()
+import mknodes as mk
+
+node = mk.MkShowcase()
 for i in range(6):
     node.add_card(
         link="https://phil65.github.io/mknodes/",
