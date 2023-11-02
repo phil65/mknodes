@@ -3,6 +3,7 @@ from __future__ import annotations
 import collections
 import contextlib
 import json
+import os
 import pathlib
 
 from typing import Any, Literal
@@ -68,16 +69,46 @@ def get_safe_loader(base_loader_cls: type):
     return SafeLoader
 
 
+def construct_env_tag(loader: yaml.Loader, node: yaml.Node) -> Any:
+    """Assign value of ENV variable referenced at node."""
+    default = None
+    match node:
+        case yaml.nodes.ScalarNode():
+            variables = [loader.construct_scalar(node)]
+        case yaml.nodes.SequenceNode():
+            child_nodes = node.value
+            if len(child_nodes) > 1:
+                # default is resolved using YAML's (implicit) types.
+                default = loader.construct_object(child_nodes[-1])
+                child_nodes = child_nodes[:-1]
+            # Env Vars are resolved as string values, ignoring (implicit) types.
+            variables = [loader.construct_scalar(child) for child in child_nodes]
+        case _:
+            raise yaml.constructor.ConstructorError(
+                None,
+                None,
+                f"expected a scalar or sequence node, but found {node.id}",
+                node.start_mark,
+            )
+
+    for var in variables:
+        if var in os.environ:
+            value = os.environ[var]
+            # Resolve value to Python type using YAML's implicit resolvers
+            tag = loader.resolve(yaml.nodes.ScalarNode, value, (True, False))
+            return loader.construct_object(yaml.nodes.ScalarNode(tag, value))
+
+    return default
+
+
 def get_default_loader(base_loader_cls: type):
     # Attach Environment Variable constructor.
     # See https://github.com/waylan/pyyaml-env-tag
 
-    import yaml_env_tag
-
     class DefaultLoader(base_loader_cls):
         """Default Loader."""
 
-    DefaultLoader.add_constructor("!ENV", yaml_env_tag.construct_env_tag)
+    DefaultLoader.add_constructor("!ENV", construct_env_tag)
     DefaultLoader.add_constructor("!include", yaml_include_constructor)
     # Loader.add_constructor("!ENV", lambda loader, node: None)  # type: ignore
     # if config is not None:
