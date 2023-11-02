@@ -24,6 +24,8 @@ class Environment(jinja2.Environment):
         *,
         undefined: undefined_.UndefinedStr | type[jinja2.Undefined] = "strict",
         trim_blocks: bool = True,
+        cache_size: int = -1,
+        auto_reload: bool = False,
         loader: jinja2.BaseLoader
         | list[jinja2.BaseLoader]
         | dict
@@ -37,13 +39,22 @@ class Environment(jinja2.Environment):
         Arguments:
             undefined: Handling of "Undefined" errors
             trim_blocks: Whitespace handling. Changes jinja default to `True`.
+            cache_size: Amount of templates to cache.
+                        Changes jinja default to not clean cache.
+            auto_reload: Whether to check templates for changes on loading
             loader: Loader to use (Also accepts a JSON representation of loaders)
             load_templates: Adds additional loaders to the env (deprecated).
             kwargs: Keyword arguments passed to parent
         """
         if isinstance(undefined, str):
             undefined = undefined_.UNDEFINED_BEHAVIOR[undefined]
-        kwargs = dict(undefined=undefined, trim_blocks=trim_blocks, **kwargs)
+        kwargs = dict(
+            undefined=undefined,
+            trim_blocks=trim_blocks,
+            auto_reload=auto_reload,
+            cache_size=cache_size,
+            **kwargs,
+        )
         loader = loaders.from_json(loader)
         if load_templates and loader:
             kwargs["loader"] = loaders.resource_loader | loader
