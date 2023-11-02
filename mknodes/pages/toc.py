@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 import dataclasses
 
-from typing import TypedDict
+from typing import Any, TypedDict
 
 
 class _TocToken(TypedDict):
@@ -18,8 +18,10 @@ class _TocToken(TypedDict):
 def get_toc(md: str, toc_config: dict | None = None) -> TableOfContents:
     import markdown
 
-    cfg = {"toc": toc_config} if toc_config else None
-    converter = markdown.Markdown(extensions=["toc"], extension_configs=cfg)
+    kwargs: dict[str, Any] = {"extensions": ["toc"]}
+    if toc_config:
+        kwargs["extension_configs"] = {"toc": toc_config}
+    converter = markdown.Markdown(**kwargs)  # type: ignore[arg-type]
     converter.convert(md)
     toc_tokens = getattr(converter, "toc_tokens", [])
     toc = [_parse_toc_token(i) for i in toc_tokens]
