@@ -23,8 +23,8 @@ template = """
     type: {{ node.typ }}
 {% if node.expanded %}    open: True
 {% endif %}
-{{ node.items | join }}
 
+{{ node.items | join }}
 {{ node.fence_boundary }}
 
 """

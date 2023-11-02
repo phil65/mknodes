@@ -20,7 +20,5 @@ jinja = """
 
 [output.markdown]
 template = """
-{% for item in node.items %}
-{{ item }}
-{% endfor %}
+{{ node.items | join(node.block_separator) }}
 """

@@ -74,6 +74,12 @@ class NodeFile(tomlfile.TomlFile):
                 examples[v["title"]] = get_representations(v["jinja"], parent)
         return examples
 
+    def iter_example_instances(self, parent):
+        for v in self._data.get("examples", {}).values():
+            if "jinja" in v:
+                parent.env.render_string(v["jinja"])
+                yield from parent.env.rendered_nodes
+
     @property
     def output(self) -> dict[str, str]:
         return self._data.get("output", {})

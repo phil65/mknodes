@@ -99,7 +99,7 @@ class MkCard(mknode.MkNode):
             size=self.size,
             path_dark_mode=self.path_dark_mode,
         )
-        return elem.to_string()
+        return elem.to_string(space="") + "\n"
 
     @classmethod
     def for_page(cls, page):

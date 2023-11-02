@@ -27,14 +27,21 @@ jinja = """
 
 [output.html]
 template = """
-{% if node.url %}<a href="{{ node.url }}"{% endif %}
+{% set image = (node.image ~ "#only-light") if node.path_dark_mode else node.image %}
+{% if node.url %}<a href="{{ node.url }}">
+{% endif %}
 <div class="card">
-  <div class="showcase-container">
-    <img src="{{ node.image }}" alt="{{ node.title }}" style="width:{{ node.size }}px,height:{{ node.size }}px">
-  </div>
-  <p>
-    <button>{{ node.title }}</button>
-  </p>
+<div class="showcase-container">
+<img src="{{ image }}" alt="{{ node.title }}" style="width:{{ node.size }}px,height:{{ node.size }}px">
+{% if node.path_dark_mode %}<img src="{{ node.path_dark_mode }}#only-dark" alt="{{ node.title }}" style="width:{{ node.size }}px,height:{{ node.size }}px">
+{% endif %}
+{% if node.caption %}<div class="overlay">{{ node.caption }}</div>
+{% endif %}
 </div>
-{% if node.url %}</a>{% endif %}
+<p>
+<button>{{ node.title }}</button>
+</p>
+</div>
+{% if node.url %}</a>
+{% endif %}
 """

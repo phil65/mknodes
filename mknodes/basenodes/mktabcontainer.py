@@ -48,6 +48,7 @@ class MkTabContainer(mkcontainer.MkContainer):
                 ]
         self.select_tab = select_tab
         super().__init__(content=items, header=header, **kwargs)
+        self.block_separator = "\n"
 
     def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkTabBlock:
         match item:
@@ -134,7 +135,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         if self.select_tab is not None:
             self.set_selected(self.select_tab)
         self.items[0].new = True
-        return "\n".join(str(i) for i in self.items)
+        return self.block_separator.join(str(i) for i in self.items)
 
 
 if __name__ == "__main__":
