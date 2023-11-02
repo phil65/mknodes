@@ -1,0 +1,35 @@
+[metadata]
+name = "ScrollReveal"
+
+[[resources.js]]
+is_library = true
+filename = "script.js"
+content = """
+window.sr = ScrollReveal();
+
+// Add class to <html> if ScrollReveal is supported
+// Note: only works in version 3
+if (sr.isSupported()) {
+document.documentElement.classList.add('sr');
+}
+"""
+
+[[resources.js]]
+is_library = true
+filename = "script_2.js"
+content = """
+$(window).load(function(){
+
+  window.sr = ScrollReveal();
+  sr.reveal('.%s', %s);
+});
+
+"""
+
+[[resources.js]]
+is_library = true
+link = "https://cdn.jsdelivr.net/npm/scrollreveal@3.4.0/dist/scrollreveal.min.js"
+
+[[resources.js]]
+link = "https://code.jquery.com/jquery-2.2.4.min.js"
+is_library = true

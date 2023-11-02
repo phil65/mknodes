@@ -1,0 +1,17 @@
+[metadata]
+name = "Parallax"
+
+[[resources.css]]
+filename = "timeline.css"
+
+[[resources.js]]
+is_library = true
+filename = "parallax.js"
+content = """
+var image = document.getElementsByClassName('%s');
+new simpleParallax(image, %s);
+"""
+
+[[resources.js]]
+is_library = true
+link = "https://cdn.jsdelivr.net/npm/simple-parallax-js@5.5.1/dist/simpleParallax.min.js"

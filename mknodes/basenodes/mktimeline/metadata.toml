@@ -6,6 +6,14 @@ name = "MkTimeline"
 filename = "timeline.css"
 
 [[resources.js]]
+is_library = true
+link = "https://cdn.jsdelivr.net/npm/scrollreveal@3.4.0/dist/scrollreveal.min.js"
+
+[[resources.js]]
+link = "https://code.jquery.com/jquery-2.2.4.min.js"
+is_library = true
+
+[[resources.js]]
 filename = "timeline.js"
 
 [examples.toml]
