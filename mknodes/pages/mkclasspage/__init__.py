@@ -47,14 +47,6 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         tpl_parent = DEFAULT_TPL if tpl != DEFAULT_TPL else None
         super().__init__(path=p, template=tpl, template_parent=tpl_parent, **kwargs)
 
-    @property
-    def parts(self) -> tuple[str, ...]:
-        match self.module_path:
-            case None:
-                return tuple(self.klass.__module__.split("."))
-            case _:
-                return classhelpers.to_module_parts(self.module_path)
-
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
 
