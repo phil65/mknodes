@@ -295,48 +295,41 @@ class ProjectContext(Context):
         )
 
 
-default_package_context = PackageContext(
-    pretty_name="MkNodes",
-    version="1.0.0",
-    distribution_name="mknodes",
-    summary="Don't write docs. Code them.",
-    description="Long text with description.",
-    author_name="Philipp Temminghoff",
-    author_email="philipptemminghoff@gmail.com",
-    license_name="MIT",
-    required_python_version=">= 3.11",
-    homepage="",
-    cli="typer",
-    module=mk,
-    repository_url="https://github.com/phil65/mknodes/",
-    repository_username="phil65",
-    repository_name="mknodes",
-    inventory_url="https://github.io/phil65/mknodes/objects.inv",
-)
-
-
-default_git_context = GitContext(
-    main_branch="main",
-    repo_name="mknodes",
-    repo_hoster="GitHub",
-    edit_uri="edit/main/docs/",
-)
-
-
-default_theme_context = ThemeContext(
-    name="material",
-    primary_color="AAAAAA",
-    text_color="#000000",
-)
-
-
-default_github_context = GitHubContext(
-    default_branch="main",
-    repo_name="mknodes",
-)
-
-
 def get_default_project_context():
+    default_git_context = GitContext(
+        main_branch="main",
+        repo_name="mknodes",
+        repo_hoster="GitHub",
+        edit_uri="edit/main/docs/",
+    )
+    default_theme_context = ThemeContext(
+        name="material",
+        primary_color="AAAAAA",
+        text_color="#000000",
+    )
+    default_github_context = GitHubContext(
+        default_branch="main",
+        repo_name="mknodes",
+    )
+    default_package_context = PackageContext(
+        pretty_name="MkNodes",
+        version="1.0.0",
+        distribution_name="mknodes",
+        summary="Don't write docs. Code them.",
+        description="Long text with description.",
+        author_name="Philipp Temminghoff",
+        author_email="philipptemminghoff@gmail.com",
+        license_name="MIT",
+        required_python_version=">= 3.11",
+        homepage="",
+        cli="typer",
+        module=mk,
+        repository_url="https://github.com/phil65/mknodes/",
+        repository_username="phil65",
+        repository_name="mknodes",
+        inventory_url="https://github.io/phil65/mknodes/objects.inv",
+    )
+
     return ProjectContext(
         metadata=default_package_context,
         git=default_git_context,
