@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:api"
 name = "MkDocStrings"
+group = "documentation"
 
 [requirements.plugin.mkdocstrings]
 [requirements.package.mkdocstrings]

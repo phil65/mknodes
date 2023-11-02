@@ -83,13 +83,8 @@ class MkTimelineItem(mknode.MkNode):
     def get_element(self) -> xml.Div:
         root = xml.Div("timeline-item")
         xml.Div("timeline-img", parent=root)
-        match self.fade_direction:
-            case "left":
-                fade = " js--fadeInLeft"
-            case "right":
-                fade = " js--fadeInRight"
-            case _:
-                fade = ""
+        dct = {"left": " js--fadeInLeft", "right": " js--fadeInRight"}
+        fade = dct.get(self.fade_direction or "", "")
         tl = " timeline-card" if self.image else ""
         content_div = xml.Div(f"timeline-content{tl}{fade}", parent=root)
         if self.image:
@@ -155,11 +150,10 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def get_element(self) -> xml.Section:
         root = xml.Section("timeline")
-        div = xml.Div(parent=root)
         for i, item in enumerate(self.items):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()
-            div.append(elem)
+            root.append(elem)
         return root
 
     def _to_markdown(self) -> str:

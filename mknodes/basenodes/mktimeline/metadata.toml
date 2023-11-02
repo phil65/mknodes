@@ -33,3 +33,10 @@ image = 'https://picsum.photos/401'
 " | load_toml | MkTimeline
 }}
 """
+
+# [output.markdown]
+# template = """
+# <section class="timeline">
+# {{ node.items | join }}
+# </section>
+# """
