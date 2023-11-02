@@ -262,7 +262,7 @@ class MkNode(node.Node):
         return tuple(parts)
 
     @property
-    def files(self):
+    def files(self) -> dict[str, str | bytes]:
         """Return a dict containing the virtual files attached to this tree element.
 
         This can be overridden by nodes if they want files to be included dynamically.
