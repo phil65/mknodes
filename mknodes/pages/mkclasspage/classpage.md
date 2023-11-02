@@ -16,4 +16,6 @@
 
 {{ cls | MkDocStrings }}
 
+{{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github", as_button=True) }}
+
 {% endblock %}

@@ -1,5 +1,7 @@
 {% block content %}
 
+{{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github", as_button=True) }}
+
 === "DocStrings"
 {{ cls | MkDocStrings | str | indent(first=True) }}
 

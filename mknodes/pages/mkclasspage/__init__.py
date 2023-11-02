@@ -7,7 +7,7 @@ from typing import Any
 
 from mknodes.info import grifferegistry
 from mknodes.pages import mktemplatepage
-from mknodes.utils import classhelpers, log, reprhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -63,6 +63,11 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         # right now, we inject the cls and the griffe Class into jinja namespace.
         subclasses = list(classhelpers.iter_subclasses(self.klass, recursive=False))
         variables = dict(cls=self.klass, subclasses=subclasses)
+        mod = self.klass.__module__.replace(".", "/")
+        path = inspecthelpers.get_file(self.klass).as_posix()  # type: ignore[union-attr]
+        idx = path.rfind(mod)
+        klass_url = f"https://github.com/phil65/mknodes/blob/main/{path[idx:]}"
+        variables["github_url"] = klass_url
         variables["griffe_obj"] = grifferegistry.registry.get_class(self.klass)
         return variables
 
