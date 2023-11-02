@@ -91,8 +91,7 @@ class NodeEnvironment(environment.Environment):
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
         self.globals["node"] = self.node
         self.globals["mk"] = wrapped_klasses
-
-    def update_env_from_context(self):
+        # def update_env_from_context(self):
         self.filters["get_link"] = self.node.ctx.links.get_link
         self.filters["get_url"] = self.node.ctx.links.get_url
         self.globals |= self.node.ctx.as_dict()
@@ -127,7 +126,8 @@ class NodeEnvironment(environment.Environment):
         # if pathlib.Path(template_name).as_posix() not in self.list_templates():
         #     self.add_template(template_name)
         self.rendered_nodes = []
-        self.update_env_from_context()
+        self.setup_environment()
+        # self.update_env_from_context()
         result = super().render_template(
             template_name,
             variables=variables,
@@ -147,7 +147,8 @@ class NodeEnvironment(environment.Environment):
             variables: Extra variables for the environment
         """
         self.rendered_nodes = []
-        self.update_env_from_context()
+        self.setup_environment()
+        # self.update_env_from_context()
         result = super().render_string(markdown, variables)
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result

@@ -30,7 +30,7 @@ def test_rendered_children():
     assert len(node.children) == 1
     assert len(list(node.descendants)) == num_desc
     admon_inner = node.children[0]
-    text_inner = node.children[0].children[0]
+    text_inner = admon_inner.children[0]
     assert admon_inner == text_inner.parent
     assert node == admon_inner.parent
     assert node.parent is None
@@ -39,7 +39,7 @@ def test_rendered_children():
     assert len(node.children) == 1
     assert len(list(node.descendants)) == num_desc
     admon_inner = node.children[0]
-    text_inner = node.children[0].children[0]
+    text_inner = admon_inner.children[0]
     assert admon_inner == text_inner.parent
     assert node == admon_inner.parent
     assert node.parent is None
