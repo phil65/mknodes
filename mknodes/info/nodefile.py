@@ -15,7 +15,9 @@ from mknodes.utils import resources
 def get_nodefile(klass: type) -> NodeFile | None:
     file = find_file(klass)
     if file.exists():
-        return NodeFile(file)
+        nodefile = NodeFile(file)
+        if nodefile.name == klass.__name__:
+            return nodefile
     return None
 
 
@@ -101,7 +103,7 @@ class NodeFile(tomlfile.TomlFile):
         for v in self._data.get("examples", {}).values():
             if "jinja" in v:
                 parent.env.render_string(v["jinja"])
-                yield from parent.env.rendered_nodes
+                yield from parent.env.rendered_children
 
     @property
     def output(self) -> dict[str, str]:
