@@ -8,8 +8,10 @@ import pathlib
 from typing import Any
 
 import jinja2
+import jinjarope
 
-from mknodes.jinja import loaders, undefined as undefined_
+from jinjarope import loaders, undefined as undefined_
+
 from mknodes.utils import jinjahelpers, log, mergehelpers, pathhelpers
 
 
@@ -56,10 +58,17 @@ class Environment(jinja2.Environment):
             **kwargs,
         )
         loader = loaders.from_json(loader)
+        resource_loader = jinjarope.ChoiceLoader(
+            [
+                jinjarope.get_loader("docs/"),
+                jinjarope.FsSpecProtocolPathLoader(),
+            ]
+        )
+
         if load_templates and loader:
-            kwargs["loader"] = loaders.resource_loader | loader
+            kwargs["loader"] = resource_loader | loader
         elif load_templates:
-            kwargs["loader"] = loaders.resource_loader
+            kwargs["loader"] = resource_loader
         else:
             kwargs["loader"] = loader
         self._extra_files: set[str] = set()

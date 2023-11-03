@@ -63,7 +63,7 @@ class MkDocsConfigFile(yamlfile.YamlFile):
                     plugin["mknodes"]["clone_depth"] = clone_depth
 
     def get_loaders(self) -> Sequence[jinja2.BaseLoader]:
-        from mknodes.jinja import loaders
+        from jinjarope import loaders
 
         jinja_loaders: list[jinja2.BaseLoader] = [
             loaders.registry.get_loader(self._data.get("docs_dir", "docs")),

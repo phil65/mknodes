@@ -117,6 +117,7 @@ dependencies = [
 
     # Tools
     "jinja2",
+    "jinjarope",
     "griffe",
     "deepmerge",
     "coloraide",
