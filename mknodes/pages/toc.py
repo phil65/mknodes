@@ -79,3 +79,39 @@ class TableOfContents(Iterable[AnchorLink]):
 def _parse_toc_token(token: _TocToken) -> AnchorLink:
     tokens = [_parse_toc_token(i) for i in token["children"]]
     return AnchorLink(token["name"], token["id"], token["level"], tokens)
+
+
+if __name__ == "__main__":
+    import re
+
+    import markdown
+
+    from markdown.extensions import toc
+
+    from mknodes.treelib import node
+
+    TEXT = "# **test**\n\n### test3\n\n## tsexx\n\n# tsexx\n"
+
+    class TocNode(node.Node):
+        def __init__(self, name: str, **kwargs):
+            super().__init__(**kwargs)
+            self.name = name
+
+    def stripped(md: str):
+        html = markdown.Markdown(extensions=["toc"]).convert(md)
+        res = re.sub(r"(<[^>]+>)", "", html)
+        return re.sub(r"(&[\#a-zA-Z0-9]+;)", "", res)
+
+    # page = mk.MkPage()
+    # node = MkText(TEXT)
+    # page += node
+    # print(repr(page.toc))
+    root = TocNode("")
+    pat = re.compile("^(#+) (.*)$", re.MULTILINE)
+    prev_level = 0
+
+    items = [
+        {"level": len(match[1]), "name": match[2], "cleaned": stripped(match[2])}
+        for match in pat.finditer(TEXT)
+    ]
+    print(toc.nest_toc_tokens(items))
