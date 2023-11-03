@@ -229,7 +229,7 @@ class Environment(jinja2.Environment):
         static: dict[str, str] | None = None,
         fsspec_paths: bool = True,
     ):
-        self.loader = loaders.registry.get_loader(
+        self.loader = jinjarope.get_loader(
             dir_paths=dir_paths,
             module_paths=module_paths,
             static=static,

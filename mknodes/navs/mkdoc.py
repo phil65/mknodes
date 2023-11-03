@@ -115,6 +115,7 @@ class MkDoc(mknav.MkNav):
             return
         if recursive:
             seen = _seen or set()
+            # TODO: pkgutil.iter_modules would also list "unknown" modules
             for _submod_name, submod in inspect.getmembers(mod, inspect.ismodule):
                 if submod.__name__.startswith(self.module_name) and submod not in seen:
                     seen.add(submod)
