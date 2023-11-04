@@ -22,7 +22,17 @@ def get_changelog(
     template: str,
     convention: str,
     sections: tuple[str, ...] | None = None,
+    filter_commits: str | None = None,
 ) -> str:
+    """Get changelog formatted as markdown.
+
+    Arguments:
+        repository: Path to the git repository to get a changelog for
+        template: Which template to use
+        convention: Which changelog convention to apply
+        sections: Optionally filter sections
+        filter_commits: The Git revision-range used to filter commits in git-log.
+    """
     with contextlib.redirect_stdout(io.StringIO()):
         _changelog, text = cli.build_and_render(
             repository=repository,
@@ -30,6 +40,7 @@ def get_changelog(
             convention=convention,
             parse_refs=True,
             parse_trailers=True,
+            filter_commits=filter_commits,
             sections=list(sections) if sections else None,
         )
     return text
@@ -79,11 +90,17 @@ class MkChangelog(mktext.MkText):
 
     @property
     def text(self) -> str:
+        filter_commits = None
+        if self._repository is None and (
+            cfg := self.ctx.metadata.pyproject_file.tool.get("git-changelog")
+        ):
+            filter_commits = cfg.get("filter-commits")
         return get_changelog(
             repository=str(self.repository),
             template=self.template,
             convention=self.convention,
             sections=tuple(self.sections) if self.sections else None,
+            filter_commits=filter_commits,
         )
 
     @classmethod
