@@ -4,11 +4,14 @@ import functools
 import os
 import pathlib
 
+from typing import TYPE_CHECKING
+
 from mknodes.info import tomlfile
 from mknodes.utils import resources
 
 
-# from mknodes.utils import resources
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 @functools.cache
@@ -30,7 +33,7 @@ def find_file(klass: type) -> pathlib.Path:
     return path.parent / "metadata.toml"
 
 
-def get_representations(jinja: str, parent) -> dict[str, str | mk.MkNode]:
+def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
     import mknodes as mk
 
     parent.env.render_string(jinja)

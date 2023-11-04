@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any
 
 import coloraide
@@ -13,7 +14,7 @@ class Color(coloraide.Color):
     def __init__(
         self,
         color: str | tuple,
-        data=None,
+        data: Sequence[float] | None = None,
         alpha: float = ALPHA_DEFAULT,
         **kwargs: Any,
     ):
