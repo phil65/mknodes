@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+import os
 import tempfile
 
 from typing import Self
@@ -33,9 +34,24 @@ class GitRepository(git.Repo):
         return "master" if has_master_branch else "main"
 
     @classmethod
-    def clone_from(cls, *args, **kwargs) -> Self:
-        """Clone a repository. Overridden for typing."""
-        return super().clone_from(*args, **kwargs)  # type: ignore[return-value]
+    def clone_from(
+        cls,
+        url: os.PathLike | str,
+        to_path: os.PathLike | str,
+        depth: int | None = None,
+        **kwargs,
+    ) -> Self:
+        """Clone a repository. Overridden for typing.
+
+        Arguments:
+            url: The repository URL
+            to_path: the path to clone to
+            depth: Clone depth (Amount of commits to fetch)
+            kwargs: Further arguments passed to `git clone`
+        """
+        if depth is not None:
+            kwargs["depth"] = depth
+        return super().clone_from(url, to_path, **kwargs)  # type: ignore[return-value]
 
     @cached_property
     def repo_name(self) -> str:
@@ -87,22 +103,20 @@ class GitRepository(git.Repo):
     @cached_property
     def code_repository(self) -> str:
         """Get the remote code repository name (like "GitHub")."""
-        repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
-        match repo_host:
+        match parse.urlsplit(self.remotes.origin.url).netloc.lower():
             case "github.com":
                 return "GitHub"
             case "bitbucket.org":
                 return "Bitbucket"
             case "gitlab.com":
                 return "GitLab"
-            case _:
+            case _ as repo_host:
                 return repo_host.split(".")[0].title()
 
     @property
     def edit_uri(self) -> str | None:
         """The URL part needed to get to the edit page of the code hoster."""
-        repo_host = parse.urlsplit(self.remotes.origin.url).netloc.lower()
-        match repo_host:
+        match parse.urlsplit(self.remotes.origin.url).netloc.lower():
             case "github.com" | "gitlab.com":
                 return f"edit/{self.main_branch}/"
             case "bitbucket.org":
