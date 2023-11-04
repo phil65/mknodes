@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     import typer
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Param:
     count: bool = False
     """Whether the parameter increments an integer."""
@@ -61,24 +61,8 @@ class Param:
         """A formatted and sorted string containing the the options."""
         return ", ".join(f"`{i}`" for i in reversed(self.opts))
 
-    def to_markdown(self):
-        lines = [f"### {self.opt_str}"]
-        if self.required:
-            lines.append("**REQUIRED**")
-        if self.envvar:
-            lines.append(f"**Environment variable:** {self.envvar}")
-        if self.multiple:
-            lines.append("**Multiple values allowed.**")
-        if self.default:
-            lines.append(f"**Default:** {self.default}")
-        if self.is_flag:
-            lines.append(f"**Flag:** {self.flag_value}")
-        if self.help:
-            lines.append(self.help)
-        return "\n\n".join(lines)
 
-
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class CommandInfo:
     name: str
     """The name of the command."""
@@ -99,20 +83,6 @@ class CommandInfo:
 
     def __getitem__(self, name):
         return self.subcommands[name]
-
-    def to_markdown(self, recursive: bool = False):
-        import mknodes as mk
-
-        header = f"## {self.name}\n\n"
-        text = header + self.description + "\n\n" + str(mk.MkCode(self.usage))
-        params = [i.to_markdown() for i in self.params]
-        cmd_text = text + "\n\n\n" + "\n\n\n".join(params)
-        if not recursive:
-            return cmd_text
-        children_text = "\n".join(
-            i.to_markdown(recursive=True) for i in self.subcommands.values()
-        )
-        return cmd_text + children_text
 
 
 def get_typer_info(
@@ -195,4 +165,4 @@ if __name__ == "__main__":
     import mkdocs.__main__
 
     info = get_typer_info(mkdocs.__main__.cli, command="mkdocs")
-    pprint(info.to_markdown(recursive=True))
+    pprint(info)

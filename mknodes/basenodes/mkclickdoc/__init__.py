@@ -63,8 +63,39 @@ class MkClickDoc(mknode.MkNode):
         attrs = self.attributes
         mod = importlib.import_module(attrs["module"])
         instance = getattr(mod, attrs["command"])
+
+        def param_to_md(param) -> str:
+            lines = [f"### {param.opt_str}"]
+            if param.required:
+                lines.append("**REQUIRED**")
+            if param.envvar:
+                lines.append(f"**Environment variable:** {param.envvar}")
+            if param.multiple:
+                lines.append("**Multiple values allowed.**")
+            if param.default:
+                lines.append(f"**Default:** {param.default}")
+            if param.is_flag:
+                lines.append(f"**Flag:** {param.flag_value}")
+            if param.help:
+                lines.append(param.help)
+            return "\n\n".join(lines)
+
+        def info_to_md(info, recursive: bool = False) -> str:
+            import mknodes as mk
+
+            header = f"## {info.name}\n\n"
+            text = header + info.description + "\n\n" + str(mk.MkCode(info.usage))
+            params = [param_to_md(i) for i in info.params]
+            cmd_text = text + "\n\n\n" + "\n\n\n".join(params)
+            if not recursive:
+                return cmd_text
+            children_text = "\n".join(
+                info_to_md(i, recursive=True) for i in info.subcommands.values()
+            )
+            return cmd_text + children_text
+
         info = clihelpers.get_typer_info(instance, command=attrs["prog_name"])
-        return info.to_markdown(recursive=self.show_subcommands)
+        return info_to_md(info, recursive=self.show_subcommands)
 
     @classmethod
     def create_example_page(cls, page):
