@@ -1,0 +1,17 @@
+[metadata]
+icon = "mdi:dev-to"
+status = "new"
+name = "MkDevEnvSetup"
+virtual_children = true
+
+[examples.regular]
+title = "From project"
+jinja = """
+{{ mk.MkDevEnvSetup() }}
+"""
+
+[examples.explicit]
+title = "Explicit"
+jinja = """
+{{ mk.MkDevEnvSetup(repo_url="http://url_to_git_repo.com/name.git") }}
+"""

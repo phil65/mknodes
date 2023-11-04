@@ -40,13 +40,13 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
 
     ICON = "material/dev-to"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,
         *,
         repo_url: str | None = None,
         build_backend: buildsystems.BuildSystemStr | None = None,
-        header: str = "Setting up a development environment",
         **kwargs: Any,
     ):
         """Constructor.
@@ -55,10 +55,9 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
             repo_url: Repo url to show. If None, it will be pulled from project.
             build_backend: Build backend to show install instructions for.
                             If None, it will be pulled from project.
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         self._repo_url = repo_url
         self._build_backend = build_backend
 
@@ -112,9 +111,9 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        node = MkDevEnvSetup(header="")
+        node = MkDevEnvSetup()
         page += mk.MkReprRawRendered(node, header="### From project")
-        node = MkDevEnvSetup(header="", repo_url="http://url_to_git_repo.com/name.git")
+        node = MkDevEnvSetup(repo_url="http://url_to_git_repo.com/name.git")
         page += mk.MkReprRawRendered(node, header="### Explicit")
 
 

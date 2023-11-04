@@ -19,6 +19,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
 
     ICON = "material/dev-to"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,

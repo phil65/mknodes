@@ -19,6 +19,7 @@ class MkTemplate(mkcontainer.MkContainer):
 
     ICON = "simple/jinja"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,

@@ -15,6 +15,7 @@ class MkShields(mkcontainer.MkContainer):
     """Container for Shields.io / GitHub badges."""
 
     ICON = "simple/shieldsdotio"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,

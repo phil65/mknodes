@@ -3,6 +3,7 @@ name = "MkPluginFlow"
 icon = "mdi:dev-to"
 status = "new"
 group = "documentation"
+virtual_children = true
 
 [examples.regular]
 title = "Regular"

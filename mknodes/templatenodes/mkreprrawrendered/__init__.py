@@ -19,6 +19,7 @@ class MkReprRawRendered(mktabbed.MkTabbed):
     """
 
     ICON = "material/presentation"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,

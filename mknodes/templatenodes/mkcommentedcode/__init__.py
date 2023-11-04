@@ -19,6 +19,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
     ICON = "material/code-json"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     REQUIRED_EXTENSIONS = [
         resources.Extension("pymdownx.highlight"),

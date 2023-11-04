@@ -24,6 +24,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
     ICON = "simple/shieldsdotio"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,

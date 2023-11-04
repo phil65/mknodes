@@ -1,0 +1,29 @@
+[metadata]
+icon = "mdi:code-json"
+name = "MkCommentedCode"
+status = "new"
+group = "documentation"
+virtual_children = true
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{
+"
+# Comment sections automatically get converted to non-codeblock sections.
+# That way you can explain your code in-line.
+
+# ## you can use headers.
+
+some_code = 1 + 2
+
+# !!! note
+#     Admonitions and everything else work, too.
+#
+
+" | MkCommentedCode
+}}
+"""
+
+
+

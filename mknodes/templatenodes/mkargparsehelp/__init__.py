@@ -14,6 +14,7 @@ class MkArgParseHelp(mkcontainer.MkContainer):
 
     ICON = "material/bash"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     def __init__(self, parser: argparse.ArgumentParser, **kwargs):
         self.parser = parser

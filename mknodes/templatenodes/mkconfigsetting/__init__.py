@@ -13,6 +13,7 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
     """Node for describing a config setting."""
 
     ICON = "material/library"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,

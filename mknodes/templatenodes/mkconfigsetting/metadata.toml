@@ -1,6 +1,7 @@
 [metadata]
 name = "MkConfigSetting"
 icon = "mdi:library"
+virtual_children = true
 
 [requirements.extension.def_list]
 

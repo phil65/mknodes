@@ -2,6 +2,7 @@
 name = "MkShields"
 icon = "simple-icons:shieldsdotio"
 group = "badge"
+virtual_children = true
 
 [examples.regular]
 title = "Regular"

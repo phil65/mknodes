@@ -1,0 +1,42 @@
+[metadata]
+icon = "mdi:wrench"
+status = "new"
+name = "MkDevTools"
+virtual_children = true
+
+[examples.regular]
+title = "From project"
+jinja = """
+{{ mk.MkDevTools() }}
+"""
+
+# [examples.explicit]
+# title = "Explicit"
+# jinja = """
+# {{ ["black"] | MkDevTools }}
+# """
+
+[output.markdown]
+template = """
+{% filter rstrip %}
+{% for tool in node.tools %}
+{{ tool.title | MkHeader }}
+
+{{ tool.description }}
+
+{% if tool.setup_cmd %}
+{{ tool.setup_cmd | MkCode(language="md")}}
+
+{% endif %}
+{{ (tool.cfg or "") | MkCode(language=tool.config_syntax) | MkAdmonition(collapsible=True, title="Config", typ="quote") }}
+
+{{ ["To install " ~ tool.identifier ~ ":",
+    ("pip install " ~ tool.identifier) | MkCode(language="bash"),
+    tool.url | MkLink("More information")] | MkAdmonition(collapsible=True, title="Installing " ~ tool.title)}}
+
+{% endfor %}
+{% endfilter %}
+
+
+"""
+

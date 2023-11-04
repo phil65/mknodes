@@ -1,0 +1,21 @@
+[metadata]
+name = "MkInstallGuide"
+icon = "mdi:help"
+group = "documentation"
+virtual_children = true
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ mk.MkInstallGuide() }}
+"""
+
+[examples.explicit]
+title = "Explicit"
+jinja = """
+{{ "mkdocs" | MkInstallGuide }}
+"""
+
+# [output.markdown]
+# template = """
+# """

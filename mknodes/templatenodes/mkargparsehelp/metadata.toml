@@ -2,6 +2,7 @@
 icon = "mdi:bash"
 status = "new"
 name = "MkArgParseHelp"
+virtual_children = true
 
 [examples.git_changelog]
 title = "Changelog for git_changelog"

@@ -3,6 +3,7 @@ name = "MkMetadataBadges"
 icon = "simple-icons:shieldsdotio"
 status = "new"
 group = "badge"
+virtual_children = true
 
 [requirements.package.anybadge]
 

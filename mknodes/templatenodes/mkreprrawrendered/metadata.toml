@@ -1,6 +1,8 @@
 [metadata]
 icon = "mdi:presentation"
 name = "MkReprRawRendered"
+group = "documentation"
+virtual_children = true
 
 [examples.regular]
 title = "Regular"

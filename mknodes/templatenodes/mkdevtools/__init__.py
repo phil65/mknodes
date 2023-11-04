@@ -15,6 +15,7 @@ class MkDevTools(mkcontainer.MkContainer):
 
     ICON = "material/wrench"
     STATUS = "new"
+    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,
