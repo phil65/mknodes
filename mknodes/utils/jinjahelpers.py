@@ -1,24 +1,14 @@
 from __future__ import annotations
 
-import ast
-import contextlib
 import datetime
-import functools
 import importlib
 
-from importlib import metadata, util
-import io
-import json
-import os
-import platform
-import pprint
-import sys
-import time
-import tomllib
+from importlib import util
 from typing import Any
 
 import jinja2
 
+from jinjarope import envglobals
 from markupsafe import Markup
 import tomli_w
 
@@ -35,16 +25,6 @@ from mknodes.utils import (
 
 
 logger = log.get_logger(__name__)
-
-
-version_info = dict(
-    python_version=sys.version.split("(")[0].strip(),
-    jinja_version=metadata.version("jinja2"),
-    mknodes_version=metadata.version("mknodes"),
-    system=platform.system(),
-    architecture=platform.architecture(),
-    python_implementation=platform.python_implementation(),
-)
 
 
 @jinja2.pass_context
@@ -72,106 +52,25 @@ def script_tag_filter(context, extra_script):
     return Markup(html).format(url_filter(context, str(extra_script)), extra_script)
 
 
-def format_js_map(dct: dict, indent: int = 4) -> str:
-    """Return JS map str for given dictionary.
-
-    Arguments:
-        dct: Dictionary to dump
-        indent: The amount of indentation for the key-value pairs
-    """
-    rows = []
-    indent_str = " " * indent
-    for k, v in dct.items():
-        match v:
-            case bool():
-                rows.append(f"{indent_str}{k}: {str(v).lower()},")
-            case dict():
-                rows.append(f"{indent_str}{k}: {format_js_map(v)},")
-            case None:
-                rows.append(f"{indent_str}{k}: null,")
-            case _:
-                rows.append(f"{indent_str}{k}: {v!r},")
-    row_str = "\n" + "\n".join(rows) + "\n"
-    return f"{{{row_str}}}"
-
-
-def evaluate(
-    code: str,
-    context: dict[str, Any] | None = None,
-) -> str:
-    """Evaluate python code and return the caught stdout + return value of last line.
-
-    Arguments:
-        code: The code to execute
-        context: Globals for the execution evironment
-    """
-    import mknodes as mk
-
-    now = time.time()
-    if context is None:
-        context = {"mk": mk}
-    logger.debug("Evaluating code:\n%s", code)
-    tree = ast.parse(code)
-    eval_expr = ast.Expression(tree.body[-1].value)  # type: ignore
-    # exec_expr = ast.Module(tree.body[:-1])  # type: ignore
-    exec_expr = ast.parse("")
-    exec_expr.body = tree.body[:-1]
-    compiled = compile(exec_expr, "file", "exec")
-    buffer = io.StringIO()
-    with contextlib.redirect_stdout(buffer):
-        exec(compiled, context)
-        val = eval(compile(eval_expr, "file", "eval"), context)
-    logger.debug("Code evaluation took %s seconds.", time.time() - now)
-    # result = mk.MkContainer([buffer.getvalue(), val])
-    return val or ""
-
-
-def add(text, prefix: str = "", suffix: str = ""):
-    if not text:
-        return ""
-    return f"{prefix}{text}{suffix}"
-
-
 ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
     "now": datetime.datetime.now,
     "importlib": importlib,
     "inspecthelpers": inspecthelpers,
     "resources_dir": paths.RESOURCES,
-    "environment": version_info,
+    "environment": envglobals.version_info,
 }
 ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,
     "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
-    "pformat": pprint.pformat,
-    "repr": repr,
-    "rstrip": str.rstrip,
-    "lstrip": str.lstrip,
-    "removesuffix": str.removesuffix,
-    "removeprefix": str.removeprefix,
-    "add": add,
-    "issubclass": issubclass,
-    "isinstance": isinstance,
-    "import_module": importlib.import_module,
     "to_class": classhelpers.to_class,
-    "hasattr": hasattr,
-    "evaluate": evaluate,
-    "partial": functools.partial,
     "dump_yaml": yamlhelpers.dump_yaml,
-    "dump_json": json.dumps,
     "dump_toml": tomli_w.dumps,
-    "load_json": json.loads,
-    "load_toml": tomllib.loads,
     "load_yaml": yamlhelpers.load_yaml,
-    "load_file": pathhelpers.load_file_cached,
-    "path_join": os.path.join,
     "url": url_filter,
-    "format_js_map": format_js_map,
-    "check_output": helpers.get_output_from_call,
     "script_tag": script_tag_filter,
-    "getenv": os.getenv,
-}
+} | envglobals.ENV_FILTERS
 
 
 def get_globals():
@@ -196,5 +95,5 @@ def set_markdown_exec_namespace(variables: dict[str, Any], namespace: str = "mkn
 
 
 if __name__ == "__main__":
-    a = evaluate("import mknodes\nmknodes.MkHeader('Hello')")
-    print(a)
+    a = get_filters()
+    print(a["evaluate"])

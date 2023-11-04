@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from jinjarope import envglobals
 import pytest
 
 import mknodes as mk
 
-from mknodes.utils import classhelpers, jinjahelpers
+from mknodes.utils import classhelpers
 
 
 def example_instances():
@@ -23,7 +24,7 @@ def test_if_example_can_get_rendered(node):
             if "jinja" in v:
                 node.env.render_string(v["jinja"])
             if "python" in v:
-                jinjahelpers.evaluate(v["python"])
+                envglobals.evaluate(v["python"])
 
 
 @pytest.mark.parametrize("node", example_instances(), ids=lambda x: x.__class__.__name__)
