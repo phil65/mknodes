@@ -7,7 +7,7 @@ import jinjarope
 
 from jinjarope import loaders
 
-from mknodes.utils import jinjahelpers, log
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -49,8 +49,6 @@ class Environment(jinjarope.Environment):
         else:
             kwargs["loader"] = loader
         super().__init__(**kwargs)
-        self.filters.update(jinjahelpers.get_filters())
-        self.globals.update(jinjahelpers.get_globals())
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ from importlib import util
 from typing import Any
 
 import jinja2
+import jinjarope
 
 from jinjarope import envglobals
 from markupsafe import Markup
@@ -70,6 +71,7 @@ ENV_FILTERS = {
 } | envglobals.ENV_FILTERS
 
 
+@jinjarope.Environment.register_globals
 def get_globals():
     import mknodes as mk
 
@@ -77,6 +79,7 @@ def get_globals():
     return dict(mk=node_klasses, _mk=node_klasses) | ENV_GLOBALS
 
 
+@jinjarope.Environment.register_filters
 def get_filters():
     import mknodes as mk
 
