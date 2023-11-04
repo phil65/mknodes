@@ -7,9 +7,10 @@ import pathlib
 
 from typing import Any, Self
 
+import jinjarope
+
 from mknodes import paths
 from mknodes.info import packageregistry
-from mknodes.jinja import environment
 from mknodes.utils import log
 
 
@@ -91,7 +92,7 @@ class License:
             distribution: Distribution to use data from.
         """
         info = packageregistry.get_info(distribution)
-        env = environment.Environment()
+        env = jinjarope.Environment()
 
         class Ctx:
             copyright_holder = info.author_name
@@ -126,7 +127,7 @@ class License:
             summary: Summary of the program the license is used for
             version: Version of the program the license is used for
         """
-        env = environment.Environment()
+        env = jinjarope.Environment()
 
         class Ctx:
             copyright_holder = holder
