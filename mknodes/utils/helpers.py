@@ -17,11 +17,20 @@ T = TypeVar("T")
 
 
 def reduce_list(data_set: Iterable[T]) -> list[T]:
-    """Reduce duplicate items in a list and preserve order."""
+    """Reduce duplicate items in a list and preserve order.
+
+    Arguments:
+        data_set: The Iterable to reduce.
+    """
     return list(dict.fromkeys(data_set))
 
 
 def get_hash(obj: Any) -> str:
+    """Get a Md5 hash for given object.
+
+    Arguments:
+        obj: The object to get a hash for
+    """
     import hashlib
 
     hash_md5 = hashlib.md5(str(obj).encode("utf-8"))
@@ -29,7 +38,12 @@ def get_hash(obj: Any) -> str:
 
 
 def extract_header_section(markdown: str, section_name: str) -> str | None:
-    """Extract block with given header from markdown."""
+    """Extract block with given header from markdown.
+
+    Arguments:
+        markdown: The markdown to extract a section from
+        section_name: The header of the section to extract
+    """
     header_pattern = re.compile(f"^(#+) {section_name}$", re.MULTILINE)
     header_match = header_pattern.search(markdown)
     if header_match is None:
@@ -75,12 +89,27 @@ def slugify(text: str | os.PathLike) -> str:
     return re.sub("^[^0-9a-zA-Z_#]+", "", text)
 
 
-def groupby(data, keyfunc: Callable | None = None) -> dict[str, list]:
+def groupby(data: Iterable, keyfunc: Callable | None = None) -> dict[str, list]:
+    """Group given iterable using given group function.
+
+    Arguments:
+        data: Iterable to group
+        keyfunc: Sort function
+    """
     data = sorted(data, key=keyfunc or (lambda x: x))
     return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
 
 
-def groupby_first_letter(data, keyfunc: Callable | None = None) -> dict[str, list]:
+def groupby_first_letter(
+    data: Iterable,
+    keyfunc: Callable | None = None,
+) -> dict[str, list]:
+    """Group given iterable by first letter.
+
+    Arguments:
+        data: Iterable to group
+        keyfunc: Optional alternative sort function
+    """
     data = sorted(data, key=keyfunc or (lambda x: x))
 
     def first_letter(x):
@@ -133,8 +162,17 @@ T = TypeVar("T")
 
 
 def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, None]:
-    """Batch data into tuples of length n. The last batch may be shorter."""
-    # batched('ABCDEFG', 3) --> ABC DEF G
+    """Batch data into tuples of length n. The last batch may be shorter.
+
+    Examples:
+        ``` py
+        batched('ABCDEFG', 3)  # returns ABC DEF G
+        ```
+
+    Arguments:
+        iterable: The iterable to yield as batches
+        n: The batch size
+    """
     if n < 1:
         msg = "n must be at least one"
         raise ValueError(msg)
@@ -158,14 +196,24 @@ def get_indented_lines(lines: Iterable[str], indent: int | str = 4) -> list[str]
     return []
 
 
-def is_url(path: str) -> bool:
-    return path.startswith(("http:/", "https:/", "www."))
+def is_url(string: str) -> bool:
+    """Return true when given string represents a HTTP url.
+
+    Arguments:
+        string: The string to check
+    """
+    return string.startswith(("http:/", "https:/", "www."))
 
 
 def get_output_from_call(
     call: str | Sequence[str],
     cwd: str | os.PathLike | None,
 ) -> str | None:
+    """Execute a system call and return the captured stdout.
+
+    call: The system call to execute
+    cwd: The working directory for the call. If None use cwd.
+    """
     import subprocess
 
     if not isinstance(call, str):
@@ -188,7 +236,11 @@ R = TypeVar("R")
 
 
 def list_to_tuple(fn: Callable[P, R]) -> Callable[P, R]:
-    """Decorater to convert lists to tuples in the arguments."""
+    """Decorator to convert lists to tuples in the arguments.
+
+    Arguments:
+        fn: The function to decorate
+    """
 
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         safe_args = [tuple(item) if isinstance(item, list) else item for item in args]

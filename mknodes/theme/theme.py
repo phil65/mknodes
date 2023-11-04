@@ -24,14 +24,19 @@ class Theme:
         name: str,
         *,
         data: dict[str, Any] | None = None,
-        template_registry: templateregistry.TemplateRegistry | None = None,
     ):
+        """Instanciate the theme.
+
+        Arguments:
+            name: The theme name
+            data: Additional data for the theme
+        """
         self.name = name
         self.data = data or {}
         self.features = self.data.get("features")
         loader = jinjarope.registry.get_package_loader("mknodes.resources")
         self.env = jinjarope.Environment(loader=loader)
-        self.templates = template_registry or templateregistry.TemplateRegistry()
+        self.templates = templateregistry.TemplateRegistry()
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
 
@@ -182,6 +187,11 @@ class Theme:
         return "#333333"
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
+        """Make adaptions to markdown extensions for the theme if required.
+
+        Arguments:
+            extensions: The extensions to adapt
+        """
         if self.name.lower() != "mkdocs":
             return
         for k in dict(extensions).copy():
@@ -191,10 +201,11 @@ class Theme:
                 ext["linenums_style"] = "inline"  # pymdownx-inline
 
     def adapt_extras(self, extras: dict):
-        pass
+        """Adapt the "extras" dictionary containing additional information."""
 
     @property
     def template_path(self) -> str:
+        """Return the template directory."""
         from mkdocs import utils
 
         return utils.get_theme_dir(self.name)
