@@ -4,7 +4,7 @@ from functools import cached_property
 import os
 import tempfile
 
-from typing import Self
+from typing import Any, Self
 from urllib import parse
 
 import git
@@ -39,7 +39,7 @@ class GitRepository(git.Repo):
         url: os.PathLike | str,
         to_path: os.PathLike | str,
         depth: int | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Clone a repository. Overridden for typing.
 

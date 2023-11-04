@@ -26,7 +26,8 @@ class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
 
         Arguments:
             args: Arguments passed to parent
-            template: Template to use
+            template: Template to use. Can either be a template path or a PathLike object
+                      which will be used as a template.
             template_parent: Optional parent template to use
             kwargs: Keyword arguments passed to parent
         """
