@@ -157,6 +157,9 @@ exclude_lines = [
 python_version = "3.11"
 disable_error_code = ["assignment", "misc", "import", "has-type"]
 
+[tool.git-changelog]
+filter-commits = "v0.30.0.."
+
 [tool.ruff]
 line-length = 90
 select = [
