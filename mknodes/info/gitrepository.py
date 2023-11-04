@@ -63,14 +63,8 @@ class GitRepository(git.Repo):
         """
         if isinstance(commit, str):
             commit = self.commit(commit)
-        return next(
-            (
-                self.commit_to_tag[c]
-                for c in [commit, *commit.parents]
-                if c in self.commit_to_tag
-            ),
-            None,
-        )
+        mapping = self.commit_to_tag
+        return next((mapping[c] for c in commit.traverse() if c in mapping), None)
 
     def get_last_commits(
         self,
