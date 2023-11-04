@@ -9,7 +9,7 @@ from typing import Any, Literal
 from mknodes.data import datatypes
 from mknodes.theme import colortheme, theme
 from mknodes.theme.materialtheme import palette
-from mknodes.utils import helpers, icons, log, reprhelpers
+from mknodes.utils import color as col, icons, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -197,7 +197,7 @@ class MaterialTheme(theme.Theme):
         Arguments:
             color: Color to set
         """
-        color_str = helpers.get_color_str(color)
+        color_str = str(col.Color(color))
         self.accent_fg_color = color_str
         self._set_color("accent", "custom")
         return color_str
@@ -212,7 +212,7 @@ class MaterialTheme(theme.Theme):
             color: Color to set
         """
         self._set_color("primary", "custom")
-        color_str = helpers.get_color_str(color)
+        color_str = str(col.Color(color))
         self.primary_bg_color = color_str
         return color_str
 
@@ -251,11 +251,11 @@ class MaterialTheme(theme.Theme):
             light_shade = color
         if dark_shade is None:
             dark_shade = color
-        color_str = helpers.get_color_str(color)
+        color_str = str(col.Color(color))
         self.color_theme = colortheme.ColorTheme(
             color_str,
-            helpers.get_color_str(light_shade),
-            helpers.get_color_str(dark_shade),
+            str(col.Color(light_shade)),
+            str(col.Color(dark_shade)),
         )
         return color_str
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 
-from mknodes.utils import helpers, log
+from mknodes.utils import color, log
 
 
 logger = log.get_logger(__name__)
@@ -29,15 +29,15 @@ class ColorTheme:
 
     @property
     def color_str(self) -> str:
-        return helpers.get_color_str(self.color)
+        return str(color.Color(self.color))
 
     @property
     def light_str(self) -> str:
-        return helpers.get_color_str(self.light_shade or self.color)
+        return str(color.Color(self.light_shade or self.color))
 
     @property
     def dark_str(self) -> str:
-        return helpers.get_color_str(self.dark_shade or self.color)
+        return str(color.Color(self.dark_shade or self.color))
 
 
 if __name__ == "__main__":

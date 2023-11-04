@@ -8,7 +8,7 @@ import jinjarope
 from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
-from mknodes.utils import helpers, icons, log, reprhelpers, resources
+from mknodes.utils import color, icons, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -69,10 +69,10 @@ class Theme:
             border_color: Color for the admonition border
             font_color: Color for the admonition header font
         """
-        header_col_str = helpers.get_color_str(header_color)
-        icon_col_str = helpers.get_color_str(icon_color or (255, 255, 255))
-        border_col_str = helpers.get_color_str(border_color or (255, 255, 255))
-        font_col_str = helpers.get_color_str(font_color or (255, 255, 255))
+        header_col_str = str(color.Color(header_color))
+        icon_col_str = str(color.Color(icon_color or (255, 255, 255)))
+        border_col_str = str(color.Color(border_color or (255, 255, 255)))
+        font_col_str = str(color.Color(font_color or (255, 255, 255)))
         adm = admonition.AdmonitionType(
             name=name,
             svg=icons.get_icon_svg(icon) if not icon.startswith("<") else icon,
