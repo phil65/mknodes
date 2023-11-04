@@ -33,16 +33,28 @@ def get_changelog(
         sections: Optionally filter sections
         filter_commits: The Git revision-range used to filter commits in git-log.
     """
-    with contextlib.redirect_stdout(io.StringIO()):
-        _changelog, text = cli.build_and_render(
-            repository=repository,
-            template=template,
-            convention=convention,
-            parse_refs=True,
-            parse_trailers=True,
-            filter_commits=filter_commits,
-            sections=list(sections) if sections else None,
-        )
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            _changelog, text = cli.build_and_render(
+                repository=repository,
+                template=template,
+                convention=convention,
+                parse_refs=True,
+                parse_trailers=True,
+                filter_commits=filter_commits,
+                sections=list(sections) if sections else None,
+            )
+    except ValueError:
+        # try without commit range
+        with contextlib.redirect_stdout(io.StringIO()):
+            _changelog, text = cli.build_and_render(
+                repository=repository,
+                template=template,
+                convention=convention,
+                parse_refs=True,
+                parse_trailers=True,
+                sections=list(sections) if sections else None,
+            )
     return text
 
 
