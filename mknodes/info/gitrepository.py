@@ -119,6 +119,12 @@ class GitRepository(git.Repo):
             last_commits=self.get_last_commits(100),
             repo_name=self.repo_name,
             edit_uri=self.edit_uri,
+            current_sha=self.head.object.hexsha,
+            current_committer=self.head.object.committer,
+            current_date_committed=self.head.object.committed_datetime,
+            current_author=self.head.object.author,
+            current_date_authored=self.head.object.authored_datetime,
+            last_version=self.get_version_for_commit("HEAD"),
         )
 
 

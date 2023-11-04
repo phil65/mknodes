@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import datetime
 import pathlib
 import types
 
@@ -52,6 +53,18 @@ class GitContext(Context):
     """Name of the code hoster (for example `GitHub`)"""
     edit_uri: str | None = None
     """Edit uri (depends on code hoster)."""
+    current_sha: str = ""
+    """SHA of last commit."""
+    current_committer: str = ""
+    """Committer name for last commit."""
+    current_date_committed: datetime.datetime | None = None
+    """Date committed for last commit."""
+    current_author: str = ""
+    """Author email for last commit."""
+    current_date_authored: datetime.datetime | None = None
+    """Date authored for last commit."""
+    last_version: str | None = None
+    """Name of last commit tag."""
 
 
 @dataclasses.dataclass
