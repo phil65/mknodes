@@ -34,7 +34,7 @@ class GitRepository(git.Repo):
         return "master" if has_master_branch else "main"
 
     @classmethod
-    def clone_from(
+    def clone_from(  # type: ignore[override]
         cls,
         url: os.PathLike | str,
         to_path: os.PathLike | str,
