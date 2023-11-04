@@ -10,7 +10,7 @@ from typing import Any
 import jinja2
 import jinjarope
 
-from jinjarope import loaders, undefined as undefined_
+from jinjarope import environment as env_, loaders, undefined as undefined_
 
 from mknodes.utils import jinjahelpers, log, mergehelpers, pathhelpers
 
@@ -201,7 +201,7 @@ class Environment(jinja2.Environment):
         try:
             block_render_func = template.blocks[block_name]
         except KeyError:
-            raise BlockNotFoundError(block_name, template_name) from KeyError
+            raise env_.BlockNotFoundError(block_name, template_name) from KeyError
 
         ctx = template.new_context(variables or {})
         return self.concat(block_render_func(ctx))  # type: ignore
@@ -234,21 +234,6 @@ class Environment(jinja2.Environment):
             module_paths=module_paths,
             static=static,
             fsspec_paths=fsspec_paths,
-        )
-
-
-class BlockNotFoundError(Exception):
-    def __init__(
-        self,
-        block_name: str,
-        template_name: str,
-        message: str | None = None,
-    ):
-        self.block_name = block_name
-        self.template_name = template_name
-        super().__init__(
-            message
-            or f"Block {self.block_name!r} not found in template {self.template_name!r}",
         )
 
 

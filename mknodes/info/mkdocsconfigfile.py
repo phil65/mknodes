@@ -3,6 +3,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import jinja2
+import jinjarope
+
+from jinjarope import loaders
 
 from mknodes.info import yamlfile
 
@@ -63,10 +66,8 @@ class MkDocsConfigFile(yamlfile.YamlFile):
                     plugin["mknodes"]["clone_depth"] = clone_depth
 
     def get_loaders(self) -> Sequence[jinja2.BaseLoader]:
-        from jinjarope import loaders
-
         jinja_loaders: list[jinja2.BaseLoader] = [
-            loaders.registry.get_loader(self._data.get("docs_dir", "docs")),
+            jinjarope.get_loader(self._data.get("docs_dir", "docs")),
         ]
         loader_list = self.mknodes_config.get("loaders", [])
         for loader_dct in loader_list:
