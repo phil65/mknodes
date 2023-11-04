@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import inspecthelpers, log, resources
+from mknodes.utils import inspecthelpers, log
 
 
 logger = log.get_logger(__name__)
@@ -20,12 +20,6 @@ class MkCommentedCode(mkcontainer.MkContainer):
     ICON = "material/code-json"
     STATUS = "new"
     VIRTUAL_CHILDREN = True
-
-    REQUIRED_EXTENSIONS = [
-        resources.Extension("pymdownx.highlight"),
-        resources.Extension("pymdownx.snippets"),
-        resources.Extension("pymdownx.superfences"),
-    ]
 
     def __init__(
         self,
