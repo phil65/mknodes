@@ -30,11 +30,8 @@ logger = log.get_logger(__name__)
 @jinja2.pass_context
 def url_filter(context, value: str) -> str:
     """A Template filter to normalize URLs."""
-    return pathhelpers.normalize_url(
-        str(value),
-        url=page.url if (page := context.get("page")) else None,
-        base=context["base_url"],
-    )
+    url = page.url if (page := context.get("page")) else None
+    return pathhelpers.normalize_url(str(value), url=url, base=context["base_url"])
 
 
 @jinja2.pass_context
