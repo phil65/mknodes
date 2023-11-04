@@ -4,9 +4,11 @@ import os
 
 from typing import TYPE_CHECKING, Literal
 
+from jinjarope import envglobals
+
 from mknodes.basenodes import mknode
 from mknodes.mdlib import mdconverter
-from mknodes.utils import css as css_, helpers, resources
+from mknodes.utils import helpers, resources
 
 
 if TYPE_CHECKING:
@@ -273,10 +275,9 @@ class StylesBlock(BaseBlock):
         Arguments:
             css: A string or dict containing CSS
         """
-        if isinstance(css, dict):
-            css = str(css_.CSS(css))
-        filename = f"{helpers.get_hash(css)}.css"
-        text = resources.CSSText(filename=filename, content=css)
+        css_str = envglobals.format_css_rule(css) if isinstance(css, dict) else css
+        filename = f"{helpers.get_hash(css_str)}.css"
+        text = resources.CSSText(filename=filename, content=css_str)
         self.styles.append(text)
 
     def __bool__(self):
