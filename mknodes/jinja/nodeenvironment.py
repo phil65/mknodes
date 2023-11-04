@@ -46,15 +46,6 @@ class NodeEnvironment(environment.Environment):
         paths = self.get_extra_paths()
         self.add_template_path(*paths)
 
-    @classmethod
-    def get_nodes_from_string(cls, text: str, context=None) -> list[mk.MkNode]:
-        import mknodes as mk
-
-        node = mk.MkNode(context=context)
-        env = cls(node)
-        env.render_string(text)
-        return env.rendered_nodes
-
     def setup_environment(self):
         """Set up the environment by adding node/context specific filters / globals.
 
@@ -137,7 +128,7 @@ class NodeEnvironment(environment.Environment):
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
-    def render_string(self, markdown: str, variables: dict | None = None):
+    def render_string(self, markdown: str, variables: dict | None = None) -> str:
         """Render a template string.
 
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
@@ -166,5 +157,3 @@ if __name__ == "__main__":
     # text = env.render_string(r"{{ 50 | MkProgressBar }}")
     # print(env.rendered_nodes)
     # env.render_string(r"{{test('hallo')}}")
-    # nodes = NodeEnvironment.get_nodes_from_string(r"{{ 'test' | MkHeader }}")
-    # print(nodes)
