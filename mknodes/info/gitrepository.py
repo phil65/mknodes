@@ -80,7 +80,12 @@ class GitRepository(git.Repo):
         if isinstance(commit, str):
             commit = self.commit(commit)
         mapping = self.commit_to_tag
-        return next((mapping[c] for c in commit.traverse() if c in mapping), None)
+        try:
+            return next((mapping[c] for c in commit.traverse() if c in mapping), None)
+        except ValueError:
+            msg = f"Could not get version for {commit}"
+            logger.exception(msg)
+            return None
 
     def get_last_commits(
         self,
