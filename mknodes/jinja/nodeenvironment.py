@@ -6,8 +6,8 @@ import pathlib
 from typing import TYPE_CHECKING, Any
 
 import jinja2
+import jinjarope
 
-from mknodes.jinja import environment
 from mknodes.utils import inspecthelpers, log
 
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 logger = log.get_logger(__name__)
 
 
-class NodeEnvironment(environment.Environment):
+class NodeEnvironment(jinjarope.Environment):
     """Jinja Node environment.
 
     A Jinja Environment specifically for MkNode instances.
@@ -35,12 +35,18 @@ class NodeEnvironment(environment.Environment):
             node: Node this environment belongs to.
             kwargs: Optional keyword arguments passed to parent
         """
-        super().__init__(load_templates=True, **kwargs)
-        self.inherit_from(node.ctx.env)
+        super().__init__(**kwargs)
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()
         self.setup_environment()
+        resource_loader = jinjarope.ChoiceLoader(
+            [
+                jinjarope.get_loader("docs/"),
+                jinjarope.FsSpecProtocolPathLoader(),
+            ]
+        )
+        self.loader = resource_loader
         path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
         self.class_path = pathlib.Path(path or "").parent.as_posix()
         paths = self.get_extra_paths()

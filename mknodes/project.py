@@ -9,7 +9,6 @@ from typing import Generic, TypeVar
 
 from mknodes import paths
 from mknodes.info import contexts, folderinfo, linkprovider, reporegistry
-from mknodes.jinja import environment
 from mknodes.navs import mknav
 from mknodes.theme import theme as theme_
 from mknodes.utils import classhelpers, log, reprhelpers
@@ -60,7 +59,7 @@ class Project(Generic[T]):
             # github=self.folderinfo.github.context,
             theme=self.theme.context,
             links=self.linkprovider,
-            env=environment.Environment(load_templates=True),
+            env_config={},
         )
         self._root = mknav.MkNav(context=self.context)
 

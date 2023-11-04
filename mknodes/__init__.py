@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from .jinja.environment import Environment
 from .jinja.nodeenvironment import NodeEnvironment
 
 from .basenodes.mkblock import MkBlock
@@ -92,7 +91,6 @@ from .theme.theme import Theme
 from .theme.materialtheme import MaterialTheme
 
 __all__ = [
-    "Environment",
     "NodeEnvironment",
     "MkNode",
     "MkDefaultWebsite",

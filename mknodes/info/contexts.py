@@ -273,18 +273,11 @@ class ProjectContext(Context):
         default_factory=linkprovider.LinkProvider,
     )
     """Link source."""
-    env: mk.Environment = dataclasses.field(
-        default_factory=lambda: mk.Environment(load_templates=True),
-    )
+    env_config: dict = dataclasses.field(default_factory=dict)
     # resources: Resources = dataclasses.field(default_factory=Resources)
     # pyproject: pyproject.PyProject = dataclasses.field(
     #     default_factory=pyproject.PyProject,
     # )
-
-    def __post_init__(self):
-        self.env.filters["get_link"] = self.links.get_link
-        self.env.filters["get_url"] = self.links.get_url
-        self.env.globals |= self.as_dict()
 
     def populate_linkprovider(self):
         if self.metadata.mkdocs_config is None:
@@ -349,7 +342,7 @@ def get_default_project_context():
         github=default_github_context,
         theme=default_theme_context,
         links=linkprovider.LinkProvider(),
-        env=mk.Environment(load_templates=True),
+        env_config={},
         # resources=Resources(),
     )
 
