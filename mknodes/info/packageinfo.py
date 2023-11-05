@@ -180,12 +180,14 @@ class PackageInfo:
 
     @functools.cached_property
     def cli(self) -> str | None:
-        """Get the name of the CLI package being used."""
-        eps = self.entry_points.get("console_scripts")
-        if not eps:
-            return None
-        ep = eps[0].load()
-        return "typer" if ep.__class__.__qualname__ == "Typer" else "click"
+        """Get the name of the CLI package being used.
+
+        Detection is done by comparing a list of known CLI apps with required packages.
+        """
+        for lib in ["typer", "click", "cappa"]:
+            if lib in self.required_package_names:
+                return lib
+        return None
 
     @functools.cached_property
     def cli_info(self) -> clihelpers.CommandInfo | None:

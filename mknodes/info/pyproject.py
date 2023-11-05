@@ -95,9 +95,18 @@ class PyProject(tomlfile.TomlFile):
         return self.mknodes_section.get("docstring-style")
 
     @property
-    def argparser_path(self) -> str | None:
-        """Return path to an ArgumentParser, used for documenting the CLI."""
-        return self.mknodes_section.get("argparser-path")
+    def cli_obj_path(self) -> str | None:
+        """Return path to the object describing the CLI, used for documenting the CLI.
+
+        Path can lead to:
+
+        * click.Group instance
+        * typer.Typer instance
+        * ArgumentParser instance
+        * cappa dataclass
+
+        """
+        return self.mknodes_section.get("cli-obj-path")
 
     @property
     def line_length(self) -> int | None:
