@@ -68,10 +68,8 @@ class MkDependencyTable(mktable.MkTable):
 
         node_1 = MkDependencyTable()
         page += mk.MkReprRawRendered(node_1, header="### From project")
-        node_2 = MkDependencyTable("mkdocs")
+        node_2 = MkDependencyTable("jinjarope", layout="badge")
         page += mk.MkReprRawRendered(node_2, header="### Explicitely defined")
-        node_3 = MkDependencyTable(layout="badge")
-        page += mk.MkReprRawRendered(node_3, header="### From project")
 
 
 if __name__ == "__main__":
