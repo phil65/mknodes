@@ -105,6 +105,15 @@ def get_extras(markers: list) -> list[str]:
     return extras
 
 
+def import_dotted_path(path: str) -> Any:
+    if ":" in path:
+        mod_name, kls_name = path.split(":")
+    else:
+        mod_name, kls_name = path, None
+    mod = importlib.import_module(mod_name)
+    return getattr(mod, kls_name) if kls_name else mod
+
+
 @dataclasses.dataclass
 class EntryPoint:
     """EntryPoint including imported module."""
@@ -115,12 +124,7 @@ class EntryPoint:
 
     def load(self) -> Any:
         """Import and return the EntryPoint object."""
-        if ":" in self.dotted_path:
-            mod_name, kls_name = self.dotted_path.split(":")
-        else:
-            mod_name, kls_name = self.dotted_path, None
-        mod = importlib.import_module(mod_name)
-        return getattr(mod, kls_name) if kls_name else mod
+        return import_dotted_path(self.dotted_path)
 
     @property
     def module(self) -> str:
