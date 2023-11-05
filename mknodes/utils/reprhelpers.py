@@ -8,7 +8,7 @@ import reprlib
 from typing import Any
 
 from mknodes.data import datatypes
-from mknodes.utils import log
+from mknodes.utils import inspecthelpers, log
 
 
 logger = log.get_logger(__name__)
@@ -177,10 +177,7 @@ def get_nondefault_repr(
         char_width: If set, then repr will be formatted with black to given char width
         shorten: Whether to shorten the repr using a custom reprlib Repr
     """
-    import inspect
-
-    spec = inspect.getfullargspec(instance.__init__)
-    spec.args.remove("self")
+    spec = inspecthelpers.get_argspec(instance.__init__)
     args = []
     for arg in spec.args:
         if arg == "content":
