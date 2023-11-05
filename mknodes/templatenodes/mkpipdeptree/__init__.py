@@ -6,7 +6,7 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import log, resources
+from mknodes.utils import log, packagehelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -40,19 +40,16 @@ def get_mermaid(
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
 
-        from pip._internal.metadata import pkg_resources
         from pipdeptree._models import PackageDAG
         from pipdeptree._render import render_mermaid
 
-    dists = pkg_resources.Environment.from_paths(None).iter_installed_distributions(
+    dists = packagehelpers.list_pip_packages(
         local_only=local_only,
-        skip=(),
         user_only=user_only,
         include_editables=include_editables,
         editables_only=editables_only,
     )
     pkgs = [d._dist for d in dists]  # type: ignore[attr-defined]
-
     tree = PackageDAG.from_pkgs(pkgs)
     # Reverse the tree (if applicable) before filtering,
     # thus ensuring, that the filter will be applied on ReverseTree

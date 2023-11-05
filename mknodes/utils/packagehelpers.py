@@ -73,7 +73,7 @@ def get_package_map() -> Mapping[str, list[str]]:
 
 
 @functools.cache
-def distribution_to_package(dist: str):
+def distribution_to_package(dist: str) -> str:
     """Return the top-level package for given distribution.
 
     Arguments:
@@ -84,7 +84,7 @@ def distribution_to_package(dist: str):
 
 
 @functools.cache
-def get_marker(marker):
+def get_marker(marker) -> Marker:
     return Marker(marker)
 
 
@@ -170,7 +170,7 @@ class EntryPointMap(collections.defaultdict):
             self[ep.group].append(ep)
 
     @property
-    def all_eps(self):
+    def all_eps(self) -> list[EntryPoint]:
         return [i for ls in self.values() for i in ls]
 
     def by_name(self, name: str) -> EntryPoint | None:
@@ -187,7 +187,7 @@ class Dependency:
         self._marker = name
 
     @property
-    def marker(self):
+    def marker(self) -> Marker | None:
         return (
             get_marker(self._marker.split(";", maxsplit=1)[-1])
             if ";" in self._marker
@@ -195,7 +195,7 @@ class Dependency:
         )
 
     @functools.cached_property
-    def extras(self):
+    def extras(self) -> list[str]:
         return get_extras(self.marker._markers) if self.marker else []
 
     def __repr__(self):
@@ -212,6 +212,31 @@ def list_installed_packages() -> dict[str, str]:
     import pkg_resources
 
     return {i.project_name: i.key for i in pkg_resources.working_set}
+
+
+@functools.cache
+def list_pip_packages(
+    local_only: bool = True,
+    user_only: bool = False,
+    include_editables: bool = True,
+    editables_only: bool = False,
+):
+    # import warnings
+
+    # with warnings.catch_warnings():
+    #     warnings.simplefilter("ignore")
+
+    from pip._internal.metadata import pkg_resources
+
+    return list(
+        pkg_resources.Environment.from_paths(None).iter_installed_distributions(
+            local_only=local_only,
+            skip=(),
+            user_only=user_only,
+            include_editables=include_editables,
+            editables_only=editables_only,
+        )
+    )
 
 
 if __name__ == "__main__":

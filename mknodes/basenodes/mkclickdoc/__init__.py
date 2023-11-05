@@ -37,6 +37,7 @@ class MkClickDoc(mknode.MkNode):
         self.prog_name = prog_name
         self.show_hidden = show_hidden
         self.show_subcommands = show_subcommands
+        self.template = "mkclickdoc_template.jinja"
 
     @property
     def attributes(self) -> dict[str, Any]:
@@ -74,8 +75,7 @@ class MkClickDoc(mknode.MkNode):
         instance = getattr(mod, attrs["command"])
 
         def info_to_md(info, recursive: bool = False) -> str:
-            tpl = "mkclickdoc_template.jinja"
-            cmd_text = self.env.render_template(tpl, variables=dict(info=info))
+            cmd_text = self.env.render_template(self.template, variables=dict(info=info))
             if not recursive:
                 return cmd_text
             children_text = "\n".join(

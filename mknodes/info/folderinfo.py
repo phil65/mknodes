@@ -201,7 +201,7 @@ class FolderInfo:
         for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
             if (file := self.path / path).exists():
                 return file
-        if file := self.info.metadata.json.get("license_file"):
+        if file := self.info.metadata.get("license_file"):
             return self.path / file if isinstance(file, str) else self.path / file[0]
         return None
 

@@ -212,4 +212,4 @@ class PackageInfo:
 
 if __name__ == "__main__":
     info = PackageInfo("jinja2")
-    print(list(info.metadata.json.keys()))
+    print(list(info.metadata.keys()))
