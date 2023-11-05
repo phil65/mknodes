@@ -55,6 +55,15 @@ class MkClickDoc(mknode.MkNode):
         dct.update(show_hidden=self.show_hidden, show_subcommands=self.show_subcommands)
         return dct
 
+    @property
+    def children(self):
+        self._to_markdown()
+        return self.env.rendered_children
+
+    @children.setter
+    def children(self, val):
+        pass
+
     def _to_markdown(self) -> str:
         import importlib
 
@@ -64,29 +73,9 @@ class MkClickDoc(mknode.MkNode):
         mod = importlib.import_module(attrs["module"])
         instance = getattr(mod, attrs["command"])
 
-        def param_to_md(param) -> str:
-            lines = [f"### {param.opt_str}"]
-            if param.required:
-                lines.append("**REQUIRED**")
-            if param.envvar:
-                lines.append(f"**Environment variable:** {param.envvar}")
-            if param.multiple:
-                lines.append("**Multiple values allowed.**")
-            if param.default:
-                lines.append(f"**Default:** {param.default}")
-            if param.is_flag:
-                lines.append(f"**Flag:** {param.flag_value}")
-            if param.help:
-                lines.append(param.help)
-            return "\n\n".join(lines)
-
         def info_to_md(info, recursive: bool = False) -> str:
-            import mknodes as mk
-
-            header = f"## {info.name}\n\n"
-            text = header + info.description + "\n\n" + str(mk.MkCode(info.usage))
-            params = [param_to_md(i) for i in info.params]
-            cmd_text = text + "\n\n\n" + "\n\n\n".join(params)
+            tpl = "mkclickdoc_template.jinja"
+            cmd_text = self.env.render_template(tpl, variables=dict(info=info))
             if not recursive:
                 return cmd_text
             children_text = "\n".join(

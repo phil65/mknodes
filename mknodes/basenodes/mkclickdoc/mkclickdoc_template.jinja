@@ -1,3 +1,10 @@
+## {{ info.name }}
+
+{{ info.description }}
+
+{{ info.usage | MkCode }}
+
+{% for param in info.params %}
 ### {{ param.opt_str }}
 
 {% if param.required %}
@@ -10,11 +17,15 @@ Environment variable{{ param.envvar }}
 **Multiple values allowed.**
 {% endif %}
 {% if param.default %}
-**Default:**: {{ param.default }}
+**Default:** {{ param.default }}
 {% endif %}
 {% if param.is_flag %}
-**Flag:**: {{ param.help }}
+{{ "mdi:flag" | MkMaterialBadge("Flag") }}
 {% endif %}
 {% if param.help %}
 {{ param.help }}
 {% endif %}
+
+
+{% endfor %}
+
