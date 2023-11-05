@@ -6,7 +6,8 @@ import functools
 
 from requests import structures
 
-from mknodes.utils import clihelpers, log, packagehelpers, reprhelpers
+from mknodes.info.cli import clihelpers, commandinfo
+from mknodes.utils import log, packagehelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -190,7 +191,7 @@ class PackageInfo:
         return None
 
     @functools.cached_property
-    def cli_info(self) -> clihelpers.CommandInfo | None:
+    def cli_info(self) -> commandinfo.CommandInfo | None:
         """Return a CLI info object containing infos about all CLI commands / options."""
         eps = self.entry_points.get("console_scripts")
         if not eps:

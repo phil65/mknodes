@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import clihelpers, log
-
+from mknodes.utils import log
+from mknodes.info.cli import clihelpers
 
 logger = log.get_logger(__name__)
 
