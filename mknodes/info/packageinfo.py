@@ -25,10 +25,12 @@ class PackageInfo:
         self.package_name = pkg_name
         self.distribution = packagehelpers.get_distribution(pkg_name)
         logger.debug("Loaded package info: '%s'", pkg_name)
-        self.metadata = packagehelpers.get_metadata(self.distribution)
-        self.classifiers = [v for h, v in self.metadata.items() if h == "Classifier"]
-        self.version = self.metadata["Version"]
-        self.name = self.metadata["Name"]
+        self.metadata = packagehelpers.get_metadata(self.distribution).json
+        self.classifiers = self.metadata["classifier"]
+        self.version = self.metadata["version"]
+        self.name = self.metadata["name"]
+        self.description = self.metadata["description"]
+        self.summary = self.metadata["summary"]
 
     def __repr__(self):
         return reprhelpers.get_repr(self, pkg_name=self.package_name)
@@ -44,11 +46,10 @@ class PackageInfo:
         """
         urls = {
             v.split(",")[0].strip(): v.split(",")[1].strip()
-            for k, v in self.metadata.items()
-            if k == "Project-URL"
+            for v in self.metadata.get("project_url", [])
         }
-        if "Home-page" in self.metadata:
-            urls["Home-page"] = self.metadata["Home-page"].strip()
+        if "home_page" in self.metadata:
+            urls["home_page"] = self.metadata["home_page"].strip()
         return structures.CaseInsensitiveDict(urls)
 
     @functools.cached_property
@@ -69,8 +70,8 @@ class PackageInfo:
     @functools.cached_property
     def license_name(self) -> str | None:
         """Get name of the license."""
-        if license_name := self.metadata.get("License-Expression", "").strip():
-            return license_name
+        if license_name := self.metadata.get("license_expression"):
+            return license_name if isinstance(license_name, str) else license_name[0]
         if license_names := self.classifier_map.get("License"):
             return license_names[0].split(" :: ")[-1]
         return None
@@ -84,13 +85,16 @@ class PackageInfo:
     @functools.cached_property
     def homepage(self) -> str | None:
         """The URL of the homepage associated to this package."""
-        keys = ["Home-page", "Homepage", "Documentation"]
+        keys = ["Home-page", "Homepage", "home_page", "Documentation"]
         return next((self.urls[k] for k in keys if k in self.urls), self.repository_url)
 
     @functools.cached_property
     def keywords(self) -> list[str]:
         """Return a list of keywords from metadata."""
-        return self.metadata.get("Keywords", "").split(",")
+        keywords = self.metadata["keywords"]
+        if keywords and "," in keywords[0]:
+            return keywords[0].split(",")
+        return keywords
 
     @functools.cached_property
     def classifier_map(self) -> collections.defaultdict[str, list[str]]:
@@ -102,10 +106,9 @@ class PackageInfo:
          }
         """
         classies: collections.defaultdict[str, list[str]] = collections.defaultdict(list)
-        for k, v in self.metadata.items():
-            if k == "Classifier":
-                category, value = v.split(" :: ", 1)
-                classies[category].append(value.strip())
+        for v in self.metadata["classifier"]:
+            category, value = v.split(" :: ", 1)
+            classies[category].append(value.strip())
         return classies
 
     @functools.cached_property
@@ -116,13 +119,13 @@ class PackageInfo:
     @functools.cached_property
     def author_email(self) -> str:
         """The first found package author email address."""
-        mail = self.metadata["Author-email"].split(" ")[-1]
+        mail = self.metadata["author_email"].split(",")[0].split(" ")[-1]
         return mail.replace("<", "").replace(">", "")
 
     @functools.cached_property
     def author_name(self) -> str:
         """The first found package author name."""
-        return self.metadata["Author-email"].rsplit(" ", 1)[0]
+        return self.metadata["author_email"].split(",")[0].rsplit(" ", 1)[0]
 
     @functools.cached_property
     def authors(self) -> dict[str, str]:
@@ -134,12 +137,11 @@ class PackageInfo:
          }
         """
         authors: dict[str, str] = {}
-        for k, v in self.metadata.items():
-            if k == "Author-email":
-                mail = v.split(" ")[-1]
-                mail = mail.replace("<", "").replace(">", "")
-                name = v.rsplit(" ", 1)[0]
-                authors[name] = mail
+        for v in self.metadata["author_email"].split(","):
+            mail = v.split(" ")[-1]
+            mail = mail.replace("<", "").replace(">", "")
+            name = v.rsplit(" ", 1)[0]
+            authors[name] = mail
         return authors
 
     @functools.cached_property
@@ -154,7 +156,7 @@ class PackageInfo:
     @functools.cached_property
     def required_python_version(self) -> str | None:
         """The minimum required python version for this package."""
-        return self.metadata.json.get("requires_python")
+        return self.metadata.get("requires_python")
 
     @functools.cached_property
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
@@ -209,5 +211,5 @@ class PackageInfo:
 
 
 if __name__ == "__main__":
-    info = PackageInfo("pyconify")
-    print(info.urls)
+    info = PackageInfo("jinja2")
+    print(list(info.metadata.json.keys()))

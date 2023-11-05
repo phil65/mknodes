@@ -97,10 +97,10 @@ class License:
         class Ctx:
             copyright_holder = info.author_name
             organization = info.author_name
-            program_description = info.metadata["Summary"]
+            program_description = info.summary
             program_name = info.name
             program_url = info.repository_url or ""
-            program_version = info.metadata["Version"]
+            program_version = info.version
             email = info.author_email
 
         env.globals["metadata"] = Ctx

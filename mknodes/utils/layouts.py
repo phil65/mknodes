@@ -143,7 +143,7 @@ class BadgePackageLayout(Layout):
         link = helpers.styled(link_text, size=3, bold=True)
         marker = str(dep_info.marker) if dep_info.marker else ""
         marker_str = re.sub(MARKER_RE, r"`\g<1>`", marker)
-        summary = helpers.styled(package_info.metadata["Summary"], italic=True)
+        summary = helpers.styled(package_info.summary, italic=True)
         info = mkmetadatabadges.MkMetadataBadges("websites", package=package_info.name)
         info.block_separator = "  "
         container_1 = mkcontainer.MkContainer([link, marker_str], block_separator="\n")
@@ -165,7 +165,7 @@ class DefaultPackageLayout(Layout):
         link = helpers.styled(str(node), size=3, bold=True)
         marker = str(dep_info.marker) if dep_info.marker else ""
         marker_str = re.sub(MARKER_RE, r"`\g<1>`", marker)
-        summary = helpers.styled(package_info.metadata["Summary"], italic=True)
+        summary = helpers.styled(package_info.summary, italic=True)
         return dict(Name=link, Summary=summary, Markers=marker_str)
 
 
