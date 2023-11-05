@@ -156,7 +156,8 @@ def get_entry_points(
         eps = [i for i in _get_entry_points(dist) if i.group == group or not group]
     else:
         kw_args = dict(group=group, **kwargs) if group else kwargs
-        eps = _get_entry_points(**kw_args)
+        eps = [i for ls in _get_entry_points(**kw_args).values() for i in ls]
+
     return EntryPointMap(eps)
 
 
@@ -167,18 +168,6 @@ class EntryPointMap(collections.defaultdict):
             if not isinstance(ep, EntryPoint):
                 ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
             self[ep.group].append(ep)
-
-    @classmethod
-    def from_system(cls):
-        eps = _get_entry_points()
-        kls = cls()
-        for group in eps.groups:
-            kls[group] = [
-                EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
-                for ep in eps.select(group=group)
-            ]
-        # kls.update([i for ls in eps.select() for i in ls])
-        return kls
 
     @property
     def all_eps(self):
