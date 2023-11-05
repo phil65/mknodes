@@ -94,7 +94,7 @@ class MkClickDoc(mknode.MkNode):
             )
             return cmd_text + children_text
 
-        info = clihelpers.get_typer_info(instance, command=attrs["prog_name"])
+        info = clihelpers.get_cli_info(instance, command=attrs["prog_name"])
         return info_to_md(info, recursive=self.show_subcommands)
 
     @classmethod

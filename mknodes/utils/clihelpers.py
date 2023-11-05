@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import argparse
+
 from collections.abc import Callable
 import dataclasses
-
 from typing import TYPE_CHECKING, Any, Literal
 
 
@@ -33,8 +34,8 @@ class Param:
     """Whether the parameter is accepted multiple times and recorded."""
     name: str = ""
     """The name of this parameter."""
-    nargs: int = 1
-    """The number of arguments this parameter matches."""
+    nargs: int | str | None = 1
+    """The number of arguments this parameter matches. (Argparse may return * / ?)"""
     opts: list[str] = dataclasses.field(default_factory=list)
     """Options for this parameter."""
     param_type_name: Literal["option", "parameter", "argument"] = "option"
@@ -68,7 +69,7 @@ class CommandInfo:
     """The name of the command."""
     description: str
     """A description for this command."""
-    usage: str
+    usage: str = ""
     """A formatted string containing a formatted "usage string" (placeholder example)"""
     subcommands: dict[str, CommandInfo] = dataclasses.field(default_factory=dict)
     """A command-name->CommandInfo mapping containing all subcommands."""
@@ -85,7 +86,35 @@ class CommandInfo:
         return self.subcommands[name]
 
 
-def get_typer_info(
+def get_argparse_info(parser: argparse.ArgumentParser):
+    subcommands = [
+        CommandInfo(name=i.title or "", description=i.description or "")
+        for i in parser._action_groups
+    ]
+    params = [
+        Param(
+            metavar=" ".join(i.metavar) if isinstance(i.metavar, tuple) else i.metavar,
+            help=i.help,
+            default=i.default if i.default != argparse.SUPPRESS else None,
+            opts=list(i.option_strings),
+            nargs=i.nargs,
+            required=i.required,
+            # dest: str
+            # const: Any
+            # choices: Iterable[Any] | None
+        )
+        for i in parser._actions
+    ]
+    return CommandInfo(
+        name=parser.prog,
+        description=parser.description or "",
+        usage=parser.format_usage(),
+        params=params,
+        subcommands={i.name: i for i in subcommands},
+    )
+
+
+def get_cli_info(
     instance: typer.Typer | click.Group,
     command: str | None = None,
 ) -> CommandInfo:
@@ -100,16 +129,16 @@ def get_typer_info(
     from typer.main import get_command
 
     cmd = get_command(instance) if isinstance(instance, typer.Typer) else instance
-    info = get_command_info(cmd)
+    info = get_click_info(cmd)
     if command:
         ctx = typer.Context(cmd)
         subcommands = getattr(cmd, "commands", {})
-        cmds = {k: get_command_info(v, parent=ctx) for k, v in subcommands.items()}
+        cmds = {k: get_click_info(v, parent=ctx) for k, v in subcommands.items()}
         return cmds.get(command, info)
     return info
 
 
-def get_command_info(
+def get_click_info(
     command: click.Command,
     parent: click.Context | None = None,
 ) -> CommandInfo:
@@ -119,9 +148,9 @@ def get_command_info(
         command: The **click** `Command` to get info for.
         parent: The optional parent context
     """
-    import typer
+    import click
 
-    ctx = typer.Context(command, parent=parent)
+    ctx = click.Context(command, parent=parent)
     subcommands = getattr(command, "commands", {})
     dct = ctx.command.to_info_dict(ctx)
     return CommandInfo(
@@ -129,7 +158,7 @@ def get_command_info(
         description=ctx.command.help or ctx.command.short_help or "",
         usage=_make_usage(ctx),
         params=[Param(**i) for i in dct["params"]],
-        subcommands={k: get_command_info(v, parent=ctx) for k, v in subcommands.items()},
+        subcommands={k: get_click_info(v, parent=ctx) for k, v in subcommands.items()},
         deprecated=dct["deprecated"],
         epilog=dct["epilog"],
         hidden=dct["hidden"],
@@ -164,5 +193,5 @@ if __name__ == "__main__":
 
     import mkdocs.__main__
 
-    info = get_typer_info(mkdocs.__main__.cli, command="mkdocs")
+    info = get_cli_info(mkdocs.__main__.cli, command="mkdocs")
     pprint(info)

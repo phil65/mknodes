@@ -196,7 +196,7 @@ class PackageInfo:
         ep = eps[0].load()
         qual_name = ep.__class__.__module__.lower()
         if qual_name.startswith(("typer", "click")):
-            return clihelpers.get_typer_info(ep)
+            return clihelpers.get_cli_info(ep)
         return None
 
     @functools.cached_property
