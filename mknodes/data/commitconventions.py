@@ -11,6 +11,37 @@ logger = log.get_logger(__name__)
 
 ConventionTypeStr = Literal["conventional_commits", "basic"]
 
+
+@dataclasses.dataclass(frozen=True)
+class CommitType:
+    typ: str
+    description: str
+    icon: str | None = None
+
+
+TYPES = [
+    CommitType("build", "About packaging, building wheels, etc.", "👷"),
+    CommitType("chore", "About packaging or repo/files management.", "📦"),
+    CommitType("ci", "About Continuous Integration.", "🚀"),
+    CommitType("deps", "Dependencies update.", "⬆️"),
+    CommitType("doc", "About documentation.", "📚"),
+    CommitType("docs", "About documentation.", "📚"),
+    CommitType("feat", "New feature.", "✨"),
+    CommitType("fix", "Bug fix.", "🐛"),
+    CommitType("ref", "Code refactoring.", "🔨"),
+    CommitType("revert", "Code revert.", "⏪"),
+    CommitType("add", "Code Addition.", "⚡"),
+    CommitType("change", "Code change.", "⚡"),
+    CommitType("remove", "Code removal.", "🔥"),
+    CommitType("merge", "Code merge.", "🔀"),
+    CommitType("perf", "About performance.", "🐎"),
+    CommitType("refactor", "Changes that are not features or bug fixes.", "🔨"),
+    CommitType("style", "A change in code style/format.", "🎨"),
+    CommitType("test", "About tests.", "🚨"),
+    CommitType("tests", "About tests.", "🚨"),
+]
+
+
 CommitTypeStr = Literal[
     "build",
     "chore",
@@ -33,27 +64,9 @@ CommitTypeStr = Literal[
     "tests",
 ]
 
-TYPE_DESCRIPTIONS: dict[CommitTypeStr, str] = {
-    "build": "About packaging, building wheels, etc.",
-    "chore": "About packaging or repo/files management.",
-    "ci": "About Continuous Integration.",
-    "deps": "Dependencies update.",
-    "doc": "About documentation.",
-    "docs": "About documentation.",
-    "feat": "New feature.",
-    "fix": "Bug fix.",
-    "ref": "Code refactoring.",
-    "revert": "Code revert.",
-    "add": "Code Addition.",
-    "change": "Code change.",
-    "remove": "Code removal.",
-    "merge": "Code merge.",
-    "perf": "About performance.",
-    "refactor": "Changes that are not features or bug fixes.",
-    "style": "A change in code style/format.",
-    "test": "About tests.",
-    "tests": "About tests.",
-}
+
+def get_types(types: list[CommitTypeStr]) -> list[CommitType]:
+    return [i for i in TYPES if i.typ in types]
 
 
 @dataclasses.dataclass

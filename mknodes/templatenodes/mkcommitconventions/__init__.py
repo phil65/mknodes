@@ -11,12 +11,6 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-STYLES = {
-    "Angular Style": "https://gist.github.com/stephenparish/9941e89d80e2bc58a153",
-    "Karma convention": "https://karma-runner.github.io/4.0/dev/git-commit-msg.html",
-}
-
-
 class MkCommitConventions(mktemplate.MkTemplate):
     """Text node containing Commit message conventions."""
 
@@ -44,11 +38,10 @@ class MkCommitConventions(mktemplate.MkTemplate):
 
     @property
     def variables(self):
-        styles = " or ".join(f"[{k}]({v})" for k, v in STYLES.items())
-        all_types = commitconventions.TYPE_DESCRIPTIONS
-        items = [f"`{k}`: {all_types[k]}" for k in self.commit_types]
+        types = commitconventions.get_types(self.commit_types)
+        items = [f"`{k.typ}`: {k.description}" for k in types]
         ls = mklist.MkList(items)
-        return dict(styles=styles, commit_types=str(ls))
+        return dict(commit_types=str(ls))
 
     @variables.setter
     def variables(self, value):
@@ -82,7 +75,7 @@ class MkCommitConventions(mktemplate.MkTemplate):
 
         node = MkCommitConventions()
         page += mk.MkReprRawRendered(node, header="### All commit_types")
-        node = MkCommitConventions(["fix", "feat", "refactor"], header="")
+        node = MkCommitConventions(["fix", "feat", "refactor"])
         page += mk.MkReprRawRendered(node, header="### Selected commit_types")
 
 
