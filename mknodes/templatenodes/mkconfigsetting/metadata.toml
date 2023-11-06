@@ -28,3 +28,27 @@ jinja = """
 {% set desc = "Some **markdown** to describe the setting" %}
 {{ "path" | MkConfigSetting(mode="toml", setting=setting, description=desc, default="path.to.module")}}
 """
+
+# [output.markdown]
+# template = """
+# Default: `"{{ node.default }}"`
+
+# {% if node.version_added %}
+# Version added: `{{ node.version_added }}`
+
+# {% endif %}
+# {% if node.optional is not none %}
+# Required: `{{ "yes" if node.required else "no" }}`
+
+# {% endif %}
+# {{ node.description }}
+
+# {% if node.setting %}
+# if isinstance(node.setting, dict):
+#     code = superdict.SuperDict(node.setting).serialize(mode=node.mode)
+# else:
+#     code = node.setting
+# code | MkCode(language=node.mode)
+# {% endif %}
+
+# """

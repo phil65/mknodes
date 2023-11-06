@@ -15,3 +15,12 @@ title = "Nested markdown"
 jinja = """
 {{ {"something": "A definition", "something_else": ("Nested" | MkAdmonition)} | MkDefinitionList }}
 """
+
+# [output.markdown]
+# template = """
+# {% for k, v in node.data.items() %}
+# {{ k }}
+# :   {{ v | string | indent }}
+
+# {% endfor %}
+# """
