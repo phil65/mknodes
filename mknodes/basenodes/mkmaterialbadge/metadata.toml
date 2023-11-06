@@ -24,10 +24,17 @@ jinja = """
 {{ "mdi:file" | MkMaterialBadge(text="text", align_right=True) }}
 """
 
+[examples.linked]
+title = "With link"
+jinja = """
+{{ "mdi:file" | MkMaterialBadge(text="text", target="https://phil65.github.io/mknodes") }}
+"""
+
 [output.html]
 template = """
 <span class="md-typeset mdx-badge{{ " mdx-badge--right" if node.align_right else "" }}{{ " mdx-badge--heart" if node.animated else "" }}">
-{% if node.icon %}  <span class="mdx-badge__icon">{{ node.icon | get_emoji_slug }}</span>
+{% set icon = "[" ~ node.icon | get_emoji_slug ~ "](" ~ node.url ~ ")" if node.url else node.icon | get_emoji_slug %}
+{% if node.icon %}  <span class="mdx-badge__icon">{{ icon }}</span>
 {% endif %}
 {% if node.text %}  <span class="mdx-badge__text">{{ node.text }}</span>
 {% endif %}

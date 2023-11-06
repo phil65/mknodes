@@ -82,6 +82,10 @@ class MkMaterialBadge(mknode.MkNode):
         node = MkMaterialBadge(icon, text="text", animated=True, align_right=True)
         page += mk.MkReprRawRendered(node)
 
+        url = "https://phil65.github.io/mknodes"
+        node = MkMaterialBadge(icon, text="text", target=url)
+        page += mk.MkReprRawRendered(node)
+
 
 if __name__ == "__main__":
     img = MkMaterialBadge("mdi:wrench", "test", align_right=True, animated=True)

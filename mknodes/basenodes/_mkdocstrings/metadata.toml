@@ -13,3 +13,14 @@ title = "DocStrings"
 jinja = """
 {{ "mknodes.MkDocStrings" | MkDocStrings(show_if_no_docstring=True, heading_level=3) }}
 """
+
+[output.markdown]
+template = """
+::: {{ node.obj_path }}
+{% if node.options %}
+    options:
+{% for k, v in node.options.items() %}
+      {{ k }}: {{ v | repr }}
+{% endfor %}
+{% endif %}
+"""

@@ -28,7 +28,7 @@ jinja = """
 [output.html]
 template = """
 {% set image = (node.image ~ "#only-light") if node.path_dark_mode else node.image %}
-{% if node.url %}<a href="{{ node.url }}">
+{% if node.target %}<a href="{{ node.target | get_url }}">
 {% endif %}
 <div class="card">
 <div class="showcase-container">
@@ -42,6 +42,6 @@ template = """
 <button>{{ node.title }}</button>
 </p>
 </div>
-{% if node.url %}</a>
+{% if node.target %}</a>
 {% endif %}
 """
