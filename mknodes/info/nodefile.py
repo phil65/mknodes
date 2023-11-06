@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Generator
 import functools
 import os
 import pathlib
@@ -81,7 +82,7 @@ class NodeFile(tomlfile.TomlFile):
         """Return the examples section."""
         return self._data.get("examples", {})
 
-    def get_examples(self, parent) -> dict[str, dict]:
+    def get_examples(self, parent: mk.MkNode) -> dict[str, dict]:
         """Return a dictionary containing examples.
 
         Contains example-name->dict-with-representations key-value pairs.
@@ -102,7 +103,9 @@ class NodeFile(tomlfile.TomlFile):
                 examples[v["title"]] = get_representations(v["jinja"], parent)
         return examples
 
-    def iter_example_instances(self, parent):
+    def iter_example_instances(
+        self, parent: mk.MkNode
+    ) -> Generator[mk.MkNode, None, None]:
         for v in self._data.get("examples", {}).values():
             if "jinja" in v:
                 parent.env.render_string(v["jinja"])
