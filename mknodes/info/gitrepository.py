@@ -10,7 +10,7 @@ from urllib import parse
 import git
 
 from mknodes.info import contexts
-from mknodes.utils import log
+from mknodes.utils import helpers, log
 
 
 logger = log.get_logger(__name__)
@@ -86,6 +86,24 @@ class GitRepository(git.Repo):
             msg = f"Could not get version for {commit}"
             logger.exception(msg)
             return None
+
+    @cached_property
+    def version_changes(self) -> dict[str, dict[str, list[git.Commit]]]:
+        """Returns a nested dictionary of commits, grouped by version and commit type.
+
+        Shape of retuned dict:
+        {"v0.x.x": {"feat": [git.Commit, ...], ...}, ...}
+        """
+        commits = [
+            i
+            for i in self.get_last_commits()
+            if self.get_version_for_commit(i) and i not in self.commit_to_tag
+        ]
+        groups = helpers.groupby(commits, self.get_version_for_commit, natural_sort=True)
+        return {
+            k: helpers.groupby(v, lambda x: x.message.split(":")[0])
+            for k, v in groups.items()
+        }
 
     def get_last_commits(
         self,
