@@ -40,13 +40,13 @@ class NodeEnvironment(jinjarope.Environment):
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()
         self.setup_environment()
-        resource_loader = jinjarope.ChoiceLoader(
-            [
-                jinjarope.get_loader("docs/"),
-                jinjarope.FsSpecProtocolPathLoader(),
-            ]
-        )
-        self.loader = resource_loader
+        loaders = [
+            jinjarope.get_loader("docs/"),
+            jinjarope.FsSpecProtocolPathLoader(),
+        ]
+        if self.node.nodefile:
+            loaders.insert(0, jinjarope.NestedDictLoader(self.node.nodefile._data))
+        self.loader = jinjarope.ChoiceLoader(loaders)
         path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
         self.class_path = pathlib.Path(path or "").parent.as_posix()
         paths = self.get_extra_paths()
