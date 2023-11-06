@@ -91,9 +91,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 items.extend(urls)
             case "dependencies":
                 info = ctx.required_packages
-                items.extend(
-                    (package.name, package.version, package.homepage) for package in info
-                )
+                items.extend((p.name, p.version, p.homepage) for p in info)
             case "installed_packages":
                 pkgs = []
                 for mod in pkgutil.iter_modules():
@@ -102,9 +100,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                     with contextlib.suppress(Exception):
                         dist = packageregistry.get_info(mod.name)
                         pkgs.append(dist)
-                items.extend(
-                    (package.name, package.version, package.homepage) for package in pkgs
-                )
+                items.extend((p.name, p.version, p.homepage) for p in pkgs)
             case str():
                 raise ValueError(self.typ)
             case _ if self.typ in datatypes.CLASSIFIERS:
