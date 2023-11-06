@@ -52,6 +52,12 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
         return helpers.styled(self._title, bold=True, code=True)
 
     @property
+    def setting_string(self) -> str | None:
+        if isinstance(self.setting, dict):
+            return superdict.SuperDict(self.setting).serialize(mode=self.mode)
+        return self.setting
+
+    @property
     def items(self):
         import mknodes as mk
 
@@ -63,12 +69,8 @@ class MkConfigSetting(mkdefinitionlist.MkDefinition):
             text += f"Required: `{required}`\n\n"
         text += f"{self.description}\n"
         items: list[mk.MkNode] = [mk.MkText(text, parent=self)]
-        if isinstance(self.setting, dict):
-            code = superdict.SuperDict(self.setting).serialize(mode=self.mode)
-        else:
-            code = self.setting
-        if self.setting:
-            code_node = mk.MkCode(code, parent=self, language=self.mode or "yaml")
+        if self.setting_string:
+            code_node = mk.MkCode(self.setting_string, parent=self, language=self.mode)
             items.append(code_node)
         return items
 

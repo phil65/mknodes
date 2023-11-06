@@ -18,15 +18,15 @@ class MkDefinition(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        title: str = "",
         content: list | None | str | mknode.MkNode = None,
+        title: str = "",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
-            title: Setting title
             content: Markdown content for this block
+            title: Setting title
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(content=content, **kwargs)
@@ -51,7 +51,7 @@ class MkDefinition(mkcontainer.MkContainer):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        node = MkDefinition("test", content="hfkdlsjk")
+        node = MkDefinition("hfkdlsjk", title="test")
         page += mk.MkReprRawRendered(node, header="### Regular")
 
 
