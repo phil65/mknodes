@@ -89,7 +89,7 @@ class GitRepository(git.Repo):
 
     def get_last_commits(
         self,
-        num: int,
+        num: int | None = None,
         branch: str | None = None,
     ) -> list[git.Commit]:  # type: ignore[name-defined]
         """Return last x commits.
@@ -100,7 +100,8 @@ class GitRepository(git.Repo):
         """
         rev = branch or self.main_branch
         try:
-            return list(self.iter_commits(rev, max_count=num))
+            kwargs = {} if not num else {"max_count": str(num)}
+            return list(self.iter_commits(rev, **kwargs))
         except git.exc.GitCommandError:  # type: ignore[name-defined]
             logger.warning("Could not fetch commits for %r", rev)
             return []
