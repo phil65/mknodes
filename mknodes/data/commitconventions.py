@@ -65,8 +65,17 @@ CommitTypeStr = Literal[
 ]
 
 
-def get_types(types: list[CommitTypeStr]) -> list[CommitType]:
-    return [i for i in TYPES if i.typ in types]
+def get_types(
+    types: list[CommitTypeStr] | ConventionTypeStr,
+) -> list[CommitType]:
+    match types:
+        case "basic":
+            commit_types = list(basic.types)
+        case "conventional_commits" | "angular" | None:
+            commit_types = list(conventional_commits.types)
+        case _:
+            commit_types = types
+    return [i for i in TYPES if i.typ in commit_types]
 
 
 @dataclasses.dataclass
