@@ -60,6 +60,16 @@ via code of course though), but has a much larger built-in set of macros and fil
     assert "admonition" in resources
     ```
 
+* Each node environment contains a bunch of loaders, with some of them being context-specific. These are:
+    * A loader for the `docs` folder to load documentation files
+    * A filesystem loader for the folder of the python file with given node class
+      (this allows to easily load resource files next to the node file)
+    * A `NestedDictLoader` allowing direct access to the Node metadata file, giving access
+      examples as well as output templates. (Example path: "examples/some_example/jinja")
+    * An `FsSpecProtocolPathLoader` to directly access templates via an fsspec protocol URL (example: `github://phil65:mknodes@main/pyproject.toml`)
+      This is especially useful for developing / debugging.
+
+
 /// details | "Why not use the **MkDocs** environment?"
 **MkNodes** cannot just re-use the **MkDocs** jinja environment
 because at that stage of the build process, our nodes already became text and we need
