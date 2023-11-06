@@ -4,7 +4,7 @@ from typing import Any
 
 from mknodes.basenodes import mklist
 from mknodes.data import commitconventions
-from mknodes.templatenodes import mkjinjatemplate
+from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
 
 
@@ -17,7 +17,7 @@ STYLES = {
 }
 
 
-class MkCommitConventions(mkjinjatemplate.MkTemplate):
+class MkCommitConventions(mktemplate.MkTemplate):
     """Text node containing Commit message conventions."""
 
     ICON = "simple/conventionalcommits"

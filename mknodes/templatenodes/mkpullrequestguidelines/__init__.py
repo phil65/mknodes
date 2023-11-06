@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.templatenodes import mkjinjatemplate
+from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
 
 
-class MkPullRequestGuidelines(mkjinjatemplate.MkTemplate):
+class MkPullRequestGuidelines(mktemplate.MkTemplate):
     """Node showing pull request guidelines."""
 
     ICON = "octicons/git-pull-request-24"
