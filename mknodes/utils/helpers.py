@@ -89,7 +89,7 @@ def slugify(text: str | os.PathLike) -> str:
     return re.sub("^[^0-9a-zA-Z_#]+", "", text)
 
 
-def groupby(data: Iterable, keyfunc: Callable | None = None) -> dict[str, list]:
+def groupby(data: Iterable[T], keyfunc: Callable | None = None) -> dict[str, list[T]]:
     """Group given iterable using given group function.
 
     Arguments:
@@ -101,9 +101,9 @@ def groupby(data: Iterable, keyfunc: Callable | None = None) -> dict[str, list]:
 
 
 def groupby_first_letter(
-    data: Iterable,
+    data: Iterable[T],
     keyfunc: Callable | None = None,
-) -> dict[str, list]:
+) -> dict[str, list[T]]:
     """Group given iterable by first letter.
 
     Arguments:
