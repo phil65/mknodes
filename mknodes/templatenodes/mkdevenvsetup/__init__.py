@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.templatenodes import mktemplate
 from mknodes.data import buildsystems
 from mknodes.utils import log
 
@@ -11,35 +11,11 @@ logger = log.get_logger(__name__)
 
 EXAMPLE_URL = "http://www.some-github-provider.com/my-project.git"
 
-START_TEXT = """All development for this library happens in the
-{link} repo on GitHub.
-First, you'll need to download the source code and install an
-editable version of the Python package:"""
 
-CLONE_CODE = """\
-# Clone the repository
-git clone {repo_url}
-cd {folder_name}"""
-
-
-def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.MkNode]:
-    import mknodes as mk
-
-    backend_name = backend.identifier.capitalize()
-    return [
-        mk.MkHeader("Build system"),
-        mk.MkText(f"{backend_name} is used as the build system."),
-        mk.MkCode(f"pip install {backend.identifier}", language="bash"),
-        mk.MkLink(backend.url, "More information"),
-    ]
-
-
-class MkDevEnvSetup(mkcontainer.MkContainer):
+class MkDevEnvSetup(mktemplate.MkTemplate):
     """Text node containing Instructions to set up a dev environment."""
 
     ICON = "material/dev-to"
-    STATUS = "new"
-    VIRTUAL_CHILDREN = True
 
     def __init__(
         self,
@@ -56,7 +32,7 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
                             If None, it will be pulled from project.
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__("output/markdown/template", **kwargs)
         self._repo_url = repo_url
         self._build_backend = build_backend
 
@@ -87,24 +63,6 @@ class MkDevEnvSetup(mkcontainer.MkContainer):
     @build_backend.setter
     def build_backend(self, value):
         self._build_backend = value
-
-    @property
-    def items(self):
-        import mknodes as mk
-
-        folder_name = self.repo_url.removesuffix(".git").split("/")[-1]
-        code = CLONE_CODE.format(repo_url=self.repo_url, folder_name=folder_name)
-        link = mk.MkLink(self.repo_url, folder_name)
-        start_text = START_TEXT.format(link=str(link))
-        items = [mk.MkText(start_text), mk.MkCode(code, language="md")]
-        items.extend(get_build_backend_section(self.build_backend))
-        for item in items:
-            item.parent = self
-        return items
-
-    @items.setter
-    def items(self, value):
-        pass
 
     @classmethod
     def create_example_page(cls, page):
