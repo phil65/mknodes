@@ -15,3 +15,25 @@ title = "Explicit"
 jinja = """
 {{ mk.MkDevEnvSetup(repo_url="http://url_to_git_repo.com/name.git") }}
 """
+
+[output.markdown]
+template = """
+{% set folder_name = node.repo_url.removesuffix(".git").split("/")[-1] %}
+All development for this library happens in the
+{{ node.repo_url | MkLink(folder_name) }} repo on GitHub.
+First, you'll need to download the source code and install an
+editable version of the Python package:
+
+{{ ("# Clone the repository
+git clone " ~ node.repo_url ~
+"
+cd " ~ folder_name ) | MkCode(language="md") }}
+
+## Build system
+
+{{ node.build_backend.identifier.capitalize() }} is used as the build system.
+
+{{ ("pip install " ~ node.build_backend.identifier) | MkCode(language="bash") }}
+
+{{ node.build_backend.url | MkLink("More information")}}
+"""

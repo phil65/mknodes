@@ -16,11 +16,10 @@ START_TEXT = """All development for this library happens in the
 First, you'll need to download the source code and install an
 editable version of the Python package:"""
 
-CLONE_CODE = """
+CLONE_CODE = """\
 # Clone the repository
 git clone {repo_url}
-cd {folder_name}
-"""
+cd {folder_name}"""
 
 
 def get_build_backend_section(backend: buildsystems.BuildSystem) -> list[mknode.MkNode]:
