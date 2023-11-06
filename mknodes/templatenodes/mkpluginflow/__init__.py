@@ -57,6 +57,9 @@ class MkPluginFlow(mkcontainer.MkContainer):
     def event_plugin(self):
         return eventplugins.mkdocs_plugin
 
+    def hooks_for_plugin(self, plugin):
+        return [e for e in self.event_plugin.flow if hasattr(plugin, e)]
+
     @property
     def items(self):
         import mknodes as mk
@@ -66,9 +69,7 @@ class MkPluginFlow(mkcontainer.MkContainer):
         items = []
         for plg in self.plugins:
             section = [mk.MkHeader(plg.__name__, parent=self)]
-            for event in self.event_plugin.flow:
-                if not hasattr(plg, event):
-                    continue
+            for event in self.hooks_for_plugin(plg):
                 fn = getattr(plg, event)
                 code = mk.MkCode.for_object(fn)
                 fn_name = fn.__name__

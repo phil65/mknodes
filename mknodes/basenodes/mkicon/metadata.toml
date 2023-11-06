@@ -30,5 +30,5 @@ jinja = """
 
 [output.html]
 template = """
-{{ node.svg }}
+{{ node.icon_name | get_icon_svg(color=node.color, height=node.height, width=node.width, flip=node.flip, rotate=node.rotate, box=node.box)}}
 """

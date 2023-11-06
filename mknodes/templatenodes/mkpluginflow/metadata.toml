@@ -11,7 +11,30 @@ jinja = """
 {{ "mkdocs.contrib.search.SearchPlugin" | to_class | MkPluginFlow }}
 """
 
-[output.markdown]
-template = """
-{{ node.items | join("\n") }}
-"""
+# [output.markdown]
+# template = """
+# {{ node.items | join("\n") }}
+# """
+
+# [fragments]
+# bubble = """
+# ### {{ node.event_plugin.help_link.format(event=fn.__name__) | MkLink(fn.__name__) }}
+
+# {{ inspecthelpers.get_doc(fn) }}
+
+# {{ mk.MkCode.for_object(fn) | MkAdmonition(collapsible=True, typ="quote", title="Source")}}
+
+# {{ node.event_plugin.hook_fn_path.format(event=fn.__name__) | MkDocStrings(show_source=False, show_root_toc_entry=False) | MkAdmonition(collapsible=True, title="Hook info")}}
+# """
+
+# [output.markdown]
+# template = """
+# {% for plg in node.plugins %}
+# ## {{ plg.__name__ }}
+# {% for event in node.hooks_for_plugin(plg) %}
+# {% if plg | hasattr(event) %}
+# {{ "fragments/bubble" | render_template(variables={"fn": plg | attr(event)}) | MkSpeechBubble(arrow=None if loop.last else "bottom") }}
+# {% endif %}
+# {% endfor %}
+# {% endfor %}
+# """
