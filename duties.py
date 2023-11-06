@@ -12,23 +12,24 @@ UPDATE_CMD = f"""{ENV_PREFIX}python -m pip list {" ".join(PARAMS)}"""
 
 
 @duty(capture=False)
-def build(ctx):
+def build(ctx, *args: str):
     """Build a MkNodes page."""
-    ctx.run(f"{ENV_PREFIX}mknodes build")
+    args_str = " " + " ".join(args) if args else ""
+    ctx.run(f"{ENV_PREFIX}mknodes build{args_str}")
 
 
 @duty(capture=False)
-def serve(ctx, args: str | None = None):
+def serve(ctx, *args: str):
     """Serve a MkNodes page."""
-    args = f" {args}" if args else ""
-    ctx.run(f"{ENV_PREFIX}mknodes serve{args}")
+    args_str = " " + " ".join(args) if args else ""
+    ctx.run(f"{ENV_PREFIX}mknodes serve{args_str}")
 
 
 @duty(capture=False)
-def test(ctx, args: str | None = None):
+def test(ctx, *args: str):
     """Serve a MkNodes page."""
-    args = f" {args}" if args else ""
-    ctx.run(f"{ENV_PREFIX}pytest{args}")
+    args_str = " " + " ".join(args) if args else ""
+    ctx.run(f"{ENV_PREFIX}pytest{args_str}")
 
 
 @duty(capture=False)
