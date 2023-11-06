@@ -89,14 +89,29 @@ def slugify(text: str | os.PathLike) -> str:
     return re.sub("^[^0-9a-zA-Z_#]+", "", text)
 
 
-def groupby(data: Iterable[T], keyfunc: Callable | None = None) -> dict[str, list[T]]:
+def groupby(
+    data: Iterable[T],
+    keyfunc: Callable | None = None,
+    natural_sort: bool = False,
+) -> dict[str, list[T]]:
     """Group given iterable using given group function.
 
     Arguments:
         data: Iterable to group
         keyfunc: Sort function
+        natural_sort: Whether to use a natural sort algorithm
     """
-    data = sorted(data, key=keyfunc or (lambda x: x))
+    if keyfunc is None:
+
+        def keyfunc(x):
+            return x
+
+    if natural_sort:
+        import natsort
+
+        data = natsort.natsorted(data, key=keyfunc)
+    else:
+        data = sorted(data, key=keyfunc)
     return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
 
 
