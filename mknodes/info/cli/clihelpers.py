@@ -41,15 +41,21 @@ def get_argparse_info(parser: argparse.ArgumentParser):
 
 
 def get_cli_info(
-    instance: typer.Typer | click.Group,
+    instance: typer.Typer | click.Group | argparse.ArgumentParser,
     command: str | None = None,
 ) -> commandinfo.CommandInfo:
-    """Return a `CommmandInfo` object for command of given `Typer` instance.
+    """Return a `CommmandInfo` object for command of given instance.
+
+    Instance can either be a click Group, a Typer instance or an ArgumentParser
 
     Arguments:
-        instance: A `Typer` or **click** `Group` instance
+        instance: A `Typer`, **click** `Group` or `ArgumentParser` instance
         command: The command to get info for.
     """
+    if isinstance(instance, argparse.ArgumentParser):
+        info = get_argparse_info(instance)
+        return info[command] if command else info
+
     import typer
 
     from typer.main import get_command
