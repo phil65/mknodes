@@ -51,9 +51,6 @@ class MkClickDoc(mknode.MkNode):
                 if cli_eps := self.ctx.metadata.entry_points.get("console_scripts"):
                     module, command = cli_eps[0].dotted_path.split(":")
                     dct = dict(module=module, command=command, prog_name=cli_eps[0].name)
-        if not dct:
-            return {}
-        dct.update(show_hidden=self.show_hidden, show_subcommands=self.show_subcommands)
         return dct
 
     @property
@@ -68,19 +65,18 @@ class MkClickDoc(mknode.MkNode):
     def _to_markdown(self) -> str:
         import importlib
 
-        if not self.attributes:
-            return ""
         attrs = self.attributes
+        if not attrs:
+            return ""
         mod = importlib.import_module(attrs["module"])
         instance = getattr(mod, attrs["command"])
 
         def info_to_md(info, recursive: bool = False) -> str:
-            cmd_text = self.env.render_template(self.template, variables=dict(info=info))
+            cmd_text = self.env.render_template(self.template, variables={"info": info})
             if not recursive:
                 return cmd_text
-            children_text = "\n".join(
-                info_to_md(i, recursive=True) for i in info.subcommands.values()
-            )
+            vals = info.subcommands.values()
+            children_text = "\n".join(info_to_md(i, recursive=True) for i in vals)
             return cmd_text + children_text
 
         info = clihelpers.get_cli_info(instance, command=attrs["prog_name"])

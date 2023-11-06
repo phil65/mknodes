@@ -80,7 +80,7 @@ class MkCommitConventions(mktemplate.MkTemplate):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        node = MkCommitConventions(header="")
+        node = MkCommitConventions()
         page += mk.MkReprRawRendered(node, header="### All commit_types")
         node = MkCommitConventions(["fix", "feat", "refactor"], header="")
         page += mk.MkReprRawRendered(node, header="### Selected commit_types")
