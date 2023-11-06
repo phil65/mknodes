@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mklist
 from mknodes.data import commitconventions
 from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
@@ -37,37 +36,14 @@ class MkCommitConventions(mktemplate.MkTemplate):
         self._commit_types = commit_types
 
     @property
-    def variables(self):
-        types = commitconventions.get_types(self.commit_types)
-        items = [f"`{k.typ}`: {k.description}" for k in types]
-        ls = mklist.MkList(items)
-        return dict(commit_types=str(ls))
-
-    @variables.setter
-    def variables(self, value):
-        pass
-
-    @property
-    def commit_types(self) -> list[commitconventions.CommitTypeStr]:
+    def commit_types(self) -> list[commitconventions.CommitType]:
         val: list[commitconventions.CommitTypeStr] | commitconventions.ConventionTypeStr
         match self._commit_types:
             case None:
                 val = self.ctx.metadata.commit_types or "conventional_commits"
             case _:
                 val = self._commit_types
-        match val:
-            case "basic":
-                return list(commitconventions.basic.types)
-            case "conventional_commits" | "angular" | None:
-                return list(commitconventions.conventional_commits.types)
-            case list():
-                return val
-            case _:
-                raise TypeError(self._commit_types)
-
-    @commit_types.setter
-    def commit_types(self, value):
-        self._commit_types = value
+        return commitconventions.get_types(val)
 
     @classmethod
     def create_example_page(cls, page):

@@ -18,7 +18,7 @@ jinja = """
 
 # [output.markdown]
 # template = """
-# Commit messages must follow our convention based on {{ styles }}:
+# Commit messages must follow the following convention:
 
 # ```md
 # <type>[(scope)]: Subject\
@@ -33,7 +33,9 @@ jinja = """
 
 # Scope and body are optional. Type can be:
 
-# {{ commit_types }}
+# {% for commit_type in node.commit_types %}
+# * `{{ commit_type.typ }}`: {{ commit_type.description }}
+# {% endfor %}
 
 # If you write a body, please add trailers at the end
 # (for example issues and PR references, or co-authors),

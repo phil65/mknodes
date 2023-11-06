@@ -14,7 +14,9 @@ in general.
 
 Scope and body are optional. Type can be:
 
-{{ commit_types }}
+{% for commit_type in node.commit_types %}
+* `{{ commit_type.typ }}`: {{ commit_type.description }}
+{% endfor %}
 
 If you write a body, please add trailers at the end
 (for example issues and PR references, or co-authors),
