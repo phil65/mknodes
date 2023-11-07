@@ -38,16 +38,21 @@ class MkCodeOfConduct(mktext.MkText):
         """
         super().__init__(**kwargs)
         self.version = version
-        self.contact_email = contact_email
+        self._contact_email = contact_email
+
+    @property
+    def contact_email(self):
+        match self._contact_email:
+            case str():
+                return self._contact_email
+            case None:
+                return self.ctx.metadata.author_email or "<MAIL NOT SET>"
+            case _:
+                raise TypeError(self._contact_email)
 
     @property
     def text(self) -> str:
-        match self.contact_email:
-            case str():
-                mail = self.contact_email
-            case _:
-                mail = self.ctx.metadata.author_email or "<MAIL NOT SET>"
-        return get_markdown().replace("[INSERT CONTACT METHOD]", mail)
+        return get_markdown().replace("[INSERT CONTACT METHOD]", self.contact_email)
 
     @classmethod
     def create_example_page(cls, page):
