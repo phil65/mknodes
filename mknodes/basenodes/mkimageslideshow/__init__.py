@@ -23,10 +23,7 @@ class MkImageSlideshow(mknode.MkNode):
     """Node to show an Image slideshow (in autoplay mode)."""
 
     ICON = "material/image-multiple"
-    JS_FILES: list[resources.JSFile | resources.JSText] = [
-        resources.JSFile(JS_URL),
-        resources.JSText(SCRIPT, "slideshow.js"),
-    ]
+    JS_FILES = [resources.JSFile(JS_URL), resources.JSText(SCRIPT, "slideshow.js")]
 
     def __init__(
         self,

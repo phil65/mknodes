@@ -46,7 +46,7 @@ class MkNode(node.Node):
     REQUIRED_PLUGINS: list[resources.Plugin] = []
     STATUS: datatypes.PageStatusStr | str | None = None
     CSS: list[resources.CSSFile | resources.CSSText] = []
-    JS_FILES: list[resources.JSFile] = []
+    JS_FILES: list[resources.JSFile | resources.JSText] = []
     children: list[MkNode]
     _name_registry: dict[str, MkNode] = dict()
 
@@ -175,6 +175,7 @@ class MkNode(node.Node):
 
     @classproperty.classproperty
     def nodefile(cls) -> nodefile.NodeFile | None:  # noqa: N805
+        """Return the NodeFile if existing."""
         return nodefile.get_nodefile(cls)
 
     def to_child_node(self, other: Any):  # type: ignore[return]
