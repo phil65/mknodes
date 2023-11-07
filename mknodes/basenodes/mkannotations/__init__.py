@@ -3,7 +3,7 @@ from __future__ import annotations as _annotations
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mkcontainer, mktext
+from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, reprhelpers, resources
 
 
@@ -76,13 +76,7 @@ class MkAnnotations(mkcontainer.MkContainer):
                     for i, ann in enumerate(annotations, start=1)
                 ]
             case Mapping():
-                items = [
-                    MkAnnotation(
-                        k,
-                        content=mktext.MkText(v) if isinstance(v, str) else v,
-                    )
-                    for k, v in annotations.items()
-                ]
+                items = [MkAnnotation(k, content=v) for k, v in annotations.items()]
             case _:
                 raise TypeError(annotations)
         super().__init__(content=items, **kwargs)

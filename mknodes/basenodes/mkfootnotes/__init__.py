@@ -76,13 +76,7 @@ class MkFootNotes(mkcontainer.MkContainer):
                     for i, ann in enumerate(footnotes, start=1)
                 ]
             case Mapping():
-                items = [
-                    MkFootNote(
-                        k,
-                        content=mktext.MkText(v) if isinstance(v, str) else v,
-                    )
-                    for k, v in footnotes.items()
-                ]
+                items = [MkFootNote(k, content=v) for k, v in footnotes.items()]
             case _:
                 raise TypeError(footnotes)
         super().__init__(content=items, **kwargs)
