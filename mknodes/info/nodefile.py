@@ -145,15 +145,16 @@ class NodeFile(tomlfile.TomlFile):
         return css
 
     @property
-    def js(self) -> list[resources.JSFile]:
+    def js(self) -> list[resources.JSFile | resources.JSText]:
         """Return the JavaScript resources defined in the file."""
-        js: list[resources.JSFile] = []
+        js: list[resources.JSFile | resources.JSText] = []
         res = self._data.get("resources", {})
         for item in res.get("js", []):
             if "link" in item:
-                item = item.copy()
-                name = item.pop("link")
-                instance = resources.JSFile(name, **item)
+                instance = resources.JSFile(**item)
+                js.append(instance)
+            elif "content" in item:
+                instance = resources.JSText(**item)
                 js.append(instance)
         return js
 
