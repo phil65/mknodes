@@ -43,9 +43,6 @@ class MkList(mkcontainer.MkContainer):
         self.as_links = as_links
         super().__init__(content=list(items), **kwargs)
 
-    def __len__(self):
-        return len(self.items)
-
     def __repr__(self):
         items = [reprhelpers.to_str_if_textnode(i) for i in self.items]
         return reprhelpers.get_repr(

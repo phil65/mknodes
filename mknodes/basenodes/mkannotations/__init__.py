@@ -56,9 +56,7 @@ class MkAnnotations(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        annotations: (
-            Mapping[int, str | mk.MkNode] | list[MkAnnotation] | list[str] | None
-        ) = None,
+        annotations: Mapping[int, str | mk.MkNode] | list[mk.MkNode | str] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -88,9 +86,6 @@ class MkAnnotations(mkcontainer.MkContainer):
             case _:
                 raise TypeError(annotations)
         super().__init__(content=items, **kwargs)
-
-    def __len__(self):
-        return len(self.items)
 
     def __getitem__(self, item: int):
         for node in self.items:

@@ -98,9 +98,6 @@ class MkFootNotes(mkcontainer.MkContainer):
                 notes.append(item)
         return reprhelpers.get_repr(self, footnotes=notes)
 
-    def __len__(self):
-        return len(self.items)
-
     def __getitem__(self, index: int):
         for node in self.items:
             if node.num == index:
