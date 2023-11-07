@@ -1,9 +1,6 @@
 [metadata]
 name = "Parallax"
 
-[[resources.css]]
-filename = "timeline.css"
-
 [[resources.js]]
 is_library = true
 filename = "parallax.js"
