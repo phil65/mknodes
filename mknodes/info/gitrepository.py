@@ -66,7 +66,10 @@ class GitRepository(git.Repo):
     @cached_property
     def commit_to_tag(self) -> dict[git.Commit, str]:  # type: ignore[name-defined]
         """Dictionary mapping git.Commits to tag strings."""
-        return {self.commit(i.commit): i.name for i in self.tags}
+        return {
+            self.commit(i.commit): i.name
+            for i in sorted(self.tags, key=lambda x: x.commit.committed_date)
+        }
 
     def get_version_for_commit(
         self,
