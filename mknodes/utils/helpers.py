@@ -92,26 +92,33 @@ def slugify(text: str | os.PathLike) -> str:
 def groupby(
     data: Iterable[T],
     keyfunc: Callable | None = None,
+    sort_groups: bool = True,
     natural_sort: bool = False,
+    reverse: bool = False,
 ) -> dict[str, list[T]]:
     """Group given iterable using given group function.
 
     Arguments:
         data: Iterable to group
         keyfunc: Sort function
+        sort_groups: Whether to sort the groups
         natural_sort: Whether to use a natural sort algorithm
+        reverse: Whether to reverse the value list
     """
     if keyfunc is None:
 
         def keyfunc(x):
             return x
 
-    if natural_sort:
-        import natsort
+    if sort_groups:
+        if natural_sort:
+            import natsort
 
-        data = natsort.natsorted(data, key=keyfunc)
-    else:
-        data = sorted(data, key=keyfunc)
+            data = natsort.natsorted(data, key=keyfunc)
+        else:
+            data = sorted(data, key=keyfunc)
+    if reverse:
+        data = reversed(list(data))
     return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
 
 
