@@ -50,18 +50,17 @@ class MkDevTools(mkcontainer.MkContainer):
         import mknodes as mk
 
         items = []
-        for tool in self.tools:
-            cfg_node = mk.MkCode(tool.cfg or "", language=tool.config_syntax)
-            code = mk.MkCode(f"pip install {tool.identifier}", language="bash")
-            link = mk.MkLink(tool.url, "More information")
-            in_adm = [f"To install {tool.identifier}:", code, link]
-            title = f"Installing {tool.title}"
+        for t in self.tools:
+            cfg_node = mk.MkCode(t.cfg or "", language=t.config_syntax)
+            code = mk.MkCode(f"pip install {t.identifier}", language="bash")
+            link = mk.MkLink(t.url, "More information")
+            in_adm = [f"To install {t.identifier}:", code, link]
             section = [
-                mk.MkHeader(tool.title),
-                mk.MkText(tool.description),
-                mk.MkCode(tool.setup_cmd, language="md") if tool.setup_cmd else None,
+                mk.MkHeader(t.title),
+                mk.MkText(t.description),
+                mk.MkCode(t.setup_cmd, language="md") if t.setup_cmd else None,
                 mk.MkAdmonition(cfg_node, collapsible=True, title="Config", typ="quote"),
-                mk.MkAdmonition(in_adm, collapsible=True, title=title),
+                mk.MkAdmonition(in_adm, collapsible=True, title=f"Installing {t.title}"),
             ]
             items.extend(i for i in section if i is not None)
         for item in items:

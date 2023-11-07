@@ -15,48 +15,48 @@ in the root folder."""
 
 
 MYPY_CODE = """
-{{metadata.build_system.run_prefix}}mypy --help
+{{ metadata.build_system.run_prefix }}mypy --help
 """
 
 MYPY_TEXT = """**MyPy** is used for type checking. You can find the configuration in the
 `pyproject.toml` file."""
 
 PYRIGHT_CODE = """
-{{metadata.build_system.run_prefix}}pyright --help
+{{ metadata.build_system.run_prefix }}pyright --help
 """
 
 PYRIGHT_TEXT = """**PyRight** is used for type checking. You can find the configuration in the
 `pyproject.toml` file."""
 
 RUFF_CODE = """
-{{metadata.build_system.run_prefix}}ruff --help
+{{ metadata.build_system.run_prefix }}ruff --help
 """
 
 RUFF_TEXT = """**Ruff** is used as a linter. You can find the configuration in the
 `pyproject.toml` file."""
 
 BLACK_CODE = """
-{{metadata.build_system.run_prefix}}black .
+{{ metadata.build_system.run_prefix }}black .
 """
 
 BLACK_TEXT = """**Black** is used as a code formatter. You can find the configuration in
 the `pyproject.toml` file."""
 
 COVERAGE_CODE = """
-{{metadata.build_system.run_prefix}}coverage run some_module.py
+{{ metadata.build_system.run_prefix }}coverage run some_module.py
 """
 
 COVERAGE_TEXT = """**Coverage** is used to monitor test coverage."""
 
 MKDOCS_CODE = """
 # To build the docs
-{{metadata.build_system.run_prefix}}mkdocs build
+{{ metadata.build_system.run_prefix }}mkdocs build
 
 # To serve the docs locally at http://127.0.0.1:8000/
-{{metadata.build_system.run_prefix}}mkdocs serve
+{{ metadata.build_system.run_prefix }}mkdocs serve
 
 # For additional mkdocs help and options:
-{{metadata.build_system.run_prefix}}mkdocs --help
+{{ metadata.build_system.run_prefix }}mkdocs --help
 """
 
 MKDOCS_TEXT = """**MkDocs** is used to create the documentation."""
@@ -70,6 +70,7 @@ class Tool:
     title: str
     url: str
     description: str
+    logo: str | None = None
     setup_cmd: str | None
     config_syntax: str
     pre_commit_repo: str | None = None
@@ -99,6 +100,7 @@ class PreCommit(Tool):
     identifier = "pre-commit"
     title = "Pre-Commit"
     url = "https://pre-commit.com"
+    logo = "https://avatars.githubusercontent.com/u/6943086?s=200&v=4"
     description = PRE_COMMIT_TEXT
     setup_cmd = PRE_COMMIT_CODE
     config_syntax = "yaml"
@@ -117,6 +119,7 @@ class Ruff(Tool):
     identifier = "ruff"
     title = "Ruff"
     url = "https://beta.ruff.rs/"
+    logo = "https://docs.astral.sh/ruff/assets/bolt.svg"
     description = RUFF_TEXT
     setup_cmd = RUFF_CODE
     config_syntax = "toml"
@@ -133,6 +136,9 @@ class Black(Tool):
     identifier = "black"
     title = "Black"
     url = "https://github.com/psf/black"
+    logo = (
+        "https://raw.githubusercontent.com/psf/black/main/docs/_static/logo2-readme.png"
+    )
     description = BLACK_TEXT
     setup_cmd = BLACK_CODE
     config_syntax = "toml"
@@ -148,6 +154,7 @@ class Black(Tool):
 class MyPy(Tool):
     identifier = "mypy"
     title = "MyPy"
+    logo = "https://github.com/python/mypy/raw/master/docs/source/mypy_light.svg"
     url = "https://mypy-lang.org"
     description = MYPY_TEXT
     setup_cmd = MYPY_CODE
@@ -165,6 +172,7 @@ class PyRight(Tool):
     identifier = "pyright"
     title = "PyRight"
     url = "https://microsoft.github.io/pyright/"
+    logo = "https://github.com/microsoft/pyright/raw/main/docs/img/PyrightLarge.png"
     description = PYRIGHT_TEXT
     setup_cmd = PYRIGHT_CODE
     config_syntax = "toml"
@@ -181,6 +189,7 @@ class Coverage(Tool):
     identifier = "coverage"
     title = "Coverage"
     url = "https://coverage.readthedocs.io/"
+    logo = "https://coverage.readthedocs.io/en/7.3.2/_static/sleepy-snake-circle-150.png"
     description = COVERAGE_TEXT
     setup_cmd = COVERAGE_CODE
     config_syntax = "toml"
@@ -200,6 +209,7 @@ class Coverage(Tool):
 class MkDocs(Tool):
     identifier = "mkdocs"
     title = "MkDocs"
+    logo = "https://avatars.githubusercontent.com/u/9692741?s=200&v=4"
     url = "https://mkdocs.org/"
     description = MKDOCS_TEXT
     setup_cmd = MKDOCS_CODE
@@ -215,6 +225,7 @@ class MkDocs(Tool):
 class MkDocsMaterial(Tool):
     identifier = "mkdocs-material"
     title = "Material for MkDocs"
+    logo = "https://raw.githubusercontent.com/squidfunk/mkdocs-material/master/.github/assets/logo.svg"
     url = "https://squidfunk.github.io/mkdocs-material/"
     description = MATERIAL_TEXT
     setup_cmd = None
