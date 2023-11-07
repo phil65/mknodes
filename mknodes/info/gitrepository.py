@@ -88,7 +88,7 @@ class GitRepository(git.Repo):
             return None
 
     @cached_property
-    def version_changes(self) -> dict[str, dict[str, list[git.Commit]]]:
+    def version_changes(self) -> dict[str, dict[str, list[git.Commit]]]:  # type: ignore[name-defined]
         """Returns a nested dictionary of commits, grouped by version and commit type.
 
         Shape of retuned dict:
