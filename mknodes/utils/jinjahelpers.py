@@ -62,6 +62,7 @@ ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,
     "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
+    "batched": helpers.batched,
     "to_class": classhelpers.to_class,
     "dump_yaml": yamlhelpers.dump_yaml,
     "dump_toml": tomli_w.dumps,
