@@ -8,7 +8,8 @@ from typing import TYPE_CHECKING, Any
 import jinja2
 import jinjarope
 
-from mknodes.utils import inspecthelpers, log
+# importing jinjahelpers in order to register globals / filters
+from mknodes.utils import inspecthelpers, jinjahelpers, log  # noqa: F401
 
 
 if TYPE_CHECKING:

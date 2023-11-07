@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import dataclasses
 
-from mknodes.utils import helpers, jinjahelpers, resources
+from jinjarope import envglobals
+
+from mknodes.utils import helpers, resources
 
 
 SCROLLREVEAL_LINK = (
@@ -44,7 +46,7 @@ class ScrollReveal:
         sr_res = resources.JSFile(SCROLLREVEAL_LINK, is_library=True)
         res1 = resources.JSText(SCRIPT, "scrollreveal.js")
         dct = dataclasses.asdict(self)
-        js_map = jinjahelpers.format_js_map(dct)
+        js_map = envglobals.format_js_map(dct)
         script_text = SCRIPT_2 % (self.css_class_names[-1], js_map)
         res2 = resources.JSText(script_text, "script.js")
         return resources.Resources(js=[jquery_res, sr_res, res1, res2])
