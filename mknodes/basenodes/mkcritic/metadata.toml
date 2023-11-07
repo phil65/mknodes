@@ -27,3 +27,12 @@ title = "Comment"
 jinja = """
 {{ "Type `comment`" | MkCritic(typ="comment") }}
 """
+
+[output.markdown]
+template = """
+{% raw %}{{% endraw %}{{ node.marks[0] }}
+
+{{ node.items | join(node.block_separator) }}
+
+{{ node.marks[1] }}{% raw %}}{% endraw %}
+"""

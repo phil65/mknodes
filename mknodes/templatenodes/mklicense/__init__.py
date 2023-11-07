@@ -4,7 +4,7 @@ from typing import Any
 
 from mknodes.basenodes import mktext
 from mknodes.info import license
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -33,15 +33,12 @@ class MkLicense(mktext.MkText):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.license = license_type
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self, license=self.license, _filter_empty=True)
+        self.license_type = license_type
 
     @property
     def text(self):
-        if self.license:
-            lic = license.License.from_name(self.license)
+        if self.license_type:
+            lic = license.License.from_name(self.license_type)
             if self.ctx.metadata.distribution_name:
                 lic.resolve_by_distribution(self.ctx.metadata.distribution_name)
             return lic.content
@@ -59,4 +56,4 @@ class MkLicense(mktext.MkText):
 
 if __name__ == "__main__":
     lic = MkLicense.with_context("GPL-3.0")
-    print(lic.text)
+    print(repr(lic))

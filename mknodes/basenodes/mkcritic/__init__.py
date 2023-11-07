@@ -37,18 +37,22 @@ class MkCritic(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.typ = typ
 
-    def _to_markdown(self) -> str:
+    @property
+    def marks(self):
         match self.typ:
             case "addition":
-                left, right = ("++", "++")
+                return ("++", "++")
             case "deletion":
-                left, right = ("--", "--")
+                return ("--", "--")
             case "highlight":
-                left, right = ("==", "==")
+                return ("==", "==")
             case "comment":
-                left, right = (">>", "<<")
+                return (">>", "<<")
             case _:
                 raise TypeError(self.typ)
+
+    def _to_markdown(self) -> str:
+        left, right = self.marks
         return f"{{{left}\n\n{super()._to_markdown()}\n\n{right}}}"
 
     @classmethod
