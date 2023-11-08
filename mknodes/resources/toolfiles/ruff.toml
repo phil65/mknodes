@@ -1,0 +1,17 @@
+[metadata]
+identifier = "ruff"
+title = "Ruff"
+url = "https://beta.ruff.rs/"
+config_syntax = "toml"
+pre_commit_repo = "https://github.com/charliermarsh/ruff-pre-commit"
+install_command = """
+{{ metadata.build_system.run_prefix }}ruff --help
+"""
+description = """
+**Ruff** is used as a linter. You can find the configuration in the
+`pyproject.toml` file.
+"""
+
+[[config]]
+type = "pyproject"
+section = "ruff"

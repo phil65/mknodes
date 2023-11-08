@@ -1,0 +1,16 @@
+identifier = "mypy"
+title = "MyPy"
+url = "https://mypy-lang.org"
+logo = "https://github.com/python/mypy/raw/master/docs/source/mypy_light.svg"
+pre_commit_repo = "https://github.com/pre-commit/mirrors-mypy"
+install_command = """
+{{ metadata.build_system.run_prefix }}mypy --help
+"""
+description = """
+**MyPy** is used for type checking. You can find the configuration in the
+`pyproject.toml` file.
+"""
+
+[[config]]
+type = "pyproject"
+section = "mypy"

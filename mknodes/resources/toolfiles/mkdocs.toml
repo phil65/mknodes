@@ -1,0 +1,15 @@
+identifier = "mkdocs"
+title = "MkDocs"
+url = "https://mkdocs.org/"
+logo = "https://avatars.githubusercontent.com/u/9692741?s=200&v=4"
+install_command = """
+{{ metadata.build_system.run_prefix }}ruff --help
+"""
+description = """
+**Ruff** is used as a linter. You can find the configuration in the
+`pyproject.toml` file.
+"""
+
+[[config]]
+type = "pyproject"
+section = "ruff"

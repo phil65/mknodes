@@ -1,0 +1,14 @@
+identifier = "coverage"
+title = "Coverage"
+url = "https://coverage.readthedocs.io/"
+logo = "https://coverage.readthedocs.io/en/7.3.2/_static/sleepy-snake-circle-150.png"
+install_command = "{{ metadata.build_system.run_prefix }}coverage run some_module.py"
+description = "**Coverage** is used to monitor test coverage."
+
+[[config]]
+type = "pyproject"
+section = "pyright"
+
+[[config]]
+type = "inifile"
+filename = ".coveragerc"

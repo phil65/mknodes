@@ -1,0 +1,16 @@
+identifier = "pre-commit"
+title = "Pre-Commit"
+url = "https://pre-commit.com"
+pre_commit_repo = "https://github.com/pre-commit/pre-commit-hooks"
+install_command = """
+# Setup pre-commit hooks for required formatting
+pre-commit install
+"""
+description = """
+This project uses **pre-commit** to ensure code quality.
+A `.pre-commit-config.yaml` configuration file tailored for this project is provided
+in the root folder."""
+
+[[config]]
+type = "yaml"
+filename = ".pre-commit-config.yaml"

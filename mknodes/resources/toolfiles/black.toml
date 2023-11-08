@@ -1,0 +1,17 @@
+identifier = "black"
+title = "Black"
+url = "https://github.com/psf/black"
+logo = "https://raw.githubusercontent.com/psf/black/main/docs/_static/logo2-readme.png"
+config_syntax = "toml"
+pre_commit_config = "https://github.com/psf/black-pre-commit-mirror"
+install_command = """
+{{ metadata.build_system.run_prefix }}black .
+"""
+description = """
+**Black** is used as a code formatter. You can find the configuration in
+the `pyproject.toml` file.
+"""
+
+[[config]]
+type = "pyproject"
+section = "pyright"

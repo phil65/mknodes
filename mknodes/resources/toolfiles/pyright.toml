@@ -1,0 +1,16 @@
+identifier = "pyright"
+title = "PyRight"
+url = "https://microsoft.github.io/pyright/"
+logo = "https://github.com/microsoft/pyright/raw/main/docs/img/PyrightLarge.png"
+pre_commit_repo = "https://github.com/RobertCraigie/pyright-python"
+install_command = """
+{{ metadata.build_system.run_prefix }}pyright --help
+"""
+description = """
+**PyRight** is used for type checking. You can find the configuration in the
+`pyproject.toml` file.
+"""
+
+[[config]]
+type = "pyproject"
+section = "pyright"
