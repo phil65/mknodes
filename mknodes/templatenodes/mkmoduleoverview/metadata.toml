@@ -1,0 +1,15 @@
+[metadata]
+name = "MkModuleOverview"
+icon = "mdi:file-tree-outline"
+group = "documentation"
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ mk.MkModuleOverview(maximum_depth=2) }}
+"""
+[examples.explicit]
+title = "Explicit"
+jinja = """
+{{ "git" | MkModuleOverview(maximum_depth=2) }}
+"""

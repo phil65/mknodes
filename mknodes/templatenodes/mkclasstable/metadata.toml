@@ -29,7 +29,7 @@ Description = """
 
 [layouts.extended]
 Name = """
-{{ kls | get_link | styled(size=4, bold=True) }}<br>{{ kls.__module__ | styled(size=1, italic=True) }}<br>{{ desc }}
+{{ kls | get_link | styled(size=4, bold=True) }}<br>{{ kls.__module__ | styled(size=1, italic=True) }}<br>{{ kls | inspecthelpers.get_doc(escape=True, only_summary=True) }}
 """
 Children = """
 <ul>
