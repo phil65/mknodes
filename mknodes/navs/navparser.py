@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import os
 import pathlib
 
@@ -27,6 +28,9 @@ SECTION_AND_FILE_RE = r"^\* \[(.*)\]\((.*)\)"
 SECTION_AND_FOLDER_RE = r"^\* \[(.*)\]\((.*)\/\)"
 SECTION_RE = r"^\* (.*)"
 
+# for ->MkNode parsing
+ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
+
 
 def str2page(
     path: str | os.PathLike,
@@ -34,14 +38,13 @@ def str2page(
     parent: mk.MkNode | None = None,
     **kwargs,
 ) -> mk.MkPage:
-    """Parse given path and return a MkPage.
+    """Parse given path, check for our -> syntax, and return a MkPage.
 
-    If a jinja string is detected, return a MkPage containing a MkText node with given
-    template. Otherwise open / download the markdown file from given path and put
-    that into an MkPage.
+    If -> is detected, return a MkPage containing given MkNode. Otherwise
+    open / download the markdown file from given path and put that into an MkPage.
 
     Arguments:
-        path: Path to build a MkPage for (Either path / URL or jinja string)
+        path: Path to build a MkPage for (Either path / URL or "-> MkNode")
         name: Name for given MkPage
         parent: Parent for the MkPage
         kwargs: Additional metadata for MkPage
@@ -50,6 +53,21 @@ def str2page(
 
     path = os.fspath(path)
     logger.debug("Adding file %r", path)
+    node_cls_name = path.removeprefix("->").strip().split("(")[0]
+    if path.startswith("->") and node_cls_name in mk.__all__:
+        node_cls = getattr(mk, node_cls_name)
+        page = mk.MkPage(name, parent=parent, **kwargs)
+        if match := re.match(ARGS_KWARGS_RE, path):
+            parts = match[1].split(",")
+            args = [ast.literal_eval(i.strip()) for i in parts if "=" not in i]
+            kwargs_iter = (i.strip().split("=", maxsplit=1) for i in parts if "=" in i)
+            kwargs = {i[0]: ast.literal_eval(i[1]) for i in kwargs_iter}
+            msg = "Parsed: Node: %s, args: %s, kwargs: %s"
+            logger.debug(msg, node_cls.__name__, args, kwargs)
+            page += node_cls(*args, **kwargs)
+        else:
+            page += node_cls()
+        return page
     if path.startswith(r"{{"):
         page = mk.MkPage(name, parent=parent, **kwargs)
         page += mk.MkText(path, render_jinja=True)
@@ -225,7 +243,7 @@ class NavParser:
 
                 # if not, add as regular page:
                 else:
-                    p = m[2] if m[2].startswith(r"{{") else path.parent / m[2]
+                    p = m[2] if m[2].startswith(("->", r"{{")) else path.parent / m[2]
                     page = str2page(path=p, name=m[1], parent=self._nav, **kwargs)
                     self._nav[m[1]] = page
                     logger.debug("Created page %s from %s", m[1], m[2])
