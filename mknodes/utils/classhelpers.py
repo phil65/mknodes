@@ -29,7 +29,7 @@ def iter_subclasses(
     filter_generic: bool = True,
     filter_locals: bool = True,
 ) -> typing.Iterator[T]:
-    """Recursively iter all subclasses of given klass.
+    """(Recursively) iterate all subclasses of given klass.
 
     Arguments:
         klass: class to get subclasses from
@@ -43,6 +43,35 @@ def iter_subclasses(
     for kls in klass.__subclasses__():
         if recursive:
             yield from iter_subclasses(kls)
+        if filter_abstract and inspect.isabstract(kls):
+            continue
+        if filter_generic and kls.__qualname__.endswith("]"):
+            continue
+        if filter_locals and "<locals>" in kls.__qualname__:
+            continue
+        yield kls
+
+
+def iter_baseclasses(
+    klass: T,
+    *,
+    recursive: bool = True,
+    filter_abstract: bool = False,
+    filter_generic: bool = True,
+    filter_locals: bool = True,
+) -> typing.Iterator[T]:
+    """(Recursively) iterate all baseclasses of given klass.
+
+    Arguments:
+        klass: class to get subclasses from
+        filter_abstract: whether abstract base classes should be included.
+        filter_generic: whether generic base classes should be included.
+        filter_locals: whether local base classes should be included.
+        recursive: whether to also get baseclasses of baseclasses.
+    """
+    for kls in klass.__bases__:
+        if recursive:
+            yield from iter_baseclasses(kls)
         if filter_abstract and inspect.isabstract(kls):
             continue
         if filter_generic and kls.__qualname__.endswith("]"):
