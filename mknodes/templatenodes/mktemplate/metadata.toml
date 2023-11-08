@@ -6,6 +6,6 @@ virtual_children = true
 [examples.regular]
 title = "From project"
 jinja = """
-{{ ""why_mknodes.jinja" | MkJinjaTemplate }}
+{{ "why_mknodes.jinja" | MkJinjaTemplate }}
 """
 

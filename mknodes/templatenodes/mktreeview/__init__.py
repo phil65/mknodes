@@ -33,7 +33,6 @@ class MkTreeView(mkcode.MkCode):
         predicate: Callable | None = None,
         exclude_folders: list[str] | str | None = None,
         header: str = "",
-        storage_options: dict | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -45,7 +44,6 @@ class MkTreeView(mkcode.MkCode):
             predicate: Predicate to filter results
             exclude_folders: Folders to exclude from listing
             header: Section header
-            storage_options: Used when tree is a fsspec path
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, language="", **kwargs)
@@ -53,7 +51,6 @@ class MkTreeView(mkcode.MkCode):
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
-        self.storage_options = storage_options or {}
         self.exclude_folders = (
             [exclude_folders] if isinstance(exclude_folders, str) else exclude_folders
         )
@@ -63,7 +60,7 @@ class MkTreeView(mkcode.MkCode):
         match self.tree:
             case str() | os.PathLike():
                 node = treelib.FileTreeNode.from_folder(
-                    upath.UPath(self.tree, **self.storage_options),
+                    upath.UPath(self.tree),
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                     maximum_depth=self.maximum_depth,
