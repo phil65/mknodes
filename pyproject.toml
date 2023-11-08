@@ -265,7 +265,6 @@ target-version = "py311"
 [tool.ruff.format]
 # Enable preview style formatting.
 preview = true
-exclude = ["mknodes/resources"]
 
 [tool.ruff.flake8-quotes]
 docstring-quotes = "double"
