@@ -49,6 +49,7 @@ def script_tag_filter(context, extra_script):
 ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
     "inspecthelpers": inspecthelpers,
+    "classhelpers": classhelpers,
     "resources_dir": paths.RESOURCES,
 }
 ENV_FILTERS = {
@@ -56,6 +57,7 @@ ENV_FILTERS = {
     "get_emoji_slug": icons.get_emoji_slug,
     "styled": helpers.styled,
     "batched": helpers.batched,
+    "get_doc": inspecthelpers.get_doc,
     "to_class": classhelpers.to_class,
     "dump_yaml": yamlhelpers.dump_yaml,
     "dump_toml": tomli_w.dumps,
