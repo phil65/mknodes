@@ -154,7 +154,7 @@ def to_svg(
 
         return etree.Element("img", attributes)
     el = etree.Element("span", {"class": options.get("classes", index)})
-    svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]
+    svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]  # type: ignore[attr-defined]
     svg = get_icon_svg(svg_path)
     el.text = md.htmlStash.store(svg)
     return el

@@ -39,7 +39,7 @@ class PackageInfo:
         return hash(self.package_name)
 
     @functools.cached_property
-    def urls(self) -> structures.CaseInsensitiveDict:
+    def urls(self) -> structures.CaseInsensitiveDict[str]:
         """A dictionary containing the type of URL and and URL itself.
 
         Example: {"Documentation": "http://github.io/...", ...}

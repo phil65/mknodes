@@ -160,7 +160,7 @@ class PackageContext(Context):
     """PackageInfos for the dependencies."""
     extras: dict[str, folderinfo.PackageExtra] = dataclasses.field(default_factory=dict)
     """The extras of the distribution."""
-    urls: dict[str, str] = dataclasses.field(default_factory=dict)
+    urls: Mapping[str, str] = dataclasses.field(default_factory=dict)
     """A set of URLs related to the distribution."""
     homepage: str = ""
     """The main website of the distribution."""

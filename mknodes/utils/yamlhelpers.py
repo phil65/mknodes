@@ -87,13 +87,13 @@ def construct_env_tag(loader: yaml.Loader, node: yaml.Node) -> Any:
             raise yaml.constructor.ConstructorError(
                 None,
                 None,
-                f"expected a scalar or sequence node, but found {node.id}",
+                f"expected a scalar or sequence node, but found {node.tag!r}",
                 node.start_mark,
             )
 
     for var in variables:
         if var in os.environ:
-            value = os.environ[var]
+            value = os.environ[str(var)]
             # Resolve value to Python type using YAML's implicit resolvers
             tag = loader.resolve(yaml.nodes.ScalarNode, value, (True, False))
             return loader.construct_object(yaml.nodes.ScalarNode(tag, value))
