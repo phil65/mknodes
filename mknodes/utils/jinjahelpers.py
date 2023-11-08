@@ -1,15 +1,11 @@
 from __future__ import annotations
 
-import datetime
-import importlib
-
 from importlib import util
 from typing import Any
 
 import jinja2
 import jinjarope
 
-from jinjarope import envglobals
 from markupsafe import Markup
 import tomli_w
 
@@ -52,11 +48,8 @@ def script_tag_filter(context, extra_script):
 
 ENV_GLOBALS = {
     "log": log.log_stream.getvalue,
-    "now": datetime.datetime.now,
-    "importlib": importlib,
     "inspecthelpers": inspecthelpers,
     "resources_dir": paths.RESOURCES,
-    "environment": envglobals.version_info,
 }
 ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,
@@ -69,7 +62,7 @@ ENV_FILTERS = {
     "load_yaml": yamlhelpers.load_yaml,
     "url": url_filter,
     "script_tag": script_tag_filter,
-} | envglobals.ENV_FILTERS
+}
 
 
 @jinjarope.Environment.register_globals
