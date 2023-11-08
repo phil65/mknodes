@@ -9,3 +9,15 @@ jinja = """
 {{ ["mknodes.info"] | MkModuleTable }}
 """
 
+[layouts.default]
+Name = """
+{{ module | get_link }}
+"""
+DocStrings = """
+{{ module | inspecthelpers.get_doc(fallback=fallback, only_summary=True) }}
+"""
+Members = """
+{% if module | attr("__all__") %}
+{{ mk.MkList(module.__all__, as_links=True, shorten_after=10).to_html() }}
+{% endif %}
+"""

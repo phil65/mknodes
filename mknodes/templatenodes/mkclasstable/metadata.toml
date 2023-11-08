@@ -15,3 +15,41 @@ title = "Extended layout"
 jinja = """
 {{ [_mk.MkTable, _mk.MkClassTable, _mk.MkNav] | MkClassTable(layout="extended") }}
 """
+
+[layouts.default]
+Class = """
+{{ kls | get_link }}
+"""
+Module = """
+{{ kls.__module__ }}
+"""
+Description = """
+{{ kls | inspecthelpers.get_doc(only_summary=True) }}
+"""
+
+[layouts.extended]
+Name = """
+{{ kls | get_link | styled(size=4, bold=True) }}<br>{{ kls.__module__ | styled(size=1, italic=True) }}<br>{{ desc }}
+"""
+Children = """
+<ul>
+{% for sub in classhelpers.iter_subclasses(kls, recursive=False) if node.subclass_predicate(sub) %}
+<li>{{ sub | get_link }}</li>
+{% if loop.index > node.shorten_lists_after %}
+    <li>...</li>
+    {% break %}
+{% endif %}
+{% endfor %}
+</ul>
+"""
+Inherits = """
+<ul>
+{% for base_kls in classhelpers.iter_baseclasses(kls, recursive=False) %}
+<li>{{ sub | get_link }}</li>
+{% if loop.index > node.shorten_lists_after %}
+    <li>...</li>
+    {% break %}
+{% endif %}
+{% endfor %}
+</ul>
+"""
