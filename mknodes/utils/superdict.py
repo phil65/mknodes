@@ -96,6 +96,16 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
                 import json
 
                 return json.dumps(self._data, indent=4)
+            case "ini":
+                import configparser
+                import io
+
+                config = configparser.ConfigParser()
+                config.read_dict(self._data)
+                file = io.StringIO()
+                with file as fp:
+                    config.write(fp)
+                    return file.getvalue()
             case "toml" if isinstance(self._data, dict):
                 import tomli_w
 
