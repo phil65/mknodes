@@ -48,8 +48,8 @@ class PackageInfo:
             v.split(",")[0].strip(): v.split(",")[1].strip()
             for v in self.metadata.get("project_url", [])
         }
-        if "home_page" in self.metadata:
-            urls["home_page"] = self.metadata["home_page"].strip()
+        if hp := self.metadata.get("home_page"):
+            urls["home_page"] = hp.strip()
         return structures.CaseInsensitiveDict(urls)
 
     @functools.cached_property
@@ -91,10 +91,9 @@ class PackageInfo:
     @functools.cached_property
     def keywords(self) -> list[str]:
         """Return a list of keywords from metadata."""
-        keywords = self.metadata["keywords"]
-        if keywords and "," in keywords[0]:
-            return keywords[0].split(",")
-        return keywords
+        if (kw := self.metadata.get("keywords", [])) and "," in kw[0]:
+            return kw[0].split(",")
+        return []
 
     @functools.cached_property
     def classifier_map(self) -> collections.defaultdict[str, list[str]]:
@@ -106,7 +105,7 @@ class PackageInfo:
          }
         """
         classies: collections.defaultdict[str, list[str]] = collections.defaultdict(list)
-        for v in self.metadata["classifier"]:
+        for v in self.metadata.get("classifier", []):
             category, value = v.split(" :: ", 1)
             classies[category].append(value.strip())
         return classies
@@ -119,13 +118,17 @@ class PackageInfo:
     @functools.cached_property
     def author_email(self) -> str:
         """The first found package author email address."""
-        mail = self.metadata["author_email"].split(",")[0].split(" ")[-1]
-        return mail.replace("<", "").replace(">", "")
+        if mail := self.metadata.get("author_email"):
+            mail = mail.split(",")[0].split(" ")[-1]
+            return mail.replace("<", "").replace(">", "")
+        return ""
 
     @functools.cached_property
     def author_name(self) -> str:
         """The first found package author name."""
-        return self.metadata["author_email"].split(",")[0].rsplit(" ", 1)[0]
+        if mail := self.metadata.get("author_email"):
+            return mail.split(",")[0].rsplit(" ", 1)[0]
+        return ""
 
     @functools.cached_property
     def authors(self) -> dict[str, str]:
@@ -137,7 +140,7 @@ class PackageInfo:
          }
         """
         authors: dict[str, str] = {}
-        for v in self.metadata["author_email"].split(","):
+        for v in self.metadata.get("author_email", "").split(","):
             mail = v.split(" ")[-1]
             mail = mail.replace("<", "").replace(">", "")
             name = v.rsplit(" ", 1)[0]
@@ -195,13 +198,11 @@ class PackageInfo:
     @functools.cached_property
     def cli_info(self) -> commandinfo.CommandInfo | None:
         """Return a CLI info object containing infos about all CLI commands / options."""
-        eps = self.entry_points.get("console_scripts")
-        if not eps:
-            return None
-        ep = eps[0].load()
-        qual_name = ep.__class__.__module__.lower()
-        if qual_name.startswith(("typer", "click")):
-            return clihelpers.get_cli_info(ep)
+        if eps := self.entry_points.get("console_scripts"):
+            ep = eps[0].load()
+            qual_name = ep.__class__.__module__.lower()
+            if qual_name.startswith(("typer", "click")):
+                return clihelpers.get_cli_info(ep)
         return None
 
     @functools.cached_property
