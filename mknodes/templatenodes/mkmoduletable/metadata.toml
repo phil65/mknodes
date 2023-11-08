@@ -3,6 +3,8 @@ icon = "mdi:view-module-outline"
 name = "MkModuleTable"
 group = "documentation"
 
+[requirements.extension.tables]
+
 [examples.regular]
 title = "Regular"
 jinja = """
@@ -14,10 +16,10 @@ Name = """
 {{ module | get_link }}
 """
 DocStrings = """
-{{ module | inspecthelpers.get_doc(fallback=fallback, only_summary=True) }}
+{{ module | get_doc(fallback="*No docstrings defined.*", only_summary=True) }}
 """
 Members = """
-{% if module | attr("__all__") %}
-{{ mk.MkList(module.__all__, as_links=True, shorten_after=10).to_html() }}
+{% if module | hasattr("__all__") %}
+{{ (module.__all__ | MkList(as_links=True, shorten_after=10)).to_html() }}
 {% endif %}
 """

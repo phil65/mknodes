@@ -22,6 +22,7 @@ class MkDependencyTable(mktable.MkTable):
     def __init__(
         self,
         package: str | packageinfo.PackageInfo | None = None,
+        *,
         layout: PackageLayoutStr = "default",
         **kwargs,
     ):
