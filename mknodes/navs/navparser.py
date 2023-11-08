@@ -32,13 +32,13 @@ SECTION_RE = r"^\* (.*)"
 ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 
 
-def str2page(
+def str2node(
     path: str | os.PathLike,
     name: str | None = None,
     parent: mk.MkNode | None = None,
     **kwargs,
-) -> mk.MkPage:
-    """Parse given path, check for our -> syntax, and return a MkPage.
+) -> mk.MkPage | mk.MkNav:
+    """Parse given path, check for our -> syntax, and return a MkPage / MkNav.
 
     If -> is detected, return a MkPage containing given MkNode. Otherwise
     open / download the markdown file from given path and put that into an MkPage.
@@ -56,17 +56,19 @@ def str2page(
     node_cls_name = path.removeprefix("->").strip().split("(")[0]
     if path.startswith("->") and node_cls_name in mk.__all__:
         node_cls = getattr(mk, node_cls_name)
-        page = mk.MkPage(name, parent=parent, **kwargs)
+        args = []
+        kwargs = {}
         if match := re.match(ARGS_KWARGS_RE, path):
             parts = match[1].split(",")
             args = [ast.literal_eval(i.strip()) for i in parts if "=" not in i]
             kwargs_iter = (i.strip().split("=", maxsplit=1) for i in parts if "=" in i)
             kwargs = {i[0]: ast.literal_eval(i[1]) for i in kwargs_iter}
-            msg = "Parsed: Node: %s, args: %s, kwargs: %s"
-            logger.debug(msg, node_cls.__name__, args, kwargs)
-            page += node_cls(*args, **kwargs)
-        else:
-            page += node_cls()
+        msg = "Parsed: Node: %s, args: %s, kwargs: %s"
+        logger.debug(msg, node_cls.__name__, args, kwargs)
+        if issubclass(node_cls, mk.MkNav | mk.MkPage):
+            return node_cls(*args, parent=parent, **kwargs)
+        page = mk.MkPage(name, parent=parent, **kwargs)
+        page += node_cls(*args, **kwargs)
         return page
     if path.startswith(r"{{"):
         page = mk.MkPage(name, parent=parent, **kwargs)
@@ -97,7 +99,7 @@ def from_list(
                         from_dict(val, nav.add_nav(name), base_path=base_path)
                     case str():
                         path = urljoin(base_path, val)
-                        nav += str2page(path=path, name=name, parent=nav)
+                        nav += str2node(path=path, name=name, parent=nav)
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
@@ -128,7 +130,7 @@ def from_dict(
         match v:
             case str():
                 path = urljoin(base_path, v)
-                nav += str2page(path=path, name=k, parent=nav)
+                nav += str2node(path=path, name=k, parent=nav)
             case dict():
                 logger.debug("Adding nav %r", k)
                 from_dict(v, nav.add_nav(k), base_path=base_path)
@@ -244,7 +246,7 @@ class NavParser:
                 # if not, add as regular page:
                 else:
                     p = m[2] if m[2].startswith(("->", r"{{")) else path.parent / m[2]
-                    page = str2page(path=p, name=m[1], parent=self._nav, **kwargs)
+                    page = str2node(path=p, name=m[1], parent=self._nav, **kwargs)
                     self._nav[m[1]] = page
                     logger.debug("Created page %s from %s", m[1], m[2])
 
