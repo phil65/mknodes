@@ -1,0 +1,12 @@
+[metadata]
+icon = "mdi:file-tree-outline"
+name = "MkTreeView"
+
+[examples.regular]
+title = "Different styles"
+jinja = """
+{% for style in ["regular", "ansi", "ascii", "rounded", "spaces"] %}
+{{ "mknodes/manual" | MkTreeView(style=style) }}
+{% endfor %}
+"""
+
