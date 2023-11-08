@@ -371,15 +371,11 @@ class MkNode(node.Node):
         cls,
         *args,
         repo_url: str | None = None,
-        theme_name: str | None = None,
         base_url: str = "",
         **kwargs,
     ):
         """Same as the Ctor, but auto-adds a context for the repo url (or the cwd)."""
-        import mknodes as mk
-
-        theme = mk.Theme.get_theme(theme_name or "material")
-        context = mk.Project(theme=theme, repo=repo_url, base_url=base_url).context
+        context = contexts.ProjectContext.for_config(repo=repo_url, base_url=base_url)
         return cls(*args, **kwargs, context=context)
 
     def to_html(self) -> str:

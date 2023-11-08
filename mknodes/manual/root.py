@@ -40,5 +40,6 @@ class Build:
 if __name__ == "__main__":
     import mknodes as mk
 
-    project = mk.Project(theme=mk.MaterialTheme())
-    build(project)
+    nav = mk.MkNav()
+    bld = Build()
+    bld.on_root(nav)
