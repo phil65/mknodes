@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import collections
+
 from collections.abc import MutableMapping
 from typing import Any
 
@@ -7,7 +9,7 @@ import jinjarope
 
 from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
-from mknodes.pages import templateblocks, templateregistry
+from mknodes.pages import pagetemplate, templateblocks
 from mknodes.utils import color, icons, log, reprhelpers, resources
 
 
@@ -36,7 +38,9 @@ class Theme:
         self.features = self.data.get("features")
         loader = jinjarope.registry.get_package_loader("mknodes.resources")
         self.env = jinjarope.Environment(loader=loader)
-        self.templates = templateregistry.TemplateRegistry()
+        self.templates: dict[str, pagetemplate.PageTemplate] = collections.defaultdict(
+            pagetemplate.PageTemplate
+        )
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
 
