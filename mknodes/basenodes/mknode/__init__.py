@@ -362,8 +362,10 @@ class MkNode(node.Node):
         page += mk.MkReprRawRendered(node, header="### Append annotations")
 
     @classmethod
-    def for_project(cls, project, **kwargs):
-        project.root = cls(context=project.context, **kwargs)
+    def for_project(cls, project=None, **kwargs):
+        if project:
+            kwargs["context"] = project.context
+        project.root = cls(**kwargs)
         return project.root
 
     @classmethod
