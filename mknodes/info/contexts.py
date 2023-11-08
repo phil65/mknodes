@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+import abc
+
+from collections.abc import Callable, Mapping
 import dataclasses
 import datetime
 import pathlib
 import types
-
 from typing import Any
 
 from griffe.dataclasses import Alias, Module
 
+from mknodes import paths
 import mknodes as mk
 
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
@@ -259,6 +262,29 @@ class GitHubContext(Context):
 
 
 @dataclasses.dataclass
+class ContextConfig(Mapping, metaclass=abc.ABCMeta):
+    repo_url: str = "."
+    clone_depth: int = 100
+    jinja_extensions: list[str] = dataclasses.field(default_factory=list)
+    jinja_loaders: list[dict] = dataclasses.field(default_factory=list)
+    build_fn: str | Callable = paths.DEFAULT_BUILD_FN
+    base_url: str = ""
+    use_directory_urls: bool = True
+
+    def __getitem__(self, value):
+        return getattr(self, value)
+
+    def __setitem__(self, index, value):
+        setattr(self, index, value)
+
+    def __len__(self):
+        return len(dataclasses.fields(self))
+
+    def __iter__(self):
+        return iter(i.name for i in dataclasses.fields(self))
+
+
+@dataclasses.dataclass
 class ProjectContext(Context):
     """All information about a project."""
 
@@ -279,6 +305,37 @@ class ProjectContext(Context):
     # pyproject: pyproject.PyProject = dataclasses.field(
     #     default_factory=pyproject.PyProject,
     # )
+
+    @classmethod
+    def for_config(cls, *args: dict, theme_context=None, **kwargs):
+        """The main project to create a website.
+
+        Arguments:
+            args: Config mapping
+            theme_context: Optional theme context
+            kwargs: Keyword arguments to override config values
+        """
+        from mknodes.info import folderinfo as fi, linkprovider, reporegistry
+
+        cfg = {k: v for d in args for k, v in d.items()}
+        cfg.update(kwargs)
+        links = linkprovider.LinkProvider(
+            base_url=cfg.get("base_url", ""),
+            use_directory_urls=cfg.get("use_directory_urls", True),
+            include_stdlib=True,
+        )
+        git_repo = reporegistry.get_repo(
+            str(cfg.get("repo_url", ".")),
+            clone_depth=cfg.get("clone_depth", 100),
+        )
+        folderinfo = fi.FolderInfo(git_repo.working_dir)
+        return cls(
+            metadata=folderinfo.context,
+            git=folderinfo.git.context,
+            theme=theme_context or ThemeContext(),
+            links=links,
+            env_config=cfg.get("env_config", {}),
+        )
 
     def populate_linkprovider(self):
         if self.metadata.mkdocs_config is None:
