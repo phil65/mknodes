@@ -35,6 +35,7 @@ ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 def str2page(
     path: str | os.PathLike,
     name: str | None = None,
+    parent: mk.MkNode | None = None,
     **kwargs,
 ) -> mk.MkPage:
     """Parse given path, check for our -> syntax, and return a MkPage.
@@ -45,6 +46,7 @@ def str2page(
     Arguments:
         path: Path to build a MkPage for (Either path / URL or "-> MkNode")
         name: Name for given MkPage
+        parent: Parent for the MkPage
         kwargs: Additional metadata for MkPage
     """
     import mknodes as mk
@@ -54,7 +56,7 @@ def str2page(
     node_cls_name = path.removeprefix("->").strip().split("(")[0]
     if path.startswith("->") and node_cls_name in mk.__all__:
         node_cls = getattr(mk, node_cls_name)
-        page = mk.MkPage(name, **kwargs)
+        page = mk.MkPage(name, parent=parent, **kwargs)
         if match := re.match(ARGS_KWARGS_RE, path):
             parts = match[1].split(",")
             args = [ast.literal_eval(i.strip()) for i in parts if "=" not in i]
@@ -65,6 +67,10 @@ def str2page(
             page += node_cls(*args, **kwargs)
         else:
             page += node_cls()
+        return page
+    if path.startswith(r"{{"):
+        page = mk.MkPage(name, parent=parent, **kwargs)
+        page += mk.MkText(path, render_jinja=True)
         return page
     return mk.MkPage.from_file(path, title=name, **kwargs)
 
@@ -91,7 +97,7 @@ def from_list(
                         from_dict(val, nav.add_nav(name), base_path=base_path)
                     case str():
                         path = urljoin(base_path, val)
-                        nav += str2page(path=path, name=name)
+                        nav += str2page(path=path, name=name, parent=nav)
                     case list():
                         logger.debug("Adding nav %r", name)
                         if helpers.is_url(name):
@@ -122,7 +128,7 @@ def from_dict(
         match v:
             case str():
                 path = urljoin(base_path, v)
-                nav += str2page(path=path, name=k)
+                nav += str2page(path=path, name=k, parent=nav)
             case dict():
                 logger.debug("Adding nav %r", k)
                 from_dict(v, nav.add_nav(k), base_path=base_path)
