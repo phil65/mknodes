@@ -251,7 +251,7 @@ class GitHubContext(Context):
     """The follower count of the user."""
     gravatar_id: str | None = None
     """The gravatar id associated with the user."""
-    hireable: bool = False
+    hireable: bool | None = None
     """Whether the user is hireable."""
     location: str | None = None
     """The user location, as set on GitHub."""
