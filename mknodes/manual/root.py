@@ -43,3 +43,6 @@ if __name__ == "__main__":
     nav = mk.MkNav()
     bld = Build()
     bld.on_root(nav)
+    for node in nav.iter_nodes():
+        if isinstance(node, mk.MkPage):
+            print(node)

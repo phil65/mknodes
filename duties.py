@@ -64,3 +64,10 @@ def lint(ctx):
 def lint_check(ctx):
     """Update all environment packages using pip directly."""
     ctx.run(f"{ENV_PREFIX}lint-check")
+
+
+@duty(capture=False)
+def profile(ctx, *args: str):
+    """Run generating the docs using pyinstrument."""
+    args_str = " " + " ".join(args) if args else ""
+    ctx.run(f"{ENV_PREFIX}pyinstrument mknodes/manual/root.py{args_str}")
