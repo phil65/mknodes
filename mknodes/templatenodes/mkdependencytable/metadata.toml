@@ -39,10 +39,9 @@ Marker = """
 Name = """
 {% if package_info.homepage %}
 {{ package_info.homepage | MkLink(package_info.name) | string | styled(size=3, bold=True) }}{% else %}
-{{ package_info.name | styled(size=3, bold=True, code=True) }}{% endif %}
-{{ (dep_info.marker or "") | string | regex_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
+{{ package_info.name | styled(size=3, bold=True, code=True) }}{% endif %}{{ (dep_info.marker or "") | string | regex_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
 """
 
 Summary = """
-{{ package_info.summary | styled(italic=True) }} {{ "websites" | MkMetadataBadges(package=package_info.name) }}
+{{ package_info.summary | styled(italic=True) }}<br>{{ "websites" | MkMetadataBadges(package=package_info.name, block_separator=" ") }}
 """

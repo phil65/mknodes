@@ -37,6 +37,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         badge_color: str | None = None,
         text_color: str | None = None,
         use_gitlab_style: bool = False,
+        block_separator: str = "\n",
         **kwargs: Any,
     ):
         """Constructor.
@@ -50,10 +51,10 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             badge_color: Badge color. If none is set, it will be pulled from project.
             text_color: Badge color
             use_gitlab_style: Use Gitlab-scope style
+            block_separator: Divider to use between badges
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
-        self.block_separator = "\n"
+        super().__init__(block_separator=block_separator, **kwargs)
         self._package = package
         self.typ = typ
         self.font_size = font_size
