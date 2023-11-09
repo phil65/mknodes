@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from mknodes.info import grifferegistry
 from mknodes.templatenodes import mktemplatetable
 from mknodes.utils import log
 
@@ -21,7 +22,10 @@ class MkClassTable(mktemplatetable.MkTemplateTable):
         super().__init__(layout=layout, **kwargs)
 
     def iter_items(self):
-        yield from [dict(kls=kls) for kls in self.klasses]
+        yield from [
+            dict(kls=kls, griffe_kls=grifferegistry.get_class(kls))
+            for kls in self.klasses
+        ]
 
     @classmethod
     def create_example_page(cls, page):

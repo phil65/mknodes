@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 import types
 
+from mknodes.info import grifferegistry
 from mknodes.templatenodes import mktemplatetable
 from mknodes.utils import classhelpers, helpers, log
 
@@ -24,7 +25,10 @@ class MkModuleTable(mktemplatetable.MkTemplateTable):
         super().__init__(**kwargs)
 
     def iter_items(self):
-        yield from [dict(module=module) for module in self.modules]
+        yield from [
+            dict(module=module, griffe_module=grifferegistry.get_module(module))
+            for module in self.modules
+        ]
 
     @classmethod
     def create_example_page(cls, page):
