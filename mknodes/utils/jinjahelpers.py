@@ -6,6 +6,7 @@ from typing import Any
 import jinja2
 import jinjarope
 
+from jinjarope import envglobals
 from markupsafe import Markup
 import tomli_w
 
@@ -64,7 +65,7 @@ ENV_FILTERS = {
     "load_yaml": yamlhelpers.load_yaml,
     "url": url_filter,
     "script_tag": script_tag_filter,
-}
+} | envglobals.ENV_FILTERS  # envglobals filters required for MkDocs themes
 
 
 @jinjarope.Environment.register_globals
