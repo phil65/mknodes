@@ -257,6 +257,35 @@ def to_dotted_path(
 
 
 @functools.cache
+def list_classes(
+    module: types.ModuleType | str | tuple[str, ...],
+    *,
+    type_filter: type | None | types.UnionType = None,
+    module_filter: str | None = None,
+    filter_by___all__: bool = False,
+    recursive: bool = False,
+) -> list[type]:
+    """Return list of classes from given module.
+
+    Arguments:
+        module: either a module or a path to a module in form of str or
+                tuple of strings.
+        type_filter: only return classes which are subclasses of given type.
+        module_filter: filter by a module prefix.
+        filter_by___all__: Whether to filter based on whats defined in __all__.
+        recursive: import all submodules recursively and also return their classes.
+    """
+    return list(
+        iter_classes(
+            module=module,
+            type_filter=type_filter,
+            module_filter=module_filter,
+            filter_by___all__=filter_by___all__,
+            recursive=recursive,
+        )
+    )
+
+
 def iter_classes(
     module: types.ModuleType | str | tuple[str, ...],
     *,
