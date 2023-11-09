@@ -24,6 +24,8 @@ logger = log.get_logger(__name__)
 
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 
+fallback_ctx = contexts.ProjectContext()
+
 
 class MkNode(node.Node):
     """Base class for everything which can be expressed as Markup.
@@ -156,7 +158,7 @@ class MkNode(node.Node):
         for ancestor in self.ancestors:
             if ancestor._ctx:
                 return ancestor._ctx
-        return contexts.ProjectContext()
+        return fallback_ctx
 
     @property
     def parent_navs(self) -> list[mk.MkNav]:

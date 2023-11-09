@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import functools
+
 from importlib import util
 from typing import Any
 
@@ -69,6 +71,7 @@ ENV_FILTERS = {
 
 
 @jinjarope.Environment.register_globals
+@functools.cache
 def get_globals():
     import mknodes as mk
 
@@ -77,6 +80,7 @@ def get_globals():
 
 
 @jinjarope.Environment.register_filters
+@functools.cache
 def get_filters():
     import mknodes as mk
 
