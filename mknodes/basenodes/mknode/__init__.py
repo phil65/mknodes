@@ -196,7 +196,7 @@ class MkNode(node.Node):
             case str():
                 return mk.MkText(other, parent=self)
             case list():
-                return mk.MkContainer([self.to_child_node(i) for i in other])
+                return mk.MkContainer(other, parent=self)
             case mk.MkNode():
                 other.parent = self
                 return other
