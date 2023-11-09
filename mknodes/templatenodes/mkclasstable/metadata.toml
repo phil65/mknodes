@@ -33,7 +33,7 @@ Name = """
 """
 Children = """
 <ul>
-{% for sub in classhelpers.iter_subclasses(kls, recursive=False) %}
+{% for sub in classhelpers.list_subclasses(kls, recursive=False) %}
 <li>{{ sub | get_link }}</li>
 {% if loop.index > 10 %}
     <li>...</li>
@@ -44,7 +44,7 @@ Children = """
 """
 Inherits = """
 <ul>
-{% for base_kls in classhelpers.iter_baseclasses(kls, recursive=False) %}
+{% for base_kls in classhelpers.list_baseclasses(kls, recursive=False) %}
 <li>{{ base_kls | get_link }}</li>
 {% if loop.index > 10 %}
     <li>...</li>

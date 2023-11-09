@@ -9,7 +9,7 @@ from mknodes.utils import classhelpers
 
 def example_instances():
     page = mk.MkPage.with_context()
-    for cls in classhelpers.iter_subclasses(mk.MkNode):
+    for cls in classhelpers.list_subclasses(mk.MkNode):
         if cls.nodefile:
             yield from cls.nodefile.iter_example_instances(page)
 

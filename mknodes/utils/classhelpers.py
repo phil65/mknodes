@@ -21,6 +21,40 @@ T = typing.TypeVar("T", bound=type)
 logger = log.get_logger(__name__)
 
 
+@functools.cache
+def list_subclasses(
+    klass: T,
+    *,
+    recursive: bool = True,
+    filter_abstract: bool = False,
+    filter_generic: bool = True,
+    filter_locals: bool = True,
+) -> list[T]:
+    """Return list of all subclasses of given klass.
+
+    Note: This call is cached. Consider iter_subclasses for uncached iterating.
+
+    Arguments:
+        klass: class to get subclasses from
+        filter_abstract: whether abstract base classes should be included.
+        filter_generic: whether generic base classes should be included.
+        filter_locals: whether local base classes should be included.
+        recursive: whether to also get subclasses of subclasses.
+    """
+    return list(
+        iter_subclasses(
+            klass,
+            recursive=recursive,
+            filter_abstract=filter_abstract,
+            filter_generic=filter_generic,
+            filter_locals=filter_locals,
+        )
+    )
+
+
+T = typing.TypeVar("T", bound=type)
+
+
 def iter_subclasses(
     klass: T,
     *,
@@ -79,6 +113,35 @@ def iter_baseclasses(
         if filter_locals and "<locals>" in kls.__qualname__:
             continue
         yield kls
+
+
+@functools.cache
+def list_baseclasses(
+    klass: T,
+    *,
+    recursive: bool = True,
+    filter_abstract: bool = False,
+    filter_generic: bool = True,
+    filter_locals: bool = True,
+) -> list[T]:
+    """Return list of all baseclasses of given klass.
+
+    Arguments:
+        klass: class to get subclasses from
+        filter_abstract: whether abstract base classes should be included.
+        filter_generic: whether generic base classes should be included.
+        filter_locals: whether local base classes should be included.
+        recursive: whether to also get baseclasses of baseclasses.
+    """
+    return list(
+        iter_baseclasses(
+            klass,
+            recursive=recursive,
+            filter_abstract=filter_abstract,
+            filter_generic=filter_generic,
+            filter_locals=filter_locals,
+        )
+    )
 
 
 @typing.overload

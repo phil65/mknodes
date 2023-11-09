@@ -53,7 +53,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self) -> dict[str, Any]:
         # right now, we inject the cls and the griffe Class into jinja namespace.
-        subclasses = list(classhelpers.iter_subclasses(self.klass, recursive=False))
+        subclasses = classhelpers.list_subclasses(self.klass, recursive=False)
         variables = dict(cls=self.klass, subclasses=subclasses)
         mod = self.klass.__module__.replace(".", "/")
         path = inspecthelpers.get_file(self.klass).as_posix()  # type: ignore[union-attr]

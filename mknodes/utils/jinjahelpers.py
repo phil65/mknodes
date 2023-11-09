@@ -75,7 +75,7 @@ ENV_FILTERS = {
 def get_globals():
     import mknodes as mk
 
-    node_klasses = {k.__name__: k for k in classhelpers.iter_subclasses(mk.MkNode)}
+    node_klasses = {k.__name__: k for k in classhelpers.list_subclasses(mk.MkNode)}
     return dict(mk=node_klasses, _mk=node_klasses) | ENV_GLOBALS
 
 
@@ -84,7 +84,7 @@ def get_globals():
 def get_filters():
     import mknodes as mk
 
-    node_klasses = {k.__name__: k for k in classhelpers.iter_subclasses(mk.MkNode)}
+    node_klasses = {k.__name__: k for k in classhelpers.list_subclasses(mk.MkNode)}
     return ENV_FILTERS | node_klasses
 
 

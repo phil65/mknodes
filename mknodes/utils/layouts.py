@@ -77,7 +77,7 @@ class ExtendedClassLayout(Layout):
         """
         subclass_links = [
             self.linkprovider.link_for_klass(sub)
-            for sub in classhelpers.iter_subclasses(kls, recursive=False)
+            for sub in classhelpers.list_subclasses(kls, recursive=False)
             if self.subclass_predicate(sub)
         ]
         subclass_str = mklist.MkList(
