@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-import inspect
 import types
 
 from mknodes.templatenodes import mktemplatetable
@@ -33,7 +32,7 @@ class MkModuleTable(mktemplatetable.MkTemplateTable):
 
         import mknodes as mk
 
-        modules = [mod for _, mod in inspect.getmembers(jinja2, inspect.ismodule)]
+        modules = classhelpers.get_submodules(jinja2)
         node = MkModuleTable(modules=modules)
         page += mk.MkReprRawRendered(node)
 

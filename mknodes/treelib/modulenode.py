@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import inspect
 import types
 
 from typing import Any
 
 from mknodes.treelib import node
-from mknodes.utils import inspecthelpers, log
+from mknodes.utils import classhelpers, inspecthelpers, log
 
 
 logger = log.get_logger(__name__)
@@ -40,11 +39,7 @@ class ModuleNode(node.Node):
     ):
         node = cls(module, parent=parent)
         seen = _seen or set()
-        children = [
-            mod
-            for _name, mod in inspect.getmembers(module, inspect.ismodule)
-            if mod.__name__.startswith(module.__name__)
-        ]
+        children = classhelpers.get_submodules(module)
         if sort:
             children = sorted(children, key=lambda s: s.__name__.lower())
         for submod in children:

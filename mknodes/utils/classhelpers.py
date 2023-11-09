@@ -308,7 +308,7 @@ def iter_classes(
     if not mod:
         return []
     if recursive:
-        for _name, submod in get_members(mod, inspect.ismodule):
+        for submod in get_submodules(mod):
             if submod.__name__.startswith(module_filter or ""):
                 yield from iter_classes(
                     submod,
