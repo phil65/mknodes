@@ -10,6 +10,16 @@ from mknodes.utils import log
 
 logger = log.get_logger(__name__)
 
+DEFAULT_EXTS: Sequence[str | markdown.Extension] = [
+    "toc",
+    "tables",
+    # "fenced_code",
+    "pymdownx.emoji",
+    "md_in_html",
+    "attr_list",
+    "admonition",
+]
+
 
 class MdConverter(markdown.Markdown):
     def __init__(
@@ -19,17 +29,7 @@ class MdConverter(markdown.Markdown):
         output_format: Literal["xhtml", "html"] = "html",
         tab_length: int = 4,
     ):
-        exts: Sequence[str | markdown.Extension] = [
-            "toc",
-            "tables",
-            # "fenced_code",
-            "pymdownx.emoji",
-            "md_in_html",
-            "attr_list",
-            "admonition",
-        ]
-        if extensions:
-            exts = list({*exts, *extensions})
+        exts = list({*DEFAULT_EXTS, *extensions}) if extensions else DEFAULT_EXTS
         super().__init__(
             extensions=exts,
             extension_configs=extension_configs or {},
