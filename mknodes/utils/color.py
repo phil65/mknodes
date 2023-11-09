@@ -57,7 +57,7 @@ class Color(coloraide.Color):
         Arguments:
             value: The new alpha value
         """
-        color["alpha"] = value
+        self["alpha"] = value
 
 
 if __name__ == "__main__":
