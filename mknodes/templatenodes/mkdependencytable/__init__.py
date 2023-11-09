@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from mknodes.basenodes import mktable
+from mknodes.templatenodes import mktemplatetable
 from mknodes.info import packageinfo, packageregistry
-from mknodes.utils import layouts, log, reprhelpers
+from mknodes.utils import log
 from mknodes.utils.packagehelpers import Dependency
 
 
@@ -13,7 +13,7 @@ logger = log.get_logger(__name__)
 PackageLayoutStr = Literal["default", "badge"]
 
 
-class MkDependencyTable(mktable.MkTable):
+class MkDependencyTable(mktemplatetable.MkTemplateTable):
     """Node for a table showing dependencies for a package."""
 
     ICON = "material/database"
@@ -27,17 +27,7 @@ class MkDependencyTable(mktable.MkTable):
         **kwargs,
     ):
         self.package = package
-        match layout:
-            case "default":
-                self.layouter = layouts.DefaultPackageLayout()
-            case "badge":
-                self.layouter = layouts.BadgePackageLayout()
-            case _:
-                raise ValueError(layout)
-        super().__init__(**kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self, package=self.package, _filter_empty=True)
+        super().__init__(layout=layout, **kwargs)
 
     @property
     def required_packages(self) -> dict[packageinfo.PackageInfo, Dependency] | None:
@@ -51,17 +41,11 @@ class MkDependencyTable(mktable.MkTable):
             case _:
                 return None
 
-    @property
-    def data(self):
-        if not self.required_packages:
-            return {}
-        packages = self.required_packages
-        if data := [self.layouter.get_row_for(kls) for kls in packages.items()]:
-            return {
-                k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
-                for k in data[0]
-            }
-        return {}
+    def iter_items(self):
+        yield from [
+            dict(package_info=package_info, dep_info=dep_info)
+            for (package_info, dep_info) in self.required_packages.items()
+        ]
 
     @classmethod
     def create_example_page(cls, page):
@@ -75,4 +59,4 @@ class MkDependencyTable(mktable.MkTable):
 
 if __name__ == "__main__":
     table = MkDependencyTable("mknodes")
-    logger.warning(table)
+    print(table)
