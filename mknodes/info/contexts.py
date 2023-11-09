@@ -307,7 +307,12 @@ class ProjectContext(Context):
     # )
 
     @classmethod
-    def for_config(cls, *args: dict, theme_context=None, **kwargs):
+    def for_config(
+        cls,
+        *args: dict,
+        theme_context: ThemeContext | None = None,
+        **kwargs: Any,
+    ):
         """The main project to create a website.
 
         Arguments:

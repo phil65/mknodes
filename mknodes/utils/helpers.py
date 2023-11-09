@@ -240,6 +240,8 @@ def get_output_from_call(
 
     if not isinstance(call, str):
         call = " ".join(call)
+    msg = f"Executing {call!r}..."
+    logger.info(msg)
     try:
         return subprocess.run(
             call,
