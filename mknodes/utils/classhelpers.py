@@ -369,7 +369,11 @@ def import_file(path: str | os.PathLike) -> types.ModuleType:
     Arguments:
         path: Path which should get imported
     """
-    module_name = pathlib.Path(path).stem
+    p = pathlib.Path(path)
+    if p.is_dir():
+        msg = f"{path!r} is a directory."
+        raise IsADirectoryError(msg)
+    module_name = p.stem
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None:
         raise RuntimeError
