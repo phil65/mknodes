@@ -25,6 +25,15 @@ def get_module(module: str | types.ModuleType) -> griffe.Module | Alias:
     return registry.get_module(module)
 
 
+def get_class(klass: str | type) -> griffe.Class | Alias:
+    """Return info for given klass from registry.
+
+    Arguments:
+        klass: Name of the klass
+    """
+    return registry.get_class(klass)
+
+
 class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
     """Registry for PackageInfos.
 
