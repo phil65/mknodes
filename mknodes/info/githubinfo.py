@@ -103,7 +103,7 @@ class GitHubRepo:
         return self.repo.get_commits(rev, **kwargs)  # type: ignore
 
     @functools.cached_property
-    def context(self):
+    def context(self) -> contexts.GitHubContext:
         """Return github context."""
         return contexts.GitHubContext(
             default_branch=self.default_branch,

@@ -54,7 +54,7 @@ class PreCommitConfigFile(yamlfile.YamlFile):
         return [hook for repo in self.repos for hook in repo.hooks]
 
     @functools.cached_property
-    def repos(self):
+    def repos(self) -> list[Repository]:
         repos = []
         for r in self._data["repos"]:
             hooks = [Hook(hook_id=dct.pop("id"), **dct) for dct in r["hooks"]]
@@ -63,7 +63,7 @@ class PreCommitConfigFile(yamlfile.YamlFile):
         return repos
 
     @property
-    def hook_names(self):
+    def hook_names(self) -> list[str]:
         return helpers.reduce_list([i.hook_id for i in self.hooks])
 
 

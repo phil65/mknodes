@@ -117,7 +117,7 @@ class NodeFile(tomlfile.TomlFile):
         return self._data.get("output", {})
 
     @property
-    def requirements(self):
+    def requirements(self) -> dict:
         """Return the `requirements` section of the file."""
         return self._data.get("requirements", {})
 

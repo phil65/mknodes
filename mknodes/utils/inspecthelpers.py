@@ -8,12 +8,7 @@ import pathlib
 import types
 
 from mknodes.data import datatypes
-from mknodes.utils import helpers, log
-
-
-RESPONSE_CODE_OK = 200
-
-logger = log.get_logger(__name__)
+from mknodes.utils import helpers
 
 
 def get_stack_info(frame, level: int) -> dict | None:

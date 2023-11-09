@@ -18,11 +18,11 @@ class PyPiInfo:
         self.response = json.loads(text)
 
     @property
-    def summary(self):
+    def summary(self) -> str | None:
         return self.response["info"].get("summary")
 
     @property
-    def description(self):
+    def description(self) -> str | None:
         return self.response["info"].get("description")
 
 
