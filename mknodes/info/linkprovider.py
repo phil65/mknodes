@@ -205,6 +205,10 @@ class LinkProvider:
             target: The thing to link to
             title: The title to use for the link
         """
+        if isinstance(target, type) and not title:
+            return self.link_for_klass(target)
+        if isinstance(target, types.ModuleType) and not title:
+            return self.link_for_module(target)
         url = self.get_url(target)
         return linked(url, title)
 
