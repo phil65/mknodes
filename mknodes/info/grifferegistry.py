@@ -107,7 +107,11 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
             docstring_style: Docstring style
         """
         if isinstance(klass, type):
-            mod_name, sub_mod_path = klass.__module__.split(".", 1)
+            mod_name = klass.__module__
+            if "." in mod_name:
+                mod_name, sub_mod_path = mod_name.split(".", 1)
+            else:
+                mod_name, sub_mod_path = mod_name, ""
             qual_name = klass.__qualname__
             kls_name = f"{sub_mod_path}.{qual_name}" if sub_mod_path else qual_name
         else:
