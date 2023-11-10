@@ -4,9 +4,12 @@ icon = "mdi:alert-box"
 
 [requirements.extension."pymdownx.superfences"]
 
+[fragments.annotation]
+template = """
+{{ node.num }}.{{ 3 - self.num | string | length }}{{ node.items | join("\n\n") | indent }}
+"""
+
 [output.markdown]
 template = """
-{% for item in node.items | sort(attribute="num") %}
-{{ item }}
-{% endfor %}
+{{ node.items | sort(attribute="num") | join }}
 """

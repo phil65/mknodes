@@ -14,3 +14,14 @@ node[2] = r"They can also get nested[^3]."
 node[3] = mk.MkAdmonition("And they can also contain other Markdown.")
 node
 """
+
+[fragments.footnote]
+template = """
+[^{{ footnote.num }}]
+{{ node.items | join("\n") | indent(first=True) }}
+"""
+
+[output.markdown]
+template = """
+{{ node.items | sort(attribute="num") | join }}
+"""

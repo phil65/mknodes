@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -30,9 +30,6 @@ class MkTask(mkcontainer.MkContainer):
         """
         super().__init__(content=content, **kwargs)
         self.value = value
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self, value=self.value, content=self.items)
 
     def _to_markdown(self) -> str:
         lines = super()._to_markdown().split("\n")

@@ -3,7 +3,8 @@ from __future__ import annotations
 import mknodes as mk
 
 
-EXPECTED = """## Header
+EXPECTED = """\
+## Header
 
 1.  abcde
     fghi
@@ -27,7 +28,8 @@ EXPECTED = """## Header
     fghi
 """
 
-EXPECTED_SORTED = """1.  1
+EXPECTED_SORTED = """\
+1.  1
 2.  2
 """
 

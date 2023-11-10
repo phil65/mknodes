@@ -18,6 +18,17 @@ jinja = """
 {{ {"Tabs": node, "Admonition": mk.MkAdmonition("Nested admonition")} | MkTabbed }}
 """
 
+[fragments.tab]
+template = """
+==={% if tab.new %}!{% endif %}{% if tab.select %}+{% endif %} "{{ tab.title }}"
+    {{ tab.items | join(tab.block_separator) | rstrip("\n") | indent }}
+    {% if tab.annotations %}
+    { .annotate }
+
+    {{ tab.annotations | indent }}
+    {% endif %}
+"""
+
 [output.markdown]
 template = """
 {{ node.items | join(node.block_separator) }}
