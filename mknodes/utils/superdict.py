@@ -6,7 +6,7 @@ import os
 
 from typing import Any, Literal, Self, TypeVar
 
-from mknodes.utils import pathhelpers
+from mknodes.utils import pathhelpers, reprhelpers
 
 
 MarkupTypeStr = Literal["yaml", "json", "toml"]
@@ -39,6 +39,9 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
 
     def __len__(self):
         return len(self._data)
+
+    def __repr__(self):
+        return reprhelpers.get_repr(self, data=dict(self._data))
 
     def rename_key(self, old: str, new: str) -> Self:
         """Rename a key of the dict while preserving key order.
