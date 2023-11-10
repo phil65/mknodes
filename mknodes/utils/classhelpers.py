@@ -12,6 +12,8 @@ import sys
 import types
 import typing
 
+import griffe
+
 from mknodes.utils import log
 
 
@@ -252,6 +254,8 @@ def to_dotted_path(
             return obj.__name__
         case type() | Callable():
             return f"{obj.__module__}.{obj.__qualname__}"
+        case griffe.Object():
+            return obj.canonical_path
         case _:
             raise TypeError(obj)
 
@@ -363,6 +367,10 @@ def get_submodules(
         module: Module to return submodules from.
     """
     module = to_module(module)
+    # import pkgutil
+
+    # for _importer, mod_name, _ispkg in pkgutil.iter_modules(module.__path__):
+    #     yield importlib.import_module(f"{module.__name__}.{mod_name}")
     return [
         mod
         for name, mod in get_members(module, inspect.ismodule)

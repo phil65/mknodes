@@ -8,6 +8,8 @@ import types
 
 from typing import TYPE_CHECKING
 
+import griffe
+
 from mknodes import paths
 from mknodes.info import packageregistry
 from mknodes.utils import helpers, inventorymanager, log
@@ -98,7 +100,7 @@ class LinkProvider:
 
     def url_for_module(
         self,
-        mod: types.ModuleType,
+        mod: types.ModuleType | str | griffe.Module,
         fallback_to_homepage: bool = True,
     ) -> str | None:
         """Return a url for given module.
@@ -107,19 +109,31 @@ class LinkProvider:
             mod: Module to get a url for
             fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
-        dotted_path = mod.__name__
+        match mod:
+            case types.ModuleType():
+                dotted_path = mod.__name__
+            case str():
+                dotted_path = mod
+            case griffe.Module():
+                dotted_path = mod.canonical_path
         if dotted_path in self.inv_manager:
             return self.inv_manager[dotted_path]
         module = dotted_path.split(".")[0]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_module(self, mod: types.ModuleType) -> str:
+    def link_for_module(self, mod: types.ModuleType | str) -> str:
         """Return a markdown link for given module.
 
         Arguments:
             mod: Module to get a link for
         """
-        dotted_path = mod.__name__
+        match mod:
+            case types.ModuleType():
+                dotted_path = mod.__name__
+            case str():
+                dotted_path = mod
+            case griffe.Module():
+                dotted_path = mod.canonical_path
         fallback = dotted_path not in self.excludes
         if url := self.url_for_module(mod, fallback_to_homepage=fallback):
             return linked(url, dotted_path)
@@ -127,7 +141,7 @@ class LinkProvider:
 
     def url_for_klass(
         self,
-        kls: type,
+        kls: type | str | griffe.Class,
         fallback_to_homepage: bool = True,
     ) -> str | None:
         """Return a url for given class.
@@ -136,22 +150,37 @@ class LinkProvider:
             kls: Klass to get a url for
             fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
-        module_path = kls.__module__
-        qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
-        is_builtin = module_path == "builtins"
-        dotted_path = qual_name if is_builtin else f"{module_path}.{qual_name}"
+        match kls:
+            case type():
+                module_path = kls.__module__
+                qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
+                module = module_path.split(".")[0]
+                is_builtin = module_path == "builtins"
+                dotted_path = qual_name if is_builtin else f"{module_path}.{qual_name}"
+            case griffe.Class():
+                dotted_path = kls.canonical_path
+                module = dotted_path.split(".")[0]
+            case str():
+                dotted_path = kls
+                module = dotted_path.split(".")[0]
         if dotted_path in self.inv_manager:
             return self.inv_manager[dotted_path]
-        module = module_path.split(".")[0]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_klass(self, kls: type) -> str:
+    def link_for_klass(self, kls: type | str | griffe.Class) -> str:
         """Return a markdown link for given class.
 
         Arguments:
             kls: Klass to get a link for
         """
-        qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
+        match kls:
+            case type():
+                qual_name = kls.__qualname__.split("[")[0]  # to split off generics part
+            case griffe.Class():
+                prefix = f"{kls.module.canonical_path}."
+                qual_name = kls.canonical_path.removeprefix(prefix)
+            case str():
+                qual_name = kls
         fallback = qual_name not in self.excludes
         if url := self.url_for_klass(kls, fallback_to_homepage=fallback):
             return linked(url, qual_name)
