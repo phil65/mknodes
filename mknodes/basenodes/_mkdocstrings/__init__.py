@@ -4,6 +4,7 @@ from collections.abc import Callable
 import os
 import types
 
+import griffe
 from typing import Any, Literal
 
 from mknodes.basenodes import mknode
@@ -25,6 +26,7 @@ class MkDocStrings(mknode.MkNode):
         self,
         obj: (
             types.ModuleType
+            | griffe.Object
             | str
             | tuple[str, ...]
             | list[str]
@@ -167,6 +169,8 @@ class MkDocStrings(mknode.MkNode):
         match self.obj:
             case types.ModuleType():
                 return self.obj.__name__
+            case griffe.Object():
+                return self.obj.canonical_path
             case Callable():
                 if not self.for_topmost:
                     return f"{self.obj.__module__}.{self.obj.__qualname__}"
