@@ -56,6 +56,13 @@ def get_deprecated_message(obj) -> str | None:
     Arguments:
         obj: Object to check
     """
+    if isinstance(obj, griffe.Function | griffe.Class):
+        paths = [
+            i for i in obj.decorators if i.callable_path == "typing_extensions.deprecated"
+        ]
+        if paths:
+            p = str(paths[0].value)
+            return p[p.find("(") + 1 : p.find(")")]
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
@@ -91,6 +98,18 @@ def get_doc(
     if only_summary:
         doc = doc.split("\n")[0]
     return helpers.escaped(doc) if doc and escape else doc
+
+
+def is_abstract(obj: type | griffe.Class | griffe.Function) -> bool:
+    """Check whether a class / method is abstract."""
+    match obj:
+        case griffe.Function():
+            return "abc.abstractmethod" in [i.callable_path for i in obj.decorators]
+        case griffe.Class():
+            bases = [i if isinstance(i, str) else i.canonical_path for i in obj.bases]
+            return "abc.ABC" in bases
+        case _:
+            return inspect.isabstract(obj)
 
 
 @functools.cache
