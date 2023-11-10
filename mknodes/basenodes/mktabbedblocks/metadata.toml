@@ -17,6 +17,15 @@ jinja = """
 {{ {"Tabs": node, "Admonition": mk.MkAdmonition("Nested admonition")} | MkTabbedBlocks }}
 """
 
+[fragments.tab]
+template = """
+{{ node.fence_boundary }} tab | {{ node.title }}
+{{ node.attributes_block }}
+
+{{ node.content_block }}{{ node.fence_boundary }}
+
+"""
+
 [output.markdown]
 template = """
 {{ node.items | join(node.block_separator) }}
