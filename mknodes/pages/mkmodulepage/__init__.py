@@ -38,9 +38,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         """
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
-        self.klasses = (
-            klasses
-            or classhelpers.list_classes(module=module, module_filter=self.parts[0]),
+        self.klasses = klasses or classhelpers.list_classes(
+            module=module, module_filter=self.parts[0]
         )
 
         tpl_name = template or DEFAULT_TPL
