@@ -43,9 +43,10 @@ jinja = """
 
 [output.markdown]
 template = """
+{% if node.title or node.items %}
 {{ node.title_line }}
 {{ node.items | join(node.block_separator) | indent(first=True) }}
-
+{% endif %}
 """
 
 # [output.block]
