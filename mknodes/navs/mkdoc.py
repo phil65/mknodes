@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Sequence
-import inspect
 import types
 
 from typing import Any
@@ -94,11 +93,10 @@ class MkDoc(mknav.MkNav):
 
     def iter_classes(
         self,
-        submodule: types.ModuleType | str | tuple | list | None = None,
+        submodule: types.ModuleType | str | tuple[str, ...] | list[str] | None = None,
         *,
         recursive: bool = False,
         predicate: Callable[[type], bool] | None = None,
-        _seen: set | None = None,
     ) -> Iterator[type]:
         """Iterate over all classes of the module.
 
@@ -108,33 +106,16 @@ class MkDoc(mknav.MkNav):
                        or whether it should also include classes from submodules.
             predicate: filter classes based on a predicate.
         """
-        if isinstance(submodule, list):
-            submodule = tuple(submodule)
-        mod = classhelpers.to_module(submodule) if submodule else self.module
-        if mod is None:
+        module = submodule or self.module
+        if module is None:
             return
-        if recursive:
-            seen = _seen or set()
-            # TODO: pkgutil.iter_modules would also list "unknown" modules
-            for submod in classhelpers.get_submodules(mod):
-                if submod not in seen:
-                    seen.add(submod)
-                    yield from self.iter_classes(
-                        submod,
-                        recursive=True,
-                        predicate=predicate,
-                        _seen=seen,
-                    )
-        for klass_name, klass in inspect.getmembers(mod, inspect.isclass):
-            if self.filter_by___all__ and (
-                not hasattr(mod, "__all__") or klass_name not in mod.__all__
-            ):
-                continue
-            if predicate and not predicate(klass):
-                continue
-            # if klass.__module__.startswith(self.module_name):
-            if self.module_name in klass.__module__.split("."):
-                yield klass
+        yield from classhelpers.list_classes(
+            module=tuple(module) if isinstance(module, list) else module,
+            recursive=recursive,
+            filter_by___all__=self.filter_by___all__,
+            predicate=predicate,
+            module_filter=self.module_name,
+        )
 
     def add_class_page(
         self,

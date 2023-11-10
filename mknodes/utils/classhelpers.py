@@ -267,6 +267,7 @@ def list_classes(
     type_filter: type | None | types.UnionType = None,
     module_filter: str | None = None,
     filter_by___all__: bool = False,
+    predicate: Callable[[type], bool] | None = None,
     recursive: bool = False,
 ) -> list[type]:
     """Return list of classes from given module.
@@ -277,6 +278,7 @@ def list_classes(
         type_filter: only return classes which are subclasses of given type.
         module_filter: filter by a module prefix.
         filter_by___all__: Whether to filter based on whats defined in __all__.
+        predicate: filter classes based on a predicate.
         recursive: import all submodules recursively and also return their classes.
     """
     return list(
@@ -285,6 +287,7 @@ def list_classes(
             type_filter=type_filter,
             module_filter=module_filter,
             filter_by___all__=filter_by___all__,
+            predicate=predicate,
             recursive=recursive,
         )
     )
@@ -296,7 +299,9 @@ def iter_classes(
     type_filter: type | None | types.UnionType = None,
     module_filter: str | None = None,
     filter_by___all__: bool = False,
+    predicate: Callable[[type], bool] | None = None,
     recursive: bool = False,
+    # _seen: set | None = None,
 ) -> Iterator[type]:
     """Yield classes from given module.
 
@@ -306,24 +311,31 @@ def iter_classes(
         type_filter: only yield classes which are subclasses of given type.
         module_filter: filter by a module prefix.
         filter_by___all__: Whether to filter based on whats defined in __all__.
+        predicate: filter classes based on a predicate.
         recursive: import all submodules recursively and also yield their classes.
     """
     mod = to_module(module)
     if not mod:
         return []
     if recursive:
+        # seen = _seen or set()
         for submod in get_submodules(mod):
+            # if submod not in seen:
+            #     seen.add(submod)
             if submod.__name__.startswith(module_filter or ""):
                 yield from iter_classes(
                     submod,
                     type_filter=type_filter,
                     module_filter=submod.__name__,
                     filter_by___all__=filter_by___all__,
+                    predicate=predicate,
                     recursive=True,
                 )
     for klass_name, kls in get_members(mod, inspect.isclass):
         has_all = hasattr(mod, "__all__")
         if filter_by___all__ and (not has_all or klass_name not in mod.__all__):
+            continue
+        if predicate and not predicate(kls):
             continue
         if type_filter is not None and not issubclass(kls, type_filter):
             continue
