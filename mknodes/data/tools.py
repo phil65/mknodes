@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mknodes.info import folderinfo
-from mknodes.utils import pathhelpers, yamlhelpers
+from mknodes.utils import pathhelpers, reprhelpers, yamlhelpers
 
 
 PRE_COMMIT_CODE = """
@@ -78,6 +78,9 @@ class Tool:
     def __init__(self, folderinfo):
         self.used = self.is_used(folderinfo)
         self.cfg = self.get_config(folderinfo) if self.used else None
+
+    def __repr__(self):
+        return reprhelpers.get_repr(self)
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         """Return whether tool is used for given directory.
