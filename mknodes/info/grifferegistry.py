@@ -35,9 +35,9 @@ def get_class(klass: str | type) -> griffe.Class | Alias:
 
 
 class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
-    """Registry for PackageInfos.
+    """Registry for Griffe Modules.
 
-    Used for caching all loaded Package information.
+    Used for accessing / caching all loaded Griffe objects.
     The registry will always only create the Griffe module for the top-level module
     and then use griffe_module[submodule] or griffe_module[klass] to get the
     griffe instances. That should enable the best cache behaviour.
@@ -50,7 +50,13 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         ```
     """
 
-    def __init__(self):
+    def __init__(self, expand_wildcards: bool = True):
+        """Instanciate the registry.
+
+        Arguments:
+            expand_wildcards: Whether to expand wildcard imports for the Modules
+        """
+        self.expand_wildcards = expand_wildcards
         self._modules: dict[str, griffe.Module] = {}
 
     def __getitem__(self, value):
@@ -91,7 +97,10 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         if module_name not in self._modules:
             parser = Parser(docstring_style)
             loader = GriffeLoader(docstring_parser=parser)
-            self._modules[module_name] = loader.load_module(module_name)
+            griffe_mod = loader.load_module(module_name)
+            if self.expand_wildcards:
+                loader.expand_wildcards(griffe_mod, external=True)
+            self._modules[module_name] = griffe_mod
         griffe_mod = self._modules[module_name]
         return griffe_mod[sub_mod_path] if sub_mod_path else griffe_mod
 
