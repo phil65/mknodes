@@ -13,7 +13,7 @@ from mknodes.data import datatypes
 from mknodes.utils import helpers
 
 
-def get_stack_info(frame, level: int) -> dict | None:
+def get_stack_info(frame: types.FrameType, level: int) -> dict | None:
     for _ in range(level):
         frame = frame.f_back
     if not frame:
