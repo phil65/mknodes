@@ -6,7 +6,7 @@ import dataclasses
 # from typing import Literal
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class AdmonitionType:
     name: str
     svg: str

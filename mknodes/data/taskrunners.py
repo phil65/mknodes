@@ -5,7 +5,7 @@ import dataclasses
 from typing import Literal
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class TaskRunner:
     identifier: TaskRunnerStr
     website: str

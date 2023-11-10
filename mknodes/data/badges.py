@@ -8,7 +8,7 @@ from typing import Literal
 # ![Static Badge](https://img.shields.io/badge/built_with-mknodes-yellow?link=www.pypa.org)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Badge:
     identifier: str
     title: str

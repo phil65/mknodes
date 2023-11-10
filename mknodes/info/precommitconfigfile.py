@@ -36,7 +36,7 @@ class Hook:
         return reprhelpers.get_dataclass_repr(self)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Repository:
     repo: str
     rev: str | None

@@ -12,7 +12,7 @@ logger = log.get_logger(__name__)
 InstallMethodStr = Literal["pip", "pipx", "conda_forge", "homebrew"]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class InstallMethod:
     ID: ClassVar
     project: str

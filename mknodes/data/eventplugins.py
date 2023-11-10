@@ -8,7 +8,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class EventPlugin:
     flow: list[str]
     help_link: str

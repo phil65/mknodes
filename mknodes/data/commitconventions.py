@@ -78,7 +78,7 @@ def get_types(
     return [i for i in TYPES if i.typ in commit_types]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class CommitConvention:
     name: str
     display_name: str

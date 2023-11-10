@@ -8,7 +8,7 @@ import os
 MD_ESCAPE_CHARS = tuple("!#()*+-[\\]_`{}")
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Item:
     level: int
     title: str

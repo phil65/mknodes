@@ -18,7 +18,7 @@ BuildSystemStr = Literal[
 ]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class BuildSystem:
     identifier: BuildSystemStr
     build_backend: str

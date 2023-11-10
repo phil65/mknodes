@@ -17,7 +17,7 @@ TreeStyleStr = Literal[
 ]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class TreeStyle:
     identifier: TreeStyleStr
     filename_middle: str

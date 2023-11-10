@@ -53,7 +53,7 @@ GITHUB_REGEX = re.compile(
 )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class PackageExtra:
     """A class describing a package extra, used to define additional dependencies."""
 
