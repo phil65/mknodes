@@ -25,7 +25,7 @@ jinja = """
 {{ "Title" | MkCard("https://picsum.photos/300", path_dark_mode="https://picsum.photos/200") }}
 """
 
-[output.html]
+[output.markdown]
 template = """
 {% set image = (node.image ~ "#only-light") if node.path_dark_mode else node.image %}
 {% if node.target %}<a href="{{ node.target | get_url }}">

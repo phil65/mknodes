@@ -17,7 +17,7 @@ jinja = """
 {{ "some text" | MkSpeechBubble(arrow=None) }}
 """
 
-[output.html]
+[output.markdown]
 template = """
 <div class="speech{{ node.arrow | add(prefix=' ') }}" markdown="1">{{node.items  | join(node.block_separator) }}</div>
 """
