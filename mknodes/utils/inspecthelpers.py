@@ -116,28 +116,32 @@ def get_file(obj: datatypes.HasCodeType) -> pathlib.Path | None:
     return None
 
 
-def get_argspec(callable_obj) -> inspect.FullArgSpec:
+def get_argspec(callable_obj, remove_self: bool = True) -> inspect.FullArgSpec:
     """Return a cleanup-up FullArgSpec for given callable.
 
     ArgSpec is cleaned up by removing self from method callables.
 
     Arguments:
         callable_obj: A callable python object
+        remove_self: Whether to remove "self" argument from method argspecs
     """
     if inspect.isfunction(callable_obj):
         argspec = inspect.getfullargspec(callable_obj)
     elif inspect.ismethod(callable_obj):
         argspec = inspect.getfullargspec(callable_obj)
-        del argspec.args[0]  # remove "self"
+        if remove_self:
+            del argspec.args[0]
     elif inspect.isclass(callable_obj):
         if callable_obj.__init__ is object.__init__:  # to avoid an error
             argspec = inspect.getfullargspec(lambda self: None)
         else:
             argspec = inspect.getfullargspec(callable_obj.__init__)
-        del argspec.args[0]  # remove "self"
+        if remove_self:
+            del argspec.args[0]
     elif callable(callable_obj):
         argspec = inspect.getfullargspec(callable_obj.__call__)
-        del argspec.args[0]  # remove "self"
+        if remove_self:
+            del argspec.args[0]
     else:
         msg = f"{callable_obj} is not callable"
         raise TypeError(msg)
