@@ -119,9 +119,7 @@ def get_source(obj: datatypes.HasCodeType | griffe.Object) -> str:
     Arguments:
         obj: Object to return source for.
     """
-    if isinstance(obj, griffe.Object):
-        return obj.source
-    return inspect.getsource(obj)
+    return obj.source if isinstance(obj, griffe.Object) else inspect.getsource(obj)
 
 
 @functools.cache

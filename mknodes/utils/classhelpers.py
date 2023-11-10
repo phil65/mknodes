@@ -215,7 +215,7 @@ def to_class(klass: type | str | tuple[str, ...] | list[str]):
 
 
 def to_module_parts(  # type: ignore
-    module: Sequence[str] | str | types.ModuleType,
+    module: Sequence[str] | str | types.ModuleType | griffe.Module,
 ) -> tuple[str, ...]:
     """Returns a tuple describing the module path.
 
@@ -231,6 +231,8 @@ def to_module_parts(  # type: ignore
             return tuple(module.split("."))
         case types.ModuleType():
             return tuple(module.__name__.split("."))
+        case griffe.Module():
+            return tuple(module.path.split("."))
         case pathlib.Path() if not module.is_absolute():
             return module.parts
         case _:
@@ -250,14 +252,12 @@ def to_dotted_path(
             return ".".join(obj)
         case str():
             return obj
-        case griffe.Object():
-            return obj.canonical_path
         case types.ModuleType():
             return obj.__name__
         case type() | Callable():
             return f"{obj.__module__}.{obj.__qualname__}"
         case griffe.Object():
-            return obj.canonical_path
+            return obj.path
         case _:
             raise TypeError(obj)
 
