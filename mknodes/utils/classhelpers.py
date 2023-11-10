@@ -238,7 +238,7 @@ def to_module_parts(  # type: ignore
 
 
 def to_dotted_path(
-    obj: Sequence[str] | str | types.ModuleType | types.MethodType | type,
+    obj: Sequence[str] | str | type | types.ModuleType | types.MethodType | griffe.Object,
 ) -> str:
     """Return dotted path for given input.
 
@@ -250,6 +250,8 @@ def to_dotted_path(
             return ".".join(obj)
         case str():
             return obj
+        case griffe.Object():
+            return obj.canonical_path
         case types.ModuleType():
             return obj.__name__
         case type() | Callable():
