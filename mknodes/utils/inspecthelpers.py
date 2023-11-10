@@ -7,6 +7,8 @@ import itertools
 import pathlib
 import types
 
+import griffe
+
 from mknodes.data import datatypes
 from mknodes.utils import helpers
 
@@ -26,24 +28,26 @@ def get_stack_info(frame, level: int) -> dict | None:
 
 
 @functools.cache
-def get_function_body(func: types.MethodType | types.FunctionType | type) -> str:
+def get_function_body(
+    func: types.MethodType | types.FunctionType | type | griffe.Object,
+) -> str:
     """Get body of given function. Strips off the signature.
 
     Arguments:
         func: Callable to get the body from
     """
     # see https://stackoverflow.com/questions/38050649
-    source_lines, _ = get_source_lines(func)
-    source_lines = itertools.dropwhile(lambda x: x.strip().startswith("@"), source_lines)
-    line = next(source_lines).strip()  # type: ignore
+    src_lines, _ = get_source_lines(func)
+    src_lines = itertools.dropwhile(lambda x: x.strip().startswith("@"), src_lines)
+    line = next(src_lines).strip()  # type: ignore
     if not line.startswith(("def ", "class ")):
         return line.rsplit(":")[-1].strip()
     if not line.endswith(":"):
-        for line in source_lines:
+        for line in src_lines:
             line = line.strip()
             if line.endswith(":"):
                 break
-    return "".join(source_lines)
+    return "".join(src_lines)
 
 
 def get_deprecated_message(obj) -> str | None:
@@ -73,10 +77,15 @@ def get_doc(
         from_base_classes: Use base class docstrings if docstrings dont exist
         only_summary: Only return first line of docstrings
     """
-    if from_base_classes:
-        doc = inspect.getdoc(obj)
-    else:
-        doc = inspect.cleandoc(obj.__doc__) if isinstance(obj.__doc__, str) else None
+    match obj:
+        case griffe.Object():
+            doc = obj.docstring.value if obj.docstring else None
+        case _ if from_base_classes:
+            doc = inspect.getdoc(obj)
+        case _ if obj.__doc__:
+            doc = inspect.cleandoc(obj.__doc__)
+        case _:
+            doc = None
     if not doc:
         return fallback
     if only_summary:
@@ -85,64 +94,78 @@ def get_doc(
 
 
 @functools.cache
-def get_source(obj: datatypes.HasCodeType) -> str:
+def get_source(obj: datatypes.HasCodeType | griffe.Object) -> str:
     """Cached wrapper for inspect.getsource.
 
     Arguments:
         obj: Object to return source for.
     """
+    if isinstance(obj, griffe.Object):
+        return obj.source
     return inspect.getsource(obj)
 
 
 @functools.cache
-def get_source_lines(obj: datatypes.HasCodeType) -> tuple[list[str], int]:
+def get_source_lines(
+    obj: datatypes.HasCodeType | griffe.Object,
+) -> tuple[list[str], int]:
     """Cached wrapper for inspect.getsourcelines.
 
     Arguments:
         obj: Object to return source lines for.
     """
+    if isinstance(obj, griffe.Object):
+        return (obj.source.split("\n"), obj.lineno or 0)
     return inspect.getsourcelines(obj)
 
 
 @functools.cache
-def get_file(obj: datatypes.HasCodeType) -> pathlib.Path | None:
+def get_file(obj: datatypes.HasCodeType | griffe.Object) -> pathlib.Path | None:
     """Cached wrapper for inspect.getfile.
 
     Arguments:
         obj: Object to get file for
     """
+    if isinstance(obj, griffe.Object):
+        return fp[0] if isinstance(fp := obj.filepath, list) else fp
     with contextlib.suppress(TypeError):
         return pathlib.Path(inspect.getfile(obj))
     return None
 
 
-def get_argspec(callable_obj, remove_self: bool = True) -> inspect.FullArgSpec:
+def get_argspec(obj, remove_self: bool = True) -> inspect.FullArgSpec:
     """Return a cleanup-up FullArgSpec for given callable.
 
     ArgSpec is cleaned up by removing self from method callables.
 
     Arguments:
-        callable_obj: A callable python object
+        obj: A callable python object
         remove_self: Whether to remove "self" argument from method argspecs
     """
-    if inspect.isfunction(callable_obj):
-        argspec = inspect.getfullargspec(callable_obj)
-    elif inspect.ismethod(callable_obj):
-        argspec = inspect.getfullargspec(callable_obj)
+    # if isinstance(obj, griffe.Function):
+    #     args = [i for i in obj.parameters if i.kind == "positional-only"]
+    #     varargs = [i for i in obj.parameters if i.kind == "variadic positional"]
+    #     varkw = [i for i in obj.parameters if i.kind == "variadic keyword"]
+    #     kw_only = [i for i in obj.parameters if i.kind == "keyword-only"]
+    #     spec = inspect.FullArgSpec(args, varargs, varkw, (), kw_only)
+    if inspect.isfunction(obj):
+        argspec = inspect.getfullargspec(obj)
+    elif inspect.ismethod(obj):
+        argspec = inspect.getfullargspec(obj)
         if remove_self:
             del argspec.args[0]
-    elif inspect.isclass(callable_obj):
-        if callable_obj.__init__ is object.__init__:  # to avoid an error
+    elif inspect.isclass(obj):
+        if obj.__init__ is object.__init__:  # to avoid an error
             argspec = inspect.getfullargspec(lambda self: None)
         else:
-            argspec = inspect.getfullargspec(callable_obj.__init__)
+            argspec = inspect.getfullargspec(obj.__init__)
         if remove_self:
             del argspec.args[0]
-    elif callable(callable_obj):
-        argspec = inspect.getfullargspec(callable_obj.__call__)
+    elif callable(obj):
+        argspec = inspect.getfullargspec(obj.__call__)
         if remove_self:
             del argspec.args[0]
     else:
-        msg = f"{callable_obj} is not callable"
+        msg = f"{obj} is not callable"
         raise TypeError(msg)
     return argspec
