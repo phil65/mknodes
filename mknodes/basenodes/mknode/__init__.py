@@ -123,9 +123,11 @@ class MkNode(node.Node):
             return False
         dct_1 = self.__dict__.copy()
         dct_2 = other.__dict__.copy()
-        for attr in ["_parent"]:  # , "_annotations"]
-            dct_1.pop(attr)
-            dct_2.pop(attr)
+        for attr in ["_parent", "env"]:  # , "_annotations"]
+            if attr in dct_1:
+                dct_1.pop(attr)
+            if attr in dct_2:
+                dct_2.pop(attr)
         return dct_1 == dct_2
 
     def __rshift__(self, other, inverse: bool = False):

@@ -124,7 +124,7 @@ class Node:
             return None
         children = self._parent.children
         if child_idx := children.index(self):
-            return self._parent.children[child_idx - 1]
+            return children[child_idx - 1]
         return None
 
     @property
@@ -135,7 +135,7 @@ class Node:
         children = self._parent.children
         child_idx = children.index(self)
         if child_idx + 1 < len(children):
-            return self._parent.children[child_idx + 1]
+            return children[child_idx + 1]
         return None
 
     @property
