@@ -32,3 +32,30 @@ title = "Separate dark mode image"
 jinja = """
 {{ "https://picsum.photos/200" | MkImage(path_dark_mode="https://picsum.photos/300") }}
 """
+
+[output.markdown]
+template = """
+{% if node.path_dark_mode %}
+{% set markdown_link = node._build(node.path_dark_mode, 'dark') ~ " " ~ node._build(node.path, 'light') %}
+{% else %}
+{% set markdown_link = node._build(node.path) %}
+{% endif %}
+{% if node.caption %}
+<figure markdown>
+  {{ markdown_link }}
+  <figcaption>{{ node.caption }}</figcaption>
+</figure>
+{% else %}
+{{ markdown_link }}{% endif %}
+"""
+
+# [output.github]
+# template = """
+# <picture>
+# {% if node.path_dark_mode %}
+#  <source media="(prefers-color-scheme: dark)" srcset="{{ node.path_dark_mode }}">
+#  <source media="(prefers-color-scheme: light)" srcset="{{ node.path }}">
+# {% endif %}
+#  <img alt="{{ node.caption }}" src="{{ node.path }}">
+# </picture>
+# """
