@@ -62,7 +62,7 @@ def get_deprecated_message(obj) -> str | None:
         ]
         if paths:
             p = str(paths[0].value)
-            return p[p.find("(") + 1 : p.find(")")]
+            return p[p.find("(") + 2 : p.find(")") - 1]
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
