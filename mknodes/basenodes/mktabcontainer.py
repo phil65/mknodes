@@ -39,13 +39,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             case list():
                 items = tabs
             case _:
-                items = [
-                    self.Tab(
-                        title=k,
-                        content=mktext.MkText(v) if isinstance(v, str) else v,
-                    )
-                    for k, v in tabs.items()
-                ]
+                items = [self.Tab(title=k, content=v) for k, v in tabs.items()]
         self.select_tab = select_tab
         super().__init__(content=items, header=header, **kwargs)
         self.block_separator = "\n"
@@ -121,13 +115,10 @@ class MkTabContainer(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            tabs=self.to_dict(),
+            tabs=self.items,
             select_tab=self.select_tab,
             _filter_empty=True,
         )
-
-    def to_dict(self) -> dict[str, str]:
-        return {tab.title: "\n\n".join(str(i) for i in tab.items) for tab in self.items}
 
     def _to_markdown(self) -> str:
         if not self.items:
