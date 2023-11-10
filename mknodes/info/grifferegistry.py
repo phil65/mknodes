@@ -116,7 +116,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
             kls_name = f"{sub_mod_path}.{qual_name}" if sub_mod_path else qual_name
         else:
             parts = klass.split(".", 1)
-            mod_name, kls_name = parts if len(parts) > 1 else "builtins", parts[0]
+            mod_name, kls_name = parts if len(parts) > 1 else ("builtins", parts[0])
         module = self.get_module(mod_name, docstring_style=docstring_style)
         return module[kls_name]
 
