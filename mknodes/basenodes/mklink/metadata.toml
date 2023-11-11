@@ -41,3 +41,8 @@ jinja = """
 template = """
 [{{ node.icon | add(suffix=" ") }}{{ node.title }}]({{ node.url }}{{ node.tooltip | add(prefix=" '", suffix="'")}})
 """
+
+# [output.rst]
+# template = """
+# `{{ node.title }} <{{ node.url }}>`_
+# """

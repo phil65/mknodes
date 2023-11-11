@@ -51,13 +51,19 @@ template = """
 
 # [output.block]
 # template = """
-# /// admonition {{ node.typ }} | {{ node.title }}
+# {{ node.fence_boundary }} admonition {{ node.typ }} | {{ node.title }}
 # {{ node.items | join }}
-# ///
+# {{ node.fence_boundary }}
 # """
 
 # [output.github]
 # template = """
 # > [!{{ node.typ | upper }}]\
 # {{ node.items | join | indent(width="> ", first=True) }}
+# """
+
+# [output.rst]
+# template = """
+# .. {{ self.typ }}:: {{ node.title }}
+# {{ node.items | join(node.block_separator) | indent(first=True) }}
 # """
