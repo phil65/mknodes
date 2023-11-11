@@ -13,3 +13,50 @@ title = "SubCommand"
 jinja = """
 {{ "mkdocs_mknodes.cli:cli" | MkClickDoc(prog_name="build") }}
 """
+
+[fragments]
+param_template = """
+### {{ param.opt_str }}
+
+{% if param.required %}
+"{{ "REQUIRED" | styled(bold=True) }}"
+{% endif %}
+{% if param.envvar %}
+Environment variable{{ param.envvar }}
+{% endif %}
+{% if param.multiple %}
+{{ "Multiple values allowed." | styled(bold=True) }}
+{% endif %}
+{% if param.default %}
+{{ "Default:" | styled(bold=True) }} {{ param.default }}
+{% endif %}
+{% if param.is_flag %}
+{{ "mdi:flag" | MkMaterialBadge("Flag") }}
+{% endif %}
+{% if param.help %}
+{{ param.help }}
+{% endif %}
+"""
+command_template = """
+## {{ info.name }}
+
+{{ info.description }}
+
+{{ info.usage | MkCode }}
+
+{% for param in info.params %}
+{{ "fragments/param_template" | render_template(param=param) }}
+
+{% endfor %}
+
+"""
+
+[output.markdown]
+template = """
+{{ "fragments/command_template" | render_template(info=node.info) }}
+{% if node.show_subcommands %}
+{% for sub_info in node.info.subcommands.values() %}
+{{ "fragments/command_template" | render_template(info=sub_info) }}
+{% endfor %}
+{% endif %}
+"""

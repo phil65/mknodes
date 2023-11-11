@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mknode
+from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
-from mknodes.info.cli import clihelpers
+from mknodes.info.cli import clihelpers, commandinfo
 
 logger = log.get_logger(__name__)
 
 
-class MkClickDoc(mknode.MkNode):
+class MkClickDoc(mktemplate.MkTemplate):
     """Node for showing documentation for click / typer CLI apps."""
 
     ICON = "material/api"
@@ -32,55 +32,30 @@ class MkClickDoc(mknode.MkNode):
             show_subcommands: List subcommands of a given command.
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__("output/markdown/template", **kwargs)
         self.target = target
         self.prog_name = prog_name
         self.show_hidden = show_hidden
         self.show_subcommands = show_subcommands
-        self.template = "mkclickdoc_template.jinja"
 
     @property
-    def attributes(self) -> dict[str, Any]:
-        # sourcery skip: use-named-expression
-        dct: dict[str, Any] = {}
+    def info(self) -> commandinfo.CommandInfo | None:
+        import importlib
+
         match self.target:
             case str():
                 module, command = self.target.split(":")
-                dct = dict(module=module, command=command, prog_name=self.prog_name)
+                prog_name = self.prog_name
             case None:
                 if cli_eps := self.ctx.metadata.entry_points.get("console_scripts"):
                     module, command = cli_eps[0].dotted_path.split(":")
-                    dct = dict(module=module, command=command, prog_name=cli_eps[0].name)
-        return dct
-
-    @property
-    def children(self):
-        self._to_markdown()
-        return self.env.rendered_children
-
-    @children.setter
-    def children(self, val):
-        pass
-
-    def _to_markdown(self) -> str:
-        import importlib
-
-        attrs = self.attributes
-        if not attrs:
-            return ""
-        mod = importlib.import_module(attrs["module"])
-        instance = getattr(mod, attrs["command"])
-
-        def info_to_md(info, recursive: bool = False) -> str:
-            cmd_text = self.env.render_template(self.template, variables={"info": info})
-            if not recursive:
-                return cmd_text
-            vals = info.subcommands.values()
-            children_text = "\n".join(info_to_md(i, recursive=True) for i in vals)
-            return cmd_text + children_text
-
-        info = clihelpers.get_cli_info(instance, command=attrs["prog_name"])
-        return info_to_md(info, recursive=self.show_subcommands)
+                    prog_name = cli_eps[0].name
+                return None
+            case _:
+                raise TypeError(self.target)
+        mod = importlib.import_module(module)
+        instance = getattr(mod, command)
+        return clihelpers.get_cli_info(instance, command=prog_name)
 
     @classmethod
     def create_example_page(cls, page):
@@ -93,5 +68,5 @@ class MkClickDoc(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc.with_context("mkdocs_mknodes.cli:cli")
+    docstrings = MkClickDoc.with_context("mkdocs_mknodes.cli:cli", show_subcommands=True)
     print(docstrings)
