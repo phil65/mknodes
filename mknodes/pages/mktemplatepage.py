@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import abc
 import os
 
 from typing import Any
@@ -12,7 +11,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkTemplatePage(mkpage.MkPage, metaclass=abc.ABCMeta):
+class MkTemplatePage(mkpage.MkPage):
     """MkPage subclass used for rendering templates."""
 
     def __init__(
