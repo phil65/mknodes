@@ -11,6 +11,7 @@ class TaskRunner:
     website: str
     filenames: list[str]
     help_cmd: list[str]
+    logo: str | None = None
 
 
 TaskRunnerStr = Literal["makefile", "task", "just", "duty", "invoke", "doit"]
@@ -32,6 +33,7 @@ TaskRunnerStr = Literal["makefile", "task", "just", "duty", "invoke", "doit"]
 makefile = TaskRunner(
     identifier="makefile",
     website="https://www.gnu.org/software/make/manual/make.html",
+    logo="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Official_gnu.svg/2048px-Official_gnu.svg.png",
     filenames=["Makefile"],
     help_cmd=["make", "help"],
 )
@@ -39,6 +41,7 @@ makefile = TaskRunner(
 task = TaskRunner(
     identifier="task",
     website="https://taskfile.dev/",
+    logo="https://taskfile.dev/img/logo.svg",
     filenames=[
         "Taskfile.yml",
         "taskfile.yml",
@@ -76,6 +79,7 @@ invoke = TaskRunner(
 doit = TaskRunner(
     identifier="doit",
     website="http://pydoit.org",
+    logo="https://pydoit.org/_static/doit-logo.png",
     filenames=["dodo.py"],
     help_cmd=["doit", "list"],
 )
