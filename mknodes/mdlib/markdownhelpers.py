@@ -29,7 +29,7 @@ class CustomFence:
         # import mknodes as mk
 
         # node_kls = getattr(mk, language)
-        # print(f"{language=} {css_class=} {options=} {classes=} {id_value=} {attrs=}")
+        print(f"{language=} {css_class=} {options=} {classes=} {id_value=} {attrs=}")
         try:
             return md.convert(source)
         except Exception:
@@ -48,13 +48,11 @@ def generate_fences():
 
 
 if __name__ == "__main__":
+    from mknodes.mdlib import mdconverter
+
     fence = CustomFence(extensions=[])
-    fence_dct = {"name": "ab", "class": "ab", "format": fence.custom_formatter}
-    config = {"custom_fences": generate_fences()}
-    md = markdown.Markdown(
-        extensions=["pymdownx.superfences", "attr_list"],
-        extension_configs={"pymdownx.superfences": config},
-    )
+    fences = generate_fences()
+    md = mdconverter.MdConverter(extensions=["attr_list"], custom_fences=fences)
     text = "```{.MkText shift_header_levels=1}\ntest\n```"
     result = md.convert(text)
     print(result)
