@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mkcode, mkcontainer, mkheader, mknode, mktext
+from mknodes.templatenodes import mktemplate
 from mknodes.data import installmethods
 from mknodes.utils import log
 
@@ -10,7 +10,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkInstallGuide(mkcontainer.MkContainer):
+class MkInstallGuide(mktemplate.MkTemplate):
     """Node to display an install guide."""
 
     ICON = "material/help"
@@ -32,7 +32,7 @@ class MkInstallGuide(mkcontainer.MkContainer):
             header_level: Header level for each section
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__("output/markdown/template", **kwargs)
         self._distribution = distribution
         self.header_level = header_level
         self._package_repos = package_repos
@@ -52,33 +52,11 @@ class MkInstallGuide(mkcontainer.MkContainer):
         self._distribution = value
 
     @property
-    def items(self) -> list[mknode.MkNode]:
+    def install_methods(self):
         if not self.distribution:
             return []
         klasses = [installmethods.InstallMethod.by_id(i) for i in self.package_repos]
-        methods = [i(self.distribution) for i in klasses]
-        return [self.get_section_for(method) for method in methods]
-
-    @items.setter
-    def items(self, value):
-        pass
-
-    def get_section_for(
-        self,
-        method: installmethods.InstallMethod,
-    ) -> mkcontainer.MkContainer:
-        items = [
-            mkheader.MkHeader(method.ID, level=self.header_level),
-            mktext.MkText(method.info_text()),
-            mkcode.MkCode(method.install_instructions()),
-        ]
-        # proj = self.associated_distribution
-        # if method.ID == "pip" and proj and (extras := proj.info.extras):
-        #     extras_str = ",".join(extras)
-        #     text = f"{method.install_instructions()}[{extras_str}]"
-        #     code = mkcode.MkCode(text)
-        #     items.append(code)
-        return mkcontainer.MkContainer(items, parent=self)
+        return [i(self.distribution) for i in klasses]
 
     @classmethod
     def create_example_page(cls, page):
