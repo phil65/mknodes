@@ -86,8 +86,6 @@ if __name__ == "__main__":
 
     import markdown
 
-    from markdown.extensions import toc
-
     from mknodes.treelib import node
 
     TEXT = "# **test**\n\n### test3\n\n## tsexx\n\n# tsexx\n"
@@ -114,4 +112,5 @@ if __name__ == "__main__":
         {"level": len(match[1]), "name": match[2], "cleaned": stripped(match[2])}
         for match in pat.finditer(TEXT)
     ]
-    print(toc.nest_toc_tokens(items))
+    # from markdown.extensions import toc
+    # print(toc.nest_toc_tokens(items))

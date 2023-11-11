@@ -43,12 +43,10 @@ jinja = """
 # {% endif %}
 # {{ node.description }}
 
-# {% if node.setting %}
-# if isinstance(node.setting, dict):
-#     code = superdict.SuperDict(node.setting).serialize(mode=node.mode)
-# else:
-#     code = node.setting
-# code | MkCode(language=node.mode)
+# {% if node.setting is instance("dict") %}
+# {{ node.setting | serialize(mode=node.mode) | MkCode(language=node.mode) }}
+# {% else %}
+# {{ node.setting | MkCode(language=node.mode) }}
 # {% endif %}
 
 # """
