@@ -1,12 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-
-import jinja2
-import jinjarope
-
-from jinjarope import loaders
-
 from mknodes.info import yamlfile
 
 
@@ -65,18 +58,6 @@ class MkDocsConfigFile(yamlfile.YamlFile):
                 if clone_depth is not None:
                     plugin["mknodes"]["clone_depth"] = clone_depth
 
-    def get_loaders(self) -> Sequence[jinja2.BaseLoader]:
-        jinja_loaders: list[jinja2.BaseLoader] = [
-            jinjarope.get_loader(self._data.get("docs_dir", "docs")),
-        ]
-        loader_list = self.mknodes_config.get("loaders", [])
-        for loader_dct in loader_list:
-            dct = loader_dct.copy()
-            kls = loaders.LOADERS[dct.pop("type")]
-            loader = kls(**dct)
-            jinja_loaders.append(loader)
-        return jinja_loaders
-
     def get_inventory_infos(self) -> list[dict]:
         """Returns list of dicts containing inventory info.
 
@@ -97,4 +78,3 @@ class MkDocsConfigFile(yamlfile.YamlFile):
 
 if __name__ == "__main__":
     info = MkDocsConfigFile("mkdocs.yml")
-    print(info.get_loaders())
