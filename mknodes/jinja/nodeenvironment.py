@@ -112,6 +112,7 @@ class NodeEnvironment(jinjarope.Environment):
         variables: dict[str, Any] | None = None,
         block_name: str | None = None,
         parent_template: str | None = None,
+        **kwargs: Any,
     ) -> str:
         """Render a loaded template.
 
@@ -122,6 +123,7 @@ class NodeEnvironment(jinjarope.Environment):
             variables: Extra variables for this render call
             block_name: Render specific block from the template
             parent_template: The name of the parent template importing this template
+            kwargs: Additional variables for the render call
         """
         # if pathlib.Path(template_name).as_posix() not in self.list_templates():
         #     self.add_template(template_name)
@@ -133,11 +135,17 @@ class NodeEnvironment(jinjarope.Environment):
             variables=variables,
             block_name=block_name,
             parent_template=parent_template,
+            **kwargs,
         )
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
-    def render_string(self, markdown: str, variables: dict | None = None) -> str:
+    def render_string(
+        self,
+        markdown: str,
+        variables: dict | None = None,
+        **kwargs: Any,
+    ) -> str:
         """Render a template string.
 
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
@@ -145,11 +153,12 @@ class NodeEnvironment(jinjarope.Environment):
         Arguments:
             markdown: String to render
             variables: Extra variables for the environment
+            kwargs: Additional variables for the render call
         """
         self.rendered_nodes = []
         self.setup_environment()
         # self.update_env_from_context()
-        result = super().render_string(markdown, variables)
+        result = super().render_string(markdown, variables, **kwargs)
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
