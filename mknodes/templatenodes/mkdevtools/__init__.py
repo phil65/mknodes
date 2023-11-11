@@ -4,7 +4,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import tools
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -32,9 +32,6 @@ class MkDevTools(mkcontainer.MkContainer):
         super().__init__(**kwargs)
         self._tools = tools
 
-    def __repr__(self):
-        return reprhelpers.get_repr(self, tools=self._tools, _filter_empty=True)
-
     @property
     def tools(self) -> list[tools.Tool]:  # type: ignore[return]
         match self._tools:
@@ -51,7 +48,7 @@ class MkDevTools(mkcontainer.MkContainer):
 
         items = []
         for t in self.tools:
-            cfg_node = mk.MkCode(t.cfg or "", language=t.config_syntax)
+            cfg_node = mk.MkCode(t.cfg["content"] or "", language=t.cfg["syntax"])
             code = mk.MkCode(f"pip install {t.identifier}", language="bash")
             link = mk.MkLink(t.url, "More information")
             in_adm = [f"To install {t.identifier}:", code, link]
@@ -80,5 +77,5 @@ class MkDevTools(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    setup_text = MkDevTools(build_backend="flit")
+    setup_text = MkDevTools.with_context()
     print(setup_text)

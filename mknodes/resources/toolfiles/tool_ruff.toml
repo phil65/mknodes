@@ -1,10 +1,8 @@
-[metadata]
 identifier = "ruff"
 title = "Ruff"
 url = "https://beta.ruff.rs/"
-config_syntax = "toml"
 pre_commit_repo = "https://github.com/charliermarsh/ruff-pre-commit"
-install_command = """
+setup_cmd = """
 {{ metadata.build_system.run_prefix }}ruff --help
 """
 description = """
@@ -12,6 +10,6 @@ description = """
 `pyproject.toml` file.
 """
 
-[[config]]
+[[configs]]
 type = "pyproject"
 section = "ruff"

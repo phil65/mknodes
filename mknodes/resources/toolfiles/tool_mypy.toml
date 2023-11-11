@@ -3,7 +3,7 @@ title = "MyPy"
 url = "https://mypy-lang.org"
 logo = "https://github.com/python/mypy/raw/master/docs/source/mypy_light.svg"
 pre_commit_repo = "https://github.com/pre-commit/mirrors-mypy"
-install_command = """
+setup_cmd = """
 {{ metadata.build_system.run_prefix }}mypy --help
 """
 description = """
@@ -11,6 +11,6 @@ description = """
 `pyproject.toml` file.
 """
 
-[[config]]
+[[configs]]
 type = "pyproject"
 section = "mypy"

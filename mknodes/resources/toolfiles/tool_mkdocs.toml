@@ -2,7 +2,7 @@ identifier = "mkdocs"
 title = "MkDocs"
 url = "https://mkdocs.org/"
 logo = "https://avatars.githubusercontent.com/u/9692741?s=200&v=4"
-install_command = """
+setup_cmd = """
 {{ metadata.build_system.run_prefix }}ruff --help
 """
 description = """
@@ -10,6 +10,6 @@ description = """
 `pyproject.toml` file.
 """
 
-[[config]]
+[[configs]]
 type = "pyproject"
 section = "ruff"

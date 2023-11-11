@@ -28,7 +28,7 @@ template = """
 {{ tool.setup_cmd | MkCode(language="md")}}
 
 {% endif %}
-{{ (tool.cfg or "") | MkCode(language=tool.config_syntax) | MkAdmonition(collapsible=True, title="Config", typ="quote") }}
+{{ (tool.cfg.content or "") | MkCode(language=tool.cfg.syntax) | MkAdmonition(collapsible=True, title="Config", typ="quote") }}
 
 {{ ["To install " ~ tool.identifier ~ ":",
     ("pip install " ~ tool.identifier) | MkCode(language="bash"),

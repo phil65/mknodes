@@ -3,8 +3,8 @@ title = "Black"
 url = "https://github.com/psf/black"
 logo = "https://raw.githubusercontent.com/psf/black/main/docs/_static/logo2-readme.png"
 config_syntax = "toml"
-pre_commit_config = "https://github.com/psf/black-pre-commit-mirror"
-install_command = """
+pre_commit_repo = "https://github.com/psf/black-pre-commit-mirror"
+setup_cmd = """
 {{ metadata.build_system.run_prefix }}black .
 """
 description = """
@@ -12,6 +12,6 @@ description = """
 the `pyproject.toml` file.
 """
 
-[[config]]
+[[configs]]
 type = "pyproject"
 section = "pyright"

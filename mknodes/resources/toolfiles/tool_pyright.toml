@@ -3,7 +3,7 @@ title = "PyRight"
 url = "https://microsoft.github.io/pyright/"
 logo = "https://github.com/microsoft/pyright/raw/main/docs/img/PyrightLarge.png"
 pre_commit_repo = "https://github.com/RobertCraigie/pyright-python"
-install_command = """
+setup_cmd = """
 {{ metadata.build_system.run_prefix }}pyright --help
 """
 description = """
@@ -11,6 +11,6 @@ description = """
 `pyproject.toml` file.
 """
 
-[[config]]
+[[configs]]
 type = "pyproject"
 section = "pyright"
