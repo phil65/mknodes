@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import abc
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, MutableMapping
 import dataclasses
 import datetime
 import pathlib
@@ -261,6 +261,31 @@ class GitHubContext(Context):
     """The GitHub username."""
     twitter_username: str | None = None
     """The twitter username."""
+
+
+@dataclasses.dataclass
+class EnvironmentContext(MutableMapping, metaclass=abc.ABCMeta):
+    loader: dict = dataclasses.field(default_factory=dict)
+    block_start_string: str | None = None
+    block_end_string: str | None = None
+    variable_start_string: str | None = None
+    variable_end_string: str | None = None
+    undefined: str | None = None
+
+    def __getitem__(self, value):
+        return getattr(self, value)
+
+    def __setitem__(self, index, value):
+        setattr(self, index, value)
+
+    def __delitem__(self, index):
+        setattr(self, index, None)
+
+    def __len__(self):
+        return len(dataclasses.fields(self))
+
+    def __iter__(self):
+        return iter(i.name for i in dataclasses.fields(self))
 
 
 @dataclasses.dataclass
