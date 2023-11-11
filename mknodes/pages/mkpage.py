@@ -227,6 +227,7 @@ class MkPage(mkcontainer.MkContainer):
     def from_file(
         cls,
         path: str | os.PathLike,
+        *,
         title: str | None = None,
         parent: mknode.MkNode | None = None,
         **kwargs: Any,

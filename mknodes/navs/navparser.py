@@ -36,7 +36,7 @@ def str2node(
     path: str | os.PathLike,
     name: str | None = None,
     parent: mk.MkNode | None = None,
-    **kwargs,
+    **kwargs: Any,
 ) -> mk.MkPage | mk.MkNav:
     """Parse given path, check for our -> syntax, and return a MkPage / MkNav.
 
