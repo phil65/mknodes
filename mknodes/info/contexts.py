@@ -213,7 +213,8 @@ class PackageContext(Context):
     )
     """The tool section of the pyproject file.
 
-    Comes as a SuperDict. (A Mutable mapping with extended capabilities) *[pyproject]*"""
+    Comes as a SuperDict. (A Mutable mapping with extended capabilities) *[pyproject]*
+    """
     line_length: int | None = None
     """The line length, if defined by any popular tool *[pyproject]*"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
@@ -224,7 +225,8 @@ class PackageContext(Context):
         default_factory=list,
     )
     """Package repositories the distribution is distributed on.
-    Defined in pyproject mknodes section *[pyproject]*"""
+    Defined in pyproject mknodes section *[pyproject]*
+    """
 
 
 @dataclasses.dataclass
@@ -265,8 +267,7 @@ class GitHubContext(Context):
 class ContextConfig(Mapping, metaclass=abc.ABCMeta):
     repo_url: str = "."
     clone_depth: int = 100
-    jinja_extensions: list[str] = dataclasses.field(default_factory=list)
-    jinja_loaders: list[dict] = dataclasses.field(default_factory=list)
+    jinja_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
     build_fn: str | Callable = paths.DEFAULT_BUILD_FN
     base_url: str = ""
     use_directory_urls: bool = True
