@@ -33,7 +33,7 @@ jinja = """
 # ## {{ plg.__name__ }}
 # {% for event in node.hooks_for_plugin(plg) %}
 # {% if plg | hasattr(event) %}
-# {{ "fragments/bubble" | render_template(variables={"fn": plg | attr(event)}) | MkSpeechBubble(arrow=None if loop.last else "bottom") }}
+# {{ "fragments/bubble" | render_template(fn=(plg | attr(event))) | MkSpeechBubble(arrow=None if loop.last else "bottom") }}
 # {% endif %}
 # {% endfor %}
 # {% endfor %}

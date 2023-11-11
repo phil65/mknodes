@@ -142,7 +142,7 @@ class NodeEnvironment(jinjarope.Environment):
 
     def render_string(
         self,
-        markdown: str,
+        string: str,
         variables: dict | None = None,
         **kwargs: Any,
     ) -> str:
@@ -151,14 +151,14 @@ class NodeEnvironment(jinjarope.Environment):
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
 
         Arguments:
-            markdown: String to render
+            string: String to render
             variables: Extra variables for the environment
             kwargs: Additional variables for the render call
         """
         self.rendered_nodes = []
         self.setup_environment()
         # self.update_env_from_context()
-        result = super().render_string(markdown, variables, **kwargs)
+        result = super().render_string(string, variables, **kwargs)
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
