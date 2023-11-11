@@ -74,7 +74,7 @@ def str2node(
         page = mk.MkPage(name, parent=parent, **kwargs)
         page += mk.MkText(path, render_jinja=True)
         return page
-    return mk.MkPage.from_file(path, title=name, **kwargs)
+    return mk.MkPage.from_file(path, title=name, parent=parent, **kwargs)
 
 
 def from_list(
