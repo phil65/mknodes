@@ -28,7 +28,7 @@ class MkDefaultWebsite(mk.MkNav):
         self.page_template.announcement_bar = mk.MkMetadataBadges("websites")
         if self.ctx.metadata.cli:
             page = self.add_page("CLI", hide="nav")
-            page += mk.MkClickDoc(show_subcommands=True)
+            page += mk.MkCliDoc(show_subcommands=True)
 
         nav = self.add_nav("Development")
 

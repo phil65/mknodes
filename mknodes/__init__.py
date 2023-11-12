@@ -18,7 +18,7 @@ from .basenodes.mkkeys import MkKeys
 from .basenodes.mkcontainer import MkContainer
 from .basenodes.mkcode import MkCode
 from .basenodes._mkdocstrings import MkDocStrings
-from .basenodes.mkclickdoc import MkClickDoc
+from .basenodes.mkclidoc import MkCliDoc
 from .basenodes.mkicon import MkIcon
 from .basenodes.mkimage import MkImage
 from .basenodes.mkmaterialbadge import MkMaterialBadge
@@ -101,7 +101,7 @@ __all__ = [
     "MkContainer",
     "MkNav",
     "MkDocStrings",
-    "MkClickDoc",
+    "MkCliDoc",
     "MkText",
     "MkKeys",
     # "MkGrid",

@@ -10,7 +10,7 @@ from mknodes.info.cli import clihelpers, commandinfo
 logger = log.get_logger(__name__)
 
 
-class MkClickDoc(mktemplate.MkTemplate):
+class MkCliDoc(mktemplate.MkTemplate):
     """Node for showing documentation for click / typer CLI apps."""
 
     ICON = "material/api"
@@ -65,12 +65,12 @@ class MkClickDoc(mktemplate.MkTemplate):
     def create_example_page(cls, page):
         import mknodes as mk
 
-        node = MkClickDoc(target="mkdocs_mknodes.cli:cli")
+        node = MkCliDoc(target="mkdocs_mknodes.cli:cli")
         page += mk.MkReprRawRendered(node)
-        node = MkClickDoc(target="mkdocs_mknodes.cli:cli", prog_name="build")
+        node = MkCliDoc(target="mkdocs_mknodes.cli:cli", prog_name="build")
         page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":
-    docstrings = MkClickDoc.with_context("mkdocs_mknodes.cli:cli", show_subcommands=True)
+    docstrings = MkCliDoc.with_context("mkdocs_mknodes.cli:cli", show_subcommands=True)
     print(docstrings)

@@ -43,7 +43,7 @@ DOCUMENTATION_NODES = [
     mk.MkClassTable,
     mk.MkModuleTable,
     mk.MkPluginFlow,
-    mk.MkClickDoc,
+    mk.MkCliDoc,
 ]
 
 ABOUT_THE_PROJECT_NODES = [
