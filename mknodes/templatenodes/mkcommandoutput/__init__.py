@@ -59,7 +59,7 @@ class MkCommandOutput(mknode.MkNode):
         import mknodes as mk
 
         if os.environ.get("CI"):
-            node = MkCommandOutput(["make", "help"])
+            node = MkCommandOutput(["mknodes", "--help"])
             node = mk.MkReprRawRendered(node)
         else:
             node = mk.MkHeader("Sadly breaks log output ATM, so only triggered in CI")

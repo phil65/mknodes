@@ -4,6 +4,7 @@ icon = "mdi:code-json"
 group = "documentation"
 
 # [examples.regular]
+# condition = "{{ 'CI' | getenv }}"
 # title = "Regular"
 # jinja = """
 # {{ "mknodes/data/tools.py" | MkPyDeps(max_bacon=1, max_module_depth=1) }}

@@ -5,6 +5,13 @@ name = "MkCommandOutput"
 [[resources.css]]
 filename = "terminal.css"
 
+[examples.regular]
+condition = "{{ 'CI' | getenv }}"
+title = "Regular"
+jinja = """
+["mknodes", "--help"] | MkCommandOutput
+"""
+
 [output.html]
 template = """
 <div data-terminal>
