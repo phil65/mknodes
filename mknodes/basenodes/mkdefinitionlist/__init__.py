@@ -99,13 +99,8 @@ class MkDefinitionList(mkcontainer.MkContainer):
                 raise TypeError(data)
 
     def _to_markdown(self) -> str:
-        result = []
-        for k, v in self.data.items():
-            lines = str(v).split("\n")
-            result.extend([str(k), f":   {lines[0]}"])
-            result.extend(f"    {i}" for i in lines[1:])
-            result.append("")
-        return "\n".join(result) + "\n"
+        items = [f"{k}\n:   {filters.do_indent(str(v))}\n" for k, v in self.data.items()]
+        return "".join(items)
 
     @classmethod
     def create_example_page(cls, page):

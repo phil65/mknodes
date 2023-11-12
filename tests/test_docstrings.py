@@ -8,7 +8,8 @@ EXPECTED_IN_ANNOTATIONS = """\
         options:
           docstring_section_style: 'list'
           show_root_heading: True
-    \n"""
+
+"""
 
 
 def test_docstrings():

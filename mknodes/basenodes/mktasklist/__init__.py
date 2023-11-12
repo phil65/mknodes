@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from jinja2 import filters
+
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, resources
 
@@ -32,11 +34,9 @@ class MkTask(mkcontainer.MkContainer):
         self.value = value
 
     def _to_markdown(self) -> str:
-        lines = super()._to_markdown().split("\n")
+        text = super()._to_markdown()
         val = "x" if self.value else " "
-        result = [f"- [{val}] {lines[0]}"]
-        result.extend(f"      {i}" for i in lines[1:])
-        return "\n".join(result) + "\n"
+        return f"- [{val}] {filters.do_indent(str(text))}\n"
 
 
 class MkTaskList(mkcontainer.MkContainer):

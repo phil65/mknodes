@@ -3,6 +3,8 @@ from __future__ import annotations as _annotations
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
+from jinja2 import filters
+
 from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, reprhelpers, resources
 
@@ -40,11 +42,8 @@ class MkAnnotation(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
-        lines = item_str.split("\n")
         space = (3 - len(str(self.num))) * " "
-        result = [f"{self.num}.{space}{lines[0]}"]
-        result.extend(f"    {i}" for i in lines[1:])
-        return "\n".join(result) + "\n"
+        return f"{self.num}.{space}{filters.do_indent(item_str)}\n"
 
 
 class MkAnnotations(mkcontainer.MkContainer):

@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Any
 
+from jinja2 import filters
+
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, xmlhelpers as xml
 
@@ -34,9 +36,7 @@ class MkGrid(mkcontainer.MkContainer):
         result = []
         for item in self.items:
             item_str = item.to_markdown()
-            lines = item_str.split("\n")
-            result += [f"-   {lines[0]}"]
-            result.extend(f"    {i}" for i in lines[1:])
+            result += [f"-   {filters.do_indent(item_str)}"]
         content = "\n".join(result)
         root.text = "\n\n" + content + "\n"
         return root
