@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from typing import Any
-import pprint
 
-from mknodes.basenodes import mkcode
+from mknodes.templatenodes import mktemplate
 from mknodes.data import datatypes
 from mknodes.utils import log
 
@@ -11,7 +10,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-class MkPrettyPrint(mkcode.MkCode):
+class MkPrettyPrint(mktemplate.MkTemplate):
     """Node to show a prettyprinted data structure."""
 
     ICON = "material/printer"
@@ -26,14 +25,12 @@ class MkPrettyPrint(mkcode.MkCode):
         compact: bool = False,
         sort_dicts: bool = False,
         underscore_numbers: bool = False,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             obj: Object to prettyprint
-            header: Section header
             nest_indent: Specifies the amount of indentation added for each nesting level
             maximum_depth: Maximum nesting depth to print
             char_width: Specifies the desired maximum number of characters per line
@@ -42,7 +39,7 @@ class MkPrettyPrint(mkcode.MkCode):
             underscore_numbers: Whether to use underscore as a separator for long numbers
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header, **kwargs)
+        super().__init__("output/markdown/template", **kwargs)
         self.obj = obj
         self.nest_indent = nest_indent  # indent already used by MkNode
         self.char_width = char_width
@@ -50,18 +47,6 @@ class MkPrettyPrint(mkcode.MkCode):
         self.compact = compact
         self.sort_dicts = sort_dicts
         self.underscore_numbers = underscore_numbers
-
-    @property
-    def text(self):
-        return pprint.pformat(
-            self.obj,
-            indent=self.nest_indent,
-            width=self.char_width,
-            depth=self.maximum_depth,
-            compact=self.compact,
-            sort_dicts=self.sort_dicts,
-            underscore_numbers=self.underscore_numbers,
-        )
 
     @classmethod
     def create_example_page(cls, page):

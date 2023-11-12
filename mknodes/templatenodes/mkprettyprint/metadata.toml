@@ -1,0 +1,22 @@
+[metadata]
+name = "MkPrettyPrint"
+icon = "octicon:git-pull-request-24"
+group = "documentation"
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ ([{"a": "test" * 5}] * 5) | MkPrettyPrint }}
+"""
+
+[output.markdown]
+template = """
+{{ node.obj | pformat(
+            indent=node.nest_indent,
+            width=node.char_width,
+            depth=node.maximum_depth,
+            compact=node.compact,
+            sort_dicts=node.sort_dicts,
+            underscore_numbers=node.underscore_numbers
+    ) | MkCode }}
+"""
