@@ -12,12 +12,16 @@ jinja = """
 
 [output.markdown]
 template = """
-{% if node.node %}
-{% set html_node = node.node.__copy__(as_html=True) %}
-{{ node.node | repr | MkCode | MkTab(title="Repr", new=True) }}
-{{ node.node | MkCode(language="markdown") | MkTab(title="Raw") }}
+{% set inspected = node.node %}
+{% if inspected %}
+{% set html_node = inspected.__copy__(as_html=True) %}
+{% if node._node is string_like %}
+{{ node._node | MkTab(title="Jinja") }}
+{% endif %}
+{{ inspected | repr | MkCode | MkTab(title="Repr", new=True) }}
+{{ inspected | MkCode(language="markdown") | MkTab(title="Raw") }}
 {{ html_node | MkCode(language="html") | MkTab(title="Html") }}
-{{ node.node | MkTab(title="Rendered", select=True) }}
-{% if node.node.children %}
-{{ node.node | MkTreeView | MkTab(title="Repr tree") }}{% endif %}{% endif %}
+{{ inspected | MkTab(title="Rendered", select=True) }}
+{% if inspected.children %}
+{{ inspected | MkTreeView | MkTab(title="Repr tree") }}{% endif %}{% endif %}
 """
