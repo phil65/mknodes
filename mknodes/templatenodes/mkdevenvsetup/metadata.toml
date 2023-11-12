@@ -29,7 +29,7 @@ git clone " ~ node.repo_url ~
 "
 cd " ~ folder_name ) | MkCode(language="md") }}
 
-## Build system
+{{ "Build system" | MkHeader }}
 
 {{ node.build_backend.identifier.capitalize() }} is used as the build system.
 

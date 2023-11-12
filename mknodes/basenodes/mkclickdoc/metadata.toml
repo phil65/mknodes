@@ -16,7 +16,7 @@ jinja = """
 
 [fragments]
 param_template = """
-### {{ param.opt_str }}
+{{ param.opt_str | MkHeader(level=3) }}
 
 {% if param.required %}
 "{{ "REQUIRED" | styled(bold=True) }}"
@@ -38,7 +38,7 @@ Environment variable{{ param.envvar }}
 {% endif %}
 """
 command_template = """
-## {{ info.name }}
+{{ info.name | MkHeader }}
 
 {{ info.description }}
 

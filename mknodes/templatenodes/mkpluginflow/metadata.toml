@@ -18,7 +18,7 @@ jinja = """
 
 # [fragments]
 # bubble = """
-# ### {{ node.event_plugin.help_link.format(event=fn.__name__) | MkLink(fn.__name__) }}
+# {{ node.event_plugin.help_link.format(event=fn.__name__) | MkLink(fn.__name__) | MkHeader }}
 
 # {{ inspecthelpers.get_doc(fn) }}
 
@@ -30,7 +30,7 @@ jinja = """
 # [output.markdown]
 # template = """
 # {% for plg in node.plugins %}
-# ## {{ plg.__name__ }}
+# {{ plg.__name__ | MkHeader }}
 # {% for event in node.hooks_for_plugin(plg) %}
 # {% if plg | hasattr(event) %}
 # {{ "fragments/bubble" | render_template(fn=(plg | attr(event))) | MkSpeechBubble(arrow=None if loop.last else "bottom") }}
