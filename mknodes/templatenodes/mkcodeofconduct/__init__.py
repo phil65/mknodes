@@ -1,24 +1,15 @@
 from __future__ import annotations
 
-import functools
-import pathlib
-
 from typing import Any, Literal
 
-from mknodes.basenodes import mktext
+from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
 
 
-@functools.cache
-def get_markdown() -> str:
-    file = pathlib.Path(__file__).parent / "code_of_conduct_2_1.md"
-    return file.read_text()
-
-
-class MkCodeOfConduct(mktext.MkText):
+class MkCodeOfConduct(mktemplate.MkTemplate):
     """Node for a code of conduct section."""
 
     ICON = "octicons/code-of-conduct-24"
@@ -36,7 +27,7 @@ class MkCodeOfConduct(mktext.MkText):
             version: Contributor covenant version (currently only "2.1")
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__("output/markdown/template", **kwargs)
         self.version = version
         self._contact_email = contact_email
 
@@ -49,10 +40,6 @@ class MkCodeOfConduct(mktext.MkText):
                 return self.ctx.metadata.author_email or "<MAIL NOT SET>"
             case _:
                 raise TypeError(self._contact_email)
-
-    @property
-    def text(self) -> str:
-        return get_markdown().replace("[INSERT CONTACT METHOD]", self.contact_email)
 
     @classmethod
     def create_example_page(cls, page):
