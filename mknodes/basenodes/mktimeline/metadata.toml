@@ -34,9 +34,34 @@ image = 'https://picsum.photos/401'
 }}
 """
 
+[fragments]
+item = """
+  <div class="timeline-item">
+    <div class="timeline-img"></div>
+    <div class="timeline-content js--fadeIn{{ node.fade_direction | capitalize }}">
+    {% if node.image %}
+    <div class="timeline-img-header" style="background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)), url({{ node.image }}) center center no-repeat; background-size: cover;">
+        <p><h2>{{ node.title }}</h2></p>
+    </div>
+    {% else %}
+      <h2>{{ node.title }}</h2>
+    {% endif %}
+    {% if node.label %}
+      <div class="date">{{ node.label }}</div>
+    {% endif %}
+      <p>
+        {{ node.content }}
+      </p>
+      <a href="{{ node.link }}" class="bnt-more">{{ node.button_text }}</a>
+    </div>
+  </div>
+"""
+
 # [output.markdown]
 # template = """
 # <section class="timeline">
-# {{ node.items | join }}
+# {% for item in node.items %}
+#  {{ "fragments/item" | render_template(node=item) }}
+# {% endfor %}
 # </section>
 # """

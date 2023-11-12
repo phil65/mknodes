@@ -75,7 +75,7 @@ class MkShowcase(mkcontainer.MkContainer):
         self,
         title: str,
         image: str,
-        link: str | mk.MkPage | mk.MkNav | None = None,
+        target: str | mk.MkPage | mk.MkNav | None = None,
         caption: str | None = None,
     ):
         """Add an image card to the node.
@@ -83,10 +83,10 @@ class MkShowcase(mkcontainer.MkContainer):
         Arguments:
             title: Card title
             image: link to the Image
-            link: Optional link for the card
+            target: Optional link for the card
             caption: Image caption
         """
-        card = mkcard.MkCard(target=link, title=title, image=image, caption=caption)
+        card = mkcard.MkCard(target=target, title=title, image=image, caption=caption)
         self.append(card)
 
     @classmethod
@@ -96,7 +96,7 @@ class MkShowcase(mkcontainer.MkContainer):
         node = MkShowcase()
         for i in range(6):
             node.add_card(
-                link="https://phil65.github.io/mknodes/",
+                target="https://phil65.github.io/mknodes/",
                 title=f"Title {i}",
                 image="https://picsum.photos/300",
                 caption=f"Caption {i}",

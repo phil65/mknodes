@@ -27,14 +27,23 @@ import mknodes as mk
 node = mk.MkShowcase()
 for i in range(6):
     node.add_card(
-        link="https://phil65.github.io/mknodes/",
+        target="https://phil65.github.io/mknodes/",
         title=f"Title {i}",
         image="https://picsum.photos/300",
         caption=f"Caption {i}",
     )
 node
 """
-
+jinja = """
+{% set url = "https://phil65.github.io/mknodes/" %}
+{% set img_url = "https://picsum.photos/300" %}
+{{ ["Title 0" | MkCard(target=url, image=img_url, caption="Caption 0"),
+    "Title 1" | MkCard(target=url, image=img_url, caption="Caption 1"),
+    "Title 2" | MkCard(target=url, image=img_url, caption="Caption 2"),
+    "Title 3" | MkCard(target=url, image=img_url, caption="Caption 3"),
+    "Title 4" | MkCard(target=url, image=img_url, caption="Caption 4"),
+    "Title 5" | MkCard(target=url, image=img_url, caption="Caption 5")] | MkShowcase }}
+"""
 [output.markdown]
 template = """
 {% for items in node.items | batched(node.column_count) %}
