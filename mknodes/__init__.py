@@ -174,4 +174,4 @@ __all__ = [
     "MaterialTheme",
 ]
 
-__version__ = "0.49.4"
+__version__ = "0.49.5"
