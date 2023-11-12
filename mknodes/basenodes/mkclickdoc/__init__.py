@@ -1,4 +1,5 @@
 from __future__ import annotations
+import argparse
 
 from typing import Any
 
@@ -16,7 +17,7 @@ class MkClickDoc(mktemplate.MkTemplate):
 
     def __init__(
         self,
-        target: str | None = None,
+        target: str | None | argparse.ArgumentParser = None,
         *,
         prog_name: str | None = None,
         show_hidden: bool = False,
@@ -46,15 +47,18 @@ class MkClickDoc(mktemplate.MkTemplate):
             case str():
                 module, command = self.target.split(":")
                 prog_name = self.prog_name
+                mod = importlib.import_module(module)
+                instance = getattr(mod, command)
             case None:
                 if cli_eps := self.ctx.metadata.entry_points.get("console_scripts"):
                     module, command = cli_eps[0].dotted_path.split(":")
                     prog_name = cli_eps[0].name
+                    mod = importlib.import_module(module)
+                    instance = getattr(mod, command)
                 return None
             case _:
-                raise TypeError(self.target)
-        mod = importlib.import_module(module)
-        instance = getattr(mod, command)
+                instance = self.target
+                prog_name = self.prog_name
         return clihelpers.get_cli_info(instance, command=prog_name)
 
     @classmethod
