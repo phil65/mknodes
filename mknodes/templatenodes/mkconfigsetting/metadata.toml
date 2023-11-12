@@ -31,7 +31,7 @@ jinja = """
 
 [output.markdown]
 template = """
-{{ node.title }}
+{{ node.title | styled(bold=True, code=True) }}
 :   {% filter indent %}Default: `{{ node.default | repr }}`
 
 {% if node.version_added %}
