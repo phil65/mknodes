@@ -14,6 +14,16 @@ jinja = """
 {{ "mkdocs_mknodes.cli:cli" | MkCliDoc(prog_name="build") }}
 """
 
+[examples.argparse]
+title = "ArgumentParser"
+python = """
+from git_changelog import cli
+import mknodes as mk
+
+parser = cli.get_parser()
+mk.MkCliDoc(parser)
+"""
+
 [fragments]
 param_template = """
 {{ param.opt_str | MkHeader(level=3) }}

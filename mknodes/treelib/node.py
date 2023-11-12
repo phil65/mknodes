@@ -55,10 +55,11 @@ class Node:
         #     logger.debug(msg)
         self._parent = value
 
-    def __copy__(self) -> Self:
+    def __copy__(self, **kwargs) -> Self:
         """Shallow copy self."""
         obj = type(self).__new__(self.__class__)
         obj.__dict__.update(self.__dict__)
+        obj.__dict__.update(kwargs)
         return obj
 
     def __deepcopy__(self, memo):
