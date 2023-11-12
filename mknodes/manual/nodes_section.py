@@ -59,7 +59,6 @@ ABOUT_THE_PROJECT_NODES = [
     mk.MkDevTools,
     mk.MkShields,
     mk.MkMetadataBadges,
-    mk.MkModuleOverview,
     mk.MkPipDepTree,
 ]
 

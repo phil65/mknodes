@@ -50,9 +50,6 @@ class MkDefaultWebsite(mk.MkNav):
         page += mk.MkDependencyTable()
         page += mk.MkPipDepTree(direction="LR")
 
-        page = nav.add_page("Module overview")
-        page += mk.MkModuleOverview()
-
         if "mkdocs.plugins" in self.ctx.metadata.entry_points:
             page = nav.add_page("MkDocs Plugins")
             page += mk.MkPluginFlow()

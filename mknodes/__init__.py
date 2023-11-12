@@ -71,7 +71,6 @@ from .templatenodes.mkdependencytable import MkDependencyTable
 from .templatenodes.mkcommandoutput import MkCommandOutput
 from .templatenodes.mkbadge import MkBadge
 from .templatenodes.mkmetadatabadges import MkMetadataBadges
-from .templatenodes.mkmoduleoverview import MkModuleOverview
 from .templatenodes.mkcommentedcode import MkCommentedCode
 from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
@@ -161,7 +160,6 @@ __all__ = [
     "Metadata",
     "PageTemplate",
     "MkMetadataBadges",
-    "MkModuleOverview",
     "MkCommentedCode",
     "MkConfigSetting",
     "MkSpeechBubble",
