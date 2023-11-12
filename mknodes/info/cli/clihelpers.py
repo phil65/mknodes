@@ -13,10 +13,11 @@ if TYPE_CHECKING:
 
 
 def get_argparse_info(parser: argparse.ArgumentParser):
-    subcommands = [
-        commandinfo.CommandInfo(name=i.title or "", description=i.description or "")
-        for i in parser._action_groups
-    ]
+    # subs = [
+    #     commandinfo.CommandInfo(i)
+    #     for i in parser._actions
+    #     if isinstance(i, argparse._SubParsersAction)
+    # ]
     params = [
         param.Param(
             metavar=" ".join(i.metavar) if isinstance(i.metavar, tuple) else i.metavar,
@@ -36,7 +37,7 @@ def get_argparse_info(parser: argparse.ArgumentParser):
         description=parser.description or "",
         usage=parser.format_usage(),
         params=params,
-        subcommands={i.name: i for i in subcommands},
+        # subcommands={i.name: get_argparse_info(i) for i in parser._subparsers},
     )
 
 
