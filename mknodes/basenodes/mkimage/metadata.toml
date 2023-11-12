@@ -33,12 +33,24 @@ jinja = """
 {{ "https://picsum.photos/200" | MkImage(path_dark_mode="https://picsum.photos/300") }}
 """
 
+[fragments]
+image = """
+![{{ node.title ~ "](" ~ path ~ (mode | add("#only-")) ~ ")" ~ (node.align | add("{ align=", " }")) ~ (node.width | add('{ width="', '" }')) }}{% if node.lazy %}{ loading=lazy }{% endif %}
+"""
+linked_image = """
+{% if node.url %}
+[{{ "fragments/image" | render_template(node=node, path=path, mode=mode) }}]({{ node.url }}){% else %}
+{{ "fragments/image" | render_template(node=node, path=path, mode=mode) }}{% endif %}
+"""
+
 [output.markdown]
 template = """
 {% if node.path_dark_mode %}
-{% set markdown_link = node._build(node.path_dark_mode, 'dark') ~ " " ~ node._build(node.path, 'light') %}
+{% set link_dark = "fragments/linked_image" | render_template(node=node, path=node.path_dark_mode, mode="dark") %}
+{% set link_light = "fragments/linked_image" | render_template(node=node, path=node.path, mode="light") %}
+{% set markdown_link = link_dark ~ " " ~ link_light %}
 {% else %}
-{% set markdown_link = node._build(node.path) %}
+{% set markdown_link = "fragments/linked_image" | render_template(node=node, path=node.path, mode=None) %}
 {% endif %}
 {% if node.caption %}
 <figure markdown>
