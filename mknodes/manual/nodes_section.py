@@ -43,7 +43,6 @@ DOCUMENTATION_NODES = [
     mk.MkClassTable,
     mk.MkModuleTable,
     mk.MkPluginFlow,
-    mk.MkArgParseHelp,
     mk.MkClickDoc,
 ]
 
