@@ -22,7 +22,26 @@ jinja = """
 
 [output.markdown]
 template = """
-{{ node.fence_boundary }} {{ node.fence_title }}
-{{ node.text }}
+{{ node.fence_boundary }} mermaid
+{{ node.graph_type }} {{ node.direction }}
+{% if node.connections %}
+{% for name in node.names %}
+  {{ name }}
+{% endfor %}
+{% for connection in node.connections %}
+{% if connection | length == 2 %}
+  {{ connection[0] }} --> {{ connection[1] }}
+{% else %}
+  {{ connection[0] }} --> |{{ connection[2] }}| {{ connection[1] }}
+{% endif %}
+{% endfor %}
+{% else %}
+{% for name in node.names %}
+  {{ name | get_hash }}["{{ name }}"]
+{% endfor %}
+{% for prev, nxt in node.names | pairwise %}
+  {{ prev | get_hash }} --> {{ nxt | get_hash }}
+{% endfor %}
+{% endif %}
 {{ node.fence_boundary }}
 """
