@@ -33,10 +33,7 @@ class MkGrid(mkcontainer.MkContainer):
         root = xml.Div("grid cards", markdown=True)
         if not self.items:
             return root
-        result = []
-        for item in self.items:
-            item_str = item.to_markdown()
-            result += [f"-   {filters.do_indent(item_str)}"]
+        result = [f"-   {filters.do_indent(item.to_markdown())}" for item in self.items]
         content = "\n".join(result)
         root.text = "\n\n" + content + "\n"
         return root
