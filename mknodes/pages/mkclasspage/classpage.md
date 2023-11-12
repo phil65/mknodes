@@ -1,18 +1,18 @@
 {% block content %}
 
 {% if subclasses %}
-### Sub classes
+{{ "Sub classes" | MkHeader(level=3) }}
 {{ subclasses | MkClassTable }}
 {% endif %}
 
 {% if cls.mro() | length > 2 %}
-### Base classes
+{{ "Base classes" | MkHeader(level=3) }}
 {{ cls.__bases__ | MkClassTable }}
-### ⋔ Inheritance diagram
+{{ "⋔ Inheritance diagram" | MkHeader(level=3) }}
 {{ cls | MkClassDiagram(mode="baseclasses") }}
 {% endif %}
 
-### 🛈 DocStrings
+{{ "🛈 DocStrings" | MkHeader(level=3) }}
 
 {{ cls | MkDocStrings }}
 

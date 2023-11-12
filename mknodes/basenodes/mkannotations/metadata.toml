@@ -4,6 +4,23 @@ icon = "mdi:alert-box"
 
 [requirements.extension."pymdownx.superfences"]
 
+[examples.python]
+python = """
+import mknodes as mk
+
+page += mk.MkCode.for_object(mk.MkCode.for_object, extract_body=True)
+node = MkAnnotations()
+page += node
+text = mk.MkText("The MkAnnotations node aggregates annotations(1).")
+page += text
+info = r"Annotations are numbered and can be set via \\__setitem__."
+node[1] = info  # (1)
+admonition = mk.MkAdmonition("They can also contain other Markdown.")
+node[2] = admonition  # (2)
+text.annotations[1] = "Every MkNode can annotate via the 'annotations' attribute"
+page += mk.MkCode(str(node), language="markdown", header="Markdown")
+"""
+
 [fragments.annotation]
 template = """
 {{ node.num }}.{{ 3 - self.num | string | length }}{{ node.items | join("\n\n") | indent }}

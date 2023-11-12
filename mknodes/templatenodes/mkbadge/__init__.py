@@ -123,19 +123,11 @@ class MkBadge(mkimage.MkImage):
             use_gitlab_style=self.use_gitlab_style,
         )
 
-    @data.setter
-    def data(self, value):
-        pass
-
     @property
     def path(self) -> str:
         hashed = helpers.get_hash(repr(self))
         unique = f"{self.label}_{self.value}_{hashed}.svg"
         return helpers.slugify(unique)
-
-    @path.setter
-    def path(self, value):
-        pass
 
     @classmethod
     def create_example_page(cls, page):

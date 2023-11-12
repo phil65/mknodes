@@ -2,7 +2,7 @@
 {% block content %}
 
 {% if cls | hasattr("REQUIRED_EXTENSIONS") and cls.REQUIRED_EXTENSIONS %}
-#### Required Extensions:
+{{ "Required Extensions:" | MkHeader(level=4) }}
 
 {% for i in cls.REQUIRED_EXTENSIONS %}
 
