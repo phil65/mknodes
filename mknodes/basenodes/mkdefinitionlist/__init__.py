@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from typing import Any
-
+from jinja2 import filters
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, reprhelpers, resources
 
@@ -41,11 +41,8 @@ class MkDefinition(mkcontainer.MkContainer):
         self._title = value
 
     def _to_markdown(self) -> str:
-        lines = super()._to_markdown().split("\n")
-        result = [f"{self.title}", f":   {lines[0]}"]
-        result.extend(f"    {i}" for i in lines[1:])
-        result.append("")
-        return "\n".join(result) + "\n"
+        text = super()._to_markdown()
+        return f"{self.title}\n:   {filters.do_indent(text)}\n"
 
     @classmethod
     def create_example_page(cls, page):

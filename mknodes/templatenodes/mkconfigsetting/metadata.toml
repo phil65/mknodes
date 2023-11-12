@@ -29,24 +29,26 @@ jinja = """
 {{ "path" | MkConfigSetting(mode="toml", setting=setting, description=desc, default="path.to.module")}}
 """
 
-# [output.markdown]
-# template = """
-# Default: `"{{ node.default }}"`
+[output.markdown]
+template = """
+{{ node.title }}
+:   {% filter indent %}Default: `{{ node.default | repr }}`
 
-# {% if node.version_added %}
-# Version added: `{{ node.version_added }}`
+{% if node.version_added %}
+Version added: `{{ node.version_added }}`
 
-# {% endif %}
-# {% if node.optional is not none %}
-# Required: `{{ "yes" if node.required else "no" }}`
+{% endif %}
+{% if node.optional is not none %}
+Required: `{{ "yes" if node.required else "no" }}`
 
-# {% endif %}
-# {{ node.description }}
+{% endif %}
+{{ node.description }}
 
-# {% if node.setting is instance("dict") %}
-# {{ node.setting | serialize(mode=node.mode) | MkCode(language=node.mode) }}
-# {% else %}
-# {{ node.setting | MkCode(language=node.mode) }}
-# {% endif %}
 
-# """
+{% if node.setting is instance(dict) %}
+{{ node.setting | serialize(node.mode) | MkCode(language=node.mode) }}
+{% else %}
+{{ node.setting | MkCode(language=node.mode) }}
+{% endif %}
+{% endfilter %}
+"""
