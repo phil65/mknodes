@@ -168,13 +168,14 @@ class FolderInfo:
         return self.info.package_name
 
     @functools.cached_property
-    def package_repos(self) -> list[installmethods.InstallMethodStr]:
+    def package_repos(self) -> list[installmethods.InstallMethod]:
         """Return a list of package repositories the package is available on."""
         repos = self.pyproject.package_repos or ["pip"]
         has_script = "console_scripts" in self.info.entry_points
         if "pip" in repos and "pipx" not in repos and has_script:
             repos.append("pipx")
-        return repos
+        klasses = [installmethods.InstallMethod.by_id(i) for i in repos]
+        return [i(self.info.name) for i in klasses]
 
     @functools.cached_property
     def commit_types(self) -> list[commitconventions.CommitTypeStr]:
@@ -292,7 +293,7 @@ class FolderInfo:
             configured_build_systems=self.pyproject.configured_build_systems,
             tool_section=self.pyproject.tool,
             commit_types=self.pyproject.allowed_commit_types,
-            package_repos=self.pyproject.package_repos,
+            package_repos=self.package_repos,
             line_length=self.pyproject.line_length,
         )
 

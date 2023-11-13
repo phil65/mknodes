@@ -38,10 +38,13 @@ class MkInstallGuide(mktemplate.MkTemplate):
         self._package_repos = package_repos
 
     @property
-    def package_repos(self) -> list[installmethods.InstallMethodStr]:
+    def package_repos(self) -> list[installmethods.InstallMethod]:
         if self._package_repos:
-            return self._package_repos
-        return self.ctx.metadata.package_repos or ["pip"]
+            return [
+                installmethods.InstallMethod.by_id(i)(self.distribution)
+                for i in self._package_repos
+            ]
+        return self.ctx.metadata.package_repos or []
 
     @property
     def distribution(self):
@@ -50,13 +53,6 @@ class MkInstallGuide(mktemplate.MkTemplate):
     @distribution.setter
     def distribution(self, value):
         self._distribution = value
-
-    @property
-    def install_methods(self):
-        if not self.distribution:
-            return []
-        klasses = [installmethods.InstallMethod.by_id(i) for i in self.package_repos]
-        return [i(self.distribution) for i in klasses]
 
     @classmethod
     def create_example_page(cls, page):

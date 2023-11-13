@@ -18,7 +18,7 @@ jinja = """
 
 [output.markdown]
 template = """
-{% for method in node.install_methods %}
+{% for method in node.package_repos %}
 {{ method.ID | MkHeader(level=node.header_level) }}
 
 {{ method.info_text() }}

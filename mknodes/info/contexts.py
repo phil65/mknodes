@@ -113,7 +113,7 @@ class ThemeContext(Context):
 #     """Commit types defined in pyproject mknodes section *[pyproject]*"""
 #     extras_descriptions: dict[str, str] = dataclasses.field(default_factory=dict)
 #     """Descriptions for extras, defined in pyproject mknodes section *[pyproject]*"""
-#     package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
+#     package_repos: list[installmethods.InstallMethod] = dataclasses.field(
 #         default_factory=list,
 #     )
 #     """Package repositories the distribution is distributed on."""
@@ -221,7 +221,7 @@ class PackageContext(Context):
         default_factory=list,
     )
     """Commit types defined in pyproject mknodes section *[pyproject]*"""
-    package_repos: list[installmethods.InstallMethodStr] = dataclasses.field(
+    package_repos: list[installmethods.InstallMethod] = dataclasses.field(
         default_factory=list,
     )
     """Package repositories the distribution is distributed on.
