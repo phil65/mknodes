@@ -10,3 +10,8 @@ jinja = """
 {% endfor %}
 """
 
+# [examples.remote]
+# title = "Files from a repote path"
+# jinja = """
+# {{ "github://" | MkTreeView(storage_options={"org": "mkdocstrings", "repo": "mkocstrings"}, maximum_depth=2) }}
+# """

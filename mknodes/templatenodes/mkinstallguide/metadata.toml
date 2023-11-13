@@ -13,7 +13,7 @@ jinja = """
 [examples.explicit]
 title = "Explicit"
 jinja = """
-{{ "mkdocs" | MkInstallGuide }}
+{{ "mkdocs" | MkInstallGuide(package_repos=["pip", "pipx"]) }}
 """
 
 [output.markdown]

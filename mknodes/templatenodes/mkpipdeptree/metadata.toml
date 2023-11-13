@@ -12,6 +12,12 @@ jinja = """
 {{ "jinja2" | MkPipDepTree }}
 """
 
+[examples.direction]
+title = "Directed"
+jinja = """
+{{ mk.MkPipDepTree(direction="LR") }}
+"""
+
 [output.markdown]
 template = """
 {{ node.fence_boundary }} {{ node.fence_title }}
