@@ -39,7 +39,7 @@ class MkInclude(mktext.MkText):
     def text(self) -> str:
         match self.target:
             case os.PathLike() | str():
-                return pathhelpers.load_file_cached(str(self.target))
+                return pathhelpers.load_file_cached(os.fspath(self.target))
             case mktext.MkText():
                 return str(self.target)
             case _:

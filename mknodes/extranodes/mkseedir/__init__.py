@@ -1,11 +1,10 @@
 from __future__ import annotations
 
+import functools
 import os
 import upath
 
 from typing import Any, Literal, get_args
-
-import seedir
 
 from mknodes.basenodes import mkcode
 from mknodes.utils import log, resources
@@ -15,6 +14,35 @@ logger = log.get_logger(__name__)
 
 
 DirectoryTreeStyleStr = Literal["lines", "dash", "arrow", "spaces", "plus"]
+
+
+@functools.cache
+def get_folder_tree(
+    directory: str | os.PathLike,
+    *,
+    style: DirectoryTreeStyleStr | None = None,
+    indent: int = 4,
+    depth_limit: int | None = None,
+    item_limit: int | None = None,
+    beyond: Literal["ellipsis", "content"] = "ellipsis",
+    first: Literal["files", "folders"] | None = None,
+    sort: bool = False,
+    exclude_folders: list[str] | str | None = None,
+) -> str:
+    import seedir
+
+    return seedir.seedir(
+        directory,
+        style=style or "lines",
+        printout=False,
+        indent=indent,
+        depthlimit=depth_limit,
+        itemlimit=item_limit,
+        beyond=beyond,
+        first=first,
+        sort=sort,
+        exclude_folders=exclude_folders,
+    )
 
 
 class MkSeeDir(mkcode.MkCode):
@@ -39,7 +67,6 @@ class MkSeeDir(mkcode.MkCode):
         first: Literal["files", "folders"] | None = None,
         sort: bool = False,
         exclude_folders: list[str] | str | None = None,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
@@ -54,10 +81,9 @@ class MkSeeDir(mkcode.MkCode):
             first: What to print first
             sort: Whether to sort the output
             exclude_folders: Folders to exclude from listing
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header, **kwargs)
+        super().__init__(**kwargs)
         self.directory = upath.UPath(directory)
         self.style = style or "lines"
         self.print_indent = print_indent
@@ -70,7 +96,12 @@ class MkSeeDir(mkcode.MkCode):
 
     @property
     def text(self):
-        return seedir.seedir(
+        exclude = (
+            tuple(self.exclude_folders)
+            if isinstance(self.exclude_folders, list)
+            else self.exclude_folders
+        )
+        return get_folder_tree(
             self.directory,
             style=self.style,
             printout=False,
@@ -80,7 +111,7 @@ class MkSeeDir(mkcode.MkCode):
             beyond=self.beyond,
             first=self.first,
             sort=self.sort,
-            exclude_folders=self.exclude_folders,
+            exclude_folders=exclude,
         )
 
     @text.setter
