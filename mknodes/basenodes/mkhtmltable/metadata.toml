@@ -12,3 +12,27 @@ jinja = """
 {% set data = {"Code": code_col, "Admonitions": admonitions, "Tabs": tabs} %}
 {{ data | MkHtmlTable }}
 """
+
+[output.markdown]
+template = """
+{% set table = node.data %}
+<table markdown="1">
+<tr>
+{% for header in table.keys() %}
+<td>
+{{ header }}
+</td>
+{% endfor %}
+</tr>
+{% for row in node.iter_rows() %}
+<tr>
+{% for item in row %}
+<td>
+{{ item }}
+</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+"""
+

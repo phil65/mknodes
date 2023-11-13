@@ -14,3 +14,9 @@ description = "We can also nest blocks, they will adjust their delimiters automa
 jinja = """
 {{ "Nested!" | MkBlockQuote | MkBlockQuote }}
 """
+
+[output.markdown]
+template = """
+{{ node.items | join(node.block_separator) | indent(width="> ", first=True) | rstrip("\n") }}
+
+"""
