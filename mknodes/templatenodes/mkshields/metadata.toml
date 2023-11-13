@@ -20,3 +20,6 @@ jinja = """
 template = """
 {{ node.items | join("\n") }}
 """
+# {% for s in node.shields %}
+# {{ s.image_url.format(user=node.user, project=node.project, branch=node.branch) | MkImage(target=s.get_url(user=node.user, project=node.project, title=node.title)) }}
+# {% endfor %}
