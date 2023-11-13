@@ -34,3 +34,11 @@ title = "GitLab style"
 jinja = """
 {{ ("Some", "Badge") | MkBadge(use_gitlab_style=True) }}
 """
+
+[output.html]
+template = """
+{% set content = node.data | replace("\n", "") %}
+{% if node.url %}
+<body><a href={{ node.url | repr }}>{{ content }}</a></body>"{% else %}
+<body>{{ content }}</body>{% endif %}
+"""

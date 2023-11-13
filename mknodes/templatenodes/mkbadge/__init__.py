@@ -39,7 +39,7 @@ def get_badge(
         text_color=text_color,
         style="gitlab-scoped" if use_gitlab_style else "default",
     )
-    return badge.badge_svg_text
+    return badge.badge_svg_text.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
 
 
 class MkBadge(mkimage.MkImage):
@@ -98,7 +98,7 @@ class MkBadge(mkimage.MkImage):
         return self.ctx.theme.primary_color
 
     def _to_markdown(self):
-        data = self.data.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+        data = self.data
         content = data.replace("\n", "")
         inner = f"<a href={self.url!r}>{content}</a>" if self.url else content
         return f"<body>{inner}</body>"
