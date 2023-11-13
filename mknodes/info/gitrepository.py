@@ -19,8 +19,8 @@ logger = log.get_logger(__name__)
 class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, path: str | os.PathLike | None = None):
+        super().__init__(path)
         # to keep a reference to a TempDirectory instance
         self.temp_directory: tempfile.TemporaryDirectory | None = None
 

@@ -383,8 +383,12 @@ def get_submodules(
     module = to_module(module)
     # import pkgutil
 
-    # for _importer, mod_name, _ispkg in pkgutil.iter_modules(module.__path__):
-    #     yield importlib.import_module(f"{module.__name__}.{mod_name}")
+    # return [
+    #     importlib.import_module(f"{module.__name__}.{mod_name}")
+    #     for _importer, mod_name, _ispkg in pkgutil.iter_modules(
+    #         module.__path__ if hasattr(module, "__path__") else [module.__file__]
+    #     )
+    # ]
     return [
         mod
         for name, mod in get_members(module, inspect.ismodule)
