@@ -1,4 +1,5 @@
 from __future__ import annotations
+import dataclasses
 
 from typing import Any, Literal
 
@@ -8,6 +9,43 @@ from mknodes.utils import inspecthelpers, log
 
 
 logger = log.get_logger(__name__)
+
+
+def iter_code_sections(code_string: str, start_line: int | None = None):
+    @dataclasses.dataclass
+    class Section:
+        typ: str
+        code: str
+        start_line: int | None = None
+
+    section: list[str] = []
+    mode = ""
+    line_num = start_line or 0
+    for i, line in enumerate(code_string.split("\n"), start=line_num):
+        if not line.strip() or line.rstrip().endswith("##"):
+            continue
+        if line.strip().startswith("#"):
+            if mode == "code":
+                code = "\n".join(section)
+                yield Section(mode, code, start_line=line_num if start_line else None)
+                section = []
+                line_num = i
+            section.append(line.strip().removeprefix("#")[1:])
+            mode = "comment"
+        elif not line.strip().startswith("#"):
+            if mode == "comment":
+                text = "\n".join(section)
+                yield Section("comment", text)
+                section = []
+                line_num = i
+            section.append(line)
+            mode = "code"
+    if mode == "code":
+        code = "\n".join(section)
+        yield Section("code", code, start_line=line_num if start_line else None)
+    elif mode == "comment":
+        text = "\n".join(section)
+        yield Section("comment", text)
 
 
 class MkCommentedCode(mkcontainer.MkContainer):
@@ -74,44 +112,13 @@ class MkCommentedCode(mkcontainer.MkContainer):
     def items(self):
         import mknodes as mk
 
-        if not self.code:
-            return {}
-        section: list[str] = []
-        sections: list[mk.MkNode] = []
-        mode = ""
-        line_num = self.linenums or 0
-        for i, line in enumerate(self.code.split("\n"), start=line_num):
-            if not line.strip() or line.rstrip().endswith("##"):
-                continue
-            if line.strip().startswith("#"):
-                if mode == "code":
-                    code = "\n".join(section)
-                    start_line = line_num if self.linenums else None
-                    node = mk.MkCode(code, linenums=start_line)
-                    sections.append(node)
-                    section = []
-                    line_num = i
-                section.append(line.strip().removeprefix("#")[1:])
-                mode = "comment"
-            elif not line.strip().startswith("#"):
-                if mode == "comment":
-                    text = "\n".join(section)
-                    sections.append(self.comment_class(text))
-                    section = []
-                    line_num = i
-                section.append(line)
-                mode = "code"
-        if mode == "code":
-            code = "\n".join(section)
-            start_line = line_num if self.linenums else None
-            node = mk.MkCode(code, linenums=start_line)
-            sections.append(node)
-        elif mode == "comment":
-            text = "\n".join(section)
-            sections.append(self.comment_class(text))
-        for sect in sections:
-            sect.parent = self
-        return sections
+        items = []
+        for sec in iter_code_sections(self.code, self.linenums):
+            if sec.typ == "code":
+                items += mk.MkCode(sec.code, linenums=sec.start_line, parent=self)
+            else:
+                items += self.comment_class(sec.code, parent=self)
+        return items
 
     @items.setter
     def items(self, value):
