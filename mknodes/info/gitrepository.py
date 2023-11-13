@@ -83,6 +83,8 @@ class GitRepository(git.Repo):
         if isinstance(commit, str):
             commit = self.commit(commit)
         mapping = self.commit_to_tag
+        if commit in mapping:
+            return mapping[commit]
         try:
             return next((mapping[c] for c in commit.traverse() if c in mapping), None)
         except ValueError:
