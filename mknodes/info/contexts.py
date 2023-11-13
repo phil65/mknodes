@@ -51,7 +51,7 @@ class GitContext(Context):
     """Name of the main branch of the repo (`master` / `main`)."""
     repo_name: str = ""
     """Name of the git folder."""
-    last_commits: list = dataclasses.field(default_factory=list)
+    commits: list = dataclasses.field(default_factory=list)
     """List of last commits (Commit objects from `GitPython`)."""
     repo_hoster: str = ""
     """Name of the code hoster (for example `GitHub`)"""

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from functools import cached_property
+import functools
 import os
 import tempfile
 
@@ -27,7 +27,7 @@ class GitRepository(git.Repo):
     def __len__(self):
         return len(list(self.iter_commits("HEAD")))
 
-    @cached_property
+    @functools.cached_property
     def main_branch(self) -> str:
         """The default branch of the repository."""
         has_master_branch = any(branch.name == "master" for branch in self.heads)
@@ -53,17 +53,17 @@ class GitRepository(git.Repo):
             kwargs["depth"] = depth
         return super().clone_from(url, to_path, **kwargs)  # type: ignore[return-value]
 
-    @cached_property
+    @functools.cached_property
     def repo_name(self) -> str:
         """Name (aka the last part of the url) of the Git repository."""
         return self.remotes.origin.url.split(".git")[0].split("/")[-1]
 
-    @cached_property
+    @functools.cached_property
     def repo_url(self) -> str:
         """Url of the remote repository (without .git)."""
         return self.remotes.origin.url.split(".git")[0] + "/"
 
-    @cached_property
+    @functools.cached_property
     def commit_to_tag(self) -> dict[git.Commit, str]:  # type: ignore[name-defined]
         """Dictionary mapping git.Commits to tag strings."""
         return {
@@ -86,13 +86,15 @@ class GitRepository(git.Repo):
         if commit in mapping:
             return mapping[commit]
         try:
-            return next((mapping[c] for c in commit.traverse() if c in mapping), None)
+            return next(
+                (mapping[c] for c in self.iter_commits(commit) if c in mapping), None
+            )
         except ValueError:
             msg = f"Could not get version for {commit}"
             logger.exception(msg)
             return None
 
-    @cached_property
+    @functools.cached_property
     def version_changes(self) -> dict[str, dict[str, list[git.Commit]]]:  # type: ignore[name-defined]
         """Returns a nested dictionary of commits, grouped by version and commit type.
 
@@ -101,7 +103,7 @@ class GitRepository(git.Repo):
         """
         commits = [
             i
-            for i in self.get_last_commits()
+            for i in self.get_commits()
             if self.get_version_for_commit(i) and i not in self.commit_to_tag
         ]
         groups = helpers.groupby(commits, self.get_version_for_commit, natural_sort=True)
@@ -110,7 +112,11 @@ class GitRepository(git.Repo):
             for k, v in groups.items()
         }
 
-    def get_last_commits(
+    @functools.cached_property
+    def all_commits(self) -> list[git.Commit]:
+        return self.get_commits()
+
+    def get_commits(
         self,
         num: int | None = None,
         branch: str | None = None,
@@ -129,7 +135,7 @@ class GitRepository(git.Repo):
             logger.warning("Could not fetch commits for %r", rev)
             return []
 
-    @cached_property
+    @functools.cached_property
     def code_repository(self) -> str:
         """Get the remote code repository name (like "GitHub")."""
         match parse.urlsplit(self.remotes.origin.url).netloc.lower():
@@ -153,13 +159,13 @@ class GitRepository(git.Repo):
             case _:
                 return None
 
-    @cached_property
+    @functools.cached_property
     def context(self) -> contexts.GitContext:
         """Return Git context."""
         return contexts.GitContext(
             main_branch=self.main_branch,
             repo_hoster=self.code_repository,
-            last_commits=self.get_last_commits(100),
+            commits=self.get_commits(),
             repo_name=self.repo_name,
             edit_uri=self.edit_uri,
             current_sha=self.head.object.hexsha,
@@ -173,6 +179,6 @@ class GitRepository(git.Repo):
 
 if __name__ == "__main__":
     repo = GitRepository(".")
-    # for commit in repo.get_last_commits(100):
+    # for commit in repo.get_commits(100):
     v = repo.get_version_for_commit("949f6df9cdf49d175bfe2c57d8f51d3882c7fc01")
     print(v)
