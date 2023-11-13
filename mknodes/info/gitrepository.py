@@ -101,11 +101,7 @@ class GitRepository(git.Repo):
         Shape of retuned dict:
         {"v0.x.x": {"feat": [git.Commit, ...], ...}, ...}
         """
-        commits = [
-            i
-            for i in self.get_commits()
-            if self.get_version_for_commit(i) and i not in self.commit_to_tag
-        ]
+        commits = [i for i in self.all_commits if i not in self.commit_to_tag]
         groups = helpers.groupby(commits, self.get_version_for_commit, natural_sort=True)
         return {
             k: helpers.groupby(v, lambda x: x.message.split(":")[0])
