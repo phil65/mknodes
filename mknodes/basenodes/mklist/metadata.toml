@@ -28,3 +28,14 @@ title = "Nested"
 jinja = """
 {{ [_mk.MkAdmonition("Nested!")] | MkList }}
 """
+
+[output.markdown]
+template = """
+{% for item in node.items[: node.shorten_after] %}
+  {{ (loop.index ~ ".") if node.ordered else "*" }} {{ node._prep(item)}}
+{% endfor %}
+{% if node.shorten_after and node.items | length > node.shorten_after %}
+  {{ (node.shorten_after + 1 ~ ".") if node.ordered else "*" }} ...
+{% endif %}
+
+"""

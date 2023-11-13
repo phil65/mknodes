@@ -77,9 +77,12 @@ class MkList(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         if not self.items:
             return ""
-        prefix = "1." if self.ordered else "*"
-        lines = [f"  {prefix} {self._prep(i)}" for i in self.items[: self.shorten_after]]
+        lines = [
+            f"  {f'{i}.' if self.ordered else '*'} {self._prep(item)}"
+            for i, item in enumerate(self.items[: self.shorten_after], start=1)
+        ]
         if self.shorten_after and len(self.items) > self.shorten_after:
+            prefix = f"{self.shorten_after + 1}." if self.ordered else "*"
             lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
 
