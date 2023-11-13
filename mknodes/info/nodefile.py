@@ -17,21 +17,26 @@ if TYPE_CHECKING:
 
 @functools.cache
 def get_nodefile(klass: type) -> NodeFile | None:
-    file = find_file(klass)
-    if file.exists():
+    if file := find_file(klass):
         nodefile = NodeFile(file)
         if nodefile.name == klass.__name__:
             return nodefile
     return None
 
 
-def find_file(klass: type) -> pathlib.Path:
+def find_file(klass: type) -> pathlib.Path | None:
     from mknodes.utils import inspecthelpers
 
     path = inspecthelpers.get_file(klass)  # type: ignore[arg-type]
     assert path
     # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
-    return path.parent / "metadata.toml"
+    if (file := path.parent / klass.__name__).exists():
+        return file
+    if (file := path.parent / klass.__name__.lower()).exists():
+        return file
+    if (file := path.parent / "metadata.toml").exists():
+        return file
+    return None
 
 
 def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
