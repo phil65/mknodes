@@ -112,20 +112,21 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         page += mk.MkReprRawRendered(mro_diagram)
 
     @property
-    def mermaid_code(self) -> str:
+    def builder(self):
         klass = classhelpers.to_class(self.klass)
         match self.mode:
             case "subclasses":
-                builder = SubclassConnector(klass, max_depth=self._max_depth)
-                return builder.get_graph_connection_text()
+                return SubclassConnector(klass, max_depth=self._max_depth)
             case "baseclasses":
-                builder = ParentClassConnector(klass, max_depth=self._max_depth)
-                return builder.get_graph_connection_text()
+                return ParentClassConnector(klass, max_depth=self._max_depth)
             case "mro":
-                builder = MroConnector(klass, max_depth=self._max_depth)
-                return builder.get_graph_connection_text()
+                return MroConnector(klass, max_depth=self._max_depth)
             case _:
                 raise ValueError(self.mode)
+
+    @property
+    def mermaid_code(self) -> str:
+        return self.builder.get_graph_connection_text()
 
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ class MkCommitConventions(mktemplate.MkTemplate):
                           "conventional_commits", or a list of commit_types
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(template="commit_conventions.jinja", **kwargs)
+        super().__init__(template="output/markdown/template", **kwargs)
         self._commit_types = commit_types
 
     @property

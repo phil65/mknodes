@@ -8,7 +8,7 @@ jinja = """
 {{ "https://raw.githubusercontent.com/phil65/mknodes/main/README.md" | MkInclude }}
 """
 
-# [output.markdown]
-# template = """
-# {{ node.text }}
-# """
+[output.markdown]
+template = """
+{{ node.text }}
+"""
