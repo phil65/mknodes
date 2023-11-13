@@ -86,9 +86,9 @@ class GitRepository(git.Repo):
         if commit in mapping:
             return mapping[commit]
         try:
-            return next(
-                (mapping[c] for c in self.iter_commits(commit) if c in mapping), None
-            )
+            idx = self.all_commits.index(commit)
+            all_commits = list(reversed(self.all_commits[:idx]))
+            return next((mapping[c] for c in all_commits if c in mapping), None)
         except ValueError:
             msg = f"Could not get version for {commit}"
             logger.exception(msg)
@@ -165,7 +165,7 @@ class GitRepository(git.Repo):
         return contexts.GitContext(
             main_branch=self.main_branch,
             repo_hoster=self.code_repository,
-            commits=self.get_commits(),
+            commits=self.all_commits,
             repo_name=self.repo_name,
             edit_uri=self.edit_uri,
             current_sha=self.head.object.hexsha,
