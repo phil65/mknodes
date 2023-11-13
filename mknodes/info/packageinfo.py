@@ -24,8 +24,9 @@ class PackageInfo:
         """
         self.package_name = pkg_name
         self.distribution = packagehelpers.get_distribution(pkg_name)
+        assert self.distribution
         logger.debug("Loaded package info: '%s'", pkg_name)
-        self.metadata = packagehelpers.get_metadata(self.distribution).json
+        self.metadata = self.distribution.metadata_dict
         self.classifiers = self.metadata["classifier"]
         self.version = self.metadata["version"]
         self.name = self.metadata["name"]
@@ -64,7 +65,7 @@ class PackageInfo:
 
     @functools.cached_property
     def _required_deps(self) -> list[packagehelpers.Dependency]:
-        requires = packagehelpers.get_requires(self.distribution)
+        requires = self.metadata["requires_dist"]
         return [packagehelpers.get_dependency(i) for i in requires] if requires else []
 
     @functools.cached_property
@@ -168,7 +169,7 @@ class PackageInfo:
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         from mknodes.info import packageregistry
 
-        requires = packagehelpers.get_requires(self.distribution)
+        requires = self.metadata["requires_dist"]
         modules = (
             {packagehelpers.get_dependency(i).name for i in requires}
             if requires
@@ -211,9 +212,9 @@ class PackageInfo:
     @functools.cached_property
     def entry_points(self) -> dict[str, list[packagehelpers.EntryPoint]]:
         """Get entry points for this package."""
-        return packagehelpers.get_entry_points(self.distribution)
+        return packagehelpers.get_entry_points(self.distribution)  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":
     info = PackageInfo("jinja2")
-    print(list(info.metadata.keys()))
+    print(info.metadata["requires_dist"])

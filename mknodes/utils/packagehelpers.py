@@ -14,9 +14,12 @@ from packaging.markers import Marker
 from packaging.requirements import Requirement
 import pip._internal as pip
 
+from pip._internal.metadata import base, pkg_resources
+
 from mknodes.utils import log
 
 
+env = pkg_resources.Environment.from_paths(None)
 logger = log.get_logger(__name__)
 
 
@@ -47,23 +50,13 @@ def install_or_import(module_name: str) -> types.ModuleType:
 
 
 @functools.cache
-def get_distribution(name: str) -> metadata.Distribution:
+def get_distribution(name: str) -> base.BaseDistribution | None:
     """Cached version of metadata.distribution.
 
     Arguments:
         name: Name of the distribution to get an object for.
     """
-    return metadata.distribution(name)
-
-
-@functools.cache
-def get_metadata(dist: metadata.Distribution):
-    return dist.metadata
-
-
-@functools.cache
-def get_requires(dist: metadata.Distribution) -> list[str]:
-    return dist.requires or []
+    return env.get_distribution(name)
 
 
 @functools.cache
@@ -89,8 +82,8 @@ def get_marker(marker) -> Marker:
 
 
 @functools.cache
-def _get_entry_points(dist: metadata.Distribution | None = None, **kwargs):
-    return dist.entry_points if dist else metadata.entry_points(**kwargs)
+def _get_entry_points(dist: base.BaseDistribution | None = None, **kwargs):
+    return list(dist.iter_entry_points()) if dist else metadata.entry_points(**kwargs)
 
 
 def get_extras(markers: list) -> list[str]:
@@ -139,7 +132,7 @@ class EntryPoint:
 
 @functools.cache
 def get_entry_points(
-    dist: metadata.Distribution | str | None = None,
+    dist: base.BaseDistribution | str | None = None,
     group: str | None = None,
     **kwargs: Any,
 ) -> EntryPointMap:  # [str, list[EntryPoint]]
@@ -226,10 +219,8 @@ def list_pip_packages(
     # with warnings.catch_warnings():
     #     warnings.simplefilter("ignore")
 
-    from pip._internal.metadata import pkg_resources
-
     return list(
-        pkg_resources.Environment.from_paths(None).iter_installed_distributions(
+        env.iter_installed_distributions(
             local_only=local_only,
             skip=(),
             user_only=user_only,
