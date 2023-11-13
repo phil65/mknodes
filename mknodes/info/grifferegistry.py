@@ -97,7 +97,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         if module_name not in self._modules:
             parser = Parser(docstring_style)
             loader = GriffeLoader(docstring_parser=parser)
-            griffe_mod = loader.load_module(module_name)
+            griffe_mod = loader.load(module_name)
             if self.expand_wildcards:
                 loader.expand_wildcards(griffe_mod, external=True)
             self._modules[module_name] = griffe_mod
