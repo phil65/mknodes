@@ -94,26 +94,6 @@ class MkCode(mkcontainer.MkContainer):
         return f"{first_line}\n{self.text}\n{self.fence_boundary}"
 
     @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        page += mk.MkHeader("Regular", level=3)
-        node_1 = MkCode("a = 1 + 2", language="py")
-        page += mk.MkReprRawRendered(node_1)
-
-        page += mk.MkHeader("Syntax highlighting", level=3)
-        node_2 = MkCode("var z = x + y;", language="js", title="syntax highlight")
-        page += mk.MkReprRawRendered(node_2)
-
-        page += mk.MkHeader("Highlighting lines", level=3)
-        node_3 = MkCode("1\n2\n3\n4", highlight_lines=[1, 3])
-        page += mk.MkReprRawRendered(node_3)
-
-        page += mk.MkHeader("Numbered lines", level=3)
-        node_4 = MkCode("1\n2\n3\n4", linenums=10)
-        page += mk.MkReprRawRendered(node_4)
-
-    @classmethod
     def for_file(
         cls,
         path: str | os.PathLike,

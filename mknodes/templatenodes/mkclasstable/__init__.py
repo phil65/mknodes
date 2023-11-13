@@ -27,16 +27,6 @@ class MkClassTable(mktemplatetable.MkTemplateTable):
             for kls in self.klasses
         ]
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        klasses = [mk.MkTable, MkClassTable, mk.MkNav]
-        node_1 = MkClassTable(klasses=klasses, layout="compact")
-        node_2 = MkClassTable(klasses=klasses, layout="default")
-        page += mk.MkReprRawRendered(node_1, header="### Compact layout")
-        page += mk.MkReprRawRendered(node_2, header="### Extended layout")
-
 
 if __name__ == "__main__":
     table = MkClassTable(klasses=[mktemplatetable.MkTemplateTable], layout="default")

@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import upath
 
-from typing import Any, Literal, get_args
+from typing import Any, Literal
 
 from mknodes.basenodes import mkcode
 from mknodes.utils import helpers, log, resources
@@ -110,14 +110,6 @@ class MkSeeDir(mkcode.MkCode):
     @text.setter
     def text(self, text):
         self.obj = text
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        for style in get_args(DirectoryTreeStyleStr):
-            node = MkSeeDir("mknodes/manual", style=style)
-            page += mk.MkReprRawRendered(node, header=f"### Style '{style}'")
 
 
 if __name__ == "__main__":

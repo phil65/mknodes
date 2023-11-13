@@ -38,15 +38,6 @@ class MkReprRawRendered(mktemplate.MkTemplate):
             case _:
                 return self._node
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        example_node = mk.MkAdmonition("Some text")
-        node = MkReprRawRendered(node=example_node)
-        page += node
-        page += MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     import mknodes as mk

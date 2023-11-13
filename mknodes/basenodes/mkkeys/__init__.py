@@ -41,14 +41,6 @@ class MkKeys(mknode.MkNode):
         key_str = "+".join(self.keys)
         return f"++{key_str}++"
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        page += mk.MkAdmonition("MkKeys can be used to show Key combinations.")
-        page += mk.MkReprRawRendered(MkKeys("M+k+K+e+y+s"))
-        page += mk.MkReprRawRendered(MkKeys("Ctrl+A"))
-
 
 if __name__ == "__main__":
     keys = MkKeys(keys="Ctrl+A")

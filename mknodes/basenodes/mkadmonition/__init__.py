@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import textwrap
 
-from typing import Any, Literal, get_args
+from typing import Any, Literal
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
@@ -93,31 +93,6 @@ class MkAdmonition(mkcontainer.MkContainer):
         text = "\n".join(i.to_markdown() for i in self.items)
         indented = textwrap.indent(text, "    ")
         return f"{self.title_line}\n{indented}\n{annotations}"
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = mk.MkAdmonition("MkAdmonitions can carry annotations(1).")
-        node.annotations[1] = "Super handy!"
-        page += mk.MkReprRawRendered(node)
-        # AdmonitionTypeStr is a Literal containing all Admonition types
-        for typ in get_args(datatypes.AdmonitionTypeStr):
-            page += mk.MkHeader(f"Type '{typ}'", level=3)
-            content = f"This is type **{typ}**"
-            node = mk.MkAdmonition(typ=typ, content=content)
-            page += mk.MkReprRawRendered(node)
-        page += mk.MkHeader("Collapsible and expandable", level=3)
-        node = mk.MkAdmonition(
-            content="Admonitions can also be collapsible.",
-            collapsible=True,
-            title="Expand me!",
-            expanded=True,  # this changes the initial state to expanded
-        )
-        page += mk.MkReprRawRendered(node)
-        page += mk.MkHeader("Inlined", level=3)
-        node = mk.MkAdmonition(content="Inlined.", inline="left", title="Inlined.")
-        page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

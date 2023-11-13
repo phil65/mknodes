@@ -34,15 +34,6 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         return self.get_element().to_string()
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkSpeechBubble(MkSpeechBubble.__doc__)
-        page += mk.MkReprRawRendered(node)
-        node = MkSpeechBubble(MkSpeechBubble.__doc__, arrow="left")
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     grid = MkSpeechBubble("test")

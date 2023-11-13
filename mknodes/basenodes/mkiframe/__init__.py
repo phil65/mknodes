@@ -39,13 +39,6 @@ class MkIFrame(mknode.MkNode):
         self.width = width
         self.height = height
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        frame = MkIFrame(url="https://phil65.github.io/mknodes/", width=600, height=600)
-        page += mk.MkReprRawRendered(frame)
-
     def _to_markdown(self) -> str:
         if not self.url:
             return ""

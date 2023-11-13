@@ -58,15 +58,6 @@ class MkContainer(mknode.MkNode):
     def __iter__(self) -> Iterator[mknode.MkNode]:  # type: ignore
         return iter(self.items)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        item_1 = mk.MkCode("a = 1 + 2")
-        item_2 = mk.MkText("abc")
-        node = MkContainer(content=[item_1, item_2])
-        page += mk.MkReprRawRendered(node)
-
     def _to_markdown(self) -> str:
         return self.block_separator.join(i.to_markdown() for i in self.items)
 

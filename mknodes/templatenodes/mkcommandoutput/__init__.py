@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-import os
 
 from typing import Any
 
@@ -53,17 +52,6 @@ class MkCommandOutput(mknode.MkNode):
     def _to_markdown(self):
         call = " ".join(self.call)
         return TEXT.format(input=call, output=self.output)
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        if os.environ.get("CI"):
-            node = MkCommandOutput(["mknodes", "--help"])
-            node = mk.MkReprRawRendered(node)
-        else:
-            node = mk.MkHeader("Sadly breaks log output ATM, so only triggered in CI")
-        page += node
 
 
 if __name__ == "__main__":

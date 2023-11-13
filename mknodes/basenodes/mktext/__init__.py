@@ -8,9 +8,6 @@ from mknodes.utils import helpers, log, pathhelpers
 
 logger = log.get_logger(__name__)
 
-RESPONSE_CODE_OK = 200
-EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
-
 
 class MkText(mknode.MkNode):
     """Class for any Markup text.
@@ -66,15 +63,6 @@ class MkText(mknode.MkNode):
     @children.setter
     def children(self, val):
         pass
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkText("This is the most basic node. It contains `markdown` text")
-        page += mk.MkReprRawRendered(node, header="### Regular")
-        if from_url := MkText.from_url(EXAMPLE_URL):
-            page += mk.MkReprRawRendered(from_url, header="### From URL")
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:

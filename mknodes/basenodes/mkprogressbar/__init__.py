@@ -59,19 +59,6 @@ class MkProgressBar(mknode.MkNode):
     def _to_markdown(self) -> str:
         return rf'[={self.percentage}% "{self.label}"]'
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkProgressBar(60)
-        page += mk.MkReprRawRendered(node, header="### Regular")
-        node = MkProgressBar(60, style="thin")
-        page += mk.MkReprRawRendered(node, header="### Thin")
-        node = MkProgressBar(70, style="candystripe", label="We reached {percentage}!")
-        page += mk.MkReprRawRendered(node, header="### Candystripe")
-        node = MkProgressBar(80, style="candystripe_animated")
-        page += mk.MkReprRawRendered(node, header="### Animated")
-
 
 if __name__ == "__main__":
     bar = MkProgressBar(percentage=30, label=None)

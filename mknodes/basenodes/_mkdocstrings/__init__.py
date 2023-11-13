@@ -205,19 +205,6 @@ class MkDocStrings(mknode.MkNode):
         option_text = "\n".join(option_lines)
         return f"{md}    options:\n{option_text}\n"
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        page += "The MkDocStrings node shows DocStrings from mkdocstrings addon."
-        node = MkDocStrings(
-            "mknodes.MkDocStrings",
-            show_if_no_docstring=True,
-            header="DocStrings",
-            heading_level=3,
-        )
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     docstrings = MkDocStrings("a.b", show_submodules=True)

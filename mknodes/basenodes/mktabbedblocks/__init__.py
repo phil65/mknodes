@@ -14,15 +14,6 @@ class MkTabbedBlocks(mktabcontainer.MkTabContainer):
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.blocks.tab")]
     Tab = mktabs.MkTabBlock
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # this one is basically the same as MkTabbed,
-        # but based on new pymdownx block syntax.
-        node = MkTabbedBlocks(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mk.MkReprRawRendered(node, header="### Regular")
-
 
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")

@@ -35,16 +35,6 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
         root = self.get_element()
         return root.to_string(space="") if root is not None else ""
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        code_col = [mk.MkCode("print('hello world')\nsys.exit()") for _ in range(3)]
-        admonitions = [mk.MkAdmonition("Admonition inside cell") for _ in range(3)]
-        tabs = [mk.MkTabbed(dict(A=["Tab a"], B=["Tab b"])) for _ in range(3)]
-        data: dict[str, list] = dict(Code=code_col, Admonitions=admonitions, Tabs=tabs)
-        page += mk.MkReprRawRendered(MkHtmlTable(data))
-
 
 if __name__ == "__main__":
     table = MkHtmlTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})

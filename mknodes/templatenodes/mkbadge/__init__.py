@@ -129,21 +129,6 @@ class MkBadge(mkimage.MkImage):
         unique = f"{self.label}_{self.value}_{hashed}.svg"
         return helpers.slugify(unique)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkBadge(label="Some", value="Badge")
-        page += mk.MkReprRawRendered(node)
-        node = MkBadge(label="Some", value="Badge", font_size=12)
-        page += mk.MkReprRawRendered(node)
-        node = MkBadge(label="Some", value="Badge", num_padding_chars=5)
-        page += mk.MkReprRawRendered(node)
-        node = MkBadge(label="Some", value="Badge", badge_color="teal")
-        page += mk.MkReprRawRendered(node)
-        node = MkBadge(label="Some", value="Badge", use_gitlab_style=True)
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     img = MkBadge("Left", "right")

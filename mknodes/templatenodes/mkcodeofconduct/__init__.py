@@ -41,15 +41,6 @@ class MkCodeOfConduct(mktemplate.MkTemplate):
             case _:
                 raise TypeError(self._contact_email)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkCodeOfConduct(contact_email="my@email.com")
-        page += mk.MkReprRawRendered(node, header="### Explicit email")
-        node = MkCodeOfConduct()
-        page += mk.MkReprRawRendered(node, header="### Email from project")
-
 
 if __name__ == "__main__":
     coc = MkCodeOfConduct("my@email.com")

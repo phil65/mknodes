@@ -45,15 +45,6 @@ class MkCommitConventions(mktemplate.MkTemplate):
                 val = self._commit_types
         return commitconventions.get_types(val)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkCommitConventions()
-        page += mk.MkReprRawRendered(node, header="### All commit_types")
-        node = MkCommitConventions(["fix", "feat", "refactor"])
-        page += mk.MkReprRawRendered(node, header="### Selected commit_types")
-
 
 if __name__ == "__main__":
     conventions = MkCommitConventions()

@@ -72,24 +72,6 @@ class MkLink(mknode.MkNode):
         tooltip = f" {self.tooltip!r}" if self.tooltip else ""
         return f"[{prefix}{self.title}]({self.url}{tooltip})"
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        url = "http://www.google.de"
-        node = mk.MkLink(url, "This is a link.")
-        page += mk.MkReprRawRendered(node, header="### Regular")
-        node = mk.MkLink(url, "Disguised as button.", as_button=True)
-        page += mk.MkReprRawRendered(node, header="### Button")
-        node = mk.MkLink(url, "Colored.", as_button=True, primary_color=True)
-        page += mk.MkReprRawRendered(node, header="### Colored")
-        node = mk.MkLink(url, "With icon.", icon="octicons/link-24")
-        page += mk.MkReprRawRendered(node, header="### With icon")
-        node = mk.MkLink(url, "With tooltip.", tooltip="Test")
-        page += mk.MkReprRawRendered(node, header="### With tooltip")
-        node = mk.MkLink(page.parent.index_page, "To page.")
-        page += mk.MkReprRawRendered(node, header="###To page")
-
 
 if __name__ == "__main__":
     link = MkLink("www.test.de")

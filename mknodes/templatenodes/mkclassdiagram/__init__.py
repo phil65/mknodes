@@ -97,20 +97,6 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             direction=self.direction,
         )
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        parent_diagram = MkClassDiagram(klass=MkClassDiagram, mode="baseclasses")
-        sub = MkClassDiagram(klass=mk.MkContainer, mode="subclasses", direction="LR")
-        mro_diagram = MkClassDiagram(klass=mk.MkTable, mode="mro")
-        page += "### Parent class hierarchy: MkClassDiagram"
-        page += mk.MkReprRawRendered(parent_diagram)
-        page += "### Subclass hierarchy: MkContainer"
-        page += mk.MkReprRawRendered(sub)
-        page += "### Method resolution order: MkTable"
-        page += mk.MkReprRawRendered(mro_diagram)
-
     @property
     def builder(self):
         klass = classhelpers.to_class(self.klass)

@@ -193,28 +193,6 @@ class MkTimeline(mkcontainer.MkContainer):
         self += item
         return item
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkTimeline()
-        for i in range(1, 6):
-            node += MkTimelineItem(
-                title=f"Image card {i}",
-                content="A card with an image.",
-                label=f"{i} JANUARY 2023",
-                link="https://phil65.github.io/mknodes",
-                image=f"https://picsum.photos/40{i}",
-            )
-            admonition = mk.MkAdmonition("test")
-            node += MkTimelineItem(
-                title=f"Card {i}",
-                content=admonition,
-                label=f"{i} JANUARY 2023",
-                link="https://phil65.github.io/mknodes",
-            )
-        page += node
-
 
 if __name__ == "__main__":
     import mknodes as mk

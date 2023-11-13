@@ -107,20 +107,6 @@ class MkDiagram(mkcode.MkCode):
         """MkCode override."""
         return "mermaid"
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        page += "MkDiagrams can be used to create Mermaid diagrams manually."
-        diagram = MkDiagram(["1", "2", "3"], connections=[("1", "2"), ("2", "3")])
-        page += mk.MkReprRawRendered(diagram, header="### Regular")
-        diagram = MkDiagram(
-            ["1", "2", "3"],
-            connections=[("1", "2"), ("1", "3", "comment")],
-            direction="LR",
-        )
-        page += mk.MkReprRawRendered(diagram, header="### Direction")
-
 
 if __name__ == "__main__":
     diagram = MkDiagram(["a", "b", "c", "d"])

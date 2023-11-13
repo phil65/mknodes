@@ -44,15 +44,6 @@ class MkLicense(mktext.MkText):
             return lic.content
         return self.ctx.metadata.license_text or ""
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkLicense()
-        page += mk.MkReprRawRendered(node, header="### From project")
-        node = MkLicense("GPL-3.0")
-        page += mk.MkReprRawRendered(node, header="### Explicit")
-
 
 if __name__ == "__main__":
     lic = MkLicense.with_context("GPL-3.0")

@@ -32,17 +32,6 @@ class MkTable(mkbasetable.MkBaseTable):
         data_txt = ["| " + " | ".join(line) + " |" for line in data]
         return "\n".join([header_txt, divider_text, *data_txt]) + "\n"
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node_1 = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
-        # data can be given in different shapes.
-        page += mk.MkReprRawRendered(node_1, header="### From dict")
-        dicts = [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}]
-        node_2 = MkTable(data=dicts)
-        page += mk.MkReprRawRendered(node_2, header="### From list")
-
 
 if __name__ == "__main__":
     table = MkTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})

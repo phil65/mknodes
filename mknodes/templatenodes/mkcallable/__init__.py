@@ -59,13 +59,6 @@ class MkCallable(mknode.MkNode):
         node = self.__call__()
         return node.files
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkCallable(lambda: mk.MkAdmonition("Nested!"))
-        page += mk.MkReprRawRendered(node)
-
     def to_markdown(self) -> str:
         node = self.__call__()
         return node.to_markdown()

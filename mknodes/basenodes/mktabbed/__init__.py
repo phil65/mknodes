@@ -17,17 +17,6 @@ class MkTabbed(mktabcontainer.MkTabContainer):
     ]
     Tab = mktabs.MkTab
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # this node is basically a container and manager for MkTabs nodes.
-        node = MkTabbed(tabs={"Tab 1": "Some markdown", "Tab 2": "Other Markdown"})
-        page += mk.MkReprRawRendered(node, header="### Regular")
-        admonition = mk.MkAdmonition("Nested admonition")
-        nested_node = MkTabbed(tabs={"Tabs": node, "Admonition": admonition})
-        page += mk.MkReprRawRendered(nested_node, header="### Nested")
-
 
 if __name__ == "__main__":
     tabs = dict(Tab1="Some text", Tab2="Another text")

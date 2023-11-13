@@ -42,13 +42,6 @@ class MkDevTools(mktemplate.MkTemplate):
             case _:
                 raise TypeError(self._tools)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkDevTools()
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     setup_text = MkDevTools.with_context()

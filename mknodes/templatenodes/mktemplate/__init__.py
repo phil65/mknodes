@@ -55,10 +55,6 @@ class MkTemplate(mkcontainer.MkContainer):
     def items(self, val):
         pass
 
-    @classmethod
-    def create_example_page(cls, page):
-        page += MkTemplate(template="nodes_index.jinja")
-
     def _to_markdown(self) -> str:
         return self.env.render_template(
             self.template,

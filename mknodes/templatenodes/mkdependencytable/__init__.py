@@ -47,15 +47,6 @@ class MkDependencyTable(mktemplatetable.MkTemplateTable):
             for (package_info, dep_info) in self.required_packages.items()
         ]
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node_1 = MkDependencyTable()
-        page += mk.MkReprRawRendered(node_1, header="### From project")
-        node_2 = MkDependencyTable("jinjarope", layout="badge")
-        page += mk.MkReprRawRendered(node_2, header="### Explicitely defined")
-
 
 if __name__ == "__main__":
     table = MkDependencyTable("mknodes")

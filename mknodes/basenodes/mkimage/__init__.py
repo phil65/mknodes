@@ -109,29 +109,6 @@ class MkImage(mknode.MkNode):
             markdown_link = f"[{markdown_link}]({self.url})"
         return markdown_link
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkImage(path="https://picsum.photos/200", caption="Dummy image")
-        page += mk.MkReprRawRendered(node, header="### With caption")
-
-        node = MkImage(path="https://picsum.photos/200", align="right")
-        page += mk.MkReprRawRendered(node, header="### Aligned")
-
-        node = MkImage(path="https://picsum.photos/200", width=500)
-        page += mk.MkReprRawRendered(node, header="### Fixed width")
-
-        node = MkImage(path="https://picsum.photos/200", target="https://www.google.com")
-        page += mk.MkReprRawRendered(node, header="### Linked")
-
-        node = MkImage(
-            path="https://picsum.photos/200",
-            target="https://www.google.com",
-            path_dark_mode="https://picsum.photos/300",
-        )
-        page += mk.MkReprRawRendered(node, header="### Separate dark mode")
-
 
 if __name__ == "__main__":
     img = MkImage("Some path", target="http://www.google.de", title="test")

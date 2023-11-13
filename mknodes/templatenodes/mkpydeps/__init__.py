@@ -115,13 +115,6 @@ class MkPyDeps(mknode.MkNode):
     def _to_markdown(self) -> str:
         return f"<body>\n\n{self.svg}\n\n</body>\n"
 
-    # @classmethod
-    # def create_example_page(cls, page):
-    #     import mknodes as mk
-
-    #     node = MkPyDeps("mknodes/data/tools.py", max_bacon=1, max_module_depth=1)
-    #     page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     node = MkPyDeps.with_context("mknodes/data/tools.py", max_bacon=1)

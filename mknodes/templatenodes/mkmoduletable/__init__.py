@@ -30,16 +30,6 @@ class MkModuleTable(mktemplatetable.MkTemplateTable):
             for module in self.modules
         ]
 
-    @classmethod
-    def create_example_page(cls, page):
-        import jinja2
-
-        import mknodes as mk
-
-        modules = classhelpers.get_submodules(jinja2)
-        node = MkModuleTable(modules=modules)
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     table = MkModuleTable(modules=[mktemplatetable, helpers, classhelpers])

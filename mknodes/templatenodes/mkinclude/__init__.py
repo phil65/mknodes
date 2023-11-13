@@ -9,9 +9,6 @@ from mknodes.pages import mkpage
 from mknodes.utils import log, pathhelpers
 
 
-EXAMPLE_URL = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
-
-
 logger = log.get_logger(__name__)
 
 
@@ -45,15 +42,9 @@ class MkInclude(mktext.MkText):
             case _:
                 raise TypeError(self.target)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkInclude(EXAMPLE_URL)
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     page = mkpage.MkPage(content="test")
-    include = MkInclude(target=EXAMPLE_URL)
+    url = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
+    include = MkInclude(target=url)
     print(include)

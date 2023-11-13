@@ -48,13 +48,6 @@ class MkPrettyPrint(mktemplate.MkTemplate):
         self.sort_dicts = sort_dicts
         self.underscore_numbers = underscore_numbers
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkPrettyPrint(obj=[dict(a="test " * 5)] * 5)
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     section = MkPrettyPrint([dict(a="test " * 5)] * 5, header="test")

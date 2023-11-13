@@ -89,20 +89,6 @@ class MkShowcase(mkcontainer.MkContainer):
         card = mkcard.MkCard(target=target, title=title, image=image, caption=caption)
         self.append(card)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkShowcase()
-        for i in range(6):
-            node.add_card(
-                target="https://phil65.github.io/mknodes/",
-                title=f"Title {i}",
-                image="https://picsum.photos/300",
-                caption=f"Caption {i}",
-            )
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     import mknodes as mk

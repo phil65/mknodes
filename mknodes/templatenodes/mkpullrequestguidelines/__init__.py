@@ -22,11 +22,6 @@ class MkPullRequestGuidelines(mktemplate.MkTemplate):
         """
         super().__init__(template="pullrequest_guidelines.jinja", **kwargs)
 
-    @classmethod
-    def create_example_page(cls, page):
-        node = MkPullRequestGuidelines()
-        page += node
-
 
 if __name__ == "__main__":
     guideline = MkPullRequestGuidelines()

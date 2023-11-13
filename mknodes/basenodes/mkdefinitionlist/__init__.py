@@ -44,13 +44,6 @@ class MkDefinition(mkcontainer.MkContainer):
         text = super()._to_markdown()
         return f"{self.title}\n:   {filters.do_indent(text)}\n"
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkDefinition("hfkdlsjk", title="test")
-        page += mk.MkReprRawRendered(node, header="### Regular")
-
 
 class MkDefinitionList(mkcontainer.MkContainer):
     """Node for definition lists."""
@@ -101,18 +94,6 @@ class MkDefinitionList(mkcontainer.MkContainer):
     def _to_markdown(self) -> str:
         items = [f"{k}\n:   {filters.do_indent(str(v))}\n" for k, v in self.data.items()]
         return "".join(items)
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        defs_1 = dict(something="A definition", somethingelse="Another\ndefinition")
-        node = MkDefinitionList(data=defs_1)
-        page += mk.MkReprRawRendered(node, header="### Regular")
-
-        defs_2 = dict(admonition=mk.MkAdmonition("Nested markup"))
-        node = MkDefinitionList(data=defs_2)
-        page += mk.MkReprRawRendered(node, header="### Nested markup")
 
 
 if __name__ == "__main__":

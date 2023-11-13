@@ -110,15 +110,6 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         self.editables_only = editables_only
         super().__init__(graph_type="flow", direction=direction, **kwargs)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        tree = MkPipDepTree(direction="LR")
-        page += mk.MkReprRawRendered(tree)
-        tree = MkPipDepTree("mkdocstrings", direction="LR")
-        page += mk.MkReprRawRendered(tree)
-
     @property
     def package(self) -> str:
         match self._package:

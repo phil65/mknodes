@@ -55,15 +55,6 @@ class MkPluginFlow(mktemplate.MkTemplate):
     def hooks_for_plugin(self, plugin):
         return [e for e in self.event_plugin.flow if hasattr(plugin, e)]
 
-    @classmethod
-    def create_example_page(cls, page):
-        from mkdocs.contrib import search
-
-        import mknodes as mk
-
-        node = MkPluginFlow(plugin=search.SearchPlugin)
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     from mkdocs.contrib import search

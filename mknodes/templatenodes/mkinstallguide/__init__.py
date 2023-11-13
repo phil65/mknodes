@@ -54,18 +54,6 @@ class MkInstallGuide(mktemplate.MkTemplate):
     def distribution(self, value):
         self._distribution = value
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # this will show an install guide for our associated project
-        node = MkInstallGuide()
-        page += mk.MkReprRawRendered(node, header="### From project")
-
-        # we can also explicitely define the repositories
-        node = MkInstallGuide("mkdocs", package_repos=["pipx"])
-        page += mk.MkReprRawRendered(node, header="### Explicit")
-
 
 if __name__ == "__main__":
     guide = MkInstallGuide.with_context()

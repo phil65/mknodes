@@ -65,27 +65,6 @@ class MkMaterialBadge(mknode.MkNode):
     def url(self) -> str:
         return self.ctx.links.get_url(self.target) if self.target else ""
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        icon = ":mdi-file:"
-        node = MkMaterialBadge(icon, text="text")
-        page += mk.MkReprRawRendered(node)
-
-        node = MkMaterialBadge(icon, text="text", align_right=True)
-        page += mk.MkReprRawRendered(node)
-
-        node = MkMaterialBadge(icon, text="text", animated=True)
-        page += mk.MkReprRawRendered(node)
-
-        node = MkMaterialBadge(icon, text="text", animated=True, align_right=True)
-        page += mk.MkReprRawRendered(node)
-
-        url = "https://phil65.github.io/mknodes"
-        node = MkMaterialBadge(icon, text="text", target=url)
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     img = MkMaterialBadge("mdi:wrench", "test", align_right=True, animated=True)

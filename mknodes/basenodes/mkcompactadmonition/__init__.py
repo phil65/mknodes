@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, get_args
+from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.data import datatypes
@@ -41,16 +41,6 @@ class MkCompactAdmonition(mknode.MkNode):
         text_div = xmlhelpers.Div("mdx-grid-child", parent=root)
         text_div.text = str(self.text)
         return root.to_string()
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        for typ in get_args(datatypes.AdmonitionTypeStr):
-            page += mk.MkHeader(f"Type '{typ}'", level=3)
-            content = f"This is type **{typ}**"
-            node = MkCompactAdmonition(typ=typ, text=content)
-            page += mk.MkReprRawRendered(node)
 
 
 if __name__ == "__main__":

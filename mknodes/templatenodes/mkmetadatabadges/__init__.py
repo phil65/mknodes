@@ -121,29 +121,6 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def items(self, value):
         pass
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkMetadataBadges(typ="classifiers")
-        page += mk.MkReprRawRendered(node, header="### Classifiers")
-        node = MkMetadataBadges(typ="keywords")
-        page += mk.MkReprRawRendered(node, header="### Keywords")
-        node = MkMetadataBadges(typ="keywords_combined")
-        page += mk.MkReprRawRendered(node, header="### Keywords")
-        node = MkMetadataBadges(typ="websites")
-        page += mk.MkReprRawRendered(node, header="### Websites")
-        node = MkMetadataBadges(typ="dependencies")
-        page += mk.MkReprRawRendered(node, header="### Dependencies")
-        node = MkMetadataBadges(typ="dependencies", package="mkdocs")
-        page += mk.MkReprRawRendered(node, header="### For other package")
-        # node = MkMetadataBadges(typ="installed_packages")
-        # page += mk.MkReprRawRendered(node, header="### Installed packages")
-        node = MkMetadataBadges(typ="classifiers", use_gitlab_style=True)
-        page += mk.MkReprRawRendered(node, header="### Gitlab style")
-        node = MkMetadataBadges(typ="required_python", badge_color="red")
-        page += mk.MkReprRawRendered(node, header="### Colored")
-
 
 if __name__ == "__main__":
     node = MkMetadataBadges.with_context("websites")

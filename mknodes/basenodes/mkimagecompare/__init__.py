@@ -35,16 +35,6 @@ class MkImageCompare(mktemplate.MkTemplate):
         self.before_image = before_image
         self.after_image = after_image
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkImageCompare(
-            before_image="https://picsum.photos/700",
-            after_image="https://picsum.photos/701",
-        )
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     img = MkImageCompare("a", "b")

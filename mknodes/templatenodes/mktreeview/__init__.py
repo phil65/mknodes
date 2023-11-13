@@ -4,7 +4,7 @@ from collections.abc import Callable
 import os
 import upath
 
-from typing import Any, get_args
+from typing import Any
 
 from mknodes import treelib
 from mknodes.basenodes import mkcode, mknode
@@ -70,20 +70,6 @@ class MkTreeView(mkcode.MkCode):
             case _:
                 raise TypeError(self.tree)
         return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
-
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # Different styles
-        for style in get_args(treestyles.TreeStyleStr):
-            node = MkTreeView("mknodes/manual", style=style)
-            page += mk.MkReprRawRendered(node, header=f"### Style '{style}'")
-
-        # Showing a remote tree structure (using fsspec package)
-        # opts = dict(org="mkdocstrings", repo="mkdocstrings")
-        # node = MkTreeView("github://", storage_options=opts, maximum_depth=2)
-        # page += mk.MkReprRawRendered(node, header="### From remote (FsSpec)")
 
 
 if __name__ == "__main__":

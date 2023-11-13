@@ -61,15 +61,6 @@ class MkCliDoc(mktemplate.MkTemplate):
                 prog_name = self.prog_name
         return clihelpers.get_cli_info(instance, command=prog_name)
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkCliDoc(target="mkdocs_mknodes.cli:cli")
-        page += mk.MkReprRawRendered(node)
-        node = MkCliDoc(target="mkdocs_mknodes.cli:cli", prog_name="build")
-        page += mk.MkReprRawRendered(node)
-
 
 if __name__ == "__main__":
     docstrings = MkCliDoc.with_context("mkdocs_mknodes.cli:cli", show_subcommands=True)

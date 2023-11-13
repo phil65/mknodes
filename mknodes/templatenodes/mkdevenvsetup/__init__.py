@@ -64,15 +64,6 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
     def build_backend(self, value):
         self._build_backend = value
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        node = MkDevEnvSetup()
-        page += mk.MkReprRawRendered(node, header="### From project")
-        node = MkDevEnvSetup(repo_url="http://url_to_git_repo.com/name.git")
-        page += mk.MkReprRawRendered(node, header="### Explicit")
-
 
 if __name__ == "__main__":
     setup_text = MkDevEnvSetup(build_backend="flit")

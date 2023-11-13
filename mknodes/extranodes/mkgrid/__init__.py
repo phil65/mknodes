@@ -42,17 +42,6 @@ class MkGrid(mkcontainer.MkContainer):
         root = self.get_element()
         return root.to_string(space="")
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # only works for Mkdocs-material sponsors.
-        ls = ["Item 1", "Item 2", "Item 3"]
-        item_1 = mk.MkList(ls)
-        item_2 = mk.MkKeys(keys=["Ctrl+A"])
-        grid = MkGrid([item_1, item_2])
-        page += mk.MkReprRawRendered(grid)
-
 
 if __name__ == "__main__":
     import mknodes as mk

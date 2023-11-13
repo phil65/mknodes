@@ -44,37 +44,6 @@ class MkConfigSetting(mktemplate.MkTemplate):
         self.optional = optional
         self.mode = mode
 
-    @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        setting = {"plugins": {"mknodes": {"path": "path.to.module"}}}
-        desc = "Some **markdown** to describe the setting"
-        node = MkConfigSetting(
-            "path",
-            setting=setting,
-            description=desc,
-            default="path.to.module",
-        )
-        page += mk.MkReprRawRendered(node, header="### YAML")
-        node = MkConfigSetting(
-            "path",
-            mode="json",
-            setting=setting,
-            description=desc,
-            default="path.to.module",
-        )
-        page += mk.MkReprRawRendered(node, header="### JSON")
-        node = MkConfigSetting(
-            "path",
-            mode="toml",
-            version_added="2.1.0",
-            setting=setting,
-            description=desc,
-            default="path.to.module",
-        )
-        page += mk.MkReprRawRendered(node, header="### TOML")
-
 
 if __name__ == "__main__":
     setting = {"path": {"to": "setting"}}
