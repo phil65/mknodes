@@ -62,8 +62,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.use_gitlab_style = use_gitlab_style
 
     @property
-    def badge_content(self) -> list[tuple]:
-        items: list[tuple] = []
+    def badge_content(self) -> list[tuple]:  # noqa: PLR0911
         ctx = (
             packageregistry.get_info(self._package)
             if self._package
@@ -71,36 +70,33 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         )
         match self.typ:
             case "classifiers":
-                dct = ctx.classifier_map
-                for category, labels in dct.items():
+                items: list[tuple] = []
+                for category, labels in ctx.classifier_map.items():
                     items.extend([(i, category, None) for i in labels])
+                return items
             case "keywords":
-                items.extend((keyword, "", None) for keyword in ctx.keywords)
+                return [(keyword, "", None) for keyword in ctx.keywords]
             case "keywords_combined":
-                items.append(("Keywords", " | ".join(ctx.keywords), None))
+                return [("Keywords", " | ".join(ctx.keywords), None)]
             case "required_python":
-                string = ctx.required_python_version
-                items.append(("Python", string, "https://www.python.org"))
+                return [("Python", ctx.required_python_version, "https://python.org")]
             case "websites":
-                urls = [
+                return [
                     (name, parse.urlparse(url).netloc, url)
                     for name, url in ctx.urls.items()
                 ]
-                items.extend(urls)
             case "dependencies":
-                info = ctx.required_packages
-                items.extend((p.name, p.version, p.homepage) for p in info)
+                return [(p.name, p.version, p.homepage) for p in ctx.required_packages]
             case "installed_packages":
-                items.extend(
+                return [
                     (p.name, p.version, p.homepage)
                     for p in packageregistry.get_installed_packages()
-                )
+                ]
             case str():
                 raise ValueError(self.typ)
             case _ if self.typ in datatypes.CLASSIFIERS:
                 labels = ctx.classifier_map.get(self.typ, [])
-                items.extend([(i, self.typ, None) for i in labels])
-        return items
+                return [(i, self.typ, None) for i in labels]
 
     @property
     def items(self) -> list[mknode.MkNode]:
