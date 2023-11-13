@@ -75,7 +75,7 @@ from .templatenodes.mkcommentedcode import MkCommentedCode
 from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
 from .templatenodes.mkpluginflow import MkPluginFlow
-from .templatenodes.mktemplate import MkTemplate, MkTemplate as MkJinjaTemplate
+from .templatenodes.mktemplate import MkTemplate
 from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
 
@@ -164,7 +164,6 @@ __all__ = [
     "MkTaskList",
     "MkTimeline",
     "MkTemplate",
-    "MkJinjaTemplate",
     "MkPyDeps",
     "MkPipDepTree",
     "Router",

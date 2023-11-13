@@ -1,11 +1,11 @@
 [metadata]
 icon = "simple-icons:jinja"
-name = "MkJinjaTemplate"
+name = "MkTemplate"
 virtual_children = true
 
 [examples.regular]
 title = "From project"
 jinja = """
-{{ "why_mknodes.jinja" | MkJinjaTemplate }}
+{{ "why_mknodes.jinja" | MkTemplate }}
 """
 
