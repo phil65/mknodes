@@ -91,8 +91,11 @@ class PackageInfo:
     @functools.cached_property
     def keywords(self) -> list[str]:
         """Return a list of keywords from metadata."""
-        if (kw := self.metadata.get("keywords", [])) and "," in kw[0]:
+        kw = self.metadata.get("keywords", [])
+        if kw and "," in kw[0]:
             return kw[0].split(",")
+        if kw:
+            return kw
         return []
 
     @functools.cached_property
