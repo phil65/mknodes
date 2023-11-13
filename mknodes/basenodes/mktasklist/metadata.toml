@@ -9,3 +9,14 @@ title = "Regular"
 jinja = """
 {{ [_mk.MkTask(True, "Item 1"), _mk.MkTask(True, "Item 2")] | MkTaskList }}
 """
+
+[fragments]
+task = """
+- [{{ "x" if node.value else " " }}] {{ node.items | join(node.block_separator) | indent }}
+
+"""
+
+[output.markdown]
+template = """
+{{ node.items | join(node.block_separator) }}
+"""

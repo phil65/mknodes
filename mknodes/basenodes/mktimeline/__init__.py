@@ -158,7 +158,7 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         root = self.get_element()
-        return "\n\n" + root.to_string() + "\n\n"
+        return "\n\n" + root.to_string(space="") + "\n\n"
 
     def add_item(
         self,

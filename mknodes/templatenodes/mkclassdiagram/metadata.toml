@@ -25,3 +25,16 @@ title = "MRO diagram"
 jinja = """
 {{ _mk.MkTable | MkClassDiagram(mode="mro") }}
 """
+
+[output.markdown]
+template = """
+{{ node.fence_boundary }} mermaid
+graph {{ node.direction }}
+{% for identifier, title in zip(node.builder.items, node.builder.titles) %}
+  {{ identifier }}["{{ title }}"]
+{% endfor %}
+{% for a, b in node.builder.connections %}
+  {{ a }} --> {{ b }}
+{% endfor %}
+{{ node.fence_boundary }}
+"""
