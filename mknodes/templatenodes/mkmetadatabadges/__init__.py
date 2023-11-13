@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import contextlib
-import pkgutil
-
 from typing import Any, Literal
 from urllib import parse
 
@@ -94,14 +91,10 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 info = ctx.required_packages
                 items.extend((p.name, p.version, p.homepage) for p in info)
             case "installed_packages":
-                pkgs = []
-                for mod in pkgutil.iter_modules():
-                    if not mod.ispkg:
-                        continue
-                    with contextlib.suppress(Exception):
-                        dist = packageregistry.get_info(mod.name)
-                        pkgs.append(dist)
-                items.extend((p.name, p.version, p.homepage) for p in pkgs)
+                items.extend(
+                    (p.name, p.version, p.homepage)
+                    for p in packageregistry.get_installed_packages()
+                )
             case str():
                 raise ValueError(self.typ)
             case _ if self.typ in datatypes.CLASSIFIERS:

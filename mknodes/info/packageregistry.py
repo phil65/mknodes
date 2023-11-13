@@ -19,6 +19,20 @@ def get_info(mod_name: str) -> packageinfo.PackageInfo:
     return registry.get_info(mod_name)
 
 
+def get_installed_packages():
+    import contextlib
+    import pkgutil
+
+    pkgs = []
+    for mod in pkgutil.iter_modules():
+        if not mod.ispkg:
+            continue
+        with contextlib.suppress(Exception):
+            dist = registry.get_info(mod.name)
+            pkgs.append(dist)
+    return pkgs
+
+
 class PackageRegistry(MutableMapping, metaclass=ABCMeta):
     """Registry for PackageInfos.
 
