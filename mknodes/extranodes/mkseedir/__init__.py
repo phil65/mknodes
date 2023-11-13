@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import functools
 import os
 import upath
 
 from typing import Any, Literal, get_args
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import log, resources
+from mknodes.utils import helpers, log, resources
 
 
 logger = log.get_logger(__name__)
@@ -16,7 +15,7 @@ logger = log.get_logger(__name__)
 DirectoryTreeStyleStr = Literal["lines", "dash", "arrow", "spaces", "plus"]
 
 
-@functools.cache
+@helpers.list_to_tuple
 def get_folder_tree(
     directory: str | os.PathLike,
     *,
@@ -96,22 +95,16 @@ class MkSeeDir(mkcode.MkCode):
 
     @property
     def text(self):
-        exclude = (
-            tuple(self.exclude_folders)
-            if isinstance(self.exclude_folders, list)
-            else self.exclude_folders
-        )
         return get_folder_tree(
             self.directory,
             style=self.style,
-            printout=False,
             indent=self.print_indent,
-            depthlimit=self.depth_limit,
-            itemlimit=self.item_limit,
+            depth_limit=self.depth_limit,
+            item_limit=self.item_limit,
             beyond=self.beyond,
             first=self.first,
             sort=self.sort,
-            exclude_folders=exclude,
+            exclude_folders=self.exclude_folders,
         )
 
     @text.setter
