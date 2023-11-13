@@ -66,7 +66,8 @@ class MkShields(mkcontainer.MkContainer):
 
     @property
     def shields(self):
-        return self._shields or [i.identifier for i in badges.SHIELDS]
+        shields = self._shields or [i.identifier for i in badges.SHIELDS]
+        return [s for s in badges.SHIELDS if s.identifier in shields]
 
     @property
     def branch(self) -> str:
@@ -83,8 +84,7 @@ class MkShields(mkcontainer.MkContainer):
                 title=s.title,
                 parent=self,
             )
-            for s in badges.SHIELDS
-            if s.identifier in self.shields
+            for s in self.shields
         ]
 
     @items.setter
