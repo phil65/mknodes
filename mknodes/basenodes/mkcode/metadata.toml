@@ -42,8 +42,8 @@ template = """
 {{ node.fence_boundary }}
 """
 
-# [output.rst]
-# template = """
-# .. sourcecode:: {{ node.language }}
-# {{ node.text | indent(first=True) }}
-# """
+[output.rst]
+template = """
+.. sourcecode:: {{ node.language }}
+{{ node.text | indent(first=True) }}
+"""

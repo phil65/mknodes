@@ -26,10 +26,10 @@ template = """
 {{ node.items | sort(attribute="num") | join }}
 """
 
-# [output.rst]
-# template = """
-# .. rubric:: Footnotes
+[output.rst]
+template = """
+.. rubric:: Footnotes
 
-# {% for item in node.items | sort(attribute="num") %}
-# .. {{ item }}
-# """
+{% for item in node.items | sort(attribute="num") %}
+.. {{ item }}
+"""
