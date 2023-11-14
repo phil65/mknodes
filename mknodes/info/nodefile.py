@@ -55,9 +55,11 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
         Html=mk.MkCode(node.to_html(), language="html"),
     )
     if "rst" in node.nodefile.output:
-        dct["reST"] = mk.MkCode(node.env.render_template("output/rst/template"))
+        output = node.env.render_template("output/rst/template")
+        dct["reST"] = mk.MkCode(output, language="rst")
     if "github" in node.nodefile.output:
-        dct["GitHub"] = mk.MkCode(node.env.render_template("output/github/template"))
+        output = node.env.render_template("output/github/template")
+        dct["GitHub"] = mk.MkCode(output, language="markdown")
     if len(node.children) > 0:
         dct["Repr tree"] = mk.MkTreeView(node)
     return dct
