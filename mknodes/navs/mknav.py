@@ -77,10 +77,10 @@ class MkNav(mknode.MkNode):
         del self.nav[index]
 
     # def __len__(self):
-    #     return len(self.nav.all_items)
+    #     return len(self.children)
 
     def __iter__(self):
-        yield from self.nav.all_items
+        yield from self.children
 
     @property
     def index_page(self) -> mk.MkPage | None:
