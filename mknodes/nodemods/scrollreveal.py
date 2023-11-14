@@ -4,6 +4,7 @@ import dataclasses
 
 from jinjarope import envglobals
 
+from mknodes.nodemods import mod
 from mknodes.utils import helpers, resources
 
 
@@ -34,7 +35,7 @@ $(window).load(function(){
 
 
 @dataclasses.dataclass(frozen=True)
-class ScrollReveal:
+class ScrollReveal(mod.Mod):
     origin: str = "left"
     distance: str = "300px"
     easing: str = "ease-in-out"

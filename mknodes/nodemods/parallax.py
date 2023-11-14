@@ -4,6 +4,7 @@ import dataclasses
 
 from jinjarope import envglobals
 
+from mknodes.nodemods import mod
 from mknodes.utils import helpers, resources
 
 
@@ -16,7 +17,7 @@ LIB = "https://cdn.jsdelivr.net/npm/simple-parallax-js@5.5.1/dist/simpleParallax
 
 
 @dataclasses.dataclass(frozen=True)
-class ParallaxEffect:
+class ParallaxEffect(mod.Mod):
     orientation: str = "up"
     scale: float = 1.5
     overflow: bool = False
