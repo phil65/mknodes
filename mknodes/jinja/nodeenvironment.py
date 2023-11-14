@@ -9,6 +9,7 @@ import jinja2
 import jinjarope
 
 # importing jinjahelpers in order to register globals / filters
+from mknodes.nodemods import mod
 from mknodes.utils import inspecthelpers, jinjahelpers, log  # noqa: F401
 
 
@@ -55,6 +56,15 @@ class NodeEnvironment(jinjarope.Environment):
 
         self._node_filters = {}
         self._wrapped_klasses = {}
+
+        def apply_mod(node: mk.MkNode, mod_name: str, **kwargs):
+            for mod_cls in mod.Mod.__subclasses__():
+                if mod_name == mod_cls.__name__:
+                    node.mods.mods.append(mod_cls(**kwargs))
+            return node
+
+        self.filters["apply_mod"] = apply_mod
+
         for kls_name in mk.__all__:
             klass = getattr(mk, kls_name)
 
@@ -168,7 +178,7 @@ if __name__ == "__main__":
 
     node = mk.MkText.with_context()
     env = NodeEnvironment(node)
-    txt = "{{ metadata.required_python_version | MkAdmonition }}"
+    txt = "{{ metadata.required_python_version | MkAdmonition | apply_mod('ParallaxEffect') }}"
     print(env.render_string(txt))
     print(env.rendered_nodes)
     # text = env.render_string(r"{{ 'test' | MkHeader }}")
