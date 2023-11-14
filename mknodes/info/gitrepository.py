@@ -20,7 +20,7 @@ class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
     def __init__(self, path: str | os.PathLike | None = None, **kwargs):
-        super().__init__(path, **kwargs)
+        super().__init__(path or ".", **kwargs)
         # to keep a reference to a TempDirectory instance
         self.temp_directory: tempfile.TemporaryDirectory | None = None
 

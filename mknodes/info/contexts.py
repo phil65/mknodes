@@ -356,7 +356,7 @@ class ProjectContext(Context):
             include_stdlib=True,
         )
         git_repo = reporegistry.get_repo(
-            str(cfg.get("repo_url", ".")),
+            cfg.get("repo_url") or ".",
             clone_depth=cfg.get("clone_depth", 100),
         )
         folderinfo = fi.FolderInfo(git_repo.working_dir)

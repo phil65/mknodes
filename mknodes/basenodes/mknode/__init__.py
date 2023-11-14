@@ -366,8 +366,8 @@ class MkNode(node.Node):
         **kwargs,
     ):
         """Same as the Ctor, but auto-adds a context for the repo url (or the cwd)."""
-        context = contexts.ProjectContext.for_config(repo=repo_url, base_url=base_url)
-        return cls(*args, **kwargs, context=context)
+        ctx = contexts.ProjectContext.for_config(repo_url=repo_url, base_url=base_url)
+        return cls(*args, **kwargs, context=ctx)
 
     def to_html(self) -> str:
         """Convert node to HTML using the resources from node + children."""
