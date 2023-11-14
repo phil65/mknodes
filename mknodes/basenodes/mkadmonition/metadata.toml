@@ -51,7 +51,7 @@ template = """
 
 [output.block]
 template = """
-{{ node.fence_boundary }} admonition {{ node.typ }} | {{ node.title }}
+{{ node.fence_boundary }} admonition {{ node.typ }}{{ node.title | add(" | ") }}
 {{ node.items | join }}
 {{ node.fence_boundary }}
 """
@@ -64,6 +64,6 @@ template = """
 
 [output.rst]
 template = """
-.. {{ node.typ }}:: {{ node.title }}
+.. {{ node.typ }}:: {{ node.title or "" }}
 {{ node.items | join(node.block_separator) | indent(first=True) }}
 """
