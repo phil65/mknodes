@@ -39,7 +39,7 @@ class MkCode(mkcontainer.MkContainer):
         self,
         content: str | mk.MkNode | list = "",
         *,
-        language: str = "py",
+        language: str = "python",
         title: str = "",
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
@@ -83,12 +83,23 @@ class MkCode(mkcontainer.MkContainer):
     @property
     def fence_title(self) -> str:
         """Title in first line."""
-        title = f" title={self.title!r}" if self.title else ""
+        classes = " ".join(f".{i}" for i in self.mods.css_classes)
+        attrs = {}
+        if self.title:
+            attrs["title"] = repr(self.title)
+        if self.language:
+            classes = f".{self.language} {classes}"
         if self.linenums is not None:
-            title += f' linenums="{self.linenums}"'
+            attrs["linenums"] = f'"{self.linenums}"'
         if self.highlight_lines:
-            title += ' hl_lines="' + " ".join(str(i) for i in self.highlight_lines) + '"'
-        return f"{self.language}{title}"
+            sub = " ".join(str(i) for i in self.highlight_lines)
+            attrs["hl_lines"] = f'"{sub}"'
+        if not classes and not attrs:
+            return ""
+        attr_str = " ".join(f"{k}={v}" for k, v in attrs.items())
+        if attr_str:
+            attr_str = " " + attr_str
+        return f"{{{classes}{attr_str}}}"
 
     def _to_markdown(self) -> str:
         first_line = f"{self.fence_boundary} {self.fence_title}"

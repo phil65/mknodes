@@ -67,7 +67,7 @@ def test_mapping_interface():
 def test_code_annotations_inside_admonition():
     expected = """!!! info
     <div class="annotate" markdown>
-    ``` python
+    ``` {.python }
     test # (1)
     ```
     </div>
