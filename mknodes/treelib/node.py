@@ -219,7 +219,7 @@ class Node:
                 style=style or "ascii",
             )
         ]
-        return formatter(self) + "\n" + "\n".join(lines[1:])
+        return self.__class__.__name__ + "\n" + "\n".join(lines[1:])
 
     def _yield_tree(
         self,
