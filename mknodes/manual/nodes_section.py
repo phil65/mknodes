@@ -93,26 +93,27 @@ def create_section_for_nodes(
 ) -> mk.MkTable:
     table = mk.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
-        if "create_example_page" in kls.__dict__:
-            page = nav.add_page(kls.__name__, icon=kls.ICON)
-            create_class_page(kls, page)
-            link = mk.MkLink(page, kls.__name__, icon=kls.ICON)
-            extensions = ", ".join(f"`{i}`" for i in kls.REQUIRED_EXTENSIONS)
-            table.add_row((link, kls.__doc__, extensions))
+        if not kls.nodefile:
+            continue
+        page = nav.add_page(kls.__name__, icon=kls.ICON)
+        page += "## Examples"
+        examples = kls.nodefile.get_examples(page)
+        for k, v in examples.items():
+            page += mk.MkHeader(f"Example: **{k}**")
+            page += mk.MkAdmonition(v.pop("Jinja"), title="Jinja")
+            page += mk.MkAdmonition(v.pop("Repr"), title="Python")
+            page += mk.MkTabbed(v)
+        if kls.STATUS:
+            page.metadata.status = kls.STATUS
+        elif kls.JS_FILES:
+            page.metadata.status = "js"
+        elif kls.CSS:
+            page.metadata.status = "css"
+        page.created_by = create_section_for_nodes
+        link = mk.MkLink(page, kls.__name__, icon=kls.ICON)
+        extensions = ", ".join(f"`{i}`" for i in kls.REQUIRED_EXTENSIONS)
+        table.add_row((link, kls.__doc__, extensions))
     return table
-
-
-def create_class_page(kls: type[mk.MkNode], page: mk.MkPage):
-    page += mk.MkCode.for_object(kls.create_example_page, extract_body=True)
-    page += "## Examples"
-    if kls.STATUS:
-        page.metadata.status = kls.STATUS
-    elif kls.JS_FILES:
-        page.metadata.status = "js"
-    elif kls.CSS:
-        page.metadata.status = "css"
-    kls.create_example_page(page)
-    page.created_by = create_class_page
 
 
 nav = mk.MkNav("The nodes")

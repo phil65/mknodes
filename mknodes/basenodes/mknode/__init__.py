@@ -351,21 +351,6 @@ class MkNode(node.Node):
         return req
 
     @classmethod
-    def create_example_page(cls, page):
-        import mknodes as mk
-
-        # We dont instanciate MkNode directly, so we take a subclass
-        # to show some base class functionality
-
-        node = mk.MkText("Intro\n# A header\nOutro")
-        node.shift_header_levels = 2
-        page += mk.MkReprRawRendered(node, header="### Shift header levels")
-
-        node = mk.MkText("Every node can also append annotations (1)")
-        node.annotations[1] = "Nice!"
-        page += mk.MkReprRawRendered(node, header="### Append annotations")
-
-    @classmethod
     def for_project(cls, project=None, **kwargs):
         if project:
             kwargs["context"] = project.context
