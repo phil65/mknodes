@@ -5,8 +5,8 @@ status = "new"
 group = "documentation"
 virtual_children = true
 
-[examples.regular]
-title = "Regular"
+[examples.from_text]
+title = "From text"
 jinja = """
 {{
 "
@@ -23,6 +23,13 @@ some_code = 1 + 2
 
 " | MkCommentedCode
 }}
+"""
+
+
+[examples.from_function]
+title = "From function"
+jinja = """
+{{ mk.MkCommentedCode.create_example_page | MkCommentedCode }}
 """
 
 

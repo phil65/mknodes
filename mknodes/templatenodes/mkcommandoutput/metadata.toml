@@ -9,7 +9,7 @@ filename = "terminal.css"
 condition = "{{ 'CI' | getenv }}"
 title = "Regular"
 jinja = """
-["mknodes", "--help"] | MkCommandOutput
+{{ ["hatch", "--help"] | MkCommandOutput }}
 """
 
 [output.html]

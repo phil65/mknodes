@@ -1,0 +1,26 @@
+[metadata]
+icon = "mdi:code-json"
+name = "MkCodeImage"
+
+[examples.title]
+title = "Default"
+description = "By default, python syntax highlighting is used."
+jinja = """
+{{ "a = 1 + 2" | MkCodeImage }}
+"""
+
+[examples.syntax_highlight]
+title = "Syntax highlighting"
+jinja = """
+{{ "var z = x + y;" | MkCodeImage(language="js") }}
+"""
+
+[output.html]
+template = """
+<body>
+
+{{ richhelpers.get_svg_for_code(node.code, language=node.language, title=node.title) }}
+
+</body>
+"""
+

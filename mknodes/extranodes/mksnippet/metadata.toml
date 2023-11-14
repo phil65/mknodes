@@ -1,0 +1,19 @@
+[metadata]
+icon = "mdi:paperclip"
+name = "MkSnippet"
+
+[requirements.extension."pymdownx.snippets"]
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ "README.md" | MkSnippet }}
+"""
+
+[output.markdown]
+template = """
+--8<--
+{{ node.path }}
+--8<--
+
+"""

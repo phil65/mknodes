@@ -12,11 +12,11 @@ jinja = """
 {{ "jinja2" | MkPipDepTree }}
 """
 
-[examples.direction]
-title = "Directed"
-jinja = """
-{{ mk.MkPipDepTree(direction="LR") }}
-"""
+# [examples.direction]
+# title = "Directed"
+# jinja = """
+# {{ mk.MkPipDepTree(direction="LR") }}
+# """
 
 [output.markdown]
 template = """
