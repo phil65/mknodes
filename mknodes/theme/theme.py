@@ -51,6 +51,22 @@ class Theme:
             border_color="black",
             font_color=self.text_color,
         )
+        self.add_admonition_type(
+            name="jinja",
+            icon="simple-icons:jinja",
+            header_color="tomato",
+            icon_color="black",
+            border_color="black",
+            font_color=self.text_color,
+        )
+        self.add_admonition_type(
+            name="python",
+            icon="mdi:language-python",
+            header_color="lightblue",
+            icon_color="black",
+            border_color="black",
+            font_color=self.text_color,
+        )
 
     def __repr__(self):
         return reprhelpers.get_repr(self, name=self.name)

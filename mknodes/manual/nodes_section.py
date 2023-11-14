@@ -100,8 +100,8 @@ def create_section_for_nodes(
         examples = kls.nodefile.get_examples(page)
         for k, v in examples.items():
             page += mk.MkHeader(f"Example: **{k}**")
-            page += mk.MkAdmonition(v.pop("Jinja"), title="Jinja")
-            page += mk.MkAdmonition(v.pop("Repr"), title="Python")
+            page += mk.MkAdmonition(v.pop("Jinja"), title="Jinja", typ="jinja")
+            page += mk.MkAdmonition(v.pop("Repr"), title="Python", typ="python")
             page += mk.MkTabbed(v)
         if kls.STATUS:
             page.metadata.status = kls.STATUS
