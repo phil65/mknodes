@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import pathlib
 
 from typing import Any
 
@@ -24,7 +23,6 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         klass: type,
         *,
         title: str | None = None,
-        path: str | os.PathLike | None = None,
         module_path: tuple[str, ...] | str | None = None,
         template: str | os.PathLike | None = None,
         **kwargs: Any,
@@ -38,18 +36,15 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
                          This can be useful if you want to link to an aliased class
                          (for example a class imported to __init__.py)
             template: Name of the template to load
-            path: Filename/path for the class page. defaults to [classname].md
             kwargs: keyword arguments passed to base class
         """
         self.klass = klass
         self.module_path = module_path
         # if user chooses custom template, we make default the parent
         tpl = template or DEFAULT_TPL
-        p = path or pathlib.Path(f"{klass.__name__}.md")
         tpl_parent = DEFAULT_TPL if tpl != DEFAULT_TPL else None
         super().__init__(
             title=title or klass.__name__,
-            path=p,
             template=tpl,
             template_parent=tpl_parent,
             **kwargs,
@@ -76,5 +71,5 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 if __name__ == "__main__":
     import mknodes as mk
 
-    doc = MkClassPage.with_context(mk.MkClassPage)
-    print(doc.to_markdown())
+    doc = MkClassPage.with_context(mk.MkMaterialBadge, template="classpage_custom.jinja")
+    print(doc.get_resources())

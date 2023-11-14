@@ -93,7 +93,8 @@ def create_section_for_nodes(
 ) -> mk.MkTable:
     table = mk.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
-        page = mk.MkClassPage(kls, icon=kls.ICON, template="classpage_custom.jinja")
+        tpl = "classpage_custom.jinja"
+        page = mk.MkClassPage(kls, icon=kls.ICON, template=tpl, parent=nav)
         nav += page
         if kls.STATUS:
             page.metadata.status = kls.STATUS

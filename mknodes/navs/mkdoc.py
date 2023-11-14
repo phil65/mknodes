@@ -146,12 +146,7 @@ class MkDoc(mknav.MkNav):
                 **kwargs,
             )
         else:
-            page = self.ClassPage(
-                klass=klass,
-                module_path=tuple(parts),
-                parent=self,
-                **kwargs,
-            )
+            page = self.ClassPage(klass, module_path=tuple(parts), parent=self, **kwargs)
         section = (klass.__name__,) if flatten else (*parts[1:], klass.__name__)
         self.nav[section] = page
         return page
