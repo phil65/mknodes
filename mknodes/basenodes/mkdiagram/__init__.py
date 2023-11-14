@@ -43,7 +43,6 @@ class MkDiagram(mkcode.MkCode):
         *,
         graph_type: GraphTypeStr = "flow",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
-        attributes: dict[str, str] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -53,7 +52,6 @@ class MkDiagram(mkcode.MkCode):
             connections: tuples indicating the connections of the names
             graph_type: Type of the graph
             direction: diagram direction
-            attributes: Optional attributes for the names
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(language="mermaid", **kwargs)
@@ -62,7 +60,6 @@ class MkDiagram(mkcode.MkCode):
         # Preserve order. Useful if only names are passed, order is important then.
         self.names = helpers.reduce_list(names or [])
         self.connections = set(connections or [])
-        self.attributes = attributes or {}
 
     @property
     def graph_type(self) -> str:
