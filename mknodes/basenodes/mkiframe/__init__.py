@@ -8,7 +8,7 @@ from mknodes.utils import log
 
 logger = log.get_logger(__name__)
 
-HTML = '<iframe frameborder="0" width="{width}" height="{height}" src="{url}"></iframe>'
+HTML = '<iframe width="{width}" height="{height}" src="{url}"></iframe>'
 
 
 class MkIFrame(mknode.MkNode):
@@ -32,8 +32,6 @@ class MkIFrame(mknode.MkNode):
             height: height of frame in pixels
             kwargs: Keyword arguments passed to parent
         """
-        # if as_links:
-        #     url = [link.Link(i) for i in url]
         super().__init__(**kwargs)
         self.url = url
         self.width = width
