@@ -24,8 +24,8 @@ class MkDoc(mknav.MkNav):
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
         recursive: bool = False,
-        class_page: type[mkclasspage.MkClassPage] | str | None = None,
-        module_page: type[mkmodulepage.MkModulePage] | str | None = None,
+        class_template: str | None = None,
+        module_template: str | None = None,
         flatten_nav: bool = False,
         **kwargs: Any,
     ):
@@ -37,8 +37,8 @@ class MkDoc(mknav.MkNav):
             recursive: Whether to search modules recursively
             exclude_modules: List of modules to exclude
             section_name: Optional section title override
-            class_page: Override for the default ClassPage
-            module_page: Override for the default ModulePage
+            class_template: Override for the default ClassPage template
+            module_template: Override for the default ModulePage template
             flatten_nav: Whether classes should be put into top-level of the nav
             kwargs: Keyword arguments passed to parent
         """
@@ -46,8 +46,8 @@ class MkDoc(mknav.MkNav):
             self._module = classhelpers.to_module(module, return_none=False)
         else:
             self._module = None
-        self.ClassPage = class_page or mkclasspage.MkClassPage
-        self.ModulePage = module_page or mkmodulepage.MkModulePage
+        self.class_template = class_template
+        self.module_template = module_template
         self.flatten_nav = flatten_nav
         self.recursive = recursive
         self.klasses: set[type] = set()
@@ -84,9 +84,9 @@ class MkDoc(mknav.MkNav):
         for submod in self.submodules:
             self.add_doc(
                 submod,
-                class_page=self.ClassPage,
+                class_template=self.class_template,
                 filter_by___all__=self.filter_by___all__,
-                module_page=self.ModulePage,
+                module_template=self.module_template,
                 flatten_nav=self.flatten_nav,
             )
         self._create_index_page()
@@ -137,16 +137,13 @@ class MkDoc(mknav.MkNav):
             parts = classhelpers.get_topmost_module_path(klass).split(".")
         else:
             parts = klass.__module__.split(".")
-        if isinstance(self.ClassPage, str):
-            page = mkclasspage.MkClassPage(
-                klass=klass,
-                template=self.ClassPage,
-                module_path=tuple(parts),
-                parent=self,
-                **kwargs,
-            )
-        else:
-            page = self.ClassPage(klass, module_path=tuple(parts), parent=self, **kwargs)
+        page = mkclasspage.MkClassPage(
+            klass=klass,
+            template_path=self.class_template,
+            module_path=tuple(parts),
+            parent=self,
+            **kwargs,
+        )
         section = (klass.__name__,) if flatten else (*parts[1:], klass.__name__)
         self.nav[section] = page
         return page
@@ -162,26 +159,15 @@ class MkDoc(mknav.MkNav):
             title: Override title for the section.
             kwargs: kwargs passed to MkModulePage.
         """
-        path = "index.md" if title is None else f"{title}.md"
-        if isinstance(self.ModulePage, str):
-            page = mkmodulepage.MkModulePage(
-                module=self.module,
-                title=title or self.module_name,
-                klasses=self.klasses,
-                template_name=self.ModulePage,
-                path=path,
-                parent=self,
-                **kwargs,
-            )
-        else:
-            page = self.ModulePage(
-                title=title or self.module_name,
-                module=self.module,
-                klasses=self.klasses,
-                path=path,
-                parent=self,
-                **kwargs,
-            )
+        page = mkmodulepage.MkModulePage(
+            module=self.module,
+            title=title or self.module_name,
+            is_index=True,
+            klasses=self.klasses,
+            template_path=self.module_template,
+            parent=self,
+            **kwargs,
+        )
         self.index_page = page
         return page
 

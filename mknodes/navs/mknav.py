@@ -191,8 +191,8 @@ class MkNav(mknode.MkNode):
         filter_by___all__: bool = False,
         recursive: bool = False,
         section_name: str | None = None,
-        class_page: type[mk.MkClassPage] | str | None = None,
-        module_page: type[mk.MkModulePage] | str | None = None,
+        class_template: str | None = None,
+        module_template: str | None = None,
         flatten_nav: bool = False,
     ) -> mk.MkDoc:
         """Add a module documentation to the Nav.
@@ -202,8 +202,8 @@ class MkNav(mknode.MkNode):
             filter_by___all__: Whether the documentation
             recursive: Whether to search modules recursively
             section_name: Override the name for the menu (default: module name)
-            class_page: Override for the default ClassPage
-            module_page: Override for the default ModulePage
+            class_template: Override for the default ClassPage template
+            module_template: Override for the default ModulePage template
             flatten_nav: Whether classes should be put into top-level of the nav
         """
         import mknodes as mk
@@ -214,8 +214,8 @@ class MkNav(mknode.MkNode):
             parent=self,
             section_name=section_name,
             recursive=recursive,
-            class_page=class_page,
-            module_page=module_page,
+            class_template=class_template,
+            module_template=module_template,
             flatten_nav=flatten_nav,
         )
         self.nav.register(nav)

@@ -17,7 +17,7 @@ class MkTemplatePage(mkpage.MkPage):
     def __init__(
         self,
         *args: Any,
-        template: str | os.PathLike,
+        template_path: str | os.PathLike,
         template_parent: str | None = None,
         **kwargs: Any,
     ):
@@ -25,13 +25,13 @@ class MkTemplatePage(mkpage.MkPage):
 
         Arguments:
             args: Arguments passed to parent
-            template: Template to use. Can either be a template path or a PathLike object
-                      which will be used as a template.
+            template_path: Template to use. Can either be a template path or a PathLike
+                           object which will be used as a template.
             template_parent: Optional parent template to use
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(*args, **kwargs)
-        self.template_main = template
+        self.template_main = template_path
         self.template_parent = template_parent
 
     @property

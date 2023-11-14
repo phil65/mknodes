@@ -24,7 +24,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         *,
         klasses: list[type] | set[type] | None = None,
         title: str | None = None,
-        template: str | os.PathLike | None = None,
+        template_path: str | os.PathLike | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -33,7 +33,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             module: ModuleType or path to model to show info for.
             klasses: klasses to use
             title: Optional title override. Defaults to module name
-            template: Name of the template to load
+            template_path: Name of the template to load
             kwargs: further keyword arguments passed to parent
         """
         self.parts = classhelpers.to_module_parts(module)
@@ -42,8 +42,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             module,
             module_filter=self.parts[0],
         )
-        tpl_name = template or self.DEFAULT_TPL
-        super().__init__(template=tpl_name, title=title or self.parts[-1], **kwargs)
+        tpl_name = template_path or self.DEFAULT_TPL
+        super().__init__(template_path=tpl_name, title=title or self.parts[-1], **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, module=self.module, path=self.path)

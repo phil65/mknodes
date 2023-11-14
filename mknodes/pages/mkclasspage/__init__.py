@@ -23,7 +23,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         *,
         title: str | None = None,
         module_path: tuple[str, ...] | str | None = None,
-        template: str | os.PathLike | None = None,
+        template_path: str | os.PathLike | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -34,14 +34,14 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
             module_path: If given, overrides module returned by class.__module__
                          This can be useful if you want to link to an aliased class
                          (for example a class imported to __init__.py)
-            template: Name of the template to load
+            template_path: Name of the template to load
             kwargs: keyword arguments passed to base class
         """
         self.klass = klass
         self.module_path = module_path
         # if user chooses custom template, we make default the parent
-        tpl = template or self.DEFAULT_TPL
-        super().__init__(title=title or klass.__name__, template=tpl, **kwargs)
+        tpl = template_path or self.DEFAULT_TPL
+        super().__init__(title=title or klass.__name__, template_path=tpl, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
