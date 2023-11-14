@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Sequence
 import types
 
 from typing import Any
@@ -77,7 +77,14 @@ class MkDoc(mknav.MkNav):
 
     def _collect_classes(self):
         """Collect classes from given module."""
-        for klass in self.iter_classes(recursive=self.recursive):
+        if self.module is None:
+            return
+        for klass in classhelpers.list_classes(
+            module=self.module,
+            recursive=self.recursive,
+            filter_by___all__=self.filter_by___all__,
+            module_filter=self.module_name,
+        ):
             self.klasses.add(klass)
         for klass in self.klasses:
             self.add_class_page(klass=klass, flatten=self.flatten_nav)
@@ -90,32 +97,6 @@ class MkDoc(mknav.MkNav):
                 flatten_nav=self.flatten_nav,
             )
         self._create_index_page()
-
-    def iter_classes(
-        self,
-        submodule: types.ModuleType | str | tuple[str, ...] | list[str] | None = None,
-        *,
-        recursive: bool = False,
-        predicate: Callable[[type], bool] | None = None,
-    ) -> Iterator[type]:
-        """Iterate over all classes of the module.
-
-        Arguments:
-            submodule: filter based on a submodule
-            recursive: whether to only iterate over members of current module
-                       or whether it should also include classes from submodules.
-            predicate: filter classes based on a predicate.
-        """
-        module = submodule or self.module
-        if module is None:
-            return
-        yield from classhelpers.list_classes(
-            module=tuple(module) if isinstance(module, list) else module,
-            recursive=recursive,
-            filter_by___all__=self.filter_by___all__,
-            predicate=predicate,
-            module_filter=self.module_name,
-        )
 
     def add_class_page(
         self,
