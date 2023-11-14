@@ -175,25 +175,24 @@ def get_nondefault_repr(
         char_width: If set, then repr will be formatted with black to given char width
         shorten: Whether to shorten the repr using a custom reprlib Repr
     """
-    spec = inspecthelpers.get_argspec(instance.__init__)
     args = []
-    for arg in spec.args:
+    kwargs = {}
+    signature = inspecthelpers.get_signature(instance.__init__)
+    for arg, v in signature.parameters.items():
+        if v.kind in [v.VAR_POSITIONAL, v.VAR_KEYWORD]:
+            continue
         if arg == "content":
             val = getattr(instance, "items", None)
         elif hasattr(instance, f"_{arg}"):
             val = getattr(instance, f"_{arg}")
         else:
             val = getattr(instance, arg)
-        args.append(val)
-    dct = spec.kwonlydefaults or {}
-    kwargs = {}
-    for k, v in dct.items():
-        # check for hidden attribute first, then for attribute named like kwarg
-        if f"_{k}" in instance.__dict__ and v != getattr(instance, f"_{k}"):
-            kwargs[k] = getattr(instance, f"_{k}")
-        elif k in instance.__dict__ and v != getattr(instance, k):
-            kwargs[k] = getattr(instance, k)
-    return get_repr(instance, *args, **kwargs, _char_width=char_width, _shorten=shorten)
+        if v.default != val:
+            if v.kind in [v.KEYWORD_ONLY]:
+                kwargs[arg] = val
+            if v.kind in [v.POSITIONAL_OR_KEYWORD, v.POSITIONAL_ONLY]:
+                args.append(val)
+    return get_repr(instance, *args, _char_width=char_width, _shorten=shorten, **kwargs)  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":

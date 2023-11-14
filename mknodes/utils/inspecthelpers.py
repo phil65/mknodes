@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import contextlib
 import dataclasses
 import functools
@@ -173,6 +174,16 @@ def get_source_lines(
     if isinstance(obj, griffe.Object):
         return (obj.source.split("\n"), obj.lineno or 0)
     return inspect.getsourcelines(obj)
+
+
+@functools.cache
+def get_signature(obj: Callable) -> inspect.Signature:
+    """Cached wrapper for inspect.signature.
+
+    Arguments:
+        obj: Callable to get a signature for.
+    """
+    return inspect.signature(obj)
 
 
 @functools.cache
