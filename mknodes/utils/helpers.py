@@ -16,6 +16,12 @@ logger = log.get_logger(__name__)
 T = TypeVar("T")
 
 
+def clean_svg(img_text: str) -> str:
+    img_text = re.sub(r"<\?xml version.*\?>\s*", "", img_text, flags=re.DOTALL)
+    img_text = re.sub(r"<!DOCTYPE svg.*?>", "", img_text, flags=re.DOTALL)
+    return img_text.strip()
+
+
 def reduce_list(data_set: Iterable[T]) -> list[T]:
     """Reduce duplicate items in a list and preserve order.
 
