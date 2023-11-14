@@ -59,10 +59,8 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         subclasses = classhelpers.list_subclasses(self.klass, recursive=False)
         variables = dict(cls=self.klass, subclasses=subclasses)
         mod = self.klass.__module__.replace(".", "/")
-        path = inspecthelpers.get_file(self.klass).as_posix()  # type: ignore[union-attr]
-        idx = path.rfind(mod)
-        url = self.ctx.metadata.repository_url
-        klass_url = f"{url}blob/main/{path[idx:]}"
+        p = inspecthelpers.get_file(self.klass).as_posix()  # type: ignore[union-attr]
+        klass_url = f"{self.ctx.metadata.repository_url}blob/main/{p[p.rfind(mod):]}"
         variables["github_url"] = klass_url
         variables["griffe_obj"] = grifferegistry.registry.get_class(self.klass)
         return variables

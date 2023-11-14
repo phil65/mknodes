@@ -39,9 +39,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
         self.klasses = klasses or classhelpers.list_classes(
-            module=module, module_filter=self.parts[0]
+            module, module_filter=self.parts[0]
         )
-
         tpl_name = template or DEFAULT_TPL
         super().__init__(
             template=tpl_name,
@@ -58,10 +57,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         variables: dict[str, Any] = dict(module=self.module, klasses=self.klasses)
         mod = self.module.__name__.replace(".", "/")
         path = inspecthelpers.get_file(self.module).as_posix()  # type: ignore[union-attr]
-        idx = path.rfind(mod)
         url = self.ctx.metadata.repository_url
-        mod_url = f"{url}blob/main/{path[idx:]}"
-        variables["github_url"] = mod_url
+        variables["github_url"] = f"{url}blob/main/{path[path.rfind(mod):]}"
         variables["griffe_obj"] = grifferegistry.get_module(self.module)
         return variables
 
