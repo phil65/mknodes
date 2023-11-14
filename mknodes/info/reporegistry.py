@@ -10,6 +10,7 @@ from mknodes.utils import helpers, log
 
 
 logger = log.get_logger(__name__)
+_temp_dirs: dict[str, tempfile.TemporaryDirectory] = {}
 
 
 def get_repo(
@@ -33,7 +34,6 @@ class RepoRegistry(MutableMapping, metaclass=ABCMeta):
 
     def __init__(self):
         self._repos: dict[str, gitrepository.GitRepository] = {}
-        self._directories: dict[str, tempfile.TemporaryDirectory] = {}
 
     def __getitem__(self, value):
         return self._repos.__getitem__(value)
@@ -79,7 +79,7 @@ class RepoRegistry(MutableMapping, metaclass=ABCMeta):
         )
         logger.info("Finished cloning.")
         repo.temp_directory = directory
-        self._directories[str(repo.working_dir)] = directory
+        _temp_dirs[str(repo.working_dir)] = directory
         self._repos[repo_url] = repo
         return repo
 
