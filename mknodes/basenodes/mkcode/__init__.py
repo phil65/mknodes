@@ -24,6 +24,7 @@ class MkCode(mkcontainer.MkContainer):
     """Class representing a Code block."""
 
     ICON = "material/code-json"
+    ATTR_LIST_SEPARATOR = "\n"
     REQUIRED_EXTENSIONS = [
         resources.Extension(
             "pymdownx.highlight",
