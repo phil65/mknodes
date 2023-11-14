@@ -10,13 +10,13 @@ from mknodes.pages import mktemplatepage
 from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
 
 
-DEFAULT_TPL = "modulepage.md"
-
 logger = log.get_logger(__name__)
 
 
 class MkModulePage(mktemplatepage.MkTemplatePage):
     """Page showing information about a module."""
+
+    DEFAULT_TPL = "modulepage.md"
 
     def __init__(
         self,
@@ -39,15 +39,11 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
         self.klasses = klasses or classhelpers.list_classes(
-            module, module_filter=self.parts[0]
+            module,
+            module_filter=self.parts[0],
         )
-        tpl_name = template or DEFAULT_TPL
-        super().__init__(
-            template=tpl_name,
-            template_parent=DEFAULT_TPL if tpl_name != DEFAULT_TPL else None,
-            title=title or self.parts[-1],
-            **kwargs,
-        )
+        tpl_name = template or self.DEFAULT_TPL
+        super().__init__(template=tpl_name, title=title or self.parts[-1], **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, module=self.module, path=self.path)

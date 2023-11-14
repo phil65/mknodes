@@ -12,11 +12,10 @@ from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
 logger = log.get_logger(__name__)
 
 
-DEFAULT_TPL = "classpage.md"
-
-
 class MkClassPage(mktemplatepage.MkTemplatePage):
     """Page showing information about a class."""
+
+    DEFAULT_TPL = "classpage.md"
 
     def __init__(
         self,
@@ -41,14 +40,8 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         self.klass = klass
         self.module_path = module_path
         # if user chooses custom template, we make default the parent
-        tpl = template or DEFAULT_TPL
-        tpl_parent = DEFAULT_TPL if tpl != DEFAULT_TPL else None
-        super().__init__(
-            title=title or klass.__name__,
-            template=tpl,
-            template_parent=tpl_parent,
-            **kwargs,
-        )
+        tpl = template or self.DEFAULT_TPL
+        super().__init__(title=title or klass.__name__, template=tpl, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
