@@ -109,7 +109,7 @@ class GitRepository(git.Repo):
         }
 
     @functools.cached_property
-    def all_commits(self) -> list[git.Commit]:
+    def all_commits(self) -> list[git.Commit]:  # type: ignore[name-defined]
         return self.get_commits()
 
     def get_commits(
