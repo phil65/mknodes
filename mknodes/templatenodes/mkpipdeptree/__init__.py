@@ -6,13 +6,14 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import log, packagehelpers, resources
+from mknodes.utils import helpers, log, packagehelpers, resources
 
 
 logger = log.get_logger(__name__)
 
 
 @functools.cache
+@helpers.list_to_tuple
 def get_mermaid(
     package: str | tuple[str] | None = None,
     local_only: bool = True,
@@ -123,7 +124,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
     @property
     def mermaid_code(self) -> str:
         return get_mermaid(
-            tuple(self.package) if isinstance(self.package, list) else self.package,
+            self.package,
             local_only=self.local_only,
             user_only=self.user_only,
             include_editables=self.include_editables,
