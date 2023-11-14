@@ -75,8 +75,8 @@ template = """
 [output.rst]
 template = """
 .. image:: {{ node.path }}
-   {% if node.width %}:width: {{ node.width }}{% endif %}
-   {% if node.caption %}:alt: {{ node.caption }}{% endif %}
-   {% if node.align %}:align: {{ node.align }}{% endif %}
-   {% if node.url %}:target: {{ node.url }}{% endif %}
+{% if node.width %}    :width: {{ node.width }}{% endif %}
+{% if node.caption %}    :alt: {{ node.caption }}{% endif %}
+{% if node.align %}    :align: {{ node.align }}{% endif %}
+{% if node.url %}    :target: {{ node.url }}{% endif %}
 """
