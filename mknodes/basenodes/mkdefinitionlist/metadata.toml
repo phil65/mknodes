@@ -23,3 +23,11 @@ template = """
 :   {{ v | string | indent }}
 {% endfor %}
 """
+
+[output.rst]
+template = """
+{% for k, v in node.data.items() %}
+{{ k }}
+  {{ v | string | indent(width=2) }}
+{% endfor %}
+"""

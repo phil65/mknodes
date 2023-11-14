@@ -20,3 +20,9 @@ template = """
 {{ node.items | join(node.block_separator) | indent(width="> ", first=True) | rstrip("\n") }}
 
 """
+
+[output.rst]
+template = """
+{{ node.items | join(node.block_separator) | indent(width="    ", first=True) | rstrip("\n") }}
+
+"""
