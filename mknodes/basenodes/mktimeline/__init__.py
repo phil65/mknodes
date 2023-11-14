@@ -7,7 +7,7 @@ from typing import Any, Literal
 from xml.etree import ElementTree as Et
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.utils import log, pathhelpers, reprhelpers, resources, xmlhelpers as xml
+from mknodes.utils import log, pathhelpers, resources, xmlhelpers as xml
 
 
 logger = log.get_logger(__name__)
@@ -144,9 +144,6 @@ class MkTimeline(mkcontainer.MkContainer):
         elif isinstance(items, dict):
             items = [MkTimelineItem(**step) for step in items.values()]
         super().__init__(items, **kwargs)
-
-    def __repr__(self):
-        return reprhelpers.get_repr(self)
 
     def get_element(self) -> xml.Section:
         root = xml.Section("timeline")

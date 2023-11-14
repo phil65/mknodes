@@ -68,7 +68,7 @@ def get_mermaid(
         try:
             tree = tree.filter_nodes(include_list, exclude_list)
         except ValueError:
-            msg = "Error when filtering nodes for pipdeptree. Is the package on PyPi?."
+            msg = f"Error when building tree for {include_list}. Is the package on PyPi?."
             logger.exception(msg)
             return ""
     tree = [tree] if isinstance(tree, str) else tree
