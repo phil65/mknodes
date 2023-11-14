@@ -7,6 +7,8 @@ import pathlib
 
 from typing import TYPE_CHECKING
 
+from jinjarope import utils
+
 from mknodes.info import tomlfile
 from mknodes.utils import resources
 
@@ -47,7 +49,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
     node = mk.MkContainer(nodes) if len(nodes) > 1 else nodes[0]
     dct: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
         Jinja=mk.MkCode(jinja, language="jinja"),
-        Repr=mk.MkCode(repr(node)),
+        Repr=mk.MkCode(utils.format_code(repr(node))),
         Rendered=node.__copy__(),
         Markdown=mk.MkCode(node, language="markdown"),
         Html=mk.MkCode(node.to_html(), language="html"),

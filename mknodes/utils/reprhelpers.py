@@ -153,7 +153,7 @@ def to_str_if_textnode(node) -> str:
 
 def get_nondefault_repr(
     instance: object,
-    char_width: int | None = 60,
+    char_width: int | None = None,
     shorten: bool = False,
 ) -> str:
     """Get a repr for an instance containing all nondefault (keyword) arguments.
