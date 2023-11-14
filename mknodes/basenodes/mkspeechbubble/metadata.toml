@@ -19,5 +19,7 @@ jinja = """
 
 [output.markdown]
 template = """
-<div class="speech{{ node.arrow | add(prefix=' ') }}" markdown="1">{{node.items  | join(node.block_separator) }}</div>
+<div class="speech{{ node.arrow | add(prefix=' ') }}" markdown="1">
+{{node.items  | join(node.block_separator) }}
+</div>
 """

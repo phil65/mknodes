@@ -28,7 +28,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
     def get_element(self) -> xml.Div:
         klass = f"speech {self.arrow}" if self.arrow else "speech"
         root = xml.Div(klass, markdown=True)
-        root.text = super()._to_markdown()
+        root.text = "\n" + super()._to_markdown() + "\n"
         return root
 
     def _to_markdown(self) -> str:
