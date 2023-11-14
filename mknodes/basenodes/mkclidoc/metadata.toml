@@ -63,10 +63,12 @@ command_template = """
 
 [output.markdown]
 template = """
+{% if node.info %}
 {{ "fragments/command_template" | render_template(info=node.info) }}
 {% if node.show_subcommands %}
 {% for sub_info in node.info.subcommands.values() %}
 {{ "fragments/command_template" | render_template(info=sub_info) }}
 {% endfor %}
+{% endif %}
 {% endif %}
 """
