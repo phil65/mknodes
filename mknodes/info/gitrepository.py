@@ -71,6 +71,14 @@ class GitRepository(git.Repo):
             for i in sorted(self.tags, key=lambda x: x.commit.committed_date)
         }
 
+    def get_commit(self, commit: str) -> git.Commit | None:  # type: ignore[name-defined]
+        import gitdb.exc
+
+        try:
+            return self.commit(commit)
+        except gitdb.exc.BadName:
+            return None
+
     def get_version_for_commit(
         self,
         commit: git.Commit | str,  # type: ignore[name-defined]
@@ -80,17 +88,18 @@ class GitRepository(git.Repo):
         Arguments:
             commit: Commit to get a version for.
         """
-        if isinstance(commit, str):
-            commit = self.commit(commit)
+        commit_obj = self.get_commit(commit) if isinstance(commit, str) else commit
+        if commit_obj is None:
+            return None
         mapping = self.commit_to_tag
-        if commit in mapping:
-            return mapping[commit]
+        if commit_obj in mapping:
+            return mapping[commit_obj]
         try:
-            idx = self.all_commits.index(commit)
+            idx = self.all_commits.index(commit_obj)
             all_commits = list(reversed(self.all_commits[:idx]))
             return next((mapping[c] for c in all_commits if c in mapping), None)
         except ValueError:
-            msg = f"Could not get version for {commit}"
+            msg = f"Could not get version for {commit_obj}"
             logger.exception(msg)
             return None
 
