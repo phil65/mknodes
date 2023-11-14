@@ -23,6 +23,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         self,
         klass: type,
         *,
+        title: str | None = None,
         path: str | os.PathLike | None = None,
         module_path: tuple[str, ...] | str | None = None,
         template: str | os.PathLike | None = None,
@@ -32,6 +33,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 
         Arguments:
             klass: class to show info for
+            title: Optional title override. Defaults to class name
             module_path: If given, overrides module returned by class.__module__
                          This can be useful if you want to link to an aliased class
                          (for example a class imported to __init__.py)
@@ -45,7 +47,13 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         tpl = template or DEFAULT_TPL
         p = path or pathlib.Path(f"{klass.__name__}.md")
         tpl_parent = DEFAULT_TPL if tpl != DEFAULT_TPL else None
-        super().__init__(path=p, template=tpl, template_parent=tpl_parent, **kwargs)
+        super().__init__(
+            title=title or klass.__name__,
+            path=p,
+            template=tpl,
+            template_parent=tpl_parent,
+            **kwargs,
+        )
 
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
