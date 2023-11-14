@@ -24,7 +24,6 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         *,
         klasses: list[type] | set[type] | None = None,
         title: str | None = None,
-        path: str | os.PathLike | None = None,
         template: str | os.PathLike | None = None,
         **kwargs: Any,
     ):
@@ -34,7 +33,6 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             module: ModuleType or path to model to show info for.
             klasses: klasses to use
             title: Optional title override. Defaults to module name
-            path: Filename/path for the Module page. defaults to [modulename].md
             template: Name of the template to load
             kwargs: further keyword arguments passed to parent
         """
@@ -49,7 +47,6 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             template=tpl_name,
             template_parent=DEFAULT_TPL if tpl_name != DEFAULT_TPL else None,
             title=title or self.parts[-1],
-            path=path or f"{self.parts[-1]}.md",
             **kwargs,
         )
 
