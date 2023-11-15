@@ -50,14 +50,12 @@ class MkDoc(mknav.MkNav):
         self.module_template = module_template
         self.flatten_nav = flatten_nav
         self.recursive = recursive
-        self.klasses: set[type] = set()
         self.submodules: set[types.ModuleType] = set()
         self.filter_by___all__ = filter_by___all__
         self._exclude = exclude_modules or []
         # self.root_path = pathlib.Path(f"./{self.module_name}")
         super().__init__(**kwargs)
         self.title = section_name or self.module_name
-        self._collect_classes()
 
     def __repr__(self):
         return reprhelpers.get_repr(
@@ -68,35 +66,51 @@ class MkDoc(mknav.MkNav):
         )
 
     @property
-    def module(self):
-        return self.ctx.metadata.module if self._module is None else self._module
-
-    @property
-    def module_name(self) -> str:
-        return self.module.__name__.split(".")[-1] if self.module else ""
-
-    def _collect_classes(self):
-        """Collect classes from given module."""
+    def children(self):
         if self.module is None:
-            return
-        for klass in classhelpers.list_classes(
+            return []
+        pages = []
+        navs = []
+        klasses = classhelpers.list_classes(
             module=self.module,
             recursive=self.recursive,
             filter_by___all__=self.filter_by___all__,
             module_filter=self.module_name,
-        ):
-            self.klasses.add(klass)
-        for klass in self.klasses:
-            self.add_class_page(klass=klass, flatten=self.flatten_nav)
+        )
+        for klass in klasses:
+            p = self.add_class_page(klass=klass, flatten=self.flatten_nav)
+            pages.append(p)
         for submod in self.submodules:
-            self.add_doc(
+            nav = self.add_doc(
                 submod,
                 class_template=self.class_template,
                 filter_by___all__=self.filter_by___all__,
                 module_template=self.module_template,
                 flatten_nav=self.flatten_nav,
             )
-        self._create_index_page()
+            navs.append(nav)
+        page = mkmodulepage.MkModulePage(
+            module=self.module,
+            title=self.module_name,
+            is_index=True,
+            klasses=klasses,
+            template_path=self.module_template,
+            parent=self,
+        )
+        self.index_page = page
+        return pages + navs + [page]
+
+    @children.setter
+    def children(self, val):
+        pass
+
+    @property
+    def module(self):
+        return self.ctx.metadata.module if self._module is None else self._module
+
+    @property
+    def module_name(self) -> str:
+        return self.module.__name__.split(".")[-1] if self.module else ""
 
     def add_class_page(
         self,
@@ -127,29 +141,6 @@ class MkDoc(mknav.MkNav):
         )
         section = (klass.__name__,) if flatten else (*parts[1:], klass.__name__)
         self.nav[section] = page
-        return page
-
-    def _create_index_page(
-        self,
-        title: str | None = None,
-        **kwargs: Any,
-    ) -> mkmodulepage.MkModulePage:
-        """Add a page showing all submodules.
-
-        Arguments:
-            title: Override title for the section.
-            kwargs: kwargs passed to MkModulePage.
-        """
-        page = mkmodulepage.MkModulePage(
-            module=self.module,
-            title=title or self.module_name,
-            is_index=True,
-            klasses=self.klasses,
-            template_path=self.module_template,
-            parent=self,
-            **kwargs,
-        )
-        self.index_page = page
         return page
 
 

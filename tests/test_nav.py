@@ -43,5 +43,4 @@ def test_creating_module_document():
     nav = mk.MkNav()
     subnav = nav.add_nav("subsection")
     module_docs = subnav.add_doc(pytest)
-    module_docs._collect_classes()
-    # assert klasses
+    assert module_docs.children
