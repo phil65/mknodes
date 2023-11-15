@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 from typing import Any
 
 from mknodes.info import grifferegistry
@@ -23,7 +21,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         *,
         title: str | None = None,
         module_path: tuple[str, ...] | str | None = None,
-        template_path: str | os.PathLike | None = None,
+        template_path: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.

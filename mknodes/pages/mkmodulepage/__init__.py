@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import types
 
 from typing import Any
@@ -24,7 +23,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         *,
         klasses: list[type] | set[type] | None = None,
         title: str | None = None,
-        template_path: str | os.PathLike | None = None,
+        template_path: str | None = None,
         **kwargs: Any,
     ):
         """Constructor.

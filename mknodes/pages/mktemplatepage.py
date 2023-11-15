@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 from typing import Any
 
 from mknodes.pages import mkpage
@@ -17,7 +15,7 @@ class MkTemplatePage(mkpage.MkPage):
     def __init__(
         self,
         *args: Any,
-        template_path: str | os.PathLike,
+        template_path: str,
         template_parent: str | None = None,
         **kwargs: Any,
     ):
@@ -49,10 +47,8 @@ class MkTemplatePage(mkpage.MkPage):
         return {}
 
     def _to_markdown(self) -> str:
-        with self.env.with_globals(**self.extra_variables):
-            if isinstance(self.template_path, os.PathLike):
-                return self.env.render_file(self.template_path)
-            return self.env.render_template(
-                self.template_path,
-                parent_template=self.template_parent,
-            )
+        return self.env.render_template(
+            self.template_path,
+            parent_template=self.template_parent,
+            variables=self.extra_variables,
+        )
