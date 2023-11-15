@@ -272,7 +272,7 @@ class LinkProvider:
                     return self.get_url(node)
                 msg = f"Cannot get link for {node!r}"
                 raise TypeError(msg)
-            case str():
+            case str() if target:
                 return f"{target}.md"
             case _:
                 raise TypeError(target)
