@@ -210,6 +210,12 @@ class MkNode(node.Node):
         """Get a node from name registry."""
         return cls._name_registry[name]
 
+    @property
+    def toc(self):
+        from mknodes.pages import toc
+
+        return toc.get_toc(self.to_markdown())
+
     def _to_markdown(self) -> str:
         return NotImplemented
 
