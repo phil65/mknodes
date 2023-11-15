@@ -114,6 +114,7 @@ def get_doc(
     fallback: str = "",
     from_base_classes: bool = False,
     only_summary: bool = False,
+    only_description: bool = False,
 ) -> str:
     """Get __doc__ for given object.
 
@@ -123,6 +124,7 @@ def get_doc(
         fallback: Fallback in case docstrings dont exist
         from_base_classes: Use base class docstrings if docstrings dont exist
         only_summary: Only return first line of docstrings
+        only_description: Only return block after first line
     """
     match obj:
         case griffe.Object():
@@ -137,6 +139,8 @@ def get_doc(
         return fallback
     if only_summary:
         doc = doc.split("\n")[0]
+    if only_description:
+        doc = "\n".join(doc.split("\n")[1:])
     return helpers.escaped(doc) if doc and escape else doc
 
 
