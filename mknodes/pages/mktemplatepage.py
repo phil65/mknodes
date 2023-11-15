@@ -31,7 +31,7 @@ class MkTemplatePage(mkpage.MkPage):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(*args, **kwargs)
-        self.template_main = template_path
+        self.template_path = template_path
         self.template_parent = template_parent
 
     @property
@@ -50,9 +50,9 @@ class MkTemplatePage(mkpage.MkPage):
 
     def to_markdown(self) -> str:
         with self.env.with_globals(**self.extra_variables):
-            if isinstance(self.template_main, os.PathLike):
-                return self.env.render_file(self.template_main)
+            if isinstance(self.template_path, os.PathLike):
+                return self.env.render_file(self.template_path)
             return self.env.render_template(
-                self.template_main,
+                self.template_path,
                 parent_template=self.template_parent,
             )
