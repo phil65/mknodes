@@ -93,16 +93,8 @@ def create_section_for_nodes(
 ) -> mk.MkTable:
     table = mk.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
-        if not kls.nodefile:
-            continue
-        page = nav.add_page(kls.__name__, icon=kls.ICON)
-        page += "## Examples"
-        examples = kls.nodefile.get_examples(page)
-        for k, v in examples.items():
-            page += mk.MkHeader(f"Example: **{k}**")
-            page += mk.MkAdmonition(v.pop("Jinja"), title="Jinja", typ="jinja")
-            page += mk.MkAdmonition(v.pop("Repr"), title="Python", typ="python")
-            page += mk.MkTabbed(v)
+        tpl = "classpage_custom.jinja"
+        page = mk.MkClassPage(kls, icon=kls.ICON, template_path=tpl, parent=nav)
         nav += page
         if kls.STATUS:
             page.metadata.status = kls.STATUS

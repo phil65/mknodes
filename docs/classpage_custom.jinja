@@ -1,14 +1,13 @@
-{% extends "classpage.md" %}
+{% extends "classpage_tabbed.md" %}
 {% block content %}
 
 {% if cls | hasattr("nodefile") and cls.nodefile %}
-{{ "Examples" | MkHeader }}
-
+=== "Examples"
 {% for k, v in cls.nodefile.get_examples(node).items() %}
-{{ ("Example: " ~ k | styled(bold=True)) | MkHeader(level=3) }}
-{{ v.pop("Jinja") | MkAdmonition(title="Jinja", typ="jinja") }}
-{{ v.pop("Repr") | MkAdmonition(title="Python", typ="python") }}
-{{ v | MkTabbed }}
+    {{ ("Example: " ~ k | styled(bold=True)) | MkHeader(level=3) | string  | indent }}
+    {{ v.pop("Jinja") | MkAdmonition(title="Jinja", typ="jinja") | string  | indent  }}
+    {{ v.pop("Repr") | MkAdmonition(title="Python", typ="python") | string  | indent  }}
+    {{ v | MkTabbed | string  | indent }}
 {% endfor %}
 
 {% endif %}

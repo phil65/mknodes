@@ -1,7 +1,4 @@
 {% block content %}
-
-{{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github", as_button=True) }}
-
 === "DocStrings"
 {{ cls | MkDocStrings | string | indent(first=True) }}
 
@@ -16,5 +13,8 @@
 === "⋔ Inheritance diagram"
 {{ cls | MkClassDiagram(mode="baseclasses") | string | indent(first=True) }}
 {% endif %}
+
+
+{{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github", as_button=True) }}
 
 {% endblock %}
