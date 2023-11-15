@@ -54,9 +54,7 @@ item = """
 <p>
 {{ node.content | to_html }}
 </p>
-{% if node.link %}
-<a href="{{ node.link }}" class="bnt-more">{{ node.button_text }}</a>
-{% endif %}
+{{ node.button_text | html_link(node.link, class_="bnt-more") }}
 </div>
 </div>
 """
