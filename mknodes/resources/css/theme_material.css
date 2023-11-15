@@ -2,13 +2,13 @@
 content_area_width, classic_admonition_style, default_icons, color_theme*/
 :root {
 {% for admonition in admonitions %}
-    --md-admonition-icon--{{ admonition.name }}: url('data:image/svg+xml;charset=utf-8,{{ admonition.svg }}');
+    --md-admonition-icon--{{ admonition.name }}: {{ admonition.svg | svg_to_data_uri }};
 {% endfor %}
 {% for status_icon in status_icons %}
-    --md-status--{{ status_icon.name }}: url('data:image/svg+xml;charset=utf-8,{{ status_icon.svg }}');
+    --md-status--{{ status_icon.name }}: {{ status_icon.svg | svg_to_data_uri }};
 {% endfor %}
 {% for k, v in default_icons.values() %}
-    --md-{k}: url('data:image/svg+xml;charset=utf-8,{{ v }}');
+    --md-{k}: {{ v | svg_to_data_uri }};
 {% endfor %}
 {% if accent_fg_color %}
     --md-accent-fg-color: {{ accent_fg_color }};
