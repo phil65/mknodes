@@ -23,7 +23,7 @@ jinja = """
 [output.markdown]
 template = """
 {{ node.fence_boundary }} mermaid
-{{ node.graph_type }} {{ node.direction }}
+graph {{ node.direction }}
 {% if node.connections %}
 {% for name in node.names %}
   {{ name }}

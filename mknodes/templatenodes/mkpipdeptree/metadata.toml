@@ -20,7 +20,7 @@ jinja = """
 
 [output.markdown]
 template = """
-{{ node.fence_boundary }} {{ node.fence_title }}
+{{ node.fence_boundary }} mermaid
 {{ node.text }}
 {{ node.fence_boundary }}
 """

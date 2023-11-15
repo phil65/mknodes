@@ -109,7 +109,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         self.user_only = user_only
         self.include_editables = include_editables
         self.editables_only = editables_only
-        super().__init__(graph_type="flow", direction=direction, **kwargs)
+        super().__init__(direction=direction, **kwargs)
 
     @property
     def package(self) -> str:

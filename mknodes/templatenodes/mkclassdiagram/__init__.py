@@ -87,7 +87,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         self.klass = klass
         self.mode = mode
         self._max_depth = max_depth
-        super().__init__(graph_type="flow", direction=direction, **kwargs)
+        super().__init__(direction=direction, **kwargs)
 
     def __repr__(self):
         return reprhelpers.get_repr(

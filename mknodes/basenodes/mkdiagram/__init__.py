@@ -30,18 +30,11 @@ class MkDiagram(mkcode.MkCode):
     ICON = "material/graph-outline"
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.superfences", **config)]
 
-    TYPE_MAP = dict(
-        flow="graph",
-        sequence="sequenceDiagram",
-        state="stateDiagram-v2",
-    )
-
     def __init__(
         self,
         names: list[str] | None = None,
         connections: list[tuple] | None = None,
         *,
-        graph_type: GraphTypeStr = "flow",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         **kwargs: Any,
     ):
@@ -50,30 +43,19 @@ class MkDiagram(mkcode.MkCode):
         Arguments:
             names: names which should be part of the diagram
             connections: tuples indicating the connections of the names
-            graph_type: Type of the graph
             direction: diagram direction
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(language="mermaid", **kwargs)
-        self._graph_type = graph_type
         self.direction = direction
         # Preserve order. Useful if only names are passed, order is important then.
         self.names = helpers.reduce_list(names or [])
         self.connections = set(connections or [])
 
     @property
-    def graph_type(self) -> str:
-        """The type of the graph (usually flow)."""
-        return (
-            self._graph_type
-            if self._graph_type not in self.TYPE_MAP
-            else self.TYPE_MAP[self._graph_type]
-        )
-
-    @property
     def text(self) -> str:
         """MkCode override."""
-        return f"{self.graph_type} {self.direction}\n{self.mermaid_code}"
+        return f"graph {self.direction}\n{self.mermaid_code}"
 
     @property
     def mermaid_code(self) -> str:
