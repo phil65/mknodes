@@ -10,10 +10,15 @@ from urllib import parse
 import git
 
 from mknodes.info import contexts
-from mknodes.utils import helpers, log
+from mknodes.utils import helpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
+
+
+class CommitList(list):
+    def __repr__(self):
+        return reprhelpers.limit_repr.repr(list(self))
 
 
 class GitRepository(git.Repo):
@@ -135,10 +140,10 @@ class GitRepository(git.Repo):
         rev = branch or self.main_branch
         try:
             kwargs = {} if not num else {"max_count": str(num)}
-            return list(self.iter_commits(rev, **kwargs))
+            return CommitList(self.iter_commits(rev, **kwargs))
         except git.exc.GitCommandError:  # type: ignore[name-defined]
             logger.warning("Could not fetch commits for %r", rev)
-            return []
+            return CommitList()
 
     @functools.cached_property
     def code_repository(self) -> str:
