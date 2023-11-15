@@ -1,5 +1,10 @@
-{% extends "classpage_tabbed.md" %}
-{% block content %}
+{{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github") }}
+
+{{ cls | get_doc(only_summary=True) | MkHeader(level=3) }}
+
+{% if cls | get_doc(only_description=True) %}
+{{ cls | get_doc(only_description=True) | MkAdmonition(title="Description") }}
+{% endif %}
 
 {% if cls | hasattr("nodefile") and cls.nodefile %}
 === "Examples"
@@ -10,8 +15,24 @@
     {{ v | MkTabbed | string  | indent }}
 {% endfor %}
 
+=== "DocStrings"
+{{ cls | MkDocStrings(show_docstring_description=False) | string | indent(first=True) }}
+
+{% if subclasses %}
+=== "Sub classes"
+{{ subclasses | MkClassTable | string | indent(first=True) }}
 {% endif %}
 
-{{ super() }}
-
-{% endblock %}
+{% if cls.mro() | length > 2 %}
+=== "Base classes"
+{{ cls.__bases__ | MkClassTable | string | indent(first=True) }}
+=== "⋔ Inheritance diagram"
+{{ cls | MkClassDiagram(mode="baseclasses") | string | indent(first=True) }}
+{% endif %}
+{% endif %}
+{% if cls | hasattr("nodefile") and cls.nodefile %}
+=== "NodeFile"
+    {{ cls.nodefile.path | load_file | MkCode(language="toml", title=cls.nodefile.path) | string | indent  }}
+=== "Code"
+    {{ _mk.MkCode.for_object(cls) | string | indent  }}
+{% endif %}
