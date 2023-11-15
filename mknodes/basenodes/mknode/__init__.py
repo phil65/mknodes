@@ -61,7 +61,6 @@ class MkNode(node.Node):
         shift_header_levels: int = 0,
         css_classes: Iterable[str] | None = None,
         variables: dict[str, Any] | None = None,
-        as_html: bool = False,
         context: contexts.ProjectContext | None = None,
         parent: MkNode | None = None,
     ):
@@ -74,7 +73,6 @@ class MkNode(node.Node):
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
             css_classes: A sequence of css class names to use for this node
             variables: Variables to use for rendering
-            as_html: Converts node to HTML on stringifying.
             context: Context this Nav is connected to.
             parent: Parent for building the tree
         """
@@ -87,7 +85,6 @@ class MkNode(node.Node):
         self.mods._css_classes = list(css_classes) if css_classes else []
         self._ctx = context
         self._node_name = name
-        self.as_html = as_html
         self.variables = variables or {}
         if name is not None:
             self._name_registry[name] = self
@@ -113,7 +110,7 @@ class MkNode(node.Node):
         return nodeenvironment.NodeEnvironment(self)
 
     def __str__(self):
-        return self.to_html() if self.as_html else self.to_markdown()
+        return self.to_markdown()
 
     def __hash__(self):
         return hash(self.to_markdown())
