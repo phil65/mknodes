@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any
 from mknodes.basenodes import mknode
 from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
-from mknodes.pages import metadata, mkpage, pagetemplate
+from mknodes.pages import metadata as metadata_, mkpage, pagetemplate
 from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
@@ -36,6 +36,7 @@ class MkNav(mknode.MkNode):
         section: str | None = None,
         *,
         filename: str = "SUMMARY.md",
+        metadata: dict | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -43,6 +44,7 @@ class MkNav(mknode.MkNode):
         Arguments:
             section: Section name for the Nav
             filename: FileName for the resulting nav
+            metadata: Metadata for the nav. Child pages will inherit this.
             kwargs: Keyword arguments passed to parent
         """
         self.title = section
@@ -53,7 +55,7 @@ class MkNav(mknode.MkNode):
         """Router used for decorator routing."""
         self.parse = navparser.NavParser(self)
         """Parser object used to build Navs from different data / directory structures."""
-        self.metadata = metadata.Metadata()
+        self.metadata = metadata_.Metadata(metadata or {})
         """Page Metadata."""
         self.page_template = pagetemplate.PageTemplate(parent=self, extends="main.html")
         super().__init__(**kwargs)
