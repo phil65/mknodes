@@ -2,16 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from mknodes.basenodes import mknode
-from mknodes.utils import log
+from mknodes.templatenodes import mktemplate
 
 
-logger = log.get_logger(__name__)
-
-HTML = '<iframe width="{width}" height="{height}" src="{url}"></iframe>'
-
-
-class MkIFrame(mknode.MkNode):
+class MkIFrame(mktemplate.MkTemplate):
     """Node for embedding an IFrame."""
 
     ICON = "material/web-box"
@@ -32,15 +26,10 @@ class MkIFrame(mknode.MkNode):
             height: height of frame in pixels
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__("output/html/template", **kwargs)
         self.url = url
         self.width = width
         self.height = height
-
-    def _to_markdown(self) -> str:
-        if not self.url:
-            return ""
-        return HTML.format(url=self.url, width=self.width, height=self.height)
 
 
 if __name__ == "__main__":
