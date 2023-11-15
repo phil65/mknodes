@@ -48,6 +48,7 @@ class MkDocStrings(mknode.MkNode):
         show_category_heading: bool | None = None,
         show_symbol_type_heading: bool | None = None,
         show_symbol_type_toc: bool | None = None,
+        show_docstring_description: bool | None = None,
         inherited_members: bool | None = None,
         members: list[str] | None = None,
         members_order: Literal["alphabetical", "source"] | None = None,
@@ -96,6 +97,7 @@ class MkDocStrings(mknode.MkNode):
                                       class, func and attr).
             show_symbol_type_toc: Show the symbol type in the Table of
                                   Contents (e.g. mod, class, func and attr).
+            show_docstring_description: Whether to show the description from DocStrings
             inherited_members: Also show inherited members.
             members: An explicit list of members to render.
             members_order: The members ordering to use.
@@ -141,6 +143,7 @@ class MkDocStrings(mknode.MkNode):
             show_category_heading=show_category_heading,
             show_symbol_type_heading=show_symbol_type_heading,
             show_symbol_type_toc=show_symbol_type_toc,
+            show_docstring_description=show_docstring_description,
             inherited_members=inherited_members,
             members=members,
             members_order=members_order,
