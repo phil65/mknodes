@@ -32,5 +32,18 @@ jinja = """
 {{ mk.MkCommentedCode.create_example_page | MkCommentedCode }}
 """
 
-
+[output.markdown]
+template = """
+{% for section in inspecthelpers.iter_code_sections(node.code, node.linenums) %}
+{% if section.typ == "code" %}
+{{ section.code | MkCode(linenums=section.start_line) }}
+{% elif node.style == "text" %}
+{{ section.code }}
+{% elif node.style == "bubble" %}
+{{ section.code | MkSpeechBubble }}
+{% elif node.style == "admonition" %}
+{{ section.code | MkAdmonition }}
+{% endif %}
+{% endfor %}
+"""
 

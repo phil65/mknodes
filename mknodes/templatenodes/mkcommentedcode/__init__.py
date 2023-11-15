@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.templatenodes import mktemplate
 from mknodes.data import datatypes
 from mknodes.utils import inspecthelpers, log
 
@@ -10,7 +10,7 @@ from mknodes.utils import inspecthelpers, log
 logger = log.get_logger(__name__)
 
 
-class MkCommentedCode(mkcontainer.MkContainer):
+class MkCommentedCode(mktemplate.MkTemplate):
     """Node which displays a list of code / comment blocks for given code.
 
     Lines beginning with # are shown in dedicated blocks and can be used to
@@ -28,7 +28,6 @@ class MkCommentedCode(mkcontainer.MkContainer):
         *,
         linenums: int | None = None,
         style: Literal["text", "admonition", "bubble"] = "bubble",
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
@@ -38,15 +37,14 @@ class MkCommentedCode(mkcontainer.MkContainer):
             language: language for syntax highlighting
             linenums: If set, use as start linenumber
             style: Comment style
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
         self._code = code
         self.language = language
         self.title = ""
         self.linenums = linenums
-        self._style = style
-        super().__init__(content=None, header=header, **kwargs)
+        self.style = style
+        super().__init__(template="output/markdown/template", **kwargs)
 
     @property
     def code(self) -> str:
@@ -55,36 +53,6 @@ class MkCommentedCode(mkcontainer.MkContainer):
                 return self._code
             case _:
                 return inspecthelpers.get_source(self._code)
-
-    @property
-    def comment_class(self) -> type[mknode.MkNode]:
-        import mknodes as mk
-
-        match self._style:
-            case "text":
-                return mk.MkText
-            case "bubble":
-                return mk.MkSpeechBubble
-            case "admonition":
-                return mk.MkAdmonition
-            case _:
-                raise TypeError(self._style)
-
-    @property
-    def items(self):
-        import mknodes as mk
-
-        items = []
-        for sec in inspecthelpers.iter_code_sections(self.code, self.linenums):
-            if sec.typ == "code":
-                items += mk.MkCode(sec.code, linenums=sec.start_line, parent=self)
-            else:
-                items += self.comment_class(sec.code, parent=self)
-        return items
-
-    @items.setter
-    def items(self, value):
-        pass
 
     @classmethod
     def create_example_page(cls, page):
@@ -108,7 +76,7 @@ class MkCommentedCode(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    from mknodes.manual import root
+    from mknodes.manual import get_started_section
 
-    node = MkCommentedCode(root.build)
+    node = MkCommentedCode(get_started_section.a_quick_tour)
     print(node)
