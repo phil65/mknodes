@@ -1,6 +1,7 @@
 [metadata]
 icon = "mdi:code-json"
 name = "MkCodeImage"
+group = "image"
 
 [examples.title]
 title = "Default"

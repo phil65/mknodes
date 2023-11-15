@@ -60,5 +60,5 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 if __name__ == "__main__":
     import mknodes as mk
 
-    doc = MkClassPage.with_context(mk.MkMaterialBadge, template="classpage_custom.jinja")
+    doc = MkClassPage(mk.MkPluginFlow, template_path="classpage_custom.jinja")
     print(doc.get_resources())
