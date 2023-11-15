@@ -52,7 +52,7 @@ def linked(identifier: str, title: str | None = None) -> str:
         title: Title to show as label
     """
     suffix = "" if helpers.is_url(identifier) or identifier.endswith(".md") else ".md"
-    return f"[{identifier if title is None else title}]({identifier}{suffix})"
+    return f"[{title or identifier}]({identifier}{suffix})"
 
 
 class LinkProvider:

@@ -37,8 +37,5 @@ jinja = """
 
 [output.html]
 template = """
-{% set content = node.data | replace("\n", "") %}
-{% if node.url %}
-<body><a href={{ node.url | repr }}>{{ content }}</a></body>"{% else %}
-<body>{{ content }}</body>{% endif %}
+<body>{{ node.url | html_link(node.data | replace("\n", "")) }}</body>
 """
