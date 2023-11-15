@@ -102,6 +102,7 @@ class NodeEnvironment(jinjarope.Environment):
         self.globals["parent_page"] = self.node.parent_page
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
         self.globals["node"] = self.node
+        self.globals["file"] = self.node.nodefile
         self.globals["mk"] = self._wrapped_klasses
         # def update_env_from_context(self):
         self.filters["get_link"] = self.node.ctx.links.get_link
