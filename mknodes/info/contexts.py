@@ -70,6 +70,9 @@ class GitContext(Context):
     last_version: str | None = None
     """Name of last commit tag."""
 
+    def __repr__(self):
+        return f"GitContext({self.repo_name!r}: {self.main_branch!r})"
+
 
 @dataclasses.dataclass
 class ThemeContext(Context):
@@ -92,6 +95,9 @@ class ThemeContext(Context):
     css_accent_bg: str = ""
     css_default_fg: str = ""
     css_default_bg: str = ""
+
+    def __repr__(self):
+        return f"ThemeContext({self.name!r})"
 
 
 # @dataclasses.dataclass
@@ -228,6 +234,9 @@ class PackageContext(Context):
     Defined in pyproject mknodes section *[pyproject]*
     """
 
+    def __repr__(self):
+        return f"PackageContext({self.distribution_name!r})"
+
 
 @dataclasses.dataclass
 class GitHubContext(Context):
@@ -261,6 +270,9 @@ class GitHubContext(Context):
     """The GitHub username."""
     twitter_username: str | None = None
     """The twitter username."""
+
+    def __repr__(self):
+        return f"GitHubContext({self.repo_name!r})"
 
 
 @dataclasses.dataclass
