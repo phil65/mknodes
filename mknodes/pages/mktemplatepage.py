@@ -36,7 +36,7 @@ class MkTemplatePage(mkpage.MkPage):
 
     @property
     def items(self):
-        self.to_markdown()
+        self._to_markdown()
         return self.env.rendered_children
 
     @items.setter
@@ -48,7 +48,7 @@ class MkTemplatePage(mkpage.MkPage):
         """Extra variables for the environment. Can be overridden by subclasses."""
         return {}
 
-    def to_markdown(self) -> str:
+    def _to_markdown(self) -> str:
         with self.env.with_globals(**self.extra_variables):
             if isinstance(self.template_path, os.PathLike):
                 return self.env.render_file(self.template_path)
