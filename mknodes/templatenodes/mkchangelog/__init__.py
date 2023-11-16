@@ -10,13 +10,14 @@ from typing import Any, Literal
 from git_changelog import cli
 
 from mknodes.basenodes import mktext
-from mknodes.utils import log, resources
+from mknodes.utils import helpers, log, resources
 
 
 logger = log.get_logger(__name__)
 
 
 @functools.cache
+@helpers.list_to_tuple
 def get_changelog(
     repository: str,
     template: str,
