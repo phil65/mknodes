@@ -4,22 +4,14 @@ from collections.abc import Sequence
 
 from typing import Any
 
-from jinjarope import envglobals
-
-from mknodes.basenodes import mknode
+from mknodes.templatenodes import mktemplate
 from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
 
 
-TEXT = """<div data-terminal>
-  <span data-ty="input">{input}</span>
-  <span data-ty>{output}</span>
-</div>"""
-
-
-class MkCommandOutput(mknode.MkNode):
+class MkCommandOutput(mktemplate.MkTemplate):
     """Node to display the terminal output of a command."""
 
     ICON = "material/bash"
@@ -34,26 +26,11 @@ class MkCommandOutput(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         self.call = call
-        # caching on instance level as a compromise
-        self._cache: dict[str, str] = {}  # {call: output}
-        super().__init__(**kwargs)
+        super().__init__("output/html/template", **kwargs)
 
     @property
-    def output(self) -> str:
-        import pathlib
-
-        key = " ".join(self.call)
-        if key in self._cache:
-            return self._cache[key]
-        cwd = self.ctx.metadata.repository_path or pathlib.Path.cwd()
-        if output := envglobals.get_output_from_call(key, cwd=cwd):
-            self._cache[key] = output  # .replace("\n", "<br>").replace(" ", "&nbsp;")
-            return self._cache[key]
-        return "**Command failed**"
-
-    def _to_markdown(self):
-        call = " ".join(self.call)
-        return TEXT.format(input=call, output=self.output)
+    def cwd(self):
+        return self.ctx.metadata.repository_path
 
 
 if __name__ == "__main__":

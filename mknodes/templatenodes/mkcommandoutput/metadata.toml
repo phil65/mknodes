@@ -16,6 +16,6 @@ jinja = """
 template = """
 <div data-terminal>
   <span data-ty="input">{{ node.call | join(" ") }}</span>
-  <span data-ty>{{ node.output }}</span>
+  <span data-ty>{{ node.call | check_output(cwd=node.cwd) }}</span>
 </div>
 """
