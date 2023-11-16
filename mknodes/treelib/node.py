@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Sequence
 import copy
+import types
 
 from typing import Self
 
@@ -102,8 +103,12 @@ class Node:
         """Get iterator to yield all descendants of self, does not include self."""
         yield from preorder_iter(self, filter_condition=lambda _node: _node != self)
 
-    def is_descendant_of(self, kls: type) -> bool:
-        """Returns True if any ancestor is of given type."""
+    def is_descendant_of(self, kls: type | types.UnionType) -> bool:
+        """Returns True if any ancestor is of given type.
+
+        Arguments:
+            kls: The class (union) the check the ancestors for
+        """
         return any(isinstance(i, kls) for i in self.ancestors)
 
     @property
