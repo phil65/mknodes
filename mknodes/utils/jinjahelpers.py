@@ -69,26 +69,23 @@ ENV_FILTERS = {
 
 
 def setup_env(env: jinjarope.Environment):
-    env.globals |= get_globals()
-    env.filters |= get_filters()
+    """Used as extension point for the jinjarope environment.
+
+    Arguments:
+        env: The jinjarope environment to extend
+    """
+    node_klasses = get_nodes()
+    env.globals |= dict(mk=node_klasses, _mk=node_klasses)
+    env.globals |= ENV_GLOBALS
+    env.filters |= node_klasses
+    env.filters |= ENV_FILTERS
 
 
-@jinjarope.Environment.register_globals
 @functools.cache
-def get_globals():
+def get_nodes():
     import mknodes as mk
 
-    node_klasses = {k.__name__: k for k in classhelpers.list_subclasses(mk.MkNode)}
-    return dict(mk=node_klasses, _mk=node_klasses) | ENV_GLOBALS
-
-
-@jinjarope.Environment.register_filters
-@functools.cache
-def get_filters():
-    import mknodes as mk
-
-    node_klasses = {k.__name__: k for k in classhelpers.list_subclasses(mk.MkNode)}
-    return ENV_FILTERS | node_klasses
+    return {k.__name__: k for k in classhelpers.list_subclasses(mk.MkNode)}
 
 
 def set_markdown_exec_namespace(variables: dict[str, Any], namespace: str = "mknodes"):
@@ -99,5 +96,5 @@ def set_markdown_exec_namespace(variables: dict[str, Any], namespace: str = "mkn
 
 
 if __name__ == "__main__":
-    a = get_filters()
-    print(a["evaluate"])
+    nodes = get_nodes()
+    print(nodes)

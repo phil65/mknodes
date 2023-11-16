@@ -51,6 +51,9 @@ def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
     In order to provide compatibility with the materialx-icon-index,
     we also add the prefixes used by that index, which is different from
     the pyconify prefixes. (material vs mdi etc, see PYCONIFY_TO_PREFIXES)
+
+    Arguments:
+        prefixes: The collections to fetch
     """
     import pyconify
 
@@ -69,6 +72,8 @@ def _get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
     "name" is the emoji identifier,
     "path" is the pyconify key
 
+    Arguments:
+        collections: Collections to fetch. If none given, fetch all
     """
     import pyconify
 
