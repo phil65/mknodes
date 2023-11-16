@@ -197,7 +197,7 @@ class MkCode(mkcontainer.MkContainer):
             start_line += 1
         if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
             call_file = frame.f_back.f_code.co_filename
-            obj_file = inspect.getfile(obj)
+            obj_file = inspecthelpers.get_file(obj)
             if call_file == obj_file:
                 line_no = frame.f_back.f_lineno
                 line = line_no - start_line + 1
