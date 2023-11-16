@@ -86,17 +86,17 @@ class MkCode(mkcontainer.MkContainer):
         classes = " ".join(f".{i}" for i in self.mods.css_classes)
         attrs = {}
         if self.title:
-            attrs["title"] = repr(self.title)
+            attrs["title"] = self.title
         if self.language:
             classes = f".{self.language} {classes}"
         if self.linenums is not None:
-            attrs["linenums"] = f'"{self.linenums}"'
+            attrs["linenums"] = str(self.linenums)
         if self.highlight_lines:
             sub = " ".join(str(i) for i in self.highlight_lines)
-            attrs["hl_lines"] = f'"{sub}"'
+            attrs["hl_lines"] = sub
         if not classes and not attrs:
             return ""
-        attr_str = " ".join(f"{k}={v}" for k, v in attrs.items())
+        attr_str = " ".join(f"{k}={v!r}" for k, v in attrs.items())
         if attr_str:
             attr_str = " " + attr_str
         return f"{{{classes}{attr_str}}}"
