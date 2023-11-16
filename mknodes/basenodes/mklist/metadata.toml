@@ -39,3 +39,11 @@ template = """
 {% endif %}
 
 """
+
+[output.html]
+template = """
+<{{ "ol" if node.ordered else "ul" }}>{% for item in node.items[: node.shorten_after] %}<li>{{ node._prep(item)}}</li>{% endfor %}
+{% if node.shorten_after and node.items | length > node.shorten_after %}
+<li>...</li>{% endif %}
+</{{ "ol" if node.ordered else "ul" }}>
+"""

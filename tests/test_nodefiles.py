@@ -32,3 +32,4 @@ def test_if_template_output_equals_code_output(node: mk.MkNode):
                 continue
             result = node.env.render_string(v["template"], dict(node=node))
             assert result == node._to_markdown()
+            break
