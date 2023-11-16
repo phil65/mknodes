@@ -47,7 +47,7 @@ class MkTreeView(mkcode.MkCode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(header, language="", **kwargs)
-        self.tree = tree
+        self._tree = tree
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
@@ -56,20 +56,23 @@ class MkTreeView(mkcode.MkCode):
         )
 
     @property
-    def text(self):
-        match self.tree:
+    def tree(self) -> treelib.Node:
+        match self._tree:
             case str() | os.PathLike():
-                node = treelib.FileTreeNode.from_folder(
-                    upath.UPath(self.tree),
+                return treelib.FileTreeNode.from_folder(
+                    upath.UPath(self._tree),
                     predicate=self.predicate,
                     exclude_folders=self.exclude_folders,
                     maximum_depth=self.maximum_depth,
                 )
             case mknode.MkNode():
-                node = self.tree
+                return self._tree
             case _:
-                raise TypeError(self.tree)
-        return node.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
+                raise TypeError(self._tree)
+
+    @property
+    def text(self):
+        return self.tree.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
 
 
 if __name__ == "__main__":
