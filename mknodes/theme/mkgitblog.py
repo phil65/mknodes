@@ -13,6 +13,8 @@ from mknodes.utils import downloadhelpers
 
 @dataclasses.dataclass(frozen=True)
 class Commit:
+    """Class representing a single Git commit."""
+
     sha: str
     author_name: str
     author_email: str
@@ -71,6 +73,14 @@ class MkGitBlog(mkblog.MkBlog):
     """The MkDocs-Material plugin-blog, misused as a Git log."""
 
     def __init__(self, org: str, repo: str, posts_dir: str | os.PathLike, **kwargs):
+        """Instanciate a MkGitBlog.
+
+        Arguments:
+            org: The repository org
+            repo: The repository name
+            posts_dir: The folder of the post files
+            kwargs: Additional keyword arguments passed to parent
+        """
         super().__init__(**kwargs)
         self.commits: list[mkblog.MkBlogPost] = []
         self.posts_dir = posts_dir

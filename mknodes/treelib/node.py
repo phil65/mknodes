@@ -202,6 +202,15 @@ class Node:
         return "\n".join(lines)
 
     def iter_nodes(self, indent: int = 0, max_depth: int | None = None):
+        """Iterate over all nodes, including self and children.
+
+        Yields current-depth-node tuples.
+
+        Arguments:
+            indent: The start "level". The first element of the returned tuple will be
+                    relative to this
+            max_depth: The max depth to iterate
+        """
         if max_depth is not None and indent > max_depth:
             return
         yield indent, self

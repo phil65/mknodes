@@ -60,8 +60,8 @@ class BlogMetadata(metadata.Metadata):
 class MkBlog(mknav.MkNav):
     """Class representing the blog provided by the MkDocs-Material blog plugin."""
 
-    def __init__(self, section: str | None = "Blog", **kwargs: Any):
-        super().__init__(section=section, **kwargs)
+    def __init__(self, title: str | None = "Blog", **kwargs: Any):
+        super().__init__(section=title, **kwargs)
         self.authors: dict[str, Author] = {}
         # self.posts = mknav.MkNav("posts", parent=self)
         # self.index_page = mkpage.MkPage()
@@ -87,6 +87,7 @@ class MkBlog(mknav.MkNav):
         self.authors[username] = author
 
     def get_node_resources(self) -> resources.Resources:
+        """Return required resources for this node."""
         authors_file = yamlfile.YamlFile()
         dct = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
         authors_file._data["authors"] = dct
