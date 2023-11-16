@@ -5,10 +5,11 @@ import textwrap
 
 from typing import Any, Literal
 
+from jinjarope import iterfilters, utils
 from pymdownx import superfences
 
 from mknodes.basenodes import mkcode
-from mknodes.utils import helpers, resources
+from mknodes.utils import resources
 
 
 GraphTypeStr = Literal["flow", "sequence", "state"]
@@ -49,7 +50,7 @@ class MkDiagram(mkcode.MkCode):
         super().__init__(language="mermaid", **kwargs)
         self.direction = direction
         # Preserve order. Useful if only names are passed, order is important then.
-        self.names = helpers.reduce_list(names or [])
+        self.names = iterfilters.reduce_list(names or [])
         self.connections = set(connections or [])
 
     @property
@@ -65,9 +66,9 @@ class MkDiagram(mkcode.MkCode):
         """
         lines = list(self.names)
         if not self.connections:
-            lines = [f'{helpers.get_hash(i)}["{i}"]' for i in lines]
+            lines = [f'{utils.get_hash(i)}["{i}"]' for i in lines]
             for prev, nxt in itertools.pairwise(self.names):
-                lines.append(f"{helpers.get_hash(prev)} --> {helpers.get_hash(nxt)}")
+                lines.append(f"{utils.get_hash(prev)} --> {utils.get_hash(nxt)}")
             return textwrap.indent("\n".join(lines), "  ")
         for connection in self.connections:
             if len(connection) == 2:  # noqa: PLR2004

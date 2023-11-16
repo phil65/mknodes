@@ -3,8 +3,10 @@ from __future__ import annotations
 import dataclasses
 import functools
 
+from jinjarope import iterfilters
+
 from mknodes.info import yamlfile
-from mknodes.utils import helpers, reprhelpers
+from mknodes.utils import reprhelpers
 
 
 @dataclasses.dataclass(frozen=True)
@@ -64,7 +66,7 @@ class PreCommitConfigFile(yamlfile.YamlFile):
 
     @property
     def hook_names(self) -> list[str]:
-        return helpers.reduce_list([i.hook_id for i in self.hooks])
+        return iterfilters.reduce_list([i.hook_id for i in self.hooks])
 
 
 if __name__ == "__main__":

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import dataclasses
 
-from jinjarope import htmlfilters
+from jinjarope import htmlfilters, utils
 
 from mknodes.nodemods import mod
-from mknodes.utils import helpers, resources
+from mknodes.utils import resources
 
 
 SCROLLREVEAL_LINK = (
@@ -54,7 +54,7 @@ class ScrollReveal(mod.Mod):
 
     @property
     def css_class_names(self):
-        return ["sr", f"scrollreveal_{helpers.get_hash(self)}"]
+        return ["sr", f"scrollreveal_{utils.get_hash(self)}"]
 
 
 if __name__ == "__main__":

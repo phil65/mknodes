@@ -6,6 +6,8 @@ import dataclasses
 
 from typing import Any, ClassVar, Literal
 
+from jinjarope import iterfilters, utils
+
 from mknodes.utils import helpers, mergehelpers, reprhelpers
 
 
@@ -150,7 +152,7 @@ class TextResource:
     @property
     def resolved_filename(self) -> str:
         """Return a filename consisting of a user-set prefix + a hash value."""
-        hashed = helpers.get_hash(self.content)
+        hashed = utils.get_hash(self.content)
         return (
             f"{self.filename.removesuffix(self.EXTENSION)}_{hashed}{self.EXTENSION}"
             if self.filename
@@ -318,11 +320,11 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
             exts = [self.markdown_extensions, other_exts]
             merged = mergehelpers.merge_extensions(exts)
             self.markdown_extensions = mergehelpers.merge_dicts(*merged)
-        self.css = helpers.reduce_list(self.css + other["css"])
-        self.plugins = helpers.reduce_list(self.plugins + other["plugins"])
-        self.js = helpers.reduce_list(self.js + other["js"])
-        self.assets = helpers.reduce_list(self.assets + other["assets"])
-        self.packages = helpers.reduce_list(self.packages + other["packages"])
+        self.css = iterfilters.reduce_list(self.css + other["css"])
+        self.plugins = iterfilters.reduce_list(self.plugins + other["plugins"])
+        self.js = iterfilters.reduce_list(self.js + other["js"])
+        self.assets = iterfilters.reduce_list(self.assets + other["assets"])
+        self.packages = iterfilters.reduce_list(self.packages + other["packages"])
         return self
 
 

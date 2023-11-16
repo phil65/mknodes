@@ -5,7 +5,7 @@ import itertools
 import os
 import re
 
-from typing import Any, Literal, ParamSpec, TypeVar
+from typing import Literal, ParamSpec, TypeVar
 
 from mknodes.utils import log
 
@@ -14,27 +14,6 @@ logger = log.get_logger(__name__)
 
 
 T = TypeVar("T")
-
-
-def reduce_list(data_set: Iterable[T]) -> list[T]:
-    """Reduce duplicate items in a list and preserve order.
-
-    Arguments:
-        data_set: The Iterable to reduce.
-    """
-    return list(dict.fromkeys(data_set))
-
-
-def get_hash(obj: Any) -> str:
-    """Get a Md5 hash for given object.
-
-    Arguments:
-        obj: The object to get a hash for
-    """
-    import hashlib
-
-    hash_md5 = hashlib.md5(str(obj).encode("utf-8"))
-    return hash_md5.hexdigest()[:7]
 
 
 def slugify(text: str | os.PathLike) -> str:

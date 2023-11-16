@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import dataclasses
 
-from jinjarope import htmlfilters
+from jinjarope import htmlfilters, utils
 
 from mknodes.nodemods import mod
-from mknodes.utils import helpers, resources
+from mknodes.utils import resources
 
 
 SCRIPT = """\
@@ -35,7 +35,7 @@ class ParallaxEffect(mod.Mod):
 
     @property
     def css_class_names(self):
-        return [f"parallax_{helpers.get_hash(self)}"]
+        return [f"parallax_{utils.get_hash(self)}"]
 
 
 if __name__ == "__main__":

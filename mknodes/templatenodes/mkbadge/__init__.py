@@ -5,7 +5,7 @@ import html
 
 from typing import Any, Literal
 
-from jinjarope import htmlfilters
+from jinjarope import htmlfilters, utils
 
 from mknodes.basenodes import mkimage
 from mknodes.utils import helpers, log, resources
@@ -125,7 +125,7 @@ class MkBadge(mkimage.MkImage):
 
     @property
     def path(self) -> str:
-        hashed = helpers.get_hash(repr(self))
+        hashed = utils.get_hash(repr(self))
         unique = f"{self.label}_{self.value}_{hashed}.svg"
         return helpers.slugify(unique)
 
