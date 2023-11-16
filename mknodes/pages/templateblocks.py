@@ -4,7 +4,7 @@ import os
 
 from typing import TYPE_CHECKING, Literal
 
-from jinjarope import envglobals
+from jinjarope import htmlfilters
 
 from mknodes.basenodes import mknode
 from mknodes.mdlib import mdconverter
@@ -275,7 +275,7 @@ class StylesBlock(BaseBlock):
         Arguments:
             css: A string or dict containing CSS
         """
-        css_str = envglobals.format_css_rule(css) if isinstance(css, dict) else css
+        css_str = htmlfilters.format_css_rule(css) if isinstance(css, dict) else css
         filename = f"{helpers.get_hash(css_str)}.css"
         text = resources.CSSText(filename=filename, content=css_str)
         self.styles.append(text)

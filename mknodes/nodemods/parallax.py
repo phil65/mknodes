@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 
-from jinjarope import envglobals
+from jinjarope import htmlfilters
 
 from mknodes.nodemods import mod
 from mknodes.utils import helpers, resources
@@ -28,7 +28,7 @@ class ParallaxEffect(mod.Mod):
     def get_resources(self):
         file = resources.JSFile(LIB, is_library=True)
         dct = dataclasses.asdict(self)
-        js_map = envglobals.format_js_map(dct)
+        js_map = htmlfilters.format_js_map(dct)
         text = SCRIPT % (self.css_class_names[0], js_map)
         script = resources.JSText(text, filename="parallax.js")
         return resources.Resources(js=[file, script])

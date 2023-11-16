@@ -5,7 +5,7 @@ import html
 
 from typing import Any, Literal
 
-from jinjarope import envglobals
+from jinjarope import htmlfilters
 
 from mknodes.basenodes import mkimage
 from mknodes.utils import helpers, log, resources
@@ -100,7 +100,7 @@ class MkBadge(mkimage.MkImage):
         return self.ctx.theme.primary_color
 
     def _to_markdown(self):
-        inner = envglobals.html_link(self.data.replace("\n", ""), self.url)
+        inner = htmlfilters.html_link(self.data.replace("\n", ""), self.url)
         return f"<body>{inner}</body>"
 
     @property
