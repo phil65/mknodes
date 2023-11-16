@@ -76,10 +76,8 @@ class MkTreeView(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    opts = dict(org="mkdocstrings", repo="mkdocstrings")
     node = MkTreeView(
-        "github://mknodes",
-        storage_options=opts,
+        upath.UPath("github://mknodes", org="mkdocstrings", repo="mkdocstrings"),
         style="ascii",
         maximum_depth=2,
     )

@@ -15,3 +15,10 @@ jinja = """
 # jinja = """
 # {{ "github://" | MkTreeView(storage_options={"org": "mkdocstrings", "repo": "mkocstrings"}, maximum_depth=2) }}
 # """
+
+[output.markdown]
+template = """
+{{ node.fence_boundary }} 
+{{ node.tree.get_tree_repr(style=node.style, max_depth=node.maximum_depth) }}
+{{ node.fence_boundary }}
+"""
