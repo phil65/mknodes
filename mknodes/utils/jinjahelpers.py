@@ -68,6 +68,11 @@ ENV_FILTERS = {
 } | envglobals.ENV_FILTERS  # envglobals filters required for MkDocs themes
 
 
+def setup_env(env: jinjarope.Environment):
+    env.globals |= get_globals()
+    env.filters |= get_filters()
+
+
 @jinjarope.Environment.register_globals
 @functools.cache
 def get_globals():

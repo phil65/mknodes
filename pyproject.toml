@@ -131,6 +131,9 @@ dependencies = [
 ]
 license = "MIT"
 
+[project.entry-points."jinjarope.environment"]
+mknodes = "mknodes.utils.jinjahelpers:setup_env"
+
 [project.urls]
 Documentation = "https://phil65.github.io/mknodes/"
 Source = "https://github.com/phil65/mknodes"
