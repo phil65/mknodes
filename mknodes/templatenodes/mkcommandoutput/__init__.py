@@ -4,8 +4,10 @@ from collections.abc import Sequence
 
 from typing import Any
 
+from jinjarope import envglobals
+
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -44,7 +46,7 @@ class MkCommandOutput(mknode.MkNode):
         if key in self._cache:
             return self._cache[key]
         cwd = self.ctx.metadata.repository_path or pathlib.Path.cwd()
-        if output := helpers.get_output_from_call(key, cwd=cwd):
+        if output := envglobals.get_output_from_call(key, cwd=cwd):
             self._cache[key] = output  # .replace("\n", "<br>").replace(" ", "&nbsp;")
             return self._cache[key]
         return "**Command failed**"

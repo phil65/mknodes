@@ -29,16 +29,16 @@ param_template = """
 {{ param.opt_str | MkHeader(level=3) }}
 
 {% if param.required %}
-"{{ "REQUIRED" | styled(bold=True) }}"
+"{{ "REQUIRED" | md_style(bold=True) }}"
 {% endif %}
 {% if param.envvar %}
 Environment variable{{ param.envvar }}
 {% endif %}
 {% if param.multiple %}
-{{ "Multiple values allowed." | styled(bold=True) }}
+{{ "Multiple values allowed." | md_style(bold=True) }}
 {% endif %}
 {% if param.default %}
-{{ "Default:" | styled(bold=True) }} {{ param.default }}
+{{ "Default:" | md_style(bold=True) }} {{ param.default }}
 {% endif %}
 {% if param.is_flag %}
 {{ "mdi:flag" | MkMaterialBadge("Flag") }}

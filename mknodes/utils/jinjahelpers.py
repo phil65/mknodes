@@ -6,8 +6,9 @@ from importlib import util
 from typing import Any
 
 import jinja2
-import jinjarope
 
+from jinja2 import runtime
+import jinjarope
 from jinjarope import envglobals
 from markupsafe import Markup
 import tomli_w
@@ -15,7 +16,6 @@ import tomli_w
 from mknodes import paths
 from mknodes.utils import (
     classhelpers,
-    helpers,
     icons,
     inspecthelpers,
     log,
@@ -28,14 +28,14 @@ logger = log.get_logger(__name__)
 
 
 @jinja2.pass_context
-def url_filter(context, value: str) -> str:
+def url_filter(context: runtime.Context, value: str) -> str:
     """A Template filter to normalize URLs."""
     url = page.url if (page := context.get("page")) else None
     return pathhelpers.normalize_url(str(value), url=url, base=context["base_url"])
 
 
 @jinja2.pass_context
-def script_tag_filter(context, extra_script):
+def script_tag_filter(context: runtime.Context, extra_script):
     """Converts an ExtraScript value to an HTML <script> tag line."""
     html = '<script src="{0}"'
     if not isinstance(extra_script, str):
@@ -58,7 +58,6 @@ ENV_GLOBALS = {
 ENV_FILTERS = {
     "get_icon_svg": icons.get_icon_svg,
     "get_emoji_slug": icons.get_emoji_slug,
-    "styled": helpers.styled,
     "get_doc": inspecthelpers.get_doc,
     "to_class": classhelpers.to_class,
     "dump_yaml": yamlhelpers.dump_yaml,

@@ -5,6 +5,10 @@ The `jinja2` environment also contains some pre-defined filters.
      Filters are separated from the variable by a pipe symbol (|) and may have optional arguments in parentheses. Multiple filters can be chained. The output of one filter is applied to the next.
 
 
+A base collection of filters is provided by [jinjarope](https://phil65.github.io/jinjarope)
+
+Additional filters provided by MkNodes:
+
 ### `get_link`
 
 Example:
@@ -25,18 +29,6 @@ Example:
 ```
 
 ::: mknodes.info.linkprovider.LinkProvider.get_url
-    options:
-      show_root_heading: false
-      show_root_toc_entry: false
-
-### `styled`
-
-Example:
-```
-"My text" | styled(bold=True, align="right")
-```
-
-::: mknodes.utils.helpers.styled
     options:
       show_root_heading: false
       show_root_toc_entry: false
@@ -79,16 +71,3 @@ Example:
     options:
       show_root_heading: false
       show_root_toc_entry: false
-
-
-**Additional filters from Python stdlib added to the environment**
-
-* `str`
-* `str.lstrip`
-* `str.rstrip`
-* `str.removesuffix`
-* `str.removeprefix`
-* `issubclass`
-* `isinstance`
-* `hasattr`
-* `path_join (os.path.join)`

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable
 import itertools
 import os
 import re
 
-from typing import Literal, ParamSpec, TypeVar
+from typing import ParamSpec, TypeVar
 
 from mknodes.utils import log
 
@@ -87,38 +87,6 @@ def groupby_first_letter(
     return {k: list(g) for k, g in itertools.groupby(data, first_letter)}
 
 
-def styled(
-    text: str,
-    *,
-    size: int | None = None,
-    bold: bool = False,
-    italic: bool = False,
-    code: bool = False,
-    align: Literal["left", "right", "center"] | None = None,
-) -> str:
-    """Apply styling to given markdown.
-
-    Arguments:
-        text: Text to style
-        size: Optional text size
-        bold: Whether styled text should be bold
-        italic: Whether styled text should be italic
-        code: Whether styled text should styled as (inline) code
-        align: Optional text alignment
-    """
-    if size:
-        text = f"<font size='{size}'>{text}</font>"
-    if bold:
-        text = f"**{text}**"
-    if italic:
-        text = f"*{text}*"
-    if code:
-        text = f"`{text}`"
-    if align:
-        text = f"<p style='text-align: {align};'>{text}</p>"
-    return text
-
-
 def label_for_class(klass: type) -> str:
     mod = klass.__module__
     parts = mod.split(".")
@@ -152,34 +120,6 @@ def is_url(string: str) -> bool:
         string: The string to check
     """
     return string.startswith(("http:/", "https:/", "www."))
-
-
-def get_output_from_call(
-    call: str | Sequence[str],
-    cwd: str | os.PathLike | None,
-) -> str | None:
-    """Execute a system call and return the captured stdout.
-
-    call: The system call to execute
-    cwd: The working directory for the call. If None use cwd.
-    """
-    import subprocess
-
-    if not isinstance(call, str):
-        call = " ".join(call)
-    msg = f"Executing {call!r}..."
-    logger.info(msg)
-    try:
-        return subprocess.run(
-            call,
-            stdout=subprocess.PIPE,
-            text=True,
-            shell=True,
-            cwd=cwd,
-        ).stdout
-    except subprocess.CalledProcessError:
-        logger.warning("Executing %s failed", call)
-        return None
 
 
 P = ParamSpec("P")

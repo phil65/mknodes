@@ -25,11 +25,11 @@ jinja = """
 [layouts.default]
 Name = """
 {% if package_info.homepage %}
-{{ package_info.homepage | MkLink(package_info.name) | string | styled(size=3, bold=True) }}{% else %}
-{{ package_info.name | styled(size=3, bold=True, code=True) }}{% endif %}
+{{ package_info.homepage | MkLink(package_info.name) | string | md_style(size=3, bold=True) }}{% else %}
+{{ package_info.name | md_style(size=3, bold=True, code=True) }}{% endif %}
 """
 Summary = """
-{{ package_info.summary | styled(italic=True) }}
+{{ package_info.summary | md_style(italic=True) }}
 """
 Marker = """
 {{ (dep_info.marker or "") | string | re_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
@@ -38,10 +38,10 @@ Marker = """
 [layouts.badge]
 Name = """
 {% if package_info.homepage %}
-{{ package_info.homepage | MkLink(package_info.name) | string | styled(size=3, bold=True) }}{% else %}
-{{ package_info.name | styled(size=3, bold=True, code=True) }}{% endif %}{{ (dep_info.marker or "") | string | re_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
+{{ package_info.homepage | MkLink(package_info.name) | string | md_style(size=3, bold=True) }}{% else %}
+{{ package_info.name | md_style(size=3, bold=True, code=True) }}{% endif %}{{ (dep_info.marker or "") | string | re_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
 """
 
 Summary = """
-{{ package_info.summary | styled(italic=True) }}<br>{{ "websites" | MkMetadataBadges(package=package_info.name, block_separator=" ") }}
+{{ package_info.summary | md_style(italic=True) }}<br>{{ "websites" | MkMetadataBadges(package=package_info.name, block_separator=" ") }}
 """

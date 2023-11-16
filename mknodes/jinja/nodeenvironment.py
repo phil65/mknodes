@@ -20,10 +20,6 @@ if TYPE_CHECKING:
 logger = log.get_logger(__name__)
 
 
-def to_html(node: mk.MkNode) -> str:
-    return node.to_html()
-
-
 class NodeEnvironment(jinjarope.Environment):
     """Jinja Node environment.
 
@@ -109,7 +105,7 @@ class NodeEnvironment(jinjarope.Environment):
         self.filters["get_url"] = self.node.ctx.links.get_url
         self.filters["link_for_class"] = self.node.ctx.links.link_for_klass
         self.filters["link_for_module"] = self.node.ctx.links.link_for_module
-        self.filters["to_html"] = to_html
+        self.filters["to_html"] = lambda x: x.to_html()
         self.globals |= self.node.ctx.as_dict()
 
     def get_extra_paths(self) -> list[str]:
