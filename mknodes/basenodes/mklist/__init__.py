@@ -5,7 +5,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.info import linkprovider
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -42,17 +42,6 @@ class MkList(mkcontainer.MkContainer):
         self.shorten_after = shorten_after
         self.as_links = as_links
         super().__init__(content=list(items), **kwargs)
-
-    def __repr__(self):
-        items = [reprhelpers.to_str_if_textnode(i) for i in self.items]
-        return reprhelpers.get_repr(
-            self,
-            items=items,
-            shorten_after=self.shorten_after,
-            as_links=self.as_links,
-            _filter_empty=True,
-            _filter_false=True,
-        )
 
     def _prep(self, item) -> str:
         return linkprovider.linked(str(item)) if self.as_links else str(item)
