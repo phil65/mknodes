@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Generator, Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 import itertools
 import os
 import re
@@ -14,12 +14,6 @@ logger = log.get_logger(__name__)
 
 
 T = TypeVar("T")
-
-
-def clean_svg(img_text: str) -> str:
-    img_text = re.sub(r"<\?xml version.*\?>\s*", "", img_text, flags=re.DOTALL)
-    img_text = re.sub(r"<!DOCTYPE svg.*?>", "", img_text, flags=re.DOTALL)
-    return img_text.strip()
 
 
 def reduce_list(data_set: Iterable[T]) -> list[T]:
@@ -43,45 +37,6 @@ def get_hash(obj: Any) -> str:
     return hash_md5.hexdigest()[:7]
 
 
-def extract_header_section(markdown: str, section_name: str) -> str | None:
-    """Extract block with given header from markdown.
-
-    Arguments:
-        markdown: The markdown to extract a section from
-        section_name: The header of the section to extract
-    """
-    header_pattern = re.compile(f"^(#+) {section_name}$", re.MULTILINE)
-    header_match = header_pattern.search(markdown)
-    if header_match is None:
-        return None
-    section_level = len(header_match[1])
-    start_index = header_match.span()[1] + 1
-    end_pattern = re.compile(f"^#{{1,{section_level}}} ", re.MULTILINE)
-    end_match = end_pattern.search(markdown[start_index:])
-    if end_match is None:
-        return markdown[start_index:]
-    end_index = end_match.span()[0]
-    return markdown[start_index : end_index + start_index]
-
-
-def escaped(text: str, entity_type: str | None = None) -> str:
-    """Helper function to escape markup.
-
-    Args:
-        text: The text.
-        entity_type: For the entity types ``PRE``, ``CODE`` and the link
-                     part of ``TEXT_LINKS``, only certain characters need to be escaped.
-    """
-    if entity_type in ["pre", "code"]:
-        escape_chars = r"\`"
-    elif entity_type == "text_link":
-        escape_chars = r"\)"
-    else:
-        escape_chars = r"_*[]()~`>#+-=|{}.!"
-
-    return re.sub(f"([{re.escape(escape_chars)}])", r"\\\1", text)
-
-
 def slugify(text: str | os.PathLike) -> str:
     """Create a slug for given text.
 
@@ -97,7 +52,8 @@ def slugify(text: str | os.PathLike) -> str:
 
 def groupby(
     data: Iterable[T],
-    keyfunc: Callable | None = None,
+    key: Callable | str | None = None,
+    *,
     sort_groups: bool = True,
     natural_sort: bool = False,
     reverse: bool = False,
@@ -106,16 +62,22 @@ def groupby(
 
     Arguments:
         data: Iterable to group
-        keyfunc: Sort function
+        key: Sort function or attribute name to use for sorting
         sort_groups: Whether to sort the groups
         natural_sort: Whether to use a natural sort algorithm
         reverse: Whether to reverse the value list
     """
-    if keyfunc is None:
+    if key is None:
 
         def keyfunc(x):
             return x
 
+    elif isinstance(key, str):
+        import operator
+
+        keyfunc = operator.attrgetter(key)
+    else:
+        keyfunc = key
     if sort_groups:
         if natural_sort:
             import natsort
@@ -187,26 +149,6 @@ def label_for_class(klass: type) -> str:
 
 
 T = TypeVar("T")
-
-
-def batched(iterable: Iterable[T], n: int) -> Generator[tuple[T, ...], None, None]:
-    """Batch data into tuples of length n. The last batch may be shorter.
-
-    Examples:
-        ``` py
-        batched('ABCDEFG', 3)  # returns ABC DEF G
-        ```
-
-    Arguments:
-        iterable: The iterable to yield as batches
-        n: The batch size
-    """
-    if n < 1:
-        msg = "n must be at least one"
-        raise ValueError(msg)
-    it = iter(iterable)
-    while batch := tuple(itertools.islice(it, n)):
-        yield batch
 
 
 def get_indented_lines(lines: Iterable[str], indent: int | str = 4) -> list[str]:

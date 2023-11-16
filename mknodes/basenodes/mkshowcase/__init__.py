@@ -6,9 +6,11 @@ import tomllib
 import os
 from typing import TYPE_CHECKING
 
+from jinjarope import iterfilters
+
 from mknodes.basenodes import mkcard, mkcontainer, mknode
 from mknodes.pages import mkpage
-from mknodes.utils import helpers, log, pathhelpers
+from mknodes.utils import log, pathhelpers
 
 
 if TYPE_CHECKING:
@@ -62,7 +64,7 @@ class MkShowcase(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         text = ""
-        for items in helpers.batched(self.items, self.column_count):
+        for items in iterfilters.batched(self.items, self.column_count):
             text += '<div class="row">'
             for item in items:
                 text += '\n  <div class="column">\n'

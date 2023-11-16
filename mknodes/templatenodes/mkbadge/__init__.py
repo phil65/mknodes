@@ -41,7 +41,7 @@ def get_badge(
         text_color=text_color,
         style="gitlab-scoped" if use_gitlab_style else "default",
     )
-    return helpers.clean_svg(badge.badge_svg_text)
+    return htmlfilters.clean_svg(badge.badge_svg_text)
 
 
 class MkBadge(mkimage.MkImage):

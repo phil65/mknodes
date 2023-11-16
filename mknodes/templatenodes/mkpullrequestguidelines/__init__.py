@@ -3,10 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.templatenodes import mktemplate
-from mknodes.utils import log
-
-
-logger = log.get_logger(__name__)
 
 
 class MkPullRequestGuidelines(mktemplate.MkTemplate):

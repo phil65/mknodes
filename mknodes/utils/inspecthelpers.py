@@ -11,8 +11,9 @@ import types
 
 import griffe
 
+from jinjarope import mdfilters
+
 from mknodes.data import datatypes
-from mknodes.utils import helpers
 
 
 def iter_code_sections(code_string: str, start_line: int | None = None):
@@ -141,7 +142,7 @@ def get_doc(
         doc = doc.split("\n")[0]
     if only_description:
         doc = "\n".join(doc.split("\n")[1:])
-    return helpers.escaped(doc) if doc and escape else doc
+    return mdfilters.md_escape(doc) if doc and escape else doc
 
 
 def is_abstract(obj: type | griffe.Class | griffe.Function) -> bool:

@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from typing import Any, Self
 
+from jinjarope import mdfilters
+
 from mknodes.basenodes import mknode
-from mknodes.utils import helpers, log, pathhelpers
+from mknodes.utils import log, pathhelpers
 
 
 logger = log.get_logger(__name__)
@@ -37,7 +39,7 @@ class MkText(mknode.MkNode):
 
     def __getitem__(self, section_name: str) -> Self | None:
         markdown = self._to_markdown()
-        section_text = helpers.extract_header_section(markdown, section_name)
+        section_text = mdfilters.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
     @property
@@ -79,7 +81,7 @@ class MkText(mknode.MkNode):
         url, *section = url.split("#")
         text = pathhelpers.load_file_cached(url)
         if section:
-            text = helpers.extract_header_section(text, section[0])
+            text = mdfilters.extract_header_section(text, section[0])
         return cls(text) if text is not None else None
 
 
