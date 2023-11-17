@@ -19,6 +19,12 @@ if TYPE_CHECKING:
     import mknodes as mk
 
 
+class IllegalArgumentError(ValueError):
+    def __init__(self, node, kwargs):
+        msg = f"Invalid keyword arguments for {type(node)!r}: {kwargs}"
+        super().__init__(msg)
+
+
 logger = log.get_logger(__name__)
 
 
@@ -63,6 +69,7 @@ class MkNode(node.Node):
         variables: dict[str, Any] | None = None,
         context: contexts.ProjectContext | None = None,
         parent: MkNode | None = None,
+        **_kwargs: Any,
     ):
         """Constructor.
 
@@ -77,6 +84,8 @@ class MkNode(node.Node):
             parent: Parent for building the tree
         """
         super().__init__(parent=parent)
+        if _kwargs:
+            raise IllegalArgumentError(self, _kwargs)
         self.header = header
         self.indent = indent
         self.shift_header_levels = shift_header_levels
