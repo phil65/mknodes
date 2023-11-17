@@ -89,6 +89,19 @@ from .navs.router import Router
 from .theme.theme import Theme
 from .theme.materialtheme import MaterialTheme
 
+
+def parse(project=None, **kwargs):
+    if project:
+        kwargs["context"] = project.context
+    from mknodes.navs.navparser import parse_new_style_nav
+
+    pages = kwargs.pop("pages")
+    root_nav = MkNav(**kwargs)
+    project.root = root_nav
+    parse_new_style_nav(root_nav, pages)
+    return root_nav
+
+
 __all__ = [
     "NodeEnvironment",
     "MkNode",
