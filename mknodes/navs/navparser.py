@@ -363,10 +363,9 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list):
                 root_nav += instance
                 for node_dct in nodes:
                     kls = getattr(mk, node_dct.pop("type"))
-                    node_instance = kls(**node_dct)
                     if header := node_dct.pop("title", None):
                         instance += mk.MkHeader(header)
-                    instance += node_instance
+                    instance += kls(**node_dct)
             else:
                 page = root_nav.add_page(
                     title,
