@@ -7,7 +7,7 @@ import os
 import reprlib
 from typing import Any
 
-from jinjarope import utils
+from jinjarope import textfilters
 
 from mknodes.data import datatypes
 from mknodes.utils import inspecthelpers, log
@@ -90,7 +90,7 @@ def get_repr(
     sig = ", ".join(parts + kw_parts)
     text = f"{classname}({sig})"
     if _char_width:
-        return utils.format_code(text, _char_width)
+        return textfilters.format_code(text, _char_width)
     return text
 
 
@@ -141,7 +141,7 @@ def get_dataclass_repr(
     nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in vals)
     text = f"{instance.__class__.__name__}({nodef_f_repr})"
     if char_width:
-        return utils.format_code(text, char_width)
+        return textfilters.format_code(text, char_width)
     return text
 
 
