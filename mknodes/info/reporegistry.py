@@ -69,7 +69,10 @@ class RepoRegistry(MutableMapping, metaclass=ABCMeta):
             return self._repos[repo_url]
         if not helpers.is_url(repo_url):
             return gitrepository.GitRepository(repo_url)
-        directory = tempfile.TemporaryDirectory(prefix="mknodes_repo_")
+        directory = tempfile.TemporaryDirectory(
+            prefix="mknodes_repo_",
+            ignore_cleanup_errors=True,
+        )
         logger.info("Created temporary directory %s", directory.name)
         logger.info("Cloning %s with depth %s", repo_url, clone_depth)
         repo = gitrepository.GitRepository.clone_from(
