@@ -32,6 +32,7 @@ from .basenodes.mkhtmltable import MkHtmlTable
 from .basenodes.mktabcontainer import MkTabContainer
 from .basenodes.mktabbedblocks import MkTabbedBlocks
 from .basenodes.mktabbed import MkTabbed
+from .basenodes.mktabs import MkTab, MkTabBlock
 from .basenodes.mkcritic import MkCritic
 from .basenodes.mkannotations import MkAnnotations
 from .basenodes.mkfootnotes import MkFootNotes
@@ -117,6 +118,8 @@ __all__ = [
     "MkAdmonition",
     "MkDiagram",
     "MkClassDiagram",
+    "MkTab",
+    "MkTabBlock",
     "MkTable",
     "MkHtmlTable",
     "MkClassTable",

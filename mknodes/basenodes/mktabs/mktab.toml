@@ -1,0 +1,35 @@
+[metadata]
+name = "MkTab"
+icon = "mdi:tab"
+
+[requirements.extension."pymdownx.tabbed"]
+[requirements.extension."pymdownx.superfences"]
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ "Content" | MkTab("Title") }}
+"""
+
+[examples.python]
+title = "Annotations"
+python = """
+import mknodes as mk
+
+# We can add single tabs to a page by themselves.
+# It is recommended to use a Tab container though.
+tab = mk.MkTab("Tab content(1)", title="A Title")
+tab.annotations[1] = "Tabs can carry annotations."
+tab
+"""
+
+[output.markdown]
+template = """
+==={% if node.new %}!{% endif %}{% if node.select %}+{% endif %} "{{ node.title }}"
+    {{ node.items | join(node.block_separator) | rstrip("\n") | indent }}
+{% if node.annotations %}
+    { .annotate }
+
+    {{ node.annotations | indent }}
+{% endif %}
+"""

@@ -45,16 +45,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         self.block_separator = "\n"
 
     def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkTabBlock:
-        match item:
-            case int():
-                return self.items[item]
-            case str():
-                for tab in self.items:
-                    if tab.title == item:
-                        return tab
-                raise IndexError(item)
-            case _:
-                raise TypeError(item)
+        return self.items[item if isinstance(item, int) else self._get_tab_pos(item)]
 
     def __contains__(self, tab: str | mktabs.MkTab | mktabs.MkTabBlock) -> bool:
         match tab:

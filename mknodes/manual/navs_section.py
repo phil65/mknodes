@@ -55,12 +55,12 @@ def _(nav: mk.MkNav):
 #     nav += mk.MkDefaultWebsite.with_context(section="MkDocStrings", repo_url=url)
 
 
-@nav.route.nav("The MkDoc class")
-def _(nav: mk.MkNav):
-    page = nav.add_page(is_index=True, hide="toc", icon="api")
-    page += mk.MkAdmonition(DOC_TEXT, typ="tip")
-    template = "classpage_custom.jinja"
-    nav.add_doc(module=mk, class_template=template, recursive=True)
+# @nav.route.nav("The MkDoc class")
+# def _(nav: mk.MkNav):
+#     page = nav.add_page(is_index=True, hide="toc", icon="api")
+#     page += mk.MkAdmonition(DOC_TEXT, typ="tip")
+#     template = "classpage_custom.jinja"
+#     nav.add_doc(module=mk, class_template=template, recursive=True)
 
 
 @nav.route.page("Context propagation")

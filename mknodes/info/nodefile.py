@@ -32,9 +32,9 @@ def find_file(klass: type) -> pathlib.Path | None:
     path = inspecthelpers.get_file(klass)  # type: ignore[arg-type]
     assert path
     # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
-    if (file := path.parent / klass.__name__).exists():
+    if (file := path.parent / f"{klass.__name__}.toml").exists():
         return file
-    if (file := path.parent / klass.__name__.lower()).exists():
+    if (file := path.parent / f"{klass.__name__}.toml".lower()).exists():
         return file
     if (file := path.parent / "metadata.toml").exists():
         return file
@@ -112,6 +112,8 @@ class NodeFile(tomlfile.TomlFile):
         """
         examples = {}
         for v in self._data.get("examples", {}).values():
+            if "condition" in v and not parent.env.render_condition(v["condition"]):
+                continue
             if "jinja" in v:
                 examples[v["title"]] = get_representations(v["jinja"], parent)
         return examples

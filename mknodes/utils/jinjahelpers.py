@@ -12,7 +12,6 @@ import jinjarope
 from markupsafe import Markup
 import tomli_w
 
-from mknodes import paths
 from mknodes.utils import (
     classhelpers,
     icons,
@@ -48,25 +47,6 @@ def script_tag_filter(context: runtime.Context, extra_script):
     return Markup(html).format(url_filter(context, str(extra_script)), extra_script)
 
 
-ENV_GLOBALS = {
-    "log": log.log_stream.getvalue,
-    "inspecthelpers": inspecthelpers,
-    "classhelpers": classhelpers,
-    "resources_dir": paths.RESOURCES,
-}
-ENV_FILTERS = {
-    "get_icon_svg": icons.get_icon_svg,
-    "get_emoji_slug": icons.get_emoji_slug,
-    "get_doc": inspecthelpers.get_doc,
-    "to_class": classhelpers.to_class,
-    "dump_yaml": yamlhelpers.dump_yaml,
-    "dump_toml": tomli_w.dumps,
-    "load_yaml": yamlhelpers.load_yaml,
-    "url": url_filter,
-    "script_tag": script_tag_filter,
-}
-
-
 def setup_env(env: jinjarope.Environment):
     """Used as extension point for the jinjarope environment.
 
@@ -75,9 +55,19 @@ def setup_env(env: jinjarope.Environment):
     """
     node_klasses = get_nodes()
     env.globals |= dict(mk=node_klasses, _mk=node_klasses)
-    env.globals |= ENV_GLOBALS
+    env.globals |= {"inspecthelpers": inspecthelpers, "classhelpers": classhelpers}
     env.filters |= node_klasses
-    env.filters |= ENV_FILTERS
+    env.filters |= {
+        "get_icon_svg": icons.get_icon_svg,
+        "get_emoji_slug": icons.get_emoji_slug,
+        "get_doc": inspecthelpers.get_doc,
+        "to_class": classhelpers.to_class,
+        "dump_yaml": yamlhelpers.dump_yaml,
+        "dump_toml": tomli_w.dumps,
+        "load_yaml": yamlhelpers.load_yaml,
+        "url": url_filter,
+        "script_tag": script_tag_filter,
+    }
 
 
 @functools.cache
