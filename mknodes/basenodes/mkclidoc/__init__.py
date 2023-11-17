@@ -55,7 +55,8 @@ class MkCliDoc(mktemplate.MkTemplate):
                     prog_name = cli_eps[0].name
                     mod = importlib.import_module(module)
                     instance = getattr(mod, command)
-                return None
+                else:
+                    return None
             case _:
                 instance = self.target
                 prog_name = self.prog_name
