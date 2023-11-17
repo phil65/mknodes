@@ -362,6 +362,10 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list):
                 instance.title = title
                 root_nav += instance
                 for node_dct in nodes:
+                    if (
+                        condition := node_dct.pop("condition", False)
+                    ) and not instance.env.render_condition(condition):
+                        continue
                     kls = getattr(mk, node_dct.pop("type"))
                     if header := node_dct.pop("title", None):
                         instance += mk.MkHeader(header)
