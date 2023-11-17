@@ -341,6 +341,26 @@ class NavParser:
         return self._nav
 
 
+def parse_new_style_nav(root_nav: mk.MkNav, items: list):
+    import mknodes as mk
+
+    for item in items:
+        if "type" in item and "title" in item:
+            if (
+                condition := item.pop("condition", False)
+            ) and not root_nav.env.render_condition(condition):
+                continue
+            kls = getattr(mk, item.pop("type"))
+            title = item.pop("title")
+            is_index = item.pop("is_index", False)
+            page = root_nav.add_page(title, is_index=is_index)
+            page += kls(**item)
+        else:
+            name, items = next(iter(item.items()))
+            nav = root_nav.add_nav(name)
+            parse_new_style_nav(nav, items)
+
+
 if __name__ == "__main__":
     log.basic()
     nav = mknav.MkNav()
