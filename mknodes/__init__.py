@@ -83,7 +83,6 @@ from .templatenodes.mkpipdeptree import MkPipDepTree
 from .project import Project
 from .pages.metadata import Metadata
 from .pages.pagetemplate import PageTemplate
-from .navs.mkdefaultwebsite import MkDefaultWebsite
 from .navs.router import Router
 
 from .theme.theme import Theme
@@ -105,7 +104,6 @@ def parse(project=None, **kwargs):
 __all__ = [
     "NodeEnvironment",
     "MkNode",
-    "MkDefaultWebsite",
     "MkBlockQuote",
     "MkLink",
     "MkBlock",

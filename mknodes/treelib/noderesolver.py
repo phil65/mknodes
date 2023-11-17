@@ -356,12 +356,3 @@ class MkNodeResolver(NodeResolver):
                 return node.path
             case _:
                 return type(node).__name__
-
-
-if __name__ == "__main__":
-    import mknodes as mk
-
-    root = mk.MkDefaultWebsite.with_context()
-    resolver = MkNodeResolver()
-    result = resolver.glob("*/Mk*", root)
-    print(result)

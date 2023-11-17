@@ -49,12 +49,6 @@ def _(nav: mk.MkNav):
     return routing.nav
 
 
-# @nav.route.nav("MkDefaultWebsite")
-# def _(nav: mk.MkNav):
-#     url = "https://github.com/mkdocstrings/mkdocstrings.git"
-#     nav += mk.MkDefaultWebsite.with_context(section="MkDocStrings", repo_url=url)
-
-
 # @nav.route.nav("The MkDoc class")
 # def _(nav: mk.MkNav):
 #     page = nav.add_page(is_index=True, hide="toc", icon="api")
