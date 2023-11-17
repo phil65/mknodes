@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
 from mknodes.templatenodes import mktemplate
-from mknodes.utils import log
-
-
-logger = log.get_logger(__name__)
 
 
 class MkCodeOfConduct(mktemplate.MkTemplate):
@@ -17,18 +13,15 @@ class MkCodeOfConduct(mktemplate.MkTemplate):
     def __init__(
         self,
         contact_email: str | None = None,
-        version: Literal["2.1"] | None = None,
         **kwargs: Any,
     ):
         """Constructor.
 
         Arguments:
             contact_email: Email for contacting. If None, it will be pulled from Project.
-            version: Contributor covenant version (currently only "2.1")
             kwargs: Keyword arguments passed to parent
         """
         super().__init__("output/markdown/template", **kwargs)
-        self.version = version
         self._contact_email = contact_email
 
     @property

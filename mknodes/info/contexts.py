@@ -11,9 +11,9 @@ from typing import Any
 
 from griffe.dataclasses import Alias, Module
 
-from mknodes import paths
 import mknodes as mk
 
+from mknodes import paths
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import (
     folderinfo,

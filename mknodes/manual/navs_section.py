@@ -1,6 +1,6 @@
-from mknodes import paths
 import mknodes as mk
 
+from mknodes import paths
 from mknodes.manual import routing
 from mknodes.navs import navrouter
 
