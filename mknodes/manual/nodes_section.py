@@ -29,7 +29,6 @@ IMAGE_NODES = [
 
 PRESENTATION_NODES = [
     mk.MkTreeView,
-    mk.MkPrettyPrint,
     mk.MkReprRawRendered,
     mk.MkDiagram,
     mk.MkTimeline,
