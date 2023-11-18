@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pathlib
+
 from typing import Any
 
 from mknodes.info import grifferegistry
@@ -48,12 +50,14 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     def extra_variables(self) -> dict[str, Any]:
         # right now, we inject the cls and the griffe Class into jinja namespace.
         subclasses = classhelpers.list_subclasses(self.klass, recursive=False)
-        variables = dict(cls=self.klass, subclasses=subclasses)
-        mod = self.klass.__module__.replace(".", "/")
-        p = inspecthelpers.get_file(self.klass).as_posix()  # type: ignore[union-attr]
-        klass_url = f"{self.ctx.metadata.repository_url}blob/main/{p[p.rfind(mod):]}"
-        variables["github_url"] = klass_url
-        variables["griffe_obj"] = grifferegistry.registry.get_class(self.klass)
+        griffe_obj = grifferegistry.registry.get_class(self.klass)
+        variables = dict(cls=self.klass, subclasses=subclasses, griffe_obj=griffe_obj)
+        p = inspecthelpers.get_file(self.klass)
+        repo_path = self.ctx.metadata.repository_path
+        if p and p.is_relative_to(repo_path):
+            rel_path = pathlib.Path(p).relative_to(repo_path).as_posix()
+            klass_url = f"{self.ctx.metadata.repository_url}blob/main/{rel_path}"
+            variables["github_url"] = klass_url
         return variables
 
 

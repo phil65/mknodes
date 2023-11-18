@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import types
 
+import pathlib
 from typing import Any
 
 from mknodes.info import grifferegistry
@@ -49,12 +50,14 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
 
     @property
     def extra_variables(self) -> dict[str, Any]:
-        variables: dict[str, Any] = dict(module=self.module, klasses=self.klasses)
-        mod = self.module.__name__.replace(".", "/")
-        path = inspecthelpers.get_file(self.module).as_posix()  # type: ignore[union-attr]
+        griffe_obj = grifferegistry.get_module(self.module)
+        variables = dict(module=self.module, klasses=self.klasses, griffe_obj=griffe_obj)
+        path = inspecthelpers.get_file(self.module)
         url = self.ctx.metadata.repository_url
-        variables["github_url"] = f"{url}blob/main/{path[path.rfind(mod):]}"
-        variables["griffe_obj"] = grifferegistry.get_module(self.module)
+        repo_path = self.ctx.metadata.repository_path
+        if path and path.is_relative_to(repo_path):
+            rel_path = pathlib.Path(path).relative_to(repo_path).as_posix()
+            variables["github_url"] = f"{url}blob/main/{rel_path}"
         return variables
 
 
