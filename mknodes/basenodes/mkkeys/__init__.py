@@ -44,5 +44,3 @@ class MkKeys(mknode.MkNode):
 
 if __name__ == "__main__":
     keys = MkKeys(keys="Ctrl+A")
-    keys.add_css_class("test")
-    print(keys.to_html())

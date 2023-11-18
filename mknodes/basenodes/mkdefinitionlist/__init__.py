@@ -30,15 +30,7 @@ class MkDefinition(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(content=content, **kwargs)
-        self._title = title
-
-    @property
-    def title(self):
-        return self._title
-
-    @title.setter
-    def title(self, value):
-        self._title = value
+        self.title = title
 
     def _to_markdown(self) -> str:
         text = super()._to_markdown()
@@ -51,27 +43,20 @@ class MkDefinitionList(mkcontainer.MkContainer):
     REQUIRED_EXTENSIONS = [resources.Extension("def_list")]
     ICON = "material/library"
 
-    def __init__(
-        self,
-        data: Mapping | None = None,
-        *,
-        header: str = "",
-        **kwargs: Any,
-    ):
+    def __init__(self, data: Mapping | None = None, **kwargs: Any):
         """Constructor.
 
         Arguments:
             data: Data show for the table
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         self.data: dict[str, str | mknode.MkNode] = {}
         self.items = data
 
     def __repr__(self):
-        kwarg_data = {k: reprhelpers.to_str_if_textnode(v) for k, v in self.data.items()}
-        return reprhelpers.get_repr(self, data=kwarg_data)
+        kws = {k: reprhelpers.to_str_if_textnode(v) for k, v in self.data.items()}
+        return reprhelpers.get_repr(self, data=kws)
 
     @property
     def items(self):

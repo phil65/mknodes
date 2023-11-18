@@ -32,7 +32,6 @@ class MkCallable(mknode.MkNode):
         *,
         args: list | tuple | None = None,
         kw_args: dict | None = None,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
@@ -41,10 +40,9 @@ class MkCallable(mknode.MkNode):
             fn: Callable (must return a MkNode).
             args: Arguments to use for callable
             kw_args: Keyword arguments to use for callable
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         self.fn = fn
         self.args = args or []
         self.kw_args = kw_args or {}
@@ -72,5 +70,5 @@ if __name__ == "__main__":
         page += "Some content"
         return page
 
-    text = MkCallable(make_page, header="test")
+    text = MkCallable(make_page)
     print(text.to_markdown())

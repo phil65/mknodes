@@ -90,5 +90,5 @@ class MkContainer(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    section = MkContainer(header="fff")
+    section = MkContainer()
     print(section)

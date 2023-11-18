@@ -74,5 +74,4 @@ class MkList(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    section = MkList(["a", "b"], header="test")
-    print(section.to_html())
+    section = MkList(["a", "b"])

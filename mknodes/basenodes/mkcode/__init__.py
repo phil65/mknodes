@@ -44,7 +44,6 @@ class MkCode(mkcontainer.MkContainer):
         linenums: int | None = None,
         highlight_lines: list[int] | None = None,
         fence_level: int | None = None,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
@@ -57,7 +56,6 @@ class MkCode(mkcontainer.MkContainer):
             highlight_lines: Optionally highlight lines
             fence_level: Determines amount of ticks used for fence.
                          If None, auto-determine based on nesting depth.
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
         self.language = language
@@ -65,7 +63,7 @@ class MkCode(mkcontainer.MkContainer):
         self.linenums = linenums
         self.highlight_lines = highlight_lines
         self._fence_level = fence_level
-        super().__init__(content=content, header=header, **kwargs)
+        super().__init__(content=content, **kwargs)
 
     @property
     def text(self) -> str:

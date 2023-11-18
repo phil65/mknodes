@@ -34,5 +34,5 @@ class MkSnippet(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    section = MkSnippet("test.md", header="test")
+    section = MkSnippet("test.md")
     print(section.to_markdown())

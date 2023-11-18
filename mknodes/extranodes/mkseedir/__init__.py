@@ -113,5 +113,5 @@ class MkSeeDir(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    node = MkSeeDir(".", header="test", style="dash")
+    node = MkSeeDir(".", style="dash")
     print(node.to_markdown())

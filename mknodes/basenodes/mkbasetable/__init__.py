@@ -25,8 +25,6 @@ class MkBaseTable(mkcontainer.MkContainer):
         self,
         data: Sequence[Sequence[str]] | Sequence[dict] | Mapping[str, list] | None = None,
         columns: Sequence[str] | None = None,
-        *,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
@@ -34,10 +32,9 @@ class MkBaseTable(mkcontainer.MkContainer):
         Arguments:
             data: Data show for the table
             columns: Column headers if not provided by data.
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header=header, **kwargs)
+        super().__init__(**kwargs)
         match data:
             case () | None:
                 self._data: dict[str, list[mk.MkNode]] = {c: [] for c in columns or []}

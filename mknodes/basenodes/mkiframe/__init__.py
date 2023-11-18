@@ -35,5 +35,5 @@ class MkIFrame(mktemplate.MkTemplate):
 if __name__ == "__main__":
     url = "http://www.google.de"
     # "https://jex.im/regulex/#!embed=true&flags=&re=%5E(a%7Cb)*%3F%24"
-    section = MkIFrame(url, header="test")
+    section = MkIFrame(url)
     print(section)

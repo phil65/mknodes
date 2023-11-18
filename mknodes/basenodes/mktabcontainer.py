@@ -21,7 +21,6 @@ class MkTabContainer(mkcontainer.MkContainer):
         self,
         tabs: Mapping[str, str | mknode.MkNode | list] | list[mktabs.MkTab] | None = None,
         *,
-        header: str = "",
         select_tab: int | str | None = None,
         **kwargs: Any,
     ):
@@ -29,7 +28,6 @@ class MkTabContainer(mkcontainer.MkContainer):
 
         Arguments:
             tabs: Tab data
-            header: Section header
             select_tab: Tab which should be selected initially
             kwargs: Keyword arguments passed to parent
         """
@@ -41,7 +39,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             case _:
                 items = [self.Tab(title=k, content=v) for k, v in tabs.items()]
         self.select_tab = select_tab
-        super().__init__(content=items, header=header, **kwargs)
+        super().__init__(content=items, **kwargs)
         self.block_separator = "\n"
 
     def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkTabBlock:
