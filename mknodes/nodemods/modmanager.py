@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-from mknodes.nodemods import parallax, scrollreveal
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.nodemods import mod, parallax, scrollreveal
+from mknodes.utils import classhelpers, log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
 
 
 class ModManager:
-    def __init__(self, mods=None, css_classes: list[str] | None = None):
+    def __init__(
+        self,
+        mods: list[mod.Mod] | None = None,
+        css_classes: list[str] | None = None,
+    ):
         self.mods = mods or []
         self._css_classes = css_classes or []
 
@@ -22,7 +26,7 @@ class ModManager:
     def __repr__(self):
         return reprhelpers.get_repr(self, mods=self.mods, css_classes=self._css_classes)
 
-    def append(self, other):
+    def append(self, other: str | mod.Mod):
         if isinstance(other, str):
             self._css_classes.append(other)
         else:
@@ -30,19 +34,36 @@ class ModManager:
 
     def get_resources(self) -> resources.Resources:
         req = resources.Resources()
-        for mod in self.mods:
-            req.merge(mod.get_resources())
+        for m in self.mods:
+            req.merge(m.get_resources())
         return req
 
     @property
     def css_classes(self) -> list[str]:
-        cls_names = [cls_name for mod in self.mods for cls_name in mod.css_class_names]
+        """Return list of css classes of the mods."""
+        cls_names = [cls_name for m in self.mods for cls_name in m.css_class_names]
         return self._css_classes + cls_names
 
     @property
     def attr_list_str(self) -> str:
+        """Return a string to be used for attr-list extension."""
         classes = " ".join(self.css_classes)
         return f"{{: .{classes}}}"
+
+    def add_mod(self, mod_name: str, **kwargs) -> mod.Mod:
+        """Add a mod by classname.
+
+        Arguments:
+            mod_name: Class name of the modification to add
+            kwargs: Keyword arguments passed to the mod ctor
+        """
+        for kls in classhelpers.iter_subclasses(mod.Mod):
+            if kls.__name__ == "mod_name":
+                instance = kls(**kwargs)
+                self.mods.append(instance)
+                return instance
+        msg = f"Mod {mod_name} does not exist"
+        raise ValueError(msg)
 
     def add_parallax_effect(
         self,
