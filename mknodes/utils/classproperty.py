@@ -1,7 +1,15 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+
 
 class ClassPropertyDescriptor:
+    """A class property. Used for class attributes which should not resolve on loading.
+
+    For an example, this can be used for class attributes which read from files, to
+    avoid IO on loading.
+    """
+
     def __init__(self, fget, fset=None):
         self.fget = fget
         self.fset = fset
@@ -25,11 +33,9 @@ class ClassPropertyDescriptor:
         return self
 
 
-def classproperty(func):
-    if not isinstance(func, classmethod | staticmethod):
-        func = classmethod(func)
-
-    return ClassPropertyDescriptor(func)
+def classproperty(func: Callable) -> ClassPropertyDescriptor:
+    fn = func if isinstance(func, classmethod | staticmethod) else classmethod(func)
+    return ClassPropertyDescriptor(fn)
 
 
 if __name__ == "__main__":
