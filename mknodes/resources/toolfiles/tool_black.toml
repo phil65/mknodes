@@ -14,4 +14,4 @@ the `pyproject.toml` file.
 
 [[configs]]
 type = "pyproject"
-section = "pyright"
+section = "black"

@@ -7,7 +7,7 @@ description = "**Coverage** is used to monitor test coverage."
 
 [[configs]]
 type = "pyproject"
-section = "pyright"
+section = "coverage"
 
 [[configs]]
 type = "inifile"
