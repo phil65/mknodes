@@ -60,7 +60,6 @@ def setup_env(env: jinjarope.Environment):
     env.filters |= {
         "get_icon_svg": icons.get_icon_svg,
         "get_emoji_slug": icons.get_emoji_slug,
-        "get_doc": inspecthelpers.get_doc,
         "to_class": classhelpers.to_class,
         "dump_yaml": yamlhelpers.dump_yaml,
         "dump_toml": tomli_w.dumps,
