@@ -80,7 +80,6 @@ from .templatenodes.mktemplate import MkTemplate
 from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
 
-from .project import Project
 from .pages.metadata import Metadata
 from .pages.pagetemplate import PageTemplate
 from .navs.router import Router
@@ -168,7 +167,6 @@ __all__ = [
     "MkDependencyTable",
     "MkCommandOutput",
     "MkBadge",
-    "Project",
     "Metadata",
     "PageTemplate",
     "MkMetadataBadges",

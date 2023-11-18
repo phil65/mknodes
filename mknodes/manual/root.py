@@ -10,7 +10,7 @@ from mknodes.manual import (
 )
 
 
-def build(project: mk.Project[mk.MaterialTheme]) -> mk.MkNav:
+def build(project) -> mk.MkNav:
     build = Build()
     project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
     build.on_theme(project.theme)
