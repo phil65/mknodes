@@ -39,7 +39,7 @@ Marker = """
 Name = """
 {% if package_info.homepage %}
 {{ package_info.homepage | MkLink(package_info.name) | string | md_style(size=3, bold=True) }}{% else %}
-{{ package_info.name | md_style(size=3, bold=True, code=True) }}{% endif %}{{ (dep_info.marker or "") | string | re_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
+{{ package_info.name | md_style(size=3, bold=True, code=True) }}{% endif %}<br>{{ (dep_info.marker or "") | string | re_replace('([A-Za-z_]* [>|=|<]* ".*?")', "`\\\\g<1>`") }}
 """
 
 Summary = """
