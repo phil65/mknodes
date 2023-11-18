@@ -6,6 +6,8 @@ import os
 
 from typing import Any, Literal, Self, TypeVar
 
+from jinjarope import serializefilters
+
 from mknodes.utils import pathhelpers, reprhelpers
 
 
@@ -55,66 +57,22 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
         return self
 
     def get_section(self, *sections: str, keep_path: bool = False) -> Any:
-        """Try to get data with given section path.
+        """Try to get data with given section path from a dict-list structure.
 
+        If a list is encountered, treat it like a list of
+        {"identifier", {subdict}} items, as used in MkDocs config for
+        plugins & extensions.
         If Key path does not exist, return None.
 
         Arguments:
             sections: Sections to dig into
             keep_path: Return result with original nesting
         """
-        section = self._data
-        for i in sections:
-            if isinstance(section, dict):
-                if child := section.get(i):
-                    section = child
-                else:
-                    return None
-            else:
-                for idx in section:
-                    if i in idx and isinstance(idx, dict):
-                        section = idx[i]
-                        break
-                    if isinstance(idx, str) and idx == i:
-                        section = idx
-                        break
-                else:
-                    return None
-        if not keep_path:
-            return SuperDict(section) if isinstance(section, dict) else section
-        result: dict[str, dict] = {}
-        new = result
-        for sect in sections:
-            result[sect] = section if sect == sections[-1] else {}
-            result = result[sect]
-        return SuperDict(new) if isinstance(new, dict) else new
+        result = serializefilters.dig(self._data, *sections, keep_path=keep_path)
+        return SuperDict(result) if isinstance(result, dict) else result
 
     def serialize(self, mode: MarkupTypeStr | None) -> str:  # type: ignore[return]
-        match mode:
-            case None | "yaml":
-                from mknodes.utils import yamlhelpers
-
-                return yamlhelpers.dump_yaml(self._data)
-            case "json":
-                import json
-
-                return json.dumps(self._data, indent=4)
-            case "ini":
-                import configparser
-                import io
-
-                config = configparser.ConfigParser()
-                config.read_dict(self._data)
-                file = io.StringIO()
-                with file as fp:
-                    config.write(fp)
-                    return file.getvalue()
-            case "toml" if isinstance(self._data, dict):
-                import tomli_w
-
-                return tomli_w.dumps(self._data)
-            case _:
-                raise TypeError(mode)
+        return serializefilters.serialize(self._data, mode)
 
     def write(self, path: str | os.PathLike, mode: MarkupTypeStr | None = None):
         text = self.serialize(mode)
