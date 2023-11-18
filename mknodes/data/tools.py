@@ -28,7 +28,7 @@ class Tool:
             folder: Folder to check. Defaults to current working directory.
         """
         for cfg in self.configs:
-            if cfg["type"] == "pyproject" and cfg["section"] in folder.pyproject.tool:
+            if cfg["type"] == "pyproject" and folder.pyproject.tool.get(cfg["section"]):
                 self.cfg = cfg
                 self.cfg["syntax"] = "toml"
                 self.cfg["content"] = self.get_config(folder)
