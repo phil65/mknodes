@@ -19,7 +19,7 @@ name = "MkAdmonition"
 # ``` py
 # node = mk.MkAdmonition("MkAdmonitions can carry annotations(1).")
 # node.annotations[1] = "Super handy!"
-# page += mk.MkReprRawRendered(node)
+# page += node
 # ```
 # """
 
