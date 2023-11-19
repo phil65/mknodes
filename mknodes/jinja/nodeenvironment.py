@@ -51,16 +51,13 @@ class NodeEnvironment(jinjarope.Environment):
         self.class_path = pathlib.Path(path or "").parent.as_posix()
         paths = self.get_extra_paths()
         self.add_template_path(*paths)
+        file = pathlib.Path(__file__).parent / "filters.toml"
+        self.load_jinja_file(file)
+
         import mknodes as mk
 
         self._node_filters = {}
         self._wrapped_klasses = {}
-
-        def apply_mod(node: mk.MkNode, mod_name: str, **kwargs) -> mk.MkNode:
-            node.mods.add_mod(mod_name, **kwargs)
-            return node
-
-        self.filters["apply_mod"] = apply_mod
 
         for kls_name in mk.__all__:
             klass = getattr(mk, kls_name)
@@ -97,12 +94,6 @@ class NodeEnvironment(jinjarope.Environment):
         self.globals["node"] = self.node
         self.globals["file"] = self.node.nodefile
         self.globals["mk"] = self._wrapped_klasses
-        # def update_env_from_context(self):
-        self.filters["get_link"] = self.node.ctx.links.get_link
-        self.filters["get_url"] = self.node.ctx.links.get_url
-        self.filters["link_for_class"] = self.node.ctx.links.link_for_klass
-        self.filters["link_for_module"] = self.node.ctx.links.link_for_module
-        self.filters["to_html"] = lambda x: x.to_html()
         self.globals |= self.node.ctx.as_dict()
 
     def get_extra_paths(self) -> list[str]:
