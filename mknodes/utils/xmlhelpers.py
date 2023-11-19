@@ -174,19 +174,5 @@ def get_source_button(icon: str = "material/code-json") -> A:
     return elem
 
 
-def pformat(str_or_elem: str | Et.Element, space: str = "  ", level: int = 0) -> str:
-    """Prettyprint given XML.
-
-    Arguments:
-        str_or_elem: XML to prettyprint
-        space: Amount of spaces to use for indentation
-        level: Initial indentation level
-    """
-    if isinstance(str_or_elem, str):
-        str_or_elem = Et.fromstring(str_or_elem)
-    Et.indent(str_or_elem, space=space, level=level)
-    return Et.tostring(str_or_elem, encoding="unicode", method="html")
-
-
 if __name__ == "__main__":
     a = Div("test")

@@ -72,5 +72,3 @@ if __name__ == "__main__":
         scheme="slate",
     )
     root = build_toggle([default_palette, dark_palette])
-    xml_string = xml.pformat(root)
-    print(xml_string)
