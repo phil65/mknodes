@@ -58,6 +58,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         if path and path.is_relative_to(repo_path):
             rel_path = pathlib.Path(path).relative_to(repo_path).as_posix()
             variables["github_url"] = f"{url}blob/main/{rel_path}"
+        else:
+            variables["github_url"] = None
         return variables
 
 

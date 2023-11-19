@@ -58,6 +58,8 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
             rel_path = pathlib.Path(p).relative_to(repo_path).as_posix()
             klass_url = f"{self.ctx.metadata.repository_url}blob/main/{rel_path}"
             variables["github_url"] = klass_url
+        else:
+            variables["github_url"] = None
         return variables
 
 
