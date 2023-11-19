@@ -14,46 +14,6 @@ logger = log.get_logger(__name__)
 T = TypeVar("T")
 
 
-def groupby(
-    data: Iterable[T],
-    key: Callable | str | None = None,
-    *,
-    sort_groups: bool = True,
-    natural_sort: bool = False,
-    reverse: bool = False,
-) -> dict[str, list[T]]:
-    """Group given iterable using given group function.
-
-    Arguments:
-        data: Iterable to group
-        key: Sort function or attribute name to use for sorting
-        sort_groups: Whether to sort the groups
-        natural_sort: Whether to use a natural sort algorithm
-        reverse: Whether to reverse the value list
-    """
-    if key is None:
-
-        def keyfunc(x):
-            return x
-
-    elif isinstance(key, str):
-        import operator
-
-        keyfunc = operator.attrgetter(key)
-    else:
-        keyfunc = key
-    if sort_groups:
-        if natural_sort:
-            import natsort
-
-            data = natsort.natsorted(data, key=keyfunc)
-        else:
-            data = sorted(data, key=keyfunc)
-    if reverse:
-        data = reversed(list(data))
-    return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
-
-
 def label_for_class(klass: type) -> str:
     mod = klass.__module__
     parts = mod.split(".")
@@ -113,5 +73,4 @@ def list_to_tuple(fn: Callable[P, R]) -> Callable[P, R]:
 
 
 if __name__ == "__main__":
-    strings = groupby([str(i) for i in range(1000)], lambda x: str(x)[0])
-    print(strings)
+    is_url("abc")

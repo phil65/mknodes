@@ -9,8 +9,10 @@ from urllib import parse
 
 import git
 
+from jinjarope import iterfilters
+
 from mknodes.info import contexts
-from mknodes.utils import helpers, log, reprhelpers
+from mknodes.utils import log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -116,9 +118,11 @@ class GitRepository(git.Repo):
         {"v0.x.x": {"feat": [git.Commit, ...], ...}, ...}
         """
         commits = [i for i in self.all_commits if i not in self.commit_to_tag]
-        groups = helpers.groupby(commits, self.get_version_for_commit, natural_sort=True)
+        groups = iterfilters.groupby(
+            commits, self.get_version_for_commit, natural_sort=True
+        )
         return {
-            k: helpers.groupby(v, lambda x: x.message.split(":")[0])
+            k: iterfilters.groupby(v, lambda x: x.message.split(":")[0])
             for k, v in groups.items()
         }
 
