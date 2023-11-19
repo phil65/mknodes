@@ -21,7 +21,7 @@ content = """
 $(window).load(function(){
 
   window.sr = ScrollReveal();
-  sr.reveal('.%s', %s);
+  sr.reveal('.{{ css_class }}', {{ settings | format_js_map }});
 });
 
 """

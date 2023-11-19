@@ -5,8 +5,8 @@ name = "Parallax"
 is_library = true
 filename = "parallax.js"
 content = """
-var image = document.getElementsByClassName('%s');
-new simpleParallax(image, %s);
+var image = document.getElementsByClassName('{{ css_class }}');
+new simpleParallax(image, {{ settings | format_js_map }});
 """
 
 [[resources.js]]
