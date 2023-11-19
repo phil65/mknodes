@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-from mknodes.utils import log
-import re
 from typing import TYPE_CHECKING
 import textwrap
-from mknodes.pages.metadata import Metadata
 
+from jinjarope import mdfilters
+
+from mknodes.pages.metadata import Metadata
+from mknodes.utils import log
 
 if TYPE_CHECKING:
     import mknodes as mk
-
-HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)", flags=re.MULTILINE)
 
 logger = log.get_logger(__name__)
 
@@ -59,18 +58,7 @@ class ShiftHeaderLevelProcessor(TextProcessor):
         self.level_shift = level_shift
 
     def run(self, text: str) -> str:
-        if not self.level_shift:
-            return text
-
-        def mod_header(match: re.Match, levels: int) -> str:
-            header_str = match[1]
-            if levels > 0:
-                header_str += levels * "#"
-            else:
-                header_str = header_str[:levels]
-            return f"{header_str} {match[2]}"
-
-        return re.sub(HEADER_REGEX, lambda x: mod_header(x, self.level_shift), text)
+        return mdfilters.shift_header_levels(text, self.level_shift)
 
 
 class RenderJinjaProcessor(TextProcessor):

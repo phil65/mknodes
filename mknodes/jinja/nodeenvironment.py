@@ -45,7 +45,8 @@ class NodeEnvironment(jinjarope.Environment):
             jinjarope.FsSpecProtocolPathLoader(),
         ]
         if self.node.nodefile:
-            loaders.insert(0, jinjarope.NestedDictLoader(self.node.nodefile._data))
+            loader = jinjarope.NestedDictLoader(self.node.nodefile._data)
+            loaders.insert(0, loader)
         self.loader = jinjarope.ChoiceLoader(loaders)
         path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
         self.class_path = pathlib.Path(path or "").parent.as_posix()
