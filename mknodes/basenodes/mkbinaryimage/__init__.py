@@ -5,9 +5,11 @@ import upath
 
 from typing import Any, Literal, Self
 
+from jinjarope import textfilters
+
 from mknodes.basenodes import mkimage
 from mknodes.info import linkprovider
-from mknodes.utils import helpers, icons, log
+from mknodes.utils import icons, log
 
 
 logger = log.get_logger(__name__)
@@ -72,7 +74,7 @@ class MkBinaryImage(mkimage.MkImage):
             kwargs: Keyword arguments passed to constructor
         """
         content = icons.get_icon_svg(icon)
-        path = f"{helpers.slugify(icon)}.svg"
+        path = f"{textfilters.slugify(icon)}.svg"
         return cls(data=content, path=path, **kwargs)
 
     @classmethod

@@ -42,8 +42,8 @@ class MkAnnotation(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         item_str = "\n\n".join(i.to_markdown() for i in self.items)
-        space = (3 - len(str(self.num))) * " "
-        return f"{self.num}.{space}{filters.do_indent(item_str)}\n"
+        prefix = f"{self.num}."
+        return f"{prefix:<4}{filters.do_indent(item_str)}\n"
 
 
 class MkAnnotations(mkcontainer.MkContainer):

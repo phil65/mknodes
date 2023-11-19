@@ -20,6 +20,8 @@ logger = log.get_logger(__name__)
 
 @dataclasses.dataclass(frozen=True)
 class Workflow:
+    """A GitHub workflow."""
+
     name: str
     workflow: str
     badge_url: str

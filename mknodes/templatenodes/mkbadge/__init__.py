@@ -5,10 +5,10 @@ import html
 
 from typing import Any, Literal
 
-from jinjarope import htmlfilters, utils
+from jinjarope import htmlfilters, textfilters, utils
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import helpers, log, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -127,7 +127,7 @@ class MkBadge(mkimage.MkImage):
     def path(self) -> str:
         hashed = utils.get_hash(repr(self))
         unique = f"{self.label}_{self.value}_{hashed}.svg"
-        return helpers.slugify(unique)
+        return textfilters.slugify(unique)
 
 
 if __name__ == "__main__":

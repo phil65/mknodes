@@ -8,10 +8,12 @@ import pathlib
 from typing import Any, Self
 from urllib import parse
 
+from jinjarope import textfilters
+
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
 from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
-from mknodes.utils import helpers, inspecthelpers, log, pathhelpers, reprhelpers
+from mknodes.utils import inspecthelpers, log, pathhelpers, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -121,7 +123,7 @@ class MkPage(mkcontainer.MkContainer):
         if self._is_index:
             return "index.md"
         path = self._path.removesuffix(".md") if self._path else self.metadata.title
-        return helpers.slugify(path or "") + ".md"
+        return textfilters.slugify(path or "") + ".md"
 
     @path.setter
     def path(self, value: str | None):

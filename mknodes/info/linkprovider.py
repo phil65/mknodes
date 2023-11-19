@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING
 
 import griffe
 
+from jinjarope import textfilters
+
 from mknodes import paths
 from mknodes.info import packageregistry
 from mknodes.utils import helpers, inventorymanager, log
@@ -222,7 +224,7 @@ class LinkProvider:
         if page is None:
             msg = "Need a parent page for MkHeader in order to link to it"
             raise RuntimeError(msg)
-        suffix = "#" + helpers.slugify(header.text)
+        suffix = "#" + textfilters.slugify(header.text)
         return self.url_for_page(page) + suffix
 
     def get_link(self, target: LinkableType, title: str | None = None):

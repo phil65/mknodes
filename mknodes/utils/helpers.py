@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 import itertools
-import os
-import re
 
 from typing import ParamSpec, TypeVar
 
@@ -14,19 +12,6 @@ logger = log.get_logger(__name__)
 
 
 T = TypeVar("T")
-
-
-def slugify(text: str | os.PathLike) -> str:
-    """Create a slug for given text.
-
-    Returned text only contains alphanumerical and underscore.
-
-    Arguments:
-        text: text to get a slug for
-    """
-    text = str(text).lower()
-    text = re.sub("[^0-9a-zA-Z_.]", "_", text)
-    return re.sub("^[^0-9a-zA-Z_#]+", "", text)
 
 
 def groupby(
