@@ -1,5 +1,6 @@
+{% if github_url %}
 {{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github") }}
-
+{% endif %}
 {{ cls | get_doc(only_summary=True) | MkHeader(level=3) }}
 
 {% if cls | get_doc(only_description=True) %}
