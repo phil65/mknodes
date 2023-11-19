@@ -9,7 +9,6 @@ import jinja2
 import jinjarope
 
 # importing jinjahelpers in order to register globals / filters
-from mknodes.nodemods import mod
 from mknodes.utils import inspecthelpers, jinjahelpers, log  # noqa: F401
 
 
@@ -57,10 +56,8 @@ class NodeEnvironment(jinjarope.Environment):
         self._node_filters = {}
         self._wrapped_klasses = {}
 
-        def apply_mod(node: mk.MkNode, mod_name: str, **kwargs):
-            for mod_cls in mod.Mod.__subclasses__():
-                if mod_name == mod_cls.__name__:
-                    node.mods.mods.append(mod_cls(**kwargs))
+        def apply_mod(node: mk.MkNode, mod_name: str, **kwargs) -> mk.MkNode:
+            node.mods.add_mod(mod_name, **kwargs)
             return node
 
         self.filters["apply_mod"] = apply_mod

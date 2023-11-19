@@ -121,7 +121,7 @@ class LinkProvider:
         module = dotted_path.split(".")[0]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_module(self, mod: types.ModuleType | str) -> str:
+    def link_for_module(self, mod: types.ModuleType | str | griffe.Module) -> str:
         """Return a markdown link for given module.
 
         Arguments:
