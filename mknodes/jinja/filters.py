@@ -4,7 +4,11 @@ from typing import TYPE_CHECKING
 
 import jinja2
 
+from jinja2 import runtime
+from markupsafe import Markup
+
 from mknodes.jinja import nodeenvironment
+from mknodes.utils import pathhelpers
 
 
 if TYPE_CHECKING:
@@ -93,3 +97,47 @@ def apply_mod(node: mk.MkNode, mod_name: str, **kwargs) -> mk.MkNode:
     """
     node.mods.add_mod(mod_name, **kwargs)
     return node
+
+
+def add_annotation(node: mk.MkNode, num: int, annotation: str) -> mk.MkNode:
+    """Add an annotation to given node.
+
+    Arguments:
+        node: The node to add an annotation to
+        num: The annotation number
+        annotation: The annotation itself
+    """
+    node.annotations[num] = annotation
+    return node
+
+
+@jinja2.pass_context
+def url(context: runtime.Context, value: str) -> str:
+    """A Template filter to normalize URLs.
+
+    Arguments:
+        context: The environment context
+        value: The value to normalize
+    """
+    url = page.url if (page := context.get("page")) else None
+    return pathhelpers.normalize_url(str(value), url=url, base=context["base_url"])
+
+
+@jinja2.pass_context
+def script_tag(context: runtime.Context, extra_script):
+    """Converts an ExtraScript value / JSResource to an HTML <script> tag line.
+
+    Arguments:
+        context: The environment context
+        extra_script: The object to convert to a <script> tag
+    """
+    html = '<script src="{0}"'
+    if not isinstance(extra_script, str):
+        if extra_script.type:
+            html += ' type="{1.type}"'
+        if extra_script.defer:
+            html += " defer"
+        if extra_script.async_:
+            html += " async"
+    html += "></script>"
+    return Markup(html).format(url(context, str(extra_script)), extra_script)

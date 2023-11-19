@@ -52,8 +52,6 @@ class NodeEnvironment(jinjarope.Environment):
         self.class_path = pathlib.Path(path or "").parent.as_posix()
         paths = self.get_extra_paths()
         self.add_template_path(*paths)
-        file = pathlib.Path(__file__).parent / "filters.toml"
-        self.load_jinja_file(file)
 
         import mknodes as mk
 
