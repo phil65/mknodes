@@ -17,6 +17,7 @@ from mknodes import paths
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import (
     folderinfo,
+    githubinfo,
     linkprovider,
     mkdocsconfigfile,
     packageregistry,
@@ -246,8 +247,8 @@ class GitHubContext(Context):
     """The default branch of the repository."""
     repo_name: str = ""
     """The repository name."""
-    workflows: list[dict] = dataclasses.field(default_factory=list)
-    """A dictionary (workflow-name -> workflow-yaml) containing workflows."""
+    workflows: list[githubinfo.Workflow] = dataclasses.field(default_factory=list)
+    """A list of configured workflows."""
     avatar_url: str | None = None
     """The url of the GitHub avatar."""
     bio: str | None = None

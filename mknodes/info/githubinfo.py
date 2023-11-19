@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 import datetime
 import functools
 import os
@@ -12,13 +13,16 @@ from mknodes.info import contexts
 from mknodes.utils import downloadhelpers, log, pathhelpers, reprhelpers
 
 
-RAW_URL = "https://raw.githubusercontent.com/"
 TOKEN = os.environ.get("GITHUB_TOKEN")
-
 auth = github.Auth.Token(TOKEN) if TOKEN else None
-
-
 logger = log.get_logger(__name__)
+
+
+@dataclasses.dataclass(frozen=True)
+class Workflow:
+    name: str
+    workflow: str
+    badge_url: str
 
 
 class GitHubRepo:
@@ -68,13 +72,13 @@ class GitHubRepo:
         )
 
     @functools.cached_property
-    def workflows(self) -> list[dict[str, str]]:
+    def workflows(self) -> list[Workflow]:
         """Return a list of dictionaries containing info about the current workflows."""
         result = []
         for wf in self.repo.get_workflows():
             url = f"{self.raw_prefix}{self.default_branch}/{wf.path}"
             data = downloadhelpers.download(url)
-            item = dict(name=wf.name, workflow=data.decode(), badge_url=wf.badge_url)
+            item = Workflow(name=wf.name, workflow=data.decode(), badge_url=wf.badge_url)
             result.append(item)
         return result
 
@@ -85,7 +89,7 @@ class GitHubRepo:
         If used in combination with the relative path of a module file,
         this geives a valid link to a GitHub raw link.
         """
-        return f"{RAW_URL}{self.username}/{self.repo_name}/"
+        return f"https://raw.githubusercontent.com/{self.username}/{self.repo_name}/"
 
     def get_last_commits(
         self,
