@@ -54,24 +54,6 @@ def groupby(
     return {k: list(g) for k, g in itertools.groupby(data, keyfunc)}
 
 
-def groupby_first_letter(
-    data: Iterable[T],
-    keyfunc: Callable | None = None,
-) -> dict[str, list[T]]:
-    """Group given iterable by first letter.
-
-    Arguments:
-        data: Iterable to group
-        keyfunc: Optional alternative sort function
-    """
-    data = sorted(data, key=keyfunc or (lambda x: x))
-
-    def first_letter(x):
-        return keyfunc(x)[0] if keyfunc else x[0]
-
-    return {k: list(g) for k, g in itertools.groupby(data, first_letter)}
-
-
 def label_for_class(klass: type) -> str:
     mod = klass.__module__
     parts = mod.split(".")
@@ -131,5 +113,5 @@ def list_to_tuple(fn: Callable[P, R]) -> Callable[P, R]:
 
 
 if __name__ == "__main__":
-    strings = groupby_first_letter([str(i) for i in range(1000)])
+    strings = groupby([str(i) for i in range(1000)], lambda x: str(x)[0])
     print(strings)
