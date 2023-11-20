@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import abc
 
-from collections.abc import Callable, Mapping, MutableMapping
+from collections.abc import Mapping, MutableMapping
 import dataclasses
 import datetime
 import pathlib
@@ -13,7 +13,6 @@ from griffe.dataclasses import Alias, Module
 
 import mknodes as mk
 
-from mknodes import paths
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import (
     folderinfo,
@@ -306,7 +305,6 @@ class ContextConfig(Mapping, metaclass=abc.ABCMeta):
     repo_url: str = "."
     clone_depth: int = 100
     jinja_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
-    build_fn: str | Callable = paths.DEFAULT_BUILD_FN
     base_url: str = ""
     use_directory_urls: bool = True
 

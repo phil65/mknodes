@@ -358,13 +358,6 @@ class MkNode(node.Node):
         return req
 
     @classmethod
-    def for_project(cls, project=None, **kwargs):
-        if project:
-            kwargs["context"] = project.context
-        project.root = cls(**kwargs)
-        return project.root
-
-    @classmethod
     def with_context(
         cls,
         *args,
