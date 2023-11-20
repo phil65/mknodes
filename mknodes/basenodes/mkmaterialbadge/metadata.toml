@@ -33,7 +33,7 @@ jinja = """
 [output.html]
 template = """
 <span class="md-typeset mdx-badge{{ " mdx-badge--right" if node.align_right else "" }}{{ " mdx-badge--heart" if node.animated else "" }}">
-{% set icon = "[" ~ node.icon | get_emoji_slug ~ "](" ~ node.url ~ ")" if node.url else node.icon | get_emoji_slug %}
+{% set icon = "[" ~ node.icon | get_emoji_slug ~ "](" ~ node.target | get_url ~ ")" if node.target else node.icon | get_emoji_slug %}
 {% if node.icon %}  <span class="mdx-badge__icon">{{ icon }}</span>
 {% endif %}
 {% if node.text %}  <span class="mdx-badge__text">{{ node.text }}</span>

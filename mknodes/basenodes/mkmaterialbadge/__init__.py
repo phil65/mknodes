@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from mknodes.basenodes import mknode
-from mknodes.utils import icons, log, resources, xmlhelpers as xml
+from mknodes.templatenodes import mktemplate
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from mknodes.info import linkprovider
 
 
-class MkMaterialBadge(mknode.MkNode):
+class MkMaterialBadge(mktemplate.MkTemplate):
     """Node for a CSS-based badge a la MkDocs-Material."""
 
     ICON = "simple/shieldsdotio"
@@ -39,31 +39,12 @@ class MkMaterialBadge(mknode.MkNode):
             target: An optional URL / page target for the badge
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__("output/html/template", **kwargs)
         self.icon = icon
         self.text = text
         self.animated = animated
         self.align_right = align_right
         self.target = target
-
-    def _to_markdown(self):
-        classes = "md-typeset mdx-badge"
-        if self.animated:
-            classes += " mdx-badge--heart"
-        if self.align_right:
-            classes += " mdx-badge--right"
-        root = xml.Span(classes)
-        if self.icon:
-            icon = icons.get_emoji_slug(self.icon)
-            icon_str = f"[{icon}]({self.url})" if self.url else icon
-            xml.Span("mdx-badge__icon", parent=root, text=icon_str)
-        if self.text:
-            xml.Span("mdx-badge__text", parent=root, text=self.text)
-        return root.to_string()
-
-    @property
-    def url(self) -> str:
-        return self.ctx.links.get_url(self.target) if self.target else ""
 
 
 if __name__ == "__main__":

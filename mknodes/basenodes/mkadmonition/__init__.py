@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.data import datatypes
-from mknodes.utils import log, reprhelpers, resources
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -52,22 +52,6 @@ class MkAdmonition(mkcontainer.MkContainer):
         self.expanded = expanded
         super().__init__(content=content, **kwargs)
 
-    def __repr__(self):
-        if len(self.items) == 1:
-            content = reprhelpers.to_str_if_textnode(self.items[0])
-        else:
-            content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
-        return reprhelpers.get_repr(
-            self,
-            content=content,
-            typ=self.typ if self.typ != "info" else None,
-            title=self.title,
-            collapsible=self.collapsible,
-            expanded=self.expanded,
-            _filter_empty=True,
-            _filter_false=True,
-        )
-
     def attach_annotations(self, text: str) -> str:
         # we deal with attaching annotations ourselves.
         return text
@@ -96,5 +80,5 @@ class MkAdmonition(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    admonition = MkAdmonition("")
-    print(admonition)
+    admonition = MkAdmonition("fdsf", collapsible=True)
+    print(repr(admonition))
