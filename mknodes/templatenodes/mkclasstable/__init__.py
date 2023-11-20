@@ -1,8 +1,11 @@
 from __future__ import annotations
+from collections.abc import Sequence
+
+import griffe
 
 from mknodes.info import grifferegistry
 from mknodes.templatenodes import mktemplatetable
-from mknodes.utils import log
+from mknodes.utils import classhelpers, log
 
 
 logger = log.get_logger(__name__)
@@ -13,7 +16,7 @@ class MkClassTable(mktemplatetable.MkTemplateTable):
 
     def __init__(
         self,
-        klasses: list[type] | set[type],
+        klasses: Sequence[type | str | griffe.Class],
         *,
         layout: str = "default",
         **kwargs,
@@ -22,10 +25,17 @@ class MkClassTable(mktemplatetable.MkTemplateTable):
         super().__init__(layout=layout, **kwargs)
 
     def iter_items(self):
-        yield from [
-            dict(kls=kls, griffe_kls=grifferegistry.get_class(kls))
-            for kls in self.klasses
-        ]
+        for kls in self.klasses:
+            match kls:
+                case type():
+                    yield dict(kls=kls, griffe_kls=grifferegistry.get_class(kls))
+                case griffe.Class():
+                    yield dict(kls=classhelpers.import_module(kls.path), griffe_kls=kls)
+                case str():
+                    yield dict(
+                        kls=classhelpers.import_module(kls),
+                        griffe_kls=grifferegistry.get_class(kls),
+                    )
 
 
 if __name__ == "__main__":
