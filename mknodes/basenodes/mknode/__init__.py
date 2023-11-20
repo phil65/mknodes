@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 import functools
 import re
 
@@ -65,7 +64,6 @@ class MkNode(node.Node):
         indent: str = "",
         name: str | None = None,
         shift_header_levels: int = 0,
-        css_classes: Iterable[str] | None = None,
         variables: dict[str, Any] | None = None,
         context: contexts.ProjectContext | None = None,
         parent: MkNode | None = None,
@@ -78,7 +76,6 @@ class MkNode(node.Node):
             indent: Indentation of given Markup (unused ATM)
             name: An optional unique identifier (allows getting node via MkNode.get_node)
             shift_header_levels: Regex-based header level shifting (adds/removes #-chars)
-            css_classes: A sequence of css class names to use for this node
             variables: Variables to use for rendering
             context: Context this Nav is connected to.
             parent: Parent for building the tree
@@ -91,23 +88,21 @@ class MkNode(node.Node):
         self.shift_header_levels = shift_header_levels
         self._files: dict[str, str | bytes] = {}
         self.mods = ModManager()
-        self.mods._css_classes = list(css_classes) if css_classes else []
         self._ctx = context
         self._node_name = name
         self.variables = variables or {}
         if name is not None:
             self._name_registry[name] = self
-        # ugly, but convenient.
-        import mknodes as mk
-
-        if not isinstance(self, mk.MkAnnotations):
-            self.annotations = mk.MkAnnotations(parent=self)
-        else:
-            self.annotations = None
         self.__post_init__()
 
     def __post_init__(self):
         pass
+
+    @functools.cached_property
+    def annotations(self):
+        import mknodes as mk
+
+        return mk.MkAnnotations(parent=self)
 
     @functools.cached_property
     def env(self):
