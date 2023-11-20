@@ -356,27 +356,31 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list):
             is_homepage = item.pop("is_homepage", False)
             nodes = item.pop("items", [])
             instance = kls(**item)
-            if type(instance) is mk.MkPage:
-                instance._is_index = is_index
-                instance._is_homepage = is_homepage
-                instance.title = title
-                root_nav += instance
-                for node_dct in nodes:
-                    if (
-                        condition := node_dct.pop("condition", False)
-                    ) and not instance.env.render_condition(condition):
-                        continue
-                    kls = getattr(mk, node_dct.pop("type"))
-                    if header := node_dct.pop("title", None):
-                        instance += mk.MkHeader(header)
-                    instance += kls(**node_dct)
-            else:
-                page = root_nav.add_page(
-                    title,
-                    is_index=is_index,
-                    is_homepage=is_homepage,
-                )
-                page += instance
+            match instance:
+                case mk.MkPage():
+                    instance._is_index = is_index
+                    instance._is_homepage = is_homepage
+                    instance.title = title
+                    root_nav += instance
+                    for node_dct in nodes:
+                        if (
+                            condition := node_dct.pop("condition", False)
+                        ) and not instance.env.render_condition(condition):
+                            continue
+                        kls = getattr(mk, node_dct.pop("type"))
+                        if header := node_dct.pop("title", None):
+                            instance += mk.MkHeader(header)
+                        instance += kls(**node_dct)
+                case mk.MkNav():
+                    instance.title = title
+                    root_nav += instance
+                case _:
+                    page = root_nav.add_page(
+                        title,
+                        is_index=is_index,
+                        is_homepage=is_homepage,
+                    )
+                    page += instance
         else:
             name, items = next(iter(item.items()))
             nav = root_nav.add_nav(name)
