@@ -20,7 +20,7 @@ class MkDoc(mknav.MkNav):
         self,
         module: types.ModuleType | Sequence[str] | str | None = None,
         *,
-        filter_by___all__: bool = False,
+        filter_by___all__: bool = True,
         exclude_modules: list[str] | None = None,
         section_name: str | None = None,
         recursive: bool = False,
@@ -50,7 +50,6 @@ class MkDoc(mknav.MkNav):
         self.module_template = module_template
         self.flatten_nav = flatten_nav
         self.recursive = recursive
-        self.submodules: set[types.ModuleType] = set()
         self.filter_by___all__ = filter_by___all__
         self._exclude = exclude_modules or []
         # self.root_path = pathlib.Path(f"./{self.module_name}")
@@ -73,14 +72,15 @@ class MkDoc(mknav.MkNav):
         navs = []
         klasses = classhelpers.list_classes(
             module=self.module,
-            recursive=self.recursive,
             filter_by___all__=self.filter_by___all__,
             module_filter=self.module_name,
         )
         for klass in klasses:
             p = self.add_class_page(klass=klass, flatten=self.flatten_nav)
             pages.append(p)
-        for submod in self.submodules:
+        for submod in classhelpers.get_submodules(
+            self.module, filter_by___all__=self.filter_by___all__
+        ):
             nav = self.add_doc(
                 submod,
                 class_template=self.class_template,

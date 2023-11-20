@@ -377,26 +377,30 @@ def get_topmost_module_path(obj: Callable) -> str:
 @functools.cache
 def get_submodules(
     module: types.ModuleType | str | tuple[str, ...],
+    filter_by___all__: bool = False,
 ) -> list[types.ModuleType]:
     """Return list of submodules of given module.
 
     Arguments:
         module: Module to return submodules from.
+        filter_by___all__: Whether to only return submodules listed in __all__
     """
-    module = to_module(module)
-    # import pkgutil
+    mod = to_module(module, return_none=False)
+    import pkgutil
 
-    # return [
-    #     importlib.import_module(f"{module.__name__}.{mod_name}")
-    #     for _importer, mod_name, _ispkg in pkgutil.iter_modules(
-    #         module.__path__ if hasattr(module, "__path__") else [module.__file__]
-    #     )
-    # ]
-    return [
-        mod
-        for name, mod in get_members(module, inspect.ismodule)
-        if name.startswith(module.__name__)
+    path = mod.__path__ if hasattr(mod, "__path__") else [mod.__file__]  # type: ignore[list-item]
+    modules = [
+        importlib.import_module(f"{mod.__name__}.{mod_name}")
+        for _importer, mod_name, _ispkg in pkgutil.iter_modules(path)
     ]
+    if filter_by___all__:
+        return [m for m in modules if m.__name__.split(".")[-1] in mod.__all__]
+    return modules
+    # return [
+    #     mod
+    #     for name, mod in get_members(module, inspect.ismodule)
+    #     if name.startswith(module.__name__)
+    # ]
 
 
 @functools.cache
