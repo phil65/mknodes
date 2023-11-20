@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log
+from mknodes.utils import log, resources
 
 
 if TYPE_CHECKING:
@@ -52,10 +52,13 @@ class MkCallable(mknode.MkNode):
         node.parent = self.parent
         return node
 
-    @property
-    def files(self):
+    def children(self):
         node = self.__call__()
-        return node.files
+        return node.children
+
+    def get_node_resources(self) -> resources.Resources:
+        node = self.__call__()
+        return node.get_node_resources()
 
     def to_markdown(self) -> str:
         node = self.__call__()
