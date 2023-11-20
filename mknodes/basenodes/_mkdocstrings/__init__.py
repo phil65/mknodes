@@ -173,7 +173,7 @@ class MkDocStrings(mknode.MkNode):
             case types.ModuleType():
                 return self.obj.__name__
             case griffe.Object():
-                return self.obj.canonical_path
+                return self.obj.path
             case Callable():
                 if not self.for_topmost:
                     return f"{self.obj.__module__}.{self.obj.__qualname__}"

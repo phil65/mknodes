@@ -4,6 +4,8 @@ import itertools
 
 from typing import Any, Literal
 
+import griffe
+
 from mknodes.basenodes import mkdiagram
 from mknodes.utils import classhelpers, connector, helpers, reprhelpers
 
@@ -69,7 +71,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
 
     def __init__(
         self,
-        klass: type | str,
+        klass: type | str | griffe.Class,
         mode: DiagramModeStr = "baseclasses",
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,

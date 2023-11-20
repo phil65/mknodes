@@ -186,7 +186,7 @@ def to_module(
 
 
 @functools.cache
-def to_class(klass: type | str | tuple[str, ...] | list[str]):
+def to_class(klass: griffe.Class | type | str | tuple[str, ...] | list[str]):
     """Convert given input to a class.
 
     If input is a string or Sequence, interpret it as a dotted path.
@@ -197,6 +197,9 @@ def to_class(klass: type | str | tuple[str, ...] | list[str]):
     match klass:
         case type():
             return klass
+        case griffe.Class():
+            mod = import_module(klass.module.path)
+            return getattr(mod, klass.name)
         case str() if ":" in klass:
             # path.to.mod:Classname
             mod_path, klass_name = klass.split(":", maxsplit=1)
