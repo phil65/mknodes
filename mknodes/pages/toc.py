@@ -31,7 +31,7 @@ def get_toc(md: str, toc_config: dict | None = None) -> TableOfContents:
     return TableOfContents(toc)
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(unsafe_hash=True)
 class AnchorLink:
     """A single entry in the table of contents."""
 
