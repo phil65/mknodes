@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log, resources
+from mknodes.utils import classhelpers, log, resources
 
 
 if TYPE_CHECKING:
@@ -28,7 +28,7 @@ class MkCallable(mknode.MkNode):
 
     def __init__(
         self,
-        fn: Callable[..., mk.MkNode],
+        fn: Callable[..., mk.MkNode] | str,
         *,
         args: list | tuple | None = None,
         kw_args: dict | None = None,
@@ -48,7 +48,8 @@ class MkCallable(mknode.MkNode):
         self.kw_args = kw_args or {}
 
     def __call__(self) -> mk.MkNode:
-        node = self.fn(*self.args, **self.kw_args)
+        fn = classhelpers.to_callable(self.fn)
+        node = fn(*self.args, **self.kw_args)
         node.parent = self.parent
         return node
 
