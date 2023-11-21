@@ -47,7 +47,6 @@ status: new
 subtitle: Some subtitle
 title: Some title
 ---
-
 """
 
 
@@ -63,4 +62,4 @@ def test_metadata():
         description="Some description",
     )
     page.metadata.pop("created")
-    assert str(page) == EXPECTED
+    assert page.metadata.as_page_header() == EXPECTED
