@@ -44,11 +44,10 @@ def yaml_include_constructor(loader: yaml.BaseLoader, node: yaml.Node) -> Any:
     scalar = loader.construct_scalar(node)  # type: ignore[arg-type]
     folder = pathlib.Path(loader.name).parent
     fp = folder.joinpath(scalar).resolve()  # type: ignore[arg-type]
-    fe = fp.suffix.lstrip(".")
     with fp.open() as f:
-        if fe in ("yaml", "yml"):
+        if fp.suffix in (".yaml", ".yml"):
             return yaml.load(f, type(loader))
-        if fe in ("json", "jsn"):
+        if fp.suffix in (".json", ".jsn"):
             return json.load(f)
         return f.read()
 
@@ -96,7 +95,8 @@ def construct_env_tag(loader: yaml.Loader, node: yaml.Node) -> Any:
             value = os.environ[str(var)]
             # Resolve value to Python type using YAML's implicit resolvers
             tag = loader.resolve(yaml.nodes.ScalarNode, value, (True, False))
-            return loader.construct_object(yaml.nodes.ScalarNode(tag, value))
+            node = yaml.nodes.ScalarNode(tag, value)
+            return loader.construct_object(node)
 
     return default
 
@@ -112,9 +112,8 @@ def get_default_loader(base_loader_cls: type):
     DefaultLoader.add_constructor("!include", yaml_include_constructor)
     # Loader.add_constructor("!ENV", lambda loader, node: None)  # type: ignore
     # if config is not None:
-    #     Loader.add_constructor(
-    #         "!relative", functools.partial(_construct_dir_placeholder, config)
-    #     )
+    #     fn = functools.partial(_construct_dir_placeholder, config)
+    #     Loader.add_constructor("!relative", fn)
     return DefaultLoader
 
 
