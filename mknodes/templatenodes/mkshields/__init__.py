@@ -16,6 +16,7 @@ class MkShields(mkcontainer.MkContainer):
 
     ICON = "simple/shieldsdotio"
     VIRTUAL_CHILDREN = True
+    ATTR_LIST_SEPARATOR = ""
 
     def __init__(
         self,
