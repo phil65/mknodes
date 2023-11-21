@@ -341,9 +341,11 @@ class NavParser:
         return self._nav
 
 
-def parse_new_style_nav(root_nav: mk.MkNav, items: list):
+def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict):
     import mknodes as mk
 
+    if isinstance(items, dict):
+        items = [items]
     for item in items:
         if "type" in item and "title" in item:
             if (
@@ -383,8 +385,11 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list):
                     page += instance
         else:
             name, items = next(iter(item.items()))
-            nav = root_nav.add_nav(name)
-            parse_new_style_nav(nav, items)
+            if isinstance(items, str):
+                root_nav += mk.MkPage.from_file(items, title=name)
+            else:
+                nav = root_nav.add_nav(name)
+                parse_new_style_nav(nav, items)
 
 
 if __name__ == "__main__":
