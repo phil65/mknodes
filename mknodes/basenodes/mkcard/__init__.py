@@ -57,10 +57,6 @@ class MkCard(mktemplate.MkTemplate):
         self.size = size
         self.path_dark_mode = path_dark_mode
 
-    @property
-    def url(self) -> str:
-        return self.ctx.links.get_url(self.target) if self.target else ""
-
     @classmethod
     def for_page(cls, page):
         image = mkbinaryimage.MkBinaryImage.for_icon(page.icon)

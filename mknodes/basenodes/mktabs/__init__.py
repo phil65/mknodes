@@ -35,12 +35,7 @@ class MkTabBlock(mkblock.MkBlock):
             select: Whether tab should be initially selected
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(
-            "tab",
-            content=content or [],
-            argument=title,
-            **kwargs,
-        )
+        super().__init__("tab", content=content or [], argument=title, **kwargs)
         if new is not None:
             self.new = new
         if select is not None:
