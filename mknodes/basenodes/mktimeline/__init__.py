@@ -121,7 +121,7 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        items: list | str | os.PathLike | None = None,
+        items: list | str | dict | os.PathLike | None = None,
         **kwargs: Any,
     ):
         """Constructor.

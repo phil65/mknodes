@@ -32,7 +32,6 @@ class MkTreeView(mkcode.MkCode):
         maximum_depth: int | None = None,
         predicate: Callable | None = None,
         exclude_folders: list[str] | str | None = None,
-        header: str = "",
         **kwargs: Any,
     ):
         """Constructor.
@@ -43,10 +42,9 @@ class MkTreeView(mkcode.MkCode):
             maximum_depth: Maximum nesting depth to print
             predicate: Predicate to filter results
             exclude_folders: Folders to exclude from listing
-            header: Section header
             kwargs: Keyword arguments passed to parent
         """
-        super().__init__(header, language="", **kwargs)
+        super().__init__(language="", **kwargs)
         self._tree = tree
         self.style = style
         self.predicate = predicate
