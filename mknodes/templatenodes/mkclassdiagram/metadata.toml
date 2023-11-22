@@ -30,7 +30,7 @@ jinja = """
 template = """
 {{ node.fence_boundary }} mermaid
 graph {{ node.direction }}
-{% for identifier, title in node.builder.items| zip(node.builder.titles) %}
+{% for identifier, title in node.builder.items | zip(node.builder.titles) %}
   {{ identifier }}["{{ title }}"]
 {% endfor %}
 {% for a, b in node.builder.connections %}

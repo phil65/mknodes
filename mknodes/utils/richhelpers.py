@@ -2,15 +2,22 @@ from __future__ import annotations
 
 import functools
 import os
-import pathlib
+
+from typing import TYPE_CHECKING
+
+import upath
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from rich.tree import Tree
 
 
 logger = log.get_logger(__name__)
 
 
-def _walk_directory(directory: os.PathLike | str, tree) -> None:
+def _walk_directory(directory: os.PathLike | str, tree: Tree) -> None:
     """Recursively build a Tree with directory contents."""
     # Sort dirs first then by filename
     from rich.filesize import decimal
@@ -18,7 +25,7 @@ def _walk_directory(directory: os.PathLike | str, tree) -> None:
     from rich.text import Text
 
     paths = sorted(
-        pathlib.Path(directory).iterdir(),
+        upath.UPath(directory).iterdir(),
         key=lambda path: (path.is_file(), path.name.lower()),
     )
     for path in paths:
@@ -27,12 +34,9 @@ def _walk_directory(directory: os.PathLike | str, tree) -> None:
             continue
         if path.is_dir():
             style = "dim" if path.name.startswith("__") else ""
-            branch = tree.add(
-                "[bold magenta]:open_file_folder: [link"
-                f" file://{path}]{escape(path.name)}",
-                style=style,
-                guide_style=style,
-            )
+            name = escape(path.name)
+            label = f"[bold magenta]:open_file_folder: [link file://{path}]{name}"
+            branch = tree.add(label, style=style, guide_style=style)
             _walk_directory(path, branch)
         else:
             text_filename = Text(path.name, "green")

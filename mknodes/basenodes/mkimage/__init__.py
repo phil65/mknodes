@@ -112,4 +112,3 @@ class MkImage(mknode.MkNode):
 
 if __name__ == "__main__":
     img = MkImage("Some path", target="http://www.google.de", title="test")
-    print(img)

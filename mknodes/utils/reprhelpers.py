@@ -17,6 +17,8 @@ logger = log.get_logger(__name__)
 
 
 class LengthLimitRepr(reprlib.Repr):
+    """Custom repr."""
+
     def repr_type(self, obj, level):
         return obj.__name__
 

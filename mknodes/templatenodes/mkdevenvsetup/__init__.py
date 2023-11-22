@@ -4,12 +4,6 @@ from typing import Any
 
 from mknodes.templatenodes import mktemplate
 from mknodes.data import buildsystems
-from mknodes.utils import log
-
-
-logger = log.get_logger(__name__)
-
-EXAMPLE_URL = "http://www.some-github-provider.com/my-project.git"
 
 
 class MkDevEnvSetup(mktemplate.MkTemplate):
