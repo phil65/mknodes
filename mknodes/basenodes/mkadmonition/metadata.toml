@@ -6,22 +6,14 @@ name = "MkAdmonition"
 [requirements.extension."pymdownx.details"]
 [requirements.extension."pymdownx.superfences"]
 
-
-# [examples.annotations]
-# title = "Annotations"
-# jinja = """
-# !!! note annotate
-
-#     MkAdmonitions can carry annotations(1).
-
-# 1.  Super handy!
-
-# ``` py
-# node = mk.MkAdmonition("MkAdmonitions can carry annotations(1).")
-# node.annotations[1] = "Super handy!"
-# page += node
-# ```
-# """
+[examples.annotations]
+title = "Annotations"
+python = """
+import mknodes as mk
+node = mk.MkAdmonition("MkAdmonitions can carry annotations(1).")
+node.annotations[1] = "Super handy!"
+node
+"""
 
 [examples.types]
 title = "Types"
