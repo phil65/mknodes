@@ -29,6 +29,8 @@ from mknodes.utils import log, superdict
 
 logger = log.get_logger(__name__)
 
+DEFAULT_LOADER = jinjarope.FileSystemLoader("docs")
+
 
 @dataclasses.dataclass
 class Context:
@@ -339,7 +341,7 @@ class ProjectContext(Context):
     )
     """Link source."""
     env_config: jinjarope.EnvConfig = dataclasses.field(
-        default_factory=jinjarope.EnvConfig,
+        default_factory=lambda: jinjarope.EnvConfig(loader=DEFAULT_LOADER)
     )
     # resources: Resources = dataclasses.field(default_factory=Resources)
     # pyproject: pyproject.PyProject = dataclasses.field(
@@ -379,7 +381,7 @@ class ProjectContext(Context):
             git=folderinfo.git.context,
             theme=theme_context or ThemeContext(),
             links=links,
-            env_config=cfg.get("env_config", jinjarope.EnvConfig()),
+            env_config=cfg.get("env_config", jinjarope.EnvConfig(loader=DEFAULT_LOADER)),
         )
 
     def populate_linkprovider(self):
