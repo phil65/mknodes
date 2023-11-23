@@ -58,6 +58,8 @@ class ShiftHeaderLevelProcessor(TextProcessor):
         self.level_shift = level_shift
 
     def run(self, text: str) -> str:
+        if not self.level_shift:
+            return text
         return mdfilters.shift_header_levels(text, self.level_shift)
 
 
