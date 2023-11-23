@@ -379,7 +379,7 @@ class ProjectContext(Context):
             git=folderinfo.git.context,
             theme=theme_context or ThemeContext(),
             links=links,
-            env_config=cfg.get("env_config", {}),
+            env_config=cfg.get("env_config", jinjarope.EnvConfig()),
         )
 
     def populate_linkprovider(self):
@@ -445,7 +445,7 @@ def get_default_project_context():
         github=default_github_context,
         theme=default_theme_context,
         links=linkprovider.LinkProvider(),
-        env_config={},
+        env_config=jinjarope.EnvConfig(),
         # resources=Resources(),
     )
 

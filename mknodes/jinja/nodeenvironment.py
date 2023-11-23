@@ -39,18 +39,6 @@ class NodeEnvironment(jinjarope.Environment):
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()
-        loaders = [
-            jinjarope.get_loader("docs/"),
-            jinjarope.FsSpecProtocolPathLoader(),
-        ]
-        if self.node.nodefile:
-            loader = jinjarope.NestedDictLoader(self.node.nodefile._data)
-            loaders.insert(0, loader)
-        self.loader = jinjarope.ChoiceLoader(loaders)
-        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
-        self.class_path = pathlib.Path(path or "").parent.as_posix()
-        paths = self.get_extra_paths()
-        self.add_template_path(*paths)
 
         import mknodes as mk
 
@@ -86,6 +74,20 @@ class NodeEnvironment(jinjarope.Environment):
         to auto-set the node parent (and that way the context) and to collect
         the rendered nodes.
         """
+        loaders = [
+            self.node.ctx.env_config.loader or jinjarope.FileSystemLoader("docs/"),
+            jinjarope.FsSpecProtocolPathLoader(),
+        ]
+        if self.node.nodefile:
+            loader = jinjarope.NestedDictLoader(self.node.nodefile._data)
+            loaders.insert(0, loader)
+        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
+        class_path = pathlib.Path(path or "").parent.as_posix()
+        loaders.append(jinjarope.FileSystemLoader(class_path))
+        self.loader = jinjarope.ChoiceLoader(loaders)
+        # paths = self.get_extra_paths()
+        # self.add_template_path(*paths)
+
         self.filters.update(self._node_filters)
         self.globals["parent_page"] = self.node.parent_page
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
@@ -94,15 +96,15 @@ class NodeEnvironment(jinjarope.Environment):
         self.globals["mk"] = self._wrapped_klasses
         self.globals |= self.node.ctx.as_dict()
 
-    def get_extra_paths(self) -> list[str]:
-        paths = [self.class_path]
-        if self.node.parent_navs:
-            nav = self.node.parent_navs[-1]
-            if "created" in nav.metadata:
-                file = nav.metadata["created"]["source_filename"]
-                path = pathlib.Path(file).parent
-                paths.append(path.as_posix())
-        return paths
+    # def get_extra_paths(self) -> list[str]:
+    #     paths = [self.class_path]
+    #     if self.node.parent_navs:
+    #         nav = self.node.parent_navs[-1]
+    #         if "created" in nav.metadata:
+    #             file = nav.metadata["created"]["source_filename"]
+    #             path = pathlib.Path(file).parent
+    #             paths.append(path.as_posix())
+    #     return paths
 
     def render_template(
         self,
@@ -166,10 +168,10 @@ if __name__ == "__main__":
 
     node = mk.MkText.with_context()
     env = NodeEnvironment(node)
-    txt = "{{ metadata.required_python_version | MkAdmonition | apply_mod('ParallaxEffect') }}"
-    print(env.render_string(txt))
-    print(env.rendered_nodes)
-    # text = env.render_string(r"{{ 'test' | MkHeader }}")
-    # text = env.render_string(r"{{ 50 | MkProgressBar }}")
+    # txt = "{{ metadata.required_python_version | MkAdmonition | apply_mod('ParallaxEffect') }}"
+    # print(env.render_string(txt))
     # print(env.rendered_nodes)
+    # text = env.render_string(r"{{ 'test' | MkHeader }}")
+    text = env.render_string(r"{{ 50 | MkProgressBar }}")
+    print(env.rendered_nodes)
     # env.render_string(r"{{test('hallo')}}")
