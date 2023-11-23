@@ -71,10 +71,10 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
         result = serializefilters.dig(self._data, *sections, keep_path=keep_path)
         return SuperDict(result) if isinstance(result, dict) else result
 
-    def serialize(self, mode: MarkupTypeStr | None) -> str:  # type: ignore[return]
+    def serialize(self, mode: MarkupTypeStr) -> str:  # type: ignore[return]
         return serializefilters.serialize(self._data, mode)
 
-    def write(self, path: str | os.PathLike, mode: MarkupTypeStr | None = None):
+    def write(self, path: str | os.PathLike, mode: MarkupTypeStr):
         text = self.serialize(mode)
         pathhelpers.write_file(text, path)
 
