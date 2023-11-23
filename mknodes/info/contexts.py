@@ -10,6 +10,7 @@ import types
 from typing import Any
 
 from griffe.dataclasses import Alias, Module
+import jinjarope
 
 import mknodes as mk
 
@@ -337,7 +338,9 @@ class ProjectContext(Context):
         default_factory=linkprovider.LinkProvider,
     )
     """Link source."""
-    env_config: dict = dataclasses.field(default_factory=dict)
+    env_config: jinjarope.EnvConfig = dataclasses.field(
+        default_factory=jinjarope.EnvConfig,
+    )
     # resources: Resources = dataclasses.field(default_factory=Resources)
     # pyproject: pyproject.PyProject = dataclasses.field(
     #     default_factory=pyproject.PyProject,
