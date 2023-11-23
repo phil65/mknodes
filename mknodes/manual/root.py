@@ -18,6 +18,12 @@ def build(project) -> mk.MkNav:
 
 
 class Build:
+    @classmethod
+    def build(cls, root, theme):
+        b = cls()
+        b.on_theme(theme)
+        return b.on_root(root)
+
     def on_theme(self, theme: mk.Theme):
         theme.error_page.content = mk.MkAdmonition("Page does not exist!")
         if isinstance(theme, mk.MaterialTheme):
