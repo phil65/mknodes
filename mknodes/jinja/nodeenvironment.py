@@ -74,19 +74,18 @@ class NodeEnvironment(jinjarope.Environment):
         to auto-set the node parent (and that way the context) and to collect
         the rendered nodes.
         """
+        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
+        class_path = pathlib.Path(path or "").parent.as_posix()
+
         loaders = [
             self.node.ctx.env_config.loader or jinjarope.FileSystemLoader("docs/"),
+            jinjarope.FileSystemLoader(class_path),
             jinjarope.FsSpecProtocolPathLoader(),
         ]
         if self.node.nodefile:
             loader = jinjarope.NestedDictLoader(self.node.nodefile._data)
             loaders.insert(0, loader)
-        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
-        class_path = pathlib.Path(path or "").parent.as_posix()
-        loaders.append(jinjarope.FileSystemLoader(class_path))
         self.loader = jinjarope.ChoiceLoader(loaders)
-        # paths = self.get_extra_paths()
-        # self.add_template_path(*paths)
 
         self.filters.update(self._node_filters)
         self.globals["parent_page"] = self.node.parent_page
