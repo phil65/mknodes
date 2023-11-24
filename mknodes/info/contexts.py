@@ -371,10 +371,9 @@ class ProjectContext(Context):
             use_directory_urls=cfg.get("use_directory_urls", True),
             include_stdlib=True,
         )
-        git_repo = reporegistry.get_repo(
-            cfg.get("repo_url") or ".",
-            clone_depth=cfg.get("clone_depth", 100),
-        )
+        repo_url = cfg.get("repo_url") or "."
+        clone_depth = cfg.get("clone_depth", 100)
+        git_repo = reporegistry.get_repo(repo_url, clone_depth=clone_depth)
         folderinfo = fi.FolderInfo(git_repo.working_dir)
         return cls(
             metadata=folderinfo.context,
