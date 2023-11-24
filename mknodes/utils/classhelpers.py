@@ -394,7 +394,8 @@ def get_submodules(
         for _importer, mod_name, _ispkg in pkgutil.iter_modules(path)
     ]
     if filter_by___all__:
-        return [m for m in modules if m.__name__.split(".")[-1] in mod.__all__]
+        export = mod.__all__ if hasattr(mod, "__all__") else []
+        return [m for m in modules if m.__name__.split(".")[-1] in export]
     return modules
     # return [
     #     mod
