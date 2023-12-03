@@ -35,3 +35,9 @@ jinja = """
 template = """
 [={{ node.percentage }}% "{{ node.label }}"]
 """
+
+[output.html5]
+template = """
+<label for="progress_bar">{{ node.label }}:</label>
+<progress id="progress_bar" max="100" value="{{ node.percentage }}">{{ node.percentage }}%</progress>
+"""
