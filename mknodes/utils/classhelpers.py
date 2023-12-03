@@ -361,7 +361,7 @@ def get_topmost_module_path(obj: Callable) -> str:
         obj: Klass to get the path for.
     """
     to_search_for = obj.__self__ if hasattr(obj, "__self__") else obj
-    path = obj.__module__
+    path = obj.__module__ or to_search_for.__module__
     parts = path.split(".")
     while parts:
         with contextlib.suppress(TypeError):
