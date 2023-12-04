@@ -8,7 +8,7 @@ from typing import Any, ClassVar, Literal
 
 from jinjarope import iterfilters, serializefilters, utils
 
-from mknodes.utils import helpers, mergehelpers, reprhelpers
+from mknodes.utils import helpers, reprhelpers
 
 
 @dataclasses.dataclass(frozen=True)
@@ -316,9 +316,21 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
             other: The resources to merge into this one.
             additive: Merge strategy. Either additive or replace.
         """
+
+        def merge_extensions(dicts: list[dict[str, dict]]) -> list[dict[str, dict]]:
+            seen = set()
+            result = []
+            dicts = [{k: dct[k]} for dct in dicts for k in dct]
+            for dct in dicts:
+                dct = dict(sorted(dct.items()))
+                if (stringed := str(dct)) not in seen:
+                    seen.add(stringed)
+                    result.append(dct)
+            return result
+
         if other_exts := other["markdown_extensions"]:
             exts = [self.markdown_extensions, other_exts]
-            merged = mergehelpers.merge_extensions(exts)
+            merged = merge_extensions(exts)
             self.markdown_extensions = serializefilters.merge(*merged)
         self.css = iterfilters.reduce_list(self.css + other["css"])
         self.plugins = iterfilters.reduce_list(self.plugins + other["plugins"])
