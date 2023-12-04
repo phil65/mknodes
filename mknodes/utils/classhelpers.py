@@ -94,31 +94,6 @@ def to_class(klass: griffe.Class | type | str | tuple[str, ...] | list[str]):
             raise TypeError(klass)
 
 
-def to_module_parts(  # type: ignore
-    module: Sequence[str] | str | types.ModuleType | griffe.Module,
-) -> tuple[str, ...]:
-    """Returns a tuple describing the module path.
-
-    Result is of form ("module", "submodule", "subsubmodule")
-
-    Arguments:
-        module: A ModuleType, str or sequence.
-    """
-    match module:
-        case (str(), *_):  # type: ignore[attr-defined]
-            return tuple(module)
-        case str():
-            return tuple(module.split("."))
-        case types.ModuleType():
-            return tuple(module.__name__.split("."))
-        case griffe.Module():
-            return tuple(module.path.split("."))
-        case pathlib.Path() if not module.is_absolute():
-            return module.parts
-        case _:
-            raise TypeError(module)
-
-
 def to_dotted_path(
     obj: Sequence[str] | str | type | types.ModuleType | types.MethodType | griffe.Object,
 ) -> str:

@@ -36,8 +36,8 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
             template_path: Name of the template to load
             kwargs: further keyword arguments passed to parent
         """
-        self.parts = classhelpers.to_module_parts(module)
         self.module = classhelpers.to_module(module)
+        self.parts = tuple(self.module.__name__.split("."))
         self.klasses = klasses or classhelpers.list_classes(
             module,
             module_filter=self.parts[0],
