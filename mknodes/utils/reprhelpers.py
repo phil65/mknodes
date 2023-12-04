@@ -5,6 +5,7 @@ import dataclasses
 from operator import attrgetter
 import os
 import reprlib
+
 from typing import Any
 
 from jinjarope import inspectfilters, textfilters

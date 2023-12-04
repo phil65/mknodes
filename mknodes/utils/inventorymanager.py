@@ -10,6 +10,7 @@ import pathlib
 import posixpath
 import re
 import types
+
 from typing import BinaryIO, Self
 import zlib
 

@@ -7,6 +7,7 @@ import dataclasses
 import datetime
 import pathlib
 import types
+
 from typing import Any
 
 from griffe.dataclasses import Alias, Module

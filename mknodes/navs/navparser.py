@@ -6,6 +6,7 @@ import pathlib
 
 from posixpath import join as urljoin
 import re
+
 from typing import TYPE_CHECKING, Any
 from urllib import parse
 
