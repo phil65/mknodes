@@ -15,7 +15,7 @@ jinja = """
 bubble = """
 {{ node.event_plugin.help_link.format(event=fn.__name__) | MkLink(fn.__name__) | MkHeader }}
 
-{{ inspecthelpers.get_doc(fn) }}
+{{ fn | get_doc }}
 
 {{ mk.MkCode.for_object(fn) | MkAdmonition(collapsible=True, typ="quote", title="Source")}}
 

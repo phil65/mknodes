@@ -11,8 +11,6 @@ import types
 
 import griffe
 
-from jinjarope import mdfilters
-
 from mknodes.data import datatypes
 
 
@@ -107,44 +105,6 @@ def get_deprecated_message(obj) -> str | None:
     return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
 
 
-@functools.cache
-def get_doc(
-    obj,
-    *,
-    escape: bool = False,
-    fallback: str = "",
-    from_base_classes: bool = False,
-    only_summary: bool = False,
-    only_description: bool = False,
-) -> str:
-    """Get __doc__ for given object.
-
-    Arguments:
-        obj: Object to get docstrings from
-        escape: Whether docstrings should get escaped
-        fallback: Fallback in case docstrings dont exist
-        from_base_classes: Use base class docstrings if docstrings dont exist
-        only_summary: Only return first line of docstrings
-        only_description: Only return block after first line
-    """
-    match obj:
-        case griffe.Object():
-            doc = obj.docstring.value if obj.docstring else None
-        case _ if from_base_classes:
-            doc = inspect.getdoc(obj)
-        case _ if obj.__doc__:
-            doc = inspect.cleandoc(obj.__doc__)
-        case _:
-            doc = None
-    if not doc:
-        return fallback
-    if only_summary:
-        doc = doc.split("\n")[0]
-    if only_description:
-        doc = "\n".join(doc.split("\n")[1:])
-    return mdfilters.md_escape(doc) if doc and escape else doc
-
-
 def is_abstract(obj: type | griffe.Class | griffe.Function) -> bool:
     """Check whether a class / method is abstract."""
     match obj:
@@ -206,9 +166,9 @@ def get_file(obj: datatypes.HasCodeType | griffe.Object) -> pathlib.Path | None:
 
 
 def get_argspec(obj, remove_self: bool = True) -> inspect.FullArgSpec:
-    """Return a cleanup-up FullArgSpec for given callable.
+    """Return a cleaned-up FullArgSpec for given callable.
 
-    ArgSpec is cleaned up by removing self from method callables.
+    ArgSpec is cleaned up by removing `self` from method callables.
 
     Arguments:
         obj: A callable python object
