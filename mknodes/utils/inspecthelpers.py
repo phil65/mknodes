@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-import contextlib
 import dataclasses
 import functools
 import inspect
-import itertools
 import pathlib
 import types
 
 import griffe
+
+from jinjarope import inspectfilters
 
 from mknodes.data import datatypes
 
@@ -63,29 +62,6 @@ def get_stack_info(frame: types.FrameType, level: int) -> dict | None:
         source_line_no=frame.f_lineno,
         # klass=frame.f_locals["self"].__class__.__name__,
     )
-
-
-@functools.cache
-def get_function_body(
-    func: types.MethodType | types.FunctionType | type | griffe.Object,
-) -> str:
-    """Get body of given function. Strips off the signature.
-
-    Arguments:
-        func: Callable to get the body from
-    """
-    # see https://stackoverflow.com/questions/38050649
-    src_lines, _ = get_source_lines(func)
-    src_lines = itertools.dropwhile(lambda x: x.strip().startswith("@"), src_lines)
-    line = next(src_lines).strip()  # type: ignore
-    if not line.startswith(("def ", "class ")):
-        return line.rsplit(":")[-1].strip()
-    if not line.endswith(":"):
-        for line in src_lines:
-            line = line.strip()
-            if line.endswith(":"):
-                break
-    return "".join(src_lines)
 
 
 def get_deprecated_message(obj) -> str | None:
@@ -142,16 +118,6 @@ def get_source_lines(
 
 
 @functools.cache
-def get_signature(obj: Callable) -> inspect.Signature:
-    """Cached wrapper for inspect.signature.
-
-    Arguments:
-        obj: Callable to get a signature for.
-    """
-    return inspect.signature(obj)
-
-
-@functools.cache
 def get_file(obj: datatypes.HasCodeType | griffe.Object) -> pathlib.Path | None:
     """Cached wrapper for inspect.getfile.
 
@@ -160,9 +126,7 @@ def get_file(obj: datatypes.HasCodeType | griffe.Object) -> pathlib.Path | None:
     """
     if isinstance(obj, griffe.Object):
         return fp[0] if isinstance(fp := obj.filepath, list) else fp
-    with contextlib.suppress(TypeError):
-        return pathlib.Path(inspect.getfile(obj))
-    return None
+    return inspectfilters.get_file(obj)
 
 
 def get_argspec(obj, remove_self: bool = True) -> inspect.FullArgSpec:
@@ -180,24 +144,4 @@ def get_argspec(obj, remove_self: bool = True) -> inspect.FullArgSpec:
     #     varkw = [i for i in obj.parameters if i.kind == "variadic keyword"]
     #     kw_only = [i for i in obj.parameters if i.kind == "keyword-only"]
     #     spec = inspect.FullArgSpec(args, varargs, varkw, (), kw_only)
-    if inspect.isfunction(obj):
-        argspec = inspect.getfullargspec(obj)
-    elif inspect.ismethod(obj):
-        argspec = inspect.getfullargspec(obj)
-        if remove_self:
-            del argspec.args[0]
-    elif inspect.isclass(obj):
-        if obj.__init__ is object.__init__:  # to avoid an error
-            argspec = inspect.getfullargspec(lambda self: None)
-        else:
-            argspec = inspect.getfullargspec(obj.__init__)
-        if remove_self:
-            del argspec.args[0]
-    elif callable(obj):
-        argspec = inspect.getfullargspec(obj.__call__)
-        if remove_self:
-            del argspec.args[0]
-    else:
-        msg = f"{obj} is not callable"
-        raise TypeError(msg)
-    return argspec
+    return inspectfilters.get_argspec(obj, remove_self)

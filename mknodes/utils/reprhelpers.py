@@ -7,10 +7,10 @@ import os
 import reprlib
 from typing import Any
 
-from jinjarope import textfilters
+from jinjarope import inspectfilters, textfilters
 
 from mknodes.data import datatypes
-from mknodes.utils import inspecthelpers, log
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -179,7 +179,7 @@ def get_nondefault_repr(
     """
     args = []
     kwargs = {}
-    signature = inspecthelpers.get_signature(instance.__init__)
+    signature = inspectfilters.get_signature(instance.__init__)
     for arg, v in signature.parameters.items():
         if v.kind in [v.VAR_POSITIONAL, v.VAR_KEYWORD]:
             continue

@@ -7,7 +7,7 @@ import pathlib
 
 from typing import TYPE_CHECKING
 
-from jinjarope import textfilters
+from jinjarope import inspectfilters, textfilters
 
 from mknodes.info import tomlfile
 from mknodes.utils import resources
@@ -27,9 +27,7 @@ def get_nodefile(klass: type) -> NodeFile | None:
 
 
 def find_file(klass: type) -> pathlib.Path | None:
-    from mknodes.utils import inspecthelpers
-
-    path = inspecthelpers.get_file(klass)  # type: ignore[arg-type]
+    path = inspectfilters.get_file(klass)  # type: ignore[arg-type]
     assert path
     # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
     if (file := path.parent / f"{klass.__name__}.toml").exists():

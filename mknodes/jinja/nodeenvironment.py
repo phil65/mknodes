@@ -8,7 +8,9 @@ from typing import TYPE_CHECKING, Any
 import jinja2
 import jinjarope
 
-from mknodes.utils import inspecthelpers, log
+from jinjarope import inspectfilters
+
+from mknodes.utils import log
 
 
 if TYPE_CHECKING:
@@ -74,7 +76,7 @@ class NodeEnvironment(jinjarope.Environment):
         to auto-set the node parent (and that way the context) and to collect
         the rendered nodes.
         """
-        path = inspecthelpers.get_file(self.node.__class__)  # type: ignore[arg-type]
+        path = inspectfilters.get_file(self.node.__class__)  # type: ignore[arg-type]
         class_path = pathlib.Path(path or "").parent.as_posix()
 
         loaders = [

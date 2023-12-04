@@ -5,6 +5,7 @@ import os
 import textwrap
 import types
 
+from jinjarope import textfilters
 from typing import TYPE_CHECKING, Any, Self
 
 import upath
@@ -180,13 +181,12 @@ class MkCode(mkcontainer.MkContainer):
                               this method.
             kwargs: Keyword arguments passed to MkCode ctor
         """
-        if extract_body and callable(obj):
-            code = inspecthelpers.get_function_body(obj)
-        elif extract_body:
-            msg = "Can only extract body from Functions, Methods and classes"
-            raise TypeError(msg)
-        else:
-            code = inspecthelpers.get_source(obj)
+        code = inspecthelpers.get_source(obj)
+        if extract_body:
+            if not callable(obj):
+                msg = "Can only extract body from Functions, Methods and classes"
+                raise TypeError(msg)
+            code = textfilters.extract_body(code)
         code = textwrap.dedent(code) if dedent else code
         code_title = title if title is not None else classhelpers.get_code_name(obj)
         hl_lines = None
