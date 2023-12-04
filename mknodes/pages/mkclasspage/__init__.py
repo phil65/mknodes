@@ -4,9 +4,11 @@ import pathlib
 
 from typing import Any
 
+from jinjarope import inspectfilters
+
 from mknodes.info import grifferegistry
 from mknodes.pages import mktemplatepage
-from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
+from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
 logger = log.get_logger(__name__)
@@ -49,7 +51,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self) -> dict[str, Any]:
         # right now, we inject the cls and the griffe Class into jinja namespace.
-        subclasses = classhelpers.list_subclasses(self.klass, recursive=False)
+        subclasses = inspectfilters.list_subclasses(self.klass, recursive=False)
         griffe_obj = grifferegistry.registry.get_class(self.klass)
         variables = dict(cls=self.klass, subclasses=subclasses, griffe_obj=griffe_obj)
         p = inspecthelpers.get_file(self.klass)

@@ -6,6 +6,7 @@ import functools
 
 import jinjarope
 import tomli_w
+from jinjarope import inspectfilters
 
 from mknodes import paths
 from mknodes.utils import classhelpers, inspecthelpers, yamlhelpers
@@ -34,4 +35,4 @@ def setup_env(env: jinjarope.Environment):
 def get_nodes():
     import mknodes as mk
 
-    return {k.__name__: k for k in classhelpers.list_subclasses(mk.MkNode)}
+    return {k.__name__: k for k in inspectfilters.list_subclasses(mk.MkNode)}

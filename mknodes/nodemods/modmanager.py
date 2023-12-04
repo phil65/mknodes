@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from jinjarope import inspectfilters
+
 from mknodes.nodemods import mod, parallax, scrollreveal
-from mknodes.utils import classhelpers, log, reprhelpers, resources
+from mknodes.utils import log, reprhelpers, resources
 
 
 logger = log.get_logger(__name__)
@@ -57,7 +59,7 @@ class ModManager:
             mod_name: Class name of the modification to add
             kwargs: Keyword arguments passed to the mod ctor
         """
-        for kls in classhelpers.iter_subclasses(mod.Mod):
+        for kls in inspectfilters.list_subclasses(mod.Mod):
             if kls.__name__ == "mod_name":
                 instance = kls(**kwargs)
                 self.mods.append(instance)
