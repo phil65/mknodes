@@ -119,7 +119,6 @@ dependencies = [
     "jinja2",
     "jinjarope",
     "griffe",
-    "deepmerge",
     "coloraide",
     "pyconify",
     "natsort",

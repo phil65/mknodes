@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import os
 
+from jinjarope import serializefilters
 import upath
 
 from mknodes.info import configfile
-from mknodes.utils import log, mergehelpers, yamlhelpers
+from mknodes.utils import log, yamlhelpers
 
 
 logger = log.get_logger(__name__)
@@ -50,7 +51,7 @@ class YamlFile(configfile.ConfigFile):
             logger.debug("Loading inherited configuration file: %s", parent_cfg)
             text = parent_cfg.read_text()
             parent = yamlhelpers.load_yaml(text, mode)
-            self._data = mergehelpers.merge_dicts(parent, self._data)
+            self._data = serializefilters.merge(parent, self._data)
 
     @classmethod
     def _dump(cls, data: dict) -> str:

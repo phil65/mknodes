@@ -6,7 +6,7 @@ import dataclasses
 
 from typing import Any, ClassVar, Literal
 
-from jinjarope import iterfilters, utils
+from jinjarope import iterfilters, serializefilters, utils
 
 from mknodes.utils import helpers, mergehelpers, reprhelpers
 
@@ -319,7 +319,7 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         if other_exts := other["markdown_extensions"]:
             exts = [self.markdown_extensions, other_exts]
             merged = mergehelpers.merge_extensions(exts)
-            self.markdown_extensions = mergehelpers.merge_dicts(*merged)
+            self.markdown_extensions = serializefilters.merge(*merged)
         self.css = iterfilters.reduce_list(self.css + other["css"])
         self.plugins = iterfilters.reduce_list(self.plugins + other["plugins"])
         self.js = iterfilters.reduce_list(self.js + other["js"])
