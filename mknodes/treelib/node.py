@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable, Iterator, Sequence
 import copy
-import types
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 from mknodes.data import treestyles
 from mknodes.utils import log, reprhelpers
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Iterator, Sequence
+    import types
 
 
 logger = log.get_logger(__name__)

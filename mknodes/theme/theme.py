@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import MutableMapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import jinjarope
 
@@ -9,6 +8,10 @@ from mknodes.data import admonition, datatypes
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import color, icons, log, reprhelpers, resources
+
+
+if TYPE_CHECKING:
+    from collections.abc import MutableMapping
 
 
 logger = log.get_logger(__name__)

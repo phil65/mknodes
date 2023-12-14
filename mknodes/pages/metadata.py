@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import re
-from typing import Literal, Self
+from typing import TYPE_CHECKING, Literal, Self
 
-from mknodes.data import datatypes
 from mknodes.utils import yamlhelpers
+
+
+if TYPE_CHECKING:
+    from mknodes.data import datatypes
 
 
 HEADER = "---\n{options}---\n"

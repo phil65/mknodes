@@ -2,12 +2,15 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import Iterator, MutableMapping
-import os
-from typing import Any, Literal, Self, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, Self, TypeVar
 
 from jinjarope import serializefilters
 
 from mknodes.utils import pathhelpers, reprhelpers
+
+
+if TYPE_CHECKING:
+    import os
 
 
 MarkupTypeStr = Literal["yaml", "json", "toml"]

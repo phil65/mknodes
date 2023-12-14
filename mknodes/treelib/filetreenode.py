@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-import pathlib
-from typing import Any, Self, cast
+from typing import TYPE_CHECKING, Any, Self, cast
 
-from mknodes.data import treestyles
 from mknodes.treelib import node
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    import pathlib
+
+    from mknodes.data import treestyles
 
 
 logger = log.get_logger(__name__)

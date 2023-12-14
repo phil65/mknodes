@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-import types
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mknodes.navs import mknav
 from mknodes.pages import mkclasspage, mkmodulepage
 from mknodes.utils import classhelpers, log, reprhelpers
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    import types
 
 
 logger = log.get_logger(__name__)

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import inspect
-import os
 import textwrap
 import types
 
@@ -16,6 +15,7 @@ from mknodes.utils import classhelpers, inspecthelpers, log, resources
 
 
 if TYPE_CHECKING:
+    import os
     import mknodes as mk
 
 logger = log.get_logger(__name__)

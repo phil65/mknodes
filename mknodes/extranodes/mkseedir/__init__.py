@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import os
 import upath
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
 from mknodes.basenodes import mkcode
 from mknodes.utils import helpers, log, resources
+
+if TYPE_CHECKING:
+    import os
 
 
 logger = log.get_logger(__name__)

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 
 from mknodes.templatenodes import mktemplatetable
 from mknodes.info import packageinfo, packageregistry
 from mknodes.utils import log
-from mknodes.utils.packagehelpers import Dependency
+
+if TYPE_CHECKING:
+    from mknodes.utils.packagehelpers import Dependency
 
 
 logger = log.get_logger(__name__)

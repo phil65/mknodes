@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import dataclasses
-import datetime
 import functools
 import os
+from typing import TYPE_CHECKING
 
 import github
 from github import Commit
 
 from mknodes.info import contexts
 from mknodes.utils import downloadhelpers, log, pathhelpers, reprhelpers
+
+
+if TYPE_CHECKING:
+    import datetime
 
 
 TOKEN = os.environ.get("GITHUB_TOKEN")

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.templatenodes import mktemplate
-from mknodes.utils import superdict
+
+if TYPE_CHECKING:
+    from mknodes.utils import superdict
 
 
 class MkConfigSetting(mktemplate.MkTemplate):

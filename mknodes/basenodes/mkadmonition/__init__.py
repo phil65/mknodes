@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import textwrap
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
 from mknodes.basenodes import mkcontainer, mknode
-from mknodes.data import datatypes
 from mknodes.utils import log, resources
+
+if TYPE_CHECKING:
+    from mknodes.data import datatypes
 
 
 logger = log.get_logger(__name__)

@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import dataclasses
+from typing import TYPE_CHECKING
 
-from mknodes.info.cli import param
 from mknodes.utils import reprhelpers
+
+
+if TYPE_CHECKING:
+    from mknodes.info.cli import param
 
 
 @dataclasses.dataclass(frozen=True)

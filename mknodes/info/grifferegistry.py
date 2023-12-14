@@ -3,13 +3,17 @@ from __future__ import annotations
 from abc import ABCMeta
 from collections.abc import MutableMapping
 import types
+from typing import TYPE_CHECKING
 
-import griffe
-from griffe.dataclasses import Alias
 from griffe.enumerations import Parser
 from griffe.loader import GriffeLoader
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    import griffe
+    from griffe.dataclasses import Alias
 
 
 logger = log.get_logger(__name__)

@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import itertools
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
 from jinjarope import inspectfilters
-import griffe
 
 from mknodes.basenodes import mkdiagram
 from mknodes.utils import classhelpers, connector, helpers, reprhelpers
+
+if TYPE_CHECKING:
+    import griffe
 
 
 DiagramModeStr = Literal["baseclasses", "subclasses", "mro"]

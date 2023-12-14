@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import os
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log, resources
+
+if TYPE_CHECKING:
+    import os
 
 
 logger = log.get_logger(__name__)

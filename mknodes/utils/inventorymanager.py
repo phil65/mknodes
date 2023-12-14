@@ -8,11 +8,14 @@ import os
 import pathlib
 import posixpath
 import re
-import types
-from typing import BinaryIO, Self
+from typing import TYPE_CHECKING, BinaryIO, Self
 import zlib
 
 from mknodes.utils import downloadhelpers, helpers, log
+
+
+if TYPE_CHECKING:
+    import types
 
 
 logger = log.get_logger(__name__)

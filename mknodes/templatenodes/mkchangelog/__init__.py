@@ -3,14 +3,16 @@ from __future__ import annotations
 import contextlib
 import functools
 import io
-import os
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
 from git_changelog import cli
 
 from mknodes.basenodes import mktext
 from mknodes.utils import helpers, log, resources
+
+if TYPE_CHECKING:
+    import os
 
 
 logger = log.get_logger(__name__)

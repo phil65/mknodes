@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-import types
 
 import pathlib
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.info import grifferegistry
 from mknodes.pages import mktemplatepage
 from mknodes.utils import classhelpers, inspecthelpers, log, reprhelpers
+
+if TYPE_CHECKING:
+    import types
 
 
 logger = log.get_logger(__name__)

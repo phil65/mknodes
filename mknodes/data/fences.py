@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import dataclasses
+from typing import TYPE_CHECKING
 
 from pymdownx import superfences
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclasses.dataclass(frozen=True)

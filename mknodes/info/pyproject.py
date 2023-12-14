@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import collections
 import functools
-import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import upath
 
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.info import tomlfile
 from mknodes.utils import pathhelpers, superdict
+
+
+if TYPE_CHECKING:
+    import os
 
 
 class PyProject(tomlfile.TomlFile):

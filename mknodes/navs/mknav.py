@@ -1,20 +1,21 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 import inspect
 import pathlib
-import types
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.data.datatypes import PageStatusStr
 from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata as metadata_, mkpage, pagetemplate
 from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+    import types
+
     import mknodes as mk
+    from mknodes.data.datatypes import PageStatusStr
 
 
 logger = log.get_logger(__name__)

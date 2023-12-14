@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mklink
@@ -10,6 +9,8 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 logger = log.get_logger(__name__)

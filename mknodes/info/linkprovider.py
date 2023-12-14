@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from importlib import metadata
-import os
 import sys
 import types
 from typing import TYPE_CHECKING
@@ -19,6 +17,9 @@ logger = log.get_logger(__name__)
 
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+    import os
+
     import mknodes as mk
 
     LinkableType = str | mk.MkPage | mk.MkNav | mk.MkHeader | types.ModuleType | type

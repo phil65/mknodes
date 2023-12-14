@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-import os
+from typing import TYPE_CHECKING
 
 from jinjarope import serializefilters
 import upath
 
 from mknodes.info import configfile
 from mknodes.utils import log, yamlhelpers
+
+
+if TYPE_CHECKING:
+    import os
 
 
 logger = log.get_logger(__name__)

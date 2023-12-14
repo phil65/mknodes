@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Generator
 import functools
-import os
-import pathlib
 from typing import TYPE_CHECKING
 
 from jinjarope import inspectfilters, textfilters
@@ -13,6 +10,10 @@ from mknodes.utils import resources
 
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
+    import os
+    import pathlib
+
     import mknodes as mk
 
 

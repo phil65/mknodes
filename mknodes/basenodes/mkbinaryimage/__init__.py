@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-import os
 import upath
 
-from typing import Any, Literal, Self
+from typing import Any, Literal, Self, TYPE_CHECKING
 
 from jinjarope import textfilters
 
 from mknodes.basenodes import mkimage
-from mknodes.info import linkprovider
 from mknodes.utils import icons, log
+
+if TYPE_CHECKING:
+    from mknodes.info import linkprovider
+    import os
 
 
 logger = log.get_logger(__name__)

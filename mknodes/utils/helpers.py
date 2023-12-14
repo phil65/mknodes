@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
 import itertools
-from typing import ParamSpec, TypeVar
+from typing import TYPE_CHECKING, ParamSpec, TypeVar
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
 
 
 logger = log.get_logger(__name__)

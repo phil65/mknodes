@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkblock
-from mknodes.data import datatypes
 from mknodes.utils import log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
+    from mknodes.data import datatypes
     import mknodes as mk
 
 

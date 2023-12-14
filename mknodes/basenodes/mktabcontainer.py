@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktabs, mktext
 from mknodes.utils import log, reprhelpers
+
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 logger = log.get_logger(__name__)

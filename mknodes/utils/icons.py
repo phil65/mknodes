@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 import functools
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 import xml.etree.ElementTree as etree
 
-import markdown
-
 from mknodes import paths
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    import markdown
 
 
 PYCONIFY_TO_PREFIXES = {

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
@@ -8,6 +7,7 @@ from mknodes.utils import classhelpers, log, resources
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     import mknodes as mk
 
 

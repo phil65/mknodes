@@ -1,18 +1,22 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 import inspect
-import os
 import pathlib
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 from urllib import parse
 
 from jinjarope import textfilters
 
 from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
-from mknodes.data import datatypes
 from mknodes.pages import metadata, pagetemplate
 from mknodes.utils import inspecthelpers, log, pathhelpers, reprhelpers
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    import os
+
+    from mknodes.data import datatypes
 
 
 logger = log.get_logger(__name__)

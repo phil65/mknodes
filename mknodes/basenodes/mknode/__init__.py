@@ -6,7 +6,6 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import processors
-from mknodes.data import datatypes
 from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
@@ -15,6 +14,7 @@ from mknodes.utils import classproperty, icons, log, mdconverter, resources
 
 
 if TYPE_CHECKING:
+    from mknodes.data import datatypes
     import mknodes as mk
 
 

@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 import collections
-from collections.abc import Mapping
 import dataclasses
 import functools
 import importlib
 from importlib import metadata
-import types
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
 import pip._internal as pip
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+    import types
 
 
 logger = log.get_logger(__name__)

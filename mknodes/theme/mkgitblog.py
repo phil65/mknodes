@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 import dataclasses
-import datetime
 import json
-import os
+from typing import TYPE_CHECKING
 
 import dateutil.parser
 
 from mknodes.theme import mkblog
 from mknodes.utils import downloadhelpers
+
+
+if TYPE_CHECKING:
+    import datetime
+    import os
 
 
 @dataclasses.dataclass(frozen=True)

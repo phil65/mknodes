@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
 import dataclasses
 import os
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
 
 
 MD_ESCAPE_CHARS = tuple("!#()*+-[\\]_`{}")

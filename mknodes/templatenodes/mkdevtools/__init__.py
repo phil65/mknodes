@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.templatenodes import mktemplate
-from mknodes.data import tools
 from mknodes.utils import log
+
+if TYPE_CHECKING:
+    from mknodes.data import tools
 
 
 logger = log.get_logger(__name__)

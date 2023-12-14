@@ -3,12 +3,9 @@ from __future__ import annotations
 import abc
 from collections.abc import Mapping, MutableMapping
 import dataclasses
-import datetime
 import pathlib
-import types
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from griffe.dataclasses import Alias, Module
 import jinjarope
 
 import mknodes as mk
@@ -21,8 +18,16 @@ from mknodes.info import (
     packageregistry,
     pyproject,
 )
-from mknodes.info.cli import commandinfo
 from mknodes.utils import log, superdict
+
+
+if TYPE_CHECKING:
+    import datetime
+    import types
+
+    from griffe.dataclasses import Alias, Module
+
+    from mknodes.info.cli import commandinfo
 
 
 logger = log.get_logger(__name__)

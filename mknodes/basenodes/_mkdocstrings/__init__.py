@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-import os
 import types
 
 import griffe
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
 from mknodes.basenodes import mknode
 from mknodes.utils import classhelpers, log, reprhelpers, resources
+
+if TYPE_CHECKING:
+    import os
 
 
 logger = log.get_logger(__name__)

@@ -1,16 +1,18 @@
 from __future__ import annotations
 
-import os
 import textwrap
 
-from typing import Any, Self
+from typing import Any, Self, TYPE_CHECKING
 
 from jinjarope import textfilters
 import upath
 
 from mknodes.basenodes import mknode
-from mknodes.data import datatypes
 from mknodes.utils import classhelpers, inspecthelpers, log, richhelpers
+
+if TYPE_CHECKING:
+    from mknodes.data import datatypes
+    import os
 
 
 logger = log.get_logger(__name__)

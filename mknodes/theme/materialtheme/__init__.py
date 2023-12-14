@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from collections.abc import MutableMapping
 import dataclasses
 import functools
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
-from mknodes.data import datatypes
 from mknodes.theme import colortheme, theme
 from mknodes.theme.materialtheme import palette
 from mknodes.utils import color as col, icons, log, reprhelpers
+
+if TYPE_CHECKING:
+    from mknodes.data import datatypes
+    from collections.abc import MutableMapping
 
 
 logger = log.get_logger(__name__)

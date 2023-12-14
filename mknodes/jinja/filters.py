@@ -6,7 +6,6 @@ import jinja2
 from jinja2 import runtime
 from markupsafe import Markup
 
-from mknodes.jinja import nodeenvironment
 from mknodes.utils import pathhelpers
 
 
@@ -16,6 +15,7 @@ if TYPE_CHECKING:
     import griffe
 
     import mknodes as mk
+    from mknodes.jinja import nodeenvironment
 
 
 @jinja2.pass_environment

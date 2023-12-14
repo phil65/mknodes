@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-import markdown
+from typing import TYPE_CHECKING
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    import markdown
 
 
 logger = log.get_logger(__name__)

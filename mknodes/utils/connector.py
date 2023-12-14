@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Hashable
 import textwrap
+from typing import TYPE_CHECKING
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Hashable
 
 
 logger = log.get_logger(__name__)

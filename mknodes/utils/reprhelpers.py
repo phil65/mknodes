@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import os
 import reprlib
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jinjarope import inspectfilters, textfilters, utils
 
-from mknodes.data import datatypes
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from mknodes.data import datatypes
 
 
 logger = log.get_logger(__name__)

@@ -1,16 +1,20 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 import functools
 import os
 import pathlib
 import posixpath
 import shutil
+from typing import TYPE_CHECKING
 
 import upath
 from upath import core, registry
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 logger = log.get_logger(__name__)

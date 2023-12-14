@@ -3,13 +3,17 @@ from __future__ import annotations
 import dataclasses
 import functools
 import inspect
-import pathlib
-import types
+from typing import TYPE_CHECKING
 
 import griffe
 from jinjarope import inspectfilters
 
-from mknodes.data import datatypes
+
+if TYPE_CHECKING:
+    import pathlib
+    import types
+
+    from mknodes.data import datatypes
 
 
 def iter_code_sections(code_string: str, start_line: int | None = None):

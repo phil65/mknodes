@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Iterator
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 logger = log.get_logger(__name__)

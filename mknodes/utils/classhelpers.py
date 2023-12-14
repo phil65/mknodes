@@ -6,7 +6,6 @@ import functools
 import importlib
 import importlib.util
 import inspect
-import os
 import pathlib
 import sys
 import types
@@ -15,6 +14,10 @@ import typing
 import griffe
 
 from mknodes.utils import log
+
+
+if typing.TYPE_CHECKING:
+    import os
 
 
 T = typing.TypeVar("T", bound=type)

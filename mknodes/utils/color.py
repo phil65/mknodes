@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import coloraide
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 RGB_TUPLE_LEN = 3

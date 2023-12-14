@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mknode
-from mknodes.data import datatypes
 from mknodes.utils import log, resources, xmlhelpers
+
+if TYPE_CHECKING:
+    from mknodes.data import datatypes
 
 
 logger = log.get_logger(__name__)

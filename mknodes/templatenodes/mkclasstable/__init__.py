@@ -1,11 +1,14 @@
 from __future__ import annotations
-from collections.abc import Sequence
 
 import griffe
 
 from mknodes.info import grifferegistry
 from mknodes.templatenodes import mktemplatetable
 from mknodes.utils import classhelpers, log
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 logger = log.get_logger(__name__)
