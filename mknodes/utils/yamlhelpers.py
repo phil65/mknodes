@@ -5,7 +5,6 @@ import contextlib
 import json
 import os
 import pathlib
-
 from typing import Any, Literal
 
 import yaml
@@ -20,8 +19,8 @@ LoaderStr = Literal["unsafe", "full", "safe"]
 
 
 def _patch_dumper_to_not_order(dumper_cls):
-    def map_representer(dumper_cls_, data):
-        return dumper_cls_.represent_dict(data.items())
+    def map_representer(dumper: yaml.Dumper, data: dict) -> yaml.MappingNode:
+        return dumper.represent_dict(data.items())
 
     yaml.add_representer(dict, map_representer, Dumper=dumper_cls)
     yaml.add_representer(collections.OrderedDict, map_representer, Dumper=dumper_cls)

@@ -3,49 +3,12 @@ from __future__ import annotations
 import functools
 import os
 
-from typing import TYPE_CHECKING
-
 import upath
 
 from mknodes.utils import log
 
 
-if TYPE_CHECKING:
-    from rich.tree import Tree
-
-
 logger = log.get_logger(__name__)
-
-
-def _walk_directory(directory: os.PathLike | str, tree: Tree) -> None:
-    """Recursively build a Tree with directory contents."""
-    # Sort dirs first then by filename
-    from rich.filesize import decimal
-    from rich.markup import escape
-    from rich.text import Text
-
-    paths = sorted(
-        upath.UPath(directory).iterdir(),
-        key=lambda path: (path.is_file(), path.name.lower()),
-    )
-    for path in paths:
-        # Remove hidden files
-        if path.name.startswith("."):
-            continue
-        if path.is_dir():
-            style = "dim" if path.name.startswith("__") else ""
-            name = escape(path.name)
-            label = f"[bold magenta]:open_file_folder: [link file://{path}]{name}"
-            branch = tree.add(label, style=style, guide_style=style)
-            _walk_directory(path, branch)
-        else:
-            text_filename = Text(path.name, "green")
-            text_filename.highlight_regex(r"\..*$", "bold red")
-            text_filename.stylize(f"link file://{path}")
-            file_size = path.stat().st_size
-            text_filename.append(f" ({decimal(file_size)})", "blue")
-            icon = "🐍 " if path.suffix == ".py" else "📄 "
-            tree.add(Text(icon) + text_filename)
 
 
 @functools.cache
@@ -56,6 +19,36 @@ def get_folder_tree_svg(
 ) -> str:
     from rich.console import Console
     from rich.tree import Tree
+
+    def _walk_directory(directory: os.PathLike | str, tree: Tree) -> None:
+        """Recursively build a Tree with directory contents."""
+        # Sort dirs first then by filename
+        from rich.filesize import decimal
+        from rich.markup import escape
+        from rich.text import Text
+
+        paths = sorted(
+            upath.UPath(directory).iterdir(),
+            key=lambda path: (path.is_file(), path.name.lower()),
+        )
+        for path in paths:
+            # Remove hidden files
+            if path.name.startswith("."):
+                continue
+            if path.is_dir():
+                style = "dim" if path.name.startswith("__") else ""
+                name = escape(path.name)
+                label = f"[bold magenta]:open_file_folder: [link file://{path}]{name}"
+                branch = tree.add(label, style=style, guide_style=style)
+                _walk_directory(path, branch)
+            else:
+                text_filename = Text(path.name, "green")
+                text_filename.highlight_regex(r"\..*$", "bold red")
+                text_filename.stylize(f"link file://{path}")
+                file_size = path.stat().st_size
+                text_filename.append(f" ({decimal(file_size)})", "blue")
+                icon = "🐍 " if path.suffix == ".py" else "📄 "
+                tree.add(Text(icon) + text_filename)
 
     tree = Tree(
         f":open_file_folder: [link file://{directory}]{directory}",
@@ -92,7 +85,5 @@ def get_svg_for_code(
 
 
 if __name__ == "__main__":
-    import rich
-
     strings = get_folder_tree_svg(".")
-    rich.inspect(strings)
+    print(strings)

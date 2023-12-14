@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-import dataclasses
-
-from operator import attrgetter
 import os
 import reprlib
-
 from typing import Any
 
-from jinjarope import inspectfilters, textfilters
+from jinjarope import inspectfilters, textfilters, utils
 
 from mknodes.data import datatypes
 from mknodes.utils import log
@@ -126,21 +122,7 @@ def get_dataclass_repr(
         instance: dataclass instance
         char_width: If set, then repr will be formatted with black to given char width
     """
-    vals = []
-    for f in dataclasses.fields(instance):
-        no_default = isinstance(f.default, dataclasses._MISSING_TYPE)
-        no_default_factory = isinstance(f.default_factory, dataclasses._MISSING_TYPE)
-        if not no_default:
-            val = attrgetter(f.name)(instance)
-            if val != f.default:
-                vals.append((f.name, val))
-        if not no_default_factory:
-            val = attrgetter(f.name)(instance)
-            if val != f.default_factory():
-                vals.append((f.name, val))
-        if no_default and no_default_factory:
-            val = attrgetter(f.name)(instance)
-            vals.append((f.name, val))
+    vals = utils.get_dataclass_nondefault_values(instance)
     nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in vals)
     text = f"{instance.__class__.__name__}({nodef_f_repr})"
     if char_width:
