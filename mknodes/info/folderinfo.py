@@ -8,7 +8,6 @@ import os
 import pathlib
 import re
 import types
-
 from typing import TYPE_CHECKING
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
@@ -34,7 +33,6 @@ from mknodes.utils import (
 
 if TYPE_CHECKING:
     import griffe
-
     from griffe.dataclasses import Alias
 
     from mknodes.info import packageinfo

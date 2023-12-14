@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 import itertools
-
 from typing import ParamSpec, TypeVar
 
 from mknodes.utils import log

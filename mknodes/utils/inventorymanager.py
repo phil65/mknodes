@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import abc
-
 from collections.abc import Collection, Mapping
 import io
 import itertools
@@ -10,7 +9,6 @@ import pathlib
 import posixpath
 import re
 import types
-
 from typing import BinaryIO, Self
 import zlib
 

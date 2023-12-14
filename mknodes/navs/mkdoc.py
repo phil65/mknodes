@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 import types
-
 from typing import Any
 
 from mknodes.navs import mknav

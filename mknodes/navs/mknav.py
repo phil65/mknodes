@@ -4,7 +4,6 @@ from collections.abc import Sequence
 import inspect
 import pathlib
 import types
-
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode

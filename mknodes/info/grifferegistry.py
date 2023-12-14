@@ -5,7 +5,6 @@ from collections.abc import MutableMapping
 import types
 
 import griffe
-
 from griffe.dataclasses import Alias
 from griffe.enumerations import Parser
 from griffe.loader import GriffeLoader

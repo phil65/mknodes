@@ -1,7 +1,6 @@
 import typing
 
 import mknodes as mk
-
 from mknodes.data import datatypes
 from mknodes.manual.a_quick_tour import a_quick_tour
 

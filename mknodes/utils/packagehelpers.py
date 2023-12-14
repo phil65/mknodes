@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 import collections
-
 from collections.abc import Mapping
 import dataclasses
 import functools
 import importlib
-
 from importlib import metadata
 import types
-
 from typing import Any
 
 from packaging.markers import Marker

@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import jinja2
-
 from jinja2 import runtime
 from markupsafe import Markup
 

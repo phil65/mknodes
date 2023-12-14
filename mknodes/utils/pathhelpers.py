@@ -8,7 +8,6 @@ import posixpath
 import shutil
 
 import upath
-
 from upath import core, registry
 
 from mknodes.utils import log

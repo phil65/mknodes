@@ -2,12 +2,10 @@ from __future__ import annotations
 
 import functools
 import pathlib
-
 from typing import TYPE_CHECKING, Any
 
 import jinja2
 import jinjarope
-
 from jinjarope import inspectfilters
 
 from mknodes.utils import log

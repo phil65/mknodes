@@ -4,7 +4,6 @@ import dataclasses
 import functools
 import json
 import pathlib
-
 from typing import Any, Self
 
 import jinjarope

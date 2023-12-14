@@ -4,7 +4,6 @@ from collections.abc import Callable
 import inspect
 import os
 import pathlib
-
 from typing import Any, Self
 from urllib import parse
 

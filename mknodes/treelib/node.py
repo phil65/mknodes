@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable, Iterator, Sequence
 import copy
 import types
-
 from typing import Self
 
 from mknodes.data import treestyles

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
 import dataclasses
-
 from typing import Any, TypedDict
 
 

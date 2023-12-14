@@ -1,20 +1,17 @@
 from __future__ import annotations
 
 import abc
-
 from collections.abc import Mapping, MutableMapping
 import dataclasses
 import datetime
 import pathlib
 import types
-
 from typing import Any
 
 from griffe.dataclasses import Alias, Module
 import jinjarope
 
 import mknodes as mk
-
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import (
     folderinfo,

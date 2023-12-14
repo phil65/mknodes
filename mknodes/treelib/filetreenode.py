@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import pathlib
-
 from typing import Any, Self, cast
 
 from mknodes.data import treestyles

@@ -4,7 +4,6 @@ from collections.abc import Generator
 import functools
 import os
 import pathlib
-
 from typing import TYPE_CHECKING
 
 from jinjarope import inspectfilters, textfilters

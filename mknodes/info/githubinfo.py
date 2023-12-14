@@ -6,7 +6,6 @@ import functools
 import os
 
 import github
-
 from github import Commit
 
 from mknodes.info import contexts

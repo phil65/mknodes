@@ -3,7 +3,6 @@ from __future__ import annotations
 import abc
 import collections.abc
 import dataclasses
-
 from typing import Any, ClassVar, Literal
 
 from jinjarope import iterfilters, serializefilters, utils

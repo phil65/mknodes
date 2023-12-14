@@ -7,7 +7,6 @@ import pathlib
 import types
 
 import griffe
-
 from jinjarope import inspectfilters
 
 from mknodes.data import datatypes

@@ -5,11 +5,9 @@ from importlib import metadata
 import os
 import sys
 import types
-
 from typing import TYPE_CHECKING
 
 import griffe
-
 from jinjarope import textfilters
 
 from mknodes import paths

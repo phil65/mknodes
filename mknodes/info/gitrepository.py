@@ -3,12 +3,10 @@ from __future__ import annotations
 import functools
 import os
 import tempfile
-
 from typing import Any, Self
 from urllib import parse
 
 import git
-
 from jinjarope import iterfilters
 
 from mknodes.info import contexts

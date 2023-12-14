@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import collections
-
 from collections.abc import Callable, ItemsView, KeysView, ValuesView
 from dataclasses import Field
 import types
-
 from types import MappingProxyType, SimpleNamespace
 from typing import Any, ClassVar, Literal, Protocol, runtime_checkable
 

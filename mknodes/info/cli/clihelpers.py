@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-
 from typing import TYPE_CHECKING
 
 from mknodes.info.cli import commandinfo, param
@@ -58,7 +57,6 @@ def get_cli_info(
         return info[command] if command else info
 
     import typer
-
     from typer.main import get_command
 
     cmd = get_command(instance) if isinstance(instance, typer.Typer) else instance

@@ -1,5 +1,4 @@
 import mknodes as mk
-
 from mknodes.manual import (
     dev_section,
     get_started_section,
