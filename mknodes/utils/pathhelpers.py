@@ -3,7 +3,6 @@ from __future__ import annotations
 import functools
 import os
 import pathlib
-import posixpath
 import shutil
 from typing import TYPE_CHECKING
 
@@ -138,14 +137,6 @@ def write_files(mapping: Mapping[str | os.PathLike, str | bytes]):
         write_file(v, k)
 
 
-# deprecated
-def find_file_in_folder_or_parent(
-    filename: str | pathlib.Path,
-    folder: os.PathLike | str = ".",
-) -> pathlib.Path | None:
-    return find_cfg_for_folder(filename, folder)
-
-
 def find_cfg_for_folder(
     filename: str | pathlib.Path,
     folder: os.PathLike | str = ".",
@@ -204,74 +195,5 @@ def fsspec_get(path: str) -> str:
         return file.read().decode()
 
 
-@functools.lru_cache
-def _get_norm_url(path: str) -> tuple[str, int]:
-    from urllib.parse import urlsplit
-
-    if not path:
-        path = "."
-    elif "\\" in path:
-        logger.warning(
-            "Path %r uses OS-specific separator '\\'. "
-            "That will be unsupported in a future release. Please change it to '/'.",
-            path,
-        )
-        path = path.replace("\\", "/")
-    # Allow links to be fully qualified URLs
-    parsed = urlsplit(path)
-    if parsed.scheme or parsed.netloc or path.startswith(("/", "#")):
-        return path, -1
-
-    # Relative path - preserve information about it
-    norm = posixpath.normpath(path) + "/"
-    relative_level = 0
-    while norm.startswith("../", relative_level * 3):
-        relative_level += 1
-    return path, relative_level
-
-
-def normalize_url(path: str, url: str | None = None, base: str = "") -> str:
-    """Return a URL relative to the given page or using the base."""
-    path, relative_level = _get_norm_url(path)
-    if relative_level == -1:
-        return path
-    if url is not None:
-        result = relative_url(url, path)
-        if relative_level > 0:
-            result = "../" * relative_level + result
-        return result
-
-    return posixpath.join(base, path)
-
-
-def relative_url(url_a: str, url_b: str) -> str:
-    """Compute the relative path from URL A to URL B.
-
-    Arguments:
-        url_a: URL A.
-        url_b: URL B.
-
-    Returns:
-        The relative URL to go from A to B.
-    """
-    parts_a = url_a.split("/")
-    if "#" in url_b:
-        url_b, anchor = url_b.split("#", 1)
-    else:
-        anchor = None
-    parts_b = url_b.split("/")
-
-    # remove common left parts
-    while parts_a and parts_b and parts_a[0] == parts_b[0]:
-        parts_a.pop(0)
-        parts_b.pop(0)
-
-    # go up as many times as remaining a parts' depth
-    levels = len(parts_a) - 1
-    parts_relative = [".."] * levels + parts_b
-    relative = "/".join(parts_relative)
-    return f"{relative}#{anchor}" if anchor else relative
-
-
 if __name__ == "__main__":
-    file = find_file_in_folder_or_parent("github://phil65:mknodes@main/docs/icons.jinja")
+    file = find_cfg_for_folder("github://phil65:mknodes@main/docs/icons.jinja")

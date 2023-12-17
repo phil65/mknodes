@@ -39,7 +39,12 @@ def patch_pyyaml_to_not_order_dicts():
 
 
 def yaml_include_constructor(loader: yaml.BaseLoader, node: yaml.Node) -> Any:
-    """Include file referenced with !include node."""
+    """Yaml constructor for Include files referenced with !include.
+
+    Arguments:
+        loader: The loader class
+        node: Yaml Node
+    """
     scalar = loader.construct_scalar(node)  # type: ignore[arg-type]
     folder = pathlib.Path(loader.name).parent
     fp = folder.joinpath(scalar).resolve()  # type: ignore[arg-type]
@@ -52,6 +57,14 @@ def yaml_include_constructor(loader: yaml.BaseLoader, node: yaml.Node) -> Any:
 
 
 def get_safe_loader(base_loader_cls: type):
+    """Return a "SafeLoader" based on given loader.
+
+    The new loader possesses additional dummy constructors for some commonly used tags.
+
+    Arguments:
+        base_loader_cls: The loader class to derive the new loader from
+    """
+
     class SafeLoader(base_loader_cls):
         """Safe Loader."""
 
@@ -82,12 +95,8 @@ def construct_env_tag(loader: yaml.Loader, node: yaml.Node) -> Any:
             # Env Vars are resolved as string values, ignoring (implicit) types.
             variables = [loader.construct_scalar(child) for child in child_nodes]
         case _:
-            raise yaml.constructor.ConstructorError(
-                None,
-                None,
-                f"expected a scalar or sequence node, but found {node.tag!r}",
-                node.start_mark,
-            )
+            msg = f"expected a scalar or sequence node, but found {node.tag!r}"
+            raise yaml.constructor.ConstructorError(None, None, msg, node.start_mark)
 
     for var in variables:
         if var in os.environ:

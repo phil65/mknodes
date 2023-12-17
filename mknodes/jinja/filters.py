@@ -4,9 +4,8 @@ from typing import TYPE_CHECKING
 
 import jinja2
 from jinja2 import runtime
+from jinjarope import htmlfilters
 from markupsafe import Markup
-
-from mknodes.utils import pathhelpers
 
 
 if TYPE_CHECKING:
@@ -119,7 +118,7 @@ def url(context: runtime.Context, value: str) -> str:
         value: The value to normalize
     """
     url = page.url if (page := context.get("page")) else None
-    return pathhelpers.normalize_url(str(value), url=url, base=context["base_url"])
+    return htmlfilters.normalize_url(str(value), url=url, base=context["base_url"])
 
 
 @jinja2.pass_context
