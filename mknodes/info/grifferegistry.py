@@ -5,8 +5,7 @@ from collections.abc import MutableMapping
 import types
 from typing import TYPE_CHECKING
 
-from griffe.enumerations import Parser
-from griffe.loader import GriffeLoader
+from griffe import GriffeLoader, Parser
 
 from mknodes.utils import log
 
