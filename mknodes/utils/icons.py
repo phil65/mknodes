@@ -70,9 +70,10 @@ def _get_collection_map(*prefixes: str) -> dict[str, list[str]]:
 def _get_pyconify_icon_index(*collections: str) -> dict[str, dict[str, str]]:
     """Return a icon index for the pymdownx emoji extension containing pyconify icons.
 
-    The dictionaries contain two key-value pairs:
-    "name" is the emoji identifier,
-    "path" is the pyconify key
+    The dictionaries contain three key-value pairs:
+    - "name": the emoji identifier
+    - "path": the pyconify key
+    - "set": the collection name
 
     Arguments:
         collections: Collections to fetch. If none given, fetch all

@@ -59,7 +59,7 @@ class BaseResolver:
 
         A resolver using the `name` attribute:
 
-        >>> r = Resolver('name')
+        >>> r = Resolver("name")
 
         Relative paths:
 
@@ -103,13 +103,13 @@ class BaseResolver:
 
         Case insensitive matching:
 
-        >>> r.get(top, '/TOP')
+        >>> r.get(top, "/TOP")
         Traceback (most recent call last):
             ...
         ResolverError: unknown root node '/TOP'. root is '/top'.
 
-        >>> r = Resolver('name', ignore_case=True)
-        >>> r.get(top, '/TOp')
+        >>> r = Resolver("name", ignore_case=True)
+        >>> r.get(top, "/TOp")
         Node('/top')
         """
         node, parts = self._start(root_node, path, self.__cmp)
@@ -150,7 +150,7 @@ class BaseResolver:
 
         A resolver using the `name` attribute:
 
-        >>> r = Resolver('name')
+        >>> r = Resolver("name")
 
         Relative paths:
 
