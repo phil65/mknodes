@@ -112,3 +112,4 @@ ENV/
 
 # OS files
 .DS_Store
+.aider*
