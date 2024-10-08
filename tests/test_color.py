@@ -6,13 +6,13 @@ from mknodes.utils.color import Color
 def test_color_init_with_str():
     color = Color("red")
     assert color.space() == "srgb"
-    assert color.alpha() == 1.0  # noqa: PLR2004
+    assert color.alpha() == 1.0
 
 
 def test_color_init_with_rgb_tuple():
     color = Color((255, 0, 0))
     assert color.space() == "srgb"
-    assert color.alpha() == 1.0  # noqa: PLR2004
+    assert color.alpha() == 1.0
 
 
 def test_color_init_with_rgba_tuple():

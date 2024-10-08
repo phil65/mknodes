@@ -22,7 +22,7 @@ class Param:
     """ the environment variable name for this parameter."""
     flag_value: bool = False
     """ Value used for this flag if enabled."""
-    help: str | None = None  # noqa: A003
+    help: str | None = None
     """A formatted help text for this parameter."""
     hidden: bool = False
     """Whether this parameter is hidden."""
@@ -44,7 +44,7 @@ class Param:
     """Whether the parameter is required."""
     secondary_opts: list[str] = dataclasses.field(default_factory=list)
     """Secondary options for this parameter."""
-    type: clicktypes.ParamType | None = None  # noqa: A003
+    type: clicktypes.ParamType | None = None
     """The type object of the parameter."""
     callback: Callable | None = None
     """A method to further process the value after type conversion."""

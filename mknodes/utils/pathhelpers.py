@@ -49,7 +49,6 @@ def fsspec_copy(
         target[k] = src[k]
 
 
-#
 def copy(
     source_path: str | os.PathLike,
     output_path: str | os.PathLike,

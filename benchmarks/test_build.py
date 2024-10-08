@@ -5,7 +5,7 @@ import pytest
 import mknodes as mk
 
 
-@pytest.mark.benchmark()
+@pytest.mark.benchmark
 def test_build_duration():
     from mknodes.manual import root
 

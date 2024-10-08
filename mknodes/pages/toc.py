@@ -36,7 +36,7 @@ class AnchorLink:
 
     title: str
     """The text of the item."""
-    id: str  # noqa: A003
+    id: str
     """The slug used as part of the URL."""
     level: int
     """The zero-based level of the item."""
