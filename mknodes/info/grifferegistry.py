@@ -12,7 +12,7 @@ from mknodes.utils import log
 
 if TYPE_CHECKING:
     import griffe
-    from griffe.dataclasses import Alias
+    from griffe import Alias
 
 
 logger = log.get_logger(__name__)

@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     import types
 
     import griffe
-    from griffe.dataclasses import Alias
+    from griffe import Alias
 
     from mknodes.info import packageinfo
 
