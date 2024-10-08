@@ -100,6 +100,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
             parser = Parser(docstring_style)
             loader = GriffeLoader(docstring_parser=parser)
             griffe_mod = loader.load(module_name)
+            assert isinstance(griffe_mod, griffe.Object)
             if self.expand_wildcards:
                 loader.expand_wildcards(griffe_mod, external=True)
             self._modules[module_name] = griffe_mod
