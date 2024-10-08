@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import functools
 from typing import TYPE_CHECKING, Any, Literal
-import xml.etree.ElementTree as etree
+import xml.etree.ElementTree as ET
 
 from mknodes import paths
 
@@ -160,8 +160,8 @@ def to_svg(
 
         add_attributes(options, attributes)
 
-        return etree.Element("img", attributes)
-    el = etree.Element("span", {"class": options.get("classes", index)})
+        return ET.Element("img", attributes)
+    el = ET.Element("span", {"class": options.get("classes", index)})
     svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]  # type: ignore[attr-defined]
     svg = get_icon_svg(svg_path)
     el.text = md.htmlStash.store(svg)
@@ -266,16 +266,16 @@ def get_emoji_slug(icon: str) -> str:
     return f":{get_pyconify_key(icon).replace(':', '-')}:"
 
 
-def get_icon_xml(icon: str) -> etree.Element:
+def get_icon_xml(icon: str) -> ET.Element:
     """Return a xmlElement for given MaterialIcon.
 
     Arguments:
         icon: Icon to fetch. If iconname is not explicit (aka does not contain "/"),
               then it will try to get the icon from material/ folder.
     """
-    etree.register_namespace("", "http://www.w3.org/2000/svg")
+    ET.register_namespace("", "http://www.w3.org/2000/svg")
     svg_text = get_icon_svg(icon)
-    return etree.fromstring(svg_text)
+    return ET.fromstring(svg_text)
 
 
 def write_icon_index():
