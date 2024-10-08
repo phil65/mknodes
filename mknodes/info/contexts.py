@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     import datetime
     import types
 
-    from griffe.dataclasses import Alias, Module
+    from griffe import Alias, Module
 
     from mknodes.info.cli import commandinfo
 
