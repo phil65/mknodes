@@ -103,7 +103,7 @@ def write_file(content: str | bytes, output_path: str | os.PathLike):
     output_p.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
     encoding = None if "b" in mode else "utf-8"
-    with output_p.open(mode=mode, encoding=encoding) as f:
+    with output_p.open(mode=mode, encoding=encoding) as f:  # type: ignore[call-overload]
         f.write(content)
 
 
@@ -119,7 +119,7 @@ def write_files(mapping: Mapping[str | os.PathLike, str | bytes]):
 
 def find_cfg_for_folder(
     filename: str | pathlib.Path,
-    folder: os.PathLike | str = ".",
+    folder: os.PathLike[str] | str = ".",
 ) -> pathlib.Path | None:
     """Search for a file with given name in folder and its parent folders.
 
@@ -139,7 +139,7 @@ def find_cfg_for_folder(
 
 
 @functools.cache
-def load_file_cached(path: str | os.PathLike) -> str:
+def load_file_cached(path: str | os.PathLike[str]) -> str:
     if "://" in str(path):
         return fsspec_get(str(path))
     return pathlib.Path(path).read_text(encoding="utf-8")
@@ -148,10 +148,10 @@ def load_file_cached(path: str | os.PathLike) -> str:
 def download_from_github(
     org: str,
     repo: str,
-    path: str | os.PathLike,
-    destination: str | os.PathLike,
-    username=None,
-    token=None,
+    path: str | os.PathLike[str],
+    destination: str | os.PathLike[str],
+    username: str | None = None,
+    token: str | None = None,
     recursive: bool = False,
 ):
     import fsspec

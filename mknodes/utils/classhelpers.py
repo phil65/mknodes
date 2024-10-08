@@ -176,7 +176,7 @@ def iter_classes(
     """
     mod = to_module(module)
     if not mod:
-        return []
+        return
     if recursive:
         # seen = _seen or set()
         for submod in get_submodules(mod):
