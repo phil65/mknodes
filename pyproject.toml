@@ -50,14 +50,14 @@ test = "pytest -vv"
 test-cov-xml = "pytest --cov-report=xml"
 test-cov-html = "pytest --cov-report=html"
 lint = [
-  "hatch run ruff --fix .",
-  "hatch run ruff format .",
-  "hatch run mypy mknodes/",
+    "hatch run ruff check --fix .",
+    "hatch run ruff format .",
+    "hatch run mypy mknodes/",
 ]
 lint-check = [
-  "hatch run ruff .",
-  "hatch run ruff format --check .",
-  "hatch run mypy mknodes/",
+    "hatch run ruff check .",
+    "hatch run ruff format --check .",
+    "hatch run mypy mknodes/",
 ]
 
 [build-system]
