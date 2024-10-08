@@ -64,7 +64,7 @@ class MkChangelog(mktext.MkText):
     """Node for a git-based changelog (created by git-changelog).
 
     !!! note
-        For building a changelog with Github Actions, the actions/checkout@v3
+        For building a changelog with Github Actions, the actions/checkout@v4
         action needs to have fetch-depth set to 0 (or some other value.)
     """
 
