@@ -74,7 +74,7 @@ def get_repr(
     parts = [list_repr(v) if isinstance(v, list) else my_repr(v) for v in args]
     kw_parts = []
     for k, v in kwargs.items():
-        if _filter_empty and (v is None or v == "" or v == {}):
+        if _filter_empty and (v is None or v in ("", {})):
             continue
         if _filter_false and v is False:
             continue

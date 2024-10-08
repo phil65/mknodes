@@ -4,7 +4,7 @@ import os
 import tomllib
 
 from typing import Any, Literal
-from xml.etree import ElementTree as Et
+from xml.etree import ElementTree as ET
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, pathhelpers, resources, xmlhelpers as xml
@@ -44,7 +44,7 @@ class MkTimelineItem(mknode.MkNode):
     def __init__(
         self,
         title: str = "",
-        content: str | mknode.MkNode | Et.Element = "",
+        content: str | mknode.MkNode | ET.Element = "",
         *,
         label: str = "",
         link: str = "",
@@ -97,7 +97,7 @@ class MkTimelineItem(mknode.MkNode):
         if self.label:
             xml.Div("date", text=self.label, parent=content_div)
         text = f"<p>\n{self.content.to_html()}\n</p>"
-        content_div.append(Et.fromstring(text))
+        content_div.append(ET.fromstring(text))
         if self.link:
             xml.A("bnt-more", href=self.link, text=self.button_text, parent=content_div)
         return root

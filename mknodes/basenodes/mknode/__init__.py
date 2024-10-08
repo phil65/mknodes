@@ -120,7 +120,7 @@ class MkNode(node.Node):
         return hash(self.to_markdown())
 
     def __eq__(self, other):
-        if not type(other) == type(self):
+        if not type(other) is type(self):
             return False
         dct_1 = self.__dict__.copy()
         dct_2 = other.__dict__.copy()

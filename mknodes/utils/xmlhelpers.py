@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
-from xml.etree import ElementTree as Et
+from xml.etree import ElementTree as ET
 
 from mknodes.utils import icons, log
 
@@ -9,13 +9,13 @@ from mknodes.utils import icons, log
 logger = log.get_logger(__name__)
 
 
-class HTMLElement(Et.Element):
+class HTMLElement(ET.Element):
     tag_name: str
 
     def __init__(
         self,
         klass: str | None = None,
-        parent: Et.Element | None = None,
+        parent: ET.Element | None = None,
         *,
         attrs: dict | None = None,
         markdown: bool = False,
@@ -46,8 +46,8 @@ class HTMLElement(Et.Element):
                     break
 
     def to_string(self, space: str = "  ", level: int = 0) -> str:
-        Et.indent(self, space=space, level=level)
-        return Et.tostring(self, encoding="unicode", method="html")
+        ET.indent(self, space=space, level=level)
+        return ET.tostring(self, encoding="unicode", method="html")
 
 
 class Div(HTMLElement):
@@ -57,7 +57,7 @@ class Div(HTMLElement):
         self,
         klass: str | None = None,
         text: str | None = None,
-        parent: Et.Element | None = None,
+        parent: ET.Element | None = None,
         **kwargs: Any,
     ):
         super().__init__(klass, parent, **kwargs)
@@ -69,7 +69,7 @@ class Header(HTMLElement):
         self,
         level: int,
         text: str,
-        parent: Et.Element | None = None,
+        parent: ET.Element | None = None,
         **kwargs: Any,
     ):
         self.tag_name = f"h{level}"
@@ -94,7 +94,7 @@ class Span(HTMLElement):
         self,
         klass: str | None = None,
         text: str | None = None,
-        parent: Et.Element | None = None,
+        parent: ET.Element | None = None,
         **kwargs: Any,
     ):
         super().__init__(klass, parent, **kwargs)
@@ -152,7 +152,7 @@ class A(HTMLElement):
         self,
         klass: str | None = None,
         text: str | None = None,
-        parent: Et.Element | None = None,
+        parent: ET.Element | None = None,
         **kwargs: Any,
     ):
         super().__init__(klass, parent, **kwargs)

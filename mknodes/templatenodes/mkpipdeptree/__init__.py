@@ -6,7 +6,7 @@ import types
 from typing import Any, Literal
 
 from mknodes.basenodes import mkdiagram
-from mknodes.utils import helpers, log, packagehelpers, resources
+from mknodes.utils import helpers, log, resources
 
 
 logger = log.get_logger(__name__)
