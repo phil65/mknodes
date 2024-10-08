@@ -3,22 +3,16 @@ from __future__ import annotations
 from abc import ABCMeta
 from collections.abc import MutableMapping
 import types
-from typing import TYPE_CHECKING
 
-from griffe import GriffeLoader, Parser
+import griffe
 
 from mknodes.utils import log
-
-
-if TYPE_CHECKING:
-    import griffe
-    from griffe import Alias
 
 
 logger = log.get_logger(__name__)
 
 
-def get_module(module: str | types.ModuleType) -> griffe.Module | Alias:
+def get_module(module: str | types.ModuleType) -> griffe.Module | griffe.Alias:
     """Return info for given module from registry.
 
     Arguments:
@@ -27,7 +21,7 @@ def get_module(module: str | types.ModuleType) -> griffe.Module | Alias:
     return registry.get_module(module)
 
 
-def get_class(klass: str | type) -> griffe.Class | Alias:
+def get_class(klass: str | type) -> griffe.Class | griffe.Alias:
     """Return info for given klass from registry.
 
     Arguments:
@@ -83,7 +77,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         self,
         module: str | types.ModuleType,
         docstring_style: str = "google",
-    ) -> griffe.Module | Alias:
+    ) -> griffe.Module | griffe.Alias:
         """Get griffe Module for given module.
 
         Arguments:
@@ -97,8 +91,8 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         else:
             module_name, sub_mod_path = module, ""
         if module_name not in self._modules:
-            parser = Parser(docstring_style)
-            loader = GriffeLoader(docstring_parser=parser)
+            parser = griffe.Parser(docstring_style)
+            loader = griffe.GriffeLoader(docstring_parser=parser)
             griffe_mod = loader.load(module_name)
             assert isinstance(griffe_mod, griffe.Object)
             if self.expand_wildcards:
@@ -111,7 +105,7 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         self,
         klass: str | type,
         docstring_style: str = "google",
-    ) -> griffe.Class | Alias:
+    ) -> griffe.Class | griffe.Alias:
         """Get griffe Class for given class.
 
         Arguments:
