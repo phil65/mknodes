@@ -89,6 +89,7 @@ plugins:
 markdown_extensions:
 - attr_list
 - pymdownx.emoji
+- pymdownx.superfences # required for markdown-exec since it checks for it in on_config
 - toc:
     permalink: true
 
