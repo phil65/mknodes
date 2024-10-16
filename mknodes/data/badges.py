@@ -15,10 +15,10 @@ class Badge:
     url: str
     group: str = ""
 
-    def get_image_url(self, user, project, branch):
+    def get_image_url(self, user: str, project: str, branch: str) -> str:
         return self.image_url.format(user=user, project=project, branch=branch)
 
-    def get_url(self, user, project):
+    def get_url(self, user: str, project: str) -> str:
         return self.url.format(user=user, project=project)
 
 
