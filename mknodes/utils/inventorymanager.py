@@ -88,7 +88,7 @@ class InventoryItem:
         return cls(name, domain, role, uri, int(priority), dispname)
 
 
-class BaseInventory(dict):
+class BaseInventory(dict[str, InventoryItem]):
     """Inventory of collected and rendered objects."""
 
     def __init__(
@@ -177,7 +177,7 @@ class Inventory(BaseInventory):
     @classmethod
     def from_file(
         cls,
-        path: str | os.PathLike | io.BytesIO,
+        path: str | os.PathLike[str] | io.BytesIO,
         base_url: str,
         *,
         domains: list[str] | None = None,
@@ -218,7 +218,7 @@ class Inventory(BaseInventory):
             base_url = os.path.dirname(url)  # noqa: PTH120
         return cls.from_file(buffer, base_url or "", domains=domains)
 
-    def __getitem__(self, value):
+    def __getitem__(self, value: str):
         val = super().__getitem__(value)
         return posixpath.join(self.base_url, val.uri)
 
@@ -231,7 +231,7 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
 
     def add_inv_file(
         self,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         base_url: str | None = None,
         domains: list[str] | None = None,
     ):

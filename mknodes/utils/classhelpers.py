@@ -281,7 +281,7 @@ def get_members(obj: object, predicate: Callable | None = None):
 
 
 @functools.cache
-def import_file(path: str | os.PathLike) -> types.ModuleType:
+def import_file(path: str | os.PathLike[str]) -> types.ModuleType:
     """Import a module based on a file path.
 
     Arguments:

@@ -166,7 +166,7 @@ class BaseJSBlock(BaseBlock):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: resources.JSFile | str | os.PathLike):
+    def add_script_file(self, script: resources.JSFile | str | os.PathLike[str]):
         """Add a script file to the block.
 
         Arguments:
@@ -264,6 +264,7 @@ class StylesBlock(BaseBlock):
     ):
         self.include_super = include_super
         self.styles = styles or []
+        super().__init__()
 
     def add_stylesheet(self, stylesheet: resources.CSSFile):
         self.styles.append(stylesheet)

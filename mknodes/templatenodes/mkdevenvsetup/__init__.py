@@ -27,8 +27,8 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__("output/markdown/template", **kwargs)
-        self._repo_url = repo_url
-        self._build_backend = build_backend
+        self._repo_url: str | None = repo_url
+        self._build_backend: buildsystems.BuildSystemStr | None = build_backend
 
     @property
     def repo_url(self) -> str:

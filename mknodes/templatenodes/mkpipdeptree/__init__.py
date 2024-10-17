@@ -42,7 +42,7 @@ def get_mermaid(
         warnings.simplefilter("ignore")
 
         from pipdeptree._models import PackageDAG
-        from pipdeptree._render import render_mermaid
+        from pipdeptree._render.mermaid import render_mermaid
         from pipdeptree._discovery import get_installed_distributions
 
     # dists = packagehelpers.list_pip_packages(

@@ -42,12 +42,12 @@ class BaseClassConnector(connector.Connector):
         # else:
         #     return text
 
-    def get_attributes(self, item) -> list[str]:
+    def get_attributes(self, item: type) -> list[str]:
         return [i for i in dir(item) if not i.startswith("__")]
 
 
 class SubclassConnector(BaseClassConnector):
-    def _connect(self, objects):
+    def _connect(self, objects: list[type]):
         super()._connect(objects)
         self.connections = [(i[1], i[0]) for i in self.connections]
 
@@ -61,7 +61,7 @@ class ParentClassConnector(BaseClassConnector):
 
 
 class MroConnector(BaseClassConnector):
-    def _connect(self, objects):
+    def _connect(self, objects: list[type]):
         mro = list(objects[0].mro())[: self.max_depth]
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
         self.connections = [

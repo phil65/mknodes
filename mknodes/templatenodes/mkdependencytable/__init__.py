@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 
 from mknodes.templatenodes import mktemplatetable
 from mknodes.info import packageinfo, packageregistry
@@ -26,7 +26,7 @@ class MkDependencyTable(mktemplatetable.MkTemplateTable):
         package: str | packageinfo.PackageInfo | None = None,
         *,
         layout: PackageLayoutStr = "default",
-        **kwargs,
+        **kwargs: Any,
     ):
         self.package = package
         super().__init__(layout=layout, **kwargs)

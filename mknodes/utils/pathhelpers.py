@@ -19,8 +19,8 @@ logger = log.get_logger(__name__)
 
 
 def fsspec_copy(
-    source_path: str | os.PathLike,
-    output_path: str | os.PathLike,
+    source_path: str | os.PathLike[str],
+    output_path: str | os.PathLike[str],
     exist_ok: bool = True,
 ):
     """Copy source_path to output_path, making sure any parent directories exist.
@@ -50,8 +50,8 @@ def fsspec_copy(
 
 
 def copy(
-    source_path: str | os.PathLike,
-    output_path: str | os.PathLike,
+    source_path: str | os.PathLike[str],
+    output_path: str | os.PathLike[str],
     exist_ok: bool = True,
 ):
     """Copy source_path to output_path, making sure any parent directories exist.
@@ -77,7 +77,9 @@ def copy(
         shutil.copyfile(source_p, output_p)
 
 
-def clean_directory(directory: str | os.PathLike, remove_hidden: bool = False) -> None:
+def clean_directory(
+    directory: str | os.PathLike[str], remove_hidden: bool = False
+) -> None:
     """Remove the content of a directory recursively but not the directory itself."""
     folder_to_remove = upath.UPath(directory)
     if not folder_to_remove.exists():
@@ -92,7 +94,7 @@ def clean_directory(directory: str | os.PathLike, remove_hidden: bool = False) -
             path.unlink()
 
 
-def write_file(content: str | bytes, output_path: str | os.PathLike):
+def write_file(content: str | bytes, output_path: str | os.PathLike[str]):
     """Write content to output_path, making sure any parent directories exist.
 
     Arguments:
@@ -107,7 +109,7 @@ def write_file(content: str | bytes, output_path: str | os.PathLike):
         f.write(content)
 
 
-def write_files(mapping: Mapping[str | os.PathLike, str | bytes]):
+def write_files(mapping: Mapping[str | os.PathLike[str], str | bytes]):
     """Write a mapping of filename-to-content to disk.
 
     Arguments:

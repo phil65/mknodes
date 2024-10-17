@@ -3,7 +3,7 @@ from __future__ import annotations
 import functools
 import re
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.basenodes import processors
 from mknodes.info import contexts, nodefile
@@ -364,7 +364,7 @@ class MkNode(node.Node):
         repo_url: str | None = None,
         base_url: str = "",
         **kwargs,
-    ):
+    ) -> Self:
         """Same as the Ctor, but auto-adds a context for the repo url (or the cwd)."""
         ctx = contexts.ProjectContext.for_config(repo_url=repo_url, base_url=base_url)
         return cls(*args, **kwargs, context=ctx)
