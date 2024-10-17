@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import jinja2
 from jinja2 import runtime
@@ -14,13 +14,14 @@ if TYPE_CHECKING:
     import griffe
 
     import mknodes as mk
+    from mknodes.info.linkprovider import LinkableType
     from mknodes.jinja import nodeenvironment
 
 
 @jinja2.pass_environment
 def get_link(
     env: nodeenvironment.NodeEnvironment,
-    target,
+    target: LinkableType,
     title: str | None = None,
 ) -> str:
     """Return a markdown link for given target.
@@ -36,7 +37,7 @@ def get_link(
 
 
 @jinja2.pass_environment
-def get_url(env: nodeenvironment.NodeEnvironment, target) -> str:
+def get_url(env: nodeenvironment.NodeEnvironment, target: LinkableType) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -85,7 +86,7 @@ def to_html(node: mk.MkNode) -> str:
     return node.to_html()
 
 
-def apply_mod(node: mk.MkNode, mod_name: str, **kwargs) -> mk.MkNode:
+def apply_mod(node: mk.MkNode, mod_name: str, **kwargs: Any) -> mk.MkNode:
     """Apply a mod to given node.
 
     Arguments:
