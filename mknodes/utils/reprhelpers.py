@@ -126,7 +126,7 @@ def get_dataclass_repr(
         char_width: If set, then repr will be formatted with black to given char width
     """
     vals = utils.get_dataclass_nondefault_values(instance)
-    nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in vals)
+    nodef_f_repr = ", ".join(f"{name}={value!r}" for name, value in vals.items())
     text = f"{instance.__class__.__name__}({nodef_f_repr})"
     if char_width:
         return textfilters.format_code(text, char_width)
