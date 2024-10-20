@@ -90,7 +90,7 @@ class LinkProvider:
         """
         self.excludes.update(excludes)
 
-    def add_inv_file(self, path: str | os.PathLike, base_url: str | None = None):
+    def add_inv_file(self, path: str | os.PathLike[str], base_url: str | None = None):
         """Add an inventory file to the inventory manager.
 
         Arguments:

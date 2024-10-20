@@ -19,7 +19,7 @@ DirectoryTreeStyleStr = Literal["lines", "dash", "arrow", "spaces", "plus"]
 
 @helpers.list_to_tuple
 def get_folder_tree(
-    directory: str | os.PathLike,
+    directory: str | os.PathLike[str],
     *,
     style: DirectoryTreeStyleStr | None = None,
     indent: int = 4,
@@ -58,7 +58,7 @@ class MkSeeDir(mkcode.MkCode):
 
     def __init__(
         self,
-        directory: str | os.PathLike,
+        directory: str | os.PathLike[str],
         *,
         style: DirectoryTreeStyleStr | None = None,
         print_indent: int = 4,

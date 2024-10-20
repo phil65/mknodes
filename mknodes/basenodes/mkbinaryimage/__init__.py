@@ -82,7 +82,7 @@ class MkBinaryImage(mkimage.MkImage):
     @classmethod
     def for_file(
         cls,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         storage_options: dict | None = None,
         **kwargs: Any,
     ) -> Self:

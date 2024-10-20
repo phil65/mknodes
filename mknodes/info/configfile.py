@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class ConfigFile(superdict.SuperDict):
-    def __init__(self, path: str | os.PathLike | None = None):
+    def __init__(self, path: str | os.PathLike[str] | None = None):
         """Constructor.
 
         Arguments:
@@ -61,7 +61,7 @@ class ConfigFile(superdict.SuperDict):
 
     def load_file(
         self,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         **storage_options: Any,
     ):
         """Load a file with loader of given file type.

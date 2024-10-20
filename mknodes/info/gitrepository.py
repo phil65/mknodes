@@ -27,7 +27,7 @@ class CommitList(list):
 class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
-    def __init__(self, path: str | os.PathLike | None = None, **kwargs):
+    def __init__(self, path: str | os.PathLike[str] | None = None, **kwargs):
         super().__init__(path or ".", **kwargs)
         # to keep a reference to a TempDirectory instance
         self.temp_directory: tempfile.TemporaryDirectory | None = None
@@ -44,8 +44,8 @@ class GitRepository(git.Repo):
     @classmethod
     def clone_from(  # type: ignore[override]
         cls,
-        url: os.PathLike | str,
-        to_path: os.PathLike | str,
+        url: os.PathLike[str] | str,
+        to_path: os.PathLike[str] | str,
         depth: int | None = None,
         **kwargs: Any,
     ) -> Self:

@@ -76,7 +76,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
     def serialize(self, mode: MarkupTypeStr) -> str:  # type: ignore[return]
         return serializefilters.serialize(self._data, mode)
 
-    def write(self, path: str | os.PathLike, mode: MarkupTypeStr):
+    def write(self, path: str | os.PathLike[str], mode: MarkupTypeStr):
         text = self.serialize(mode)
         pathhelpers.write_file(text, path)
 

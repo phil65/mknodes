@@ -13,14 +13,14 @@ logger = log.get_logger(__name__)
 
 @functools.cache
 def get_folder_tree_svg(
-    directory: str | os.PathLike,
+    directory: str | os.PathLike[str],
     width: int = 80,
     title: str = "",
 ) -> str:
     from rich.console import Console
     from rich.tree import Tree
 
-    def _walk_directory(directory: os.PathLike | str, tree: Tree) -> None:
+    def _walk_directory(directory: os.PathLike[str] | str, tree: Tree) -> None:
         """Recursively build a Tree with directory contents."""
         # Sort dirs first then by filename
         from rich.filesize import decimal

@@ -21,7 +21,7 @@ class MkSnippet(mknode.MkNode):
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.snippets")]
     ICON = "material/paperclip"
 
-    def __init__(self, path: str | os.PathLike, **kwargs: Any):
+    def __init__(self, path: str | os.PathLike[str], **kwargs: Any):
         """Constructor.
 
         Arguments:

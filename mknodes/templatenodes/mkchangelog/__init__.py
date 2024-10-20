@@ -76,7 +76,7 @@ class MkChangelog(mktext.MkText):
         convention: Literal["basic", "angular", "atom", "conventional"] = "conventional",
         template: Literal["keepachangelog", "angular"] = "keepachangelog",
         sections: list[str] | None = None,
-        repository: str | os.PathLike | None = None,
+        repository: str | os.PathLike[str] | None = None,
         **kwargs: Any,
     ):
         """Constructor.

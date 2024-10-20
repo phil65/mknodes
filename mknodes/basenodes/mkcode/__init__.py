@@ -107,7 +107,7 @@ class MkCode(mkcontainer.MkContainer):
     @classmethod
     def for_file(
         cls,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         *,
         linenums: bool = True,
         highlight_caller: bool = True,

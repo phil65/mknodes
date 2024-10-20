@@ -39,7 +39,7 @@ class MkPage(mkcontainer.MkContainer):
         search_boost: float | None = None,
         exclude_from_search: bool | None = None,
         icon: str | None = None,
-        path: str | os.PathLike | None = None,
+        path: str | os.PathLike[str] | None = None,
         status: datatypes.PageStatusStr | None = None,
         subtitle: str | None = None,
         description: str | None = None,
@@ -225,7 +225,7 @@ class MkPage(mkcontainer.MkContainer):
     @classmethod
     def from_file(
         cls,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         *,
         title: str | None = None,
         parent: mknode.MkNode | None = None,

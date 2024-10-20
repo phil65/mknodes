@@ -18,7 +18,7 @@ logger = log.get_logger(__name__)
 
 @functools.cache
 def get_dependency_svg(
-    folder_name: str | os.PathLike,
+    folder_name: str | os.PathLike[str],
     max_bacon: int | None = 2,
     max_module_depth: int | None = None,
     only_cycles: bool = False,

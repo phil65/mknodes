@@ -76,7 +76,7 @@ def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
 class MkGitBlog(mkblog.MkBlog):
     """The MkDocs-Material plugin-blog, misused as a Git log."""
 
-    def __init__(self, org: str, repo: str, posts_dir: str | os.PathLike, **kwargs):
+    def __init__(self, org: str, repo: str, posts_dir: str | os.PathLike[str], **kwargs):
         """Instanciate a MkGitBlog.
 
         Arguments:

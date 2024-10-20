@@ -32,7 +32,7 @@ ARGS_KWARGS_RE = r".*\((.*)\)"  # get brace content
 
 
 def str2node(
-    path: str | os.PathLike,
+    path: str | os.PathLike[str],
     name: str | None = None,
     parent: mk.MkNode | None = None,
     **kwargs: Any,
@@ -167,7 +167,7 @@ class NavParser:
 
     def file(
         self,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         **kwargs: Any,
     ) -> mk.MkNav:
         """Load an existing SUMMARY.md style file.
@@ -262,7 +262,7 @@ class NavParser:
 
     def folder(
         self,
-        folder: str | os.PathLike,
+        folder: str | os.PathLike[str],
         *,
         recursive: bool = True,
         **kwargs: Any,
@@ -307,7 +307,7 @@ class NavParser:
 
     def module(
         self,
-        module: str | os.PathLike,
+        module: str | os.PathLike[str],
         *,
         recursive: bool = True,
         **kwargs: Any,

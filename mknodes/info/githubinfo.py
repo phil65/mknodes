@@ -54,8 +54,8 @@ class GitHubRepo:
 
     def download_from_path(
         self,
-        path: str | os.PathLike,
-        destination: str | os.PathLike,
+        path: str | os.PathLike[str],
+        destination: str | os.PathLike[str],
         recursive: bool = False,
     ):
         """Download a file from this github repository.

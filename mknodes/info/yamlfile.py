@@ -19,7 +19,7 @@ logger = log.get_logger(__name__)
 class YamlFile(configfile.ConfigFile):
     def __init__(
         self,
-        path: str | os.PathLike | None = None,
+        path: str | os.PathLike[str] | None = None,
         mode: yamlhelpers.LoaderStr = "unsafe",
         resolve_inherit_tag: bool = False,
     ):

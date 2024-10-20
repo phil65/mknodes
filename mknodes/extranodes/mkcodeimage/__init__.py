@@ -63,7 +63,7 @@ class MkCodeImage(mknode.MkNode):
     @classmethod
     def for_file(
         cls,
-        path: str | os.PathLike,
+        path: str | os.PathLike[str],
         *,
         storage_options: dict | None = None,
         title: str | None = None,

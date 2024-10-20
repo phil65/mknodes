@@ -64,7 +64,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
 
 
 class NodeFile(tomlfile.TomlFile):
-    def __init__(self, path_or_cls: str | os.PathLike | type):
+    def __init__(self, path_or_cls: str | os.PathLike[str] | type):
         path = find_file(path_or_cls) if isinstance(path_or_cls, type) else path_or_cls
         super().__init__(path)
 

@@ -14,7 +14,7 @@ _temp_dirs: dict[str, tempfile.TemporaryDirectory] = {}
 
 
 def get_repo(
-    repo_url: str | os.PathLike,
+    repo_url: str | os.PathLike[str],
     clone_depth: int = 100,
 ) -> gitrepository.GitRepository:
     """Return info for given module from registry.
@@ -55,7 +55,7 @@ class RepoRegistry(MutableMapping, metaclass=ABCMeta):
 
     def get_repo(
         self,
-        repo_url: str | os.PathLike,
+        repo_url: str | os.PathLike[str],
         clone_depth: int = 100,
     ) -> gitrepository.GitRepository:
         """Return a GitRepository for given URL / path.
