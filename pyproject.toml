@@ -256,6 +256,12 @@ combine-as-imports = true
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402", "I001"]
 
+[tool.pyright]
+reportUnusedCallResult = false
+reportUnknownVariableType = false
+reportAny = false
+reportImplicitOverride = false
+
 [tool.mknodes]
 allowed-commit-types = [
     "fix",
