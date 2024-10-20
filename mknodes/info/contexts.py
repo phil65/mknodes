@@ -311,6 +311,7 @@ class ContextConfig(Mapping, metaclass=abc.ABCMeta):
     repo_url: str = "."
     clone_depth: int = 100
     jinja_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
+    llm_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
     base_url: str = ""
     use_directory_urls: bool = True
 
