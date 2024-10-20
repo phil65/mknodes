@@ -72,7 +72,7 @@ def get_repr(
     my_repr = limit_repr.repr if _shorten else repr
     classname = type(_obj).__name__
     parts = [list_repr(v) if isinstance(v, list) else my_repr(v) for v in args]
-    kw_parts = []
+    kw_parts: list[str] = []
     for k, v in kwargs.items():
         if _filter_empty and (v is None or v in ("", {})):
             continue
@@ -133,7 +133,7 @@ def get_dataclass_repr(
     return text
 
 
-def to_str_if_textnode(node) -> str:
+def to_str_if_textnode(node: Any) -> str:
     import mknodes as mk
 
     return str(node) if type(node) in {mk.MkText, mk.MkHeader} else node
@@ -163,8 +163,8 @@ def get_nondefault_repr(
         char_width: If set, then repr will be formatted with black to given char width
         shorten: Whether to shorten the repr using a custom reprlib Repr
     """
-    args = []
-    kwargs = {}
+    args: list[Any] = []
+    kwargs: dict[str, Any] = {}
     signature = inspectfilters.get_signature(instance.__init__)
     for arg, v in signature.parameters.items():
         if v.kind in [v.VAR_POSITIONAL, v.VAR_KEYWORD]:
