@@ -80,9 +80,11 @@ class MkText(mknode.MkNode):
         """
         url, *section = url.split("#")
         text = pathhelpers.load_file_cached(url)
-        if section:
-            text = mdfilters.extract_header_section(text, section[0])
-        return cls(text) if text is not None else None
+        if not section:
+            return cls(text)
+
+        extracted = mdfilters.extract_header_section(text, section[0])
+        return cls(extracted) if extracted is not None else None
 
 
 if __name__ == "__main__":

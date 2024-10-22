@@ -46,9 +46,9 @@ class NodeEnvironment(jinjarope.Environment):
         self._wrapped_klasses = {}
 
         for kls_name in mk.__all__:
-            klass = getattr(mk, kls_name)
+            klass = getattr(mk, kls_name)  # type: Any
 
-            class _WrappedMkNode(klass):  # type: ignore[valid-type]
+            class _WrappedMkNode(klass):
                 def __post_init__(_self):  # noqa: N805
                     _self.parent = self.node
                     self.rendered_nodes.append(_self)

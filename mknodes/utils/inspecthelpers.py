@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 import functools
 import inspect
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import griffe
 from jinjarope import inspectfilters
@@ -53,8 +53,9 @@ def iter_code_sections(code_string: str, start_line: int | None = None):
         yield Section("comment", text)
 
 
-def get_stack_info(frame: types.FrameType, level: int) -> dict | None:
+def get_stack_info(frame: types.FrameType | None, level: int) -> dict[str, Any] | None:
     for _ in range(level):
+        assert frame
         frame = frame.f_back
     if not frame:
         return None

@@ -41,7 +41,7 @@ class Extension(dict):
     def __repr__(self):
         return f"{type(self).__name__}({self.extension_name!r})"
 
-    def __hash__(self):
+    def __hash__(self):  # type: ignore[override]
         return hash(self.extension_name + str(dict(self)))
 
     def as_mkdocs_dict(self) -> dict[str, dict]:
@@ -67,7 +67,7 @@ class Plugin(dict):
     def __repr__(self):
         return f"{type(self).__name__}({self.plugin_name!r})"
 
-    def __hash__(self):
+    def __hash__(self):  # type: ignore[override]
         return hash(self.plugin_name + str(dict(self)))
 
     def as_mkdocs_dict(self) -> dict[str, dict]:
