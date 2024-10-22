@@ -41,7 +41,7 @@ class Color(coloraide.Color):
             case _:
                 raise TypeError(color)
 
-    def __str__(self):
+    def __str__(self) -> str:  # type: ignore[override]
         """Return str in form of rgb(255, 0, 0)."""
         return self.to_string(comma=True)
 

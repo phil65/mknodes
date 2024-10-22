@@ -139,6 +139,12 @@ filter-commits = "v0.30.0.."
 
 [tool.ruff]
 line-length = 90
+extend-exclude = [
+    'docs',
+]
+target-version = "py311"
+
+[tool.ruff.lint]
 select = [
     "A",    # Flake8-builtins
     # "ANN",  # Flake8-Annotations
@@ -234,10 +240,6 @@ ignore = [
     "TRY003", # Avoid specifying long messages outside the exception class
     "COM812", "COM819", "D206", "E501", "ISC001", "Q000", "Q001", "Q002", "Q003", "W191",  # for ruff-format
 ]
-extend-exclude = [
-    'docs',
-]
-target-version = "py311"
 
 [tool.ruff.format]
 # Enable preview style formatting.
@@ -249,7 +251,7 @@ docstring-quotes = "double"
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
-lines-between-types = 1
+# lines-between-types = 1
 # atomic = true
 force-sort-within-sections = true
 combine-as-imports = true
