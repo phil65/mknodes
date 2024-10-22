@@ -4,7 +4,7 @@ from mknodes.info import yamlfile
 
 
 class MkDocsConfigFile(yamlfile.YamlFile):
-    SCHEMA = "https://json.schemastore.org/mkdocs-1.0.json"
+    SCHEMA = "https://json.schemastore.org/mkdocs-1.6.json"
 
     @property
     def theme(self):
