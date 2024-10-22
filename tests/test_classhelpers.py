@@ -110,7 +110,7 @@ def test_to_dotted_path_with_callable():
 
 def test_to_dotted_path_with_invalid_type():
     with pytest.raises(TypeError):
-        to_dotted_path(123)
+        to_dotted_path(123)  # type: ignore[arg-type]
 
 
 def test_import_file_with_valid_path():

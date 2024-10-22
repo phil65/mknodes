@@ -12,6 +12,7 @@ import yaml
 from mknodes.utils import log
 
 
+DUMPER_CLASSES = ["BaseDumper", "SafeDumper", "Dumper"]
 logger = log.get_logger(__name__)
 YAMLError = yaml.YAMLError
 
@@ -27,7 +28,7 @@ def _patch_dumper_to_not_order(dumper_cls):
 
 
 def patch_pyyaml_to_not_order_dicts():
-    _dumpers = [getattr(yaml.dumper, x) for x in yaml.dumper.__all__]
+    _dumpers = [getattr(yaml.dumper, x) for x in DUMPER_CLASSES]
     with contextlib.suppress(AttributeError):
         _cyaml = yaml.cyaml.__all__
         _dumpers += [getattr(yaml.cyaml, x) for x in _cyaml if x.endswith("Dumper")]
