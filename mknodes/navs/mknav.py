@@ -90,7 +90,7 @@ class MkNav(mknode.MkNode):
         return self.nav.index_page
 
     @index_page.setter
-    def index_page(self, value):
+    def index_page(self, value: mkpage.MkPage):
         value.parent = self
         self.nav.index_page = value
         self.nav.index_page._is_index = True

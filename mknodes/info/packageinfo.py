@@ -169,7 +169,7 @@ class PackageInfo:
         from mknodes.info import packageregistry
 
         requires = packagehelpers.get_requires(self.distribution)
-        modules = (
+        modules: set[str] = (
             {packagehelpers.get_dependency(i).name for i in requires}
             if requires
             else set()

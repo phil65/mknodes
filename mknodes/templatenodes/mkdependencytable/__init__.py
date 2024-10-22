@@ -44,6 +44,8 @@ class MkDependencyTable(mktemplatetable.MkTemplateTable):
                 return None
 
     def iter_items(self):
+        if not self.required_packages:
+            return
         yield from [
             dict(package_info=package_info, dep_info=dep_info)
             for (package_info, dep_info) in self.required_packages.items()

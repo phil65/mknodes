@@ -19,11 +19,11 @@ def get_info(mod_name: str) -> packageinfo.PackageInfo:
     return registry.get_info(mod_name)
 
 
-def get_installed_packages():
+def get_installed_packages() -> list[packageinfo.PackageInfo]:
     import contextlib
     import pkgutil
 
-    pkgs = []
+    pkgs: list[packageinfo.PackageInfo] = []
     for mod in pkgutil.iter_modules():
         if not mod.ispkg:
             continue
@@ -33,22 +33,22 @@ def get_installed_packages():
     return pkgs
 
 
-class PackageRegistry(MutableMapping, metaclass=ABCMeta):
+class PackageRegistry(MutableMapping[str, packageinfo.PackageInfo], metaclass=ABCMeta):
     """Registry for PackageInfos.
 
     Used for caching all loaded Package information.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._packages: dict[str, packageinfo.PackageInfo] = {}
 
-    def __getitem__(self, value):
+    def __getitem__(self, value: str) -> packageinfo.PackageInfo:
         return self._packages.__getitem__(value)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: str, value: packageinfo.PackageInfo):
         self._packages[index] = value
 
-    def __delitem__(self, index):
+    def __delitem__(self, index: str):
         del self._packages[index]
 
     def __repr__(self):

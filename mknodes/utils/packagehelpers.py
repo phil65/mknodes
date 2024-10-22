@@ -91,7 +91,7 @@ def get_marker(marker) -> Marker:
 
 
 @functools.cache
-def _get_entry_points(dist: metadata.Distribution | None = None, **kwargs):
+def _get_entry_points(dist: metadata.Distribution | None = None, **kwargs: Any):
     return dist.entry_points if dist else metadata.entry_points(**kwargs)
 
 
@@ -163,7 +163,7 @@ def get_entry_points(
     return EntryPointMap(eps)
 
 
-class EntryPointMap(collections.defaultdict):
+class EntryPointMap(collections.defaultdict[str, list[EntryPoint]]):
     def __init__(self, eps: list | None = None):
         super().__init__(list)
         for ep in eps or []:
@@ -205,7 +205,7 @@ class Dependency:
 
 
 @functools.cache
-def get_dependency(name) -> Dependency:
+def get_dependency(name: str) -> Dependency:
     return Dependency(name)
 
 

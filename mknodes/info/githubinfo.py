@@ -79,7 +79,7 @@ class GitHubRepo:
     @functools.cached_property
     def workflows(self) -> list[Workflow]:
         """Return a list of dictionaries containing info about the current workflows."""
-        result = []
+        result: list[Workflow] = []
         for wf in self.repo.get_workflows():
             url = f"{self.raw_prefix}{self.default_branch}/{wf.path}"
             data = downloadhelpers.download(url)

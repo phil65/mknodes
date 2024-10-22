@@ -96,7 +96,7 @@ def get_repr(
     return text
 
 
-def list_repr(v, shorten: bool = True):
+def list_repr(v: Any, shorten: bool = True):
     import mknodes as mk
 
     my_repr = limit_repr.repr if shorten else repr

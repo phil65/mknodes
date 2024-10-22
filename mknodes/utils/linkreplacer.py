@@ -25,11 +25,13 @@ AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 
 class LinkReplacer:
-    def __init__(self):
-        self.mapping = collections.defaultdict(list)
+    def __init__(self) -> None:
+        self.mapping: collections.defaultdict[str, list[str]] = collections.defaultdict(
+            list[str]
+        )
         self.page_url = ""
 
-    def __call__(self, match) -> str:
+    def __call__(self, match: re.Match[str]) -> str:
         filename = urllib.parse.unquote(match.group(3).strip())
         if filename not in self.mapping:
             return f"`{match.group(1)}`"

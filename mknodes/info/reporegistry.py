@@ -10,7 +10,7 @@ from mknodes.utils import helpers, log
 
 
 logger = log.get_logger(__name__)
-_temp_dirs: dict[str, tempfile.TemporaryDirectory] = {}
+_temp_dirs: dict[str, tempfile.TemporaryDirectory[str]] = {}
 
 
 def get_repo(
@@ -26,22 +26,22 @@ def get_repo(
     return registry.get_repo(repo_url, clone_depth=clone_depth)
 
 
-class RepoRegistry(MutableMapping, metaclass=ABCMeta):
+class RepoRegistry(MutableMapping[str, gitrepository.GitRepository], metaclass=ABCMeta):
     """Registry for Git repositories.
 
     Manages the GitRepository instances and temporary directories.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._repos: dict[str, gitrepository.GitRepository] = {}
 
-    def __getitem__(self, value):
-        return self._repos.__getitem__(value)
+    def __getitem__(self, key: str):
+        return self._repos.__getitem__(key)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: str, value: gitrepository.GitRepository):
         self._repos[index] = value
 
-    def __delitem__(self, index):
+    def __delitem__(self, index: str):
         del self._repos[index]
 
     def __repr__(self):

@@ -47,6 +47,6 @@ class MdConverter(markdown.Markdown):
             tab_length=tab_length,
         )
 
-    def register_extensions(self, extensions: dict):
+    def register_extensions(self, extensions: dict[str, Any]):
         ext_names = list(extensions.keys())
         self.registerExtensions(ext_names, extensions)

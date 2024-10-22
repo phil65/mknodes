@@ -15,7 +15,7 @@ logger = log.get_logger(__name__)
 
 
 class BaseResolver:
-    _match_cache: dict[tuple[str, bool], re.Pattern] = {}
+    _match_cache: dict[tuple[str, bool], re.Pattern[str]] = {}
 
     def __init__(self, ignore_case: bool = False):
         """Base resolver. Subclass to get glob functionality.

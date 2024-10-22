@@ -30,7 +30,7 @@ def get_class(klass: str | type) -> griffe.Class | griffe.Alias:
     return registry.get_class(klass)
 
 
-class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
+class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     """Registry for Griffe Modules.
 
     Used for accessing / caching all loaded Griffe objects.
@@ -55,13 +55,13 @@ class GriffeRegistry(MutableMapping, metaclass=ABCMeta):
         self.expand_wildcards = expand_wildcards
         self._modules: dict[str, griffe.Module] = {}
 
-    def __getitem__(self, value):
+    def __getitem__(self, value: str):
         return self._modules.__getitem__(value)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: str, value: griffe.Module):
         self._modules[index] = value
 
-    def __delitem__(self, index):
+    def __delitem__(self, index: str):
         del self._modules[index]
 
     def __repr__(self):

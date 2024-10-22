@@ -24,9 +24,6 @@ def label_for_class(klass: type) -> str:
     return f"{parts[-1]}.{klass.__name__}"
 
 
-T = TypeVar("T")
-
-
 def get_indented_lines(lines: Iterable[str], indent: int | str = 4) -> list[str]:
     """Return all lines until a line is not indented with given indent.
 

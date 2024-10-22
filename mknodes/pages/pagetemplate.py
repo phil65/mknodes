@@ -96,6 +96,7 @@ class PageTemplate:
         import mknodes as mk
 
         if isinstance(value, mk.MkNode):
+            assert self.parent
             value._ctx = self.parent.ctx
         self.announce.content = value
 

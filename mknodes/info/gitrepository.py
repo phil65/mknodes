@@ -27,10 +27,10 @@ class CommitList(list):
 class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
-    def __init__(self, path: str | os.PathLike[str] | None = None, **kwargs):
+    def __init__(self, path: str | os.PathLike[str] | None = None, **kwargs: Any):
         super().__init__(path or ".", **kwargs)
         # to keep a reference to a TempDirectory instance
-        self.temp_directory: tempfile.TemporaryDirectory | None = None
+        self.temp_directory: tempfile.TemporaryDirectory[str] | None = None
 
     def __len__(self):
         return len(list(self.iter_commits("HEAD")))

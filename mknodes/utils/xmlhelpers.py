@@ -17,7 +17,7 @@ class HTMLElement(ET.Element):
         klass: str | None = None,
         parent: ET.Element | None = None,
         *,
-        attrs: dict | None = None,
+        attrs: dict[str, str] | None = None,
         markdown: bool = False,
         **kwargs: str,
     ):

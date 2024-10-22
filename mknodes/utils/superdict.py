@@ -20,11 +20,11 @@ V = TypeVar("V")
 
 
 class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
-    def __init__(self, data: dict | None = None, **kwargs):
+    def __init__(self, data: dict[str, Any] | None = None, **kwargs: Any):
         self._data: dict[str, V] = data or {}
         self._data |= kwargs
 
-    def __getitem__(self, value: str | tuple) -> V:
+    def __getitem__(self, value: str | tuple[str, ...]) -> V:
         if isinstance(value, str):
             return self._data.__getitem__(value)
         return self.get_section(*value)

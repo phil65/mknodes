@@ -29,7 +29,7 @@ def get_dependency_svg(
     from pydeps.pydeps import depgraph_to_dotsrc
     from pydeps.target import Target
 
-    cli.verbose = cli._not_verbose
+    cli.verbose = lambda *args, **kwargs: None
     cmd = [str(folder_name), "--noshow"]
     if max_bacon:
         cmd.extend(["--max-bacon", str(max_bacon)])

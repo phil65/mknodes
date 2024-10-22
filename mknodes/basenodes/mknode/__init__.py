@@ -131,23 +131,26 @@ class MkNode(node.Node):
                 dct_2.pop(attr)
         return dct_1 == dct_2
 
-    def __rshift__(self, other, inverse: bool = False):
+    def __rshift__(self, other):
         import mknodes as mk
 
         if self.parent or (isinstance(other, mk.MkNode) and other.parent):
             msg = "Can only perform shift when nodes have no parent"
             raise RuntimeError(msg)
         container = mk.MkContainer(parent=self.parent, block_separator=" ")
-        if inverse:
-            container.append(other)
-            container.append(self)
-        else:
-            container.append(self)
-            container.append(other)
+        container.append(self)
+        container.append(other)
         return container
 
     def __rrshift__(self, other):
-        return self.__rshift__(other, inverse=True)
+        import mknodes as mk
+
+        if self.parent or (isinstance(other, mk.MkNode) and other.parent):
+            msg = "Can only perform shift when nodes have no parent"
+            raise RuntimeError(msg)
+        container = mk.MkContainer(parent=self.parent, block_separator=" ")
+        container.append(other)
+        container.append(self)
 
     @property
     def ctx(self):

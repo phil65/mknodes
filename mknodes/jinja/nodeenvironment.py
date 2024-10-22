@@ -142,7 +142,7 @@ class NodeEnvironment(jinjarope.Environment):
     def render_string(
         self,
         string: str,
-        variables: dict | None = None,
+        variables: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> str:
         """Render a template string.

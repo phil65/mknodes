@@ -30,8 +30,8 @@ class MkCallable(mknode.MkNode):
         self,
         fn: Callable[..., mk.MkNode] | str,
         *,
-        args: list | tuple | None = None,
-        kw_args: dict | None = None,
+        args: list[Any] | tuple[Any, ...] | None = None,
+        kw_args: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
         """Constructor.

@@ -42,7 +42,7 @@ class License:
     identifier: str
     content: str
     path: str | None = None
-    sources: list | None = None
+    sources: list[str] | None = None
     osi_approved: bool | None = None
     header: str | None = None
 

@@ -3,11 +3,15 @@ from __future__ import annotations
 import abc
 import collections.abc
 import dataclasses
-from typing import Any, ClassVar, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Self
 
 from jinjarope import iterfilters, serializefilters, utils
 
 from mknodes.utils import helpers, reprhelpers
+
+
+if TYPE_CHECKING:
+    from collections.abc import Hashable
 
 
 @dataclasses.dataclass(frozen=True)
@@ -231,7 +235,7 @@ class Asset:
 
 
 @dataclasses.dataclass
-class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
+class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
     """A resource bundle containing different assets.
 
     Most of the time this class is used for bundling required resources
@@ -306,7 +310,11 @@ class Resources(collections.abc.Mapping, metaclass=abc.ABCMeta):
         """All JavaScript links of this resource bundle."""
         return [i for i in self.js if i.is_library]
 
-    def merge(self, other: collections.abc.Mapping, additive: bool = False):
+    def merge(
+        self,
+        other: collections.abc.Mapping[Hashable, Any] | Self,
+        additive: bool = False,
+    ):
         """Merge resources with another resources instance or dict.
 
         Adds resources from other to this instance.
@@ -346,3 +354,5 @@ JSType = JSFile | JSText
 if __name__ == "__main__":
     link = JSText("jkfdjl", "kfjdsdkljf", async_=True)
     print(link)
+    file = JSFile("abc")
+    print(repr(file))
