@@ -199,15 +199,37 @@ class NavParser:
     ) -> mk.MkNav:
         """Create a nav based on a SUMMARY.md-style list, given as text.
 
-        For each indentation level, a new sub-nav is created.
+        This method parses a text input formatted similar to a SUMMARY.md file and
+        creates a navigation structure based on it. For each indentation level in
+        the input text, a new sub-nav is created. The method supports all SUMMARY.md
+        options except wildcards.
 
-        Should support all SUMMARY.md options except wildcards.
+        The method processes three main patterns in the input text:
+        1. Section and folder: Creates a subnav from a SUMMARY.md or index.py file.
+        2. Section and file: Creates a page or a subnav with an index page.
+        3. Section only: Creates a subnav from the indented lines following it.
 
-        Arguments:
-            text: Text to parse
-            path: path of the file containing the text.
-            kwargs: Keyword arguments passed to the pages to create.
-                    Can be used to hide the TOC for all pages for example.
+        Args:
+            text: The input text to parse, formatted like a SUMMARY.md file.
+            path: The path of the file containing the input text.
+            **kwargs: Additional keyword arguments passed to the pages to create.
+                      Can be used to set common properties for all pages.
+
+        Returns:
+            The updated navigation structure after processing the input text.
+
+        Examples:
+            ```python
+            parser = NavParser(nav)
+            text = '''
+            * [Section 1](folder1/)
+            * [Page 1](page1.md)
+            * Section 2/
+                * [Subpage 1](subpage1.md)
+                * [Subpage 2](subpage2.md)
+            '''
+            updated_nav = parser.text(text, pathlib.Path("path/to/file"))
+            ```
         """
         lines = text.splitlines()
         for i, line in enumerate(lines):
@@ -267,19 +289,32 @@ class NavParser:
         recursive: bool = True,
         **kwargs: Any,
     ) -> mk.MkNav:
-        """Load a MkNav tree from Folder.
+        """Load a MkNav tree from a folder.
 
-        SUMMARY.mds are ignored.
-        index.md files become index pages.
+        This method creates a navigation structure based on the contents of a specified folder.
+        It processes Markdown (.md) and HTML (.html) files, creating a hierarchical navigation
+        tree that reflects the folder structure.
 
-        To override the default behavior of using filenames as menu titles,
-        the pages can set a title by using page metadata.
+        Specific behaviors:
+        - SUMMARY.md files are ignored.
+        - index.md files become index pages for their respective folders.
+        - Hidden folders (starting with '.' or '_') are ignored.
+        - Page titles can be overridden using page metadata.
 
-        Arguments:
-            folder: Folder to load .md files from
-            recursive: Whether all .md files should be included recursively.
-            kwargs: Keyword arguments passed to the pages to create.
-                    Can be used to hide the TOC for all pages for example.
+        Args:
+            folder: The folder to load .md and .html files from.
+            recursive: Whether to include all files recursively from subfolders.
+            **kwargs: Additional keyword arguments passed to the created pages.
+                      Can be used to set global page properties, e.g., hiding TOC.
+
+        Returns:
+            A MkNav object representing the folder's navigation structure.
+
+        Examples:
+            ```python
+            parser = NavParser(my_nav)
+            folder_nav = parser.folder("docs/", recursive=True, toc=False)
+            ```
         """
         import mknodes as mk
 
@@ -314,13 +349,24 @@ class NavParser:
     ) -> mk.MkNav:
         """Load a MkNav tree from a Module.
 
-        Will add a page for each module showing the code in a code box.
+        This method creates a navigation structure from a given module. It iterates through
+        the module's directory, creating pages for Python files and sub-navigations for
+        subdirectories. Each Python file is displayed as a page with its content in a code box.
 
-        Arguments:
-            module: Module to load code files for
-            recursive: Whether all .md files should be included recursively.
-            kwargs: Keyword arguments passed to the pages to create.
-                    Can be used to hide the TOC for all pages for example.
+        Args:
+            module: The module to load code files from. Can be a string path or a PathLike object.
+            recursive: Whether to include all files recursively.
+            **kwargs: Additional keyword arguments passed to the pages being created.
+                These can be used to customize page properties, e.g., hiding the TOC.
+
+        Returns:
+            An MkNav object representing the navigation structure of the module.
+
+        Example:
+            ```python
+            parser = NavParser()
+            nav = parser.module("mknodes", recursive=True, hide_toc=True)
+            ```
         """
         # if isinstance(module, types.ModuleType):
         #     module = inspecthelpers.get_file(module)
@@ -341,6 +387,45 @@ class NavParser:
 
 
 def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict):
+    """Parse and add navigation items to the root navigation in a new style format.
+
+    This function processes a list or dictionary of navigation items and adds them to the
+    given root navigation. It supports various types of navigation items including pages,
+    sub-navigations, and custom MkNode instances.
+
+    The function recursively processes nested navigation structures and applies conditions
+    for rendering items based on the environment.
+
+    Args:
+        root_nav: The root navigation object to which items will be added.
+        items: A list or dictionary of navigation items to be parsed and added.
+
+    Examples:
+        ```python
+        import mknodes as mk
+
+        root_nav = mk.MkNav("Root")
+        items = [
+            {
+                "type": "MkPage",
+                "title": "Home",
+                "is_homepage": True,
+                "items": [
+                    {"type": "MkHeader", "text": "Welcome"},
+                    {"type": "MkText", "text": "This is the homepage."},
+                ],
+            },
+            {
+                "Home": [
+                    {
+                        "About": "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
+                    }
+                ]
+            },
+        ]
+        parse_new_style_nav(root_nav, items)
+        ```
+    """
     import mknodes as mk
 
     if isinstance(items, dict):
