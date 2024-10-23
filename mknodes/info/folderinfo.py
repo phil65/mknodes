@@ -158,7 +158,7 @@ class FolderInfo:
     def inventory_url(self) -> str | None:
         """Return best guess for a link to an inventory file."""
         if url := self.mkdocs_config.get("site_url"):
-            return f"{url.rstrip('/')}/objects.inv"
+            return f"{url.rstrip("/")}/objects.inv"
         return None
 
     @functools.cached_property

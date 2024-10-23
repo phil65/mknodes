@@ -57,9 +57,9 @@ class PackageInfo:
         """Return best guess for a link to an inventory file."""
         for v in self.urls.values():
             if "github.io" in v or "readthedocs" in v:
-                return f"{v.rstrip('/')}/objects.inv"
+                return f"{v.rstrip("/")}/objects.inv"
         if url := self.urls.get("Documentation"):
-            return f"{url.rstrip('/')}/objects.inv"
+            return f"{url.rstrip("/")}/objects.inv"
         return None
 
     @functools.cached_property

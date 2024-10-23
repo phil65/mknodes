@@ -31,7 +31,7 @@ class PageTemplate:
             parent: The MkPage using this Page template.
         """
         self.filename = filename
-        self.extends = f"{extends.rstrip('.html')}.html" if extends else None
+        self.extends = f"{extends.rstrip(".html")}.html" if extends else None
         self.parent = parent
 
         # Common blocks

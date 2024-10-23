@@ -263,7 +263,7 @@ def get_emoji_slug(icon: str) -> str:
     Arguments:
         icon: The string to convert to an emoji slug.
     """
-    return f":{get_pyconify_key(icon).replace(':', '-')}:"
+    return f":{get_pyconify_key(icon).replace(":", "-")}:"
 
 
 def get_icon_xml(icon: str) -> ET.Element:

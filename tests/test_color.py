@@ -23,7 +23,7 @@ def test_color_init_with_rgba_tuple():
 
 def test_color_init_with_invalid_type():
     with pytest.raises(TypeError):
-        Color(123)
+        Color(123)  # type: ignore[arg-type]
 
 
 def test_color_str():
