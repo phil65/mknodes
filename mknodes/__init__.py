@@ -64,7 +64,6 @@ from .templatenodes.mkdevtools import MkDevTools
 from .templatenodes.mkclassdiagram import MkClassDiagram
 from .templatenodes.mkclasstable import MkClassTable
 from .templatenodes.mkreprrawrendered import MkReprRawRendered
-from .templatenodes.mkcallable import MkCallable
 from .templatenodes.mktreeview import MkTreeView
 from .templatenodes.mklicense import MkLicense
 from .templatenodes.mkdependencytable import MkDependencyTable
@@ -159,7 +158,6 @@ __all__ = [
     "MkCard",
     "MkShowcase",
     "MkReprRawRendered",
-    "MkCallable",
     "MkTreeView",
     "MkLicense",
     "MkDependencyTable",

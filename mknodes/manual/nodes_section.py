@@ -83,7 +83,7 @@ CONTAINER_NODES = [
     mk.MkTaskList,
 ]
 
-SPECIAL_NODES = [mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput, mk.MkCallable]
+SPECIAL_NODES = [mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput]
 
 
 def create_section_for_nodes(
