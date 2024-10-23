@@ -434,7 +434,7 @@ def get_default_project_context():
         author_name="Philipp Temminghoff",
         author_email="philipptemminghoff@gmail.com",
         license_name="MIT",
-        required_python_version=">= 3.11",
+        required_python_version=">= 3.12",
         homepage="",
         cli="typer",
         module=mk,
