@@ -211,7 +211,7 @@ def iter_classes(
 
 
 @functools.cache
-def get_topmost_module_path(obj: Callable) -> str:
+def get_topmost_module_path(obj: Callable[..., Any]) -> str:
     """Return path of topmost module containing given class.
 
     If a class is imported in any of its parent modules, return that "shorter" path.
@@ -276,7 +276,7 @@ def import_module(mod: str) -> types.ModuleType:
 
 
 @functools.cache
-def get_members(obj: object, predicate: Callable | None = None):
+def get_members(obj: object, predicate: Callable[[Any], Any] | None = None):
     """Cached version of inspect.getmembers.
 
     Arguments:
@@ -307,8 +307,12 @@ def import_file(path: str | os.PathLike[str]) -> types.ModuleType:
     return module
 
 
+P = typing.ParamSpec("P")  # For parameters
+R = typing.TypeVar("R")  # For return type
+
+
 @functools.cache
-def to_callable(path: str | Callable) -> Callable:
+def to_callable(path: str | Callable[P, R]) -> Callable[P, R]:
     """Return a callable from a string describing the path to a Callable.
 
     If path already is a callable, return it without changes.
@@ -316,6 +320,12 @@ def to_callable(path: str | Callable) -> Callable:
 
     Arguments:
         path: The path to the callable to return.
+
+    Returns:
+        The callable object specified by the path or the original callable.
+
+    Raises:
+        TypeError: If the resolved object is not callable.
     """
     if callable(path):
         return path
