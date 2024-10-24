@@ -122,10 +122,12 @@ class GitRepository(git.Repo):
         groups = iterfilters.groupby(
             commits, self.get_version_for_commit, natural_sort=True
         )
-        return {
-            k: iterfilters.groupby(v, lambda x: x.message.split(":")[0])
-            for k, v in groups.items()
-        }
+
+        def get_commit_group(commit: git.Commit) -> str:
+            assert isinstance(commit.message, str)
+            return commit.message.split(":")[0]
+
+        return {k: iterfilters.groupby(v, get_commit_group) for k, v in groups.items()}
 
     @functools.cached_property
     def all_commits(self) -> list[git.Commit]:  # type: ignore[name-defined]
