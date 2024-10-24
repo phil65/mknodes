@@ -4,7 +4,7 @@ import functools
 import os
 import pathlib
 import shutil
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import upath
 
@@ -13,6 +13,7 @@ from mknodes.utils import log
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+    from typing import Any
 
 
 logger = log.get_logger(__name__)
@@ -97,23 +98,28 @@ def clean_directory(
 def write_file(
     content: str | bytes,
     output_path: str | os.PathLike[str],
+    errors: str | None = None,
     **kwargs: Any,
 ):
     """Write content to output_path, making sure any parent directories exist.
 
-    Encoding mode will be chosen automatically based on given content.
+    Encoding will be chosen automatically based on type of content
 
     Arguments:
         content: Content to write
         output_path: path where file should get written to.
-        kwargs: Additional keyword arguments passed to "open"
+        errors: how to handle errors. Possible options:
+                "strict", "ignore", "replace", "surrogateescape",
+                "xmlcharrefreplace", "backslashreplace", "namereplace"
+        kwargs: Additional keyword arguments passed to open
     """
     output_p = upath.UPath(output_path)
     output_p.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
-    encoding = None if "b" in mode else "utf-8"
-    kwargs["encoding"] = encoding
-    with output_p.open(mode=mode) as f:  # type: ignore[call-overload]
+    kwargs["encoding"] = None if "b" in mode else "utf-8"
+    if errors:
+        kwargs["errors"] = errors
+    with output_p.open(mode=mode, **kwargs) as f:  # type: ignore[call-overload]
         f.write(content)
 
 
