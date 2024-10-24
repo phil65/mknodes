@@ -52,7 +52,7 @@ class MkList(mkcontainer.MkContainer):
         if not self.items:
             return ""
         lines = [
-            f"  {f"{i}." if self.ordered else "*"} {self._prep(item)}"
+            f"  {f'{i}.' if self.ordered else '*'} {self._prep(item)}"
             for i, item in enumerate(self.items[: self.shorten_after], start=1)
         ]
         if self.shorten_after and len(self.items) > self.shorten_after:

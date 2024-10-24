@@ -33,7 +33,7 @@ class Tool:
                 self.cfg["syntax"] = "toml"
                 self.cfg["content"] = self.get_config(folder)
                 return True
-            if cfg["type"] in ["inifile", "yamlfile", "tomlfile", "jsonfile"]:
+            if cfg["type"] in {"inifile", "yamlfile", "tomlfile", "jsonfile"}:
                 path = pathhelpers.find_cfg_for_folder(cfg["filename"], folder.path)
                 if bool(path):
                     self.cfg = cfg
@@ -52,7 +52,7 @@ class Tool:
             if cfg["type"] == "pyproject" and folder.pyproject.tool.get(cfg["section"]):
                 dct = folder.pyproject.tool.get_section(cfg["section"])
                 return dct.serialize("toml")
-            if cfg["type"] in ["inifile", "yamlfile", "tomlfile", "jsonfile"]:  # noqa: SIM102
+            if cfg["type"] in {"inifile", "yamlfile", "tomlfile", "jsonfile"}:  # noqa: SIM102
                 if p := pathhelpers.find_cfg_for_folder(cfg["filename"], folder.path):
                     return p.read_text(encoding="utf-8")
         return None

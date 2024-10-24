@@ -55,7 +55,7 @@ def get_dependency_svg(
 
 def insert_links(svg: str, link_map: Mapping[str, str]) -> str:
     for k, v in link_map.items():
-        if (title_tag := f'<title>{k.replace(".", "_")}</title>') in svg:
+        if (title_tag := f"<title>{k.replace('.', '_')}</title>") in svg:
             svg = svg.replace(title_tag, f'<a href="{v}"><title>{k}</title>')
     return svg.replace("</text></g>", "</text></a></g>")
 

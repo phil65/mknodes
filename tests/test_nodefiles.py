@@ -27,7 +27,7 @@ def test_if_example_can_get_rendered(node):
 def test_if_template_output_equals_code_output(node: mk.MkNode):
     if nodefile := node.nodefile:
         for k, v in nodefile.output.items():
-            if k not in ["markdown", "html"]:
+            if k not in {"markdown", "html"}:
                 continue
             result = node.env.render_string(v["template"], dict(node=node))
             assert result == node._to_markdown()

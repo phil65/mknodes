@@ -315,7 +315,7 @@ class MaterialTheme(theme.Theme):
         """
         for k in dict(extensions).copy():
             ext = extensions[k]
-            if k in ["pymdownx.blocks.tab", "pymdownx.tabbed"]:
+            if k in {"pymdownx.blocks.tab", "pymdownx.tabbed"}:
                 ext["alternate_style"] = True
             elif k == "pymdownx.tasklist":
                 ext["custom_checkbox"] = True

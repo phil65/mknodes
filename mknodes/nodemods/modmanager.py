@@ -19,7 +19,7 @@ class ModManager:
         self._css_classes = css_classes or []
 
     def __hash__(self):
-        return sum([hash(i) for i in self.css_classes])
+        return sum(hash(i) for i in self.css_classes)
 
     def __eq__(self, other):
         """Needed for Mknode comparison."""

@@ -167,7 +167,7 @@ def get_nondefault_repr(
     kwargs: dict[str, Any] = {}
     signature = inspectfilters.get_signature(instance.__init__)
     for arg, v in signature.parameters.items():
-        if v.kind in [v.VAR_POSITIONAL, v.VAR_KEYWORD]:
+        if v.kind in {v.VAR_POSITIONAL, v.VAR_KEYWORD}:
             continue
         if arg == "content":
             val = getattr(instance, "items", None)
@@ -176,9 +176,9 @@ def get_nondefault_repr(
         else:
             val = getattr(instance, arg)
         if v.default != val:
-            if v.kind in [v.KEYWORD_ONLY]:
+            if v.kind in {v.KEYWORD_ONLY}:
                 kwargs[arg] = val
-            if v.kind in [v.POSITIONAL_OR_KEYWORD, v.POSITIONAL_ONLY]:
+            if v.kind in {v.POSITIONAL_OR_KEYWORD, v.POSITIONAL_ONLY}:
                 args.append(val)
     return get_repr(instance, *args, _char_width=char_width, _shorten=shorten, **kwargs)  # type: ignore[arg-type]
 

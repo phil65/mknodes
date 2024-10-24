@@ -34,7 +34,7 @@ class PyProject(tomlfile.TomlFile):
             raise FileNotFoundError(msg)
         p = upath.UPath(path)
         if p.is_dir():
-            p = p / "pyproject.toml"
+            p /= "pyproject.toml"
         super().__init__(p)
 
     @property

@@ -119,7 +119,7 @@ class BaseResolver:
                 if parent is None:
                     raise RootResolverError(node)
                 node = parent
-            elif part not in ("", "."):
+            elif part not in {"", "."}:
                 node = self._get(node, part)
         return node
 
@@ -230,7 +230,7 @@ class BaseResolver:
                 if parent is None:
                     raise RootResolverError(node)
                 nodes += self._glob(parent, remainder)
-            elif name in ("", "."):
+            elif name in {"", "."}:
                 nodes += self._glob(node, remainder)
             elif (matches := self._find(node, name, remainder)) or self.is_wildcard(name):
                 nodes += matches

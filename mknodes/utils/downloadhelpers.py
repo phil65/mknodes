@@ -34,7 +34,7 @@ def download(url: str, headers: dict[str, str] | None = None) -> bytes:
         headers: Headers to use for the request.
     """
     logger.debug("Getting file for '%s'", url)
-    if parse.urlsplit(url).scheme not in ("http", "https"):
+    if parse.urlsplit(url).scheme not in {"http", "https"}:
         with pathlib.Path(url).open("rb") as f:
             return f.read()
     if token := os.getenv("GH_TOKEN"):

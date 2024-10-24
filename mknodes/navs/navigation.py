@@ -49,7 +49,7 @@ class Navigation(dict):
     def register(self, node: NavSubType):
         match node:
             case mknav.MkNav() | mkpage.MkPage() | mklink.MkLink():
-                self[(node.title,)] = node
+                self[node.title,] = node
             case _:
                 raise TypeError(node)
 

@@ -239,7 +239,7 @@ def get_pyconify_key(icon: str) -> str:
         icon: The string which should be converted to a pyconify key.
     """
     for k, v in PYCONIFY_TO_PREFIXES.items():
-        path = f'{v.replace("-", "/")}/'
+        path = f"{v.replace('-', '/')}/"
         icon = icon.replace(path, f"{k}:")
         icon = icon.replace(f":{v}-", f"{k}:")
     icon = icon.strip(":")
@@ -263,7 +263,7 @@ def get_emoji_slug(icon: str) -> str:
     Arguments:
         icon: The string to convert to an emoji slug.
     """
-    return f":{get_pyconify_key(icon).replace(":", "-")}:"
+    return f":{get_pyconify_key(icon).replace(':', '-')}:"
 
 
 def get_icon_xml(icon: str) -> ET.Element:

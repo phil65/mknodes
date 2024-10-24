@@ -333,7 +333,7 @@ class NavParser:
                 text = path.read_text(encoding="utf-8")
                 title = nav.title or "Home"
                 nav.index_page = mk.MkPage(title, path=path.name, content=text, **kwargs)
-            elif path.suffix in [".md", ".html"] and path.name != "SUMMARY.md":
+            elif path.suffix in {".md", ".html"} and path.name != "SUMMARY.md":
                 text = path.read_text(encoding="utf-8")
                 rel_path = path.relative_to(folder)
                 nav += mk.MkPage(path=rel_path, content=text, **kwargs)
@@ -377,7 +377,7 @@ class NavParser:
                 subnav.parse.folder(folder=path, **kwargs)
                 self._nav += subnav
                 logger.debug("Loaded subnav from from %s", path)
-            elif path.suffix in [".py"]:
+            elif path.suffix in {".py"}:
                 page = mkpage.MkPage(path=path.name, title=path.name, **kwargs)
                 content = path.read_text(encoding="utf-8")
                 page += mkcode.MkCode(content, linenums=1)

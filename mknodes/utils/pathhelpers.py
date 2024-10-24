@@ -73,7 +73,7 @@ def copy(
         shutil.copytree(source_p, output_p, dirs_exist_ok=exist_ok)
     else:
         if output_p.is_dir():
-            output_p = output_p / source_p.name
+            output_p /= source_p.name
         shutil.copyfile(source_p, output_p)
 
 

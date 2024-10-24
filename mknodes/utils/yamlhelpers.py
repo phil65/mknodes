@@ -50,9 +50,9 @@ def yaml_include_constructor(loader: yaml.BaseLoader, node: yaml.Node) -> Any:
     folder = pathlib.Path(loader.name).parent
     fp = folder.joinpath(scalar).resolve()  # type: ignore[arg-type]
     with fp.open() as f:
-        if fp.suffix in (".yaml", ".yml"):
+        if fp.suffix in {".yaml", ".yml"}:
             return yaml.load(f, type(loader))
-        if fp.suffix in (".json", ".jsn"):
+        if fp.suffix in {".json", ".jsn"}:
             return json.load(f)
         return f.read()
 

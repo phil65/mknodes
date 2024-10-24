@@ -13,7 +13,7 @@ from mknodes.info import (
     contexts,
     # githubinfo,
     grifferegistry,
-    license,
+    license as lic,
     mkdocsconfigfile,
     packageregistry,
     pyproject,
@@ -158,7 +158,7 @@ class FolderInfo:
     def inventory_url(self) -> str | None:
         """Return best guess for a link to an inventory file."""
         if url := self.mkdocs_config.get("site_url"):
-            return f"{url.rstrip("/")}/objects.inv"
+            return f"{url.rstrip('/')}/objects.inv"
         return None
 
     @functools.cached_property
@@ -215,9 +215,9 @@ class FolderInfo:
         if self.license_file_path:
             return self.license_file_path.read_text(encoding="utf-8")
         if license_name := self.info.license_name:
-            lic = license.License.from_name(license_name)
-            lic.resolve_by_distribution(self.info.name)
-            return lic.content
+            obj = lic.License.from_name(license_name)
+            obj.resolve_by_distribution(self.info.name)
+            return obj.content
         return None
 
     @functools.cached_property
