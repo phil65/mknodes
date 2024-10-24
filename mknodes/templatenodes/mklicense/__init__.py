@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mktext
-from mknodes.info import license
+from mknodes.info import license as lic
 from mknodes.utils import log
 
 
@@ -38,13 +38,13 @@ class MkLicense(mktext.MkText):
     @property
     def text(self):
         if self.license_type:
-            lic = license.License.from_name(self.license_type)
+            obj = lic.License.from_name(self.license_type)
             if self.ctx.metadata.distribution_name:
-                lic.resolve_by_distribution(self.ctx.metadata.distribution_name)
-            return lic.content
+                obj.resolve_by_distribution(self.ctx.metadata.distribution_name)
+            return obj.content
         return self.ctx.metadata.license_text or ""
 
 
 if __name__ == "__main__":
-    lic = MkLicense.with_context("GPL-3.0")
-    print(repr(lic))
+    node = MkLicense.with_context("GPL-3.0")
+    print(repr(node))

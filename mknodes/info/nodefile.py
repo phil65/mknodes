@@ -48,7 +48,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
     dct: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
         Jinja=mk.MkCode(jinja, language="jinja"),
         Repr=mk.MkCode(textfilters.format_code(repr(node))),
-        Rendered=node.__copy__(),
+        Rendered=node.__copy__(),  # noqa: PLC2801
         Markdown=mk.MkCode(node, language="markdown"),
         Html=mk.MkCode(node.to_html(), language="html"),
     )
