@@ -44,7 +44,7 @@ def get_mermaid(
         from pipdeptree._models import PackageDAG
         from pipdeptree._render.mermaid import render_mermaid
         from pipdeptree._discovery import get_installed_distributions
-
+        from pipdeptree._detect_env import detect_active_interpreter
     # dists = packagehelpers.list_pip_packages(
     #     local_only=local_only,
     #     user_only=user_only,
@@ -52,7 +52,12 @@ def get_mermaid(
     #     editables_only=editables_only,
     # )
     # pkgs = [d._dist for d in dists]  # type: ignore[attr-defined]
-    pkgs = get_installed_distributions(local_only=local_only, user_only=user_only)
+    resolved_path = detect_active_interpreter()
+    pkgs = get_installed_distributions(
+        interpreter=resolved_path,
+        local_only=local_only,
+        user_only=user_only,
+    )
     tree = PackageDAG.from_pkgs(pkgs)
     # Reverse the tree (if applicable) before filtering,
     # thus ensuring, that the filter will be applied on ReverseTree
