@@ -9,8 +9,6 @@ from mknodes.utils import reprhelpers
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from click import types as clicktypes
-
 
 @dataclasses.dataclass(frozen=True)
 class Param:
@@ -44,9 +42,9 @@ class Param:
     """Whether the parameter is required."""
     secondary_opts: list[str] = dataclasses.field(default_factory=list)
     """Secondary options for this parameter."""
-    type: clicktypes.ParamType | None = None
+    type: dict[str, str] | None = None
     """The type object of the parameter."""
-    callback: Callable | None = None
+    callback: Callable[[Any], Any] | None = None
     """A method to further process the value after type conversion."""
     expose_value: str = ""
     """Whether value is passed onwards to the command callback and stored in context."""
