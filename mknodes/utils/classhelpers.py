@@ -303,16 +303,12 @@ def import_file(path: str | os.PathLike[str]) -> types.ModuleType:
         raise RuntimeError
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
+    assert spec.loader
     spec.loader.exec_module(module)  # type: ignore[union-attr]
     return module
 
 
-P = typing.ParamSpec("P")  # For parameters
-R = typing.TypeVar("R")  # For return type
-
-
-@functools.cache
-def to_callable(path: str | Callable[P, R]) -> Callable[P, R]:
+def to_callable(path: str | Callable[..., Any]) -> Callable[..., Any]:
     """Return a callable from a string describing the path to a Callable.
 
     If path already is a callable, return it without changes.
