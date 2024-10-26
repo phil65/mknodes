@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 logger = log.get_logger(__name__)
 
 
-class CommitList(list):
+class CommitList(list[git.Commit]):
     def __repr__(self):
         return reprhelpers.limit_repr.repr(list(self))
 
