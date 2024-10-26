@@ -95,8 +95,8 @@ dev-dependencies = [
     # Docs
     "mkdocs >=1.5",
     "mkdocs-material >= 9.4",
-    # "mkdocs_mknodes",
-    "mkdocs_mknodes @ git+https://github.com/phil65/mkdocs_mknodes.git@main",
+    "mkdocs_mknodes",
+    # "mkdocs_mknodes @ git+https://github.com/phil65/mkdocs_mknodes.git@main",
     "pymdown-extensions",
     "markdown-exec[ansi]",
     "pygments",
