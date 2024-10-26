@@ -159,3 +159,7 @@ def test_import_file_with_none():
 def test_import_file_with_non_string():
     with pytest.raises(TypeError):
         import_file(123)
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

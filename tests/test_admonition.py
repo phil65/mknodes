@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -16,3 +18,7 @@ def test_admonition():
 def test_markdown():
     admonition = mk.MkAdmonition("This is a test")
     assert str(admonition) == EXPECTED
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

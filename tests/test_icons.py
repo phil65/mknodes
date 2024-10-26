@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from mknodes.utils import icons
 
 
@@ -20,3 +22,7 @@ def test_noto_key_conversion():
     assert (
         icons.get_pyconify_key("fontawesome/regular/keyboard") == "fa6-regular:keyboard"
     )
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

@@ -41,3 +41,7 @@ def test_color_set_alpha():
     color = Color("red")
     color.set_alpha(0.5)
     assert color.alpha() == 0.5  # noqa: PLR2004
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

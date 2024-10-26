@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -59,3 +61,7 @@ def test_overwriting_inherited_metadata():
     page = nav.add_page("Test")
     page.metadata["test"] = "Test 2"
     assert page.resolved_metadata["test"] == "Test 2"
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

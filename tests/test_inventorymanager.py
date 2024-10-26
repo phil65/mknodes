@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from mknodes.utils import inventorymanager
 
 
@@ -13,3 +15,7 @@ def test_getting_link(test_data_dir):
     inv_manager.add_inv_file(test_data_dir / "objects.inv", base_url=BASE_URL)
     item = inv_manager[DOTTED_PATH]
     assert item == EXPECTED
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

@@ -44,3 +44,7 @@ def test_creating_module_document():
     subnav = nav.add_nav("subsection")
     module_docs = subnav.add_doc(pytest)
     assert module_docs.children
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

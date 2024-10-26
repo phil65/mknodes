@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -43,3 +45,7 @@ def test_rendered_children():
     assert admon_inner == text_inner.parent
     assert node == admon_inner.parent
     assert node.parent is None
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

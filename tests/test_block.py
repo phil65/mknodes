@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -41,3 +43,7 @@ def test_nested_block():
     inner_2 = mk.MkBlock("inner_2", content="inner_2 content")
     outer = mk.MkBlock("outer", content=[inner_1, inner_2])
     assert str(outer) == NESTED_EXPECTED
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

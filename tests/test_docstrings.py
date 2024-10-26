@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -21,3 +23,7 @@ def test_auto_list_style_inside_annotations():
     annotations = mk.MkAnnotations()
     annotations[1] = mk.MkDocStrings(obj=mk.MkDocStrings.__init__)
     assert str(annotations) == EXPECTED_IN_ANNOTATIONS
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

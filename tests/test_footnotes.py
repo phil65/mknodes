@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -72,3 +74,7 @@ def test_mapping_interface():
     ann = mk.MkFootNotes()
     ann[1] = "test"
     assert str(ann[1]) == "[^1]:\n    test\n"
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

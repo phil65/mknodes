@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import mknodes as mk
 
 
@@ -63,3 +65,7 @@ def test_metadata():
     )
     page.metadata.pop("created")
     assert page.metadata.as_page_header() == EXPECTED
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])
