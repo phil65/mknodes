@@ -100,6 +100,7 @@ class MkTab(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
 
     def __repr__(self):
+        content: str | list[str]
         if len(self.items) == 1:
             content = reprhelpers.to_str_if_textnode(self.items[0])
         else:

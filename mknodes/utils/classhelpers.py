@@ -335,7 +335,7 @@ def to_callable(path: str | Callable[..., Any]) -> Callable[..., Any]:
     return obj
 
 
-def get_code_name(obj) -> str:
+def get_code_name(obj: Any) -> str:
     """Get a title for an object representing code.
 
     Arguments:
