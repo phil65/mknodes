@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from jinjarope import iconfilters
 from mknodes.basenodes import mknode
-from mknodes.utils import icons, log
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -23,8 +24,8 @@ class MkIcon(mknode.MkNode):
         color: str | None = None,
         height: str | int | None = None,
         width: str | int | None = None,
-        flip: icons.Flip | None = None,
-        rotate: icons.Rotation | None = None,
+        flip: iconfilters.Flip | None = None,
+        rotate: iconfilters.Rotation | None = None,
         box: bool | None = None,
         **kwargs: Any,
     ):
@@ -63,7 +64,7 @@ class MkIcon(mknode.MkNode):
         import requests.exceptions
 
         try:
-            return icons.get_icon_svg(
+            return iconfilters.get_icon_svg(
                 self.icon_name,
                 color=self.color,
                 height=self.height,

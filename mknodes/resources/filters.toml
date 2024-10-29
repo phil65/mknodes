@@ -62,16 +62,6 @@ template = """
 """
 
 
-[filters.get_icon_svg]
-fn = "mknodes.utils.icons.get_icon_svg"
-group = "icon"
-
-[filters.get_icon_svg.examples.class]
-template = """
-{{ "mdi:file" | get_icon_svg }}
-"""
-
-
 [filters.get_emoji_slug]
 fn = "mknodes.utils.icons.get_emoji_slug"
 group = "icon"
