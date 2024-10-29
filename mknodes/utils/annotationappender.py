@@ -10,10 +10,12 @@ class AnnotationAppender:
     """Helper for auto-annotating code blocks.
 
     Example:
+        ``` py
         test = "mknodes.MkAdmonition("test")"
         appender = AnnotationAppender()
         text = appender.append_markers(test)
         appender.append_annotations(node)
+        ```
 
     """
 
