@@ -15,7 +15,7 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Container, Mapping
     import types
 
 
@@ -216,13 +216,41 @@ def list_installed_packages() -> dict[str, str]:
     return {i.project_name: i.key for i in pkg_resources.working_set}
 
 
+stdlib_pkgs = {"python", "wsgiref", "argparse"}
+
+
 @functools.cache
 def list_pip_packages(
     local_only: bool = True,
     user_only: bool = False,
+    skip: Container[str] = stdlib_pkgs,
     include_editables: bool = True,
     editables_only: bool = False,
 ):
+    """Returns a list of installed distributions.
+
+    This is based on ``iter_all_distributions()`` with additional filtering
+    options. Note that ``iter_installed_distributions()`` without arguments
+    is *not* equal to ``iter_all_distributions()``, since some of the
+    configurations exclude packages by default.
+
+    Args:
+        local_only:
+            If True (default), only return installations local to the current
+            virtualenv, if in a virtualenv.
+        skip: iterable:
+            An iterable of canonicalized project names to ignore.
+            Defaults to ``stdlib_pkgs``.
+        include_editables:
+            If False, don't report editables.
+        editables_only:
+            If True, only report editables.
+        user_only:
+            If True, only report installations in the user site directory.
+
+    Returns:
+        list: A list of installed distribution packages.
+    """
     # import warnings
 
     # with warnings.catch_warnings():
@@ -233,7 +261,7 @@ def list_pip_packages(
     return list(
         pkg_resources.Environment.from_paths(None).iter_installed_distributions(
             local_only=local_only,
-            skip=(),
+            skip=skip,
             user_only=user_only,
             include_editables=include_editables,
             editables_only=editables_only,
