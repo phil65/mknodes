@@ -3,19 +3,40 @@ from __future__ import annotations
 import textwrap
 
 from typing import Any, Self, TYPE_CHECKING
-
+import functools
 from jinjarope import textfilters
 import upath
 
 from mknodes.basenodes import mknode
-from mknodes.utils import classhelpers, inspecthelpers, log, richhelpers
+from mknodes.utils import classhelpers, inspecthelpers, log
+import os
 
 if TYPE_CHECKING:
     from mknodes.data import datatypes
-    import os
 
 
 logger = log.get_logger(__name__)
+
+
+@functools.cache
+def get_svg_for_code(
+    text: str,
+    title: str = "",
+    width: int = 80,
+    language: str = "py",
+    pygments_style: str = "material",
+) -> str:
+    from rich.console import Console
+    from rich.padding import Padding
+    from rich.syntax import Syntax
+
+    # with console.capture() as _capture:
+    with open(os.devnull, "w") as devnull:  # noqa: PTH123
+        console = Console(record=True, width=width, file=devnull, markup=False)
+        syntax = Syntax(text, lexer=language, theme=pygments_style)
+        renderable = Padding(syntax, (0,), expand=False)
+        console.print(renderable, markup=False)
+    return console.export_svg(title=title)
 
 
 class MkCodeImage(mknode.MkNode):
@@ -53,7 +74,7 @@ class MkCodeImage(mknode.MkNode):
                 return inspecthelpers.get_source(self._code)
 
     def _to_markdown(self) -> str:
-        content = richhelpers.get_svg_for_code(
+        content = get_svg_for_code(
             self.code,
             language=self.language,
             title=self.title,
