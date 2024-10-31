@@ -107,7 +107,7 @@ def get_extras(markers: list) -> list[str]:
     return extras
 
 
-def import_dotted_path(path: str) -> Any:
+def import_dotted_path(path: str) -> type | types.ModuleType:
     if ":" in path:
         mod_name, kls_name = path.split(":")
     else:
