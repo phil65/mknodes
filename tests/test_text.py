@@ -21,7 +21,7 @@ def test_getitem_ending_with_another_section():
 
 
 def test_fetch_from_url():
-    url = "https://raw.githubusercontent.com/fire1ce/DDNS-Cloudflare-Bash/main/README.md"
+    url = "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
     node = mk.MkText.from_url(url)
     assert str(node)
 
