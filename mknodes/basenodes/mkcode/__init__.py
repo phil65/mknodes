@@ -101,7 +101,8 @@ class MkCode(mkcontainer.MkContainer):
         return f"{{{classes}{attr_str}}}"
 
     def _to_markdown(self) -> str:
-        first_line = f"{self.fence_boundary} {self.fence_title}"
+        space = " " if self.fence_title else ""
+        first_line = f"{self.fence_boundary}{space}{self.fence_title}"
         return f"{first_line}\n{self.text}\n{self.fence_boundary}"
 
     @classmethod
