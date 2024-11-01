@@ -9,6 +9,22 @@ from mknodes.info import gitrepository
 
 @pytest.mark.skipif(not bool(os.getenv("CI")), reason="Only run Git tests in CI")
 def test_gitrepository():
+    """Test the GitRepository class functionality.
+    
+    This method tests various methods and attributes of the GitRepository class,
+    including cloning a repository, retrieving version information for specific
+    commits, and checking repository metadata.
+    
+    Args:
+        None
+    
+    Returns:
+        None
+    
+    Raises:
+        AssertionError: If any of the assertions fail, indicating incorrect
+                        behavior of the GitRepository class.
+    """
     repo = gitrepository.GitRepository.clone_from(
         "https://github.com/phil65/mknodes",
         "testclone",
