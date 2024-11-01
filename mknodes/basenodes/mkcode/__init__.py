@@ -131,7 +131,7 @@ class MkCode(mkcontainer.MkContainer):
             kwargs: Keyword arguments passed to MkCode ctor
         """
         file_path = upath.UPath(path)
-        content = file_path.read_text()
+        content = file_path.read_text("utf-8")
         hl_lines = None
         if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
             call_file = frame.f_back.f_code.co_filename

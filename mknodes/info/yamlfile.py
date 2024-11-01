@@ -53,7 +53,7 @@ class YamlFile(configfile.ConfigFile):
         for path in file_paths:
             parent_cfg = abspath.parent / path
             logger.debug("Loading inherited configuration file: %s", parent_cfg)
-            text = parent_cfg.read_text()
+            text = parent_cfg.read_text("utf-8")
             parent = yamltools.load_yaml(text, mode)
             self._data = serializefilters.merge(parent, self._data)
 

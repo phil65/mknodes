@@ -100,7 +100,7 @@ class MkCodeImage(mknode.MkNode):
         """
         opts = storage_options or {}
         file = upath.UPath(path, **opts)
-        content = file.read_text()
+        content = file.read_text("utf-8")
         title = file.name if title is None else title
         return cls(content, title=title, **kwargs)
 
