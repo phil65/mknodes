@@ -14,6 +14,17 @@ EXPECTED_TABBED = """===! "Tab1"
 
 
 def test_mktabbed():
+    """Test the creation and functionality of a MkTabbed object.
+    
+    Args:
+        None
+    
+    Returns:
+        None
+    
+    Raises:
+        AssertionError: If any of the assertions fail during the test.
+    """
     tabs = dict(Tab1="Some text", Tab2="Another text")
     node = mk.MkTabbed(tabs)
     assert len(node.items) == 2  # noqa: PLR2004
