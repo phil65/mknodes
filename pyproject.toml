@@ -273,6 +273,7 @@ reportUnusedCallResult = false
 reportUnknownVariableType = false
 reportAny = false
 reportImplicitOverride = false
+reportUnannotatedClassAttribute = false
 
 [tool.mknodes]
 allowed-commit-types = [
