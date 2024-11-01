@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Literal, Self
 
-from mknodes.utils import yamlhelpers
+from jinjarope import yamltools
 
 
 if TYPE_CHECKING:
@@ -197,13 +197,13 @@ class Metadata(dict):
         dct = {}
         if match := HEADER_RE.match(text):
             content = match[1]
-            dct = yamlhelpers.load_yaml(content)
+            dct = yamltools.load_yaml(content)
             text = text[match.span()[1] :]
         return cls(**dct), text
 
     def __str__(self):
         dct = {k: v for k, v in self.items() if v is not None}
-        return yamlhelpers.dump_yaml(dct) if dct else ""
+        return yamltools.dump_yaml(dct) if dct else ""
 
     def as_page_header(self) -> str:
         """Format metadata in Page header format (with --- separators)."""

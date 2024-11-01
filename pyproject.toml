@@ -39,7 +39,6 @@ dependencies = [
     "pygithub",
 
     # Serialization
-    "PyYAML >=5.1",
     "tomli-w",
 
     # HTTP / Remote
@@ -51,7 +50,7 @@ dependencies = [
 
     # Tools
     "jinja2",
-    "jinjarope[icons]",
+    "jinjarope[icons,yaml]",
     "griffe",
     "coloraide",
     "natsort",
@@ -69,7 +68,6 @@ mknodes = "mknodes.jinja:setup_env"
 [project.urls]
 Documentation = "https://phil65.github.io/mknodes/"
 Source = "https://github.com/phil65/mknodes"
-Gitter = "https://app.gitter.im/#/room/#mknodes:gitter.im"
 
 [build-system]
 requires = ["hatchling", "hatch-regex-commit"]

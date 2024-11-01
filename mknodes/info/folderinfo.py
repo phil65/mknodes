@@ -8,6 +8,8 @@ import pathlib
 import re
 from typing import TYPE_CHECKING
 
+from jinjarope import yamltools
+
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
@@ -19,14 +21,7 @@ from mknodes.info import (
     pyproject,
     reporegistry,
 )
-from mknodes.utils import (
-    icons,
-    log,
-    packagehelpers,
-    pathhelpers,
-    reprhelpers,
-    yamlhelpers,
-)
+from mknodes.utils import icons, log, packagehelpers, pathhelpers, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -82,7 +77,7 @@ class FolderInfo:
         self.pyproject = pyproject.PyProject(self.path)
         self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile()
         if (mk_path := self.path / "mkdocs.yml").exists():
-            with contextlib.suppress(yamlhelpers.YAMLError):
+            with contextlib.suppress(yamltools.YamlError):
                 self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile(mk_path)
         # self.github = githubinfo.GitHubRepo(
         #     self.repository_username,

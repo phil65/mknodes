@@ -6,10 +6,10 @@ import functools
 
 import jinjarope
 import tomli_w
-from jinjarope import inspectfilters
+from jinjarope import inspectfilters, yamltools
 
 from mknodes import paths
-from mknodes.utils import classhelpers, inspecthelpers, yamlhelpers
+from mknodes.utils import classhelpers, inspecthelpers
 
 
 def setup_env(env: jinjarope.Environment):
@@ -25,9 +25,9 @@ def setup_env(env: jinjarope.Environment):
     env.load_jinja_file(path)
     env.filters |= node_klasses
     env.filters |= {
-        "dump_yaml": yamlhelpers.dump_yaml,
+        "dump_yaml": yamltools.dump_yaml,
         "dump_toml": tomli_w.dumps,
-        "load_yaml": yamlhelpers.load_yaml,
+        "load_yaml": yamltools.load_yaml,
     }
 
 
