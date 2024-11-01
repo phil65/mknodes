@@ -41,6 +41,9 @@ jinja = """
 [output.markdown]
 template = """
 {{ node.fence_boundary }} 
-{{ node.tree.get_tree_repr(style=node.style, max_depth=node.maximum_depth) }}
+{% if node.tree is instance("os.PathLike") %}
+{{ node.tree.get_tree_repr(style=node.style, max_depth=node.maximum_depth) }}{% else %}
+{{ node.tree | get_directory_tree(max_depth=node.maximum_depth) }}
+{% endif %}
 {{ node.fence_boundary }}
 """

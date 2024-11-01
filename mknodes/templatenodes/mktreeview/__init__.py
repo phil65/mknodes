@@ -4,8 +4,7 @@ import os
 import upath
 
 from typing import Any, TYPE_CHECKING
-
-from mknodes import treelib
+from jinjarope import filetree
 from mknodes.basenodes import mkcode, mknode
 from mknodes.utils import log
 
@@ -28,11 +27,11 @@ class MkTreeView(mkcode.MkCode):
 
     def __init__(
         self,
-        tree: str | os.PathLike[str] | treelib.Node,
+        tree: str | os.PathLike[str] | mknode.MkNode,
         *,
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] = "rounded",
         maximum_depth: int | None = None,
-        predicate: Callable | None = None,
+        predicate: Callable[..., bool] | None = None,
         exclude_folders: list[str] | str | None = None,
         **kwargs: Any,
     ):
@@ -47,7 +46,7 @@ class MkTreeView(mkcode.MkCode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(language="", **kwargs)
-        self._tree = tree
+        self.tree = tree
         self.style = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
@@ -56,28 +55,21 @@ class MkTreeView(mkcode.MkCode):
         )
 
     @property
-    def tree(self) -> treelib.Node:
-        match self._tree:
-            case str() | os.PathLike():
-                return treelib.FileTreeNode.from_folder(
-                    upath.UPath(self._tree),
-                    predicate=self.predicate,
-                    exclude_folders=self.exclude_folders,
-                    maximum_depth=self.maximum_depth,
-                )
-            case mknode.MkNode():
-                return self._tree
-            case _:
-                raise TypeError(self._tree)
-
-    @property
     def text(self):
-        return self.tree.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
+        match self.tree:
+            case str() | os.PathLike():
+                return filetree.get_directory_tree(
+                    self.tree, max_depth=self.maximum_depth
+                )
+            case mknode.MkNode() as tree:
+                return tree.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
+            case _:
+                raise TypeError(self.tree)
 
 
 if __name__ == "__main__":
     node = MkTreeView(
-        upath.UPath("github://mknodes", org="mkdocstrings", repo="mkdocstrings"),
+        upath.UPath("github://phil65:jinjarope@main/tests/testresources"),
         style="ascii",
         maximum_depth=2,
     )
