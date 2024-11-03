@@ -26,7 +26,7 @@ class MkInstallGuide(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             distribution: name of the distribution to install
             package_repos: package repositories the project is available on
             header_level: Header level for each section

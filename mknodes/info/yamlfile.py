@@ -39,7 +39,7 @@ class YamlFile(configfile.ConfigFile):
 
         Also supports a list of files for INHERIT.
 
-        Arguments:
+        Args:
             mode: The Yaml loader type
         """
         if not self.path:

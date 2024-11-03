@@ -30,7 +30,7 @@ class MkBlock(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             name: Block name
             content: Block content
             argument: Block argument

@@ -26,7 +26,7 @@ class MkKeys(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             keys: keys to display
             kwargs: Keyword arguments passed to parent
         """

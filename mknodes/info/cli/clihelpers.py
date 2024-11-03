@@ -48,7 +48,7 @@ def get_cli_info(
 
     Instance can either be a click Group, a Typer instance or an ArgumentParser
 
-    Arguments:
+    Args:
         instance: A `Typer`, **click** `Group` or `ArgumentParser` instance
         command: The command to get info for.
     """
@@ -75,7 +75,7 @@ def get_click_info(
 ) -> commandinfo.CommandInfo:
     """Get a `CommandInfo` dataclass for given click `Command`.
 
-    Arguments:
+    Args:
         command: The **click** `Command` to get info for.
         parent: The optional parent context
     """

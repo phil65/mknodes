@@ -42,7 +42,7 @@ def str2node(
     If -> is detected, return a MkPage containing given MkNode. Otherwise
     open / download the markdown file from given path and put that into an MkPage.
 
-    Arguments:
+    Args:
         path: Path to build a MkPage for (Either path / URL or "-> MkNode")
         name: Name for given MkPage
         parent: Parent for the MkPage
@@ -83,7 +83,7 @@ def from_list(
 ):
     """Parse given list recursively and add found content to given MkNav.
 
-    Arguments:
+    Args:
         ls: List to parse
         nav: MkNav to attach found stuff to
         base_path: All found paths will be relative to this one if given.
@@ -119,7 +119,7 @@ def from_dict(
 ):
     """Parse given dict recursively and add found content to given MkNav.
 
-    Arguments:
+    Args:
         dct: Dictionary to parse
         nav: MkNav to attach found stuff to
         base_path: All found paths will be relative to this one if given.
@@ -144,7 +144,7 @@ class NavParser:
     def __init__(self, nav: mk.MkNav):
         """Constructor.
 
-        Arguments:
+        Args:
             nav: MkNav to use for routing
         """
         self._nav = nav
@@ -156,7 +156,7 @@ class NavParser:
         """Parse given list or dict and attach it to given MkNav.
 
         If no Nav is given, create a new one
-        Arguments:
+        Args:
             obj: Dictionary / List to parse
         """
         match obj:
@@ -176,7 +176,7 @@ class NavParser:
 
         Should support all SUMMARY.md options except wildcards.
 
-        Arguments:
+        Args:
             path: Path to the file
             kwargs: Keyword arguments passed to the pages to create.
                     Can be used to hide the TOC for all pages for example.

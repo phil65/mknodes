@@ -361,7 +361,7 @@ class ProjectContext(Context):
     ):
         """The main project to create a website.
 
-        Arguments:
+        Args:
             args: Config mapping
             theme_context: Optional theme context
             kwargs: Keyword arguments to override config values

@@ -28,7 +28,7 @@ class Extension(dict):
     def __init__(self, extension_name: str, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             extension_name: Name of the extension
             kwargs: Optional settings for the extension
         """
@@ -54,7 +54,7 @@ class Plugin(dict):
     def __init__(self, plugin_name: str, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             plugin_name: Name of the plugin
             kwargs: Optional settings for the plugin
         """
@@ -218,7 +218,7 @@ class Asset:
     def __init__(self, filename: str, content: str, target: str | None = None):
         """Constructor.
 
-        Arguments:
+        Args:
             filename: Filename for the asset
             content: File content
             target: target directory for the asset file
@@ -319,7 +319,7 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
 
         Adds resources from other to this instance.
 
-        Arguments:
+        Args:
             other: The resources to merge into this one.
             additive: Merge strategy. Either additive or replace.
         """

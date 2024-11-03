@@ -41,7 +41,7 @@ class MkNav(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             section: Section name for the Nav
             filename: FileName for the resulting nav
             metadata: Metadata for the nav. Child pages will inherit this.
@@ -120,7 +120,7 @@ class MkNav(mknode.MkNode):
     def add_nav(self, section: str) -> MkNav:
         """Create a Sub-Nav, register it to given Nav and return it.
 
-        Arguments:
+        Args:
             section: Name of the new nav.
         """
         navi = MkNav(section=section, parent=self)
@@ -149,7 +149,7 @@ class MkNav(mknode.MkNode):
     ) -> mk.MkPage:
         """Add a page to the Nav.
 
-        Arguments:
+        Args:
             title: Page title
             is_index: Whether the page should become the index page.
             is_homepage: Whether the page should become the homepage.
@@ -199,7 +199,7 @@ class MkNav(mknode.MkNode):
     ) -> mk.MkDoc:
         """Add a module documentation to the Nav.
 
-        Arguments:
+        Args:
             module: The module to create a documentation section for.
             filter_by___all__: Whether the documentation
             recursive: Whether to search modules recursively

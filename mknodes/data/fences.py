@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class Fences:
     """Class describing a superfence.
 
-    Arguments:
+    Args:
         name: name of the fence
         class_name: CSS class used by the fence
         format_fn: Callable for formatting

@@ -28,7 +28,7 @@ class MkTabBlock(mkblock.MkBlock):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             title: Tab title
             content: Tab content
             new: Whether tab should start a new tab bloock
@@ -85,7 +85,7 @@ class MkTab(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             title: Tab title
             content: Tab content
             new: Whether tab should start a new tab bloock

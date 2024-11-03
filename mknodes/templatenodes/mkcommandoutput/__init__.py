@@ -23,7 +23,7 @@ class MkCommandOutput(mktemplate.MkTemplate):
     def __init__(self, call: Sequence[str], **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             call: System call to make
             kwargs: Keyword arguments passed to parent
         """

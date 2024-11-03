@@ -66,7 +66,7 @@ class BaseBlock(mknode.MkNode):
     def to_markdown(self, md: markdown.Markdown | None = None):
         """Return HTML for the block.
 
-        Arguments:
+        Args:
             md: Markdown parser to use
         """
         instance = md or mdconverter.MdConverter()
@@ -80,7 +80,7 @@ class HtmlBlock(BaseBlock):
     def __init__(self, block_id: str, *, parent: mk.MkPage | mk.MkNav | None = None):
         """Constructor.
 
-        Arguments:
+        Args:
             block_id: Name of the block
             parent: Parent node
         """
@@ -94,7 +94,7 @@ class HtmlBlock(BaseBlock):
     def block_content(self, md: markdown.Markdown | None = None) -> str:
         """Return the actual block content.
 
-        Arguments:
+        Args:
             md: Markdown parser to use
         """
         import mknodes as mk
@@ -159,7 +159,7 @@ class BaseJSBlock(BaseBlock):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             scripts: List of scripts to add to HTML header libs.
             include_super: Whether to include the original content.
         """
@@ -169,7 +169,7 @@ class BaseJSBlock(BaseBlock):
     def add_script_file(self, script: resources.JSFile | str | os.PathLike[str]):
         """Add a script file to the block.
 
-        Arguments:
+        Args:
             script: Script to add to the block
         """
         if isinstance(script, str | os.PathLike):
@@ -238,7 +238,7 @@ class ExtraHeadBlock(Block):
         For valid rule values, check
         https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag
 
-        Arguments:
+        Args:
             rule: Rule to apply for robots
         """
         self.robots_rule = rule
@@ -246,7 +246,7 @@ class ExtraHeadBlock(Block):
     def set_redirect_url(self, url: str):
         """Set a URL which the page should redirect to.
 
-        Arguments:
+        Args:
             url: URL to redirect to
         """
         self.redirect_url = url
@@ -272,7 +272,7 @@ class StylesBlock(BaseBlock):
     def add_css(self, css: str | dict):
         """Add CSS in form of a string or a CSS-rule like dictionary.
 
-        Arguments:
+        Args:
             css: A string or dict containing CSS
         """
         css_str = htmlfilters.format_css_rule(css) if isinstance(css, dict) else css

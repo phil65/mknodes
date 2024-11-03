@@ -54,7 +54,7 @@ class MkCodeImage(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             code: Code to show
             language: language for syntax highlighting
             title: Code block title
@@ -92,7 +92,7 @@ class MkCodeImage(mknode.MkNode):
     ):
         """Create a MkCode node based on a code file.
 
-        Arguments:
+        Args:
             path: Path to the code file (also takes fsspec protocol URLs)
             storage_options: Options for fsspec backend
             title: title to use for the code box. If None is set, filename will be used.
@@ -118,7 +118,7 @@ class MkCodeImage(mknode.MkNode):
 
         Fetches code by using the inspect module.
 
-        Arguments:
+        Args:
             obj: Python object to show code from
             dedent: Whether to dedent the code
             extract_body: if True, Function / Class signatures are stripped from the code

@@ -21,7 +21,7 @@ class NodeConnector(connector.Connector):
 def to_tree_graph(node, direction: str = "TD") -> str:
     """Returns markdown to display a tree graph of this node and all subnodes.
 
-    Arguments:
+    Args:
         node: node to get a graph for
         direction: Direction of resulting graph
     """

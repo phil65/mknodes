@@ -17,7 +17,7 @@ class MkCodeOfConduct(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             contact_email: Email for contacting. If None, it will be pulled from Project.
             kwargs: Keyword arguments passed to parent
         """

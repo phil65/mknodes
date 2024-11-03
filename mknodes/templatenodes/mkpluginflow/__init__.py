@@ -27,7 +27,7 @@ class MkPluginFlow(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             plugin: MkDocs plugin
             kwargs: Keyword arguments passed to parent
         """

@@ -28,7 +28,7 @@ def get_link(
 
     Target can be a class, a module, a MkPage, MkNav or a string.
 
-    Arguments:
+    Args:
         env: jinja environment
         target: The thing to link to
         title: The title to use for the link
@@ -42,7 +42,7 @@ def get_url(env: nodeenvironment.NodeEnvironment, target: LinkableType) -> str:
 
     Target can be a class, a module, a MkPage, MkNav or a string.
 
-    Arguments:
+    Args:
         env: jinja environment
         target: The thing to link to
     """
@@ -56,7 +56,7 @@ def link_for_class(
 ) -> str:
     """Return a markdown link for given class.
 
-    Arguments:
+    Args:
         env: jinja environment
         kls: Klass to get a link for
     """
@@ -70,7 +70,7 @@ def link_for_module(
 ) -> str:
     """Return a markdown link for given module.
 
-    Arguments:
+    Args:
         env: jinja environment
         module: Klass to get a link for
     """
@@ -80,7 +80,7 @@ def link_for_module(
 def to_html(node: mk.MkNode) -> str:
     """Return HTML for given node.
 
-    Arguments:
+    Args:
         node: The node to add a mod to
     """
     return node.to_html()
@@ -89,7 +89,7 @@ def to_html(node: mk.MkNode) -> str:
 def apply_mod(node: mk.MkNode, mod_name: str, **kwargs: Any) -> mk.MkNode:
     """Apply a mod to given node.
 
-    Arguments:
+    Args:
         node: The node to add a mod to
         mod_name: The name of the modification to add
         kwargs: Keyword arguments for the mod ctor
@@ -101,7 +101,7 @@ def apply_mod(node: mk.MkNode, mod_name: str, **kwargs: Any) -> mk.MkNode:
 def add_annotation(node: mk.MkNode, num: int, annotation: str) -> mk.MkNode:
     """Add an annotation to given node.
 
-    Arguments:
+    Args:
         node: The node to add an annotation to
         num: The annotation number
         annotation: The annotation itself
@@ -114,7 +114,7 @@ def add_annotation(node: mk.MkNode, num: int, annotation: str) -> mk.MkNode:
 def url(context: runtime.Context, value: str) -> str:
     """A Template filter to normalize URLs.
 
-    Arguments:
+    Args:
         context: The environment context
         value: The value to normalize
     """
@@ -126,7 +126,7 @@ def url(context: runtime.Context, value: str) -> str:
 def script_tag(context: runtime.Context, extra_script):
     """Converts an ExtraScript value / JSResource to an HTML <script> tag line.
 
-    Arguments:
+    Args:
         context: The environment context
         extra_script: The object to convert to a <script> tag
     """

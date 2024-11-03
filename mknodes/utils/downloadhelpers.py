@@ -29,7 +29,7 @@ def download(url: str, headers: dict[str, str] | None = None) -> bytes:
 
     If the URL is a local path, it is simply read and returned instead.
 
-    Arguments:
+    Args:
         url: URL or local path of the file to use.
         headers: Headers to use for the request.
     """

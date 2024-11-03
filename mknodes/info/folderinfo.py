@@ -68,7 +68,7 @@ class FolderInfo:
     def __init__(self, path: str | os.PathLike[str] | None = None):
         """Constructor.
 
-        Arguments:
+        Args:
             path: Path to the repo.
         """
         # packagehelpers.install_or_import(mod_name)

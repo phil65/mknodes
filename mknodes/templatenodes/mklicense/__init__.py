@@ -27,7 +27,7 @@ class MkLicense(mktext.MkText):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             license_type: License to show (identifier from https://spdx.org/licenses/)
                           If none is set, it will try to get license from Project
             kwargs: Keyword arguments passed to parent

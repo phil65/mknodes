@@ -28,7 +28,7 @@ def get_db() -> list[dict[str, Any]]:
 class License:
     """Class representing a license.
 
-    Arguments:
+    Args:
         name: Name of the license
         identifier: License identifier
         content: License text content
@@ -50,7 +50,7 @@ class License:
     def from_name(cls, name_or_id: str) -> Self:
         """Get license based on license name.
 
-        Arguments:
+        Args:
             name_or_id: Name or id of the license to get.
         """
         db = get_db()
@@ -73,7 +73,7 @@ class License:
     def from_path(cls, path: str) -> Self:
         """Get a license from a file path.
 
-        Arguments:
+        Args:
             path: Path to get license from.
         """
         p = pathlib.Path(path)
@@ -87,7 +87,7 @@ class License:
     def resolve_by_distribution(self, distribution: str):
         """Resolve license based on distribution data.
 
-        Arguments:
+        Args:
             distribution: Distribution to use data from.
         """
         info = packageregistry.get_info(distribution)
@@ -117,7 +117,7 @@ class License:
     ):
         """Resolve license template by manually passing needed metadata.
 
-        Arguments:
+        Args:
             holder: Copyright holder
             package_name: Name of the package the license is used for
             org: Name of the organization

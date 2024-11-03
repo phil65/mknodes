@@ -31,7 +31,7 @@ class MkContainer(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Child Nodes of this container
             block_separator: Separator to put between blocks. Defaults to 2 linebreaks
             kwargs: Keyword arguments passed to parent
@@ -66,7 +66,7 @@ class MkContainer(mknode.MkNode):
     def append(self, other: str | mknode.MkNode):
         """Append a MkNode to the end of given MkPage.
 
-        Arguments:
+        Args:
             other: The node / text to append
         """
         node = self.to_child_node(other)
@@ -75,7 +75,7 @@ class MkContainer(mknode.MkNode):
     def insert(self, index: int, other: str | mknode.MkNode):
         """Insert a MkNode into desired position of given MkPage.
 
-        Arguments:
+        Args:
             index: Position where node should get inserted
             other: The node / text to insert
         """

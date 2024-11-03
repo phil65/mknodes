@@ -27,7 +27,7 @@ class MkConfigSetting(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             title: Setting title
             description: Setting description
             setting: (Nested) json-like object representing the setting

@@ -38,7 +38,7 @@ class MkAdmonition(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Admonition content
             typ: Admonition type
             title: Optional Admonition title

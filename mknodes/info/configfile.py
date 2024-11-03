@@ -15,7 +15,7 @@ class ConfigFile(superdict.SuperDict):
     def __init__(self, path: str | os.PathLike[str] | None = None):
         """Constructor.
 
-        Arguments:
+        Args:
             path: Path to the config file (supports fsspec protocol URLs)
         """
         super().__init__()
@@ -38,7 +38,7 @@ class ConfigFile(superdict.SuperDict):
 
         If Key path does not exist, return empty string.
 
-        Arguments:
+        Args:
             sections: Sections to dig into
             keep_path: Return result with original nesting
         """
@@ -50,7 +50,7 @@ class ConfigFile(superdict.SuperDict):
     def load_config(self, data: str):
         """Load a string with loader of given file type.
 
-        Arguments:
+        Args:
             data: String with markup of type as config file
         """
         self._data = self._load(data)
@@ -66,7 +66,7 @@ class ConfigFile(superdict.SuperDict):
     ):
         """Load a file with loader of given file type.
 
-        Arguments:
+        Args:
             path: Path to the config file (also supports fsspec protocol URLs)
             storage_options: Options for fsspec backend
         """
@@ -79,7 +79,7 @@ class ConfigFile(superdict.SuperDict):
     def _dump(cls, data: dict) -> str:
         """Needs to be reimplemented by subclasses.
 
-        Arguments:
+        Args:
             data: Data to dump
         """
         raise NotImplementedError
@@ -88,7 +88,7 @@ class ConfigFile(superdict.SuperDict):
     def _load(cls, data: str) -> dict | list:
         """Needs to be reimplemented by subclasses.
 
-        Arguments:
+        Args:
             data: Data to load
         """
         raise NotImplementedError

@@ -50,7 +50,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
     def rename_key(self, old: str, new: str) -> Self:
         """Rename a key of the dict while preserving key order.
 
-        Arguments:
+        Args:
             old: the old key
             new: the new key
         """
@@ -66,7 +66,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
         plugins & extensions.
         If Key path does not exist, return None.
 
-        Arguments:
+        Args:
             sections: Sections to dig into
             keep_path: Return result with original nesting
         """

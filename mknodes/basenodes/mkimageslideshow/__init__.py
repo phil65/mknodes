@@ -32,7 +32,7 @@ class MkImageSlideshow(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             images: A list of image URLs to use for the slideshow
             kwargs: Keyword arguments passed to parent
         """

@@ -29,7 +29,7 @@ class MkCritic(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Content to mark
             typ: Mark type
             kwargs: Keyword arguments passed to parent

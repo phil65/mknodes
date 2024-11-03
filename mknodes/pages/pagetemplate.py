@@ -25,7 +25,7 @@ class PageTemplate:
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             filename: Optional filename for the Template (can get overridden during build)
             extends: Parent template path
             parent: The MkPage using this Page template.
@@ -111,7 +111,7 @@ class PageTemplate:
     def build_html(self, md: markdown.Markdown | None = None) -> str | None:
         """Convert given PageTemplate to HTML.
 
-        Arguments:
+        Args:
             md: Markdown parser to use for HTML conversion.
         """
         md = md or mdconverter.MdConverter()

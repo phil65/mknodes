@@ -29,7 +29,7 @@ def get_changelog(
 ) -> str:
     """Get changelog formatted as markdown.
 
-    Arguments:
+    Args:
         repository: Path to the git repository to get a changelog for
         template: Which template to use
         convention: Which changelog convention to apply
@@ -81,7 +81,7 @@ class MkChangelog(mktext.MkText):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             convention: Commit conventions to use
             template: Changelog template
             sections: Which sections to display

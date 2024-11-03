@@ -31,7 +31,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             module: ModuleType or path to model to show info for.
             klasses: klasses to use
             title: Optional title override. Defaults to module name

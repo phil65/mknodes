@@ -15,7 +15,7 @@ from mknodes.utils import classhelpers, inspecthelpers
 def setup_env(env: jinjarope.Environment):
     """Used as extension point for the jinjarope environment.
 
-    Arguments:
+    Args:
         env: The jinjarope environment to extend
     """
     node_klasses = get_nodes()

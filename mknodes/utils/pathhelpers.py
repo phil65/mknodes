@@ -28,7 +28,7 @@ def fsspec_copy(
 
     The output_path may be a directory.
 
-    Arguments:
+    Args:
         source_path: File to copy
         output_path: path where file should get copied to.
         exist_ok: Whether exception should be raised in case stuff would get overwritten
@@ -59,7 +59,7 @@ def copy(
 
     The output_path may be a directory.
 
-    Arguments:
+    Args:
         source_path: File to copy
         output_path: path where file should get copied to.
         exist_ok: Whether exception should be raised in case stuff would get overwritten
@@ -105,7 +105,7 @@ def write_file(
 
     Encoding will be chosen automatically based on type of content
 
-    Arguments:
+    Args:
         content: Content to write
         output_path: path where file should get written to.
         errors: how to handle errors. Possible options:
@@ -126,7 +126,7 @@ def write_file(
 def write_files(mapping: Mapping[str | os.PathLike[str], str | bytes]):
     """Write a mapping of filename-to-content to disk.
 
-    Arguments:
+    Args:
         mapping: {"path/to/file.ext": b"content", ...} - style mapping
     """
     for k, v in mapping.items():
@@ -139,7 +139,7 @@ def find_cfg_for_folder(
 ) -> pathlib.Path | None:
     """Search for a file with given name in folder and its parent folders.
 
-    Arguments:
+    Args:
         filename: File to search
         folder: Folder to start searching from
     """

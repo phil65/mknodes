@@ -82,7 +82,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             klass: Klass to show a diagram for
             mode: What kind of diagram to display
             direction: diagram direction

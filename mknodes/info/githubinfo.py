@@ -34,7 +34,7 @@ class GitHubRepo:
     def __init__(self, username: str, repository: str):
         """Constructor.
 
-        Arguments:
+        Args:
             username: Github user name
             repository: Github repository / project name
         """
@@ -60,7 +60,7 @@ class GitHubRepo:
     ):
         """Download a file from this github repository.
 
-        Arguments:
+        Args:
             path: Path to the file we want to download.
             destination: Path where file should be saved.
             recursive: Download all files from a folder (and subfolders).
@@ -103,7 +103,7 @@ class GitHubRepo:
     ) -> list[Commit.Commit]:  # type: ignore[valid-type]
         """Return last x commits.
 
-        Arguments:
+        Args:
             since: Amount of commits to fetch.
             branch: Branch to get commits from. Defaults to main / master.
         """

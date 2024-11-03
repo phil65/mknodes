@@ -76,7 +76,7 @@ class MkBlog(mknav.MkNav):
 
         Authors get linked to the blog post authors to show extended information.
 
-        Arguments:
+        Args:
             username: Username / slug of the author
             name: Full name of the author
             description: Short description of the author
@@ -110,7 +110,7 @@ class MkBlog(mknav.MkNav):
     ):
         """Add a post to the blog.
 
-        Arguments:
+        Args:
             text: Blog post text
             date: Time/Date of the post
             more_text: Text hidden behint the more button.
@@ -149,7 +149,7 @@ class MkBlogPost(mkpage.MkPage):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             date: Time/Date of the post
             draft: Whether post is a draft
             categories: A list of categories this post is linked to

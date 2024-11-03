@@ -33,7 +33,7 @@ class MkDoc(mknav.MkNav):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             module: Module to document
             filter_by___all__: Whether to filter stuff according to "__all__"
             recursive: Whether to search modules recursively
@@ -124,7 +124,7 @@ class MkDoc(mknav.MkNav):
     ) -> mkclasspage.MkClassPage:
         """Add a page showing information about a class.
 
-        Arguments:
+        Args:
             klass: klass to build a page for
             find_topmost: Whether to use a module path from a parent package if available
             flatten: Put page into top level nav if nested.

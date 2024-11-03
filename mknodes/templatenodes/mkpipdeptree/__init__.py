@@ -27,7 +27,7 @@ def get_mermaid(
 
     Mermaid graph code is returned without fences
 
-    Arguments:
+    Args:
         package: package / packages to get a graph for. If None, include all packages
         local_only: Whether to return installs local to the current virtualenv if used
         user_only: If True, only report installation in the user
@@ -102,7 +102,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             package: Package to show a dependency diagram for
             direction: diagram direction
             local_only: Show ony local packages

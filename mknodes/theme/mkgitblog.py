@@ -41,7 +41,7 @@ class Commit:
 def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
     """Return latest commits from given repository.
 
-    Arguments:
+    Args:
         owner: Repository owner
         repo: Repository name
         page: page to get. Each page contains max 100 commits.
@@ -79,7 +79,7 @@ class MkGitBlog(mkblog.MkBlog):
     def __init__(self, org: str, repo: str, posts_dir: str | os.PathLike[str], **kwargs):
         """Instanciate a MkGitBlog.
 
-        Arguments:
+        Args:
             org: The repository org
             repo: The repository name
             posts_dir: The folder of the post files

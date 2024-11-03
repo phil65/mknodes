@@ -15,7 +15,7 @@ logger = log.get_logger(__name__)
 def get_module(module: str | types.ModuleType) -> griffe.Module | griffe.Alias:
     """Return info for given module from registry.
 
-    Arguments:
+    Args:
         module: Name of the module
     """
     return registry.get_module(module)
@@ -24,7 +24,7 @@ def get_module(module: str | types.ModuleType) -> griffe.Module | griffe.Alias:
 def get_class(klass: str | type) -> griffe.Class | griffe.Alias:
     """Return info for given klass from registry.
 
-    Arguments:
+    Args:
         klass: Name of the klass
     """
     return registry.get_class(klass)
@@ -49,7 +49,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     def __init__(self, expand_wildcards: bool = True):
         """Instanciate the registry.
 
-        Arguments:
+        Args:
             expand_wildcards: Whether to expand wildcard imports for the Modules
         """
         self.expand_wildcards = expand_wildcards
@@ -80,7 +80,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     ) -> griffe.Module | griffe.Alias:
         """Get griffe Module for given module.
 
-        Arguments:
+        Args:
             module: Module to get griffe object for
             docstring_style: Docstring style
         """
@@ -108,7 +108,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     ) -> griffe.Class | griffe.Alias:
         """Get griffe Class for given class.
 
-        Arguments:
+        Args:
             klass: Class to get Griffe object for
             docstring_style: Docstring style
         """

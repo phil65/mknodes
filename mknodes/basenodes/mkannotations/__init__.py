@@ -29,7 +29,7 @@ class MkAnnotation(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             num: Annotation index number
             content: Annotation content
             kwargs: Keyword arguments passed to parent
@@ -60,7 +60,7 @@ class MkAnnotations(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             annotations: Annotations data (Can be given in different shapes)
             kwargs: Keyword arguments passed to parent
         """

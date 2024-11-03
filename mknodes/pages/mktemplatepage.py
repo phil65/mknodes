@@ -21,7 +21,7 @@ class MkTemplatePage(mkpage.MkPage):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             args: Arguments passed to parent
             template_path: Template to use. Can either be a template path or a PathLike
                            object which will be used as a template.

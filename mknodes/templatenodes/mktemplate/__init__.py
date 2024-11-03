@@ -31,7 +31,7 @@ class MkTemplate(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             template: Jinja template name.
             block: Name of a specific block of the template which should get rendered
             variables: Variables to use for rendering

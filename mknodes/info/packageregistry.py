@@ -13,7 +13,7 @@ logger = log.get_logger(__name__)
 def get_info(mod_name: str) -> packageinfo.PackageInfo:
     """Return info for given module from registry.
 
-    Arguments:
+    Args:
         mod_name: Name of the module
     """
     return registry.get_info(mod_name)
@@ -63,7 +63,7 @@ class PackageRegistry(MutableMapping[str, packageinfo.PackageInfo], metaclass=AB
     def get_info(self, mod_name: str) -> packageinfo.PackageInfo:
         """Get package information for given module.
 
-        Arguments:
+        Args:
             mod_name: Name of the module
         """
         mapping = packagehelpers.get_package_map()

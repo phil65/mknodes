@@ -72,7 +72,7 @@ class MkSeeDir(mkcode.MkCode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             directory: Folder path to prettyprint content from
             style: Print style
             print_indent: Amount of indentation added for each nesting level

@@ -55,7 +55,7 @@ class ModManager:
     def add_mod(self, mod_name: str, **kwargs) -> mod.Mod:
         """Add a mod by classname.
 
-        Arguments:
+        Args:
             mod_name: Class name of the modification to add
             kwargs: Keyword arguments passed to the mod ctor
         """
@@ -77,7 +77,7 @@ class ModManager:
     ):
         """Add a parallax effect to the node.
 
-        Arguments:
+        Args:
             orientation: Orientation of the effect
             scale: Effect scale
             overflow: Overflow
@@ -103,7 +103,7 @@ class ModManager:
     ):
         """Add a scroll-reveal effect to the node.
 
-        Arguments:
+        Args:
             origin: Origin of the effect
             distance: Distance of the slide effect
             easing: Animation easing

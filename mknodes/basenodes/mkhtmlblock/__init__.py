@@ -33,7 +33,7 @@ class MkHtmlBlock(mkblock.MkBlock):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: What should be contained in the block
             block_type: Block type
             markdown_mode: Markdown mode

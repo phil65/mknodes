@@ -169,7 +169,7 @@ class MaterialTheme(theme.Theme):
     def _get_color(self, color_type: Literal["primary", "accent"], fallback: str) -> str:
         """Return either primary or accent color.
 
-        Arguments:
+        Args:
             color_type: The color type to get
             fallback: value to return in case color_type is not defined.
         """
@@ -183,7 +183,7 @@ class MaterialTheme(theme.Theme):
     def _set_color(self, color_type: Literal["primary", "accent"], value: str):
         """Set the color for the first palette.
 
-        Arguments:
+        Args:
             color_type: The color type to set
             value: The color to set
         """
@@ -197,7 +197,7 @@ class MaterialTheme(theme.Theme):
     def set_accent_foreground_color(self, color: datatypes.RGBColorType):
         """Set the accent foreground color.
 
-        Arguments:
+        Args:
             color: Color to set
         """
         color_str = str(col.Color(color))
@@ -211,7 +211,7 @@ class MaterialTheme(theme.Theme):
     ):
         """Set the primary background color.
 
-        Arguments:
+        Args:
             color: Color to set
         """
         self._set_color("primary", "custom")
@@ -243,7 +243,7 @@ class MaterialTheme(theme.Theme):
 
         Requires primary color set to "custom".
 
-        Arguments:
+        Args:
             color: Main color
             light_shade: Optional light shade. If None, same as color.
             dark_shade: Optional dark shade. If None, same as color.
@@ -265,7 +265,7 @@ class MaterialTheme(theme.Theme):
     def set_default_icon(self, icon_type: IconTypeStr, data: str):
         """Allows setting some custom default icons used throughout the theme.
 
-        Arguments:
+        Args:
             icon_type: Icon type to set a new default for
             data: svg for the new icon
         """
@@ -279,7 +279,7 @@ class MaterialTheme(theme.Theme):
     ):
         """Add a custom status icon.
 
-        Arguments:
+        Args:
             name: slug for the status icon
             icon: Iconify icon name
             description: Optional status description (used for tooltip)
@@ -298,7 +298,7 @@ class MaterialTheme(theme.Theme):
         The tag identifier must be set in page metadata.
         This requires the "tags" plugin to be included.
 
-        Arguments:
+        Args:
             identifier: Slug for the tag
             tag: Tag name
             icon: Optional Iconify icon identifier
@@ -311,7 +311,7 @@ class MaterialTheme(theme.Theme):
         This method will get called during the build process in order to make sure
         that theme-specifics are considered.
 
-        Arguments:
+        Args:
             extensions: Extensions to adapt.
         """
         for k in dict(extensions).copy():

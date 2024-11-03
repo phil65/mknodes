@@ -26,7 +26,7 @@ class MkDevTools(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             tools: Tools to show install / setup instructions for.
                             If None, tools will be pulled from project.
             kwargs: Keyword arguments passed to parent

@@ -54,7 +54,7 @@ class MkTimelineItem(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             title: Item header / title
             content: Text / markdown for the content area
             label: A label, displayed in an upper corner
@@ -126,7 +126,7 @@ class MkTimeline(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             items: Timeline items or a path to a TOML file containing timeline data
             kwargs: Keyword arguments passed to parent
         """

@@ -31,7 +31,7 @@ class MkShields(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             shields: Shields to include
             user: Github username for shields
             project: project name for shields

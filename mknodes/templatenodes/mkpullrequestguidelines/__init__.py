@@ -13,7 +13,7 @@ class MkPullRequestGuidelines(mktemplate.MkTemplate):
     def __init__(self, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(template="pullrequest_guidelines.jinja", **kwargs)

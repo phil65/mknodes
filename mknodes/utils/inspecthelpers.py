@@ -71,7 +71,7 @@ def get_stack_info(frame: types.FrameType | None, level: int) -> dict[str, Any] 
 def get_deprecated_message(obj) -> str | None:
     """Return deprecated message (created by deprecated decorator).
 
-    Arguments:
+    Args:
         obj: Object to check
     """
     if isinstance(obj, griffe.Function | griffe.Class):
@@ -101,7 +101,7 @@ def is_abstract(obj: type | griffe.Class | griffe.Function) -> bool:
 def get_source(obj: datatypes.HasCodeType | griffe.Object) -> str:
     """Cached wrapper for inspect.getsource.
 
-    Arguments:
+    Args:
         obj: Object to return source for.
     """
     return obj.source if isinstance(obj, griffe.Object) else inspect.getsource(obj)
@@ -113,7 +113,7 @@ def get_source_lines(
 ) -> tuple[list[str], int]:
     """Cached wrapper for inspect.getsourcelines.
 
-    Arguments:
+    Args:
         obj: Object to return source lines for.
     """
     if isinstance(obj, griffe.Object):
@@ -125,7 +125,7 @@ def get_source_lines(
 def get_file(obj: datatypes.HasCodeType | griffe.Object) -> pathlib.Path | None:
     """Cached wrapper for inspect.getfile.
 
-    Arguments:
+    Args:
         obj: Object to get file for
     """
     if isinstance(obj, griffe.Object):
@@ -138,7 +138,7 @@ def get_argspec(obj, remove_self: bool = True) -> inspect.FullArgSpec:
 
     ArgSpec is cleaned up by removing `self` from method callables.
 
-    Arguments:
+    Args:
         obj: A callable python object
         remove_self: Whether to remove "self" argument from method argspecs
     """

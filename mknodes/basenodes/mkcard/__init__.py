@@ -40,7 +40,7 @@ class MkCard(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             title: Button text
             image: Card image
             caption: Image caption

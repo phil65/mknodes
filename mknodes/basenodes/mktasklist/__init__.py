@@ -25,7 +25,7 @@ class MkTask(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             value: Setting value
             content: Markdown content for this block
             kwargs: Keyword arguments passed to parent
@@ -52,7 +52,7 @@ class MkTaskList(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Data show for the table
             kwargs: Keyword arguments passed to parent
         """

@@ -71,7 +71,7 @@ class MkNode(node.Node):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             header: Optional header for contained Markup
             indent: Indentation of given Markup (unused ATM)
             name: An optional unique identifier (allows getting node via MkNode.get_node)
@@ -191,7 +191,7 @@ class MkNode(node.Node):
 
         Either converts text to an MkNode sets parent of node to self.
 
-        Arguments:
+        Args:
             other: The node / string to convert to a child node.
         """
         import mknodes as mk
@@ -245,7 +245,7 @@ class MkNode(node.Node):
 
         Can be reimplemented if non-default annotations are needed.
 
-        Arguments:
+        Args:
             text: Markdown to annote
         """
         return self.annotations.annotate_text(text) if self.annotations else text
@@ -257,7 +257,7 @@ class MkNode(node.Node):
         Default behavior is appending the css class snippet with a space
         as separator.
 
-        Arguments:
+        Args:
             text: Markdown to annote
         """
         if not self.mods.css_classes:
@@ -288,7 +288,7 @@ class MkNode(node.Node):
     def add_file(self, filename: str, data: str | bytes):
         """Add a static file as data to this node.
 
-        Arguments:
+        Args:
             filename: Filename of the file to add
             data: Data of the file
         """
@@ -297,7 +297,7 @@ class MkNode(node.Node):
     def add_css_class(self, class_name: str):
         """Wrap node markdown with given css class.
 
-        Arguments:
+        Args:
             class_name: CSS class to wrap the node with
         """
         self.mods._css_classes.append(class_name)

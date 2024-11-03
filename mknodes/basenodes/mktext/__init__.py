@@ -28,7 +28,7 @@ class MkText(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             text: Markup text
             render_jinja: Whether text should get rendered by this node
             kwargs: Keyword arguments passed to parent
@@ -75,7 +75,7 @@ class MkText(mknode.MkNode):
 
         All fsspec protocols are supported as URL.
 
-        Arguments:
+        Args:
             url: URL to get markdown from.
         """
         url, *section = url.split("#")

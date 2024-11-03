@@ -43,7 +43,7 @@ class InventoryItem:
     ):
         """Initialize the object.
 
-        Arguments:
+        Args:
             name: The item name.
             domain: The item domain, like 'python'
             role: The item role, like 'class' or 'method'.
@@ -74,7 +74,7 @@ class InventoryItem:
     def parse_sphinx(cls, line: str) -> InventoryItem:
         """Parse a line from a Sphinx v2 inventory file and return an `InventoryItem`.
 
-        Arguments:
+        Args:
             line: The line to parse
         """
         match = cls.sphinx_item_regex.search(line)
@@ -99,7 +99,7 @@ class BaseInventory(dict[str, InventoryItem]):
     ):
         """Initialize the object.
 
-        Arguments:
+        Args:
             items: A list of items.
             project: The project name.
             version: The project version.
@@ -122,7 +122,7 @@ class BaseInventory(dict[str, InventoryItem]):
     ) -> None:
         """Create and register an item.
 
-        Arguments:
+        Args:
             name: The item name.
             domain: The item domain, like 'python'
             role: The item role, like 'class' or 'method'.
@@ -157,7 +157,7 @@ class BaseInventory(dict[str, InventoryItem]):
     ) -> Self:
         """Parse a Sphinx v2 inventory file and return an `Inventory` from it.
 
-        Arguments:
+        Args:
             in_file: The binary file-like object to read from.
             domain_filter: A collection of domain values to allow.
         """
@@ -207,7 +207,7 @@ class Inventory(BaseInventory):
     ):
         """Return an Inventory based on an inventory file located at given url.
 
-        Arguments:
+        Args:
             url: Inventory file url
             base_url: The base url for the inventory, if different from download url
             domains: The domains to include

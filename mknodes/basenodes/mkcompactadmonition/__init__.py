@@ -27,7 +27,7 @@ class MkCompactAdmonition(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             text: Admonition text
             typ: Admonition type
             kwargs: Keyword arguments passed to parent

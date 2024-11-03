@@ -24,7 +24,7 @@ class MkSnippet(mknode.MkNode):
     def __init__(self, path: str | os.PathLike[str], **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             path: Path to markdown file
             kwargs: Keyword arguments passed to parent
         """

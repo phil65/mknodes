@@ -30,7 +30,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             klass: class to show info for
             title: Optional title override. Defaults to class name
             module_path: If given, overrides module returned by class.__module__

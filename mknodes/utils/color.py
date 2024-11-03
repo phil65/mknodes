@@ -23,7 +23,7 @@ class Color(coloraide.Color):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             color: Color, either as string or (a)rgb tuple
             data: Optional data in case color is a str (see ColorAide docs)
             alpha: Alpha value for the color (0 - 1)
@@ -48,7 +48,7 @@ class Color(coloraide.Color):
     def brightness(self, value: float, **kwargs: Any):
         """Change brightness of given color.
 
-        Arguments:
+        Args:
             value: The new brightness
             kwargs: Keyword arguments passed to parent
         """
@@ -57,7 +57,7 @@ class Color(coloraide.Color):
     def set_alpha(self, value: float):
         """Change the color alpha value.
 
-        Arguments:
+        Args:
             value: The new alpha value
         """
         self["alpha"] = value

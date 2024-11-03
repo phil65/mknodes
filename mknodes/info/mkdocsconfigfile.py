@@ -44,7 +44,7 @@ class MkDocsConfigFile(yamlfile.YamlFile):
     ):
         """Quick access to overriding our plugin settings.
 
-        Arguments:
+        Args:
             repo_url: Repo url to set
             build_fn: Build function to set
             clone_depth: Amount of commits to fetch when cloning a repository.

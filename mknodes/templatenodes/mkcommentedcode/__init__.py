@@ -34,7 +34,7 @@ class MkCommentedCode(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             code: Code to show
             language: language for syntax highlighting
             linenums: If set, use as start linenumber

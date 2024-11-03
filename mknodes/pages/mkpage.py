@@ -53,7 +53,7 @@ class MkPage(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             path: Page path
             hide: Hide parts of the website ("toc", "nav", "path", "tags").
             search_boost: Factor to modify search ranking
@@ -212,7 +212,7 @@ class MkPage(mkcontainer.MkContainer):
         If value is a string, use that string for metadata and clear the template object.
         If value is a PageTemplate, use that and put its name into metadata.
 
-        Arguments:
+        Args:
             value: Page template to set.
         """
         if isinstance(value, pagetemplate.PageTemplate):
@@ -235,7 +235,7 @@ class MkPage(mkcontainer.MkContainer):
 
         Parses and reads header metadata.
 
-        Arguments:
+        Args:
             path: Path to load file from, either a local path or a fsspec protocol path.
             title: Optional title to use
                    If None, title will be infered from metadata or filename

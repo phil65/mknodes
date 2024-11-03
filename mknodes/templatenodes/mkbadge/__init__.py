@@ -69,7 +69,7 @@ class MkBadge(mkimage.MkImage):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             label: Left part of the badge. If given a tuple, use 2nd item as value.
             value: Right part of the badge
             font_size: Size of font to use

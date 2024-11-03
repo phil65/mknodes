@@ -49,7 +49,7 @@ class MkCode(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Content to show inside code box
             language: language for syntax highlighting
             title: Code block title
@@ -122,7 +122,7 @@ class MkCode(mkcontainer.MkContainer):
         it will try to detect whether the calling method is inside the code block are
         creating and if yes, it will highlight that line.
 
-        Arguments:
+        Args:
             path: Path to the code file (also supports fsspec-protocol URLs)
             linenums: Whether to show line numbers
             highlight_caller: Whether we want to try to highlight the line which called
@@ -172,7 +172,7 @@ class MkCode(mkcontainer.MkContainer):
         it will try to detect whether the calling method is inside the code block are
         displaying and if yes, it will highlight that line.
 
-        Arguments:
+        Args:
             obj: Python object to show code from
             dedent: Whether to dedent the code
             extract_body: if True, Function / Class signatures are stripped from the code

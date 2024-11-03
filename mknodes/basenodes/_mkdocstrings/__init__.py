@@ -73,7 +73,7 @@ class MkDocStrings(mknode.MkNode):
         Global options for DocStrings can be overridden by setting the keyword arguments
         to not-None.
 
-        Arguments:
+        Args:
             obj: What to show DocStrings for.
             for_topmost: If True, try to find the "shortest" path to given object by
                          checking whether it can also be found in a parent module.

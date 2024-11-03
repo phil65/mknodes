@@ -31,7 +31,7 @@ class MkIcon(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             icon_name: Icon name
             color: Icon color. Replaces currentColor with specific color, resulting in
                    icon with hardcoded palette.

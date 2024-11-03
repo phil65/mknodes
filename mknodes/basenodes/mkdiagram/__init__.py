@@ -41,7 +41,7 @@ class MkDiagram(mkcode.MkCode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             names: names which should be part of the diagram
             connections: tuples indicating the connections of the names
             direction: diagram direction

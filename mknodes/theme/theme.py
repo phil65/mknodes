@@ -31,7 +31,7 @@ class Theme:
     ):
         """Instanciate the theme.
 
-        Arguments:
+        Args:
             name: The theme name
             data: Additional data for the theme
         """
@@ -86,7 +86,7 @@ class Theme:
     ):
         """Add a custom admonition type.
 
-        Arguments:
+        Args:
             name: Slug for new admonition type
             icon: Either a Pyconify icon key or an <svg> element
             header_color: Color for the admonition header
@@ -168,7 +168,7 @@ class Theme:
     ):
         """Return theme instance of corresponding subclass based on theme name.
 
-        Arguments:
+        Args:
             theme_name: Name of the theme
             data: Additional data for the theme
             kwargs: Additional keyword arguments passe to the Theme
@@ -209,7 +209,7 @@ class Theme:
     def adapt_extensions(self, extensions: MutableMapping[str, dict]):
         """Make adaptions to markdown extensions for the theme if required.
 
-        Arguments:
+        Args:
             extensions: The extensions to adapt
         """
         if self.name.lower() != "mkdocs":

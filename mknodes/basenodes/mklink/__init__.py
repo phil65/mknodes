@@ -34,7 +34,7 @@ class MkLink(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             target: Link target
             title: Title used for link
             tooltip: Tooltip for the link

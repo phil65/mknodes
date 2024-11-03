@@ -28,7 +28,7 @@ class MkCliDoc(mktemplate.MkTemplate):
     ):
         r"""Constructor.
 
-        Arguments:
+        Args:
             target: Dotted path to click group / typer instance / ArgumentParser
             prog_name: Program name
             show_hidden: Show commands and options that are marked as hidden.

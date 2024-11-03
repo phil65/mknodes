@@ -29,7 +29,7 @@ class MkBaseTable(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             data: Data show for the table
             columns: Column headers if not provided by data.
             kwargs: Keyword arguments passed to parent
@@ -128,7 +128,7 @@ class MkBaseTable(mkcontainer.MkContainer):
     def width_for_column(self, column: str | int) -> int:
         """Returns the minimum width needed for given column.
 
-        Arguments:
+        Args:
             column: Name or index of the column
         """
         data = self.data  # property

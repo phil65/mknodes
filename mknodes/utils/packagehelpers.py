@@ -25,7 +25,7 @@ logger = log.get_logger(__name__)
 def install(package: str, editable: bool = False):
     """Pip-Install distribution with given options.
 
-    Arguments:
+    Args:
         package: Name of the package to install
         editable: Whether to install in editable mode
     """
@@ -38,7 +38,7 @@ def install_or_import(module_name: str) -> types.ModuleType:
 
     This method relies on module name == distribution_name
 
-    Arguments:
+    Args:
         module_name: Name of the module to import / install
     """
     try:
@@ -52,7 +52,7 @@ def install_or_import(module_name: str) -> types.ModuleType:
 def get_distribution(name: str) -> metadata.Distribution:
     """Cached version of metadata.distribution.
 
-    Arguments:
+    Args:
         name: Name of the distribution to get an object for.
     """
     return metadata.distribution(name)
@@ -78,7 +78,7 @@ def get_package_map() -> Mapping[str, list[str]]:
 def distribution_to_package(dist: str) -> str:
     """Return the top-level package for given distribution.
 
-    Arguments:
+    Args:
         dist: Name of the distribution to get the package for.
     """
     result = next((k for k, v in get_package_map().items() if dist in v), dist)
@@ -147,7 +147,7 @@ def get_entry_points(
 ) -> EntryPointMap:  # [str, list[EntryPoint]]
     """Returns a dictionary with entry point group as key, entry points as value.
 
-    Arguments:
+    Args:
         dist: Optional distribution filter.
         group: Optional group filter.
         kwargs: Entry point filters

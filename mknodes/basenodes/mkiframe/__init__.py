@@ -20,7 +20,7 @@ class MkIFrame(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             url: Url to display in a frame
             width: width of frame in pixels
             height: height of frame in pixels

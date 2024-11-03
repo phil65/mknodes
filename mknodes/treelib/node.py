@@ -76,7 +76,7 @@ class Node:
     def append_child(self, item: Self):
         """Append a node as a child.
 
-        Arguments:
+        Args:
             item: Node to add as a child
         """
         item.parent = self
@@ -85,7 +85,7 @@ class Node:
     def insert_children(self, idx: int, items: Sequence[Self]):
         """Insert a list of child nodes at given index.
 
-        Arguments:
+        Args:
             idx: The index of insertion
             items: A sequence of nodes to add as children
         """
@@ -108,7 +108,7 @@ class Node:
     def is_descendant_of(self, kls: type | types.UnionType) -> bool:
         """Returns True if any ancestor is of given type.
 
-        Arguments:
+        Args:
             kls: The class (union) the check the ancestors for
         """
         return any(isinstance(i, kls) for i in self.ancestors)
@@ -208,7 +208,7 @@ class Node:
 
         Yields current-depth-node tuples.
 
-        Arguments:
+        Args:
             indent: The start "level". The first element of the returned tuple will be
                     relative to this
             max_depth: The max depth to iterate
@@ -246,7 +246,7 @@ class Node:
 
         Tuple consists of two strings to be used as a prefix, and the node itself.
 
-        Arguments:
+        Args:
             max_depth: The maxium depth of nodes to yield
             style: The prefix style.
         """
@@ -323,7 +323,7 @@ def preorder_iter(
     >>> [node.node_name for node in preorder_iter(root)]
     ['a', 'b', 'd', 'e', 'g', 'h', 'c', 'f']
 
-    Arguments:
+    Args:
         tree: input tree
         filter_condition: function that takes in node as argument
         stop_condition: function that takes in node as argument

@@ -36,7 +36,7 @@ class MkImage(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             path: path of the image
             target: Optional URL or node the image should link to
             caption: Image caption

@@ -25,7 +25,7 @@ class MkHeader(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             text: Header text
             level: Header level
             exclude_from_search: Whether section should be included in search.

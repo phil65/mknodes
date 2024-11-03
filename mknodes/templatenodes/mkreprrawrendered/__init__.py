@@ -22,7 +22,7 @@ class MkReprRawRendered(mktemplate.MkTemplate):
     def __init__(self, node: mknode.MkNode | str | None = None, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             node: Node to show an example for
             kwargs: Keyword arguments passed to parent
         """

@@ -27,7 +27,7 @@ class MkProgressBar(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             percentage: Percentage value for the progress bar
             label: Label to display on top of progress bar
             style: Progress bar style

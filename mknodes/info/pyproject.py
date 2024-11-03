@@ -21,7 +21,7 @@ class PyProject(tomlfile.TomlFile):
     def __init__(self, path: str | os.PathLike[str] | None = None):
         """Constructor.
 
-        Arguments:
+        Args:
             path: Path to the pyproject file.
                   If None, parent directories are checked, too.
                   If path points to folder, check that folder for a pyproject.toml
@@ -50,7 +50,7 @@ class PyProject(tomlfile.TomlFile):
     @property
     def tool(self) -> superdict.SuperDict[Any]:
         """Tool section."""
-        dct: collections.defaultdict[str, dict] = collections.defaultdict(dict)
+        dct: collections.defaultdict[str, dict[str, Any]] = collections.defaultdict(dict)
         dct.update(self._data.get("tool", {}))
         return superdict.SuperDict(dct)
 

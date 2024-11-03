@@ -37,7 +37,7 @@ class MkTreeView(mkcode.MkCode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             tree: Tree to display. Can be a path to a folder or a Node.
             style: Print style. If tuple, parts are used for stems
             maximum_depth: Maximum nesting depth to print

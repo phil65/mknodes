@@ -25,7 +25,7 @@ class MkInclude(mktext.MkText):
     def __init__(self, target: str | os.PathLike[str] | mktext.MkText, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             target: target to include
             kwargs: Keyword arguments passed to parent
         """

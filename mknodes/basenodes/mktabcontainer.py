@@ -29,7 +29,7 @@ class MkTabContainer(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             tabs: Tab data
             select_tab: Tab which should be selected initially
             kwargs: Keyword arguments passed to parent
@@ -66,7 +66,7 @@ class MkTabContainer(mkcontainer.MkContainer):
     ) -> mktabs.MkTab | mktabs.MkTabBlock:
         """Append a tab to existing ones.
 
-        Arguments:
+        Args:
             title: Title of the new tab
             content: content of the new tab
             select: Whether new tab should get selected initially
@@ -82,7 +82,7 @@ class MkTabContainer(mkcontainer.MkContainer):
     def set_selected(self, index: int | str):
         """Set tab with given index as selected.
 
-        Arguments:
+        Args:
             index: Index or title of the tab which should be selected
         """
         self.select_tab = self._get_tab_pos(index) if isinstance(index, str) else index

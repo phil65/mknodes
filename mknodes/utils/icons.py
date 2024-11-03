@@ -107,7 +107,7 @@ def get_emoji_slug(icon: str) -> str:
 
     The icon string will get picked up by pymdownx.emoji extension.
 
-    Arguments:
+    Args:
         icon: The string to convert to an emoji slug.
     """
     return f":{iconfilters.get_pyconify_key(icon).replace(':', '-')}:"
@@ -116,7 +116,7 @@ def get_emoji_slug(icon: str) -> str:
 def get_icon_xml(icon: str) -> ET.Element:
     """Return a xmlElement for given MaterialIcon.
 
-    Arguments:
+    Args:
         icon: Icon to fetch. If iconname is not explicit (aka does not contain "/"),
               then it will try to get the icon from material/ folder.
     """

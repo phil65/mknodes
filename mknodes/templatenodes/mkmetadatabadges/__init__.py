@@ -39,7 +39,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             typ: Metadata badges to show
             package: Package to show badges for. If None, it will get pulled from project
             font_size: Size of font to use

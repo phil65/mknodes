@@ -24,7 +24,7 @@ class MkDefinition(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Markdown content for this block
             title: Setting title
             kwargs: Keyword arguments passed to parent
@@ -46,7 +46,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
     def __init__(self, data: Mapping | None = None, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             data: Data show for the table
             kwargs: Keyword arguments passed to parent
         """

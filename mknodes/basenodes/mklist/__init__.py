@@ -30,7 +30,7 @@ class MkList(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             items: Items to show as a list
             ordered: whether the list should be numbered
             shorten_after: will clip the list after n items and append a "..."

@@ -18,7 +18,7 @@ class MkGrid(mkcontainer.MkContainer):
     def __init__(self, items: list[str | mknode.MkNode] | None = None, **kwargs: Any):
         """Initialize the node.
 
-        Arguments:
+        Args:
             items: The items of this node.
             kwargs: Keyword arguments passed to parent
         """

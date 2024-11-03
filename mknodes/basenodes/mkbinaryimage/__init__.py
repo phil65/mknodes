@@ -41,7 +41,7 @@ class MkBinaryImage(mkimage.MkImage):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             data: Image data
             path: path for the image (including extension)
             target: Optional URL or node the image should link to
@@ -71,7 +71,7 @@ class MkBinaryImage(mkimage.MkImage):
     def for_icon(cls, icon: str, **kwargs: Any) -> Self:
         """Return a MkBinaryImage with data for given icon.
 
-        Arguments:
+        Args:
             icon: Icon to get a MkBinaryImage for (example: material/file-image)
             kwargs: Keyword arguments passed to constructor
         """
@@ -88,7 +88,7 @@ class MkBinaryImage(mkimage.MkImage):
     ) -> Self:
         """Return a MkBinaryImage with data for given icon.
 
-        Arguments:
+        Args:
             path: Path to an image (also takes fsspec protocol URLs)
             storage_options: Options for fsspec backend
             kwargs: Keyword arguments passed to constructor

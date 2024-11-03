@@ -31,7 +31,7 @@ def homepage_for_distro(dist_name: str) -> str | None:
 
     Used if no better link was found.
 
-    Arguments:
+    Args:
         dist_name: Name of the distribution to get a link for
     """
     if dist_name in sys.stdlib_module_names:
@@ -48,7 +48,7 @@ def homepage_for_distro(dist_name: str) -> str | None:
 def linked(identifier: str, title: str | None = None) -> str:
     """Create a markdown link.
 
-    Arguments:
+    Args:
         identifier: Target url
         title: Title to show as label
     """
@@ -65,7 +65,7 @@ class LinkProvider:
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             base_url: Base URL of the website
             use_directory_urls: Use directory-style URLS
             include_stdlib: Load the stdlib inventory file on init
@@ -85,7 +85,7 @@ class LinkProvider:
 
         That way handling of linking can be done by Markdown extensions.
 
-        Arguments:
+        Args:
             excludes: list of terms to exclude from linking
         """
         self.excludes.update(excludes)
@@ -93,7 +93,7 @@ class LinkProvider:
     def add_inv_file(self, path: str | os.PathLike[str], base_url: str | None = None):
         """Add an inventory file to the inventory manager.
 
-        Arguments:
+        Args:
             path: Path or URL to the inventory file
             base_url: Base URL (required when inventory file is local)
         """
@@ -106,7 +106,7 @@ class LinkProvider:
     ) -> str | None:
         """Return a url for given module.
 
-        Arguments:
+        Args:
             mod: Module to get a url for
             fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
@@ -125,7 +125,7 @@ class LinkProvider:
     def link_for_module(self, mod: types.ModuleType | str | griffe.Module) -> str:
         """Return a markdown link for given module.
 
-        Arguments:
+        Args:
             mod: Module to get a link for
         """
         match mod:
@@ -147,7 +147,7 @@ class LinkProvider:
     ) -> str | None:
         """Return a url for given class.
 
-        Arguments:
+        Args:
             kls: Klass to get a url for
             fallback_to_homepage: Whether to get a link from Metadata if no other found
         """
@@ -171,7 +171,7 @@ class LinkProvider:
     def link_for_klass(self, kls: type | str | griffe.Class) -> str:
         """Return a markdown link for given class.
 
-        Arguments:
+        Args:
             kls: Klass to get a link for
         """
         match kls:
@@ -190,7 +190,7 @@ class LinkProvider:
     def url_for_nav(self, nav: mk.MkNav) -> str:
         """Return the final URL for given MkNav.
 
-        Arguments:
+        Args:
             nav: The Nav to link to
         """
         if nav.index_page:
@@ -203,7 +203,7 @@ class LinkProvider:
     def url_for_page(self, page: mk.MkPage) -> str:
         """Return the final URL for given MkPage.
 
-        Arguments:
+        Args:
             page: The Page to link to
         """
         path = page.resolved_file_path
@@ -216,7 +216,7 @@ class LinkProvider:
     def url_for_header(self, header: mk.MkHeader) -> str:
         """Return the final URL for given MkHeader.
 
-        Arguments:
+        Args:
             header: The Header to link to
         """
         page = header.parent_page
@@ -231,7 +231,7 @@ class LinkProvider:
 
         Target can be a class, a module, a MkPage, MkNav or a string.
 
-        Arguments:
+        Args:
             target: The thing to link to
             title: The title to use for the link
         """
@@ -247,7 +247,7 @@ class LinkProvider:
 
         Target can be a class, a module, a MkPage, MkNav or a string.
 
-        Arguments:
+        Args:
             target: The thing to link to
         """
         import mknodes as mk

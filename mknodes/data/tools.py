@@ -24,7 +24,7 @@ class Tool:
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         """Return whether tool is used for given directory.
 
-        Arguments:
+        Args:
             folder: Folder to check. Defaults to current working directory.
         """
         for cfg in self.configs:
@@ -45,7 +45,7 @@ class Tool:
     def get_config(self, folder: folderinfo.FolderInfo) -> str | None:
         """Return config for given tool.
 
-        Arguments:
+        Args:
             folder: Folder to get config from. Defaults to current working directory.
         """
         for cfg in self.configs:

@@ -20,7 +20,7 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             repo_url: Repo url to show. If None, it will be pulled from project.
             build_backend: Build backend to show install instructions for.
                             If None, it will be pulled from project.

@@ -31,7 +31,7 @@ class MkMaterialBadge(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             icon: Icon to display. Can either be an iconify or an emoji slug
             text: Text to display
             animated: Optional animated style

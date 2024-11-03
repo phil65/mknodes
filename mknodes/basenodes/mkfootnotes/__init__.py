@@ -28,7 +28,7 @@ class MkFootNote(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             num: Footnote index number
             content: Footnote content
             kwargs: Keyword arguments passed to parent
@@ -61,7 +61,7 @@ class MkFootNotes(mkcontainer.MkContainer):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             footnotes: Footnotes data (Can be given in different shapes)
             kwargs: Keyword arguments passed to parent
         """

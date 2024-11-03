@@ -23,7 +23,7 @@ class HTMLElement(ET.Element):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             klass: CSS class
             parent: Optional parent element
             attrs: A dict containing XML attributes

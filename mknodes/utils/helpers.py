@@ -29,7 +29,7 @@ def get_indented_lines(lines: Iterable[str], indent: int | str = 4) -> list[str]
 
     Returned lines are unindented.
 
-    Arguments:
+    Args:
         lines: Lines to check for indented lines
         indent: Indentation to check
     """
@@ -42,7 +42,7 @@ def get_indented_lines(lines: Iterable[str], indent: int | str = 4) -> list[str]
 def is_url(string: str) -> bool:
     """Return true when given string represents a HTTP url.
 
-    Arguments:
+    Args:
         string: The string to check
     """
     return string.startswith(("http:/", "https:/", "www."))
@@ -55,7 +55,7 @@ R = TypeVar("R")
 def list_to_tuple(fn: Callable[P, R]) -> Callable[P, R]:
     """Decorator to convert lists to tuples in the arguments.
 
-    Arguments:
+    Args:
         fn: The function to decorate
     """
 

@@ -32,7 +32,7 @@ class MkDetailsBlock(mkblock.MkBlock):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             content: Admonition content
             typ: Admonition type
             expanded: Whether the details block should be expanded initially

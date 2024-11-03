@@ -82,7 +82,7 @@ class MkShowcase(mkcontainer.MkContainer):
     ):
         """Add an image card to the node.
 
-        Arguments:
+        Args:
             title: Card title
             image: link to the Image
             target: Optional link for the card

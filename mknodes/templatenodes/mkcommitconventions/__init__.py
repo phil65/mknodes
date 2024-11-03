@@ -27,7 +27,7 @@ class MkCommitConventions(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             commit_types: Allowed commit commit_types. Can be "basic",
                           "conventional_commits", or a list of commit_types
             kwargs: Keyword arguments passed to parent

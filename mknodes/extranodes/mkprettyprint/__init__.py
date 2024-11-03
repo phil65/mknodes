@@ -31,7 +31,7 @@ class MkPrettyPrint(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             obj: Object to prettyprint
             nest_indent: Specifies the amount of indentation added for each nesting level
             maximum_depth: Maximum nesting depth to print

@@ -78,7 +78,7 @@ class MkPyDeps(mknode.MkNode):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             module: Path to the module
             max_bacon: Max bacon
             max_module_depth: Maximum module depth to display

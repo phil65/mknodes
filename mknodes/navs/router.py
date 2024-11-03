@@ -73,7 +73,7 @@ class Router:
         In comparison to `route_page()` and `route_nav()`, it is not required
          to know in advance what will be returned.
 
-        Arguments:
+        Args:
             path: The section path for the returned `MkNav` / `MkPage`
         """
 
@@ -105,7 +105,7 @@ class Router:
                 nav += ...
             ```
 
-        Arguments:
+        Args:
             path: The section path for the returned MkNav
             condition: If passed, the nav is only included if the callable returns True
             kwargs: Keyword arguments passed to the MkNav constructor.
@@ -147,7 +147,7 @@ class Router:
             def _(page: mk.MkPage):
                 page += ...
             ```
-        Arguments:
+        Args:
             path: The section path for the returned MkPage
             condition: If passed, the page is only included if the callable returns True
             kwargs: Keyword arguments passed to the MkPage constructor.

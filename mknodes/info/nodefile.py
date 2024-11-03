@@ -99,7 +99,7 @@ class NodeFile(tomlfile.TomlFile):
         Contains example-name->dict-with-representations key-value pairs.
         Representations are Markdown, Html, Repr tree, jinja, rendered
 
-        Arguments:
+        Args:
             parent: Parent for the created MkNodes
                     (most representations are wrapped in MkCode nodes)
 

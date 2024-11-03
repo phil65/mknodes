@@ -45,7 +45,7 @@ def to_module(
 ) -> types.ModuleType | None:
     """Return a module for given module path. If module is given, just return it.
 
-    Arguments:
+    Args:
         module: A ModuleType, str or sequence.
         return_none: In case module cant get imported, return None.
                      If False, Exception is thrown.
@@ -72,7 +72,7 @@ def to_class(klass: griffe.Class | type | str | tuple[str, ...] | list[str]):
 
     If input is a string or Sequence, interpret it as a dotted path.
 
-    Arguments:
+    Args:
         klass: Name / path to get a klass for
     """
     match klass:
@@ -108,7 +108,7 @@ def to_dotted_path(
 ) -> str:
     """Return dotted path for given input.
 
-    Arguments:
+    Args:
         obj: Input to return dotted path for
     """
     match obj:
@@ -138,7 +138,7 @@ def list_classes(
 ) -> list[type]:
     """Return list of classes from given module.
 
-    Arguments:
+    Args:
         module: either a module or a path to a module in form of str or
                 tuple of strings.
         type_filter: only return classes which are subclasses of given type.
@@ -171,7 +171,7 @@ def iter_classes(
 ) -> Iterator[type]:
     """Yield classes from given module.
 
-    Arguments:
+    Args:
         module: either a module or a path to a module in form of str or
                 tuple of strings.
         type_filter: only yield classes which are subclasses of given type.
@@ -218,7 +218,7 @@ def get_topmost_module_path(obj: Callable[..., Any]) -> str:
 
     So for a class "submodule.classmodule.Class", it could return "submodule.Class"
 
-    Arguments:
+    Args:
         obj: Klass to get the path for.
     """
     to_search_for = obj.__self__ if hasattr(obj, "__self__") else obj
@@ -242,7 +242,7 @@ def get_submodules(
 ) -> list[types.ModuleType]:
     """Return list of submodules of given module.
 
-    Arguments:
+    Args:
         module: Module to return submodules from.
         filter_by___all__: Whether to only return submodules listed in __all__
     """
@@ -269,7 +269,7 @@ def get_submodules(
 def import_module(mod: str) -> types.ModuleType:
     """Cached version of importlib.import_module.
 
-    Arguments:
+    Args:
         mod: The module to import.
     """
     return importlib.import_module(mod)
@@ -279,7 +279,7 @@ def import_module(mod: str) -> types.ModuleType:
 def get_members(obj: object, predicate: Callable[[Any], Any] | None = None):
     """Cached version of inspect.getmembers.
 
-    Arguments:
+    Args:
         obj: Object to get members for
         predicate: Optional predicate for the members
     """
@@ -290,7 +290,7 @@ def get_members(obj: object, predicate: Callable[[Any], Any] | None = None):
 def import_file(path: str | os.PathLike[str]) -> types.ModuleType:
     """Import a module based on a file path.
 
-    Arguments:
+    Args:
         path: Path which should get imported
     """
     p = pathlib.Path(path)
@@ -314,7 +314,7 @@ def to_callable(path: str | Callable[..., Any]) -> Callable[..., Any]:
     If path already is a callable, return it without changes.
     Must be of format "module.path:object.fn"
 
-    Arguments:
+    Args:
         path: The path to the callable to return.
 
     Returns:
@@ -338,7 +338,7 @@ def to_callable(path: str | Callable[..., Any]) -> Callable[..., Any]:
 def get_code_name(obj: Any) -> str:
     """Get a title for an object representing code.
 
-    Arguments:
+    Args:
         obj: The object to get a name for.
     """
     match obj:
@@ -362,7 +362,7 @@ def get_code_name(obj: Any) -> str:
     # ):
     #     """Collect submodules.
 
-    #     Arguments:
+    #     Args:
     #         recursive: Collect recursively
     #         predicate: Module filter predicate
     #         submodule: Module to collect from. If None, collect from project module.
@@ -384,7 +384,7 @@ def get_code_name(obj: Any) -> str:
     # ) -> Iterator[types.ModuleType]:
     #     """Iterate over all submodules of the module.
 
-    #     Arguments:
+    #     Args:
     #         submodule: filter based on a submodule
     #         recursive: whether to only iterate over members of current module
     #                    or whether it should also include modules from submodules.

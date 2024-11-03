@@ -121,7 +121,7 @@ def get_dataclass_repr(
 ) -> str:
     """Return repr for dataclass, filtered by non-default values.
 
-    Arguments:
+    Args:
         instance: dataclass instance
         char_width: If set, then repr will be formatted with black to given char width
     """
@@ -158,7 +158,7 @@ def get_nondefault_repr(
             self.some_value = str(some_value)
         ```
 
-    Arguments:
+    Args:
         instance: The instance to get a repr for
         char_width: If set, then repr will be formatted with black to given char width
         shorten: Whether to shorten the repr using a custom reprlib Repr

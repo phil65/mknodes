@@ -68,7 +68,7 @@ class NavBuilder:
     def build_literate_nav(self, indentation: int | str = "") -> Iterable[str]:
         """Convert data to a literate-nav formatted markdown list.
 
-        Arguments:
+        Args:
             indentation: Initial indentation
         """
         if isinstance(indentation, int):

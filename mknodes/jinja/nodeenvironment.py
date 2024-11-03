@@ -31,7 +31,7 @@ class NodeEnvironment(jinjarope.Environment):
     def __init__(self, node: mk.MkNode, **kwargs: Any):
         """Constructor.
 
-        Arguments:
+        Args:
             node: Node this environment belongs to.
             kwargs: Optional keyword arguments passed to parent
         """
@@ -117,7 +117,7 @@ class NodeEnvironment(jinjarope.Environment):
 
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
 
-        Arguments:
+        Args:
             template_name: Template name
             variables: Extra variables for this render call
             block_name: Render specific block from the template
@@ -149,7 +149,7 @@ class NodeEnvironment(jinjarope.Environment):
 
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
 
-        Arguments:
+        Args:
             string: String to render
             variables: Extra variables for the environment
             kwargs: Additional variables for the render call

@@ -51,7 +51,7 @@ class GitRepository(git.Repo):
     ) -> Self:
         """Clone a repository. Overridden for typing.
 
-        Arguments:
+        Args:
             url: The repository URL
             to_path: the path to clone to
             depth: Clone depth (Amount of commits to fetch)
@@ -93,7 +93,7 @@ class GitRepository(git.Repo):
     ) -> str | None:
         """Iterate commit parents to find the associated version of the commit.
 
-        Arguments:
+        Args:
             commit: Commit to get a version for.
         """
         commit_obj = self.get_commit(commit) if isinstance(commit, str) else commit
@@ -140,7 +140,7 @@ class GitRepository(git.Repo):
     ) -> list[git.Commit]:  # type: ignore[name-defined]
         """Return last x commits.
 
-        Arguments:
+        Args:
             num: Amount of commits to fetch.
             branch: Branch to get commits from. Defaults to main / master.
         """

@@ -19,7 +19,7 @@ class PackageInfo:
     def __init__(self, pkg_name: str):
         """Constructor.
 
-        Arguments:
+        Args:
             pkg_name: Name of the package
         """
         self.package_name = pkg_name

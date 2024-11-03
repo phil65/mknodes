@@ -22,7 +22,7 @@ class NavRouter:
     def __init__(self, nav: mknav.MkNav):
         """Constructor.
 
-        Arguments:
+        Args:
             nav: MkNav to use for routing
         """
         self._nav = nav
@@ -39,7 +39,7 @@ class NavRouter:
         In comparison to `page()` and `nav()`, it is not required to know in advance what
         will be returned.
 
-        Arguments:
+        Args:
             path: The section path for the returned `MkNav` / `MkPage`
         """
 
@@ -76,7 +76,7 @@ class NavRouter:
                 nav += ...
             ```
 
-        Arguments:
+        Args:
             path: The section path for the returned MkNav
             kwargs: Keyword arguments passed to the MkNav constructor.
         """
@@ -119,7 +119,7 @@ class NavRouter:
             def _(page: mk.MkPage):
                 page += ...
             ```
-        Arguments:
+        Args:
             path: The section path for the returned MkPage
             kwargs: Keyword arguments passed to the MkPage constructor.
         """

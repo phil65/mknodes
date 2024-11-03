@@ -19,7 +19,7 @@ def get_repo(
 ) -> gitrepository.GitRepository:
     """Return info for given module from registry.
 
-    Arguments:
+    Args:
         repo_url: Name of the module
         clone_depth: Amount of commits to clone if repo is remote.
     """
@@ -60,7 +60,7 @@ class RepoRegistry(MutableMapping[str, gitrepository.GitRepository], metaclass=A
     ) -> gitrepository.GitRepository:
         """Return a GitRepository for given URL / path.
 
-        Arguments:
+        Args:
             repo_url: URL / path of the repository
             clone_depth: Amount of commits to fetch if repo is remote
         """

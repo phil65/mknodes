@@ -26,7 +26,7 @@ class MkImageCompare(mktemplate.MkTemplate):
     ):
         """Constructor.
 
-        Arguments:
+        Args:
             before_image: Image shown with slider to the right
             after_image: Image shown with slider to the left
             kwargs: Keyword arguments passed to parent
