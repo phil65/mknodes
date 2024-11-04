@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from jinjarope import serializefilters, yamltools
+from jinjarope import serializefilters
 import upath
+import yamling
+from yamling import yamltypes
 
 from mknodes.info import configfile
 from mknodes.utils import log
@@ -20,7 +22,7 @@ class YamlFile(configfile.ConfigFile):
     def __init__(
         self,
         path: str | os.PathLike[str] | None = None,
-        mode: yamltools.LoaderStr = "unsafe",
+        mode: yamltypes.LoaderStr = "unsafe",
         resolve_inherit_tag: bool = False,
     ):
         super().__init__(path)
@@ -29,7 +31,7 @@ class YamlFile(configfile.ConfigFile):
 
     def resolve_inherit_tag(
         self,
-        mode: yamltools.LoaderStr = "unsafe",
+        mode: yamltypes.LoaderStr = "unsafe",
     ):
         """Resolve INHERIT key-value pair for this YAML file.
 
@@ -54,16 +56,16 @@ class YamlFile(configfile.ConfigFile):
             parent_cfg = abspath.parent / path
             logger.debug("Loading inherited configuration file: %s", parent_cfg)
             text = parent_cfg.read_text("utf-8")
-            parent = yamltools.load_yaml(text, mode)
+            parent = yamling.load_yaml(text, mode)
             self._data = serializefilters.merge(parent, self._data)
 
     @classmethod
     def _dump(cls, data: dict) -> str:
-        return yamltools.dump_yaml(data)
+        return yamling.dump_yaml(data)
 
     @classmethod
-    def _load(cls, data: str, mode: yamltools.LoaderStr = "unsafe") -> dict | list:
-        return yamltools.load_yaml(data, mode)
+    def _load(cls, data: str, mode: yamltypes.LoaderStr = "unsafe") -> dict | list:
+        return yamling.load_yaml(data, mode)
 
 
 if __name__ == "__main__":

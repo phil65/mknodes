@@ -50,7 +50,8 @@ dependencies = [
 
     # Tools
     "jinja2",
-    "jinjarope[icons,yaml]",
+    "jinjarope[icons]",
+    "yamling",
     "griffe",
     "coloraide",
     "natsort",
