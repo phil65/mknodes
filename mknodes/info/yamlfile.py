@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jinjarope import serializefilters
 import upath
@@ -57,14 +57,16 @@ class YamlFile(configfile.ConfigFile):
             logger.debug("Loading inherited configuration file: %s", parent_cfg)
             text = parent_cfg.read_text("utf-8")
             parent = yamling.load_yaml(text, mode)
-            self._data = serializefilters.merge(parent, self._data)
+            self._data: dict[str, Any] = serializefilters.merge(parent, self._data)
 
     @classmethod
-    def _dump(cls, data: dict) -> str:
+    def _dump(cls, data: dict[str, Any]) -> str:
         return yamling.dump_yaml(data)
 
     @classmethod
-    def _load(cls, data: str, mode: yamltypes.LoaderStr = "unsafe") -> dict | list:
+    def _load(
+        cls, data: str, mode: yamltypes.LoaderStr = "unsafe"
+    ) -> dict[str, Any] | list[Any]:
         return yamling.load_yaml(data, mode)
 
 
