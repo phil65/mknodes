@@ -1,0 +1,20 @@
+[metadata]
+icon = "mdi:view-grid"
+status = "new"
+name = "MkLlm"
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ "Write a poem about MkDocs" | MkLlm }}
+"""
+
+# [output.markdown]
+# template = """
+# <div class="grid cards" markdown="1">
+
+# {% for item in node.items %}
+# -   {{ item | indent }}
+# {% endfor %}
+# </div>
+# """
