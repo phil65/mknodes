@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import upath
+import yamling
 
 from mknodes.utils import superdict
 
@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 
 
 class ConfigFile(superdict.SuperDict):
+    filetype: str | None = None
+
     def __init__(self, path: str | os.PathLike[str] | None = None):
         """Constructor.
 
@@ -45,19 +47,11 @@ class ConfigFile(superdict.SuperDict):
         if not sections:
             raise ValueError(sections)
         section = self.get_section(*sections, keep_path=keep_path)
-        return "" if section is None else self._dump(section)
-
-    def load_config(self, data: str):
-        """Load a string with loader of given file type.
-
-        Args:
-            data: String with markup of type as config file
-        """
-        self._data = self._load(data)
+        return "" if section is None else yamling.dump(section, mode=self.filetype)  # type: ignore[arg-type]
 
     def dump_config(self) -> str:
         """Dump to string with dumper of given file type."""
-        return self._dump(self._data)
+        return yamling.dump(self._data, mode=self.filetype)  # type: ignore[arg-type]
 
     def load_file(
         self,
@@ -70,28 +64,7 @@ class ConfigFile(superdict.SuperDict):
             path: Path to the config file (also supports fsspec protocol URLs)
             storage_options: Options for fsspec backend
         """
-        opts = storage_options or {}
-        file = upath.UPath(path, **opts)
-        text = file.read_text(encoding="utf-8")
-        self.load_config(text)
-
-    @classmethod
-    def _dump(cls, data: dict) -> str:
-        """Needs to be reimplemented by subclasses.
-
-        Args:
-            data: Data to dump
-        """
-        raise NotImplementedError
-
-    @classmethod
-    def _load(cls, data: str) -> dict | list:
-        """Needs to be reimplemented by subclasses.
-
-        Args:
-            data: Data to load
-        """
-        raise NotImplementedError
+        self._data = yamling.load_file(path, storage_options=storage_options or {})
 
 
 if __name__ == "__main__":
