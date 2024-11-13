@@ -61,7 +61,7 @@ dependencies = [
     "git-changelog",
     "mkdocstrings[python]",
 ]
-license = "MIT"
+license = {file = "LICENSE"}
 
 [project.entry-points."jinjarope.environment"]
 mknodes = "mknodes.jinja:setup_env"
