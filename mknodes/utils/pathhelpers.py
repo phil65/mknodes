@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import functools
-import os
 import pathlib
 import shutil
 from typing import TYPE_CHECKING
@@ -13,6 +12,7 @@ from mknodes.utils import log
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+    import os
     from typing import Any
 
 
@@ -159,28 +159,6 @@ def load_file_cached(path: str | os.PathLike[str]) -> str:
     if "://" in str(path):
         return fsspec_get(str(path))
     return pathlib.Path(path).read_text(encoding="utf-8")
-
-
-def download_from_github(
-    org: str,
-    repo: str,
-    path: str | os.PathLike[str],
-    destination: str | os.PathLike[str],
-    username: str | None = None,
-    token: str | None = None,
-    recursive: bool = False,
-):
-    import fsspec
-
-    token = token or os.environ.get("GITHUB_TOKEN")
-    if token and not username:
-        token = None
-    dest = upath.UPath(destination)
-    dest.mkdir(exist_ok=True, parents=True)
-    fs = fsspec.filesystem("github", org=org, repo=repo)
-    logger.info("Copying files from Github: %s", path)
-    files = fs.ls(str(path))
-    fs.get(files, dest.as_posix(), recursive=recursive)
 
 
 @functools.cache

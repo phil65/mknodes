@@ -133,11 +133,6 @@ class EntryPoint:
         """The module of the entry point."""
         return self.dotted_path.split(":")[0]
 
-    @property
-    def obj_path(self) -> str:
-        """The dotted path of the object (without the module)."""
-        return self.dotted_path.split(":")[1]
-
 
 @functools.cache
 def get_entry_points(

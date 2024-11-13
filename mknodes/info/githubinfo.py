@@ -9,7 +9,7 @@ import github
 from github import Commit
 
 from mknodes.info import contexts
-from mknodes.utils import downloadhelpers, log, pathhelpers, reprhelpers
+from mknodes.utils import downloadhelpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -50,30 +50,6 @@ class GitHubRepo:
             self,
             username=self.username,
             repository=self.repo_name,
-        )
-
-    def download_from_path(
-        self,
-        path: str | os.PathLike[str],
-        destination: str | os.PathLike[str],
-        recursive: bool = False,
-    ):
-        """Download a file from this github repository.
-
-        Args:
-            path: Path to the file we want to download.
-            destination: Path where file should be saved.
-            recursive: Download all files from a folder (and subfolders).
-        """
-        user_name = self.main.get_user().login if TOKEN else None
-        return pathhelpers.download_from_github(
-            org=self.username,
-            repo=self.repo_name,
-            path=path,
-            destination=destination,
-            username=user_name,
-            token=TOKEN,
-            recursive=recursive,
         )
 
     @functools.cached_property
