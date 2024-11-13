@@ -67,9 +67,33 @@ class ConfigFile(superdict.SuperDict):
         self._data = yamling.load_file(path, storage_options=storage_options or {})
 
 
-if __name__ == "__main__":
-    from mknodes.info import tomlfile
+class TomlFile(ConfigFile):
+    filetype = "toml"
 
-    info = tomlfile.TomlFile("github://phil65:mknodes@main/pyproject.toml")
+
+class YamlFile(ConfigFile):
+    filetype = "yaml"
+
+    def load_file(
+        self,
+        path: str | os.PathLike[str],
+        **storage_options: Any,
+    ):
+        """Load a file with loader of given file type.
+
+        Args:
+            path: Path to the config file (also supports fsspec protocol URLs)
+            storage_options: Options for fsspec backend
+        """
+        self._data = yamling.load_yaml_file(
+            path,
+            storage_options=storage_options or {},
+            resolve_inherit=True,
+        )
+        # type: ignore[arg-type]
+
+
+if __name__ == "__main__":
+    info = TomlFile("github://phil65:mknodes@main/pyproject.toml")
     text = info.get_section_text("tool", "hatch", keep_path=True)
     print(text)

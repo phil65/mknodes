@@ -5,7 +5,7 @@ import datetime
 from typing import Any
 
 from mknodes.basenodes import mktext
-from mknodes.info import yamlfile
+from mknodes.info import configfile
 from mknodes.navs import mknav
 from mknodes.pages import metadata, mkpage
 from mknodes.utils import resources
@@ -87,7 +87,7 @@ class MkBlog(mknav.MkNav):
 
     def get_node_resources(self) -> resources.Resources:
         """Return required resources for this node."""
-        authors_file = yamlfile.YamlFile()
+        authors_file = configfile.YamlFile()
         dct = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
         authors_file._data["authors"] = dct
         content = authors_file.serialize("yaml")

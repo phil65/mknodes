@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from jinjarope import inspectfilters, textfilters
 
-from mknodes.info import tomlfile
+from mknodes.info import configfile
 from mknodes.utils import resources
 
 
@@ -63,7 +63,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
     return dct
 
 
-class NodeFile(tomlfile.TomlFile):
+class NodeFile(configfile.TomlFile):
     def __init__(self, path_or_cls: str | os.PathLike[str] | type):
         path = find_file(path_or_cls) if isinstance(path_or_cls, type) else path_or_cls
         super().__init__(path)

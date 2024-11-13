@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from mknodes.info import yamlfile
+from mknodes.info import configfile
 
 
-class MkDocsConfigFile(yamlfile.YamlFile):
+class MkDocsConfigFile(configfile.YamlFile):
     SCHEMA = "https://json.schemastore.org/mkdocs-1.6.json"
 
     @property

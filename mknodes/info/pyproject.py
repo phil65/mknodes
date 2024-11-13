@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 import upath
 
 from mknodes.data import buildsystems, commitconventions, installmethods
-from mknodes.info import tomlfile
+from mknodes.info import configfile
 from mknodes.utils import pathhelpers, superdict
 
 
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     import os
 
 
-class PyProject(tomlfile.TomlFile):
+class PyProject(configfile.TomlFile):
     """Class representing a PyProject config file."""
 
     def __init__(self, path: str | os.PathLike[str] | None = None):
