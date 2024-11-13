@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import functools
-import pathlib
 import shutil
 from typing import TYPE_CHECKING
 
@@ -13,6 +12,7 @@ from mknodes.utils import log
 if TYPE_CHECKING:
     from collections.abc import Mapping
     import os
+    import pathlib
     from typing import Any
 
 
@@ -134,7 +134,7 @@ def write_files(mapping: Mapping[str | os.PathLike[str], str | bytes]):
 
 
 def find_cfg_for_folder(
-    filename: str | pathlib.Path,
+    filename: str | os.PathLike[str],
     folder: os.PathLike[str] | str = ".",
 ) -> pathlib.Path | None:
     """Search for a file with given name in folder and its parent folders.
@@ -143,10 +143,10 @@ def find_cfg_for_folder(
         filename: File to search
         folder: Folder to start searching from
     """
-    if folder and folder != ".":
-        path = upath.UPath(folder).absolute() / filename
+    if folder and str(folder) != ".":
+        path = upath.UPath(folder).resolve() / filename
     else:
-        path = upath.UPath(filename).absolute()
+        path = upath.UPath(filename).resolve()
     while len(path.parts) > 1:
         path = path.parent
         if (file := path / filename).exists():
@@ -156,17 +156,7 @@ def find_cfg_for_folder(
 
 @functools.cache
 def load_file_cached(path: str | os.PathLike[str]) -> str:
-    if "://" in str(path):
-        return fsspec_get(str(path))
-    return pathlib.Path(path).read_text(encoding="utf-8")
-
-
-@functools.cache
-def fsspec_get(path: str) -> str:
-    import fsspec
-
-    with fsspec.open(path) as file:
-        return file.read().decode()
+    return upath.UPath(path).read_text(encoding="utf-8")
 
 
 if __name__ == "__main__":
