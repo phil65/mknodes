@@ -55,3 +55,7 @@ ENV/
 
 # uv
 uv.lock
+
+.ruff_cache/
+
+.zed/
