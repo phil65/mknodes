@@ -33,21 +33,17 @@ keywords = [
 
 requires-python = ">=3.12"
 dependencies = [
-
     # Git(Hub)
     "gitpython",
     "pygithub",
-
     # Serialization
     "tomli-w",
-
     # HTTP / Remote
     "requests",
     "fsspec",
     "universal_pathlib",
-    "aiohttp",           # for fsspec http://
+    "aiohttp", # for fsspec http://
     "requests_cache",
-
     # Tools
     "jinja2",
     "jinjarope[icons]",
@@ -60,6 +56,7 @@ dependencies = [
     "pipdeptree",
     "git-changelog",
     "mkdocstrings[python]",
+    "githarbor",
 ]
 license = {file = "LICENSE"}
 
