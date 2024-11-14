@@ -14,6 +14,7 @@ BASE_NODES = [
     mk.MkProgressBar,
     mk.MkSpeechBubble,
     mk.MkTemplate,
+    mk.MkLlm,
 ]
 
 IMAGE_NODES = [
