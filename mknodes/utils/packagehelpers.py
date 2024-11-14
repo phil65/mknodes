@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import collections
-import dataclasses
 import functools
 import importlib
 from importlib import metadata
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
@@ -90,11 +88,6 @@ def get_marker(marker) -> Marker:
     return Marker(marker)
 
 
-@functools.cache
-def _get_entry_points(dist: metadata.Distribution | None = None, **kwargs: Any):
-    return dist.entry_points if dist else metadata.entry_points(**kwargs)
-
-
 def get_extras(markers: list) -> list[str]:
     extras = []
     for marker in markers:
@@ -114,67 +107,6 @@ def import_dotted_path(path: str) -> type | types.ModuleType:
         mod_name, kls_name = path, None
     mod = importlib.import_module(mod_name)
     return getattr(mod, kls_name) if kls_name else mod
-
-
-@dataclasses.dataclass
-class EntryPoint:
-    """EntryPoint including imported module."""
-
-    name: str
-    dotted_path: str
-    group: str
-
-    def load(self) -> Any:
-        """Import and return the EntryPoint object."""
-        return import_dotted_path(self.dotted_path)
-
-    @property
-    def module(self) -> str:
-        """The module of the entry point."""
-        return self.dotted_path.split(":")[0]
-
-
-@functools.cache
-def get_entry_points(
-    dist: metadata.Distribution | str | None = None,
-    group: str | None = None,
-    **kwargs: Any,
-) -> EntryPointMap:  # [str, list[EntryPoint]]
-    """Returns a dictionary with entry point group as key, entry points as value.
-
-    Args:
-        dist: Optional distribution filter.
-        group: Optional group filter.
-        kwargs: Entry point filters
-    """
-    if dist:
-        if isinstance(dist, str):
-            dist = get_distribution(dist)
-        eps = [i for i in _get_entry_points(dist) if i.group == group or not group]
-    else:
-        kw_args = dict(group=group, **kwargs) if group else kwargs
-        eps = [i for ls in _get_entry_points(**kw_args).values() for i in ls]
-
-    return EntryPointMap(eps)
-
-
-class EntryPointMap(collections.defaultdict[str, list[EntryPoint]]):
-    def __init__(self, eps: list | None = None):
-        super().__init__(list)
-        for ep in eps or []:
-            if not isinstance(ep, EntryPoint):
-                ep = EntryPoint(name=ep.name, dotted_path=ep.value, group=ep.group)
-            self[ep.group].append(ep)
-
-    @property
-    def all_eps(self) -> list[EntryPoint]:
-        return [i for ls in self.values() for i in ls]
-
-    def by_name(self, name: str) -> EntryPoint | None:
-        return next((i for i in self.all_eps if i.name == name), None)
-
-    def by_dotted_path(self, dotted_path: str) -> EntryPoint | None:
-        return next((i for i in self.all_eps if i.dotted_path == dotted_path), None)
 
 
 class Dependency:

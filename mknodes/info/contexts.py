@@ -6,6 +6,7 @@ import dataclasses
 import pathlib
 from typing import TYPE_CHECKING, Any
 
+import epregistry
 import jinjarope
 
 import mknodes as mk
@@ -204,7 +205,9 @@ class PackageContext(Context):
     """A icon-name -> URL dictionary containing ."""
     inventory_url: str | None = ""
     """A best guess for an inventory URL for the package."""
-    entry_points: dict = dataclasses.field(default_factory=dict)
+    entry_points: epregistry.ModuleEntryPointRegistry = dataclasses.field(
+        default_factory=epregistry.ModuleEntryPointRegistry
+    )
     """A dictionary containing the entry points of the distribution."""
     cli: str | None = None
     """The cli package name used by the distribution."""

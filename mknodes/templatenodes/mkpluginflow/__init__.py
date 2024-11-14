@@ -39,7 +39,7 @@ class MkPluginFlow(mktemplate.MkTemplate):
         match self._plugin:
             case None:
                 ep_group = self.event_plugin.entry_point_group
-                eps = self.ctx.metadata.entry_points.get(ep_group, [])
+                eps = self.ctx.metadata.entry_points.get_group(ep_group, [])
                 return [i.load() for i in eps]
             case type():
                 return [self._plugin]

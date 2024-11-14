@@ -52,8 +52,8 @@ class MkCliDoc(mktemplate.MkTemplate):
                 mod = importlib.import_module(module)
                 instance = getattr(mod, command)
             case None:
-                if cli_eps := self.ctx.metadata.entry_points.get("console_scripts"):
-                    module, command = cli_eps[0].dotted_path.split(":")
+                if cli_eps := self.ctx.metadata.entry_points.get_group("console_scripts"):
+                    module, command = cli_eps[0].value.split(":")
                     prog_name = cli_eps[0].name
                     mod = importlib.import_module(module)
                     instance = getattr(mod, command)

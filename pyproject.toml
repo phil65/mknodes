@@ -59,6 +59,7 @@ dependencies = [
     "pipdeptree",
     "git-changelog",
     "mkdocstrings[python]",
+    "epregistry",
 ]
 license = { file = "LICENSE" }
 

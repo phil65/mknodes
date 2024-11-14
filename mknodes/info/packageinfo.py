@@ -3,7 +3,9 @@ from __future__ import annotations
 import collections
 import contextlib
 import functools
+from typing import Any
 
+import epregistry
 from requests import structures
 
 from mknodes.info.cli import clihelpers, commandinfo
@@ -201,7 +203,7 @@ class PackageInfo:
     @functools.cached_property
     def cli_info(self) -> commandinfo.CommandInfo | None:
         """Return a CLI info object containing infos about all CLI commands / options."""
-        if eps := self.entry_points.get("console_scripts"):
+        if eps := self.entry_points.get_group("console_scripts"):
             ep = eps[0].load()
             qual_name = ep.__class__.__module__.lower()
             if qual_name.startswith(("typer", "click")):
@@ -209,9 +211,9 @@ class PackageInfo:
         return None
 
     @functools.cached_property
-    def entry_points(self) -> dict[str, list[packagehelpers.EntryPoint]]:
+    def entry_points(self) -> epregistry.ModuleEntryPointRegistry[Any]:
         """Get entry points for this package."""
-        return packagehelpers.get_entry_points(self.distribution)
+        return epregistry.ModuleEntryPointRegistry(self.package_name)
 
 
 if __name__ == "__main__":
