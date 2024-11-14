@@ -47,21 +47,6 @@ def install_or_import(module_name: str) -> types.ModuleType:
 
 
 @functools.cache
-def get_distribution(name: str) -> metadata.Distribution:
-    """Cached version of metadata.distribution.
-
-    Args:
-        name: Name of the distribution to get an object for.
-    """
-    return metadata.distribution(name)
-
-
-@functools.cache
-def get_metadata(dist: metadata.Distribution):
-    return dist.metadata
-
-
-@functools.cache
 def get_requires(dist: metadata.Distribution) -> list[str]:
     return dist.requires or []
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import collections
 import contextlib
 import functools
+from importlib import metadata
 from typing import Any
 
 import epregistry
@@ -25,14 +26,14 @@ class PackageInfo:
             pkg_name: Name of the package
         """
         self.package_name = pkg_name
-        self.distribution = packagehelpers.get_distribution(pkg_name)
+        self.distribution = metadata.distribution(pkg_name)
         logger.debug("Loaded package info: '%s'", pkg_name)
-        self.metadata = packagehelpers.get_metadata(self.distribution).json
-        self.classifiers = self.metadata["classifier"]
-        self.version = self.metadata["version"]
-        self.name = self.metadata["name"]
-        self.description = self.metadata["description"]
-        self.summary = self.metadata["summary"]
+        self.metadata: dict[str, Any] = self.distribution.metadata.json
+        self.classifiers: list[str] = self.metadata["classifier"]
+        self.version: str = self.metadata["version"]
+        self.name: str = self.metadata["name"]
+        self.description: str = self.metadata["description"]
+        self.summary: str = self.metadata["summary"]
 
     def __repr__(self):
         return reprhelpers.get_repr(self, pkg_name=self.package_name)
@@ -66,7 +67,7 @@ class PackageInfo:
 
     @functools.cached_property
     def _required_deps(self) -> list[packagehelpers.Dependency]:
-        requires = packagehelpers.get_requires(self.distribution)
+        requires = self.distribution.requires
         return [packagehelpers.get_dependency(i) for i in requires] if requires else []
 
     @functools.cached_property
@@ -170,7 +171,7 @@ class PackageInfo:
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         from mknodes.info import packageregistry
 
-        requires = packagehelpers.get_requires(self.distribution)
+        requires = self.distribution.requires
         modules: set[str] = (
             {packagehelpers.get_dependency(i).name for i in requires}
             if requires
