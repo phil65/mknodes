@@ -77,6 +77,7 @@ from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mktemplate import MkTemplate
 from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
+from .templatenodes.mkllm import MkLlm
 
 from .pages.metadata import Metadata
 from .pages.pagetemplate import PageTemplate
@@ -146,6 +147,7 @@ __all__ = [
     "MkLicense",
     "MkLink",
     "MkList",
+    "MkLlm",
     "MkMaterialBadge",
     "MkMetadataBadges",
     "MkModulePage",

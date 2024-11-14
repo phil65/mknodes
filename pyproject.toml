@@ -42,9 +42,11 @@ dependencies = [
     "requests",
     "fsspec",
     "universal_pathlib",
-    "aiohttp", # for fsspec http://
+    "aiohttp",           # for fsspec http://
     "requests_cache",
     # Tools
+    "python-dotenv",
+    "githarbor",
     "jinja2",
     "jinjarope[icons]",
     "yamling",
@@ -52,13 +54,13 @@ dependencies = [
     "coloraide",
     "natsort",
     # TODO: make these optional
+    "litellm",
     "anybadge",
     "pipdeptree",
     "git-changelog",
     "mkdocstrings[python]",
-    "githarbor",
 ]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 
 [project.entry-points."jinjarope.environment"]
 mknodes = "mknodes.jinja:setup_env"
