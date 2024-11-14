@@ -8,6 +8,7 @@ import pathlib
 import re
 from typing import TYPE_CHECKING
 
+import epregistry
 import yamling
 
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
@@ -21,7 +22,7 @@ from mknodes.info import (
     pyproject,
     reporegistry,
 )
-from mknodes.utils import icons, log, packagehelpers, pathhelpers, reprhelpers
+from mknodes.utils import icons, log, pathhelpers, reprhelpers
 
 
 if TYPE_CHECKING:
@@ -91,15 +92,15 @@ class FolderInfo:
     @functools.cached_property
     def module(self) -> types.ModuleType:
         """Return the module itself."""
-        mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
-        return importlib.import_module(mod_name)
+        mod_name = epregistry.distribution_to_package(self.git.repo_name)
+        return importlib.import_module(mod_name or self.git.repo_name)
 
     @functools.cached_property
     def griffe_module(self) -> griffe.Module | Alias:
         """Return a griffe Module containing information about the module."""
         # Long-term ideally we would pull all information from here.
-        mod_name = packagehelpers.distribution_to_package(self.git.repo_name)
-        return grifferegistry.get_module(mod_name)
+        mod_name = epregistry.distribution_to_package(self.git.repo_name)
+        return grifferegistry.get_module(mod_name or self.git.repo_name)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)

@@ -13,7 +13,7 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
-    from collections.abc import Container, Mapping
+    from collections.abc import Container
     import types
 
 
@@ -49,23 +49,6 @@ def install_or_import(module_name: str) -> types.ModuleType:
 @functools.cache
 def get_requires(dist: metadata.Distribution) -> list[str]:
     return dist.requires or []
-
-
-@functools.cache
-def get_package_map() -> Mapping[str, list[str]]:
-    """Return a mapping of top-level packages to their distributions."""
-    return metadata.packages_distributions()
-
-
-@functools.cache
-def distribution_to_package(dist: str) -> str:
-    """Return the top-level package for given distribution.
-
-    Args:
-        dist: Name of the distribution to get the package for.
-    """
-    result = next((k for k, v in get_package_map().items() if dist in v), dist)
-    return result.replace("-", "_").lower()
 
 
 @functools.cache
