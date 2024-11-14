@@ -6,7 +6,7 @@ name = "MkLlm"
 [examples.regular]
 title = "Regular"
 jinja = """
-{{ "Write a poem about MkDocs" | MkLlm }}
+{{ "Write a poem about MkDocs" | MkLlm(model="ollama/smollm2:360m") }}
 """
 
 # [output.markdown]
