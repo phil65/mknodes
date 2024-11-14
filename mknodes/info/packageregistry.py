@@ -3,8 +3,10 @@ from __future__ import annotations
 from abc import ABCMeta
 from collections.abc import MutableMapping
 
+import epregistry
+
 from mknodes.info import packageinfo
-from mknodes.utils import log, packagehelpers
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -66,7 +68,7 @@ class PackageRegistry(MutableMapping[str, packageinfo.PackageInfo], metaclass=AB
         Args:
             mod_name: Name of the module
         """
-        mapping = packagehelpers.get_package_map()
+        mapping = epregistry.get_packages_distributions()
         pkg_name = mapping[mod_name][0] if mod_name in mapping else mod_name
         pkg_name = pkg_name.lower()
         if pkg_name not in self._packages:
