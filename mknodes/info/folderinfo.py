@@ -14,7 +14,6 @@ import yamling
 from mknodes.data import commitconventions, installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
-    # githubinfo,
     grifferegistry,
     license as lic,
     mkdocsconfigfile,
@@ -80,10 +79,6 @@ class FolderInfo:
         if (mk_path := self.path / "mkdocs.yml").exists():
             with contextlib.suppress(yamling.YAMLError):
                 self.mkdocs_config = mkdocsconfigfile.MkDocsConfigFile(mk_path)
-        # self.github = githubinfo.GitHubRepo(
-        #     self.repository_username,
-        #     self.repository_name,
-        # )
         self._temp_directory = None
 
     def __fspath__(self):

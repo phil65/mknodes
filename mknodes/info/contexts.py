@@ -7,13 +7,13 @@ import pathlib
 from typing import TYPE_CHECKING, Any
 
 import epregistry
+import githarbor
 import jinjarope
 
 import mknodes as mk
 from mknodes.data import buildsystems, commitconventions, installmethods, tools
 from mknodes.info import (
     folderinfo,
-    githubinfo,
     linkprovider,
     mkdocsconfigfile,
     packageregistry,
@@ -255,7 +255,7 @@ class GitHubContext(Context):
     """The default branch of the repository."""
     repo_name: str = ""
     """The repository name."""
-    workflows: list[githubinfo.Workflow] = dataclasses.field(default_factory=list)
+    workflows: list[githarbor.Workflow] = dataclasses.field(default_factory=list)
     """A list of configured workflows."""
     avatar_url: str | None = None
     """The url of the GitHub avatar."""
@@ -267,7 +267,7 @@ class GitHubContext(Context):
     """The company associated with the user."""
     email: str | None = None
     """The user email address."""
-    followers: int = 0
+    followers: int | None = None
     """The follower count of the user."""
     gravatar_id: str | None = None
     """The gravatar id associated with the user."""
@@ -283,10 +283,41 @@ class GitHubContext(Context):
     def __repr__(self):
         return f"GitHubContext({self.repo_name!r})"
 
+    @classmethod
+    def from_url(cls, url: str) -> GitHubContext:
+        """Create GitHubContext from a GitHubRepository instance.
+
+        Args:
+            url: URL to the repository.
+
+        Returns:
+            GitHubContext: Populated context instance.
+        """
+        repo = githarbor.create_repository(url)
+        workflows = repo.list_workflows()
+        user = repo.get_repo_user()
+
+        return cls(
+            default_branch=repo.default_branch,
+            repo_name=f"{repo.owner}/{repo.name}",
+            workflows=workflows,
+            avatar_url=user.avatar_url,
+            bio=user.bio,
+            blog=user.blog,
+            company=user.company,
+            email=user.email,
+            followers=user.followers,
+            gravatar_id=user.gravatar_id,
+            hireable=user.hireable,
+            location=user.location,
+            name=user.name,
+            twitter_username=user.twitter_username,
+        )
+
 
 @dataclasses.dataclass
-class EnvironmentContext(MutableMapping, metaclass=abc.ABCMeta):
-    loader: dict = dataclasses.field(default_factory=dict)
+class EnvironmentContext(MutableMapping[str, Any], metaclass=abc.ABCMeta):
+    loader: dict[str, dict[str, Any]] = dataclasses.field(default_factory=dict)
     block_start_string: str | None = None
     block_end_string: str | None = None
     variable_start_string: str | None = None
