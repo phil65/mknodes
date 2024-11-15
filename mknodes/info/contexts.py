@@ -26,9 +26,8 @@ if TYPE_CHECKING:
     import datetime
     import types
 
+    import clinspector
     from griffe import Alias, Module
-
-    from mknodes.info.cli import commandinfo
 
 
 logger = log.get_logger(__name__)
@@ -211,7 +210,7 @@ class PackageContext(Context):
     """A dictionary containing the entry points of the distribution."""
     cli: str | None = None
     """The cli package name used by the distribution."""
-    cli_info: commandinfo.CommandInfo | None = None
+    cli_info: clinspector.CommandInfo | None = None
     """An object containing information about all cli commands."""
 
     # required_packages: dict[PackageInfo, packagehelpers.Dependency] =

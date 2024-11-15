@@ -4,7 +4,8 @@ from typing import Any, TYPE_CHECKING
 
 from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
-from mknodes.info.cli import clihelpers, commandinfo
+
+import clinspector
 
 if TYPE_CHECKING:
     import argparse
@@ -42,7 +43,7 @@ class MkCliDoc(mktemplate.MkTemplate):
         self.show_subcommands = show_subcommands
 
     @property
-    def info(self) -> commandinfo.CommandInfo | None:
+    def info(self) -> clinspector.CommandInfo | None:
         import importlib
 
         match self.target:
@@ -62,7 +63,7 @@ class MkCliDoc(mktemplate.MkTemplate):
             case _:
                 instance = self.target
                 prog_name = self.prog_name
-        return clihelpers.get_cli_info(instance, command=prog_name)
+        return clinspector.get_cmd_info(instance, command=prog_name)
 
 
 if __name__ == "__main__":

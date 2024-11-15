@@ -6,10 +6,10 @@ import functools
 from importlib import metadata
 from typing import Any
 
+import clinspector
 import epregistry
 from requests import structures
 
-from mknodes.info.cli import clihelpers, commandinfo
 from mknodes.utils import log, packagehelpers, reprhelpers
 
 
@@ -202,13 +202,13 @@ class PackageInfo:
         return None
 
     @functools.cached_property
-    def cli_info(self) -> commandinfo.CommandInfo | None:
+    def cli_info(self) -> clinspector.CommandInfo | None:
         """Return a CLI info object containing infos about all CLI commands / options."""
         if eps := self.entry_points.get_group("console_scripts"):
             ep = eps[0].load()
             qual_name = ep.__class__.__module__.lower()
             if qual_name.startswith(("typer", "click")):
-                return clihelpers.get_cli_info(ep)
+                return clinspector.get_cmd_info(ep)
         return None
 
     @functools.cached_property
