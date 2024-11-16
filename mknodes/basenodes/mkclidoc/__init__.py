@@ -20,7 +20,7 @@ class MkCliDoc(mktemplate.MkTemplate):
 
     def __init__(
         self,
-        target: str | None | argparse.ArgumentParser = None,
+        target: str | argparse.ArgumentParser | None = None,
         *,
         prog_name: str | None = None,
         show_hidden: bool = False,

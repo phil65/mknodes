@@ -20,7 +20,7 @@ class MkTask(mkcontainer.MkContainer):
     def __init__(
         self,
         value: bool = False,
-        content: list | None | str | mknode.MkNode = None,
+        content: list | str | mknode.MkNode | None = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -47,7 +47,7 @@ class MkTaskList(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: list | None | str | mknode.MkNode = None,
+        content: list | str | mknode.MkNode | None = None,
         **kwargs: Any,
     ):
         """Constructor.

@@ -101,7 +101,7 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def add_row(
         self,
-        row: Sequence[str | None | mk.MkNode] | dict[str, str | None],
+        row: Sequence[str | mk.MkNode | None] | dict[str, str | None],
     ):
         if len(row) != len(self.columns):
             msg = "Row to add doesnt have same length as header"

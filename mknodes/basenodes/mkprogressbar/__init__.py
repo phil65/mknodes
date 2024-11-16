@@ -21,7 +21,7 @@ class MkProgressBar(mknode.MkNode):
         self,
         percentage: int,
         *,
-        label: str | None | Literal[True] = True,
+        label: str | Literal[True] | None = True,
         style: Literal["thin", "candystripe", "candystripe_animated"] | None = None,
         **kwargs: Any,
     ):

@@ -130,7 +130,7 @@ def to_dotted_path(
 def list_classes(
     module: types.ModuleType | str | tuple[str, ...],
     *,
-    type_filter: type | None | types.UnionType = None,
+    type_filter: type | types.UnionType | None = None,
     module_filter: str | None = None,
     filter_by___all__: bool = False,
     predicate: Callable[[type], bool] | None = None,
@@ -162,7 +162,7 @@ def list_classes(
 def iter_classes(
     module: types.ModuleType | str | tuple[str, ...],
     *,
-    type_filter: type | None | types.UnionType = None,
+    type_filter: type | types.UnionType | None = None,
     module_filter: str | None = None,
     filter_by___all__: bool = False,
     predicate: Callable[[type], bool] | None = None,

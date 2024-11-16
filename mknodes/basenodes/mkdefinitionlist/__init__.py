@@ -18,7 +18,7 @@ class MkDefinition(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: list | None | str | mknode.MkNode = None,
+        content: list | str | mknode.MkNode | None = None,
         title: str = "",
         **kwargs: Any,
     ):

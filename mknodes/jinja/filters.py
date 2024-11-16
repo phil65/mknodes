@@ -139,4 +139,5 @@ def script_tag(context: runtime.Context, extra_script):
         if extra_script.async_:
             html += " async"
     html += "></script>"
-    return Markup(html).format(url(context, str(extra_script)), extra_script)
+    string = url(context, str(extra_script))
+    return Markup(html).format(string, extra_script)
