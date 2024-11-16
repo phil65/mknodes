@@ -214,7 +214,9 @@ class PackageInfo:
     @functools.cached_property
     def entry_points(self) -> epregistry.ModuleEntryPointRegistry[Any]:
         """Get entry points for this package."""
-        return epregistry.ModuleEntryPointRegistry(self.package_name)
+        # just using distribution.entry_points might be alternative, but is uncached afaik
+        name = epregistry.distribution_to_package(self.package_name)
+        return epregistry.ModuleEntryPointRegistry(name)
 
 
 if __name__ == "__main__":
