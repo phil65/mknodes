@@ -87,15 +87,15 @@ class FolderInfo:
     @functools.cached_property
     def module(self) -> types.ModuleType:
         """Return the module itself."""
-        mod_name = epregistry.distribution_to_package(self.git.repo_name)
-        return importlib.import_module(mod_name or self.git.repo_name)
+        mod_name = epregistry.distribution_to_package(self.git.repo_name, fallback=True)
+        return importlib.import_module(mod_name)
 
     @functools.cached_property
     def griffe_module(self) -> griffe.Module | Alias:
         """Return a griffe Module containing information about the module."""
         # Long-term ideally we would pull all information from here.
-        mod_name = epregistry.distribution_to_package(self.git.repo_name)
-        return grifferegistry.get_module(mod_name or self.git.repo_name)
+        mod_name = epregistry.distribution_to_package(self.git.repo_name, fallback=True)
+        return grifferegistry.get_module(mod_name)
 
     def __repr__(self):
         return reprhelpers.get_repr(self, path=self.path)
@@ -289,6 +289,6 @@ class FolderInfo:
 
 
 if __name__ == "__main__":
-    info = FolderInfo("https://github.com/mkdocs/mkdocs.git")
-    print(info.context)
-    log.basic()
+    info = FolderInfo("https://github.com/phil65/mkdocs-mknodes")
+    # info = FolderInfo()
+    print(info.module)
