@@ -140,4 +140,4 @@ def script_tag(context: runtime.Context, extra_script):
             html += " async"
     html += "></script>"
     string = url(context, str(extra_script))
-    return Markup(html).format(string, extra_script)
+    return Markup(html).format(string, extra_script)  # noqa: RUF035
