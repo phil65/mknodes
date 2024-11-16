@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import functools
 from typing import TYPE_CHECKING, Any, Self
-from urllib import parse
 
 import git
+import githarbor
 from jinjarope import iterfilters
 
 from mknodes.info import contexts
@@ -31,6 +31,7 @@ class GitRepository(git.Repo):
         super().__init__(path or ".", **kwargs)
         # to keep a reference to a TempDirectory instance
         self.temp_directory: tempfile.TemporaryDirectory[str] | None = None
+        self.remote_repo = githarbor.create_repository(self.remotes.origin.url)
 
     def __len__(self):
         return len(list(self.iter_commits("HEAD")))
@@ -155,26 +156,12 @@ class GitRepository(git.Repo):
     @functools.cached_property
     def code_repository(self) -> str:
         """Get the remote code repository name (like "GitHub")."""
-        match parse.urlsplit(self.remotes.origin.url).netloc.lower():
-            case "github.com":
-                return "GitHub"
-            case "bitbucket.org":
-                return "Bitbucket"
-            case "gitlab.com":
-                return "GitLab"
-            case _ as repo_host:
-                return repo_host.split(".")[0].title()
+        return self.remote_repo.repository_type
 
     @property
     def edit_uri(self) -> str | None:
         """The URL part needed to get to the edit page of the code hoster."""
-        match parse.urlsplit(self.remotes.origin.url).netloc.lower():
-            case "github.com" | "gitlab.com":
-                return f"edit/{self.main_branch}/"
-            case "bitbucket.org":
-                return "src/default/"
-            case _:
-                return None
+        return self.remote_repo.edit_base_uri
 
     @functools.cached_property
     def context(self) -> contexts.GitContext:
