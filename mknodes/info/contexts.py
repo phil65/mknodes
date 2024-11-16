@@ -158,7 +158,7 @@ class PackageContext(Context):
     """A description for the distribution *[Metadata]*"""
     authors: dict[str, str] = dataclasses.field(default_factory=dict)
     """All authors of the distribution *[Metadata]*"""
-    classifiers: list = dataclasses.field(default_factory=list)
+    classifiers: list[str] = dataclasses.field(default_factory=list)
     """Distribution classifiers *[Metadata]*"""
     classifier_map: dict[str, list[str]] = dataclasses.field(default_factory=dict)
     """Distribution classifiers, sorted by category *[Metadata]*"""
