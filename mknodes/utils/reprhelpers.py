@@ -10,6 +10,9 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+    import types
+
     from mknodes.data import datatypes
 
 
@@ -19,31 +22,35 @@ logger = log.get_logger(__name__)
 class LengthLimitRepr(reprlib.Repr):
     """Custom repr."""
 
-    def repr_type(self, obj, level):
+    def __init__(self) -> None:
+        super().__init__(
+            maxlist=10,
+            maxstring=100,
+            maxlevel=8,
+            maxtuple=10,
+            maxarray=10,
+            maxdict=10,
+            maxset=10,
+            maxfrozenset=10,
+            maxdeque=10,
+            maxlong=60,
+            maxother=60,
+        )
+
+    def repr_type(self, obj: type, level):
         return obj.__name__
 
-    def repr_module(self, obj, level):
+    def repr_module(self, obj: types.ModuleType, level):
         return obj.__name__
 
-    def repr_function(self, obj, level):
+    def repr_function(self, obj: Callable[..., Any], level):
         return obj.__name__
 
-    def repr_method(self, obj, level):
+    def repr_method(self, obj: types.MethodType, level):
         return f"{obj.__self__.__class__.__name__}.{obj.__name__}"
 
 
 limit_repr = LengthLimitRepr()
-limit_repr.maxlist = 10
-limit_repr.maxstring = 100
-limit_repr.maxlevel = 8
-limit_repr.maxtuple = 10
-limit_repr.maxarray = 10
-limit_repr.maxdict = 10
-limit_repr.maxset = 10
-limit_repr.maxfrozenset = 10
-limit_repr.maxdeque = 10
-limit_repr.maxlong = 60
-limit_repr.maxother = 60
 
 
 def get_repr(
