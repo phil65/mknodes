@@ -161,7 +161,7 @@ class Node:
     @property
     def is_leaf(self) -> bool:
         """Get indicator if self is leaf node."""
-        return not len(list(self.children))
+        return not list(self.children)
 
     @property
     def is_first_child(self) -> bool:

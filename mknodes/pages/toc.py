@@ -25,7 +25,7 @@ def get_toc(md: str, toc_config: dict | None = None) -> TableOfContents:
     toc_tokens = getattr(converter, "toc_tokens", [])
     toc = [_parse_toc_token(i) for i in toc_tokens]
     # For the table of contents, always mark the first element as active
-    if len(toc):
+    if toc:
         toc[0].active = True  # type: ignore[attr-defined]
     return TableOfContents(toc)
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # page += node
     # print(repr(page.toc))
     root = TocNode("")
-    pat = re.compile("^(#+) (.*)$", re.MULTILINE)
+    pat = re.compile(r"^(#+) (.*)$", re.MULTILINE)
     prev_level = 0
 
     items = [
