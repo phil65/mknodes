@@ -5,7 +5,6 @@ from __future__ import annotations
 import functools
 from typing import Any, TYPE_CHECKING
 
-from jinjarope import llmfilters
 from mknodes.basenodes import mktext
 from mknodes.utils import log, resources
 from upath import UPath
@@ -20,11 +19,12 @@ logger = log.get_logger(__name__)
 
 @functools.cache
 def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
-    return llmfilters.llm_complete(
-        user_prompt,
-        system_prompt,
+    from llmling_agent import functional
+
+    return functional.run_with_model_sync(
+        user_prompt + "\n\n" + context,
         model=model,
-        context=context,
+        system_prompt=system_prompt,
     )
 
 
@@ -38,7 +38,7 @@ class MkLlm(mktext.MkText):
         self,
         user_prompt: str,
         system_prompt: str | None = None,
-        model: str = "gpt-3.5-turbo",
+        model: str = "openai:gpt-4o-mini",
         context: str | None = None,
         extra_files: Sequence[str | os.PathLike[str]] | None = None,
         **kwargs: Any,
@@ -101,12 +101,12 @@ class MkLlm(mktext.MkText):
 
         return complete_llm(
             self.user_prompt,
-            self.system_prompt,
+            self.system_prompt or "",
             model=self._model,
-            context=combined_context,
+            context=combined_context or "",
         )
 
 
 if __name__ == "__main__":
-    node = MkLlm("Say hello, introduce yourself", model="gemini/gemini-1.5-flash")
+    node = MkLlm("Say hello, introduce yourself", model="openai:gpt-4o-mini")
     print(node)

@@ -54,7 +54,7 @@ dependencies = [
     "coloraide",
     "natsort",
     # TODO: make these optional
-    "litellm",
+    "llmling-agent>=0.12.4",
     "anybadge",
     "pipdeptree",
     "git-changelog",
