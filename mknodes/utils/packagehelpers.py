@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
-import pip._internal as pip
 
 from mknodes.utils import log
 
@@ -18,32 +17,6 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
-
-
-def install(package: str, editable: bool = False):
-    """Pip-Install distribution with given options.
-
-    Args:
-        package: Name of the package to install
-        editable: Whether to install in editable mode
-    """
-    cmd = ["install", "-e", package] if editable else ["install", package]
-    pip.main(cmd)
-
-
-def install_or_import(module_name: str) -> types.ModuleType:
-    """If required, try to install given package and import it.
-
-    This method relies on module name == distribution_name
-
-    Args:
-        module_name: Name of the module to import / install
-    """
-    try:
-        return importlib.import_module(module_name)
-    except ImportError:
-        install(module_name)
-        return importlib.import_module(module_name)
 
 
 @functools.cache
