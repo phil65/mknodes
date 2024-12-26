@@ -21,6 +21,9 @@ defaults:
     run:
         shell: bash
 
+env:
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
 jobs:
     build:
         runs-on: ubuntu-latest
