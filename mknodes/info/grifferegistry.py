@@ -124,7 +124,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
             parts = klass.split(".", 1)
             mod_name, kls_name = parts if len(parts) > 1 else ("builtins", parts[0])
         module = self.get_module(mod_name, docstring_style=docstring_style)
-        return module[kls_name]
+        return module[kls_name.split("[")[0]]
 
 
 registry = GriffeRegistry()
