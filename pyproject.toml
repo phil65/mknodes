@@ -271,6 +271,8 @@ combine-as-imports = true
 "__init__.py" = ["E402", "I001"]
 
 [tool.pyright]
+venvPath = "."
+venv = ".venv"
 pythonVersion = "3.12"
 pythonPlatform = "All"
 reportUnusedCallResult = false
