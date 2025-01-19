@@ -78,7 +78,7 @@ class MkPage(mkcontainer.MkContainer):
         self._is_index = is_index
         self._is_homepage = is_homepage
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
-        self.created_by: Callable | None = None
+        self.created_by: Callable[..., Any] | None = None
         self.metadata = metadata.Metadata(
             hide=hide,
             search_boost=search_boost,

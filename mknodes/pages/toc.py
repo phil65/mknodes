@@ -14,7 +14,7 @@ class _TocToken(TypedDict):
     children: list[_TocToken]
 
 
-def get_toc(md: str, toc_config: dict | None = None) -> TableOfContents:
+def get_toc(md: str, toc_config: dict[str, Any] | None = None) -> TableOfContents:
     import markdown
 
     kwargs: dict[str, Any] = {"extensions": ["toc"]}

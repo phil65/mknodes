@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Literal, Self
+from typing import TYPE_CHECKING, Any, Literal, Self
 
 import yamling
 
@@ -18,7 +18,7 @@ HEADER_RE = re.compile(r"\A-{3}\n([\S\s]*)^-{3}(\n|$)", re.MULTILINE)
 SectionStr = Literal["navigation", "toc", "path", "tags", "footer", "feedback"]
 
 
-class Metadata(dict):
+class Metadata(dict[str, Any]):
     """The Metadata class is a subclassed Python dictionary.
 
     It is enhanced with properties for common metadata fields in order
