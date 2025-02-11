@@ -280,6 +280,7 @@ reportMissingTypeStubs = false
 reportUnusedCallResult = false
 reportUnknownVariableType = false
 reportAny = false
+reportExplicitAny = false
 reportImplicitOverride = false
 reportUnusedFunction = false
 reportImplicitStringConcatenation = false
