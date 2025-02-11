@@ -1,0 +1,64 @@
+[metadata]
+icon = "mdi:code-braces"
+name = "MkDataClassInfo"
+group = "documentation"
+
+[examples.class]
+title = "Class documentation"
+python = """
+from dataclasses import dataclass
+
+@dataclass
+class Example:
+    \"\"\"An example dataclass.\"\"\"
+    field_a: int
+    \"\"\"First field description.\"\"\"
+    field_b: str = "default"
+    \"\"\"Second field description.\"\"\"
+
+mk.MkDataClassInfo(Example)
+"""
+
+[examples.instance]
+title = "Instance documentation"
+python = """
+from dataclasses import dataclass
+
+@dataclass
+class Example:
+    \"\"\"An example dataclass.\"\"\"
+    field_a: int
+    \"\"\"First field description.\"\"\"
+    field_b: str = "default"
+    \"\"\"Second field description.\"\"\"
+
+obj = Example(42)
+mk.MkDataClassInfo(obj)
+"""
+
+[output.markdown]
+template = """
+### {{ (node.obj if node.is_class else node.obj.__class__).__name__ }}
+{% if node.include_docstring and node.obj.__doc__ %}
+
+{{ node.obj.__doc__.strip() }}
+{% endif %}
+
+{% if node.is_class %}
+| Field | Description |
+|-------|-------------|
+{% for field in node.obj | get_fields %}
+{% if not (node.skip_private and field.name.startswith('_')) %}
+| `{{ field.name }}`{% if field.type %} *({{ field.type or "any" }})*{% endif %} | {{ field.description or "" }} |
+{% endif %}
+{% endfor %}
+{% else %}
+| Field | Value | Description |
+|-------|--------|-------------|
+{% for field in node.obj | get_fields %}
+{% if not (node.skip_private and field.name.startswith('_')) %}
+| `{{ field.name }}`{% if field.type %} *({{ field.type or "any" }})*{% endif %} | `{{ node.obj | getattr(field.name) | repr }}` | {{ field.description or "" }} |
+{% endif %}
+{% endfor %}
+{% endif %}
+"""

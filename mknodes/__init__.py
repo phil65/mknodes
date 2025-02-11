@@ -45,6 +45,7 @@ from .basenodes.mkspeechbubble import MkSpeechBubble
 from .basenodes.mktasklist import MkTaskList
 from .basenodes.mktimeline import MkTimeline
 from .basenodes.mkpyodide import MkPyodideTerminal
+from .basenodes.mkdataclassinfo import MkDataClassInfo
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -125,6 +126,7 @@ __all__ = [
     "MkConfigSetting",
     "MkContainer",
     "MkCritic",
+    "MkDataClassInfo",
     "MkDefinitionList",
     "MkDependencyTable",
     "MkDetailsBlock",
