@@ -21,7 +21,7 @@ logger = log.get_logger(__name__)
 def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
     from llmling_agent_functional import run
 
-    return run.run_with_model_sync(
+    return run.run_agent_sync(
         user_prompt + "\n\n" + context,
         model=model,
         system_prompt=system_prompt,

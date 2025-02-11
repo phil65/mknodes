@@ -275,11 +275,18 @@ venvPath = "."
 venv = ".venv"
 pythonVersion = "3.12"
 pythonPlatform = "All"
+deprecateTypingAliases = true
+reportMissingTypeStubs = false
 reportUnusedCallResult = false
 reportUnknownVariableType = false
 reportAny = false
 reportImplicitOverride = false
+reportUnusedFunction = false
+reportImplicitStringConcatenation = false
+reportIgnoreCommentWithoutRule = false
 reportUnannotatedClassAttribute = false
+reportSelfClsParameterName = false
+reportPrivateImportUsage = false
 
 [tool.mknodes]
 allowed-commit-types = [
