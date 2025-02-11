@@ -44,6 +44,7 @@ from .basenodes.mkshowcase import MkShowcase
 from .basenodes.mkspeechbubble import MkSpeechBubble
 from .basenodes.mktasklist import MkTaskList
 from .basenodes.mktimeline import MkTimeline
+from .basenodes.mkpyodide import MkPyodideTerminal
 
 from .pages.mkpage import MkPage
 from .pages.mkclasspage import MkClassPage
@@ -160,6 +161,7 @@ __all__ = [
     "MkProgressBar",
     "MkPullRequestGuidelines",
     "MkPyDeps",
+    "MkPyodideTerminal",
     "MkReprRawRendered",
     "MkShields",
     "MkShowcase",

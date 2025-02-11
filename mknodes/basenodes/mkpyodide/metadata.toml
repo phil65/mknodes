@@ -1,0 +1,57 @@
+[metadata]
+icon = "material/console"
+name = "MkPyodideTerminal"
+
+[[resources.css]]
+link = "https://cdn.jsdelivr.net/npm/xterm/css/xterm.css"
+is_library = true
+
+[[resources.js]]
+link = "https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"
+is_library = true
+
+[[resources.js]]
+link = "https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"
+is_library = true
+
+[[resources.js]]
+link = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"
+is_library = true
+
+[[resources.js]]
+filename = "pyodide-terminal.js"
+content = '''
+class PyodideTerminal {
+    constructor(element, code) {
+        this.term = new Terminal({
+            cols: 80,
+            rows: 24,
+            theme: { background: "#1a1a1a", foreground: "#ffffff" }
+        });
+        this.fitAddon = new FitAddon.FitAddon();
+        this.term.loadAddon(this.fitAddon);
+        this.term.open(element);
+        this.fitAddon.fit();
+        this.code = code;
+        this.initPyodide();
+    }
+
+    async initPyodide() {
+        this.pyodide = await loadPyodide({
+            stdout: (text) => this.term.write(text),
+            stderr: (text) => this.term.write(`\\x1b[31m${text}\\x1b[0m`)
+        });
+        await this.pyodide.loadPackage(["micropip"]);
+        const micropip = this.pyodide.pyimport("micropip");
+        await micropip.install("llmling-agent");
+        await micropip.install("textual");
+        await this.pyodide.runPythonAsync(this.code);
+    }
+}
+'''
+
+[examples.basic]
+title = "Basic Terminal"
+jinja = '''
+{{ "print('Hello from Pyodide!')" | MkPyodideTerminal }}
+'''
