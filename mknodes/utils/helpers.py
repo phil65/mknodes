@@ -52,7 +52,7 @@ P = ParamSpec("P")
 R = TypeVar("R")
 
 
-def list_to_tuple(fn: Callable[P, R]) -> Callable[P, R]:
+def list_to_tuple[**P, R](fn: Callable[P, R]) -> Callable[P, R]:
     """Decorator to convert lists to tuples in the arguments.
 
     Args:
