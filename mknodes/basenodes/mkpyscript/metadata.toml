@@ -1,0 +1,21 @@
+[metadata]
+icon = "material/console"
+name = "MkPyScript"
+
+
+# [output.html]
+# template = """
+# <iframe
+#     src="https://jupyterlite.github.io/demo/repl/index.html?kernel=python&code={encoded_code}"
+#     width="{node.width}"
+#     height="{node.height}"
+#     style="border: none;">
+# </iframe>
+# """
+
+
+[examples.basic]
+title = "Basic Terminal"
+jinja = '''
+{{ "import os" | MkPyScript }}
+'''

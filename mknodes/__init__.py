@@ -45,6 +45,8 @@ from .basenodes.mkspeechbubble import MkSpeechBubble
 from .basenodes.mktasklist import MkTaskList
 from .basenodes.mktimeline import MkTimeline
 from .basenodes.mkpyodide import MkPyodideTerminal
+from .basenodes.mkjupyterlite import MkJupyterLite
+from .basenodes.mkpyscript import MkPyScript
 from .basenodes.mkdataclassinfo import MkDataClassInfo
 
 from .pages.mkpage import MkPage
@@ -146,6 +148,7 @@ __all__ = [
     "MkImageSlideshow",
     "MkInclude",
     "MkInstallGuide",
+    "MkJupyterLite",
     "MkKeys",
     "MkLicense",
     "MkLink",
@@ -163,6 +166,7 @@ __all__ = [
     "MkProgressBar",
     "MkPullRequestGuidelines",
     "MkPyDeps",
+    "MkPyScript",
     "MkPyodideTerminal",
     "MkReprRawRendered",
     "MkShields",
