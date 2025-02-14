@@ -4,16 +4,17 @@ import importlib.util
 import io
 import logging
 import sys
+from typing import Any
 
 
 class Logger:
     def __init__(self, logger: logging.Logger):
         self.logger = logger
 
-    def __getattr__(self, val):
+    def __getattr__(self, val: Any):
         return getattr(self.logger, val)
 
-    def log_dict(self, dct: dict, level=logging.INFO):
+    def log_dict(self, dct: dict[str, Any], level: int = logging.INFO):
         for k, v in dct.items():
             self.logger.log(level, "%s: %s", k, v)
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 
 if TYPE_CHECKING:
@@ -37,19 +37,6 @@ class ClassPropertyDescriptor:
         return self
 
 
-def classproperty(func: Callable) -> ClassPropertyDescriptor:
+def classproperty(func: Callable[..., Any]) -> ClassPropertyDescriptor:
     fn = func if isinstance(func, classmethod | staticmethod) else classmethod(func)
     return ClassPropertyDescriptor(fn)
-
-
-if __name__ == "__main__":
-
-    class Bar:
-        _bar = 1
-
-        @classproperty
-        def bar(self):
-            return self._bar
-
-    print(Bar.bar)
-    print(Bar().bar)

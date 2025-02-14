@@ -21,9 +21,9 @@ class AnnotationAppender:
 
     def __init__(self):
         self.count = 0
-        self.matches = []
+        self.matches: list[tuple[int, str]] = []
 
-    def __call__(self, match) -> str:
+    def __call__(self, match: re.Match[str]) -> str:
         line = match.group()
         self.count += 1
         self.matches.append((self.count, match.group(2)))

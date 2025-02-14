@@ -28,12 +28,15 @@ logger = log.get_logger(__name__)
 
 
 @typing.overload
-def to_module(module, return_none: typing.Literal[False] = ...) -> types.ModuleType: ...
+def to_module(
+    module: str | Sequence[str] | types.ModuleType,
+    return_none: typing.Literal[False] = ...,
+) -> types.ModuleType: ...
 
 
 @typing.overload
 def to_module(
-    module,
+    module: str | Sequence[str] | types.ModuleType,
     return_none: typing.Literal[True] = ...,
 ) -> types.ModuleType | None: ...
 
