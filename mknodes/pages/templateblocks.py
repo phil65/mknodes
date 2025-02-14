@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from jinjarope import htmlfilters, utils
 
@@ -269,7 +269,7 @@ class StylesBlock(BaseBlock):
     def add_stylesheet(self, stylesheet: resources.CSSFile):
         self.styles.append(stylesheet)
 
-    def add_css(self, css: str | dict):
+    def add_css(self, css: str | dict[str, Any]):
         """Add CSS in form of a string or a CSS-rule like dictionary.
 
         Args:

@@ -18,7 +18,7 @@ def build(project) -> mk.MkNav:
 
 class Build:
     @classmethod
-    def build(cls, root, theme):
+    def build(cls, root: mk.MkNav, theme: mk.Theme):
         b = cls()
         b.on_theme(theme)
         return b.on_root(root)

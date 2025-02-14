@@ -1,6 +1,13 @@
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
 
 import mknodes as mk
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 BASE_NODES = [
@@ -46,7 +53,7 @@ DOCUMENTATION_NODES = [
     mk.MkCliDoc,
 ]
 
-ABOUT_THE_PROJECT_NODES = [
+ABOUT_THE_PROJECT_NODES: list[type[mk.MkNode]] = [
     mk.MkChangelog,
     mk.MkCodeOfConduct,
     mk.MkLicense,
@@ -54,7 +61,6 @@ ABOUT_THE_PROJECT_NODES = [
     mk.MkInstallGuide,
     mk.MkCommitConventions,
     mk.MkPullRequestGuidelines,
-    mk.MkDevEnvSetup,
     mk.MkDevTools,
     mk.MkShields,
     mk.MkMetadataBadges,
@@ -89,7 +95,7 @@ SPECIAL_NODES = [mk.MkInclude, mk.MkIFrame, mk.MkCommandOutput]
 
 def create_section_for_nodes(
     nav: mk.MkNav,
-    klasses: list[type[mk.MkNode]],
+    klasses: Sequence[type[mk.MkNode]],
 ) -> mk.MkTable:
     table = mk.MkTable(columns=["Node", "Docstrings", "Markdown extensions"])
     for kls in klasses:
