@@ -12,6 +12,10 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
+    PageCallable = Callable[[mkpage.MkPage], mkpage.MkPage | None]
+    NavCallable = Callable[[mknav.MkNav], mknav.MkNav | None]
+    NavSubTypeCallable = Callable[..., NavSubType]
+    PageDecorator = Callable[[PageCallable], Any]
 
 logger = log.get_logger(__name__)
 
@@ -30,7 +34,7 @@ class NavRouter:
     def __call__(
         self,
         *path: str,
-    ) -> Callable[[Callable], Callable]:
+    ) -> Callable[[NavSubTypeCallable], Any]:
         """Decorator method to use for routing.
 
         The decorated functions need to return either a MkPage or an MkNav.
@@ -43,7 +47,10 @@ class NavRouter:
             path: The section path for the returned `MkNav` / `MkPage`
         """
 
-        def decorator(fn: Callable[..., NavSubType], path=path) -> Callable:
+        def decorator(
+            fn: NavSubTypeCallable,
+            path: tuple[str, ...] = path,
+        ) -> NavSubTypeCallable:
             node = fn()
             node.parent = self._nav
             if isinstance(node, mkpage.MkPage):
@@ -59,7 +66,7 @@ class NavRouter:
         self,
         *path: str,
         **kwargs: Any,
-    ) -> Callable[[Callable], Callable]:
+    ) -> Callable[[NavCallable], Any]:
         """Decorator method to use for routing Navs.
 
         The decorated functions will get passed an MkNav as an argument which can be
@@ -82,10 +89,10 @@ class NavRouter:
         """
 
         def decorator(
-            fn: Callable[..., mknav.MkNav],
-            path=path,
-            kwargs=kwargs,
-        ) -> Callable:
+            fn: NavCallable,
+            path: tuple[str, ...] = path,
+            kwargs: dict[str, Any] = kwargs,
+        ) -> NavCallable:
             node = mknav.MkNav(path[-1], parent=self._nav, **kwargs)
             node = fn(node) or node
             node.parent = self._nav  # in case a new MkPage was generated
@@ -100,7 +107,7 @@ class NavRouter:
         self,
         *path: str,
         **kwargs: Any,
-    ) -> Callable[[Callable], Callable]:
+    ) -> PageDecorator:
         """Decorator method to use for routing Pages.
 
         The decorated functions will get passed an MkPage as an argument which can be
@@ -125,10 +132,10 @@ class NavRouter:
         """
 
         def decorator(
-            fn: Callable[..., mkpage.MkPage],
-            path=path,
-            kwargs=kwargs,
-        ) -> Callable:
+            fn: PageCallable,
+            path: tuple[str, ...] = path,
+            kwargs: dict[str, Any] = kwargs,
+        ) -> PageCallable:
             p = path[-1] if path else (self._nav.title or "Home")
             node = mkpage.MkPage(title=p, parent=self._nav, **kwargs)
             node = fn(node) or node
