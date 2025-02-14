@@ -101,8 +101,10 @@ class MkPyodideTerminal(mknode.MkNode):
 
     def __init__(
         self,
-        code: str,
+        code: str = "",
         *,
+        imports: list[str] | None = None,
+        init_code: str | None = None,
         height: str = "400px",
         width: str = "100%",
         terminal_id: str | None = None,
@@ -111,7 +113,9 @@ class MkPyodideTerminal(mknode.MkNode):
         """Constructor.
 
         Args:
-            code: Python code to run in the terminal
+            code: Python code to show initially in terminal
+            imports: List of packages to import during initialization
+            init_code: Python code to execute during initialization
             height: Terminal height (CSS value)
             width: Terminal width (CSS value)
             terminal_id: Optional ID for the terminal element
@@ -119,6 +123,8 @@ class MkPyodideTerminal(mknode.MkNode):
         """
         super().__init__(**kwargs)
         self.code = code
+        self.imports = imports or []
+        self.init_code = init_code
         self.height = height
         self.width = width
         self.terminal_id = terminal_id or f"pyodide-terminal-{id(self)}"
