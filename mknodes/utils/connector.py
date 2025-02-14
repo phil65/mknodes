@@ -1,29 +1,30 @@
 from __future__ import annotations
 
 import textwrap
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from mknodes.utils import log
 
 
 if TYPE_CHECKING:
-    from collections.abc import Hashable
+    from collections.abc import Hashable, Sequence
 
 
 logger = log.get_logger(__name__)
 
 
-class Connector:
-    def __init__(self, objects: Any, max_depth: int | None = None):
-        if not isinstance(objects, list | tuple):
-            objects = [objects]
+class Connector[T]:
+    def __init__(
+        self, objects: T | list[T] | tuple[T, ...], max_depth: int | None = None
+    ):
+        objs = objects if isinstance(objects, list | tuple) else [objects]
         self.item_dict: dict[Hashable, str] = {}
         self.connections: list[tuple[Hashable, Hashable]] = []
         self.max_depth = max_depth
-        self._connect(objects)
+        self._connect(objs)
 
-    def _connect(self, objects: Any):
-        def add_connections(item: Any, depth: int = 0):
+    def _connect(self, objects: Sequence[T]):
+        def add_connections(item: T, depth: int = 0):
             identifier = self.get_id(item)
             if identifier not in self.item_dict:
                 # if item.__module__.startswith(base_module):
@@ -45,18 +46,18 @@ class Connector:
     def titles(self):
         return list(self.item_dict.values())
 
-    def get_children(self, item: Any) -> list[Any] | tuple[Any, ...]:
+    def get_children(self, item: T) -> list[T] | tuple[T, ...]:
         """This should return a list of children for the tree node."""
         return NotImplemented
 
-    def get_id(self, item: Any):
+    def get_id(self, item: T):
         """This needs to return a unique identifier for an item."""
         return item
 
-    def get_attributes(self, item: Any):
+    def get_attributes(self, item: T) -> list[str] | None:
         return None
 
-    def get_title(self, item: Any) -> str:
+    def get_title(self, item: T) -> str:
         """This can be overridden for a nicer label."""
         return str(self.get_id(item))
 
@@ -71,8 +72,8 @@ class Connector:
 
 if __name__ == "__main__":
 
-    class Test(Connector):
-        def get_children(self, item):
+    class Test(Connector[type]):
+        def get_children(self, item: type):
             return item.__bases__
 
     test = Test(Connector).get_graph_connection_text()

@@ -10,13 +10,14 @@ from mknodes.basenodes import mkdiagram
 from mknodes.utils import classhelpers, connector, helpers, reprhelpers
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     import griffe
 
 
 DiagramModeStr = Literal["baseclasses", "subclasses", "mro"]
 
 
-class BaseClassConnector(connector.Connector):
+class BaseClassConnector(connector.Connector[type]):
     def __init__(
         self,
         objects,
@@ -25,7 +26,6 @@ class BaseClassConnector(connector.Connector):
         max_depth: int | None = None,
     ):
         self.title_style = title_style
-        # self.object = objects[0]
         super().__init__(objects, max_depth=max_depth)
 
     def get_id(self, item: type) -> int:
@@ -47,7 +47,7 @@ class BaseClassConnector(connector.Connector):
 
 
 class SubclassConnector(BaseClassConnector):
-    def _connect(self, objects: list[type]):
+    def _connect(self, objects: Sequence[type]):
         super()._connect(objects)
         self.connections = [(i[1], i[0]) for i in self.connections]
 
@@ -61,7 +61,7 @@ class ParentClassConnector(BaseClassConnector):
 
 
 class MroConnector(BaseClassConnector):
-    def _connect(self, objects: list[type]):
+    def _connect(self, objects: Sequence[type]):
         mro = list(objects[0].mro())[: self.max_depth]
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
         self.connections = [
