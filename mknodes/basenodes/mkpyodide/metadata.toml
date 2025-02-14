@@ -4,7 +4,6 @@ name = "MkPyodideTerminal"
 
 [[resources.css]]
 link = "https://cdn.jsdelivr.net/npm/xterm/css/xterm.css"
-is_library = true
 
 [[resources.js]]
 link = "https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"
@@ -15,7 +14,7 @@ link = "https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"
 is_library = true
 
 [[resources.js]]
-link = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"
+link = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"
 is_library = true
 
 [[resources.js]]
