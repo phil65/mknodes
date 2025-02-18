@@ -83,7 +83,7 @@ class MkBinaryImage(mkimage.MkImage):
     def for_file(
         cls,
         path: str | os.PathLike[str],
-        storage_options: dict | None = None,
+        storage_options: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> Self:
         """Return a MkBinaryImage with data for given icon.

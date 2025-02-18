@@ -27,7 +27,7 @@ class MkAdmonition(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: str | list | mknode.MkNode,
+        content: str | list[mknode.MkNode] | mknode.MkNode,
         *,
         typ: datatypes.AdmonitionTypeStr | str = "info",
         title: str | None = None,

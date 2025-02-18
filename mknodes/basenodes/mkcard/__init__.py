@@ -58,7 +58,8 @@ class MkCard(mktemplate.MkTemplate):
         self.path_dark_mode = path_dark_mode
 
     @classmethod
-    def for_page(cls, page):
+    def for_page(cls, page: mkpage.MkPage):
+        assert page.icon, "Page must have an icon"
         image = mkbinaryimage.MkBinaryImage.for_icon(page.icon)
         card = MkCard(
             page.title,
