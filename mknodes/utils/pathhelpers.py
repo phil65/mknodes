@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 import upath
 
 from mknodes.utils import log
+from mknodes.utils.downloadhelpers import download
 
 
 if TYPE_CHECKING:
@@ -156,7 +157,7 @@ def find_cfg_for_folder(
 
 @functools.cache
 def load_file_cached(path: str | os.PathLike[str]) -> str:
-    return upath.UPath(path).read_text(encoding="utf-8")
+    return download(str(path)).decode()
 
 
 if __name__ == "__main__":

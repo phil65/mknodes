@@ -42,10 +42,10 @@ dependencies = [
     # Serialization
     "tomli-w",
     # HTTP / Remote
-    "requests",
     "fsspec",
     "universal_pathlib",
-    "requests_cache",
+    "httpx",
+    "fsspec-httpx",
     # Tools
     "python-dotenv",
     "githarbor",
@@ -63,6 +63,7 @@ dependencies = [
     "mkdocstrings[python]",
     "epregistry",
     "clinspector",
+    "hishel",
     # "marimo>=0.11.2; python_version < '3.14'",
 ]
 

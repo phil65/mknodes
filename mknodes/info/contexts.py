@@ -29,6 +29,9 @@ if TYPE_CHECKING:
     import clinspector
     from griffe import Alias, Module
 
+    from mknodes.info.packageinfo import PackageInfo
+    from mknodes.utils.packagehelpers import Dependency
+
 
 logger = log.get_logger(__name__)
 
@@ -57,7 +60,7 @@ class GitContext(Context):
     """Name of the main branch of the repo (`master` / `main`)."""
     repo_name: str = ""
     """Name of the git folder."""
-    commits: list = dataclasses.field(default_factory=list)
+    commits: list[Any] = dataclasses.field(default_factory=list)
     """List of last commits (Commit objects from `GitPython`)."""
     repo_hoster: str = ""
     """Name of the code hoster (for example `GitHub`)"""
@@ -92,7 +95,7 @@ class ThemeContext(Context):
     """Primary text color."""
     data: dict[str, str] = dataclasses.field(default_factory=dict)
     """Additional data of the theme."""
-    admonitions: list = dataclasses.field(default_factory=list)
+    admonitions: list[Any] = dataclasses.field(default_factory=list)
     css_primary_fg: str = ""
     css_primary_bg: str = ""
     css_primary_bg_light: str = ""
@@ -168,7 +171,9 @@ class PackageContext(Context):
     """The required python version for the distribution *[Metadata]*"""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
     """The names of the dependencies."""
-    required_packages: dict = dataclasses.field(default_factory=dict)
+    required_packages: dict[PackageInfo, Dependency] = dataclasses.field(
+        default_factory=dict
+    )
     """PackageInfos for the dependencies."""
     extras: dict[str, folderinfo.PackageExtra] = dataclasses.field(default_factory=dict)
     """The extras of the distribution."""
@@ -198,7 +203,7 @@ class PackageContext(Context):
     """A dict-like File containing the PyProject data."""
     tools: list[tools.Tool] = dataclasses.field(default_factory=list)
     """A list of tools found for the distribution."""
-    task_runners: list = dataclasses.field(default_factory=list)
+    task_runners: list[Any] = dataclasses.field(default_factory=list)
     """Task runners used by the distribution."""
     social_info: list[dict[str, str]] = dataclasses.field(default_factory=list)
     """A icon-name -> URL dictionary containing ."""
@@ -220,7 +225,7 @@ class PackageContext(Context):
         default_factory=lambda: buildsystems.hatch,
     )
     """The build system set as build backend *[pyproject]*"""
-    configured_build_systems: list = dataclasses.field(default_factory=list)
+    configured_build_systems: list[Any] = dataclasses.field(default_factory=list)
     """A list of build systems which are configured in pyproject *[pyproject]*"""
     tool_section: superdict.SuperDict[Any] = dataclasses.field(
         default_factory=superdict.SuperDict,
@@ -340,7 +345,7 @@ class EnvironmentContext(MutableMapping[str, Any], metaclass=abc.ABCMeta):
 
 
 @dataclasses.dataclass
-class ContextConfig(Mapping, metaclass=abc.ABCMeta):
+class ContextConfig(Mapping[str, Any], metaclass=abc.ABCMeta):
     repo_url: str = "."
     clone_depth: int = 100
     jinja_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
@@ -388,7 +393,7 @@ class ProjectContext(Context):
     @classmethod
     def for_config(
         cls,
-        *args: dict,
+        *args: dict[str, Any],
         theme_context: ThemeContext | None = None,
         **kwargs: Any,
     ):
@@ -424,7 +429,7 @@ class ProjectContext(Context):
             env_config=cfg.get("env_config", jinjarope.EnvConfig(loader=DEFAULT_LOADER)),
         )
 
-    def populate_linkprovider(self):
+    async def populate_linkprovider(self):
         if self.metadata.mkdocs_config is None:
             return
         invs = self.metadata.mkdocs_config.get_inventory_infos()

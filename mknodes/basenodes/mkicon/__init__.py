@@ -61,8 +61,6 @@ class MkIcon(mknode.MkNode):
 
     @property
     def svg(self) -> str:
-        import requests.exceptions
-
         try:
             return iconfilters.get_icon_svg(
                 self.icon_name,
@@ -73,7 +71,7 @@ class MkIcon(mknode.MkNode):
                 rotate=self.rotate,
                 box=self.box,
             )
-        except requests.exceptions.HTTPError:
+        except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)
             return ""
 
