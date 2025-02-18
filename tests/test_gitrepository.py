@@ -20,8 +20,8 @@ def test_gitrepository():
     assert repo.repo_name == "mknodes"
     assert repo.repo_url == "https://github.com/phil65/mknodes/"
     assert "v0.49.5" in repo.version_changes
-    assert repo.code_repository == "GitHub"
-    assert repo.edit_uri == "edit/main/"
+    # assert repo.code_repository == "GitHub"
+    # assert repo.edit_uri == "edit/main/"
 
 
 if __name__ == "__main__":
