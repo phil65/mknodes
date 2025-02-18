@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class IllegalArgumentError(ValueError):
-    def __init__(self, node, kwargs):
+    def __init__(self, node, kwargs: Any):
         msg = f"Invalid keyword arguments for {type(node)!r}: {kwargs}"
         super().__init__(msg)
 
@@ -119,7 +119,7 @@ class MkNode(node.Node):
     def __hash__(self):
         return hash(self.to_markdown())
 
-    def __eq__(self, other):
+    def __eq__(self, other: object):
         if type(other) is not type(self):
             return False
         dct_1 = self.__dict__.copy()

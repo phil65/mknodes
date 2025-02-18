@@ -45,7 +45,7 @@ class MkList(mkcontainer.MkContainer):
         self.as_links = as_links
         super().__init__(content=list(items), **kwargs)
 
-    def _prep(self, item) -> str:
+    def _prep(self, item: mknode.MkNode) -> str:
         return linkprovider.linked(str(item)) if self.as_links else str(item)
 
     def _to_markdown(self) -> str:

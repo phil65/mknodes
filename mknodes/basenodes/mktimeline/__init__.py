@@ -44,7 +44,7 @@ class MkTimelineItem(mknode.MkNode):
     def __init__(
         self,
         title: str = "",
-        content: str | mknode.MkNode | ET.Element = "",
+        content: str | mknode.MkNode = "",
         *,
         label: str = "",
         link: str = "",

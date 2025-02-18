@@ -58,7 +58,7 @@ class MkTaskList(mkcontainer.MkContainer):
         """
         super().__init__(content=content, block_separator="", **kwargs)
 
-    def add_item(self, content, value):
+    def add_item(self, content, value: bool):
         item = MkTask(value, content)
         self.append(item)
 

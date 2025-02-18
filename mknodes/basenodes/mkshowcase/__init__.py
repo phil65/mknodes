@@ -4,7 +4,7 @@ import textwrap
 
 import tomllib
 import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jinja2 import filters
 
@@ -36,7 +36,7 @@ class MkShowcase(mkcontainer.MkContainer):
         items: list[str | mknode.MkNode] | None = None,
         *,
         column_count: int = 3,
-        **kwargs,
+        **kwargs: Any,
     ):
         self.column_count = column_count
         if isinstance(items, str | os.PathLike):

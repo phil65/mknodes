@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, resources, xmlhelpers as xml
@@ -20,7 +20,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
         content: str | mknode.MkNode | list | None = None,
         *,
         arrow: Literal["top", "bottom", "left", "right"] | None = "bottom",
-        **kwargs,
+        **kwargs: Any,
     ):
         self.arrow = arrow
         super().__init__(content=content or [], **kwargs)

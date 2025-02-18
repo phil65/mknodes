@@ -121,7 +121,7 @@ class MkBaseTable(mkcontainer.MkContainer):
             yield [data[k][j] for k in data]
 
     @classmethod
-    def for_items(cls, items, columns: dict[str, Callable]):
+    def for_items(cls, items, columns: dict[str, Callable[..., Any]]):
         ls = [{k: v(item) for k, v in columns.items()} for item in items]
         return cls(ls)
 

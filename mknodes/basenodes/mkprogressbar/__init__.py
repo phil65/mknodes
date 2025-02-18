@@ -45,6 +45,8 @@ class MkProgressBar(mknode.MkNode):
             case "candystripe_animated":
                 self.add_css_class("candystripe")
                 self.add_css_class("candystripe-animate")
+            case None:
+                pass
 
     @property
     def label(self) -> str:
