@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 import json
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import dateutil.parser
 
@@ -38,7 +38,7 @@ class Commit:
     verified_reason: str
 
 
-def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
+async def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
     """Return latest commits from given repository.
 
     Args:
@@ -47,7 +47,7 @@ def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
         page: page to get. Each page contains max 100 commits.
     """
     url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=100&page={page}"
-    response = downloadhelpers.download(url)
+    response = await downloadhelpers.download_async(url)
     commits = json.loads(response.decode())
     return [
         Commit(
@@ -76,7 +76,13 @@ def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commit]:
 class MkGitBlog(mkblog.MkBlog):
     """The MkDocs-Material plugin-blog, misused as a Git log."""
 
-    def __init__(self, org: str, repo: str, posts_dir: str | os.PathLike[str], **kwargs):
+    def __init__(
+        self,
+        org: str,
+        repo: str,
+        posts_dir: str | os.PathLike[str],
+        **kwargs: Any,
+    ):
         """Instanciate a MkGitBlog.
 
         Args:
@@ -91,9 +97,9 @@ class MkGitBlog(mkblog.MkBlog):
         self.org = org
         self.repo = repo
 
-    def add_commits(self):
+    async def add_commits(self):
         """Fetch commits and add them to the blog."""
-        commits = get_latest_commits(self.org, self.repo)
+        commits = await get_latest_commits(self.org, self.repo)
         for c in commits:
             if c.author_login not in self.authors:
                 self.authors[c.author_login] = mkblog.Author(
@@ -119,7 +125,3 @@ class MkGitBlog(mkblog.MkBlog):
 
 if __name__ == "__main__":
     blog = MkGitBlog("phil65", "mknodes", "blog/posts")
-    blog.add_commits()
-    page = blog.nav.pages[1]
-
-    print(page)
