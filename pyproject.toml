@@ -67,7 +67,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-ui = ["pygithub", "aiohttp"]
+ui = ["aiogithubapi", "aiohttp"]
 
 [project.entry-points."jinjarope.environment"]
 mknodes = "mknodes.jinja:setup_env"

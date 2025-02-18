@@ -4,7 +4,6 @@ import functools
 from typing import TYPE_CHECKING, Any, Self
 
 import git
-import githarbor
 from jinjarope import iterfilters
 
 from mknodes.info import contexts
@@ -28,10 +27,16 @@ class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
     def __init__(self, path: str | os.PathLike[str] | None = None, **kwargs: Any):
+        import githarbor
+        from githarbor.core.proxy import Repository
+
         super().__init__(path or ".", **kwargs)
         # to keep a reference to a TempDirectory instance
         self.temp_directory: tempfile.TemporaryDirectory[str] | None = None
-        self.remote_repo = githarbor.create_repository(self.remotes.origin.url)
+        try:
+            self.remote_repo = githarbor.create_repository(self.remotes.origin.url)
+        except Exception:  # noqa: BLE001
+            self.remote_repo = Repository(githarbor.BaseRepository())
 
     def __len__(self):
         return len(list(self.iter_commits("HEAD")))
@@ -149,7 +154,7 @@ class GitRepository(git.Repo):
         try:
             kwargs = {} if not num else {"max_count": str(num)}
             return CommitList(self.iter_commits(rev, **kwargs))
-        except git.exc.GitCommandError:  # type: ignore[name-defined]
+        except git.GitCommandError:
             logger.warning("Could not fetch commits for %r", rev)
             return CommitList()
 

@@ -410,8 +410,12 @@ class ProjectContext(Context):
         )
         repo_url = cfg.get("repo_url") or "."
         clone_depth = cfg.get("clone_depth", 100)
-        git_repo = reporegistry.get_repo(repo_url, clone_depth=clone_depth)
-        folderinfo = fi.FolderInfo(git_repo.working_dir)
+        try:
+            git_repo = reporegistry.get_repo(repo_url, clone_depth=clone_depth)
+        except Exception as e:  # noqa: BLE001
+            print(f"Error fetching repository: {e}")
+            git_repo = None
+        folderinfo = fi.FolderInfo(git_repo.working_dir if git_repo else ".")
         return cls(
             metadata=folderinfo.context,
             git=folderinfo.git.context,
