@@ -42,7 +42,7 @@ dependencies = [
     "requests",
     "fsspec",
     "universal_pathlib",
-    "aiohttp",           # for fsspec http://
+    "aiohttp; python_version < '3.14'", # for fsspec http://
     "requests_cache",
     # Tools
     "python-dotenv",
@@ -83,7 +83,8 @@ path = "mknodes/__init__.py"
 [tool.uv]
 dev-dependencies = [
     # Linting
-    "mypy[faster-cache]",
+    "mypy[faster-cache]; python_version < '3.14'",
+    "mypy; python_version >= '3.14'",
     "ruff",
     # black is used by mkdocstrings to format signatures
     "black",
@@ -102,8 +103,8 @@ dev-dependencies = [
     "pydeps",
 
     # Material Social addon
-    "cairosvg",
-    "pillow",
+    "cairosvg; python_version < '3.14'",
+    "pillow; python_version < '3.14'",
 
     # Debugging
     "pyreadline3",
