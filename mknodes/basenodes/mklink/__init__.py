@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import inspect
+import os
+import types
 from typing import TYPE_CHECKING, Any
-
+from collections.abc import Mapping
+import json
+import base64
 from mknodes.basenodes import mknode
 from mknodes.utils import icons, log
-
+import upath
 
 if TYPE_CHECKING:
     from mknodes.info import linkprovider
@@ -66,6 +71,55 @@ class MkLink(mknode.MkNode):
     @property
     def title(self) -> str:
         return self._title or self.url
+
+    @classmethod
+    def for_pydantic_playground(
+        cls,
+        files: Mapping[str, str] | list[types.ModuleType] | list[str | os.PathLike[str]],
+        title: str = "Open in Pydantic Playground",
+        **kwargs: Any,
+    ) -> MkLink:
+        """Create a link to Pydantic playground with pre-populated files.
+
+        Args:
+            files: The files to include in the playground. Can be:
+                    - A mapping of filenames to code content
+                    - A list of modules
+                    - A list of file paths
+            title: The title of the link
+            **kwargs: Additional keyword arguments to pass to the Pydantic playground
+
+        Returns:
+            An MkLink instance pointing to the Pydantic playground
+        """
+        match files:
+            case Mapping():
+                file_data: list[dict[str, Any]] = [
+                    {"name": name, "content": content} for name, content in files.items()
+                ]
+            case [types.ModuleType(), *_]:
+                file_data = [
+                    {"name": f"{mod.__name__}.py", "content": inspect.getsource(mod)}  # type: ignore
+                    for mod in files
+                ]
+            case [str() | os.PathLike(), *_]:
+                file_data = []
+                for path in files:
+                    file = upath.UPath(path)
+                    file_data.append({"name": file.name, "content": file.read_text()})
+            case _:
+                raise TypeError(files)
+
+        # Add activeIndex to first file
+        if file_data:
+            file_data[0]["activeIndex"] = 1
+
+        # Create the URL-safe base64 encoded JSON string
+        json_str = json.dumps({"files": file_data})
+        encoded = base64.urlsafe_b64encode(json_str.encode()).decode()
+
+        url = f"https://pydantic.run/new?files={encoded}"
+        return cls(url, title, **kwargs)
 
     def _to_markdown(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""
