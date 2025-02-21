@@ -4,9 +4,8 @@ import inspect
 import os
 import types
 from typing import TYPE_CHECKING, Any
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 import json
-import base64
 from mknodes.basenodes import mknode
 from mknodes.utils import icons, log
 import upath
@@ -75,7 +74,9 @@ class MkLink(mknode.MkNode):
     @classmethod
     def for_pydantic_playground(
         cls,
-        files: Mapping[str, str] | list[types.ModuleType] | list[str | os.PathLike[str]],
+        files: Mapping[str, str]
+        | list[types.ModuleType]
+        | Sequence[str | os.PathLike[str]],
         title: str = "Open in Pydantic Playground",
         **kwargs: Any,
     ) -> MkLink:
@@ -92,6 +93,8 @@ class MkLink(mknode.MkNode):
         Returns:
             An MkLink instance pointing to the Pydantic playground
         """
+        from urllib.parse import quote
+
         match files:
             case Mapping():
                 file_data: list[dict[str, Any]] = [
@@ -106,7 +109,10 @@ class MkLink(mknode.MkNode):
                 file_data = []
                 for path in files:
                     file = upath.UPath(path)
-                    file_data.append({"name": file.name, "content": file.read_text()})
+                    file_data.append({
+                        "name": file.name,
+                        "content": file.read_text("utf-8"),
+                    })
             case _:
                 raise TypeError(files)
 
@@ -114,9 +120,8 @@ class MkLink(mknode.MkNode):
         if file_data:
             file_data[0]["activeIndex"] = 1
 
-        # Create the URL-safe base64 encoded JSON string
-        json_str = json.dumps({"files": file_data})
-        encoded = base64.urlsafe_b64encode(json_str.encode()).decode()
+        json_str = json.dumps(file_data)
+        encoded = quote(json_str)
 
         url = f"https://pydantic.run/new?files={encoded}"
         return cls(url, title, **kwargs)
@@ -128,4 +133,7 @@ class MkLink(mknode.MkNode):
 
 
 if __name__ == "__main__":
-    link = MkLink("www.test.de")
+    import pathlib
+
+    link = MkLink.for_pydantic_playground([pathlib.Path(__file__)])
+    print(link)
