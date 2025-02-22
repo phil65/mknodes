@@ -68,7 +68,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-ui = ["aiogithubapi", "aiohttp"]
+ui = ["githubkit"]
 
 [project.entry-points."jinjarope.environment"]
 mknodes = "mknodes.jinja:setup_env"
@@ -123,6 +123,8 @@ log_cli = true
 log_format = "%(asctime)s %(levelname)s %(message)s"
 log_date_format = "%Y-%m-%d %H:%M:%S"
 addopts = "--cov=mknodes/ --cov-report=term-missing"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_mode = "auto"
 
 [tool.coverage.report]
 exclude_lines = [
