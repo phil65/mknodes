@@ -38,7 +38,7 @@ def test_to_module_with_nonexistent_module_return_none():
 
 def test_to_module_with_invalid_type():
     with pytest.raises(TypeError):
-        to_module(123)
+        to_module(123)  # type: ignore
 
 
 def test_to_class_with_type():
