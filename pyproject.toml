@@ -37,7 +37,7 @@ license = { file = "LICENSE" }
 dependencies = [
     # Git(Hub)
     "gitpython",
-    "pydantic >= 2.11.0a2",
+    "pydantic",
     "fieldz",
     # Serialization
     "tomli-w",
