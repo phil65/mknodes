@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from mknodes.pages import pagetemplate
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class TemplateRegistry:
@@ -13,10 +19,10 @@ class TemplateRegistry:
             pagetemplate.PageTemplate(filename=value),
         )
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: str, value: pagetemplate.PageTemplate):
         self.templates[index] = value
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[pagetemplate.PageTemplate]:
         return iter(self.templates.values())
 
     def __len__(self):
