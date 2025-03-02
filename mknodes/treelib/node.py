@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import copy
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.data import treestyles
 from mknodes.utils import log, reprhelpers
@@ -58,7 +58,7 @@ class Node:
         #     logger.debug(msg)
         self._parent = value
 
-    def __copy__(self, **kwargs) -> Self:
+    def __copy__(self, **kwargs: Any) -> Self:
         """Shallow copy self."""
         obj = type(self).__new__(self.__class__)
         obj.__dict__.update(self.__dict__)
@@ -225,7 +225,7 @@ class Node:
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] | None = None,
         detailed: bool = True,
     ) -> str:
-        def formatter(x) -> str:
+        def formatter(x: object) -> str:
             return repr(x) if detailed else x.__class__.__name__
 
         lines = [
@@ -240,7 +240,7 @@ class Node:
     def _yield_tree(
         self,
         max_depth: int | None = None,
-        style: treestyles.TreeStyleStr | tuple = "const",
+        style: treestyles.TreeStyleStr | tuple[str, ...] = "const",
     ) -> Iterable[tuple[str, str, Node]]:
         """Yield a tuple for prettyprinting the tree.
 
@@ -260,7 +260,7 @@ class Node:
             filename_middle = style_obj.filename_middle
             filename_last = style_obj.filename_last
             gap_str = style_obj.parent_middle
-        unclosed_depth = set()
+        unclosed_depth: set[int] = set()
         initial_depth = self.depth
         for _node in preorder_iter(self, max_depth=max_depth):
             pre_str = ""

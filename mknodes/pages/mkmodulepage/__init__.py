@@ -53,7 +53,9 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     @property
     def extra_variables(self) -> dict[str, Any]:
         griffe_obj = grifferegistry.get_module(self.module)
-        variables = dict(module=self.module, klasses=self.klasses, griffe_obj=griffe_obj)
+        variables: dict[str, Any] = dict(
+            module=self.module, klasses=self.klasses, griffe_obj=griffe_obj
+        )
         path = inspecthelpers.get_file(self.module)
         url = self.ctx.metadata.repository_url
         repo_path = self.ctx.metadata.repository_path

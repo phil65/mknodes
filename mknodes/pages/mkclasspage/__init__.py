@@ -53,7 +53,9 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         # right now, we inject the cls and the griffe Class into jinja namespace.
         subclasses = inspectfilters.list_subclasses(self.klass, recursive=False)
         griffe_obj = grifferegistry.registry.get_class(self.klass)
-        variables = dict(cls=self.klass, subclasses=subclasses, griffe_obj=griffe_obj)
+        variables: dict[str, Any] = dict(
+            cls=self.klass, subclasses=subclasses, griffe_obj=griffe_obj
+        )
         p = inspecthelpers.get_file(self.klass)
         repo_path = self.ctx.metadata.repository_path
         if p and p.is_relative_to(repo_path):

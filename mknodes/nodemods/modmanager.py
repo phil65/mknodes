@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from jinjarope import inspectfilters
 
 from mknodes.nodemods import mod, parallax, scrollreveal
@@ -21,7 +23,7 @@ class ModManager:
     def __hash__(self):
         return sum(hash(i) for i in self.css_classes)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object):
         """Needed for Mknode comparison."""
         return hash(self) == hash(other)
 
@@ -52,7 +54,7 @@ class ModManager:
         classes = " ".join(self.css_classes)
         return f"{{: .{classes}}}"
 
-    def add_mod(self, mod_name: str, **kwargs) -> mod.Mod:
+    def add_mod(self, mod_name: str, **kwargs: Any) -> mod.Mod:
         """Add a mod by classname.
 
         Args:
