@@ -78,6 +78,7 @@ class MkLink(mknode.MkNode):
         | list[types.ModuleType]
         | Sequence[str | os.PathLike[str]],
         title: str = "Open in Pydantic Playground",
+        active_index: int = 0,
         **kwargs: Any,
     ) -> MkLink:
         """Create a link to Pydantic playground with pre-populated files.
@@ -88,6 +89,7 @@ class MkLink(mknode.MkNode):
                     - A list of modules
                     - A list of file paths
             title: The title of the link
+            active_index: The index of the active file in the playground
             **kwargs: Additional keyword arguments to pass to the Pydantic playground
 
         Returns:
@@ -118,7 +120,7 @@ class MkLink(mknode.MkNode):
 
         # Add activeIndex to first file
         if file_data:
-            file_data[0]["activeIndex"] = 1
+            file_data[active_index]["activeIndex"] = 1
 
         json_str = json.dumps(file_data)
         encoded = quote(json_str)

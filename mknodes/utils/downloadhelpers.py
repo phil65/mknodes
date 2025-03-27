@@ -4,9 +4,8 @@ import os
 from typing import Final
 from urllib import parse
 
-import fsspec.registry
-from fsspec_httpx import HTTPFileSystem
 import hishel
+import upathtools
 
 from mknodes.utils import log
 
@@ -14,8 +13,7 @@ from mknodes.utils import log
 logger = log.get_logger(__name__)
 
 
-fsspec.register_implementation("http", HTTPFileSystem, clobber=True)
-
+upathtools.register_http_filesystems()
 CACHE_CONTROLLER: Final = hishel.Controller(
     cacheable_methods=["GET"],
     cacheable_status_codes=[200],

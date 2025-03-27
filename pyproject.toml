@@ -45,7 +45,7 @@ dependencies = [
     "fsspec",
     "universal_pathlib",
     "httpx",
-    "fsspec-httpx",
+    "upathtools[httpx]",
     # Tools
     "python-dotenv",
     "githarbor",
@@ -56,7 +56,7 @@ dependencies = [
     "coloraide",
     "natsort",
     # TODO: make these optional
-    "llmling-agent>=0.12.4",
+    "llmling-agent[default]>=0.12.4",
     "anybadge",
     "pipdeptree",
     "git-changelog",
