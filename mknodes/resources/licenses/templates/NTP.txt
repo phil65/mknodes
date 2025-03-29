@@ -1,5 +1,0 @@
-NTP License (NTP)
-
-Copyright (c) {{ now().year }} {{ metadata.copyright_holder }}
-
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose with or without fee is hereby granted, provided that the above copyright notice appears in all copies and that both the copyright notice and this permission notice appear in supporting documentation, and that the name {{ now().year }} {{ metadata.program_name }} not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. {{ now().year }} {{ metadata.program_name }} makes no representations about the suitability this software for any purpose. It is provided "as is" without express or implied warranty.

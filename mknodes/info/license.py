@@ -2,26 +2,25 @@ from __future__ import annotations
 
 import dataclasses
 import functools
-import json
 import pathlib
 from typing import Any, Self
 
 import jinjarope
 
-from mknodes import paths
 from mknodes.info import packageregistry
 from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
+DB_URL = "https://raw.githubusercontent.com/fsfe/reuse-tool/refs/heads/main/src/reuse/resources/licenses.json"
 
 
 @functools.cache
 def get_db() -> list[dict[str, Any]]:
-    """Return dictionary with license data."""
-    path = paths.RESOURCES / "licenses" / "db.json"
-    with path.open("r") as file:
-        return json.load(file)["licenses"]
+    import anyenv
+
+    response = anyenv.get_json_sync(DB_URL, return_type=dict, cache=True)
+    return response["licenses"]
 
 
 @dataclasses.dataclass
@@ -44,7 +43,6 @@ class License:
     path: str | None = None
     sources: list[str] | None = None
     osi_approved: bool | None = None
-    header: str | None = None
 
     @classmethod
     def from_name(cls, name_or_id: str) -> Self:
@@ -53,19 +51,22 @@ class License:
         Args:
             name_or_id: Name or id of the license to get.
         """
+        import anyenv
+
         db = get_db()
         name_or_id = name_or_id.lower()
         for lic in db:
-            if name_or_id in {lic["name"].lower(), lic["id"].lower()}:
-                path = paths.RESOURCES / "licenses" / "templates" / lic["template"]
+            if name_or_id in {lic["name"].lower(), lic["licenseId"].lower()}:
+                url = lic["detailsUrl"]
+                response = anyenv.get_json_sync(url, return_type=dict, cache=True)
+                content = response["licenseText"]
                 return cls(
                     name=lic["name"],
-                    identifier=lic["id"],
-                    content=path.read_text(encoding="utf-8"),
-                    path=path,
-                    sources=lic["sources"],
-                    osi_approved=lic["osi_approved"],
-                    header=lic["header"],
+                    identifier=lic["licenseId"],
+                    content=content,
+                    path=url,
+                    sources=lic["seeAlso"],
+                    osi_approved=lic["isOsiApproved"],
                 )
         raise ValueError(name_or_id)
 
