@@ -207,7 +207,6 @@ class FolderInfo:
             return self.license_file_path.read_text(encoding="utf-8")
         if license_name := self.info.license_name:
             obj = lic.License.from_name(license_name)
-            obj.resolve_by_distribution(self.info.name)
             return obj.content
         return None
 

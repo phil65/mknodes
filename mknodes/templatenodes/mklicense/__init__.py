@@ -39,8 +39,6 @@ class MkLicense(mktext.MkText):
     def text(self):
         if self.license_type:
             obj = lic.License.from_name(self.license_type)
-            if self.ctx.metadata.distribution_name:
-                obj.resolve_by_distribution(self.ctx.metadata.distribution_name)
             return obj.content
         return self.ctx.metadata.license_text or ""
 
