@@ -29,11 +29,11 @@ class PackageInfo:
         self.distribution = metadata.distribution(pkg_name)
         logger.debug("Loaded package info: '%s'", pkg_name)
         self.metadata: dict[str, Any] = self.distribution.metadata.json
-        self.classifiers: list[str] = self.metadata["classifier"]
-        self.version: str = self.metadata["version"]
-        self.name: str = self.metadata["name"]
-        self.description: str = self.metadata["description"]
-        self.summary: str = self.metadata["summary"]
+        self.classifiers: list[str] = self.metadata.get("classifier")  # type: ignore
+        self.version: str = self.metadata.get("version")  # type: ignore
+        self.name: str = self.metadata.get("name")  # type: ignore
+        self.description: str = self.metadata.get("description")  # type: ignore
+        self.summary: str = self.metadata.get("summary")  # type: ignore
 
     def __repr__(self):
         return reprhelpers.get_repr(self, pkg_name=self.package_name)
