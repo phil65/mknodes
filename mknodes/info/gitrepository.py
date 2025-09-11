@@ -48,7 +48,7 @@ class GitRepository(git.Repo):
         return "master" if has_master_branch else "main"
 
     @classmethod
-    def clone_from(  # type: ignore[override]
+    def clone_from(  # type: ignore[override]  # pyright: ignore[reportIncompatibleMethodOverride]
         cls,
         url: os.PathLike[str] | str,
         to_path: os.PathLike[str] | str,
@@ -65,7 +65,7 @@ class GitRepository(git.Repo):
         """
         if depth is not None:
             kwargs["depth"] = depth
-        return super().clone_from(url, to_path, **kwargs)  # type: ignore[return-value]
+        return super().clone_from(url, to_path, **kwargs)  # type: ignore[return-value]  # pyright: ignore[reportReturnType]
 
     @functools.cached_property
     def repo_name(self) -> str:
@@ -178,10 +178,14 @@ class GitRepository(git.Repo):
             repo_name=self.repo_name,
             edit_uri=self.edit_uri,
             current_sha=self.head.object.hexsha,
-            current_committer=self.head.object.committer.name,
+            current_committer=self.head.object.committer.name
+            if isinstance(self.head.object.committer.name, str)
+            else "",
             # current_committer_mail=self.head.object.committer.email,
             current_date_committed=self.head.object.committed_datetime,
-            current_author=self.head.object.author.name,
+            current_author=self.head.object.author.name
+            if isinstance(self.head.object.author.name, str)
+            else "",
             # current_author_email=self.head.object.author.email,
             current_date_authored=self.head.object.authored_datetime,
             last_version=self.get_version_for_commit("HEAD"),
