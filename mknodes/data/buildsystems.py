@@ -14,6 +14,7 @@ BuildSystemStr = Literal[
     "pdm",
     "meson_python",
     "maturin",
+    "uv",
 ]
 
 
@@ -87,6 +88,14 @@ maturin = BuildSystem(
     install_url="https://www.maturin.rs/installation",
 )
 
+uv = BuildSystem(
+    identifier="uv",
+    build_backend="uv_build",
+    url="https://docs.astral.sh/uv/concepts/build-backend/",
+    env_setup_cmd=None,
+    install_url="https://docs.astral.sh/uv/getting-started/installation/",
+)
+
 BUILD_SYSTEMS: dict[BuildSystemStr, BuildSystem] = {
-    p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm, mesonpy, maturin]
+    p.identifier: p for p in [hatch, flit, poetry, setuptools, pdm, mesonpy, maturin, uv]
 }
