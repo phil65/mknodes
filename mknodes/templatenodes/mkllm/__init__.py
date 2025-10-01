@@ -66,6 +66,8 @@ class MkLlm(mktext.MkText):
         Returns:
             List of context strings.
         """
+        from upathtools import to_upath
+
         context_items: list[str] = []
 
         def process_dir(path: UPath) -> list[str]:
@@ -73,7 +75,7 @@ class MkLlm(mktext.MkText):
 
         for item in self._extra_files:
             try:
-                path = UPath(item)
+                path = to_upath(item)
                 if path.is_file():
                     context_items.append(path.read_text())
                 elif path.is_dir():
