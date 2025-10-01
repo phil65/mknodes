@@ -24,7 +24,7 @@ jobs:
             - name: Setup Graphviz
               uses: ts-graphviz/setup-graphviz@v2
             - name: Serve Ollama Model
-            - uses: pydantic/ollama-action@v3
+              uses: pydantic/ollama-action@v3
               with:
                   model: "smollm2:360m"
             - name: Install uv
