@@ -8,7 +8,7 @@ from collections.abc import Mapping, Sequence
 import json
 from mknodes.basenodes import mknode
 from mknodes.utils import icons, log
-import upath
+from upathtools import to_upath
 
 if TYPE_CHECKING:
     from mknodes.info import linkprovider
@@ -110,7 +110,7 @@ class MkLink(mknode.MkNode):
             case [str() | os.PathLike(), *_]:
                 file_data = []
                 for path in files:
-                    file = upath.UPath(path)
+                    file = to_upath(path)
                     file_data.append({
                         "name": file.name,
                         "content": file.read_text("utf-8"),

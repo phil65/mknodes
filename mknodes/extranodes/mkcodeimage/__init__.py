@@ -99,7 +99,7 @@ class MkCodeImage(mknode.MkNode):
             kwargs: Keyword arguments passed to MkCode ctor
         """
         opts = storage_options or {}
-        file = upath.UPath(path, **opts)
+        file = upath.UPath(path if isinstance(path, str) else str(path), **opts)
         content = file.read_text("utf-8")
         title = file.name if title is None else title
         return cls(content, title=title, **kwargs)

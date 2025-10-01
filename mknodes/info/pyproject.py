@@ -4,7 +4,7 @@ import collections
 import functools
 from typing import TYPE_CHECKING, Any
 
-import upath
+from upathtools import to_upath
 
 from mknodes.data import buildsystems, commitconventions, installmethods
 from mknodes.info import configfile
@@ -32,7 +32,7 @@ class PyProject(configfile.TomlFile):
         if path is None:
             msg = "Could not find pyproject.toml"
             raise FileNotFoundError(msg)
-        p = upath.UPath(path)
+        p = to_upath(path)
         if p.is_dir():
             p /= "pyproject.toml"
         super().__init__(p)
@@ -71,8 +71,12 @@ class PyProject(configfile.TomlFile):
         for p in buildsystems.BUILD_SYSTEMS.values():
             if p.build_backend == back_end:
                 return p
-        msg = "No known build backend"
-        raise RuntimeError(msg)
+        return buildsystems.BuildSystem(
+            build_backend=back_end,
+            identifier=back_end,
+            url="",
+            env_setup_cmd="",
+        )
 
     @property
     def allowed_commit_types(self) -> list[commitconventions.CommitTypeStr]:

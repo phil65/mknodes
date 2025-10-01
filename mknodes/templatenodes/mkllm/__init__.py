@@ -7,9 +7,9 @@ from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mktext
 from mknodes.utils import log, resources
-from upath import UPath
 
 if TYPE_CHECKING:
+    from upath import UPath
     import os
     from collections.abc import Sequence
 

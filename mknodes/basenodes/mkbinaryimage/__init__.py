@@ -94,7 +94,7 @@ class MkBinaryImage(mkimage.MkImage):
             kwargs: Keyword arguments passed to constructor
         """
         opts = storage_options or {}
-        file = upath.UPath(path, **opts)
+        file = upath.UPath(path if isinstance(path, str) else str(path), **opts)
         return cls(data=file.read_bytes(), path=file.name, **kwargs)
 
 

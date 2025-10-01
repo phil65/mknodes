@@ -5,6 +5,7 @@ import shutil
 from typing import TYPE_CHECKING
 
 import upath
+from upathtools import to_upath
 
 from mknodes.utils import log
 from mknodes.utils.downloadhelpers import download
@@ -13,7 +14,6 @@ from mknodes.utils.downloadhelpers import download
 if TYPE_CHECKING:
     from collections.abc import Mapping
     import os
-    import pathlib
     from typing import Any
 
 
@@ -65,8 +65,8 @@ def copy(
         output_path: path where file should get copied to.
         exist_ok: Whether exception should be raised in case stuff would get overwritten
     """
-    output_p = upath.UPath(output_path)
-    source_p = upath.UPath(source_path)
+    output_p = to_upath(output_path)
+    source_p = to_upath(source_path)
     output_p.parent.mkdir(parents=True, exist_ok=exist_ok)
     if source_p.is_dir():
         if output_p.is_dir():
@@ -83,7 +83,7 @@ def clean_directory(
     directory: str | os.PathLike[str], remove_hidden: bool = False
 ) -> None:
     """Remove the content of a directory recursively but not the directory itself."""
-    folder_to_remove = upath.UPath(directory)
+    folder_to_remove = to_upath(directory)
     if not folder_to_remove.exists():
         return
     for entry in folder_to_remove.iterdir():
@@ -114,7 +114,7 @@ def write_file(
                 "xmlcharrefreplace", "backslashreplace", "namereplace"
         kwargs: Additional keyword arguments passed to open
     """
-    output_p = upath.UPath(output_path)
+    output_p = to_upath(output_path)
     output_p.parent.mkdir(parents=True, exist_ok=True)
     mode = "wb" if isinstance(content, bytes) else "w"
     kwargs["encoding"] = None if "b" in mode else "utf-8"
@@ -137,7 +137,7 @@ def write_files(mapping: Mapping[str | os.PathLike[str], str | bytes]):
 def find_cfg_for_folder(
     filename: str | os.PathLike[str],
     folder: os.PathLike[str] | str = ".",
-) -> pathlib.Path | None:
+) -> upath.UPath | None:
     """Search for a file with given name in folder and its parent folders.
 
     Args:
@@ -145,12 +145,12 @@ def find_cfg_for_folder(
         folder: Folder to start searching from
     """
     if folder and str(folder) != ".":
-        path = upath.UPath(folder).resolve() / filename
+        path = to_upath(folder).resolve() / str(filename)
     else:
-        path = upath.UPath(filename).resolve()
+        path = to_upath(filename).resolve()
     while len(path.parts) > 1:
         path = path.parent
-        if (file := path / filename).exists():
+        if (file := path / str(filename)).exists():
             return file
     return None
 

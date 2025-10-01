@@ -7,7 +7,7 @@ import types
 from jinjarope import textfilters
 from typing import TYPE_CHECKING, Any, Self
 
-import upath
+from upathtools import to_upath
 
 from mknodes.basenodes import mkcontainer
 from mknodes.data import datatypes
@@ -131,7 +131,7 @@ class MkCode(mkcontainer.MkContainer):
             language: Syntax highlighting language. If None, try to infer from extension.
             kwargs: Keyword arguments passed to MkCode ctor
         """
-        file_path = upath.UPath(path)
+        file_path = to_upath(path)
         content = file_path.read_text("utf-8")
         hl_lines = None
         if highlight_caller and (frame := inspect.currentframe()) and frame.f_back:
