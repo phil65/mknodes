@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .jinja.nodeenvironment import NodeEnvironment
-
+from importlib.metadata import version
 from .basenodes.mkblock import MkBlock
 from .basenodes.mkhtmlblock import MkHtmlBlock
 from .basenodes.mkcompactadmonition import MkCompactAdmonition
@@ -103,6 +103,8 @@ def parse(project=None, **kwargs):
     return root_nav
 
 
+__version__ = version("mknodes")
+
 __all__ = [
     "MaterialTheme",
     "Metadata",
@@ -188,5 +190,3 @@ __all__ = [
     "Router",
     "Theme",
 ]
-
-__version__ = "0.55.10"
