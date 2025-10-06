@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import itertools
-from typing import TYPE_CHECKING, ParamSpec, TypeVar
+from typing import TYPE_CHECKING
 
 from mknodes.utils import log
 
@@ -11,9 +11,6 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
-
-
-T = TypeVar("T")
 
 
 def label_for_class(klass: type) -> str:
@@ -46,10 +43,6 @@ def is_url(string: str) -> bool:
         string: The string to check
     """
     return string.startswith(("http:/", "https:/", "www."))
-
-
-P = ParamSpec("P")
-R = TypeVar("R")
 
 
 def list_to_tuple[**P, R](fn: Callable[P, R]) -> Callable[P, R]:
