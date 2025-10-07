@@ -23,7 +23,7 @@ def _(nav: mk.MkNav):
     summary_file = folder / "SUMMARY.md"
     nav.parse.file(summary_file, hide="toc")
     page = nav.add_page(is_index=True, hide="toc", icon="file")
-    text = summary_file.read_text()
+    text = summary_file.read_text("utf-8")
     text = text.replace("](", "] (")  ##  # noqa: E262
     path = paths.TEST_RESOURCES / "nav_tree/"
     variables = dict(path=path, text=text)

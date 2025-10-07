@@ -248,7 +248,7 @@ class MkPage(mkcontainer.MkContainer):
             path = pathlib.Path(path)
         else:
             path = pathlib.Path(path)
-            file_content = path.read_text()
+            file_content = path.read_text("utf-8")
         data, text = metadata.Metadata.parse(file_content)
         data.update(kwargs)
         page = cls(path=path.name, content=text, title=title, parent=parent)

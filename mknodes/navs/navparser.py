@@ -186,7 +186,7 @@ class NavParser:
             path = os.path.relpath(path, pathlib.Path().absolute())
             path = pathlib.Path(path)
         return self.text(
-            path.read_text(),
+            path.read_text("utf-8"),
             path=path,
             **kwargs,
         )
@@ -259,7 +259,7 @@ class NavParser:
                     text = "\n".join(unindented)
                     subnav.parse.text(text, path=path, **kwargs)
                     page = subnav.add_page(is_index=True, **kwargs)
-                    page += upath.UPath(m[2]).read_text()
+                    page += upath.UPath(m[2]).read_text("utf-8")
                     msg = "Created subsection %s and loaded index page %s"
                     logger.debug(msg, m[1], m[2])
                     self._nav += subnav
