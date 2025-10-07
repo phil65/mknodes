@@ -1,33 +1,33 @@
 name: codspeed-benchmarks
 
 on:
-  push:
-    branches:
-      - "main"
-  # Run on pull requests
-  pull_request:
-  # `workflow_dispatch` allows CodSpeed to trigger backtest
-  # performance analysis in order to generate initial data.
-  workflow_dispatch:
+    push:
+        branches:
+            - "main"
+    # Run on pull requests
+    pull_request:
+    # `workflow_dispatch` allows CodSpeed to trigger backtest
+    # performance analysis in order to generate initial data.
+    workflow_dispatch:
 
 jobs:
-  benchmarks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - name: Install uv
-        uses: yezz123/setup-uv@v4
-      - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v2
-      - name: Install dependencies
-        run: |
-          uv sync --all-extras
-      - name: Run benchmarks
-        uses: CodSpeedHQ/action@v4
-        with:
-          token: ${{ secrets.CODSPEED_TOKEN }}
-          run: "uv run pytest benchmarks/ --codspeed"
+    benchmarks:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - name: Set up Python
+              uses: actions/setup-python@v6
+              with:
+                  python-version: "3.13"
+            - name: Install uv
+              uses: yezz123/setup-uv@v4
+            - name: Setup Graphviz
+              uses: ts-graphviz/setup-graphviz@v2
+            - name: Install dependencies
+              run: |
+                  uv sync --all-extras
+            - name: Run benchmarks
+              uses: CodSpeedHQ/action@v4
+              with:
+                  token: ${{ secrets.CODSPEED_TOKEN }}
+                  run: "uv run pytest benchmarks/ --codspeed"
