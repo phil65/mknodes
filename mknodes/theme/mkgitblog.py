@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import dataclasses
-import json
 from typing import TYPE_CHECKING, Any
 
 import dateutil.parser
@@ -46,9 +45,11 @@ async def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commi
         repo: Repository name
         page: page to get. Each page contains max 100 commits.
     """
+    import anyenv
+
     url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=100&page={page}"
     response = await downloadhelpers.download_async(url)
-    commits = json.loads(response.decode())
+    commits = anyenv.load_json(response.decode(), return_type=list)
     return [
         Commit(
             sha=dct["commit"]["tree"]["sha"],
