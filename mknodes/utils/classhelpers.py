@@ -21,9 +21,6 @@ if typing.TYPE_CHECKING:
     import os
 
 
-T = typing.TypeVar("T", bound=type)
-
-
 logger = log.get_logger(__name__)
 
 

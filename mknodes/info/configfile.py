@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class ConfigFile(superdict.SuperDict):
-    filetype: str | None = None
+    filetype: yamling.SupportedFormats | None = None
 
     def __init__(self, path: str | os.PathLike[str] | None = None):
         """Constructor.
@@ -46,12 +46,12 @@ class ConfigFile(superdict.SuperDict):
         """
         if not sections:
             raise ValueError(sections)
-        section = self.get_section(*sections, keep_path=keep_path)
-        return "" if section is None else yamling.dump(section, mode=self.filetype)  # type: ignore[arg-type]
+        s = self.get_section(*sections, keep_path=keep_path)
+        return "" if s is None else yamling.dump(s, mode=self.filetype or "json")
 
     def dump_config(self) -> str:
         """Dump to string with dumper of given file type."""
-        return yamling.dump(self._data, mode=self.filetype)  # type: ignore[arg-type]
+        return yamling.dump(self._data, mode=self.filetype or "json")
 
     def load_file(
         self,
