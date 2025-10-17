@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import contextlib
 import functools
+import io
 import types
 
 from typing import Any, Literal
@@ -79,7 +81,11 @@ def get_mermaid(
             logger.exception(msg)
             return ""
     tree = [tree] if isinstance(tree, str) else tree
-    text = render_mermaid(tree)
+    # Capture stdout since render_mermaid now prints instead of returning
+    stdout_buffer = io.StringIO()
+    with contextlib.redirect_stdout(stdout_buffer):
+        render_mermaid(tree)
+    text = stdout_buffer.getvalue()
     return "\n".join(text.splitlines()[1:])
 
 
