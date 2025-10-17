@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import functools
-import shutil
 from typing import TYPE_CHECKING
 
 import upath
@@ -51,34 +50,6 @@ def fsspec_copy(
         target[k] = src[k]
 
 
-def copy(
-    source_path: str | os.PathLike[str],
-    output_path: str | os.PathLike[str],
-    exist_ok: bool = True,
-):
-    """Copy source_path to output_path, making sure any parent directories exist.
-
-    The output_path may be a directory.
-
-    Args:
-        source_path: File to copy
-        output_path: path where file should get copied to.
-        exist_ok: Whether exception should be raised in case stuff would get overwritten
-    """
-    output_p = to_upath(output_path)
-    source_p = to_upath(source_path)
-    output_p.parent.mkdir(parents=True, exist_ok=exist_ok)
-    if source_p.is_dir():
-        if output_p.is_dir():
-            msg = "Cannot copy folder to file!"
-            raise RuntimeError(msg)
-        shutil.copytree(source_p, output_p, dirs_exist_ok=exist_ok)
-    else:
-        if output_p.is_dir():
-            output_p /= source_p.name
-        shutil.copyfile(source_p, output_p)
-
-
 def clean_directory(
     directory: str | os.PathLike[str], remove_hidden: bool = False
 ) -> None:
@@ -91,7 +62,7 @@ def clean_directory(
             continue
         path = folder_to_remove / entry
         if path.is_dir():
-            shutil.rmtree(path, True)
+            path.rmdir(True)
         else:
             path.unlink()
 
