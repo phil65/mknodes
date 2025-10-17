@@ -27,7 +27,7 @@ class MkTreeView(mkcode.MkCode):
 
     def __init__(
         self,
-        tree: str | os.PathLike[str] | mknode.MkNode,
+        tree: str | os.PathLike[str] | upath.UPath | mknode.MkNode,
         *,
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] = "rounded",
         maximum_depth: int | None = None,

@@ -10,11 +10,13 @@ from mknodes.utils import superdict
 if TYPE_CHECKING:
     import os
 
+    import upath
+
 
 class ConfigFile(superdict.SuperDict):
     filetype: yamling.SupportedFormats | None = None
 
-    def __init__(self, path: str | os.PathLike[str] | None = None):
+    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None):
         """Constructor.
 
         Args:

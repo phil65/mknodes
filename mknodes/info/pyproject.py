@@ -14,11 +14,13 @@ from mknodes.utils import pathhelpers, superdict
 if TYPE_CHECKING:
     import os
 
+    import upath
+
 
 class PyProject(configfile.TomlFile):
     """Class representing a PyProject config file."""
 
-    def __init__(self, path: str | os.PathLike[str] | None = None):
+    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None):
         """Constructor.
 
         Args:

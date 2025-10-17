@@ -116,9 +116,7 @@ class NodeFile(configfile.TomlFile):
                 examples[v["title"]] = get_representations(v["jinja"], parent)
         return examples
 
-    def iter_example_instances(
-        self, parent: mk.MkNode
-    ) -> Generator[mk.MkNode, None, None]:
+    def iter_example_instances(self, parent: mk.MkNode) -> Generator[mk.MkNode]:
         for v in self._data.get("examples", {}).values():
             if "jinja" in v:
                 parent.env.render_string(v["jinja"])
