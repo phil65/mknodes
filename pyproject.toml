@@ -3,7 +3,7 @@ name = "mknodes"
 version = "0.55.10"
 description = "Don't write docs. Code them."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 license = { file = "LICENSE" }
 authors = [
   { name = "Philipp Temminghoff", email = "philipptemminghoff@gmail.com" },
@@ -133,14 +133,14 @@ allowed-commit-types = [
 docstring-style = "google"
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 disable_error_code = ["assignment", "misc", "import", "has-type"]
 check_untyped_defs = true
 
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-pythonVersion = "3.12"
+pythonVersion = "3.13"
 pythonPlatform = "All"
 deprecateTypingAliases = true
 reportMissingTypeStubs = false
@@ -170,7 +170,7 @@ asyncio_mode = "auto"
 [tool.ruff]
 line-length = 90
 extend-exclude = ["docs"]
-target-version = "py312"
+target-version = "py313"
 
 [tool.ruff.lint]
 preview = true
