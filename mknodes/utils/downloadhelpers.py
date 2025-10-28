@@ -1,24 +1,14 @@
 from __future__ import annotations
 
 import os
-from typing import Final
 from urllib import parse
 
-import hishel
-import upathtools
+import anyenv
 
 from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
-
-
-upathtools.register_http_filesystems()
-CACHE_CONTROLLER: Final = hishel.Controller(
-    cacheable_methods=["GET"],
-    cacheable_status_codes=[200],
-    allow_stale=True,
-)
 
 
 def _get_headers(user_headers: dict[str, str] | None = None) -> dict[str, str]:
@@ -49,17 +39,9 @@ def download(url: str, headers: dict[str, str] | None = None) -> bytes:
     if parse.urlsplit(url).scheme not in {"http", "https"}:
         path = UPath(url)
         return path.read_bytes()
-
-    request_headers = _get_headers(headers)
-    with hishel.CacheClient(
-        headers=request_headers,
-        controller=CACHE_CONTROLLER,
-    ) as client:
-        response = client.get(url, follow_redirects=True)
-        response.raise_for_status()
-
+    content = anyenv.get_bytes_sync(url, cache=True, headers=_get_headers(headers))
     logger.debug("Downloaded %s", url)
-    return response.content
+    return content
 
 
 async def download_async(url: str, headers: dict[str, str] | None = None) -> bytes:
@@ -81,13 +63,6 @@ async def download_async(url: str, headers: dict[str, str] | None = None) -> byt
         path = UPath(url)
         return path.read_bytes()
 
-    request_headers = _get_headers(headers)
-    async with hishel.AsyncCacheClient(
-        headers=request_headers,
-        controller=CACHE_CONTROLLER,
-    ) as client:
-        response = await client.get(url, follow_redirects=True)
-        response.raise_for_status()
-
+    response = await anyenv.get_bytes(url, headers=_get_headers(headers), cache=True)
     logger.debug("Downloaded %s", url)
-    return response.content
+    return response

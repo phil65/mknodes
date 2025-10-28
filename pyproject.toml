@@ -35,6 +35,7 @@ classifiers = [
 ]
 dependencies = [
   "anybadge",
+  "anyenv[httpx]>=1.1.0",
   "clinspector",
   "coloraide",
   "epregistry",
@@ -46,8 +47,6 @@ dependencies = [
   # Git(Hub)
   "gitpython",
   "griffe",
-  "hishel",
-  "httpx",
   "jinja2",
   "jinjarope[icons]",
   # TODO: make these optional
