@@ -19,7 +19,7 @@ logger = log.get_logger(__name__)
 
 @functools.cache
 def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
-    from llmling_agent_functional import run
+    from llmling_agent.functional import run
 
     return run.run_agent_sync(
         user_prompt + "\n\n" + context,
