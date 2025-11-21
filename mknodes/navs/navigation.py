@@ -3,15 +3,12 @@ from __future__ import annotations
 import pathlib
 from typing import Any
 
-from git import TYPE_CHECKING
-
 from mknodes.basenodes import mklink
 from mknodes.navs import mknav, navbuilder
 from mknodes.pages import mkpage
 
 
-if TYPE_CHECKING:
-    NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
+NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 
 class Navigation(dict[tuple[Any, ...], NavSubType]):

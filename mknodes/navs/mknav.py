@@ -5,7 +5,6 @@ import pathlib
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mknode
-from mknodes.navs import navigation, navparser, navrouter
 from mknodes.pages import metadata as metadata_, mkpage, pagetemplate
 from mknodes.utils import inspecthelpers, log, reprhelpers
 
@@ -16,6 +15,7 @@ if TYPE_CHECKING:
 
     import mknodes as mk
     from mknodes.data.datatypes import PageStatusStr
+    from mknodes.navs import navigation
 
 
 logger = log.get_logger(__name__)
@@ -47,6 +47,8 @@ class MkNav(mknode.MkNode):
             metadata: Metadata for the nav. Child pages will inherit this.
             kwargs: Keyword arguments passed to parent
         """
+        from mknodes.navs import navigation, navparser, navrouter
+
         self.title = section
         self.filename = filename
         self.nav = navigation.Navigation()
@@ -70,7 +72,9 @@ class MkNav(mknode.MkNode):
     # to the Navigation instance.
 
     def __setitem__(
-        self, index: tuple[Any, ...] | str, node: navigation.NavSubType
+        self,
+        index: tuple[Any, ...] | str,
+        node: navigation.NavSubType,
     ) -> None:
         self.nav[index] = node
 
@@ -105,6 +109,8 @@ class MkNav(mknode.MkNode):
 
     @children.setter
     def children(self, items) -> None:
+        from mknodes.navs import navigation
+
         self.nav = navigation.Navigation(items)
 
     def __add__(self, other: navigation.NavSubType):

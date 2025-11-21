@@ -321,7 +321,7 @@ class MaterialTheme(theme.Theme):
             elif k == "pymdownx.tasklist":
                 ext["custom_checkbox"] = True
 
-    def adapt_extras(self, extras: dict) -> None:
+    def adapt_extras(self, extras: dict[str, Any]) -> None:
         if self.alternate_selector:
             extras.setdefault("alternate", []).extend(self.alternate_selector)
         for status in self.status_icons.values():

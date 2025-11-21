@@ -48,7 +48,7 @@ class Extension(dict):
         return {self.extension_name: dict(self)}
 
 
-class Plugin(dict):
+class Plugin(dict[str, Any]):
     """A plugin resource."""
 
     def __init__(self, plugin_name: str, **kwargs: Any) -> None:
@@ -244,7 +244,9 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
 
     css: list[CSSType] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
-    markdown_extensions: dict[str, dict] = dataclasses.field(default_factory=dict)
+    markdown_extensions: dict[str, dict[str, Any]] = dataclasses.field(
+        default_factory=dict
+    )
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: list[Plugin] = dataclasses.field(default_factory=list)
     """A set of required plugins. (Only for info purposes)"""
@@ -324,7 +326,9 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
             additive: Merge strategy. Either additive or replace.
         """
 
-        def merge_extensions(dicts: list[dict[str, dict]]) -> list[dict[str, dict]]:
+        def merge_extensions(
+            dicts: list[dict[str, dict[str, Any]]],
+        ) -> list[dict[str, dict[str, Any]]]:
             seen = set()
             result = []
             dicts = [{k: dct[k]} for dct in dicts for k in dct]
