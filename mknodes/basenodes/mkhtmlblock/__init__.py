@@ -30,7 +30,7 @@ class MkHtmlBlock(mkblock.MkBlock):
         markdown_mode: MarkdownModeStr | None = None,
         attributes: dict[str, Any] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -69,7 +69,7 @@ class MkHtmlBlock(mkblock.MkBlock):
         return self.attributes.get("markdown")
 
     @markdown_mode.setter
-    def markdown_mode(self, value: MarkdownModeStr | None):
+    def markdown_mode(self, value: MarkdownModeStr | None) -> None:
         self.attributes["markdown"] = value
 
 

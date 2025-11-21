@@ -25,7 +25,7 @@ class Package:
 class Extension(dict):
     """A markdown extension resource."""
 
-    def __init__(self, extension_name: str, **kwargs: Any):
+    def __init__(self, extension_name: str, **kwargs: Any) -> None:
         """Constructor.
 
         Args:
@@ -38,20 +38,20 @@ class Extension(dict):
     def __str__(self):
         return self.extension_name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({self.extension_name!r})"
 
     def __hash__(self):  # type: ignore[override]
         return hash(self.extension_name + str(dict(self)))
 
-    def as_mkdocs_dict(self) -> dict[str, dict]:
+    def as_mkdocs_dict(self) -> dict[str, dict[str, Any]]:
         return {self.extension_name: dict(self)}
 
 
 class Plugin(dict):
     """A plugin resource."""
 
-    def __init__(self, plugin_name: str, **kwargs: Any):
+    def __init__(self, plugin_name: str, **kwargs: Any) -> None:
         """Constructor.
 
         Args:
@@ -64,13 +64,13 @@ class Plugin(dict):
     def __str__(self):
         return self.plugin_name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({self.plugin_name!r})"
 
     def __hash__(self):  # type: ignore[override]
         return hash(self.plugin_name + str(dict(self)))
 
-    def as_mkdocs_dict(self) -> dict[str, dict]:
+    def as_mkdocs_dict(self) -> dict[str, dict[str, Any]]:
         return {self.plugin_name: dict(self)}
 
 
@@ -215,7 +215,7 @@ class JSText(TextResource):
 class Asset:
     """An asset resource."""
 
-    def __init__(self, filename: str, content: str, target: str | None = None):
+    def __init__(self, filename: str, content: str, target: str | None = None) -> None:
         """Constructor.
 
         Args:
@@ -230,7 +230,7 @@ class Asset:
     def __hash__(self):
         return hash(self.content)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({self.filename!r})"
 
 
@@ -258,7 +258,7 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
     def __getitem__(self, value):
         return getattr(self, value)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value) -> None:
         setattr(self, index, value)
 
     def __contains__(self, other):
@@ -280,7 +280,7 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
     def __or__(self, other):
         return self.merge(other)
 
-    def remove(self, *resources):
+    def remove(self, *resources) -> None:
         for resource in resources:
             if resource in self.css:
                 self.css.remove(resource)

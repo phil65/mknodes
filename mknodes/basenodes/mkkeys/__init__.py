@@ -23,7 +23,7 @@ class MkKeys(mknode.MkNode):
         self,
         keys: str | list[str],
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

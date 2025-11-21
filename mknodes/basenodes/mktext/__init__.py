@@ -25,7 +25,7 @@ class MkText(mknode.MkNode):
         *,
         render_jinja: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -49,7 +49,7 @@ class MkText(mknode.MkNode):
         return self.env.render_string(self._text)
 
     @text.setter
-    def text(self, value):
+    def text(self, value) -> None:
         self._text = value
 
     def _to_markdown(self) -> str:
@@ -63,7 +63,7 @@ class MkText(mknode.MkNode):
         return self.env.rendered_children
 
     @children.setter
-    def children(self, val):
+    def children(self, val) -> None:
         pass
 
     @classmethod

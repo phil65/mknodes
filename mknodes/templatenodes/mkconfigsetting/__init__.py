@@ -24,7 +24,7 @@ class MkConfigSetting(mktemplate.MkTemplate):
         optional: bool | None = None,
         mode: superdict.MarkupTypeStr | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

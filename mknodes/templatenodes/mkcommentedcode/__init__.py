@@ -31,7 +31,7 @@ class MkCommentedCode(mktemplate.MkTemplate):
         linenums: int | None = None,
         style: Literal["text", "admonition", "bubble"] = "bubble",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -57,7 +57,7 @@ class MkCommentedCode(mktemplate.MkTemplate):
                 return inspecthelpers.get_source(self._code)
 
     @classmethod
-    def create_example_page(cls, page):
+    def create_example_page(cls, page) -> None:
         # Comment sections automatically get converted to non-codeblock sections.
         # That way you can explain your code in-line.
 

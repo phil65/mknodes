@@ -37,7 +37,7 @@ class MkCard(mktemplate.MkTemplate):
         size: int = CARD_DEFAULT_SIZE,
         path_dark_mode: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

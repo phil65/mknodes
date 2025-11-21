@@ -10,7 +10,7 @@ class NodeConnector(connector.Connector):
     def get_children(self, item):
         return item.children
 
-    def get_id(self, item):
+    def get_id(self, item) -> str:
         # id() would be enough, but name is sometimes useful for debugging.
         return f"{type(item).__name__}_{id(item)}"
 

@@ -63,7 +63,7 @@ class BaseBlock(mknode.MkNode):
     def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
-    def to_markdown(self, md: markdown.Markdown | None = None):
+    def to_markdown(self, md: markdown.Markdown | None = None) -> str:
         """Return HTML for the block.
 
         Args:
@@ -77,7 +77,9 @@ class BaseBlock(mknode.MkNode):
 class HtmlBlock(BaseBlock):
     """Base class for blocks which usually contain HTML content."""
 
-    def __init__(self, block_id: str, *, parent: mk.MkPage | mk.MkNav | None = None):
+    def __init__(
+        self, block_id: str, *, parent: mk.MkPage | mk.MkNav | None = None
+    ) -> None:
         """Constructor.
 
         Args:
@@ -116,7 +118,7 @@ class HtmlBlock(BaseBlock):
         return self.items[0]
 
     @content.setter
-    def content(self, value):
+    def content(self, value) -> None:
         value = self.to_child_node(value)
         self.items = [value]
 
@@ -124,7 +126,7 @@ class HtmlBlock(BaseBlock):
 class Block(BaseBlock):
     """Base class for head blocks."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.content = ""
 
     def __bool__(self):
@@ -139,13 +141,13 @@ class TitleBlock(BaseBlock):
 
     block_id = "htmltitle"
 
-    def __init__(self, content: str | None = None):
+    def __init__(self, content: str | None = None) -> None:
         self.content = content
 
     def __bool__(self):
         return bool(self.content)
 
-    def block_content(self, md: markdown.Markdown | None = None):
+    def block_content(self, md: markdown.Markdown | None = None) -> str:
         return f"<title>{self.content}</title>"
 
 
@@ -156,7 +158,7 @@ class BaseJSBlock(BaseBlock):
         self,
         scripts: list[resources.JSFile] | None = None,
         include_super: bool = True,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -166,7 +168,7 @@ class BaseJSBlock(BaseBlock):
         self.include_super = include_super
         self.scripts = scripts or []
 
-    def add_script_file(self, script: resources.JSFile | str | os.PathLike[str]):
+    def add_script_file(self, script: resources.JSFile | str | os.PathLike[str]) -> None:
         """Add a script file to the block.
 
         Args:
@@ -218,7 +220,7 @@ class ExtraHeadBlock(Block):
 
     block_id = "extrahead"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.robots_rule = None
         self.redirect_url = None
@@ -232,7 +234,7 @@ class ExtraHeadBlock(Block):
             content += REDIRECT.format(url=self.redirect_url)
         return content
 
-    def set_robots_rule(self, rule: str | None = None):
+    def set_robots_rule(self, rule: str | None = None) -> None:
         """Set a rule for search robots.
 
         For valid rule values, check
@@ -243,7 +245,7 @@ class ExtraHeadBlock(Block):
         """
         self.robots_rule = rule
 
-    def set_redirect_url(self, url: str):
+    def set_redirect_url(self, url: str) -> None:
         """Set a URL which the page should redirect to.
 
         Args:
@@ -261,15 +263,15 @@ class StylesBlock(BaseBlock):
         self,
         styles: list[resources.CSSFile | resources.CSSText] | None = None,
         include_super: bool = True,
-    ):
+    ) -> None:
         self.include_super = include_super
         self.styles = styles or []
         super().__init__()
 
-    def add_stylesheet(self, stylesheet: resources.CSSFile):
+    def add_stylesheet(self, stylesheet: resources.CSSFile) -> None:
         self.styles.append(stylesheet)
 
-    def add_css(self, css: str | dict[str, Any]):
+    def add_css(self, css: str | dict[str, Any]) -> None:
         """Add CSS in form of a string or a CSS-rule like dictionary.
 
         Args:

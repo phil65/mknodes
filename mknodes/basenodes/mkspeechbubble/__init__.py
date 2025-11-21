@@ -21,7 +21,7 @@ class MkSpeechBubble(mkcontainer.MkContainer):
         *,
         arrow: Literal["top", "bottom", "left", "right"] | None = "bottom",
         **kwargs: Any,
-    ):
+    ) -> None:
         self.arrow = arrow
         super().__init__(content=content or [], **kwargs)
 

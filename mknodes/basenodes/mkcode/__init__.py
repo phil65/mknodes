@@ -46,7 +46,7 @@ class MkCode(mkcontainer.MkContainer):
         highlight_lines: list[int] | None = None,
         fence_level: int | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

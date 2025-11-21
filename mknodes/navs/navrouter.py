@@ -23,7 +23,7 @@ logger = log.get_logger(__name__)
 class NavRouter:
     """Class used for MkNav decorator routing."""
 
-    def __init__(self, nav: mknav.MkNav):
+    def __init__(self, nav: mknav.MkNav) -> None:
         """Constructor.
 
         Args:
@@ -146,7 +146,7 @@ class NavRouter:
 
         return decorator
 
-    def link(self, *path: str, url: str, title: str):
+    def link(self, *path: str, url: str, title: str) -> None:
         link = mklink.MkLink(url, title)
         self._nav[path] = link
 

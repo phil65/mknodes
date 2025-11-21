@@ -105,7 +105,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         include_editables: bool = True,
         editables_only: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

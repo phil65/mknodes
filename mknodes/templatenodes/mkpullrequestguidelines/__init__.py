@@ -10,7 +10,7 @@ class MkPullRequestGuidelines(mktemplate.MkTemplate):
 
     ICON = "octicons/git-pull-request-24"
 
-    def __init__(self, **kwargs: Any):
+    def __init__(self, **kwargs: Any) -> None:
         """Constructor.
 
         Args:

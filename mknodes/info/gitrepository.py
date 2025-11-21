@@ -26,7 +26,7 @@ class CommitList(list[git.Commit]):
 class GitRepository(git.Repo):
     """Aggregates information about a git repo."""
 
-    def __init__(self, path: str | os.PathLike[str] | None = None, **kwargs: Any):
+    def __init__(self, path: str | os.PathLike[str] | None = None, **kwargs: Any) -> None:
         import githarbor
         from githarbor.core.proxy import Repository
 

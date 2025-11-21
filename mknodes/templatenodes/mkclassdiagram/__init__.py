@@ -24,7 +24,7 @@ class BaseClassConnector(connector.Connector[type]):
         *,
         title_style: Literal["package.classname", "qualname"] = "package.classname",
         max_depth: int | None = None,
-    ):
+    ) -> None:
         self.title_style = title_style
         super().__init__(objects, max_depth=max_depth)
 
@@ -47,7 +47,7 @@ class BaseClassConnector(connector.Connector[type]):
 
 
 class SubclassConnector(BaseClassConnector):
-    def _connect(self, objects: Sequence[type]):
+    def _connect(self, objects: Sequence[type]) -> None:
         super()._connect(objects)
         self.connections = [(i[1], i[0]) for i in self.connections]
 
@@ -61,7 +61,7 @@ class ParentClassConnector(BaseClassConnector):
 
 
 class MroConnector(BaseClassConnector):
-    def _connect(self, objects: Sequence[type]):
+    def _connect(self, objects: Sequence[type]) -> None:
         mro = list(objects[0].mro())[: self.max_depth]
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
         self.connections = [
@@ -79,7 +79,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         max_depth: int | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

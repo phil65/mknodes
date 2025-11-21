@@ -26,7 +26,7 @@ class MkCliDoc(mktemplate.MkTemplate):
         show_hidden: bool = False,
         show_subcommands: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         r"""Constructor.
 
         Args:

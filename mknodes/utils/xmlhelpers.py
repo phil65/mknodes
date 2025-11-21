@@ -20,7 +20,7 @@ class HTMLElement(ET.Element):
         attrs: dict[str, str] | None = None,
         markdown: bool = False,
         **kwargs: str,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -59,7 +59,7 @@ class Div(HTMLElement):
         text: str | None = None,
         parent: ET.Element | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         super().__init__(klass, parent, **kwargs)
         self.text = text
 
@@ -71,7 +71,7 @@ class Header(HTMLElement):
         text: str,
         parent: ET.Element | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         self.tag_name = f"h{level}"
         super().__init__(**kwargs)
         self.text = text
@@ -96,7 +96,7 @@ class Span(HTMLElement):
         text: str | None = None,
         parent: ET.Element | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         super().__init__(klass, parent, **kwargs)
         self.text = text
 
@@ -154,7 +154,7 @@ class A(HTMLElement):
         text: str | None = None,
         parent: ET.Element | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         super().__init__(klass, parent, **kwargs)
         self.text = text
 

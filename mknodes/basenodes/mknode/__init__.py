@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class IllegalArgumentError(ValueError):
-    def __init__(self, node, kwargs: Any):
+    def __init__(self, node, kwargs: Any) -> None:
         msg = f"Invalid keyword arguments for {type(node)!r}: {kwargs}"
         super().__init__(msg)
 
@@ -95,7 +95,7 @@ class MkNode(node.Node):
             self._name_registry[name] = self
         self.__post_init__()
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         pass
 
     @functools.cached_property
@@ -285,7 +285,7 @@ class MkNode(node.Node):
         """
         return self._files
 
-    def add_file(self, filename: str, data: str | bytes):
+    def add_file(self, filename: str, data: str | bytes) -> None:
         """Add a static file as data to this node.
 
         Args:
@@ -294,7 +294,7 @@ class MkNode(node.Node):
         """
         self._files[filename] = data
 
-    def add_css_class(self, class_name: str):
+    def add_css_class(self, class_name: str) -> None:
         """Wrap node markdown with given css class.
 
         Args:

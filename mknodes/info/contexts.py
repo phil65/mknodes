@@ -79,7 +79,7 @@ class GitContext(Context):
     last_version: str | None = None
     """Name of last commit tag."""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"GitContext({self.repo_name!r}: {self.main_branch!r})"
 
 
@@ -105,7 +105,7 @@ class ThemeContext(Context):
     css_default_fg: str = ""
     css_default_bg: str = ""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ThemeContext({self.name!r})"
 
 
@@ -247,7 +247,7 @@ class PackageContext(Context):
     Defined in pyproject mknodes section *[pyproject]*
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"PackageContext({self.distribution_name!r})"
 
 
@@ -284,7 +284,7 @@ class GitHubContext(Context):
     twitter_username: str | None = None
     """The twitter username."""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"GitHubContext({self.repo_name!r})"
 
     @classmethod
@@ -331,10 +331,10 @@ class EnvironmentContext(MutableMapping[str, Any], metaclass=abc.ABCMeta):
     def __getitem__(self, value):
         return getattr(self, value)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value) -> None:
         setattr(self, index, value)
 
-    def __delitem__(self, index):
+    def __delitem__(self, index) -> None:
         setattr(self, index, None)
 
     def __len__(self):
@@ -356,7 +356,7 @@ class ContextConfig(Mapping[str, Any], metaclass=abc.ABCMeta):
     def __getitem__(self, value):
         return getattr(self, value)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value) -> None:
         setattr(self, index, value)
 
     def __len__(self):
@@ -429,7 +429,7 @@ class ProjectContext(Context):
             env_config=cfg.get("env_config", jinjarope.EnvConfig(loader=DEFAULT_LOADER)),
         )
 
-    async def populate_linkprovider(self):
+    async def populate_linkprovider(self) -> None:
         if self.metadata.mkdocs_config is None:
             return
         invs = self.metadata.mkdocs_config.get_inventory_infos()

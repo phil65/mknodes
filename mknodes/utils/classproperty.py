@@ -14,7 +14,7 @@ class ClassPropertyDescriptor:
     avoid IO on loading.
     """
 
-    def __init__(self, fget, fset=None):
+    def __init__(self, fget, fset=None) -> None:
         self.fget = fget
         self.fset = fset
 

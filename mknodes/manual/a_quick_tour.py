@@ -1,7 +1,7 @@
 import mknodes as mk
 
 
-def a_quick_tour(page: mk.MkPage):
+def a_quick_tour(page: mk.MkPage) -> None:
     # This will be a quick, short random introduction of some of the nodes
     # included in **MkNodes**.
     # The selection of nodes is totally random, this should just provide a quick overview

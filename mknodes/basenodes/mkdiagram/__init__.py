@@ -38,7 +38,7 @@ class MkDiagram(mkcode.MkCode):
         *,
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

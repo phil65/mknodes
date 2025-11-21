@@ -19,7 +19,7 @@ class MkReprRawRendered(mktemplate.MkTemplate):
 
     ICON = "material/presentation"
 
-    def __init__(self, node: mknode.MkNode | str | None = None, **kwargs: Any):
+    def __init__(self, node: mknode.MkNode | str | None = None, **kwargs: Any) -> None:
         """Constructor.
 
         Args:

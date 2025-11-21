@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from mknodes.info import configfile
 
 
@@ -22,16 +24,16 @@ class MkDocsConfigFile(configfile.YamlFile):
         return self.get_section("plugins") or []
 
     @property
-    def mknodes_config(self) -> dict:
+    def mknodes_config(self) -> dict[str, Any]:
         """Return our very own config section."""
         return self.get_section("plugins", "mknodes") or {}
 
     @property
-    def mkdocstrings_config(self) -> dict:
+    def mkdocstrings_config(self) -> dict[str, Any]:
         """Return the MkDocStrings config section."""
         return self.get_section("plugins", "mkdocstrings", "handlers", "python") or {}
 
-    def remove_plugin(self, name: str):
+    def remove_plugin(self, name: str) -> None:
         for plg in self.plugins:
             if plg == name or (isinstance(plg, dict) and next(iter(plg.keys())) == name):
                 self.plugins.remove(plg)  # noqa: B909
@@ -41,7 +43,7 @@ class MkDocsConfigFile(configfile.YamlFile):
         repo_url: str | None = None,
         build_fn: str | None = None,
         clone_depth: int | None = None,
-    ):
+    ) -> None:
         """Quick access to overriding our plugin settings.
 
         Args:
@@ -58,7 +60,7 @@ class MkDocsConfigFile(configfile.YamlFile):
                 if clone_depth is not None:
                     plugin["mknodes"]["clone_depth"] = clone_depth
 
-    def get_inventory_infos(self) -> list[dict]:
+    def get_inventory_infos(self) -> list[dict[str, Any]]:
         """Returns list of dicts containing inventory info.
 
         Links are taken from mkdocstrings section.

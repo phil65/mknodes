@@ -29,7 +29,7 @@ class MkImageSlideshow(mktemplate.MkTemplate):
         self,
         images: list[str],
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

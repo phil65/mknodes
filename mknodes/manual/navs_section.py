@@ -12,13 +12,13 @@ nav = mk.MkNav("MkNavs")
 
 
 @nav.route.page(is_index=True)
-def _(page: mk.MkPage):
+def _(page: mk.MkPage) -> None:
     variables = dict(mknode_cls=mk.MkNav)
     page += mk.MkTemplate("navs/navs_index.jinja", variables=variables)
 
 
 @nav.route.nav("Populate MkPages from SUMMARY.md")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     folder = paths.TEST_RESOURCES / "nav_tree/"
     summary_file = folder / "SUMMARY.md"
     nav.parse.file(summary_file, hide="toc")
@@ -31,7 +31,7 @@ def _(nav: mk.MkNav):
 
 
 @nav.route.nav("Populate MkPages from folder")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     """Create a MkNav based on a folder tree containing markup files."""
     folder = paths.TEST_RESOURCES / "nav_tree/test_folder/"
     nav.parse.folder(folder, hide="toc")
@@ -57,5 +57,5 @@ def _(nav: mk.MkNav):
 
 
 @nav.route.page("Context propagation")
-def _(page: mk.MkPage):
+def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("context_propagation.jinja")

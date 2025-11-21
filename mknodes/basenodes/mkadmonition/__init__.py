@@ -35,7 +35,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         expanded: bool = False,
         inline: Literal["left", "right"] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -59,7 +59,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         return text
 
     @property
-    def title_line(self):
+    def title_line(self) -> str:
         block_start = "???" if self.collapsible else "!!!"
         if self.collapsible and self.expanded:
             block_start += "+"

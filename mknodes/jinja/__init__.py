@@ -16,7 +16,7 @@ from mknodes.utils import classhelpers, inspecthelpers
 logger = logging.getLogger(__name__)
 
 
-def setup_env(env: jinjarope.Environment):
+def setup_env(env: jinjarope.Environment) -> None:
     """Used as extension point for the jinjarope environment.
 
     Args:

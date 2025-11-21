@@ -26,7 +26,7 @@ class MkAnnotation(mkcontainer.MkContainer):
         num: int,
         content: str | mk.MkNode,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -107,7 +107,7 @@ class MkAnnotations(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.num == num)
         return self.items.index(item)
 
-    def __setitem__(self, index: int, value: mk.MkNode | str):
+    def __setitem__(self, index: int, value: mk.MkNode | str) -> None:
         import mknodes as mk
 
         match value:

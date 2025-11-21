@@ -25,7 +25,7 @@ class MkTabBlock(mkblock.MkBlock):
         new: bool | None = None,
         select: bool | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -46,7 +46,7 @@ class MkTabBlock(mkblock.MkBlock):
         return self.argument
 
     @title.setter
-    def title(self, value):
+    def title(self, value) -> None:
         self.argument = value
 
     @property
@@ -54,7 +54,7 @@ class MkTabBlock(mkblock.MkBlock):
         return self.attributes.get("new", False)
 
     @new.setter
-    def new(self, value: bool):
+    def new(self, value: bool) -> None:
         self.attributes["new"] = value
 
     @property
@@ -62,7 +62,7 @@ class MkTabBlock(mkblock.MkBlock):
         return self.attributes.get("select", False)
 
     @select.setter
-    def select(self, value: bool):
+    def select(self, value: bool) -> None:
         self.attributes["select"] = value
 
 
@@ -80,9 +80,9 @@ class MkTab(mkcontainer.MkContainer):
         *,
         new: bool = False,
         select: bool = False,
-        attrs: dict | None = None,
+        attrs: dict[str, Any] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

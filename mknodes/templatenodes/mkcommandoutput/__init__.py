@@ -20,7 +20,7 @@ class MkCommandOutput(mktemplate.MkTemplate):
     STATUS = "new"
     CSS = [resources.CSSFile("terminal.css")]
 
-    def __init__(self, call: Sequence[str], **kwargs: Any):
+    def __init__(self, call: Sequence[str], **kwargs: Any) -> None:
         """Constructor.
 
         Args:

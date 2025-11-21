@@ -28,7 +28,7 @@ class BlogMetadata(metadata.Metadata):
         return self.get("date")
 
     @date.setter
-    def date(self, val: str | None):
+    def date(self, val: str | None) -> None:
         self["date"] = val
 
     @property
@@ -36,7 +36,7 @@ class BlogMetadata(metadata.Metadata):
         return self.get("draft")
 
     @draft.setter
-    def draft(self, val: bool | None):
+    def draft(self, val: bool | None) -> None:
         self["draft"] = val
 
     @property
@@ -44,7 +44,7 @@ class BlogMetadata(metadata.Metadata):
         return self.get("categories")
 
     @categories.setter
-    def categories(self, val: list[str] | None):
+    def categories(self, val: list[str] | None) -> None:
         self["categories"] = val
 
     @property
@@ -52,14 +52,14 @@ class BlogMetadata(metadata.Metadata):
         return self.get("authors")
 
     @authors.setter
-    def authors(self, val: list[str] | None):
+    def authors(self, val: list[str] | None) -> None:
         self["authors"] = val
 
 
 class MkBlog(mknav.MkNav):
     """Class representing the blog provided by the MkDocs-Material blog plugin."""
 
-    def __init__(self, title: str | None = "Blog", **kwargs: Any):
+    def __init__(self, title: str | None = "Blog", **kwargs: Any) -> None:
         super().__init__(section=title, **kwargs)
         self.authors: dict[str, Author] = {}
         # self.posts = mknav.MkNav("posts", parent=self)
@@ -71,7 +71,7 @@ class MkBlog(mknav.MkNav):
         name: str,
         description: str | None = None,
         avatar: str | None = None,
-    ):
+    ) -> None:
         """Add an author to the blog.
 
         Authors get linked to the blog post authors to show extended information.
@@ -107,7 +107,7 @@ class MkBlog(mknav.MkNav):
         authors: list[str] | str | None = None,
         draft: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Add a post to the blog.
 
         Args:
@@ -146,7 +146,7 @@ class MkBlogPost(mkpage.MkPage):
         categories: list[str] | str | None = None,
         authors: list[str] | str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

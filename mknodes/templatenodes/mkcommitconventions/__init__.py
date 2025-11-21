@@ -24,7 +24,7 @@ class MkCommitConventions(mktemplate.MkTemplate):
             | None
         ) = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

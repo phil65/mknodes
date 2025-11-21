@@ -28,7 +28,7 @@ class MkShields(mkcontainer.MkContainer):
         project: str | None = None,
         branch: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -54,7 +54,7 @@ class MkShields(mkcontainer.MkContainer):
                 return self._user
 
     @user.setter
-    def user(self, value):
+    def user(self, value) -> None:
         self._user = value
 
     @property
@@ -64,7 +64,7 @@ class MkShields(mkcontainer.MkContainer):
         return self.ctx.metadata.repository_name
 
     @project.setter
-    def project(self, value):
+    def project(self, value) -> None:
         self._project = value
 
     @property
@@ -91,7 +91,7 @@ class MkShields(mkcontainer.MkContainer):
         ]
 
     @items.setter
-    def items(self, value):
+    def items(self, value) -> None:
         pass
 
 

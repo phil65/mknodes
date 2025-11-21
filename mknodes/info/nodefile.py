@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import functools
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jinjarope import inspectfilters, textfilters
 
@@ -64,7 +64,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
 
 
 class NodeFile(configfile.TomlFile):
-    def __init__(self, path_or_cls: str | os.PathLike[str] | type):
+    def __init__(self, path_or_cls: str | os.PathLike[str] | type) -> None:
         path = find_file(path_or_cls) if isinstance(path_or_cls, type) else path_or_cls
         super().__init__(path)
 
@@ -93,7 +93,7 @@ class NodeFile(configfile.TomlFile):
         """Return the examples section."""
         return self._data.get("examples", {})
 
-    def get_examples(self, parent: mk.MkNode) -> dict[str, dict]:
+    def get_examples(self, parent: mk.MkNode) -> dict[str, dict[str, Any]]:
         """Return a dictionary containing examples.
 
         Contains example-name->dict-with-representations key-value pairs.
@@ -133,7 +133,7 @@ class NodeFile(configfile.TomlFile):
         return self._data.get("layouts", {})
 
     @property
-    def requirements(self) -> dict:
+    def requirements(self) -> dict[str, Any]:
         """Return the `requirements` section of the file."""
         return self._data.get("requirements", {})
 

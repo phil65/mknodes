@@ -18,7 +18,7 @@ class MkTemplatePage(mkpage.MkPage):
         template_path: str,
         template_parent: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -38,7 +38,7 @@ class MkTemplatePage(mkpage.MkPage):
         return self.env.rendered_children
 
     @items.setter
-    def items(self, val):
+    def items(self, val) -> None:
         pass
 
     @property

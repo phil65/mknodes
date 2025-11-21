@@ -26,7 +26,7 @@ class Metadata(dict[str, Any]):
     course also add any non-documented stuff to the Metadata.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         search_dict = {}
         if "search_boost" in kwargs and kwargs["search_boost"] is not None:
             search_dict["boost"] = kwargs.pop("search_boost")
@@ -51,7 +51,7 @@ class Metadata(dict[str, Any]):
         return self.get("hide")
 
     @hide.setter
-    def hide(self, val: list[SectionStr] | str | None):
+    def hide(self, val: list[SectionStr] | str | None) -> None:
         self["hide"] = val
 
     @property
@@ -60,7 +60,7 @@ class Metadata(dict[str, Any]):
         return self.get("search_boost")
 
     @search_boost.setter
-    def search_boost(self, val: float | None):
+    def search_boost(self, val: float | None) -> None:
         self["search_boost"] = val
 
     @property
@@ -69,7 +69,7 @@ class Metadata(dict[str, Any]):
         return self.get("exclude_from_search")
 
     @exclude_from_search.setter
-    def exclude_from_search(self, val: bool | None):
+    def exclude_from_search(self, val: bool | None) -> None:
         self["exclude_from_search"] = val
 
     @property
@@ -78,7 +78,7 @@ class Metadata(dict[str, Any]):
         return self.get("git_revision_date_localized")
 
     @revision_date.setter
-    def revision_date(self, val: bool | None):
+    def revision_date(self, val: bool | None) -> None:
         self["git_revision_date_localized"] = val
 
     @property
@@ -87,7 +87,7 @@ class Metadata(dict[str, Any]):
         return self.get("git_creation_date_localized")
 
     @creation_date.setter
-    def creation_date(self, val: bool | None):
+    def creation_date(self, val: bool | None) -> None:
         self["git_creation_date_localized"] = val
 
     @property
@@ -96,7 +96,7 @@ class Metadata(dict[str, Any]):
         return self.get("icon")
 
     @icon.setter
-    def icon(self, val: str | None):
+    def icon(self, val: str | None) -> None:
         # if val and "/" not in val:
         #     val = f"material/{val}"
         self["icon"] = val
@@ -113,7 +113,7 @@ class Metadata(dict[str, Any]):
         return self.get("status")
 
     @status.setter
-    def status(self, val: datatypes.PageStatusStr | str | None):
+    def status(self, val: datatypes.PageStatusStr | str | None) -> None:
         self["status"] = val
 
     @property
@@ -122,7 +122,7 @@ class Metadata(dict[str, Any]):
         return self.get("title")
 
     @title.setter
-    def title(self, val: str | None):
+    def title(self, val: str | None) -> None:
         self["title"] = val
 
     @property
@@ -131,7 +131,7 @@ class Metadata(dict[str, Any]):
         return self.get("subtitle")
 
     @subtitle.setter
-    def subtitle(self, val: str | None):
+    def subtitle(self, val: str | None) -> None:
         self["subtitle"] = val
 
     @property
@@ -140,7 +140,7 @@ class Metadata(dict[str, Any]):
         return self.get("description")
 
     @description.setter
-    def description(self, val: str | None):
+    def description(self, val: str | None) -> None:
         self["description"] = val
 
     @property
@@ -149,7 +149,7 @@ class Metadata(dict[str, Any]):
         return self.get("inclusion_level")
 
     @inclusion_level.setter
-    def inclusion_level(self, val: str | None):
+    def inclusion_level(self, val: str | None) -> None:
         self["inclusion_level"] = val
 
     @property
@@ -161,7 +161,7 @@ class Metadata(dict[str, Any]):
         return self.get("template")
 
     @template.setter
-    def template(self, val: str | None):
+    def template(self, val: str | None) -> None:
         self["template"] = val
 
     @property
@@ -170,16 +170,16 @@ class Metadata(dict[str, Any]):
         return self.get("tags", [])
 
     @tags.setter
-    def tags(self, val: list[str] | None):
+    def tags(self, val: list[str] | None) -> None:
         self["tags"] = val
 
     @property
-    def search(self) -> dict | None:
+    def search(self) -> dict[str, Any] | None:
         """A dictionary containing search-related settings (`"boost"` / `"exclude"`)."""
         return self.get("search")
 
     @search.setter
-    def search(self, val: dict | None):
+    def search(self, val: dict[str, Any] | None) -> None:
         self["search"] = val
 
     @property
@@ -188,7 +188,7 @@ class Metadata(dict[str, Any]):
         return self.get("render_macros")
 
     @render_macros.setter
-    def render_macros(self, val: bool | None):
+    def render_macros(self, val: bool | None) -> None:
         self["render_macros"] = val
 
     @classmethod

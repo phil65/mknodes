@@ -66,7 +66,7 @@ class MkBadge(mkimage.MkImage):
         text_color: str | None = None,
         use_gitlab_style: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -99,7 +99,7 @@ class MkBadge(mkimage.MkImage):
             return self._badge_color
         return self.ctx.theme.primary_color
 
-    def _to_markdown(self):
+    def _to_markdown(self) -> str:
         inner = htmlfilters.html_link(self.data.replace("\n", ""), self.url)
         return f"<body>{inner}</body>"
 

@@ -10,7 +10,7 @@ class MkTemplateTable(mknode.MkNode):
     ICON = "material/database"
     REQUIRED_EXTENSIONS = [resources.Extension("tables")]
 
-    def __init__(self, layout: str = "default", **kwargs):
+    def __init__(self, layout: str = "default", **kwargs) -> None:
         self.layout = layout
         super().__init__(**kwargs)
 
@@ -41,7 +41,7 @@ class MkTemplateTable(mknode.MkNode):
         return children
 
     @children.setter
-    def children(self, val):
+    def children(self, val) -> None:
         pass
 
 

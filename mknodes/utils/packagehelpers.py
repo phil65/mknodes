@@ -51,7 +51,7 @@ def import_dotted_path(path: str) -> type | types.ModuleType:
 
 
 class Dependency:
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.req = Requirement(name)
         self.name = self.req.name
         self._marker = name
@@ -68,7 +68,7 @@ class Dependency:
     def extras(self) -> list[str]:
         return get_extras(self.marker._markers) if self.marker else []
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}(name={self.name!r})"
 
 

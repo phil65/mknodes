@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class ConfigFile(superdict.SuperDict):
     filetype: yamling.SupportedFormats | None = None
 
-    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None):
+    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None) -> None:
         """Constructor.
 
         Args:
@@ -27,7 +27,7 @@ class ConfigFile(superdict.SuperDict):
         if self.path:
             self.load_file(self.path)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({self.path!r})"
 
     def __bool__(self):
@@ -59,7 +59,7 @@ class ConfigFile(superdict.SuperDict):
         self,
         path: str | os.PathLike[str],
         **storage_options: Any,
-    ):
+    ) -> None:
         """Load a file with loader of given file type.
 
         Args:
@@ -80,7 +80,7 @@ class YamlFile(ConfigFile):
         self,
         path: str | os.PathLike[str],
         **storage_options: Any,
-    ):
+    ) -> None:
         """Load a file with loader of given file type.
 
         Args:

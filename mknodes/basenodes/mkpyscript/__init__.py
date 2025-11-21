@@ -27,7 +27,7 @@ class MkPyScript(mknode.MkNode):
         height: str = "400px",
         width: str = "100%",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

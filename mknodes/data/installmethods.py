@@ -34,53 +34,53 @@ class InstallMethod:
 class PipInstall(InstallMethod):
     ID = "pip"
 
-    def info_text(self):
+    def info_text(self) -> str:
         return (
             "The latest released version is available at the [Python "
             f"package index](https://pypi.org/project/{self.project})."
         )
 
-    def install_instructions(self):
+    def install_instructions(self) -> str:
         return f"pip install {self.project}"
 
 
 class PipXInstall(InstallMethod):
     ID = "pipx"
 
-    def info_text(self):
+    def info_text(self) -> str:
         return (
             "[pipx](https://github.com/pypa/pipx) allows for the "
             "global installation of Python applications in isolated environments."
         )
 
-    def install_instructions(self):
+    def install_instructions(self) -> str:
         return f"pipx install {self.project}"
 
 
 class CondaForgeInstall(InstallMethod):
     ID = "conda_forge"
 
-    def info_text(self):
+    def info_text(self) -> str:
         return (
             "See the "
             f"[feedstock](https://github.com/conda-forge/{self.project}-feedstock) "
             "for more details."
         )
 
-    def install_instructions(self):
+    def install_instructions(self) -> str:
         return f"conda install -c conda-forge {self.project}"
 
 
 class HomebrewInstall(InstallMethod):
     ID = "homebrew"
 
-    def info_text(self):
+    def info_text(self) -> str:
         return (
             f"See the [formula](https://formulae.brew.sh/formula/{self.project}) "
             "for more details."
         )
 
-    def install_instructions(self):
+    def install_instructions(self) -> str:
         return f"brew install {self.project}"
 
 

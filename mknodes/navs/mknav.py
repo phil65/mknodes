@@ -36,9 +36,9 @@ class MkNav(mknode.MkNode):
         section: str | None = None,
         *,
         filename: str = "SUMMARY.md",
-        metadata: dict | None = None,
+        metadata: dict[str, Any] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -69,13 +69,15 @@ class MkNav(mknode.MkNode):
     # The child items are managed by the Navigation object. We forward relevant calls
     # to the Navigation instance.
 
-    def __setitem__(self, index: tuple | str, node: navigation.NavSubType):
+    def __setitem__(
+        self, index: tuple[Any, ...] | str, node: navigation.NavSubType
+    ) -> None:
         self.nav[index] = node
 
-    def __getitem__(self, index: tuple | str) -> navigation.NavSubType:
+    def __getitem__(self, index: tuple[Any, ...] | str) -> navigation.NavSubType:
         return self.nav[index]
 
-    def __delitem__(self, index: tuple | str):
+    def __delitem__(self, index: tuple[Any, ...] | str) -> None:
         del self.nav[index]
 
     # def __len__(self):
@@ -90,7 +92,7 @@ class MkNav(mknode.MkNode):
         return self.nav.index_page
 
     @index_page.setter
-    def index_page(self, value: mkpage.MkPage):
+    def index_page(self, value: mkpage.MkPage) -> None:
         value.parent = self
         self.nav.index_page = value
         self.nav.index_page._is_index = True
@@ -102,7 +104,7 @@ class MkNav(mknode.MkNode):
         return self.nav.all_items
 
     @children.setter
-    def children(self, items):
+    def children(self, items) -> None:
         self.nav = navigation.Navigation(items)
 
     def __add__(self, other: navigation.NavSubType):

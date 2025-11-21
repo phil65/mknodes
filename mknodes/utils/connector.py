@@ -16,15 +16,15 @@ logger = log.get_logger(__name__)
 class Connector[T]:
     def __init__(
         self, objects: T | list[T] | tuple[T, ...], max_depth: int | None = None
-    ):
+    ) -> None:
         objs = objects if isinstance(objects, list | tuple) else [objects]
         self.item_dict: dict[Hashable, str] = {}
         self.connections: list[tuple[Hashable, Hashable]] = []
         self.max_depth = max_depth
         self._connect(objs)
 
-    def _connect(self, objects: Sequence[T]):
-        def add_connections(item: T, depth: int = 0):
+    def _connect(self, objects: Sequence[T]) -> None:
+        def add_connections(item: T, depth: int = 0) -> None:
             identifier = self.get_id(item)
             if identifier not in self.item_dict:
                 # if item.__module__.startswith(base_module):

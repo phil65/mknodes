@@ -26,7 +26,7 @@ class MkCritic(mkcontainer.MkContainer):
         *,
         typ: CriticMarkStr = "highlight",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

@@ -46,7 +46,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
         ```
     """
 
-    def __init__(self, expand_wildcards: bool = True):
+    def __init__(self, expand_wildcards: bool = True) -> None:
         """Instanciate the registry.
 
         Args:
@@ -58,13 +58,13 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     def __getitem__(self, value: str):
         return self._modules.__getitem__(value)
 
-    def __setitem__(self, index: str, value: griffe.Module):
+    def __setitem__(self, index: str, value: griffe.Module) -> None:
         self._modules[index] = value
 
-    def __delitem__(self, index: str):
+    def __delitem__(self, index: str) -> None:
         del self._modules[index]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}()"
 
     def __iter__(self):

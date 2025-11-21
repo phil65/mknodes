@@ -20,7 +20,7 @@ V = TypeVar("V")
 
 
 class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
-    def __init__(self, data: dict[str, Any] | None = None, **kwargs: Any):
+    def __init__(self, data: dict[str, Any] | None = None, **kwargs: Any) -> None:
         self._data: dict[str, V] = data or {}
         self._data |= kwargs
 
@@ -29,10 +29,10 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
             return self._data.__getitem__(value)
         return self.get_section(*value)
 
-    def __setitem__(self, index: str, value: V):
+    def __setitem__(self, index: str, value: V) -> None:
         self._data[index] = value
 
-    def __delitem__(self, index: str):
+    def __delitem__(self, index: str) -> None:
         del self._data[index]
 
     def __bool__(self):
@@ -76,7 +76,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
     def serialize(self, mode: MarkupTypeStr) -> str:  # type: ignore[return]
         return serializefilters.serialize(self._data, mode)
 
-    def write(self, path: str | os.PathLike[str], mode: MarkupTypeStr):
+    def write(self, path: str | os.PathLike[str], mode: MarkupTypeStr) -> None:
         text = self.serialize(mode)
         pathhelpers.write_file(text, path)
 

@@ -19,7 +19,7 @@ logger = log.get_logger(__name__)
 class PackageInfo:
     """Class containing metadata.distribution-related information."""
 
-    def __init__(self, pkg_name: str):
+    def __init__(self, pkg_name: str) -> None:
         """Constructor.
 
         Args:

@@ -17,7 +17,7 @@ class MkIFrame(mktemplate.MkTemplate):
         width: int = 300,
         height: int = 150,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

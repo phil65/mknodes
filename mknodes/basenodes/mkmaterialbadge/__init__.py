@@ -28,7 +28,7 @@ class MkMaterialBadge(mktemplate.MkTemplate):
         align_right: bool = False,
         target: linkprovider.LinkableType | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

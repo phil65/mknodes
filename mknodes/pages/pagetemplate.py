@@ -22,7 +22,7 @@ class PageTemplate:
         *,
         extends: str | None = "base.html",
         parent: mk.MkPage | mk.MkNav | None = None,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -92,7 +92,7 @@ class PageTemplate:
         return self.announce.content
 
     @announcement_bar.setter
-    def announcement_bar(self, value):
+    def announcement_bar(self, value) -> None:
         import mknodes as mk
 
         if isinstance(value, mk.MkNode):
@@ -105,7 +105,7 @@ class PageTemplate:
         return self.content_block.content
 
     @content.setter
-    def content(self, value):
+    def content(self, value) -> None:
         self.content_block.content = value
 
     def build_html(self, md: markdown.Markdown | None = None) -> str | None:

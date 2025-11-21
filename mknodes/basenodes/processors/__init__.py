@@ -24,7 +24,7 @@ class TextProcessor:
 class AnnotationProcessor(TextProcessor):
     ID = "annotations"
 
-    def __init__(self, item):
+    def __init__(self, item) -> None:
         self.item = item
 
     def run(self, text: str) -> str:
@@ -34,7 +34,7 @@ class AnnotationProcessor(TextProcessor):
 class FootNotesProcessor(TextProcessor):
     ID = "footnotes"
 
-    def __init__(self, item):
+    def __init__(self, item) -> None:
         self.item = item
 
     def run(self, text: str) -> str:
@@ -44,7 +44,7 @@ class FootNotesProcessor(TextProcessor):
 class IndentationProcessor(TextProcessor):
     ID = "indentation"
 
-    def __init__(self, indent: int | str = 4):
+    def __init__(self, indent: int | str = 4) -> None:
         self.indent = " " * indent if isinstance(indent, int) else indent
 
     def run(self, text: str) -> str:
@@ -54,7 +54,7 @@ class IndentationProcessor(TextProcessor):
 class ShiftHeaderLevelProcessor(TextProcessor):
     ID = "shift_header_levels"
 
-    def __init__(self, level_shift):
+    def __init__(self, level_shift) -> None:
         self.level_shift = level_shift
 
     def run(self, text: str) -> str:
@@ -66,7 +66,7 @@ class ShiftHeaderLevelProcessor(TextProcessor):
 class RenderJinjaProcessor(TextProcessor):
     ID = "render_jinja_templates"
 
-    def __init__(self, env, variables=None):
+    def __init__(self, env, variables=None) -> None:
         self.env = env
         self.variables = variables or {}
 
@@ -77,7 +77,7 @@ class RenderJinjaProcessor(TextProcessor):
 class AppendCssClassesProcessor(TextProcessor):
     ID = "append_css_classes"
 
-    def __init__(self, item):
+    def __init__(self, item) -> None:
         self.item = item
 
     def run(self, text: str) -> str:
@@ -87,7 +87,7 @@ class AppendCssClassesProcessor(TextProcessor):
 class PrependMetadataProcessor(TextProcessor):
     ID = "prepend_metadata"
 
-    def __init__(self, meta: mk.MkPage | Metadata):
+    def __init__(self, meta: mk.MkPage | Metadata) -> None:
         self.meta = meta if isinstance(meta, Metadata) else meta.resolved_metadata
 
     def run(self, text: str) -> str:
@@ -98,7 +98,7 @@ class PrependMetadataProcessor(TextProcessor):
 class PrependHeaderProcessor(TextProcessor):
     ID = "prepend_header"
 
-    def __init__(self, header: str | None):
+    def __init__(self, header: str | None) -> None:
         self.header = header
 
     def run(self, text: str) -> str:

@@ -28,7 +28,7 @@ class MkTemplate(mkcontainer.MkContainer):
         block: str | None = None,
         variables: dict[str, Any] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -52,7 +52,7 @@ class MkTemplate(mkcontainer.MkContainer):
         return self.env.rendered_children
 
     @items.setter
-    def items(self, val):
+    def items(self, val) -> None:
         pass
 
     def _to_markdown(self) -> str:

@@ -30,7 +30,7 @@ class MkDoc(mknav.MkNav):
         module_template: str | None = None,
         flatten_nav: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -103,7 +103,7 @@ class MkDoc(mknav.MkNav):
         return pages + navs + [page]
 
     @children.setter
-    def children(self, val):
+    def children(self, val) -> None:
         pass
 
     @property

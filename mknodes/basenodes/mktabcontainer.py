@@ -26,7 +26,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         *,
         select_tab: int | str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -79,7 +79,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.title == tab_title)
         return self.items.index(item)
 
-    def set_selected(self, index: int | str):
+    def set_selected(self, index: int | str) -> None:
         """Set tab with given index as selected.
 
         Args:
@@ -89,7 +89,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         for i, item in enumerate(self.items):
             item.select = i == self.select_tab
 
-    def __setitem__(self, index: str, value: mknode.MkNode | str):
+    def __setitem__(self, index: str, value: mknode.MkNode | str) -> None:
         match value:
             case str():
                 item = mktext.MkText(value)

@@ -28,7 +28,7 @@ class Theme:
         name: str,
         *,
         data: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Instanciate the theme.
 
         Args:
@@ -83,7 +83,7 @@ class Theme:
         icon_color: datatypes.ColorType | None = None,
         border_color: datatypes.ColorType | None = None,
         font_color: datatypes.ColorType | None = None,
-    ):
+    ) -> None:
         """Add a custom admonition type.
 
         Args:
@@ -206,7 +206,7 @@ class Theme:
         """
         return "#333333"
 
-    def adapt_extensions(self, extensions: MutableMapping[str, dict]):
+    def adapt_extensions(self, extensions: MutableMapping[str, dict]) -> None:
         """Make adaptions to markdown extensions for the theme if required.
 
         Args:
@@ -220,7 +220,7 @@ class Theme:
                 # default style "table" looks broken with mkdocs
                 ext["linenums_style"] = "inline"  # pymdownx-inline
 
-    def adapt_extras(self, extras: dict):
+    def adapt_extras(self, extras: dict) -> None:
         """Adapt the "extras" dictionary containing additional information."""
 
     @property

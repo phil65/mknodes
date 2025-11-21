@@ -46,7 +46,7 @@ class LengthLimitRepr(reprlib.Repr):
     def repr_function(self, obj: Callable[..., Any], level):
         return obj.__name__
 
-    def repr_method(self, obj: types.MethodType, level):
+    def repr_method(self, obj: types.MethodType, level) -> str:
         return f"{obj.__self__.__class__.__name__}.{obj.__name__}"
 
 

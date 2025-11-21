@@ -121,54 +121,54 @@ nav = mk.MkNav("The nodes")
 
 
 @nav.route.page(is_index=True)
-def _(page: mk.MkPage):
+def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("nodes_index.jinja")
 
 
 @nav.route.nav("Base nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, BASE_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Image nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, IMAGE_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Container nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, CONTAINER_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Presentation nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, PRESENTATION_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Documentation nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, DOCUMENTATION_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("About-the-project nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, ABOUT_THE_PROJECT_NODES)
     page.created_by = create_section_for_nodes
 
 
 @nav.route.nav("Special nodes")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> None:
     page = nav.add_page(is_index=True, hide="toc")
     page += create_section_for_nodes(nav, SPECIAL_NODES)
     page.created_by = create_section_for_nodes

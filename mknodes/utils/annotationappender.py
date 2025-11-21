@@ -19,7 +19,7 @@ class AnnotationAppender:
 
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.count = 0
         self.matches: list[tuple[int, str]] = []
 
@@ -32,7 +32,7 @@ class AnnotationAppender:
     def append_markers(self, code: str) -> str:
         return re.sub(CLASS_REGEX, self, code) if "# (" not in code else code
 
-    def append_annotations(self, node):
+    def append_annotations(self, node) -> None:
         import mknodes as mk
 
         for index, dotted_path in self.matches:

@@ -20,12 +20,17 @@ logger = log.get_logger(__name__)
 class Router:
     """Class used for MkNav decorator routing."""
 
-    def __init__(self):
-        self._page_registry = {}
-        self._nav_registry = {}
-        self._registry = {}
+    def __init__(self) -> None:
+        self._page_registry: dict[
+            tuple[str, ...], tuple[Callable[..., mkpage.MkPage], Any, Any]
+        ] = {}
 
-    def register_nodes(self, nav: mknav.MkNav):
+        self._nav_registry: dict[
+            tuple[str, ...], tuple[Callable[..., mknav.MkNav], Any, Any]
+        ] = {}
+        self._registry: dict[tuple[str, ...], Any] = {}
+
+    def register_nodes(self, nav: mknav.MkNav) -> None:
         for path, fn in self._registry.items():
             node = fn()
             if fn.__name__ != "_":
@@ -64,7 +69,7 @@ class Router:
     def route(
         self,
         *path: str,
-    ) -> Callable[[Callable], Callable]:
+    ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         """Decorator method to use for routing.
 
         The decorated functions need to return either a MkPage or an MkNav.
@@ -77,7 +82,7 @@ class Router:
             path: The section path for the returned `MkNav` / `MkPage`
         """
 
-        def decorator(fn: Callable[..., NavSubType], path=path):
+        def decorator(fn: Callable[..., NavSubType], path: tuple[str, ...] = path):
             self._registry[path] = fn
             return fn
 
@@ -86,9 +91,9 @@ class Router:
     def route_nav(
         self,
         *path: str,
-        condition: Callable | bool | None = None,
+        condition: Callable[..., Any] | bool | None = None,
         **kwargs: Any,
-    ) -> Callable[[Callable], Callable]:
+    ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         """Decorator method to use for routing Navs.
 
         The decorated functions will get passed an MkNav as an argument which can be
@@ -113,9 +118,9 @@ class Router:
 
         def decorator(
             fn: Callable[..., mknav.MkNav],
-            path=path,
-            kwargs=kwargs,
-            condition=condition,
+            path: tuple[str, ...] = path,
+            kwargs: dict[str, Any] = kwargs,
+            condition: Callable[..., Any] | bool | None = condition,
         ):
             if condition is not False:
                 self._nav_registry[path] = (fn, kwargs, condition)
@@ -126,9 +131,9 @@ class Router:
     def route_page(
         self,
         *path: str,
-        condition: Callable | bool | None = None,
+        condition: Callable[..., Any] | bool | None = None,
         **kwargs: Any,
-    ) -> Callable[[Callable], Callable]:
+    ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         """Decorator method to use for routing Pages.
 
         The decorated functions will get passed an MkPage as an argument which can be
@@ -155,9 +160,9 @@ class Router:
 
         def decorator(
             fn: Callable[..., mkpage.MkPage],
-            path=path,
-            kwargs=kwargs,
-            condition=condition,
+            path: tuple[str, ...] = path,
+            kwargs: dict[str, Any] = kwargs,
+            condition: Callable[..., Any] | bool | None = condition,
         ):
             if condition is not False:
                 self._page_registry[path] = (fn, kwargs, condition)
@@ -171,7 +176,7 @@ if __name__ == "__main__":
     router = Router()
 
     @router.route_page("Test")
-    def _(page):
+    def _(page) -> None:
         pass
 
     router.register_nodes(nav)

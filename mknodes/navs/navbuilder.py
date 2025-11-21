@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 
 if TYPE_CHECKING:
@@ -26,8 +26,8 @@ class NavBuilder:
     sequences of titles, which are treated like paths.
     """
 
-    def __init__(self):
-        self._data = {}
+    def __init__(self) -> None:
+        self._data: dict[str | None, Any] = {}
 
     def __setitem__(self, keys: str | tuple[str, ...], value: str):
         """Add a link to a file into the nav, under the sequence of titles.
@@ -46,9 +46,6 @@ class NavBuilder:
             msg = f"The navigation path must not be empty (got {keys!r})"
             raise ValueError(msg)
         for key in keys:
-            if not isinstance(key, str):
-                msg = f"The navigation path must consist of strings, got {type(key)}"
-                raise TypeError(msg)
             if not key:
                 msg = f"The navigation name parts must not be empty (got {keys!r})"
                 raise ValueError(msg)

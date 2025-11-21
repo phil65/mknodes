@@ -78,7 +78,7 @@ class MkChangelog(mktext.MkText):
         sections: list[str] | None = None,
         repository: str | os.PathLike[str] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

@@ -29,7 +29,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         expanded: bool | None = None,
         title: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -66,7 +66,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         return self.argument
 
     @title.setter
-    def title(self, value: str):
+    def title(self, value: str) -> None:
         self.argument = value
 
     @property
@@ -74,7 +74,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         return self.attributes["type"]
 
     @typ.setter
-    def typ(self, value: datatypes.AdmonitionTypeStr):
+    def typ(self, value: datatypes.AdmonitionTypeStr) -> None:
         self.attributes["type"] = value
 
     @property
@@ -82,7 +82,7 @@ class MkDetailsBlock(mkblock.MkBlock):
         return self.attributes["open"]
 
     @expanded.setter
-    def expanded(self, value: bool):
+    def expanded(self, value: bool) -> None:
         self.attributes["open"] = value
 
 

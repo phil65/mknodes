@@ -93,12 +93,12 @@ class MaterialTheme(theme.Theme):
     name = "material"
     css_template = "css/theme_material.css"
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         self._foreground_color = None
         self.classic_admonition_style = True
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None
-        self.default_icons = {}
+        self.default_icons: dict[IconTypeStr, str] = {}
         self.status_icons: dict[str, StatusIcon] = {}
         self.accent_fg_color = None
         self.primary_bg_color = None
@@ -180,7 +180,7 @@ class MaterialTheme(theme.Theme):
             case "accent":
                 return pal.accent or fallback
 
-    def _set_color(self, color_type: Literal["primary", "accent"], value: str):
+    def _set_color(self, color_type: Literal["primary", "accent"], value: str) -> None:
         """Set the color for the first palette.
 
         Args:
@@ -262,7 +262,7 @@ class MaterialTheme(theme.Theme):
         )
         return color_str
 
-    def set_default_icon(self, icon_type: IconTypeStr, data: str):
+    def set_default_icon(self, icon_type: IconTypeStr, data: str) -> None:
         """Allows setting some custom default icons used throughout the theme.
 
         Args:
@@ -276,7 +276,7 @@ class MaterialTheme(theme.Theme):
         name: str,
         icon: str,
         description: str | None = None,
-    ):
+    ) -> None:
         """Add a custom status icon.
 
         Args:
@@ -292,7 +292,7 @@ class MaterialTheme(theme.Theme):
         identifier: str,
         tag: str,
         icon: str | None = None,
-    ):
+    ) -> None:
         """Add a page tag.
 
         The tag identifier must be set in page metadata.
@@ -305,7 +305,7 @@ class MaterialTheme(theme.Theme):
         """
         self.status_icons[identifier] = Tag(identifier, tag, icon)
 
-    def adapt_extensions(self, extensions: MutableMapping[str, dict]):
+    def adapt_extensions(self, extensions: MutableMapping[str, dict]) -> None:
         """MkDocs-Material needs some custom configuration for extensions.
 
         This method will get called during the build process in order to make sure
@@ -321,7 +321,7 @@ class MaterialTheme(theme.Theme):
             elif k == "pymdownx.tasklist":
                 ext["custom_checkbox"] = True
 
-    def adapt_extras(self, extras: dict):
+    def adapt_extras(self, extras: dict) -> None:
         if self.alternate_selector:
             extras.setdefault("alternate", []).extend(self.alternate_selector)
         for status in self.status_icons.values():

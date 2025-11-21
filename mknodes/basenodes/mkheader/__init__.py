@@ -22,7 +22,7 @@ class MkHeader(mknode.MkNode):
         level: int = 2,
         exclude_from_search: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

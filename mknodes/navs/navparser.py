@@ -80,7 +80,7 @@ def from_list(
     ls: list,
     nav: mk.MkNav,
     base_path: str = "",
-):
+) -> None:
     """Parse given list recursively and add found content to given MkNav.
 
     Args:
@@ -116,7 +116,7 @@ def from_dict(
     dct: dict[str, str | list | dict],
     nav: mk.MkNav,
     base_path: str = "",
-):
+) -> None:
     """Parse given dict recursively and add found content to given MkNav.
 
     Args:
@@ -141,7 +141,7 @@ def from_dict(
 class NavParser:
     """Class used for constructing MkNavs."""
 
-    def __init__(self, nav: mk.MkNav):
+    def __init__(self, nav: mk.MkNav) -> None:
         """Constructor.
 
         Args:
@@ -152,7 +152,7 @@ class NavParser:
     def json(
         self,
         obj: list | dict[str, str | list | dict],
-    ):
+    ) -> None:
         """Parse given list or dict and attach it to given MkNav.
 
         If no Nav is given, create a new one
@@ -386,7 +386,7 @@ class NavParser:
         return self._nav
 
 
-def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict):
+def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict) -> None:
     """Parse and add navigation items to the root navigation in a new style format.
 
     This function processes a list or dictionary of navigation items and adds them to the

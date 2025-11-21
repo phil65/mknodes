@@ -83,7 +83,7 @@ class MkGitBlog(mkblog.MkBlog):
         repo: str,
         posts_dir: str | os.PathLike[str],
         **kwargs: Any,
-    ):
+    ) -> None:
         """Instanciate a MkGitBlog.
 
         Args:
@@ -98,7 +98,7 @@ class MkGitBlog(mkblog.MkBlog):
         self.org = org
         self.repo = repo
 
-    async def add_commits(self):
+    async def add_commits(self) -> None:
         """Fetch commits and add them to the blog."""
         commits = await get_latest_commits(self.org, self.repo)
         for c in commits:

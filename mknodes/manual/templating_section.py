@@ -22,13 +22,13 @@ nav = mk.MkNav("Templating")
 
 
 @nav.route.page(is_index=True)
-def _(page: mk.MkPage):
+def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("templating/template_index.jinja")
 
 
 @nav.route.nav("Jinja Namespace")
-def _(nav: mk.MkNav):
-    def add_context_doc(container, context):
+def _(nav: mk.MkNav) -> None:
+    def add_context_doc(container, context) -> None:
         container += mk.MkDocStrings(
             context,
             show_root_toc_entry=False,
@@ -48,10 +48,10 @@ def _(nav: mk.MkNav):
 
 
 @nav.route.page("Utility filters")
-def _(page: mk.MkPage):
+def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("templating/template_filters.jinja")
 
 
 @nav.route.page("MkNode filters")
-def _(page: mk.MkPage):
+def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("templating/jinja_mknode_filters.jinja")

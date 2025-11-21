@@ -75,7 +75,7 @@ class MkPyDeps(mknode.MkNode):
         only_cycles: bool = False,
         clusters: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

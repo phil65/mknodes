@@ -28,7 +28,7 @@ class MkPrettyPrint(mktemplate.MkTemplate):
         sort_dicts: bool = False,
         underscore_numbers: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

@@ -33,7 +33,7 @@ class MkImage(mknode.MkNode):
         lazy: bool = False,
         path_dark_mode: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

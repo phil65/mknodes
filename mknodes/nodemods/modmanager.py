@@ -16,7 +16,7 @@ class ModManager:
         self,
         mods: list[mod.Mod] | None = None,
         css_classes: list[str] | None = None,
-    ):
+    ) -> None:
         self.mods = mods or []
         self._css_classes = css_classes or []
 
@@ -30,7 +30,7 @@ class ModManager:
     def __repr__(self):
         return reprhelpers.get_repr(self, mods=self.mods, css_classes=self._css_classes)
 
-    def append(self, other: str | mod.Mod):
+    def append(self, other: str | mod.Mod) -> None:
         if isinstance(other, str):
             self._css_classes.append(other)
         else:
@@ -76,7 +76,7 @@ class ModManager:
         overflow: bool = False,
         delay: float = 0.6,
         transition: str = "cubic-bezier(0,0,0,1)",
-    ):
+    ) -> None:
         """Add a parallax effect to the node.
 
         Args:
@@ -102,7 +102,7 @@ class ModManager:
         easing: str = "ease-in-out",
         reset: bool = True,
         duration: int = 800,
-    ):
+    ) -> None:
         """Add a scroll-reveal effect to the node.
 
         Args:

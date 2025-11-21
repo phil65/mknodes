@@ -24,7 +24,7 @@ class MkLicense(mktext.MkText):
         self,
         license_type: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

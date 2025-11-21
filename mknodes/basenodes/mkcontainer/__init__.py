@@ -63,7 +63,7 @@ class MkContainer(mknode.MkNode):
     def _to_markdown(self) -> str:
         return self.block_separator.join(i.to_markdown() for i in self.items)
 
-    def append(self, other: str | mknode.MkNode):
+    def append(self, other: str | mknode.MkNode) -> None:
         """Append a MkNode to the end of given MkPage.
 
         Args:
@@ -72,7 +72,7 @@ class MkContainer(mknode.MkNode):
         node = self.to_child_node(other)
         self.items.append(node)  # type: ignore[arg-type]
 
-    def insert(self, index: int, other: str | mknode.MkNode):
+    def insert(self, index: int, other: str | mknode.MkNode) -> None:
         """Insert a MkNode into desired position of given MkPage.
 
         Args:
@@ -87,7 +87,7 @@ class MkContainer(mknode.MkNode):
         return self.items
 
     @children.setter
-    def children(self, children: list[mknode.MkNode]):
+    def children(self, children: list[mknode.MkNode]) -> None:
         self.items = children
 
 

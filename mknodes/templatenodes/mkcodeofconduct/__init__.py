@@ -14,7 +14,7 @@ class MkCodeOfConduct(mktemplate.MkTemplate):
         self,
         contact_email: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

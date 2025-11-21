@@ -23,7 +23,7 @@ class MkClassTable(mktemplatetable.MkTemplateTable):
         *,
         layout: str = "default",
         **kwargs,
-    ):
+    ) -> None:
         self.klasses = klasses
         super().__init__(layout=layout, **kwargs)
 

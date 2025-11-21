@@ -90,7 +90,7 @@ if __name__ == "__main__":
     TEXT = "# **test**\n\n### test3\n\n## tsexx\n\n# tsexx\n"
 
     class TocNode(node.Node):
-        def __init__(self, name: str, **kwargs):
+        def __init__(self, name: str, **kwargs) -> None:
             super().__init__(**kwargs)
             self.name = name
 

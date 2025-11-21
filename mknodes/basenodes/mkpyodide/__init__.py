@@ -109,7 +109,7 @@ class MkPyodideTerminal(mknode.MkNode):
         width: str = "100%",
         terminal_id: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

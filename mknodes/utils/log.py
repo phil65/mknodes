@@ -8,13 +8,13 @@ from typing import Any
 
 
 class Logger:
-    def __init__(self, logger: logging.Logger):
+    def __init__(self, logger: logging.Logger) -> None:
         self.logger = logger
 
     def __getattr__(self, val: Any):
         return getattr(self.logger, val)
 
-    def log_dict(self, dct: dict[str, Any], level: int = logging.INFO):
+    def log_dict(self, dct: dict[str, Any], level: int = logging.INFO) -> None:
         for k, v in dct.items():
             self.logger.log(level, "%s: %s", k, v)
 
@@ -27,7 +27,7 @@ def get_logger(name: str | None = None):
     return logging.getLogger(name)
 
 
-def basic():
+def basic() -> None:
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 

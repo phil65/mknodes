@@ -72,7 +72,7 @@ def write_file(
     output_path: str | os.PathLike[str],
     errors: str | None = None,
     **kwargs: Any,
-):
+) -> None:
     """Write content to output_path, making sure any parent directories exist.
 
     Encoding will be chosen automatically based on type of content
@@ -95,7 +95,7 @@ def write_file(
         f.write(content)
 
 
-def write_files(mapping: Mapping[str | os.PathLike[str], str | bytes]):
+def write_files(mapping: Mapping[str | os.PathLike[str], str | bytes]) -> None:
     """Write a mapping of filename-to-content to disk.
 
     Args:

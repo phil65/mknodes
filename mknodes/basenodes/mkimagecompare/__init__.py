@@ -23,7 +23,7 @@ class MkImageCompare(mktemplate.MkTemplate):
         before_image: str,
         after_image: str,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

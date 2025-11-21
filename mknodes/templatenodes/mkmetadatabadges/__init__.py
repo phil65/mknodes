@@ -36,7 +36,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         use_gitlab_style: bool = False,
         block_separator: str = "\n",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -118,7 +118,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         ]
 
     @items.setter
-    def items(self, value):
+    def items(self, value) -> None:
         pass
 
 

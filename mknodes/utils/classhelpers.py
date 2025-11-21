@@ -358,7 +358,7 @@ def get_code_name(obj: Any) -> str:
     #     *,
     #     recursive: bool = False,
     #     predicate: Callable[[types.ModuleType], bool] | None = None,
-    #     submodule: types.ModuleType | str | tuple | list | None = None,
+    #     submodule: types.ModuleType | str | tuple[Any, ...] | list | None = None,
     # ):
     #     """Collect submodules.
 
@@ -377,7 +377,7 @@ def get_code_name(obj: Any) -> str:
     # def iter_modules(
     #     self,
     #     *,
-    #     submodule: types.ModuleType | str | tuple | list | None = None,
+    #     submodule: types.ModuleType | str | tuple[Any, ...] | list | None = None,
     #     recursive: bool = False,
     #     predicate: Callable[[types.ModuleType], bool] | None = None,
     #     _seen: set | None = None,

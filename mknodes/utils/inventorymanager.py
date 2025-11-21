@@ -40,7 +40,7 @@ class InventoryItem:
         uri: str,
         priority: int = 1,
         dispname: str | None = None,
-    ):
+    ) -> None:
         """Initialize the object.
 
         Args:
@@ -96,7 +96,7 @@ class BaseInventory(dict[str, InventoryItem]):
         items: list[InventoryItem] | None = None,
         project: str = "project",
         version: str = "0.0.0",
-    ):
+    ) -> None:
         """Initialize the object.
 
         Args:
@@ -171,7 +171,7 @@ class BaseInventory(dict[str, InventoryItem]):
 
 
 class Inventory(BaseInventory):
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str) -> None:
         self.base_url = base_url
 
     @classmethod
@@ -226,7 +226,7 @@ class Inventory(BaseInventory):
 class InventoryManager(Mapping, metaclass=abc.ABCMeta):
     # TODO: might be worth using collections.ChainMap, or just merging all inv files.
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.inv_files: list[BaseInventory] = []
 
     def add_inv_file(

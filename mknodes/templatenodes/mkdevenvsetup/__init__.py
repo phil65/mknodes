@@ -17,7 +17,7 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
         repo_url: str | None = None,
         build_backend: buildsystems.BuildSystemStr | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -45,7 +45,7 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
         return repo_url
 
     @repo_url.setter
-    def repo_url(self, value):
+    def repo_url(self, value) -> None:
         self._repo_url = value
 
     @property
@@ -55,7 +55,7 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
         return buildsystems.BUILD_SYSTEMS[self._build_backend]
 
     @build_backend.setter
-    def build_backend(self, value):
+    def build_backend(self, value) -> None:
         self._build_backend = value
 
 

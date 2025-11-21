@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pathlib
+from typing import Any
 
 from git import TYPE_CHECKING
 
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 
-class Navigation(dict):
+class Navigation(dict[tuple[Any, ...], NavSubType]):
     """An object representing A Website structure.
 
     The dict data consists of a mapping of a path-tuple -> NavSubType.
@@ -22,11 +23,11 @@ class Navigation(dict):
     A special item is the index page. It can be accessed via the corresponding attributes.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.index_page: mkpage.MkPage | None = None
 
-    def __setitem__(self, index: tuple | str, node: NavSubType):
+    def __setitem__(self, index: tuple[Any, ...] | str, node: NavSubType) -> None:
         """Put a Navigation-type instance into the registry.
 
         Index must be a unique path / title for this navigation object.
@@ -36,12 +37,12 @@ class Navigation(dict):
             index = (index,)
         super().__setitem__(index, node)
 
-    def __getitem__(self, index: tuple | str) -> NavSubType:
+    def __getitem__(self, index: tuple[Any, ...] | str) -> NavSubType:
         if isinstance(index, str):
             index = (index,)
         return super().__getitem__(index)
 
-    def __delitem__(self, index: tuple | str):
+    def __delitem__(self, index: tuple[Any, ...] | str) -> None:
         if isinstance(index, str):
             index = (index,)
         super().__delitem__(index)
@@ -74,7 +75,7 @@ class Navigation(dict):
         """Return all registered links."""
         return [node for node in self.values() if isinstance(node, mklink.MkLink)]
 
-    def to_nav_dict(self) -> dict[str, str | dict]:
+    def to_nav_dict(self) -> dict[str, str | dict[str, Any]]:
         """Return a nested dictionary ready to be used in the Mkocs nav section.
 
         The nav dict is a nested mapping describing the complete site navigation
@@ -84,13 +85,14 @@ class Navigation(dict):
         """
         import mknodes as mk
 
-        dct: dict[str, str | dict] = {}
+        dct: dict[str, str | dict[str, Any]] = {}
         if idx := self.index_page:
             dct[idx.title] = pathlib.Path(idx.resolved_file_path).as_posix()
         for path, item in self.items():
             data = dct
             for part in path[:-1]:
                 data = data.setdefault(part, {})
+            assert isinstance(data, dict)
             match item:
                 case mk.MkNav():
                     data[path[-1]] = item.nav.to_nav_dict()
@@ -112,8 +114,6 @@ class Navigation(dict):
         if idx := self.index_page:
             nav[idx.title] = pathlib.Path(idx.path).as_posix()
         for path, item in self.items():
-            if path is None:  # this check is just to make mypy happy
-                continue
             match item:
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()

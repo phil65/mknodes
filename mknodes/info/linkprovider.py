@@ -62,7 +62,7 @@ class LinkProvider:
         base_url: str = "",
         use_directory_urls: bool = True,
         include_stdlib: bool = False,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -80,7 +80,7 @@ class LinkProvider:
                 base_url="https://docs.python.org/3/",
             )
 
-    def set_excludes(self, excludes: Sequence[str]):
+    def set_excludes(self, excludes: Sequence[str]) -> None:
         """Set terms which should not get picked up by the linkprovider.
 
         That way handling of linking can be done by Markdown extensions.
@@ -90,7 +90,9 @@ class LinkProvider:
         """
         self.excludes.update(excludes)
 
-    def add_inv_file(self, path: str | os.PathLike[str], base_url: str | None = None):
+    def add_inv_file(
+        self, path: str | os.PathLike[str], base_url: str | None = None
+    ) -> None:
         """Add an inventory file to the inventory manager.
 
         Args:

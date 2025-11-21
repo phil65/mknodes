@@ -27,7 +27,7 @@ class MkBlock(mkcontainer.MkContainer):
         argument: str = "",
         attributes: dict[str, Any] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

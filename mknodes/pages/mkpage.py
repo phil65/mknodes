@@ -50,7 +50,7 @@ class MkPage(mkcontainer.MkContainer):
         is_index: bool | None = None,
         is_homepage: bool | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -129,7 +129,7 @@ class MkPage(mkcontainer.MkContainer):
         return textfilters.slugify(path or "") + ".md"
 
     @path.setter
-    def path(self, value: str | None):
+    def path(self, value: str | None) -> None:
         self._path = value
 
     @property
@@ -171,7 +171,7 @@ class MkPage(mkcontainer.MkContainer):
         return self.metadata.status
 
     @status.setter
-    def status(self, value: datatypes.PageStatusStr):
+    def status(self, value: datatypes.PageStatusStr) -> None:
         self.metadata.status = value
 
     @property
@@ -180,7 +180,7 @@ class MkPage(mkcontainer.MkContainer):
         return self.metadata.title or self.path.removesuffix(".md")
 
     @title.setter
-    def title(self, value: str):
+    def title(self, value: str) -> None:
         self.metadata.title = value
 
     @property
@@ -189,7 +189,7 @@ class MkPage(mkcontainer.MkContainer):
         return self.metadata.subtitle
 
     @subtitle.setter
-    def subtitle(self, value: str):
+    def subtitle(self, value: str) -> None:
         self.metadata.subtitle = value
 
     @property
@@ -198,7 +198,7 @@ class MkPage(mkcontainer.MkContainer):
         return self.metadata.icon
 
     @icon.setter
-    def icon(self, value: str):
+    def icon(self, value: str) -> None:
         self.metadata.icon = value
 
     @property
@@ -206,7 +206,7 @@ class MkPage(mkcontainer.MkContainer):
         return self._template
 
     @template.setter
-    def template(self, value: str | pagetemplate.PageTemplate | None):
+    def template(self, value: str | pagetemplate.PageTemplate | None) -> None:
         """Set the page template.
 
         If value is a string, use that string for metadata and clear the template object.

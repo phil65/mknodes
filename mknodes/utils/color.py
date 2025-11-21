@@ -54,7 +54,7 @@ class Color(coloraide.Color):
         """
         return self.filter("brightness", value, **kwargs)
 
-    def set_alpha(self, value: float):
+    def set_alpha(self, value: float) -> None:
         """Change the color alpha value.
 
         Args:

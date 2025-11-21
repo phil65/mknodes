@@ -47,13 +47,13 @@ class PackageRegistry(MutableMapping[str, packageinfo.PackageInfo], metaclass=AB
     def __getitem__(self, value: str) -> packageinfo.PackageInfo:
         return self._packages.__getitem__(value)
 
-    def __setitem__(self, index: str, value: packageinfo.PackageInfo):
+    def __setitem__(self, index: str, value: packageinfo.PackageInfo) -> None:
         self._packages[index] = value
 
-    def __delitem__(self, index: str):
+    def __delitem__(self, index: str) -> None:
         del self._packages[index]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}()"
 
     def __iter__(self):

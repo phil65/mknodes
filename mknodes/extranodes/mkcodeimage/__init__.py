@@ -51,7 +51,7 @@ class MkCodeImage(mknode.MkNode):
         *,
         title: str = "",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -86,7 +86,7 @@ class MkCodeImage(mknode.MkNode):
         cls,
         path: str | os.PathLike[str],
         *,
-        storage_options: dict | None = None,
+        storage_options: dict[str, Any] | None = None,
         title: str | None = None,
         **kwargs: Any,
     ):

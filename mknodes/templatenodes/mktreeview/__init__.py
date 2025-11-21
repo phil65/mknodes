@@ -34,7 +34,7 @@ class MkTreeView(mkcode.MkCode):
         predicate: Callable[..., bool] | None = None,
         exclude_folders: list[str] | str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

@@ -27,7 +27,7 @@ class MkList(mkcontainer.MkContainer):
         shorten_after: int | None = None,
         as_links: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

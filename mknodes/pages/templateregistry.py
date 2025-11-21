@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class TemplateRegistry:
-    def __init__(self):
+    def __init__(self) -> None:
         self.templates: dict[str, pagetemplate.PageTemplate] = {}
 
     def __getitem__(self, value: str) -> pagetemplate.PageTemplate:
@@ -19,7 +19,7 @@ class TemplateRegistry:
             pagetemplate.PageTemplate(filename=value),
         )
 
-    def __setitem__(self, index: str, value: pagetemplate.PageTemplate):
+    def __setitem__(self, index: str, value: pagetemplate.PageTemplate) -> None:
         self.templates[index] = value
 
     def __iter__(self) -> Iterator[pagetemplate.PageTemplate]:

@@ -20,7 +20,7 @@ class Node:
 
     # __slots__ = ("parent", "children")
 
-    def __init__(self, parent: Self | None = None):
+    def __init__(self, parent: Self | None = None) -> None:
         self._parent = parent
         self.children: list[Self] = []
 
@@ -30,7 +30,7 @@ class Node:
     def __iter__(self) -> Iterator[Self]:
         yield from self.children
 
-    def __rshift__(self, other: Self):
+    def __rshift__(self, other: Self) -> None:
         """Set children using >> bitshift operator for self >> other.
 
         Args:
@@ -38,7 +38,7 @@ class Node:
         """
         other.parent = self
 
-    def __lshift__(self, other: Self):
+    def __lshift__(self, other: Self) -> None:
         """Set parent using << bitshift operator for self << other.
 
         Args:
@@ -52,7 +52,7 @@ class Node:
         return self._parent
 
     @parent.setter
-    def parent(self, value):
+    def parent(self, value) -> None:
         # if self._parent is not None and self._parent != value:
         #     msg = f"{self!r}: parent {self._parent!r} replaced with {value!r}"
         #     logger.debug(msg)
@@ -73,7 +73,7 @@ class Node:
             setattr(result, k, copy.deepcopy(v, memo))
         return result
 
-    def append_child(self, item: Self):
+    def append_child(self, item: Self) -> None:
         """Append a node as a child.
 
         Args:
@@ -82,7 +82,7 @@ class Node:
         item.parent = self
         self.children.append(item)
 
-    def insert_children(self, idx: int, items: Sequence[Self]):
+    def insert_children(self, idx: int, items: Sequence[Self]) -> None:
         """Insert a list of child nodes at given index.
 
         Args:

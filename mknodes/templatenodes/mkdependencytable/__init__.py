@@ -27,7 +27,7 @@ class MkDependencyTable(mktemplatetable.MkTemplateTable):
         *,
         layout: PackageLayoutStr = "default",
         **kwargs: Any,
-    ):
+    ) -> None:
         self.package = package
         super().__init__(layout=layout, **kwargs)
 

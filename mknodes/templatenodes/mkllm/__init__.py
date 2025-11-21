@@ -42,7 +42,7 @@ class MkLlm(mktext.MkText):
         context: str | None = None,
         extra_files: Sequence[str | os.PathLike[str]] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

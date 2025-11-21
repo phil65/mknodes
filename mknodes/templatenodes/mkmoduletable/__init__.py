@@ -23,7 +23,7 @@ class MkModuleTable(mktemplatetable.MkTemplateTable):
         self,
         modules: Sequence[types.ModuleType | str],
         **kwargs,
-    ):
+    ) -> None:
         self.modules = [classhelpers.to_module(i, return_none=False) for i in modules]
         super().__init__(**kwargs)
 

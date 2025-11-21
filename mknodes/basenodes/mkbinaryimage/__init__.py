@@ -38,7 +38,7 @@ class MkBinaryImage(mkimage.MkImage):
         align: Literal["left", "right"] | None = None,
         width: int | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

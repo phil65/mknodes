@@ -67,7 +67,7 @@ class MkBaseTable(mkcontainer.MkContainer):
         return self._data
 
     @data.setter
-    def data(self, value):
+    def data(self, value) -> None:
         self._data = value
 
     @property

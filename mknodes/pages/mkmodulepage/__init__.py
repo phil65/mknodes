@@ -28,7 +28,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         title: str | None = None,
         template_path: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

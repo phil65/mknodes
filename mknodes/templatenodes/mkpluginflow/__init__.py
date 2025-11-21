@@ -24,7 +24,7 @@ class MkPluginFlow(mktemplate.MkTemplate):
         self,
         plugin: type[plugins.BasePlugin] | str | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

@@ -65,7 +65,7 @@ class PackageExtra:
 class FolderInfo:
     """Aggregates information about a working dir."""
 
-    def __init__(self, path: str | os.PathLike[str] | None = None):
+    def __init__(self, path: str | os.PathLike[str] | None = None) -> None:
         """Constructor.
 
         Args:

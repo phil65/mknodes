@@ -22,7 +22,7 @@ class MkJupyterLite(mknode.MkNode):
         height: str = "400px",
         width: str = "100%",
         **kwargs: Any,
-    ):
+    ) -> None:
         super().__init__(**kwargs)
         self.code = code
         self.height = height

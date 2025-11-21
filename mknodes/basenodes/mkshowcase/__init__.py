@@ -37,7 +37,7 @@ class MkShowcase(mkcontainer.MkContainer):
         *,
         column_count: int = 3,
         **kwargs: Any,
-    ):
+    ) -> None:
         self.column_count = column_count
         if isinstance(items, str | os.PathLike):
             text = pathhelpers.load_file_cached(str(items))
@@ -79,7 +79,7 @@ class MkShowcase(mkcontainer.MkContainer):
         image: str,
         target: str | mk.MkPage | mk.MkNav | None = None,
         caption: str | None = None,
-    ):
+    ) -> None:
         """Add an image card to the node.
 
         Args:

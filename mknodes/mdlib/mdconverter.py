@@ -33,7 +33,7 @@ class MdConverter(markdown.Markdown):
         custom_fences: list[dict] | None = None,
         output_format: Literal["xhtml", "html"] = "html",
         tab_length: int = 4,
-    ):
+    ) -> None:
         configs = extension_configs or {}
         if custom_fences:
             dct = configs.setdefault("pymdownx.superfences", {})
@@ -47,6 +47,6 @@ class MdConverter(markdown.Markdown):
             tab_length=tab_length,
         )
 
-    def register_extensions(self, extensions: dict[str, Any]):
+    def register_extensions(self, extensions: dict[str, Any]) -> None:
         ext_names = list(extensions.keys())
         self.registerExtensions(ext_names, extensions)

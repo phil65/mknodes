@@ -23,7 +23,7 @@ class MkInstallGuide(mktemplate.MkTemplate):
         package_repos: list[installmethods.InstallMethodStr] | None = None,
         header_level: int = 3,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -51,7 +51,7 @@ class MkInstallGuide(mktemplate.MkTemplate):
         return self._distribution or self.ctx.metadata.distribution_name
 
     @distribution.setter
-    def distribution(self, value):
+    def distribution(self, value) -> None:
         self._distribution = value
 
 

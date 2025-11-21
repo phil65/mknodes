@@ -23,7 +23,7 @@ class MkDevTools(mktemplate.MkTemplate):
         self,
         tools: list[tools.Tool] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

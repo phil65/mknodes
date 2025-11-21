@@ -24,7 +24,7 @@ class MkProgressBar(mknode.MkNode):
         label: str | Literal[True] | None = True,
         style: Literal["thin", "candystripe", "candystripe_animated"] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

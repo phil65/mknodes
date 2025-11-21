@@ -22,7 +22,7 @@ class MkTask(mkcontainer.MkContainer):
         value: bool = False,
         content: list | str | mknode.MkNode | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -49,7 +49,7 @@ class MkTaskList(mkcontainer.MkContainer):
         self,
         content: list | str | mknode.MkNode | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -58,7 +58,7 @@ class MkTaskList(mkcontainer.MkContainer):
         """
         super().__init__(content=content, block_separator="", **kwargs)
 
-    def add_item(self, content, value: bool):
+    def add_item(self, content, value: bool) -> None:
         item = MkTask(value, content)
         self.append(item)
 

@@ -25,7 +25,7 @@ class MkFootNote(mkcontainer.MkContainer):
         num: int,
         content: str | mk.MkNode,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -111,7 +111,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         item = next(i for i in self.items if i.num == num)
         return self.items.index(item)
 
-    def __setitem__(self, index: int, value: mk.MkNode | str):
+    def __setitem__(self, index: int, value: mk.MkNode | str) -> None:
         match value:
             case MkFootNote():
                 node = value

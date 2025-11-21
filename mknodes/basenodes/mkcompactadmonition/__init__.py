@@ -24,7 +24,7 @@ class MkCompactAdmonition(mknode.MkNode):
         *,
         typ: datatypes.AdmonitionTypeStr | str = "info",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

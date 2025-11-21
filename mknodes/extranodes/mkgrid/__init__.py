@@ -15,7 +15,9 @@ class MkGrid(mkcontainer.MkContainer):
 
     ICON = "material/view-grid"
 
-    def __init__(self, items: list[str | mknode.MkNode] | None = None, **kwargs: Any):
+    def __init__(
+        self, items: list[str | mknode.MkNode] | None = None, **kwargs: Any
+    ) -> None:
         """Initialize the node.
 
         Args:

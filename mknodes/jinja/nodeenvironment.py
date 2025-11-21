@@ -28,7 +28,7 @@ class NodeEnvironment(jinjarope.Environment):
     - collects rendered nodes
     """
 
-    def __init__(self, node: mk.MkNode, **kwargs: Any):
+    def __init__(self, node: mk.MkNode, **kwargs: Any) -> None:
         """Constructor.
 
         Args:
@@ -49,7 +49,7 @@ class NodeEnvironment(jinjarope.Environment):
             klass = getattr(mk, kls_name)  # type: Any
 
             class _WrappedMkNode(klass):
-                def __post_init__(_self):  # noqa: N805
+                def __post_init__(_self) -> None:  # noqa: N805
                     _self.parent = self.node
                     self.rendered_nodes.append(_self)
 
@@ -67,7 +67,7 @@ class NodeEnvironment(jinjarope.Environment):
             self._node_filters[kls_name] = jinja2.pass_context(wrapped)
         self.setup_environment()
 
-    def setup_environment(self):
+    def setup_environment(self) -> None:
         """Set up the environment by adding node/context specific filters / globals.
 
         Mainly this adds wrapper functions / classes for all the MkNodes in order

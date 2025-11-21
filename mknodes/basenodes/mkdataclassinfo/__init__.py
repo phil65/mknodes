@@ -23,7 +23,7 @@ class MkDataClassInfo(mknode.MkNode):
         include_docstring: bool = True,
         skip_private: bool = True,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

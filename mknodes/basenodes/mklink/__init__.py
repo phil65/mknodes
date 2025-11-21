@@ -35,7 +35,7 @@ class MkLink(mknode.MkNode):
         as_button: bool = False,
         primary_color: bool = False,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

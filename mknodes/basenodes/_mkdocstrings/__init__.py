@@ -67,7 +67,7 @@ class MkDocStrings(mknode.MkNode):
         signature_crossrefs: bool | None = None,
         separate_signature: bool | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Docstring section.
 
         Global options for DocStrings can be overridden by setting the keyword arguments

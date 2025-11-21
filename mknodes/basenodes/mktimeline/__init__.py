@@ -51,7 +51,7 @@ class MkTimelineItem(mknode.MkNode):
         button_text: str = "More",
         image: str = "",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -77,7 +77,7 @@ class MkTimelineItem(mknode.MkNode):
         return [self.content]
 
     @children.setter
-    def children(self, val):
+    def children(self, val) -> None:
         pass
 
     def get_element(self) -> xml.Div:
@@ -121,9 +121,9 @@ class MkTimeline(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        items: list | str | dict | os.PathLike[str] | None = None,
+        items: list | str | dict[str, Any] | os.PathLike[str] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

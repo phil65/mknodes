@@ -28,7 +28,7 @@ class MkIcon(mknode.MkNode):
         rotate: iconfilters.Rotation | None = None,
         box: bool | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

@@ -38,13 +38,13 @@ class RepoRegistry(MutableMapping[str, gitrepository.GitRepository], metaclass=A
     def __getitem__(self, key: str):
         return self._repos.__getitem__(key)
 
-    def __setitem__(self, index: str, value: gitrepository.GitRepository):
+    def __setitem__(self, index: str, value: gitrepository.GitRepository) -> None:
         self._repos[index] = value
 
-    def __delitem__(self, index: str):
+    def __delitem__(self, index: str) -> None:
         del self._repos[index]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}()"
 
     def __iter__(self):
