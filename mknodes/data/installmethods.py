@@ -23,7 +23,7 @@ class InstallMethod:
         raise NotImplementedError
 
     @classmethod
-    def get_installmethods(cls):
+    def get_installmethods(cls) -> dict[str, type[InstallMethod]]:
         return {i.ID: i for i in cls.__subclasses__()}
 
     @classmethod

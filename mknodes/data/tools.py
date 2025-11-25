@@ -2,10 +2,18 @@ from __future__ import annotations
 
 import dataclasses
 import tomllib
+from typing import TYPE_CHECKING, Any
 
 from mknodes import paths
-from mknodes.info import folderinfo
 from mknodes.utils import pathhelpers
+
+
+if TYPE_CHECKING:
+    import pathlib
+
+    import upath
+
+    from mknodes.info import folderinfo
 
 
 @dataclasses.dataclass
@@ -18,8 +26,8 @@ class Tool:
     setup_cmd: str | None = None
     config_syntax: str | None = None
     pre_commit_repo: str | None = None
-    configs: list[dict] = dataclasses.field(default_factory=list)
-    cfg: dict = dataclasses.field(default_factory=dict)
+    configs: list[dict[str, Any]] = dataclasses.field(default_factory=list)
+    cfg: dict[str, Any] = dataclasses.field(default_factory=dict)
 
     def is_used(self, folder: folderinfo.FolderInfo) -> bool:
         """Return whether tool is used for given directory.
@@ -58,7 +66,7 @@ class Tool:
         return None
 
     @classmethod
-    def from_file(cls, path):
+    def from_file(cls, path: upath.UPath | pathlib.Path):
         txt = path.read_text(encoding="utf-8")
         dct = tomllib.loads(txt)
         return cls(**dct)
@@ -74,6 +82,8 @@ def get_tools_for_folder(folder) -> list[Tool]:
 
 
 if __name__ == "__main__":
+    from mknodes.info import folderinfo
+
     fi = folderinfo.FolderInfo()
     tools = get_tools_for_folder(fi)
     print(tools)

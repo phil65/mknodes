@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from pymdownx import superfences
 
@@ -22,7 +22,7 @@ class Fences:
 
     name: str
     class_name: str
-    format_fn: str | Callable
+    format_fn: str | Callable[..., Any]
 
     def as_dict(self):
         """Return fence data as a dictionary."""
@@ -35,9 +35,4 @@ mermaid_fence = Fences(
     format_fn=superfences.fence_code_format,
 )
 
-FENCES: dict[str, Fences] = {
-    fence.name: fence
-    for fence in [
-        mermaid_fence,
-    ]
-}
+FENCES: dict[str, Fences] = {fence.name: fence for fence in [mermaid_fence]}

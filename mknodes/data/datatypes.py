@@ -81,24 +81,24 @@ class DataclassInstance(Protocol):
 
 
 PrettyPrintableType = (
-    dict
-    | list
+    dict[str, Any]
+    | list[Any]
     | str
-    | tuple
-    | set
+    | tuple[Any, ...]
+    | set[Any]
     | bytes
     | bytearray
-    | MappingProxyType
+    | MappingProxyType[str, Any]
     | SimpleNamespace
-    | ValuesView
-    | KeysView
-    | collections.Counter
-    | collections.ChainMap
-    | collections.deque
-    | collections.UserDict
-    | collections.UserList
+    | ValuesView[Any]
+    | KeysView[Any]
+    | collections.Counter[Any]
+    | collections.ChainMap[Any, Any]
+    | collections.deque[Any]
+    | collections.UserDict[Any, Any]
+    | collections.UserList[Any]
     | collections.UserString
-    | ItemsView
+    | ItemsView[str, Any]
     | DataclassInstance
 )
 
