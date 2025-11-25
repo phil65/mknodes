@@ -60,7 +60,7 @@ class Navigation(dict[tuple[Any, ...], NavSubType]):
     @property
     def navs(self) -> list[mknav.MkNav]:
         """Return all registered navs."""
-        return [node for node in self.values() if isinstance(node, mknav.MkNav)]
+        return [node for node in self.values() if isinstance(node, mknav.MkNav)]  # pyright: ignore[reportReturnType]
 
     @property
     def pages(self) -> list[mkpage.MkPage]:
@@ -88,7 +88,7 @@ class Navigation(dict[tuple[Any, ...], NavSubType]):
         for path, item in self.items():
             data = dct
             for part in path[:-1]:
-                data = data.setdefault(part, {})
+                data = data.setdefault(part, {})  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
             assert isinstance(data, dict)
             match item:
                 case mk.MkNav():

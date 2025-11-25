@@ -31,10 +31,7 @@ class NavRouter:
         """
         self._nav = nav
 
-    def __call__(
-        self,
-        *path: str,
-    ) -> Callable[[NavSubTypeCallable], Any]:
+    def __call__(self, *path: str) -> Callable[[NavSubTypeCallable], Any]:
         """Decorator method to use for routing.
 
         The decorated functions need to return either a MkPage or an MkNav.
@@ -62,11 +59,7 @@ class NavRouter:
 
         return decorator
 
-    def nav(
-        self,
-        *path: str,
-        **kwargs: Any,
-    ) -> Callable[[NavCallable], Any]:
+    def nav(self, *path: str, **kwargs: Any) -> Callable[[NavCallable], Any]:
         """Decorator method to use for routing Navs.
 
         The decorated functions will get passed an MkNav as an argument which can be
@@ -103,11 +96,7 @@ class NavRouter:
 
         return decorator
 
-    def page(
-        self,
-        *path: str,
-        **kwargs: Any,
-    ) -> PageDecorator:
+    def page(self, *path: str, **kwargs: Any) -> PageDecorator:
         """Decorator method to use for routing Pages.
 
         The decorated functions will get passed an MkPage as an argument which can be

@@ -41,7 +41,7 @@ class MkTabContainer(mkcontainer.MkContainer):
                 items = tabs
             case _:
                 items = [self.Tab(title=k, content=v) for k, v in tabs.items()]
-        self.select_tab = select_tab
+        self.select_tab: int | str | None = select_tab
         super().__init__(content=items, **kwargs)
         self.block_separator = "\n"
 
