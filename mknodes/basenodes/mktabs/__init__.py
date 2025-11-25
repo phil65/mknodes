@@ -42,15 +42,15 @@ class MkTabBlock(mkblock.MkBlock):
             self.select = select
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self.argument
 
     @title.setter
-    def title(self, value) -> None:
+    def title(self, value: str) -> None:
         self.argument = value
 
     @property
-    def new(self):
+    def new(self) -> bool:
         return self.attributes.get("new", False)
 
     @new.setter
@@ -58,7 +58,7 @@ class MkTabBlock(mkblock.MkBlock):
         self.attributes["new"] = value
 
     @property
-    def select(self):
+    def select(self) -> bool:
         return self.attributes.get("select", False)
 
     @select.setter
