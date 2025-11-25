@@ -32,7 +32,7 @@ class Fences:
 mermaid_fence = Fences(
     name="mermaid",
     class_name="mermaid",
-    format_fn=superfences.fence_code_format,
+    format_fn=superfences.fence_code_format,  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
 )
 
 FENCES: dict[str, Fences] = {fence.name: fence for fence in [mermaid_fence]}

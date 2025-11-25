@@ -13,7 +13,7 @@ InstallMethodStr = Literal["pip", "pipx", "conda_forge", "homebrew"]
 
 @dataclasses.dataclass(frozen=True)
 class InstallMethod:
-    ID: ClassVar
+    ID: ClassVar[str]
     project: str
 
     def info_text(self) -> str:

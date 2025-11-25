@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     import mknodes as mk
     from mknodes.info.linkprovider import LinkableType
     from mknodes.jinja import nodeenvironment
+    from mknodes.utils.resources import JSFile, JSText
 
 
 @jinja2.pass_environment
@@ -123,7 +124,7 @@ def url(context: runtime.Context, value: str) -> str:
 
 
 @jinja2.pass_context
-def script_tag(context: runtime.Context, extra_script):
+def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText):
     """Converts an ExtraScript value / JSResource to an HTML <script> tag line.
 
     Args:
@@ -132,8 +133,8 @@ def script_tag(context: runtime.Context, extra_script):
     """
     html = '<script src="{0}"'
     if not isinstance(extra_script, str):
-        if extra_script.type:
-            html += ' type="{1.type}"'
+        if extra_script.typ:
+            html += ' type="{1.type}"'  # type or typ?
         if extra_script.defer:
             html += " defer"
         if extra_script.async_:

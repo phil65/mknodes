@@ -12,6 +12,10 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from jinja2.runtime import Context
+
     import mknodes as mk
 
 
@@ -35,18 +39,18 @@ class NodeEnvironment(jinjarope.Environment):
             node: Node this environment belongs to.
             kwargs: Optional keyword arguments passed to parent
         """
-        super().__init__(**kwargs)
+        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()
 
         import mknodes as mk
 
-        self._node_filters = {}
-        self._wrapped_klasses = {}
+        self._node_filters: dict[str, Callable[..., mk.MkNode]] = {}
+        self._wrapped_klasses: dict[str, type[_WrappedMkNode]] = {}
 
         for kls_name in mk.__all__:
-            klass = getattr(mk, kls_name)  # type: Any
+            klass: Any = getattr(mk, kls_name)
 
             class _WrappedMkNode(klass):
                 def __post_init__(_self) -> None:  # noqa: N805
@@ -58,7 +62,12 @@ class NodeEnvironment(jinjarope.Environment):
             _WrappedMkNode.__qualname__ = "<locals>." + _WrappedMkNode.__qualname__
             self._wrapped_klasses[kls_name] = _WrappedMkNode
 
-            def wrapped(ctx, *args, kls_name=kls_name, **kwargs):
+            def wrapped(
+                ctx: Context,  # pyright: ignore[reportUnusedParameter]
+                *args: Any,
+                kls_name: str = kls_name,
+                **kwargs: Any,
+            ) -> mk.MkNode:
                 kls = getattr(mk, kls_name)
                 node = kls(*args, parent=self.node, **kwargs)
                 self.rendered_nodes.append(node)
