@@ -219,7 +219,8 @@ class Inventory(BaseInventory):
             base_url = os.path.dirname(url)  # noqa: PTH120
         return cls.from_file(buffer, base_url or "", domains=domains)
 
-    def __getitem__(self, value: str) -> str:
+    def __getitem__(self, value: str) -> str:  # type: ignore[override]
+        # TODO: return type should be same as base class
         val = super().__getitem__(value)
         return posixpath.join(self.base_url, val.uri)
 
