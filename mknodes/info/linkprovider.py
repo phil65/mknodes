@@ -120,7 +120,7 @@ class LinkProvider:
             case griffe.Module():
                 dotted_path = mod.canonical_path
         if dotted_path in self.inv_manager:
-            return self.inv_manager[dotted_path]
+            return self.inv_manager[dotted_path]  # type: ignore[return-value] # pyright: ignore[reportReturnType]
         module = dotted_path.split(".")[0]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
@@ -167,7 +167,7 @@ class LinkProvider:
                 dotted_path = kls
                 module = dotted_path.split(".")[0]
         if dotted_path in self.inv_manager:
-            return self.inv_manager[dotted_path]
+            return self.inv_manager[dotted_path]  # type: ignore[return-value]  # pyright: ignore[reportReturnType]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
     def link_for_klass(self, kls: type | str | griffe.Class) -> str:
