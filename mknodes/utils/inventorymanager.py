@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from collections.abc import Collection, Mapping
+from collections.abc import Collection, Iterator, Mapping
 import io
 import itertools
 import os
@@ -172,6 +172,7 @@ class BaseInventory(dict[str, InventoryItem]):
 
 class Inventory(BaseInventory):
     def __init__(self, base_url: str) -> None:
+        super().__init__()
         self.base_url = base_url
 
     @classmethod
@@ -218,12 +219,12 @@ class Inventory(BaseInventory):
             base_url = os.path.dirname(url)  # noqa: PTH120
         return cls.from_file(buffer, base_url or "", domains=domains)
 
-    def __getitem__(self, value: str):
+    def __getitem__(self, value: str) -> str:
         val = super().__getitem__(value)
         return posixpath.join(self.base_url, val.uri)
 
 
-class InventoryManager(Mapping, metaclass=abc.ABCMeta):
+class InventoryManager(Mapping[str, InventoryItem], metaclass=abc.ABCMeta):
     # TODO: might be worth using collections.ChainMap, or just merging all inv files.
 
     def __init__(self) -> None:
@@ -253,7 +254,9 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
             msg = "Base URL needed for loading from file."
             raise ValueError(msg)
 
-    def __getitem__(self, name: str | type | types.FunctionType | types.MethodType):
+    def __getitem__(
+        self, name: str | type | types.FunctionType | types.MethodType
+    ) -> InventoryItem:
         match name:
             case type():
                 path = f"{name.__module__}.{name.__qualname__}"
@@ -266,10 +269,10 @@ class InventoryManager(Mapping, metaclass=abc.ABCMeta):
                 return inv_file[path]
         raise KeyError(name)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return itertools.chain(*[inv_file.keys() for inv_file in self.inv_files])
 
-    def __len__(self):
+    def __len__(self) -> int:
         return sum(len(i) for i in self.inv_files)
 
 
