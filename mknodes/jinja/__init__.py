@@ -24,8 +24,8 @@ def setup_env(env: jinjarope.Environment) -> None:
     """
     try:
         node_klasses = get_nodes()
-        env.globals |= dict(mk=node_klasses, _mk=node_klasses)
-        env.globals |= {"inspecthelpers": inspecthelpers, "classhelpers": classhelpers}
+        env.globals |= dict(mk=node_klasses, _mk=node_klasses)  # pyright: ignore[reportAttributeAccessIssue]
+        env.globals |= {"inspecthelpers": inspecthelpers, "classhelpers": classhelpers}  # pyright: ignore[reportAttributeAccessIssue]
         path = paths.RESOURCES / "filters.toml"
         env.load_jinja_file(path)
         env.filters |= node_klasses

@@ -97,11 +97,11 @@ class NodeEnvironment(jinjarope.Environment):
         self.loader = jinjarope.ChoiceLoader(loaders)
 
         self.filters.update(self._node_filters)
-        self.globals["parent_page"] = self.node.parent_page
-        self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None
-        self.globals["node"] = self.node
+        self.globals["parent_page"] = self.node.parent_page  # pyright: ignore[reportArgumentType]
+        self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None  # pyright: ignore[reportArgumentType]
+        self.globals["node"] = self.node  # pyright: ignore[reportArgumentType]
         self.globals["file"] = self.node.nodefile
-        self.globals["mk"] = self._wrapped_klasses
+        self.globals["mk"] = self._wrapped_klasses  # pyright: ignore[reportArgumentType]
         self.globals |= self.node.ctx.as_dict()
 
     # def get_extra_paths(self) -> list[str]:
