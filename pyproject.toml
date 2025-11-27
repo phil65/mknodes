@@ -35,7 +35,7 @@ classifiers = [
 ]
 dependencies = [
   "anybadge",
-  "anyenv[httpx]>=1.1.0",
+  "anyenv[httpx]>=1.9.0",
   "clinspector",
   "coloraide",
   "epregistry",
@@ -71,9 +71,6 @@ Source = "https://github.com/phil65/mknodes"
 
 [project.entry-points."jinjarope.environment"]
 mknodes = "mknodes.jinja:setup_env"
-
-[project.optional-dependencies]
-ui = ["githubkit"]
 
 [dependency-groups]
 dev = [
