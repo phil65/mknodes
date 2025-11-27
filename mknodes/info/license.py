@@ -43,7 +43,9 @@ class License:
         for lic in db:
             if name_or_id in {lic["name"].lower(), lic["licenseId"].lower()}:
                 url = lic["detailsUrl"]
-                response = anyenv.get_json_sync(url, return_type=dict, cache=True)
+                response = anyenv.get_json_sync(
+                    url, return_type=dict[str, Any], cache=True
+                )
                 return cls(
                     name=lic["name"],
                     identifier=lic["licenseId"],

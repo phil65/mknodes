@@ -14,12 +14,12 @@ class MkDocsConfigFile(configfile.YamlFile):
         return self.get_section("theme")
 
     @property
-    def markdown_extensions(self) -> list:
+    def markdown_extensions(self) -> list[Any]:
         """Return a list of markdown extensions."""
         return self.get_section("markdown_extensions") or []
 
     @property
-    def plugins(self) -> list:
+    def plugins(self) -> list[Any]:
         """Return a list of plugins from the config."""
         return self.get_section("plugins") or []
 

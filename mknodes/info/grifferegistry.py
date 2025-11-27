@@ -96,7 +96,8 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
             griffe_mod = loader.load(module_name)
             assert isinstance(griffe_mod, griffe.Object)
             if self.expand_wildcards:
-                loader.expand_wildcards(griffe_mod, external=True)
+                loader.expand_wildcards(griffe_mod, external=True)  # pyright: ignore[reportUnknownMemberType]
+            assert isinstance(griffe_mod, griffe.Module)
             self._modules[module_name] = griffe_mod
         griffe_mod = self._modules[module_name]
         return griffe_mod[sub_mod_path] if sub_mod_path else griffe_mod

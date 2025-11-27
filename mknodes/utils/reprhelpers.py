@@ -37,16 +37,16 @@ class LengthLimitRepr(reprlib.Repr):
             maxother=60,
         )
 
-    def repr_type(self, obj: type, level):
+    def repr_type(self, obj: type, _level: Any):
         return obj.__name__
 
-    def repr_module(self, obj: types.ModuleType, level):
+    def repr_module(self, obj: types.ModuleType, _level: Any):
         return obj.__name__
 
-    def repr_function(self, obj: Callable[..., Any], level):
+    def repr_function(self, obj: Callable[..., Any], _level: Any):
         return obj.__name__
 
-    def repr_method(self, obj: types.MethodType, level) -> str:
+    def repr_method(self, obj: types.MethodType, _level: Any) -> str:
         return f"{obj.__self__.__class__.__name__}.{obj.__name__}"
 
 

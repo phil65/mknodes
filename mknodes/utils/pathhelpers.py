@@ -38,11 +38,11 @@ def fsspec_copy(
     if isinstance(source_path, upath.UPath):
         src = fsspec.FSMap(source_path.path, source_path.fs)
     else:
-        src = fsspec.get_mapper(str(source_path))
+        src = fsspec.get_mapper(str(source_path))  # pyright: ignore[reportUnknownMemberType]
     if isinstance(output_path, upath.UPath):
         target = fsspec.FSMap(output_path.path, output_path.fs)
     else:
-        target = fsspec.get_mapper(str(output_path))
+        target = fsspec.get_mapper(str(output_path))  # pyright: ignore[reportUnknownMemberType]
     if not exist_ok and any(key in target for key in src):
         msg = "cannot overwrite if exist_ok is set to False"
         raise RuntimeError(msg)

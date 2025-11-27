@@ -20,7 +20,7 @@ V = TypeVar("V")
 
 
 class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
-    def __init__(self, data: dict[str, Any] | None = None, **kwargs: Any) -> None:
+    def __init__(self, data: dict[str, V] | None = None, **kwargs: Any) -> None:
         self._data: dict[str, V] = data or {}
         self._data |= kwargs
 

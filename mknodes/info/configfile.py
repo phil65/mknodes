@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     import upath
 
 
-class ConfigFile(superdict.SuperDict):
+class ConfigFile(superdict.SuperDict[Any]):
     filetype: yamling.SupportedFormats | None = None
 
     def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None) -> None:
@@ -33,11 +33,7 @@ class ConfigFile(superdict.SuperDict):
     def __bool__(self):
         return bool(self._data or self.path)
 
-    def get_section_text(
-        self,
-        *sections: str,
-        keep_path: bool = False,
-    ) -> str:
+    def get_section_text(self, *sections: str, keep_path: bool = False) -> str:
         """Try to get data from given path as text.
 
         If Key path does not exist, return empty string.
@@ -55,11 +51,7 @@ class ConfigFile(superdict.SuperDict):
         """Dump to string with dumper of given file type."""
         return yamling.dump(self._data, mode=self.filetype or "json")
 
-    def load_file(
-        self,
-        path: str | os.PathLike[str],
-        **storage_options: Any,
-    ) -> None:
+    def load_file(self, path: str | os.PathLike[str], **storage_options: Any) -> None:
         """Load a file with loader of given file type.
 
         Args:
@@ -76,11 +68,7 @@ class TomlFile(ConfigFile):
 class YamlFile(ConfigFile):
     filetype = "yaml"
 
-    def load_file(
-        self,
-        path: str | os.PathLike[str],
-        **storage_options: Any,
-    ) -> None:
+    def load_file(self, path: str | os.PathLike[str], **storage_options: Any) -> None:
         """Load a file with loader of given file type.
 
         Args:
