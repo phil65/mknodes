@@ -32,9 +32,9 @@ class MkDocStrings(mknode.MkNode):
             | str
             | tuple[str, ...]
             | list[str]
-            | os.PathLike
+            | os.PathLike[str]
             | type
-            | Callable
+            | Callable[..., Any]
         ),
         for_topmost: bool = True,
         allow_inspection: bool | None = None,

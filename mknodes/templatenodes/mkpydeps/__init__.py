@@ -29,7 +29,10 @@ def get_dependency_svg(
     from pydeps.pydeps import depgraph_to_dotsrc
     from pydeps.target import Target
 
-    cli.verbose = lambda *args, **kwargs: None
+    def noop(*_args: Any, **_kwargs: Any):
+        pass
+
+    cli.verbose = noop
     cmd = [str(folder_name), "--noshow"]
     if max_bacon:
         cmd.extend(["--max-bacon", str(max_bacon)])
@@ -68,7 +71,7 @@ class MkPyDeps(mknode.MkNode):
 
     def __init__(
         self,
-        module: str | os.PathLike | types.ModuleType | None = None,
+        module: str | os.PathLike[str] | types.ModuleType | None = None,
         *,
         max_bacon: int | None = None,
         max_module_depth: int | None = None,

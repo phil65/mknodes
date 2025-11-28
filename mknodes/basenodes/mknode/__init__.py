@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 
 class IllegalArgumentError(ValueError):
-    def __init__(self, node, kwargs: Any) -> None:
+    def __init__(self, node: mk.MkNode, kwargs: Any) -> None:
         msg = f"Invalid keyword arguments for {type(node)!r}: {kwargs}"
         super().__init__(msg)
 
@@ -138,7 +138,7 @@ class MkNode:
         obj.__dict__.update(kwargs)
         return obj
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Any):
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result
@@ -273,7 +273,7 @@ class MkNode:
         return 0
 
     def pformat(self, indent: int = 0, max_depth: int | None = None):
-        lines = [i * "    " + repr(child) for i, child in self.iter_nodes(indent, max_depth)]
+        lines = [i * f"    {child!r}" for i, child in self.iter_nodes(indent, max_depth)]
         return "\n".join(lines)
 
     def iter_nodes(
@@ -419,7 +419,7 @@ class MkNode:
                 dct_2.pop(attr)
         return dct_1 == dct_2
 
-    def __rshift__(self, other):
+    def __rshift__(self, other: mk.MkNode | str):
         import mknodes as mk
 
         if self.parent or (isinstance(other, mk.MkNode) and other.parent):
@@ -430,7 +430,7 @@ class MkNode:
         container.append(other)
         return container
 
-    def __rrshift__(self, other):
+    def __rrshift__(self, other: mk.MkNode | str):
         import mknodes as mk
 
         if self.parent or (isinstance(other, mk.MkNode) and other.parent):
@@ -441,7 +441,7 @@ class MkNode:
         container.append(self)
 
     @property
-    def ctx(self):
+    def ctx(self) -> contexts.ProjectContext:
         """The tree context.
 
         Will return the attached context or the closest context from parents.
@@ -592,7 +592,10 @@ class MkNode:
 
     def get_node_resources(self) -> resources.Resources:
         """Return the resources specific for this node."""
-        extension = {k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS}
+        extension: dict[str, dict[str, Any]] = {
+            k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS
+        }
+
         mod_resources = self.mods.get_resources()
         css_resources: list[resources.CSSType] = []
         for css in self.CSS + mod_resources.css:
@@ -628,7 +631,7 @@ class MkNode:
     def get_resources(self) -> resources.Resources:
         """Return the "final" resources object."""
         nodes = [*list(self.descendants), self]
-        extensions: dict[str, dict] = {
+        extensions: dict[str, dict[str, Any]] = {
             "attr_list": {},
             "md_in_html": {},
             "pymdownx.emoji": {

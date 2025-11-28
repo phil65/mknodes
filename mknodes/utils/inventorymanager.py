@@ -149,12 +149,7 @@ class BaseInventory(dict[str, InventoryItem]):
         return header + zlib.compress(b"\n".join(lines) + b"\n", 9)
 
     @classmethod
-    def parse_sphinx(
-        cls,
-        in_file: BinaryIO,
-        *,
-        domain_filter: Collection[str] = (),
-    ) -> Self:
+    def parse_sphinx(cls, in_file: BinaryIO, *, domain_filter: Collection[str] = ()) -> Self:
         """Parse a Sphinx v2 inventory file and return an `Inventory` from it.
 
         Args:
