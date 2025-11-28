@@ -49,13 +49,14 @@ class MkList(mkcontainer.MkContainer):
         return linkprovider.linked(str(item)) if self.as_links else str(item)
 
     def _to_markdown(self) -> str:
-        if not self.items:
+        items = self.get_items()
+        if not items:
             return ""
         lines = [
             f"  {f'{i}.' if self.ordered else '*'} {self._prep(item)}"
-            for i, item in enumerate(self.items[: self.shorten_after], start=1)
+            for i, item in enumerate(items[: self.shorten_after], start=1)
         ]
-        if self.shorten_after and len(self.items) > self.shorten_after:
+        if self.shorten_after and len(items) > self.shorten_after:
             prefix = f"{self.shorten_after + 1}." if self.ordered else "*"
             lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
@@ -65,12 +66,13 @@ class MkList(mkcontainer.MkContainer):
 
         Can be useful for including in Tables.
         """
-        if not self.items:
+        items = self.get_items()
+        if not items:
             return ""
         tag_name = "ol" if self.ordered else "ul"
-        items = [f"<li>{self._prep(i)}</li>" for i in self.items[: self.shorten_after]]
-        item_str = "".join(items)
-        if self.shorten_after and len(self.items) > self.shorten_after:
+        li_items = [f"<li>{self._prep(i)}</li>" for i in items[: self.shorten_after]]
+        item_str = "".join(li_items)
+        if self.shorten_after and len(items) > self.shorten_after:
             item_str += "<li>...</li>"
         return f"<{tag_name}>{item_str}</{tag_name}>"
 

@@ -21,6 +21,6 @@ template = """
 {{ inspected | MkCode(language="markdown") | MkTab(title="Raw") }}
 {{ inspected | to_html | MkCode(language="html") | MkTab(title="Html") }}
 {{ inspected | MkTab(title="Rendered", select=True) }}
-{% if inspected.children %}
+{% if inspected.get_children() %}
 {{ inspected | MkTreeView | MkTab(title="Repr tree") }}{% endif %}{% endif %}
 """

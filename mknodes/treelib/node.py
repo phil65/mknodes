@@ -22,13 +22,32 @@ class Node:
 
     def __init__(self, parent: Self | None = None) -> None:
         self._parent = parent
-        self.children: list[Self] = []
+        self._children: list[Node] = []
+
+    def get_children(self) -> list[Node]:
+        """Return the list of children nodes."""
+        return self._children
+
+    def set_children(self, children: list[Node]) -> None:
+        """Set the list of children nodes."""
+        self._children = children
+
+    # TODO: Remove children property once templates are migrated to use
+    # get_children() method. See metadata.toml files in node directories.
+    @property
+    def children(self) -> list[Node]:
+        """Property for backward compatibility."""
+        return self.get_children()
+
+    @children.setter
+    def children(self, children: list[Node]) -> None:
+        self.set_children(children)
 
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
 
-    def __iter__(self) -> Iterator[Self]:
-        yield from self.children
+    def __iter__(self) -> Iterator[Node]:
+        yield from self.get_children()
 
     def __rshift__(self, other: Self) -> None:
         """Set children using >> bitshift operator for self >> other.
@@ -73,23 +92,24 @@ class Node:
             setattr(result, k, copy.deepcopy(v, memo))
         return result
 
-    def append_child(self, item: Self) -> None:
+    def append_child(self, item: Node) -> None:
         """Append a node as a child.
 
         Args:
             item: Node to add as a child
         """
         item.parent = self
-        self.children.append(item)
+        self.get_children().append(item)
 
-    def insert_children(self, idx: int, items: Sequence[Self]) -> None:
+    def insert_children(self, idx: int, items: Sequence[Node]) -> None:
         """Insert a list of child nodes at given index.
 
         Args:
             idx: The index of insertion
             items: A sequence of nodes to add as children
         """
-        self.children[idx:idx] = items
+        children = self.get_children()
+        children[idx:idx] = items
         for item in items:
             item.parent = self
 
@@ -119,28 +139,28 @@ class Node:
         yield from preorder_iter(self, filter_condition=lambda _node: _node.is_leaf)
 
     @property
-    def siblings(self) -> Iterable[Self]:
+    def siblings(self) -> Iterable[Node]:
         """Get siblings of self."""
         if self._parent is None:
             return ()
-        return tuple(child for child in self._parent.children if child is not self)
+        return tuple(child for child in self._parent.get_children() if child is not self)
 
     @property
-    def left_sibling(self) -> Self | None:
+    def left_sibling(self) -> Node | None:
         """Get sibling left of self."""
         if not self._parent:
             return None
-        children = self._parent.children
+        children = self._parent.get_children()
         if child_idx := children.index(self):
             return children[child_idx - 1]
         return None
 
     @property
-    def right_sibling(self) -> Self | None:
+    def right_sibling(self) -> Node | None:
         """Get sibling right of self."""
         if not self._parent:
             return None
-        children = self._parent.children
+        children = self._parent.get_children()
         child_idx = children.index(self)
         if child_idx + 1 < len(children):
             return children[child_idx + 1]
@@ -161,7 +181,7 @@ class Node:
     @property
     def is_leaf(self) -> bool:
         """Get indicator if self is leaf node."""
-        return not list(self.children)
+        return not list(self.get_children())
 
     @property
     def is_first_child(self) -> bool:
@@ -193,7 +213,7 @@ class Node:
     def row(self) -> int:  # sourcery skip: assign-if-exp
         """Return the position of this node inside the parent's children list."""
         if self._parent:
-            return self._parent.children.index(self)  # type: ignore
+            return self._parent.get_children().index(self)
         return 0
 
     def pformat(self, indent: int = 0, max_depth: int | None = None):
@@ -216,7 +236,7 @@ class Node:
         if max_depth is not None and indent > max_depth:
             return
         yield indent, self
-        for child_item in self.children:
+        for child_item in self.get_children():
             yield from child_item.iter_nodes(indent + 1)
 
     def get_tree_repr(
@@ -334,7 +354,7 @@ def preorder_iter(
     ):
         if not filter_condition or filter_condition(tree):
             yield tree
-        for child in tree.children:
+        for child in tree.get_children():
             yield from preorder_iter(child, filter_condition, stop_condition, max_depth)
 
 
@@ -342,4 +362,4 @@ if __name__ == "__main__":
     node = Node()
     sub = Node(parent=node)
     subsub = Node(parent=sub)
-    node.children = [sub, subsub]
+    node.set_children([sub, subsub])

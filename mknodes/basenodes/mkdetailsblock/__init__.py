@@ -48,10 +48,11 @@ class MkDetailsBlock(mkblock.MkBlock):
         )
 
     def __repr__(self):
-        if len(self.items) == 1:
-            content = reprhelpers.to_str_if_textnode(self.items[0])
+        items = self.get_items()
+        if len(items) == 1:
+            content = reprhelpers.to_str_if_textnode(items[0])
         else:
-            content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
+            content = [reprhelpers.to_str_if_textnode(i) for i in items]
         return reprhelpers.get_repr(
             self,
             content=content,

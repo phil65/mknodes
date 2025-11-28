@@ -69,7 +69,7 @@ class MkCode(mkcontainer.MkContainer):
     @property
     def text(self) -> str:
         """Text content."""
-        return "\n".join(str(i) for i in self.items)
+        return "\n".join(str(i) for i in self.get_items())
 
     @property
     def fence_boundary(self) -> str:

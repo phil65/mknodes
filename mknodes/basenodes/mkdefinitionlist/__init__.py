@@ -52,18 +52,18 @@ class MkDefinitionList(mkcontainer.MkContainer):
         """
         super().__init__(**kwargs)
         self.data: dict[str, str | mknode.MkNode] = {}
-        self.items = data
+        self.set_items(data)
 
     def __repr__(self):
         kws = {k: reprhelpers.to_str_if_textnode(v) for k, v in self.data.items()}
         return reprhelpers.get_repr(self, data=kws)
 
-    @property
-    def items(self):
-        return list(self.data.values())
+    def get_items(self) -> list[mknode.MkNode]:  # type: ignore[override]
+        """Return the list of definition values."""
+        return list(self.data.values())  # type: ignore[arg-type]
 
-    @items.setter
-    def items(self, data):
+    def set_items(self, data: Mapping[str, Any] | list | None) -> None:
+        """Set items from data."""
         match data:
             case Mapping():
                 self.data = {k: self.to_child_node(v) for k, v in data.items()}

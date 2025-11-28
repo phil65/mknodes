@@ -81,8 +81,8 @@ class MkShields(mkcontainer.MkContainer):
             return self._branch
         return self.ctx.git.main_branch or "main"
 
-    @property
-    def items(self) -> list[mknode.MkNode]:
+    def get_items(self) -> list[mknode.MkNode]:
+        """Return computed shield items."""
         return [
             mkimage.MkImage(
                 s.get_image_url(user=self.user, project=self.project, branch=self.branch),
@@ -93,12 +93,11 @@ class MkShields(mkcontainer.MkContainer):
             for s in self.shields
         ]
 
-    @items.setter
-    def items(self, items) -> None:
-        pass
+    def set_items(self, items: list[mknode.MkNode]) -> None:
+        """Set items (no-op for computed shields)."""
 
     def _to_markdown(self) -> str:
-        return self.block_separator.join(i.to_markdown() for i in self.items)
+        return self.block_separator.join(i.to_markdown() for i in self.get_items())
 
 
 if __name__ == "__main__":

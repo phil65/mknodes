@@ -43,7 +43,7 @@ def test_creating_module_document():
     nav = mk.MkNav()
     subnav = nav.add_nav("subsection")
     module_docs = subnav.add_doc(pytest)
-    assert module_docs.children
+    assert module_docs.get_children()
 
 
 if __name__ == "__main__":

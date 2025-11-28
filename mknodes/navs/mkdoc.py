@@ -66,8 +66,8 @@ class MkDoc(mknav.MkNav):
             filename=self.filename,
         )
 
-    @property
-    def children(self):
+    def get_children(self):  # type: ignore[override]
+        """Return computed children for module documentation."""
         if self.module is None:
             return []
         pages = []
@@ -102,9 +102,8 @@ class MkDoc(mknav.MkNav):
         self.index_page = page
         return pages + navs + [page]
 
-    @children.setter
-    def children(self, val) -> None:
-        pass
+    def set_children(self, val) -> None:  # type: ignore[override]
+        """Set children (no-op for MkDoc)."""
 
     @property
     def module(self):

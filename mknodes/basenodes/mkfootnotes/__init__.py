@@ -37,10 +37,10 @@ class MkFootNote(mkcontainer.MkContainer):
         self.num = num
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, num=self.num, content=self.items)
+        return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
     def _to_markdown(self) -> str:
-        item_str = "\n".join(i.to_markdown() for i in self.items)
+        item_str = "\n".join(i.to_markdown() for i in self.get_items())
         indented = textwrap.indent(item_str, "    ")
         return f"[^{self.num}]:\n{indented}\n"
 
@@ -48,7 +48,6 @@ class MkFootNote(mkcontainer.MkContainer):
 class MkFootNotes(mkcontainer.MkContainer):
     """Node containing a list of MkFootNotes."""
 
-    items: list[MkFootNote]
     ICON = "octicons/list-ordered-16"
     REQUIRED_EXTENSIONS = [resources.Extension("footnotes")]
 
@@ -79,19 +78,24 @@ class MkFootNotes(mkcontainer.MkContainer):
                 raise TypeError(footnotes)
         super().__init__(content=items, **kwargs)
 
+    def get_items(self) -> list[MkFootNote]:  # type: ignore[override]
+        """Return the list of footnotes."""
+        return self._items  # type: ignore[return-value]
+
     def __repr__(self):
         notes: list[mk.MkNode | str] = []
-        for item in self.items:
-            if len(item.items) == 1 and isinstance(item.items[0], mktext.MkText):
-                notes.append(str(item.items[0]))
-            elif len(item.items) == 1:
-                notes.append(item.items[0])
+        for item in self.get_items():
+            item_children = item.get_items()
+            if len(item_children) == 1 and isinstance(item_children[0], mktext.MkText):
+                notes.append(str(item_children[0]))
+            elif len(item_children) == 1:
+                notes.append(item_children[0])
             else:
                 notes.append(item)
         return reprhelpers.get_repr(self, footnotes=notes)
 
     def __getitem__(self, index: int):
-        for node in self.items:
+        for node in self.get_items():
             if node.num == index:
                 return node
         raise IndexError(index)
@@ -99,15 +103,16 @@ class MkFootNotes(mkcontainer.MkContainer):
     def __contains__(self, item: int | MkFootNote) -> bool:
         match item:
             case MkFootNote():
-                return item in self.items
+                return item in self.get_items()
             case int():
-                return any(i.num == item for i in self.items)
+                return any(i.num == item for i in self.get_items())
             case _:
                 raise TypeError(item)
 
     def _get_item_pos(self, num: int) -> int:
-        item = next(i for i in self.items if i.num == num)
-        return self.items.index(item)
+        items = self.get_items()
+        item = next(i for i in items if i.num == num)
+        return items.index(item)
 
     def __setitem__(self, index: int, value: mk.MkNode | str) -> None:
         match value:
@@ -115,16 +120,18 @@ class MkFootNotes(mkcontainer.MkContainer):
                 node = value
             case _:
                 node = MkFootNote(index, content=value, parent=self)
+        items = self.get_items()
         if index in self:
             pos = self._get_item_pos(index)
-            self.items[pos] = node
+            items[pos] = node
         else:
-            self.items.append(node)
+            items.append(node)
 
     def _to_markdown(self) -> str:
-        if not self.items:
+        items = self.get_items()
+        if not items:
             return ""
-        items = sorted(self.items, key=lambda x: x.num)
+        items = sorted(items, key=lambda x: x.num)
         return "".join(i.to_markdown() for i in items)
 
 

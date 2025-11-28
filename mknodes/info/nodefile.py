@@ -60,7 +60,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
     if "github" in nodefile.output:
         output = node.env.render_template("output/github/template")
         dct["GitHub"] = mk.MkCode(output, language="markdown")
-    if len(node.children) > 0:
+    if len(node.get_children()) > 0:
         dct["Repr tree"] = mk.MkTreeView(node)
     return dct
 

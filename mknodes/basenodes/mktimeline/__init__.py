@@ -115,7 +115,6 @@ class MkTimeline(mkcontainer.MkContainer):
         resources.JSFile("timeline.js"),
     ]
     CSS = [resources.CSSFile("timeline.css")]
-    items: list[MkTimelineItem]
 
     def __init__(
         self,
@@ -136,9 +135,13 @@ class MkTimeline(mkcontainer.MkContainer):
             items = [MkTimelineItem(**step) for step in items.values()]
         super().__init__(items, **kwargs)
 
+    def get_items(self) -> list[MkTimelineItem]:  # type: ignore[override]
+        """Return the list of timeline items."""
+        return self._items  # type: ignore[return-value]
+
     def get_element(self) -> xml.Section:
         root = xml.Section("timeline")
-        for i, item in enumerate(self.items):
+        for i, item in enumerate(self.get_items()):
             item.fade_direction = "left" if i % 2 == 0 else "right"
             elem = item.get_element()
             root.append(elem)

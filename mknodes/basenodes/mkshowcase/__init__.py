@@ -64,7 +64,7 @@ class MkShowcase(mkcontainer.MkContainer):
 
     def _to_markdown(self) -> str:
         text = ""
-        for items in filters.do_batch(self.items, self.column_count):
+        for items in filters.do_batch(self.get_items(), self.column_count):
             text += '<div class="row">'
             for item in items:
                 text += '\n  <div class="column">\n'
@@ -98,4 +98,4 @@ if __name__ == "__main__":
     keys = mk.MkKeys(keys="Ctrl+A")
     grid = MkShowcase()
     grid.add_card("Tse", "td", "http://www.google.com")
-    print(grid.items[0])
+    print(grid.get_items()[0])

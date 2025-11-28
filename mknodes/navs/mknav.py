@@ -88,7 +88,7 @@ class MkNav(mknode.MkNode):
     #     return len(self.children)
 
     def __iter__(self):
-        yield from self.children
+        yield from self.get_children()
 
     @property
     def index_page(self) -> mk.MkPage | None:
@@ -103,15 +103,15 @@ class MkNav(mknode.MkNode):
         if not self.nav.index_page.title:
             self.nav.index_page.title = self.title or "Home"
 
-    @property
-    def children(self):
+    def get_children(self) -> list[navigation.NavSubType]:  # type: ignore[override]
+        """Return all child items from the navigation."""
         return self.nav.all_items
 
-    @children.setter
-    def children(self, items) -> None:
-        from mknodes.navs import navigation
+    def set_children(self, items: list[navigation.NavSubType]) -> None:  # type: ignore[override]
+        """Set children by replacing the navigation."""
+        from mknodes.navs import navigation as nav_module
 
-        self.nav = navigation.Navigation(items)
+        self.nav = nav_module.Navigation(items)
 
     def __add__(self, other: navigation.NavSubType):
         """Use this to to register MkNodes."""

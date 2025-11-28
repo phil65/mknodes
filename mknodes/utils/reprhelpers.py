@@ -108,7 +108,7 @@ def list_repr(v: Any, shorten: bool = True):
 
     my_repr = limit_repr.repr if shorten else repr
     match v:
-        case (mk.MkNode(), *_) if len(v) > 1 and any(i.children for i in v):
+        case (mk.MkNode(), *_) if len(v) > 1 and any(i.get_children() for i in v):
             return "[...]"
         case (mk.MkNode(),):
             if type(v[0]) in {mk.MkText, mk.MkHeader}:

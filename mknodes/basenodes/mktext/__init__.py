@@ -55,16 +55,19 @@ class MkText(mknode.MkNode):
     def _to_markdown(self) -> str:
         return self.text
 
-    @property
-    def children(self):
+    def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]
+        """Return children nodes.
+
+        For MkText with render_jinja=True, this triggers Jinja rendering
+        and returns any nodes created during rendering.
+        """
         if not self.render_jinja:
             return []
         self.env.render_string(self._text, variables=self.variables)
         return self.env.rendered_children
 
-    @children.setter
-    def children(self, val) -> None:
-        pass
+    def set_children(self, val: list[mknode.MkNode]) -> None:  # type: ignore[override]
+        """Set children (no-op for MkText)."""
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:

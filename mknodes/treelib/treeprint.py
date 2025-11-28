@@ -8,7 +8,7 @@ logger = log.get_logger(__name__)
 
 class NodeConnector(connector.Connector):
     def get_children(self, item):
-        return item.children
+        return item.get_children()
 
     def get_id(self, item) -> str:
         # id() would be enough, but name is sometimes useful for debugging.

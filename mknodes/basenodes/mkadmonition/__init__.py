@@ -73,10 +73,11 @@ class MkAdmonition(mkcontainer.MkContainer):
         return f"{block_start} {self.typ}{optional}{title}"
 
     def _to_markdown(self) -> str:
-        if not self.items and not self.title:
+        items = self.get_items()
+        if not items and not self.title:
             return ""
         annotations = f"\n{self.annotations}\n" if self.annotations else ""
-        text = "\n".join(i.to_markdown() for i in self.items)
+        text = "\n".join(i.to_markdown() for i in items)
         indented = textwrap.indent(text, "    ")
         return f"{self.title_line}\n{indented}\n{annotations}"
 

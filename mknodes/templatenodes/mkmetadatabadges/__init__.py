@@ -91,8 +91,8 @@ class MkMetadataBadges(mkcontainer.MkContainer):
                 labels = ctx.classifier_map.get(self.typ, [])
                 return [(i, self.typ, None) for i in labels]
 
-    @property
-    def items(self) -> list[mknode.MkNode]:
+    def get_items(self) -> list[mknode.MkNode]:
+        """Return computed badge items."""
         return [
             mkbadge.MkBadge(
                 label=label,
@@ -110,12 +110,11 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             for label, value, link in self.badge_content
         ]
 
-    @items.setter
-    def items(self, value) -> None:
-        pass
+    def set_items(self, value: list[mknode.MkNode]) -> None:
+        """Set items (no-op for computed badges)."""
 
     def _to_markdown(self) -> str:
-        return self.block_separator.join(i.to_markdown() for i in self.items)
+        return self.block_separator.join(i.to_markdown() for i in self.get_items())
 
 
 if __name__ == "__main__":

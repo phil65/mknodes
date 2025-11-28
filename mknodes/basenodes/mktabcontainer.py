@@ -16,7 +16,6 @@ logger = log.get_logger(__name__)
 class MkTabContainer(mkcontainer.MkContainer):
     """Base class for nodes containing tabs."""
 
-    items: list[mktabs.MkTab | mktabs.MkTabBlock]
     Tab: type[mktabs.MkTab | mktabs.MkTabBlock]
     ICON = "material/tab"
 
@@ -45,15 +44,21 @@ class MkTabContainer(mkcontainer.MkContainer):
         super().__init__(content=items, **kwargs)
         self.block_separator = "\n"
 
+    def get_items(self) -> list[mktabs.MkTab | mktabs.MkTabBlock]:  # type: ignore[override]
+        """Return the list of tab items."""
+        return self._items  # type: ignore[return-value]
+
     def __getitem__(self, item: int | str) -> mktabs.MkTab | mktabs.MkTabBlock:
-        return self.items[item if isinstance(item, int) else self._get_tab_pos(item)]
+        items = self.get_items()
+        return items[item if isinstance(item, int) else self._get_tab_pos(item)]
 
     def __contains__(self, tab: str | mktabs.MkTab | mktabs.MkTabBlock) -> bool:
+        items = self.get_items()
         match tab:
             case mktabs.MkTab() | mktabs.MkTabBlock():
-                return tab in self.items
+                return tab in items
             case str():
-                return any(i.title == tab for i in self.items)
+                return any(i.title == tab for i in items)
             case _:
                 raise TypeError(tab)
 
@@ -76,8 +81,9 @@ class MkTabContainer(mkcontainer.MkContainer):
         return tab
 
     def _get_tab_pos(self, tab_title: str) -> int:
-        item = next(i for i in self.items if i.title == tab_title)
-        return self.items.index(item)
+        items = self.get_items()
+        item = next(i for i in items if i.title == tab_title)
+        return items.index(item)
 
     def set_selected(self, index: int | str) -> None:
         """Set tab with given index as selected.
@@ -86,7 +92,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             index: Index or title of the tab which should be selected
         """
         self.select_tab = self._get_tab_pos(index) if isinstance(index, str) else index
-        for i, item in enumerate(self.items):
+        for i, item in enumerate(self.get_items()):
             item.select = i == self.select_tab
 
     def __setitem__(self, index: str, value: mknode.MkNode | str) -> None:
@@ -98,27 +104,29 @@ class MkTabContainer(mkcontainer.MkContainer):
                 tab = value
             case mknode.MkNode():
                 tab = self.Tab(title=index, content=value)
+        items = self.get_items()
         if index in self:
             pos = self._get_tab_pos(index)
-            self.items[pos] = tab
+            items[pos] = tab
         else:
-            self.items.append(tab)
+            items.append(tab)
 
     def __repr__(self):
         return reprhelpers.get_repr(
             self,
-            tabs=self.items,
+            tabs=self.get_items(),
             select_tab=self.select_tab,
             _filter_empty=True,
         )
 
     def _to_markdown(self) -> str:
-        if not self.items:
+        items = self.get_items()
+        if not items:
             return ""
         if self.select_tab is not None:
             self.set_selected(self.select_tab)
-        self.items[0].new = True
-        return self.block_separator.join(str(i) for i in self.items)
+        items[0].new = True
+        return self.block_separator.join(str(i) for i in items)
 
 
 if __name__ == "__main__":

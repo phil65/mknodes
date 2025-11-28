@@ -33,10 +33,10 @@ class MkAnnotation(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
 
     def __repr__(self):
-        return reprhelpers.get_repr(self, num=self.num, content=self.items)
+        return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
     def _to_markdown(self) -> str:
-        item_str = "\n\n".join(i.to_markdown() for i in self.items)
+        item_str = "\n\n".join(i.to_markdown() for i in self.get_items())
         prefix = f"{self.num}."
         return f"{prefix:<4}{filters.do_indent(item_str)}\n"
 
@@ -44,7 +44,6 @@ class MkAnnotation(mkcontainer.MkContainer):
 class MkAnnotations(mkcontainer.MkContainer):
     """Node containing a list of MkAnnotations."""
 
-    items: list[MkAnnotation]
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.superfences")]
     ICON = "material/alert-box"
 
@@ -75,8 +74,12 @@ class MkAnnotations(mkcontainer.MkContainer):
                 raise TypeError(annotations)
         super().__init__(content=items, **kwargs)
 
+    def get_items(self) -> list[MkAnnotation]:  # type: ignore[override]
+        """Return the list of annotations."""
+        return self._items  # type: ignore[return-value]
+
     def __getitem__(self, item: int):
-        for node in self.items:
+        for node in self.get_items():
             if node.num == item:
                 return node
         raise IndexError(item)
@@ -84,23 +87,25 @@ class MkAnnotations(mkcontainer.MkContainer):
     def __contains__(self, item: int | MkAnnotation) -> bool:
         match item:
             case MkAnnotation():
-                return item in self.items
+                return item in self.get_items()
             case int():
-                return any(i.num == item for i in self.items)
+                return any(i.num == item for i in self.get_items())
             case _:
                 raise TypeError(item)
 
     def __repr__(self):
         notes = []
-        for item in self.items:
-            if len(item.items) == 1:
-                item = reprhelpers.to_str_if_textnode(item.items[0])
+        for item in self.get_items():
+            item_children = item.get_items()
+            if len(item_children) == 1:
+                item = reprhelpers.to_str_if_textnode(item_children[0])
             notes.append(item)
         return reprhelpers.get_repr(self, annotations=notes)
 
     def _get_item_pos(self, num: int) -> int:
-        item = next(i for i in self.items if i.num == num)
-        return self.items.index(item)
+        items = self.get_items()
+        item = next(i for i in items if i.num == num)
+        return items.index(item)
 
     def __setitem__(self, index: int, value: mk.MkNode | str) -> None:
         import mknodes as mk
@@ -113,20 +118,22 @@ class MkAnnotations(mkcontainer.MkContainer):
                 node = value
             case mk.MkNode():
                 node = MkAnnotation(index, content=value, parent=self)
+        items = self.get_items()
         if index in self:
             pos = self._get_item_pos(index)
-            self.items[pos] = node
+            items[pos] = node
         else:
-            self.items.append(node)
+            items.append(node)
 
     def _to_markdown(self) -> str:
-        if not self.items:
+        items = self.get_items()
+        if not items:
             return ""
-        items = sorted(self.items, key=lambda x: x.num)
+        items = sorted(items, key=lambda x: x.num)
         return "".join(i.to_markdown() for i in items)
 
     def annotate_text(self, markdown: str) -> str:
-        if not self.items:
+        if not self.get_items():
             return markdown
         return f'<div class="annotate" markdown>\n{markdown}\n</div>\n\n{self}'
 

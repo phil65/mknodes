@@ -101,10 +101,11 @@ class MkTab(mkcontainer.MkContainer):
 
     def __repr__(self):
         content: str | list[str]
-        if len(self.items) == 1:
-            content = reprhelpers.to_str_if_textnode(self.items[0])
+        items = self.get_items()
+        if len(items) == 1:
+            content = reprhelpers.to_str_if_textnode(items[0])
         else:
-            content = [reprhelpers.to_str_if_textnode(i) for i in self.items]
+            content = [reprhelpers.to_str_if_textnode(i) for i in items]
         return reprhelpers.get_repr(
             self,
             title=self.title,
@@ -121,7 +122,7 @@ class MkTab(mkcontainer.MkContainer):
         return text
 
     def _to_markdown(self) -> str:
-        text = "\n\n".join(i.to_markdown() for i in self.items)
+        text = "\n\n".join(i.to_markdown() for i in self.get_items())
         text = text.rstrip("\n")
         if self.annotations:
             annotates = str(self.annotations)
