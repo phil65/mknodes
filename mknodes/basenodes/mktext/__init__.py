@@ -38,7 +38,7 @@ class MkText(mknode.MkNode):
         self.render_jinja = render_jinja
 
     def __getitem__(self, section_name: str) -> Self | None:
-        markdown = self._to_markdown()
+        markdown = self._text if not self.render_jinja else self.env.render_string(self._text)
         section_text = mdfilters.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
