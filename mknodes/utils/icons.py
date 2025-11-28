@@ -38,11 +38,11 @@ def icon_for_url(url: str) -> str | None:
 
 
 @functools.cache
-def _patch_index_with_sets(icon_sets: Sequence[str]) -> dict[str, Any]:
+def _patch_index_with_sets(_icon_sets: Sequence[str]) -> dict[str, Any]:
     from pymdownx import twemoji_db
 
     # Copy the Twemoji index
-    index = {
+    index: dict[str, Any] = {
         "name": "twemoji",
         "emoji": twemoji_db.emoji,
         "aliases": twemoji_db.aliases,
@@ -66,11 +66,11 @@ def twemoji(options: dict[str, Any], md: markdown.Markdown) -> dict[str, Any]:
 def to_svg(
     index: str,
     shortname: str,
-    alias: str,
+    _alias: str,
     uc: str | None,
     alt: str,
     title: str,
-    category: str,
+    _category: str,
     options: dict[str, str],
     md: markdown.Markdown,
 ):
@@ -96,7 +96,8 @@ def to_svg(
 
         return ET.Element("img", attributes)
     el = ET.Element("span", {"class": options.get("classes", index)})
-    svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]  # type: ignore[attr-defined]
+    svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]  # type: ignore[attr-defined]  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
+    assert isinstance(svg_path, str)
     svg = iconfilters.get_icon_svg(svg_path)
     el.text = md.htmlStash.store(svg)
     return el

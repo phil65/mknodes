@@ -16,7 +16,7 @@ ALPHA_DEFAULT = 1.0
 class Color(coloraide.Color):
     def __init__(
         self,
-        color: str | tuple,
+        color: str | tuple[int, int, int] | tuple[int, int, int, float],
         data: Sequence[float] | None = None,
         alpha: float = ALPHA_DEFAULT,
         **kwargs: Any,
@@ -34,7 +34,7 @@ class Color(coloraide.Color):
                 super().__init__(color, data=data, alpha=alpha, **kwargs)
                 if not data and alpha != ALPHA_DEFAULT:
                     self["alpha"] = alpha
-            case tuple() if len(color) == RGB_TUPLE_LEN:
+            case (int(), int(), int()):
                 super().__init__("srgb", [i / 255 for i in color], alpha=alpha, **kwargs)
             case tuple():
                 super().__init__("srgb", [i / 255 for i in color[:3]], color[3], **kwargs)

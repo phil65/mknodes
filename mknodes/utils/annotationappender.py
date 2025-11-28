@@ -1,6 +1,11 @@
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    import mknodes as mk
 
 
 CLASS_REGEX = re.compile(r"\b((mknodes\.Mk[A-Za-z\.\_]*).*)")
@@ -32,7 +37,7 @@ class AnnotationAppender:
     def append_markers(self, code: str) -> str:
         return re.sub(CLASS_REGEX, self, code) if "# (" not in code else code
 
-    def append_annotations(self, node) -> None:
+    def append_annotations(self, node: mk.MkAnnotations) -> None:
         import mknodes as mk
 
         for index, dotted_path in self.matches:

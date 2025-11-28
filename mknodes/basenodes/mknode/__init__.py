@@ -363,10 +363,10 @@ class MkNode(node.Node):
     @classmethod
     def with_context(
         cls,
-        *args,
+        *args: Any,
         repo_url: str | None = None,
         base_url: str = "",
-        **kwargs,
+        **kwargs: Any,
     ) -> Self:
         """Same as the Ctor, but auto-adds a context for the repo url (or the cwd)."""
         ctx = contexts.ProjectContext.for_config(repo_url=repo_url, base_url=base_url)

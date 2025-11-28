@@ -19,7 +19,7 @@ class Connector[T]:
         self.item_dict: dict[Hashable, str] = {}
         self.connections: list[tuple[Hashable, Hashable]] = []
         self.max_depth = max_depth
-        self._connect(objs)
+        self._connect(objs)  # pyright: ignore[reportUnknownArgumentType]
 
     def _connect(self, objects: Sequence[T]) -> None:
         def add_connections(item: T, depth: int = 0) -> None:
@@ -44,7 +44,7 @@ class Connector[T]:
     def titles(self):
         return list(self.item_dict.values())
 
-    def get_children(self, item: T) -> list[T] | tuple[T, ...]:
+    def get_children(self, item: T) -> list[T] | tuple[T, ...]:  # pyright: ignore[reportUnusedParameter]
         """This should return a list of children for the tree node."""
         return NotImplemented
 
@@ -52,7 +52,7 @@ class Connector[T]:
         """This needs to return a unique identifier for an item."""
         return item
 
-    def get_attributes(self, item: T) -> list[str] | None:
+    def get_attributes(self, item: T) -> list[str] | None:  # pyright: ignore[reportUnusedParameter]
         return None
 
     def get_title(self, item: T) -> str:

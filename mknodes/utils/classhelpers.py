@@ -216,7 +216,7 @@ def get_topmost_module_path(obj: Callable[..., Any]) -> str:
     Args:
         obj: Klass to get the path for.
     """
-    to_search_for = obj.__self__ if hasattr(obj, "__self__") else obj
+    to_search_for = obj.__self__ if hasattr(obj, "__self__") else obj  # pyright: ignore[reportFunctionMemberAccess]
     path = obj.__module__ or to_search_for.__module__
     parts = path.split(".")
     while parts:
@@ -244,7 +244,13 @@ def get_submodules(
     mod = to_module(module, return_none=False)
     import pkgutil
 
-    path = mod.__path__ if hasattr(mod, "__path__") else [mod.__file__]  # type: ignore[list-item]
+    if hasattr(mod, "__path__"):
+        path = mod.__path__
+    elif mod.__file__:
+        path = [mod.__file__]
+    else:
+        msg = f"Module {mod} has no path"
+        raise ValueError(msg)
     modules = [
         importlib.import_module(f"{mod.__name__}.{mod_name}")
         for _importer, mod_name, _ispkg in pkgutil.iter_modules(path)
