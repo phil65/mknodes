@@ -97,6 +97,9 @@ class MkShields(mkcontainer.MkContainer):
     def items(self, items) -> None:
         pass
 
+    def _to_markdown(self) -> str:
+        return self.block_separator.join(i.to_markdown() for i in self.items)
+
 
 if __name__ == "__main__":
     shields = MkShields(

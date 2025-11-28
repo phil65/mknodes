@@ -114,6 +114,9 @@ class MkMetadataBadges(mkcontainer.MkContainer):
     def items(self, value) -> None:
         pass
 
+    def _to_markdown(self) -> str:
+        return self.block_separator.join(i.to_markdown() for i in self.items)
+
 
 if __name__ == "__main__":
     node = MkMetadataBadges.with_context("websites")

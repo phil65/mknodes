@@ -40,28 +40,36 @@ class MkContainer(mknode.MkNode):
         self.block_separator = block_separator
         match content:
             case None:
-                self.items: list[mknode.MkNode] = []
+                self._items: list[mknode.MkNode] = []
             case str():
-                self.items = [self.to_child_node(content)] if content else []
+                self._items = [self.to_child_node(content)] if content else []
             case mknode.MkNode():
-                self.items = [self.to_child_node(content)]
+                self._items = [self.to_child_node(content)]
             case list():
-                self.items = [self.to_child_node(i) for i in content]
+                self._items = [self.to_child_node(i) for i in content]
             case _:
                 raise TypeError(content)
 
     def __bool__(self):
-        return bool(self.items)
+        return bool(self._items)
 
     def __add__(self, other: str | mknode.MkNode):
         self.append(other)
         return self
 
     def __iter__(self) -> Iterator[mknode.MkNode]:  # type: ignore
-        return iter(self.items)
+        return iter(self._items)
 
     def _to_markdown(self) -> str:
-        return self.block_separator.join(i.to_markdown() for i in self.items)
+        return self.block_separator.join(i.to_markdown() for i in self._items)
+
+    @property
+    def items(self) -> list[mknode.MkNode]:
+        return self._items
+
+    @items.setter
+    def items(self, items: list[mknode.MkNode]) -> None:
+        self._items = items
 
     def append(self, other: str | mknode.MkNode) -> None:
         """Append a MkNode to the end of given MkPage.
@@ -70,7 +78,7 @@ class MkContainer(mknode.MkNode):
             other: The node / text to append
         """
         node = self.to_child_node(other)
-        self.items.append(node)  # type: ignore[arg-type]
+        self._items.append(node)  # type: ignore[arg-type]
 
     def insert(self, index: int, other: str | mknode.MkNode) -> None:
         """Insert a MkNode into desired position of given MkPage.
@@ -80,15 +88,15 @@ class MkContainer(mknode.MkNode):
             other: The node / text to insert
         """
         node = self.to_child_node(other)
-        self.items.insert(index, node)
+        self._items.insert(index, node)
 
     @property  # type: ignore
     def children(self) -> list[mknode.MkNode]:
-        return self.items
+        return self._items
 
     @children.setter
     def children(self, children: list[mknode.MkNode]) -> None:
-        self.items = children
+        self._items = children
 
 
 if __name__ == "__main__":
