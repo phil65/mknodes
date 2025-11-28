@@ -39,7 +39,7 @@ class NodeEnvironment(jinjarope.Environment):
             node: Node this environment belongs to.
             kwargs: Optional keyword arguments passed to parent
         """
-        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
+        super().__init__(enable_async=True, **kwargs)  # pyright: ignore[reportUnknownMemberType]
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()
@@ -123,7 +123,7 @@ class NodeEnvironment(jinjarope.Environment):
         parent_template: str | None = None,
         **kwargs: Any,
     ) -> str:
-        """Render a loaded template.
+        """Render a loaded template (sync version).
 
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
 
@@ -134,12 +134,40 @@ class NodeEnvironment(jinjarope.Environment):
             parent_template: The name of the parent template importing this template
             kwargs: Additional variables for the render call
         """
-        # if pathlib.Path(template_name).as_posix() not in self.list_templates():
-        #     self.add_template(template_name)
         self.rendered_nodes = []
         self.setup_environment()
-        # self.update_env_from_context()
         result = super().render_template(
+            template_name,
+            variables=variables,
+            block_name=block_name,
+            parent_template=parent_template,
+            **kwargs,
+        )
+        self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
+        return result
+
+    async def render_template_async(
+        self,
+        template_name: str,
+        variables: dict[str, Any] | None = None,
+        block_name: str | None = None,
+        parent_template: str | None = None,
+        **kwargs: Any,
+    ) -> str:
+        """Render a loaded template (async version).
+
+        Rendered nodes can be collected from `rendered_nodes` attribute after this call.
+
+        Args:
+            template_name: Template name
+            variables: Extra variables for this render call
+            block_name: Render specific block from the template
+            parent_template: The name of the parent template importing this template
+            kwargs: Additional variables for the render call
+        """
+        self.rendered_nodes = []
+        self.setup_environment()
+        result = await super().render_template_async(
             template_name,
             variables=variables,
             block_name=block_name,
@@ -155,7 +183,7 @@ class NodeEnvironment(jinjarope.Environment):
         variables: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> str:
-        """Render a template string.
+        """Render a template string (sync version).
 
         Rendered nodes can be collected from `rendered_nodes` attribute after this call.
 
@@ -166,8 +194,28 @@ class NodeEnvironment(jinjarope.Environment):
         """
         self.rendered_nodes = []
         self.setup_environment()
-        # self.update_env_from_context()
         result = super().render_string(string, variables, **kwargs)
+        self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
+        return result
+
+    async def render_string_async(
+        self,
+        string: str,
+        variables: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> str:
+        """Render a template string (async version).
+
+        Rendered nodes can be collected from `rendered_nodes` attribute after this call.
+
+        Args:
+            string: String to render
+            variables: Extra variables for the environment
+            kwargs: Additional variables for the render call
+        """
+        self.rendered_nodes = []
+        self.setup_environment()
+        result = await super().render_string_async(string, variables, **kwargs)
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
