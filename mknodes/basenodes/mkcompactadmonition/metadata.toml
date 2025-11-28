@@ -79,20 +79,20 @@ jinja = """
 template = """
 <div class="mdx-grid-wrapper{{ node.typ | add(prefix=" mdx-admo--") }}">
   <div class="mdx-grid-child mdx-grid-child--icon"></div>
-  <div class="mdx-grid-child">{{ node.text }}</div>
+  <div class="mdx-grid-child">{{ node.get_text() }}</div>
 </div>
 """
 
 [admonitions]
-note = {icon="mdi:pencil-circle", header_color="#448aff"}
-abstract = {icon="mdi:clipboard-text", header_color="#00b0ff"}
-info = {icon="mdi:information", header_color="#00b8d4"}
-tip = {icon="mdi:fire", header_color="#00bfa5"}
-success = {icon="mdi:check", header_color="#00c853"}
-question = {icon="mdi:help-circle", header_color="#64dd17"}
-warning = {icon="mdi:alert", header_color="#ff9100"}
-failure = {icon="mdi:close", header_color="#ff5252"}
-danger = {icon="mdi:lightning-bolt-circle", header_color="#ff1744"}
-bug = {icon="mdi:shield-bug", header_color="#f50057"}
-example = {icon="mdi:test-tube", header_color="#7c4dff"}
-quote = {icon="mdi:format-quote-close", header_color="#9e9e9e"}
+note = { icon = "mdi:pencil-circle", header_color = "#448aff" }
+abstract = { icon = "mdi:clipboard-text", header_color = "#00b0ff" }
+info = { icon = "mdi:information", header_color = "#00b8d4" }
+tip = { icon = "mdi:fire", header_color = "#00bfa5" }
+success = { icon = "mdi:check", header_color = "#00c853" }
+question = { icon = "mdi:help-circle", header_color = "#64dd17" }
+warning = { icon = "mdi:alert", header_color = "#ff9100" }
+failure = { icon = "mdi:close", header_color = "#ff5252" }
+danger = { icon = "mdi:lightning-bolt-circle", header_color = "#ff1744" }
+bug = { icon = "mdi:shield-bug", header_color = "#f50057" }
+example = { icon = "mdi:test-tube", header_color = "#7c4dff" }
+quote = { icon = "mdi:format-quote-close", header_color = "#9e9e9e" }

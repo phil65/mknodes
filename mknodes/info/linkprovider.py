@@ -220,7 +220,7 @@ class LinkProvider:
         if page is None:
             msg = "Need a parent page for MkHeader in order to link to it"
             raise RuntimeError(msg)
-        suffix = "#" + textfilters.slugify(header.text)
+        suffix = "#" + textfilters.slugify(header.get_text())
         return self.url_for_page(page) + suffix
 
     def get_link(self, target: LinkableType, title: str | None = None):

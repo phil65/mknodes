@@ -42,18 +42,16 @@ class MkText(mknode.MkNode):
         section_text = mdfilters.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
-    @property
-    def text(self) -> str:
+    def get_text(self) -> str:
         if not self.render_jinja:
             return self._text
         return self.env.render_string(self._text)
 
-    @text.setter
-    def text(self, value) -> None:
+    def set_text(self, value: str) -> None:
         self._text = value
 
     def _to_markdown(self) -> str:
-        return self.text
+        return self.get_text()
 
     def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]
         """Return children nodes.

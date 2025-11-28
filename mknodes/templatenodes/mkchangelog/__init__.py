@@ -102,8 +102,7 @@ class MkChangelog(mktext.MkText):
             case _:
                 return self._repository
 
-    @property
-    def text(self) -> str:
+    def get_text(self) -> str:
         filter_commits = None
         if self._repository is None and (
             cfg := self.ctx.metadata.pyproject_file.tool.get("git-changelog")

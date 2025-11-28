@@ -10,5 +10,5 @@ jinja = """
 
 [output.markdown]
 template = """
-{{ node.text }}
+{{ node.get_text() }}
 """

@@ -21,18 +21,18 @@ jinja = """
 
 [output.markdown]
 template = """
-{{ "#" * node.level }} {{ node.text }}{% if node.exclude_from_search %} { data-search-exclude }{% endif %}
+{{ "#" * node.level }} {{ node.get_text() }}{% if node.exclude_from_search %} { data-search-exclude }{% endif %}
 """
 
 # [output.html]
 # template = """
-# <h{{ node.level }}>{{ node.text }}</h{{ node.level }}>
+# <h{{ node.level }}>{{ node.get_text() }}</h{{ node.level }}>
 # """
 
 [output.rst]
 template = """
-{% set line = {1: '#' , 2: '*' , 3: '=' , 4: '-' , 5: '^' , 6: '"' }[node.level] * (node.text | length) %}
+{% set line = {1: '#' , 2: '*' , 3: '=' , 4: '-' , 5: '^' , 6: '"' }[node.level] * (node.get_text() | length) %}
 {{ line }}
-{{ node.text }}
+{{ node.get_text() }}
 {{ line }}
 """

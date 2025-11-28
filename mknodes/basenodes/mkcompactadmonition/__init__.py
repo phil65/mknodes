@@ -32,7 +32,7 @@ class MkCompactAdmonition(mknode.MkNode):
             typ: Admonition type
             kwargs: Keyword arguments passed to parent
         """
-        self.text = text
+        self._text = text
         self.typ = typ
         super().__init__(**kwargs)
 
@@ -41,8 +41,11 @@ class MkCompactAdmonition(mknode.MkNode):
         root = xmlhelpers.Div(kls)
         xmlhelpers.Div("mdx-grid-child mdx-grid-child--icon", parent=root)
         text_div = xmlhelpers.Div("mdx-grid-child", parent=root)
-        text_div.text = str(self.text)
+        text_div.text = str(self._text)
         return root.to_string()
+
+    def get_text(self) -> str | mknode.MkNode:
+        return self._text
 
 
 if __name__ == "__main__":

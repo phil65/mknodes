@@ -32,14 +32,17 @@ class MkHeader(mknode.MkNode):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
-        self.text = str(text or "")
+        self._text = str(text or "")
         self.level = level
         self.exclude_from_search = exclude_from_search
 
     def _to_markdown(self) -> str:
         level_str = "#" * self.level
         suffix = " { data-search-exclude }" if self.exclude_from_search else ""
-        return f"{level_str} {self.text}{suffix}"
+        return f"{level_str} {self._text}{suffix}"
+
+    def get_text(self) -> str:
+        return self._text
 
 
 if __name__ == "__main__":

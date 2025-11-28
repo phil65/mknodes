@@ -3,11 +3,11 @@ icon = "mdi:code-json"
 name = "MkCode"
 
 [requirements.extension."pymdownx.superfences"]
+
 [requirements.extension."pymdownx.highlight"]
 anchor_linenums = true
-line_spans="__span"
+line_spans = "__span"
 pygments_lang_class = true
-
 
 [examples.title]
 title = "Default"
@@ -38,12 +38,12 @@ jinja = """
 [output.markdown]
 template = """
 {{ node.fence_boundary }} {{ node.fence_title }}
-{{ node.text }}
+{{ node.get_text() }}
 {{ node.fence_boundary }}
 """
 
 [output.rst]
 template = """
 .. sourcecode:: {{ node.language }}
-{{ node.text | indent(first=True) }}
+{{ node.get_text() | indent(first=True) }}
 """

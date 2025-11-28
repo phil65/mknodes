@@ -21,6 +21,6 @@ jinja = """
 [output.markdown]
 template = """
 {{ node.fence_boundary }} mermaid
-{{ node.text }}
+{{ node.get_text() }}
 {{ node.fence_boundary }}
 """

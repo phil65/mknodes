@@ -89,8 +89,7 @@ class MkLlm(mktext.MkText):
 
         return context_items
 
-    @property
-    def text(self) -> str:
+    def get_text(self) -> str:
         """Generate text using the LLM.
 
         Returns:

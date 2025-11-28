@@ -41,10 +41,13 @@ class MkMaterialBadge(mktemplate.MkTemplate):
         """
         super().__init__("output/html/template", **kwargs)
         self.icon = icon
-        self.text = text
+        self._text = text
         self.animated = animated
         self.align_right = align_right
         self.target = target
+
+    def get_text(self) -> str:
+        return self._text
 
 
 if __name__ == "__main__":
