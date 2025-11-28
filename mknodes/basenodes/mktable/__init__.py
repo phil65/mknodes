@@ -21,10 +21,7 @@ class MkTable(mkbasetable.MkBaseTable):
         headers = [formatters[i].format(k) for i, k in enumerate(table_data.keys())]
         divider = [width * "-" for width in widths]
         data = [
-            [
-                formatters[i].format(str(k).replace("\n", "<br>"))
-                for i, k in enumerate(row)
-            ]
+            [formatters[i].format(str(k).replace("\n", "<br>")) for i, k in enumerate(row)]
             for row in self.iter_rows()
         ]
         header_txt = "| " + " | ".join(headers) + " |"

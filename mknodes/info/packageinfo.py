@@ -173,9 +173,7 @@ class PackageInfo:
 
         requires = self.distribution.requires
         modules: set[str] = (
-            {packagehelpers.get_dependency(i).name for i in requires}
-            if requires
-            else set()
+            {packagehelpers.get_dependency(i).name for i in requires} if requires else set()
         )
         packages = {}
         for mod in modules:

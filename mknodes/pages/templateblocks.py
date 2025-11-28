@@ -77,9 +77,7 @@ class BaseBlock(mknode.MkNode):
 class HtmlBlock(BaseBlock):
     """Base class for blocks which usually contain HTML content."""
 
-    def __init__(
-        self, block_id: str, *, parent: mk.MkPage | mk.MkNav | None = None
-    ) -> None:
+    def __init__(self, block_id: str, *, parent: mk.MkPage | mk.MkNav | None = None) -> None:
         """Constructor.
 
         Args:

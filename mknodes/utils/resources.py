@@ -244,9 +244,7 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
 
     css: list[CSSType] = dataclasses.field(default_factory=list)
     """A filepath->filecontent dictionary containing the required CSS."""
-    markdown_extensions: dict[str, dict[str, Any]] = dataclasses.field(
-        default_factory=dict
-    )
+    markdown_extensions: dict[str, dict[str, Any]] = dataclasses.field(default_factory=dict)
     """A extension_name->settings dictionary containing the required md extensions."""
     plugins: list[Plugin] = dataclasses.field(default_factory=list)
     """A set of required plugins. (Only for info purposes)"""

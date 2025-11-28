@@ -76,8 +76,7 @@ class HomebrewInstall(InstallMethod):
 
     def info_text(self) -> str:
         return (
-            f"See the [formula](https://formulae.brew.sh/formula/{self.project}) "
-            "for more details."
+            f"See the [formula](https://formulae.brew.sh/formula/{self.project}) for more details."
         )
 
     def install_instructions(self) -> str:

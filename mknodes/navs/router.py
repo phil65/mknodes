@@ -25,9 +25,7 @@ class Router:
             tuple[str, ...], tuple[Callable[..., mkpage.MkPage], Any, Any]
         ] = {}
 
-        self._nav_registry: dict[
-            tuple[str, ...], tuple[Callable[..., mknav.MkNav], Any, Any]
-        ] = {}
+        self._nav_registry: dict[tuple[str, ...], tuple[Callable[..., mknav.MkNav], Any, Any]] = {}
         self._registry: dict[tuple[str, ...], Any] = {}
 
     def register_nodes(self, nav: mknav.MkNav) -> None:

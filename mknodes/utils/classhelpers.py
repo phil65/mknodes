@@ -99,12 +99,7 @@ def to_class(klass: griffe.Class | type | str | tuple[str, ...] | list[str]):
 
 
 def to_dotted_path(
-    obj: Sequence[str]
-    | str
-    | type
-    | types.ModuleType
-    | Callable[..., Any]
-    | griffe.Object,
+    obj: Sequence[str] | str | type | types.ModuleType | Callable[..., Any] | griffe.Object,
 ) -> str:
     """Return dotted path for given input.
 

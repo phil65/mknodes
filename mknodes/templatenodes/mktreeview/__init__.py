@@ -58,9 +58,7 @@ class MkTreeView(mkcode.MkCode):
     def text(self):
         match self.tree:
             case str() | os.PathLike():
-                return filetree.get_directory_tree(
-                    self.tree, max_depth=self.maximum_depth
-                )
+                return filetree.get_directory_tree(self.tree, max_depth=self.maximum_depth)
             case mknode.MkNode() as tree:
                 return tree.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
             case _:

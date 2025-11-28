@@ -63,11 +63,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
 
     @property
     def badge_content(self) -> list[tuple[str, str | None, str | None]]:  # noqa: PLR0911
-        ctx = (
-            packageregistry.get_info(self._package)
-            if self._package
-            else self.ctx.metadata
-        )
+        ctx = packageregistry.get_info(self._package) if self._package else self.ctx.metadata
         match self.typ:
             case "classifiers":
                 items: list[tuple[str, str | None, str | None]] = []
@@ -81,10 +77,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             case "required_python":
                 return [("Python", ctx.required_python_version, "https://python.org")]
             case "websites":
-                return [
-                    (name, parse.urlparse(url).netloc, url)
-                    for name, url in ctx.urls.items()
-                ]
+                return [(name, parse.urlparse(url).netloc, url) for name, url in ctx.urls.items()]
             case "dependencies":
                 return [(p.name, p.version, p.homepage) for p in ctx.required_packages]
             case "installed_packages":

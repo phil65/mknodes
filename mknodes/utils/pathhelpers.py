@@ -50,9 +50,7 @@ def fsspec_copy(
         target[k] = src[k]
 
 
-def clean_directory(
-    directory: str | os.PathLike[str], remove_hidden: bool = False
-) -> None:
+def clean_directory(directory: str | os.PathLike[str], remove_hidden: bool = False) -> None:
     """Remove the content of a directory recursively but not the directory itself."""
     folder_to_remove = to_upath(directory)
     if not folder_to_remove.exists():

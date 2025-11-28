@@ -236,9 +236,7 @@ class FolderInfo:
         return [
             runner
             for runner in taskrunners.TASK_RUNNERS.values()
-            if any(
-                pathhelpers.find_cfg_for_folder(i, self.path) for i in runner.filenames
-            )
+            if any(pathhelpers.find_cfg_for_folder(i, self.path) for i in runner.filenames)
         ]
 
     @functools.cached_property

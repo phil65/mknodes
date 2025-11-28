@@ -417,9 +417,7 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict) -> None:
             },
             {
                 "Home": [
-                    {
-                        "About": "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"
-                    }
+                    {"About": "https://raw.githubusercontent.com/phil65/mknodes/main/README.md"}
                 ]
             },
         ]
@@ -432,9 +430,9 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict) -> None:
         items = [items]
     for item in items:
         if "type" in item and "title" in item:
-            if (
-                condition := item.pop("condition", False)
-            ) and not root_nav.env.render_condition(condition):
+            if (condition := item.pop("condition", False)) and not root_nav.env.render_condition(
+                condition
+            ):
                 continue
             kls = getattr(mk, item.pop("type"))
             title = item.pop("title")

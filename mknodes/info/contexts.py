@@ -43,9 +43,7 @@ class Context:
     """Base class for contexts."""
 
     def as_dict(self):
-        return {
-            field.name: getattr(self, field.name) for field in dataclasses.fields(self)
-        }
+        return {field.name: getattr(self, field.name) for field in dataclasses.fields(self)}
 
     @property
     def fields(self) -> list[str]:
@@ -171,9 +169,7 @@ class PackageContext(Context):
     """The required python version for the distribution *[Metadata]*"""
     required_package_names: list[str] = dataclasses.field(default_factory=list)
     """The names of the dependencies."""
-    required_packages: dict[PackageInfo, Dependency] = dataclasses.field(
-        default_factory=dict
-    )
+    required_packages: dict[PackageInfo, Dependency] = dataclasses.field(default_factory=dict)
     """PackageInfos for the dependencies."""
     extras: dict[str, folderinfo.PackageExtra] = dataclasses.field(default_factory=dict)
     """The extras of the distribution."""

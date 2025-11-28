@@ -97,9 +97,7 @@ class MkLlm(mktext.MkText):
             Generated text content.
         """
         context_items = self._process_extra_files()
-        combined_context = (
-            "\n".join(filter(None, [self._context, *context_items])) or None
-        )
+        combined_context = "\n".join(filter(None, [self._context, *context_items])) or None
 
         return complete_llm(
             self.user_prompt,

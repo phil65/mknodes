@@ -14,9 +14,7 @@ logger = log.get_logger(__name__)
 
 
 class Connector[T]:
-    def __init__(
-        self, objects: T | list[T] | tuple[T, ...], max_depth: int | None = None
-    ) -> None:
+    def __init__(self, objects: T | list[T] | tuple[T, ...], max_depth: int | None = None) -> None:
         objs = objects if isinstance(objects, list | tuple) else [objects]
         self.item_dict: dict[Hashable, str] = {}
         self.connections: list[tuple[Hashable, Hashable]] = []
@@ -62,10 +60,7 @@ class Connector[T]:
         return str(self.get_id(item))
 
     def get_graph_connection_text(self):
-        lines = [
-            f'{identifier}["{title}"]'
-            for identifier, title in zip(self.items, self.titles)
-        ]
+        lines = [f'{identifier}["{title}"]' for identifier, title in zip(self.items, self.titles)]
         lines += [f"{a} --> {b}" for a, b in self.connections]
         return textwrap.indent("\n".join(lines), "  ")
 

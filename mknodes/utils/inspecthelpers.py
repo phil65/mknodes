@@ -75,9 +75,7 @@ def get_deprecated_message(obj) -> str | None:
         obj: Object to check
     """
     if isinstance(obj, griffe.Function | griffe.Class):
-        paths = [
-            i for i in obj.decorators if i.callable_path == "typing_extensions.deprecated"
-        ]
+        paths = [i for i in obj.decorators if i.callable_path == "typing_extensions.deprecated"]
         if paths:
             p = str(paths[0].value)
             # ast.literal_eval(str(paths[0].value.arguments[0]))

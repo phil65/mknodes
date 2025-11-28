@@ -8,9 +8,7 @@ from mknodes.nodemods import mod
 from mknodes.utils import resources
 
 
-SCROLLREVEAL_LINK = (
-    "https://cdn.jsdelivr.net/npm/scrollreveal@3.4.0/dist/scrollreveal.min.js"
-)
+SCROLLREVEAL_LINK = "https://cdn.jsdelivr.net/npm/scrollreveal@3.4.0/dist/scrollreveal.min.js"
 JQUERY_LINK = "https://code.jquery.com/jquery-2.2.4.min.js"
 
 SCRIPT = """\

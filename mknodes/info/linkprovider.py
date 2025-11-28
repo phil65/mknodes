@@ -90,9 +90,7 @@ class LinkProvider:
         """
         self.excludes.update(excludes)
 
-    def add_inv_file(
-        self, path: str | os.PathLike[str], base_url: str | None = None
-    ) -> None:
+    def add_inv_file(self, path: str | os.PathLike[str], base_url: str | None = None) -> None:
         """Add an inventory file to the inventory manager.
 
         Args:
@@ -209,10 +207,7 @@ class LinkProvider:
             page: The Page to link to
         """
         path = page.resolved_file_path
-        if self.use_directory_urls:
-            path = path.replace(".md", "/")
-        else:
-            path = path.replace(".md", ".html")
+        path = path.replace(".md", "/") if self.use_directory_urls else path.replace(".md", ".html")
         return self.base_url + path
 
     def url_for_header(self, header: mk.MkHeader) -> str:

@@ -75,9 +75,7 @@ mesonpy = BuildSystem(
     url="https://github.com/mesonbuild/meson-python",
     logo="https://mesonbuild.com/assets/images/meson_logo.png",
     env_setup_cmd=None,
-    install_url=(
-        "https://meson-python.readthedocs.io/en/latest/how-to-guides/first-project.html"
-    ),
+    install_url=("https://meson-python.readthedocs.io/en/latest/how-to-guides/first-project.html"),
 )
 
 maturin = BuildSystem(

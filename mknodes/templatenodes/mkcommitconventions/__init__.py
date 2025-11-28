@@ -19,9 +19,7 @@ class MkCommitConventions(mktemplate.MkTemplate):
     def __init__(
         self,
         commit_types: (
-            list[commitconventions.CommitTypeStr]
-            | commitconventions.ConventionTypeStr
-            | None
+            list[commitconventions.CommitTypeStr] | commitconventions.ConventionTypeStr | None
         ) = None,
         **kwargs: Any,
     ) -> None:

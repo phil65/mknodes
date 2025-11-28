@@ -125,9 +125,7 @@ class GitRepository(git.Repo):
         {"v0.x.x": {"feat": [git.Commit, ...], ...}, ...}
         """
         commits = [i for i in self.all_commits if i not in self.commit_to_tag]
-        groups = iterfilters.groupby(
-            commits, self.get_version_for_commit, natural_sort=True
-        )
+        groups = iterfilters.groupby(commits, self.get_version_for_commit, natural_sort=True)
 
         def get_commit_group(commit: git.Commit) -> str:
             assert isinstance(commit.message, str)

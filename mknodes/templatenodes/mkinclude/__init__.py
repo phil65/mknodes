@@ -22,9 +22,7 @@ class MkInclude(mktext.MkText):
 
     ICON = "octicons/file-symlink-file-24"
 
-    def __init__(
-        self, target: str | os.PathLike[str] | mktext.MkText, **kwargs: Any
-    ) -> None:
+    def __init__(self, target: str | os.PathLike[str] | mktext.MkText, **kwargs: Any) -> None:
         """Constructor.
 
         Args:

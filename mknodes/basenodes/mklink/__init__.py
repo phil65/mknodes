@@ -74,9 +74,7 @@ class MkLink(mknode.MkNode):
     @classmethod
     def for_pydantic_playground(
         cls,
-        files: Mapping[str, str]
-        | list[types.ModuleType]
-        | Sequence[str | os.PathLike[str]],
+        files: Mapping[str, str] | list[types.ModuleType] | Sequence[str | os.PathLike[str]],
         title: str = "Open in Pydantic Playground",
         active_index: int = 0,
         **kwargs: Any,

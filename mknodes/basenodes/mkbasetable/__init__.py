@@ -39,9 +39,7 @@ class MkBaseTable(mkcontainer.MkContainer):
             case () | None:
                 self._data: dict[str, list[mk.MkNode]] = {c: [] for c in columns or []}
             case Mapping():
-                self._data = {
-                    str(k): [self.to_child_node(i) for i in v] for k, v in data.items()
-                }
+                self._data = {str(k): [self.to_child_node(i) for i in v] for k, v in data.items()}
             case ((str(), *_), *_):
                 h = columns or [str(i) for i in range(len(data))]
                 self._data = {}
@@ -57,8 +55,7 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def __repr__(self):
         kwarg_data = {
-            k: [reprhelpers.to_str_if_textnode(i) for i in v]
-            for k, v in self.data.items()
+            k: [reprhelpers.to_str_if_textnode(i) for i in v] for k, v in self.data.items()
         }
         return reprhelpers.get_repr(self, data=kwarg_data)
 
@@ -83,15 +80,11 @@ class MkBaseTable(mkcontainer.MkContainer):
     def items(self, data):
         match data:
             case Mapping():
-                self._data = {
-                    str(k): [self.to_child_node(i) for i in v] for k, v in data.items()
-                }
+                self._data = {str(k): [self.to_child_node(i) for i in v] for k, v in data.items()}
             case (str(), *_):
                 self._data = {"": [self.to_child_node(i) for i in data]}
             case (dict(), *_):
-                self._data = {
-                    k: [self.to_child_node(dic[k]) for dic in data] for k in data[0]
-                }
+                self._data = {k: [self.to_child_node(dic[k]) for dic in data] for k in data[0]}
             case ():
                 self._data = {"": [self.to_child_node(k) for k in data]}
             case None:

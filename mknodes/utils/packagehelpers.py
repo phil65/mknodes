@@ -58,11 +58,7 @@ class Dependency:
 
     @property
     def marker(self) -> Marker | None:
-        return (
-            get_marker(self._marker.split(";", maxsplit=1)[-1])
-            if ";" in self._marker
-            else None
-        )
+        return get_marker(self._marker.split(";", maxsplit=1)[-1]) if ";" in self._marker else None
 
     @functools.cached_property
     def extras(self) -> list[str]:

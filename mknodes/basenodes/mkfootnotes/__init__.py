@@ -54,9 +54,7 @@ class MkFootNotes(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        footnotes: (
-            Mapping[int, str | mk.MkNode] | list[MkFootNote] | list[str] | None
-        ) = None,
+        footnotes: (Mapping[int, str | mk.MkNode] | list[MkFootNote] | list[str] | None) = None,
         **kwargs: Any,
     ):
         """Constructor.

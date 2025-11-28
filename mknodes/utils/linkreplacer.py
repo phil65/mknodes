@@ -26,9 +26,7 @@ AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
 
 class LinkReplacer:
     def __init__(self) -> None:
-        self.mapping: collections.defaultdict[str, list[str]] = collections.defaultdict(
-            list[str]
-        )
+        self.mapping: collections.defaultdict[str, list[str]] = collections.defaultdict(list[str])
         self.page_url = ""
 
     def __call__(self, match: re.Match[str]) -> str:
