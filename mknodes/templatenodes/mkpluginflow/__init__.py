@@ -22,7 +22,7 @@ class MkPluginFlow(mktemplate.MkTemplate):
 
     def __init__(
         self,
-        plugin: type[plugins.BasePlugin] | str | None = None,
+        plugin: type[plugins.BasePlugin[Any]] | str | None = None,
         **kwargs: Any,
     ) -> None:
         """Constructor.
@@ -52,7 +52,7 @@ class MkPluginFlow(mktemplate.MkTemplate):
     def event_plugin(self):
         return eventplugins.mkdocs_plugin
 
-    def hooks_for_plugin(self, plugin):
+    def hooks_for_plugin(self, plugin: type):
         return [e for e in self.event_plugin.flow if hasattr(plugin, e)]
 
 
