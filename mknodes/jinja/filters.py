@@ -15,16 +15,12 @@ if TYPE_CHECKING:
 
     import mknodes as mk
     from mknodes.info.linkprovider import LinkableType
-    from mknodes.jinja import nodeenvironment
+    from mknodes.jinja.nodeenvironment import NodeEnvironment
     from mknodes.utils.resources import JSFile, JSText
 
 
 @jinja2.pass_environment
-def get_link(
-    env: nodeenvironment.NodeEnvironment,
-    target: LinkableType,
-    title: str | None = None,
-) -> str:
+def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = None) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -38,7 +34,7 @@ def get_link(
 
 
 @jinja2.pass_environment
-def get_url(env: nodeenvironment.NodeEnvironment, target: LinkableType) -> str:
+def get_url(env: NodeEnvironment, target: LinkableType) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -51,10 +47,7 @@ def get_url(env: nodeenvironment.NodeEnvironment, target: LinkableType) -> str:
 
 
 @jinja2.pass_environment
-def link_for_class(
-    env: nodeenvironment.NodeEnvironment,
-    kls: type | str | griffe.Class,
-) -> str:
+def link_for_class(env: NodeEnvironment, kls: type | str | griffe.Class) -> str:
     """Return a markdown link for given class.
 
     Args:
@@ -65,10 +58,7 @@ def link_for_class(
 
 
 @jinja2.pass_environment
-def link_for_module(
-    env: nodeenvironment.NodeEnvironment,
-    module: types.ModuleType | str | griffe.Module,
-) -> str:
+def link_for_module(env: NodeEnvironment, module: types.ModuleType | str | griffe.Module) -> str:
     """Return a markdown link for given module.
 
     Args:

@@ -18,7 +18,7 @@ class MkDefinition(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: list | str | mknode.MkNode | None = None,
+        content: list[Any] | str | mknode.MkNode | None = None,
         title: str = "",
         **kwargs: Any,
     ) -> None:
@@ -43,7 +43,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
     REQUIRED_EXTENSIONS = [resources.Extension("def_list")]
     ICON = "material/library"
 
-    def __init__(self, data: Mapping | None = None, **kwargs: Any) -> None:
+    def __init__(self, data: Mapping[str, Any] | None = None, **kwargs: Any) -> None:
         """Constructor.
 
         Args:
