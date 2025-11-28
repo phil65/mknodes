@@ -273,10 +273,7 @@ class MkNode:
         return 0
 
     def pformat(self, indent: int = 0, max_depth: int | None = None):
-        lines = [
-            _indent * "    " + repr(child_item)
-            for _indent, child_item in self.iter_nodes(indent, max_depth)
-        ]
+        lines = [i * "    " + repr(child) for i, child in self.iter_nodes(indent, max_depth)]
         return "\n".join(lines)
 
     def iter_nodes(
@@ -307,8 +304,8 @@ class MkNode:
             return repr(x) if detailed else x.__class__.__name__
 
         lines = [
-            f"{pre_str}{fill_str}{formatter(_node)}"
-            for pre_str, fill_str, _node in self._yield_tree(
+            f"{pre_str}{fill_str}{formatter(node)}"
+            for pre_str, fill_str, node in self._yield_tree(
                 max_depth=max_depth,
                 style=style or "ascii",
             )
@@ -340,14 +337,14 @@ class MkNode:
             gap_str = style_obj.parent_middle
         unclosed_depth: set[int] = set()
         initial_depth = self.depth
-        for _node in self._preorder_iter(max_depth=max_depth):
+        for node in self._preorder_iter(max_depth=max_depth):
             pre_str = ""
             fill_str = ""
-            if not _node.is_root:
-                node_depth = _node.depth - initial_depth
+            if not node.is_root:
+                node_depth = node.depth - initial_depth
 
                 # Get fill_str (filename_middle or filename_last)
-                if _node.right_sibling:
+                if node.right_sibling:
                     unclosed_depth.add(node_depth)
                     fill_str = filename_middle
                 else:
@@ -356,10 +353,10 @@ class MkNode:
                     fill_str = filename_last
 
                 pre_str = "".join(
-                    parent_last if _depth in unclosed_depth else gap_str
-                    for _depth in range(1, node_depth)
+                    parent_last if depth in unclosed_depth else gap_str
+                    for depth in range(1, node_depth)
                 )
-            yield pre_str, fill_str, _node
+            yield pre_str, fill_str, node
 
     def _preorder_iter(
         self,
@@ -646,8 +643,8 @@ class MkNode:
         }
 
         req = resources.Resources(markdown_extensions=extensions)
-        for _node in nodes:
-            node_req = _node.get_node_resources()
+        for node in nodes:
+            node_req = node.get_node_resources()
             req.merge(node_req)
         return req
 
