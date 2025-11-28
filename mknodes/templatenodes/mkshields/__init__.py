@@ -46,19 +46,22 @@ class MkShields(mkcontainer.MkContainer):
         self._shields = shields
 
     @property
-    def user(self):
+    def user(self) -> str:
         match self._user:
             case None:
                 return self.ctx.metadata.repository_username
             case str():
                 return self._user
+            case _:
+                msg = "Invalid user type"
+                raise ValueError(msg)
 
     @user.setter
-    def user(self, value) -> None:
-        self._user = value
+    def user(self, val: str | None) -> None:
+        self._user = val
 
     @property
-    def project(self):
+    def project(self) -> str:
         if isinstance(self._project, str):
             return self._project
         return self.ctx.metadata.repository_name
@@ -91,7 +94,7 @@ class MkShields(mkcontainer.MkContainer):
         ]
 
     @items.setter
-    def items(self, value) -> None:
+    def items(self, items) -> None:
         pass
 
 
