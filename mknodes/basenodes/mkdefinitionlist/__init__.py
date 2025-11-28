@@ -32,8 +32,8 @@ class MkDefinition(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.title = title
 
-    def _to_markdown(self) -> str:
-        text = super()._to_markdown()
+    async def _to_markdown(self) -> str:
+        text = await super()._to_markdown()
         return f"{self.title}\n:   {filters.do_indent(text)}\n"
 
 
@@ -74,7 +74,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
             case _:
                 raise TypeError(data)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         items = [f"{k}\n:   {filters.do_indent(str(v))}\n" for k, v in self.data.items()]
         return "".join(items)
 

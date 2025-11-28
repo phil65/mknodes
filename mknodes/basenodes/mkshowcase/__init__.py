@@ -62,13 +62,14 @@ class MkShowcase(mkcontainer.MkContainer):
             case _:
                 return super().to_child_node(item)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         text = ""
         for items in filters.do_batch(self.get_items(), self.column_count):
             text += '<div class="row">'
             for item in items:
                 text += '\n  <div class="column">\n'
-                text += textwrap.indent(str(item), "    ")
+                item_md = await item.to_markdown()
+                text += textwrap.indent(item_md, "    ")
                 text += "  </div>"
             text += "\n</div>"
         return text

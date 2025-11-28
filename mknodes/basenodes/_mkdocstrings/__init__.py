@@ -202,7 +202,7 @@ class MkDocStrings(mknode.MkNode):
             opts["show_root_heading"] = True
         return opts
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         md = f"::: {self.obj_path}\n"
         if not self.options:
             return md

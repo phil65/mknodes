@@ -135,7 +135,7 @@ class MkNav(mknode.MkNode):
         self.nav.register(navi)
         return navi
 
-    def to_markdown(self) -> str:
+    async def to_markdown(self) -> str:
         return self.nav.to_literate_nav()
 
     def add_page(

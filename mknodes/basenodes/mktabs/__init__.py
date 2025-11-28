@@ -121,8 +121,9 @@ class MkTab(mkcontainer.MkContainer):
         # we deal with attaching annotations ourselves.
         return text
 
-    def _to_markdown(self) -> str:
-        text = "\n\n".join(i.to_markdown() for i in self.get_items())
+    async def _to_markdown(self) -> str:
+        items = [await i.to_markdown() for i in self.get_items()]
+        text = "\n\n".join(items)
         text = text.rstrip("\n")
         if self.annotations:
             annotates = str(self.annotations)

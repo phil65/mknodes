@@ -48,10 +48,9 @@ class MkBlock(mkcontainer.MkContainer):
         block_level = sum(isinstance(i, MkBlock) for i in self.ancestors)
         return "/" * (block_level + 3)
 
-    @property
-    def content_block(self) -> str:
+    async def content_block(self) -> str:
         """Returns the block content. Can be reimplemented by subclasses."""
-        text = super()._to_markdown()
+        text = await super()._to_markdown()
         return textwrap.indent(text, self.indent).rstrip("\n") + "\n"
 
     @property
@@ -65,12 +64,13 @@ class MkBlock(mkcontainer.MkContainer):
         lines = [f"    {k}: {v}" for k, v in self.attributes.items() if v is not None]
         return "\n".join(lines) + "\n"
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         boundary = self.fence_boundary
         base = f"{boundary} {self.name}"
         if self.argument:
             base += f" | {self.argument}"
-        return f"{base}\n{self.attributes_block}\n{self.content_block}{boundary}\n"
+        content = await self.content_block()
+        return f"{base}\n{self.attributes_block}\n{content}{boundary}\n"
 
 
 if __name__ == "__main__":

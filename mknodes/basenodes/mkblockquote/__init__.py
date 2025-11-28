@@ -15,8 +15,8 @@ class MkBlockQuote(mkcontainer.MkContainer):
     ICON = "material/format-quote-open"
     STATUS = "new"
 
-    def _to_markdown(self) -> str:
-        text = super()._to_markdown()
+    async def _to_markdown(self) -> str:
+        text = await super()._to_markdown()
         return textwrap.indent(text, "> ").rstrip("\n") + "\n"
 
 

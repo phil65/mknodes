@@ -51,9 +51,10 @@ class MkCritic(mkcontainer.MkContainer):
             case _:
                 raise TypeError(self.typ)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         left, right = self.marks
-        return f"{{{left}\n\n{super()._to_markdown()}\n\n{right}}}"
+        content = await super()._to_markdown()
+        return f"{{{left}\n\n{content}\n\n{right}}}"
 
 
 if __name__ == "__main__":

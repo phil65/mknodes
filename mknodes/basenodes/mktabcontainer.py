@@ -119,14 +119,15 @@ class MkTabContainer(mkcontainer.MkContainer):
             _filter_empty=True,
         )
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         items = self.get_items()
         if not items:
             return ""
         if self.select_tab is not None:
             self.set_selected(self.select_tab)
         items[0].new = True
-        return self.block_separator.join(str(i) for i in items)
+        texts = [await i.to_markdown() for i in items]
+        return self.block_separator.join(texts)
 
 
 if __name__ == "__main__":

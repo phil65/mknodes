@@ -36,7 +36,7 @@ class MkHeader(mknode.MkNode):
         self.level = level
         self.exclude_from_search = exclude_from_search
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         level_str = "#" * self.level
         suffix = " { data-search-exclude }" if self.exclude_from_search else ""
         return f"{level_str} {self._text}{suffix}"

@@ -126,7 +126,7 @@ class MkLink(mknode.MkNode):
         url = f"https://pydantic.run/new?files={encoded}"
         return cls(url, title, **kwargs)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""
         tooltip = f" {self.tooltip!r}" if self.tooltip else ""
         return f"[{prefix}{self.title}]({self.url}{tooltip})"

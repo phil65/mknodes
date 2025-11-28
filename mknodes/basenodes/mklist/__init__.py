@@ -48,7 +48,7 @@ class MkList(mkcontainer.MkContainer):
     def _prep(self, item: mknode.MkNode) -> str:
         return linkprovider.linked(str(item)) if self.as_links else str(item)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         items = self.get_items()
         if not items:
             return ""
@@ -61,7 +61,7 @@ class MkList(mkcontainer.MkContainer):
             lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
 
-    def to_html(self) -> str:
+    async def to_html(self) -> str:
         """Formats list in html as one single line.
 
         Can be useful for including in Tables.

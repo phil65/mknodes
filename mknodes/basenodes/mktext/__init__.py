@@ -50,7 +50,7 @@ class MkText(mknode.MkNode):
     def set_text(self, value: str) -> None:
         self._text = value
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         return self.get_text()
 
     def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]

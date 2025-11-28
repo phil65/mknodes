@@ -502,18 +502,17 @@ class MkNode:
         """Get a node from name registry."""
         return cls._name_registry[name]
 
-    @property
-    def toc(self):
+    async def get_toc(self):
         from mknodes.pages import toc
 
-        return toc.get_toc(self.to_markdown())
+        return toc.get_toc(await self.to_markdown())
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         return NotImplemented
 
-    def to_markdown(self) -> str:
+    async def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
-        text = self._to_markdown()
+        text = await self._to_markdown()
         for proc in self.get_processors():
             text = proc.run(text)
         return text
@@ -663,9 +662,9 @@ class MkNode:
         ctx = contexts.ProjectContext.for_config(repo_url=repo_url, base_url=base_url)
         return cls(*args, **kwargs, context=ctx)
 
-    def to_html(self) -> str:
+    async def to_html(self) -> str:
         """Convert node to HTML using the resources from node + children."""
-        md = self.to_markdown()
+        md = await self.to_markdown()
         reqs = self.get_resources()
         configs = reqs.markdown_extensions
         exts = list(configs.keys())

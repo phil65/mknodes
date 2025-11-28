@@ -36,7 +36,7 @@ class MkCompactAdmonition(mknode.MkNode):
         self.typ = typ
         super().__init__(**kwargs)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         kls = f"mdx-grid-wrapper mdx-admo--{self.typ}" if self.typ else "mdx-grid-wrapper"
         root = xmlhelpers.Div(kls)
         xmlhelpers.Div("mdx-grid-child mdx-grid-child--icon", parent=root)

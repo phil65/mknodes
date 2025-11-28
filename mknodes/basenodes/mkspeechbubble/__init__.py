@@ -25,14 +25,15 @@ class MkSpeechBubble(mkcontainer.MkContainer):
         self.arrow = arrow
         super().__init__(content=content or [], **kwargs)
 
-    def get_element(self) -> xml.Div:
+    async def get_element(self) -> xml.Div:
         klass = f"speech {self.arrow}" if self.arrow else "speech"
         root = xml.Div(klass, markdown=True)
-        root.text = "\n" + super()._to_markdown() + "\n"
+        root.text = "\n" + await super()._to_markdown() + "\n"
         return root
 
-    def _to_markdown(self) -> str:
-        return self.get_element().to_string()
+    async def _to_markdown(self) -> str:
+        element = await self.get_element()
+        return element.to_string()
 
 
 if __name__ == "__main__":

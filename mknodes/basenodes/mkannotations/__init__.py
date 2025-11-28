@@ -35,8 +35,9 @@ class MkAnnotation(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
-    def _to_markdown(self) -> str:
-        item_str = "\n\n".join(i.to_markdown() for i in self.get_items())
+    async def _to_markdown(self) -> str:
+        items = [await i.to_markdown() for i in self.get_items()]
+        item_str = "\n\n".join(items)
         prefix = f"{self.num}."
         return f"{prefix:<4}{filters.do_indent(item_str)}\n"
 
@@ -125,12 +126,13 @@ class MkAnnotations(mkcontainer.MkContainer):
         else:
             items.append(node)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         items = self.get_items()
         if not items:
             return ""
         items = sorted(items, key=lambda x: x.num)
-        return "".join(i.to_markdown() for i in items)
+        texts = [await i.to_markdown() for i in items]
+        return "".join(texts)
 
     def annotate_text(self, markdown: str) -> str:
         if not self.get_items():

@@ -31,7 +31,7 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
                 td.text = "\n" + item + "\n"
         return root
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         root = self.get_element()
         return root.to_string(space="") if root is not None else ""
 

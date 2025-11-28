@@ -115,9 +115,9 @@ class MkPyDeps(mknode.MkNode):
             only_cycles=self.only_cycles,
             clusters=self.clusters,
         )
-        return insert_links(content, self.ctx.links.inv_manager)
+        return insert_links(content, self.ctx.links.inv_manager)  # type: ignore
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         return f"<body>\n\n{self.svg}\n\n</body>\n"
 
 

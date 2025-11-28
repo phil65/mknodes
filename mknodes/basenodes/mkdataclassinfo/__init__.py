@@ -42,7 +42,7 @@ class MkDataClassInfo(mknode.MkNode):
         """Return whether we're dealing with a class or an instance."""
         return isinstance(self.obj, type)
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         """Convert the dataclass to markdown format."""
         try:
             obj_fields = fields(self.obj)

@@ -37,7 +37,7 @@ class MkKeys(mknode.MkNode):
             case list():
                 self.keys = [i.lower() for i in keys]
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         key_str = "+".join(self.keys)
         return f"++{key_str}++"
 

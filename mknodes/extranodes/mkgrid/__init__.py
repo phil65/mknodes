@@ -29,18 +29,18 @@ class MkGrid(mkcontainer.MkContainer):
                 items = [self.to_child_node(i) for i in items]
         super().__init__(content=items, **kwargs)
 
-    def get_element(self) -> xml.Div:
+    async def get_element(self) -> xml.Div:
         root = xml.Div("grid cards", markdown=True)
         items = self.get_items()
         if not items:
             return root
-        result = [f"-   {filters.do_indent(item.to_markdown())}" for item in items]
+        result = [f"-   {filters.do_indent(await item.to_markdown())}" for item in items]
         content = "\n".join(result)
         root.text = "\n\n" + content + "\n"
         return root
 
-    def _to_markdown(self) -> str:
-        root = self.get_element()
+    async def _to_markdown(self) -> str:
+        root = await self.get_element()
         return root.to_string(space="")
 
 

@@ -78,7 +78,7 @@ class MkImage(mknode.MkNode):
     def url(self) -> str:
         return self.ctx.links.get_url(self.target) if self.target else ""
 
-    def _to_markdown(self) -> str:
+    async def _to_markdown(self) -> str:
         if not self.path_dark_mode:
             markdown_link = self._build(self.path)
         else:
