@@ -28,5 +28,5 @@ template = """
 
 [output.markdown]
 template = """
-{{ node.items | join(node.block_separator) }}
+{{ node.get_items() | join(node.block_separator) }}
 """

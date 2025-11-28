@@ -23,10 +23,10 @@ page += mk.MkCode(str(node), language="markdown", header="Markdown")
 
 [fragments.annotation]
 template = """
-{{ node.num }}.{{ 3 - self.num | string | length }}{{ node.items | join("\n\n") | indent }}
+{{ node.num }}.{{ 3 - self.num | string | length }}{{ node.get_items() | join("\n\n") | indent }}
 """
 
 [output.markdown]
 template = """
-{{ node.items | sort(attribute="num") | join }}
+{{ node.get_items() | sort(attribute="num") | join }}
 """

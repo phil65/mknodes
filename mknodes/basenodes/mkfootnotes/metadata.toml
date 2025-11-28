@@ -18,18 +18,18 @@ node
 [fragments.footnote]
 template = """
 [^{{ footnote.num }}]
-{{ node.items | join("\n") | indent(first=True) }}
+{{ node.get_items() | join("\n") | indent(first=True) }}
 """
 
 [output.markdown]
 template = """
-{{ node.items | sort(attribute="num") | join }}
+{{ node.get_items() | sort(attribute="num") | join }}
 """
 
 [output.rst]
 template = """
 .. rubric:: Footnotes
 
-{% for item in node.items | sort(attribute="num") %}
+{% for item in node.get_items() | sort(attribute="num") %}
 .. {{ item }}
 """

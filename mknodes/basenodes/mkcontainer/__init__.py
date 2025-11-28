@@ -59,17 +59,6 @@ class MkContainerBase(mknode.MkNode):
         """Set the list of contained items."""
         ...
 
-    # TODO: Remove items/children properties once templates are migrated to use
-    # get_items()/get_children() methods. See metadata.toml files in node directories.
-    @property
-    def items(self) -> list[mknode.MkNode]:
-        """Property for backward compatibility with templates."""
-        return self.get_items()
-
-    @items.setter
-    def items(self, items: list[mknode.MkNode]) -> None:
-        self.set_items(items)
-
     def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]
         """Return children - delegates to get_items for containers."""
         return self.get_items()

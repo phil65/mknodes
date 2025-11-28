@@ -32,17 +32,6 @@ class Node:
         """Set the list of children nodes."""
         self._children = children
 
-    # TODO: Remove children property once templates are migrated to use
-    # get_children() method. See metadata.toml files in node directories.
-    @property
-    def children(self) -> list[Node]:
-        """Property for backward compatibility."""
-        return self.get_children()
-
-    @children.setter
-    def children(self, children: list[Node]) -> None:
-        self.set_children(children)
-
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
 

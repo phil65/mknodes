@@ -15,7 +15,7 @@ jinja = """
 # template = """
 # <div class="grid cards" markdown="1">
 
-# {% for item in node.items %}
+# {% for item in node.get_items() %}
 # -   {{ item | indent }}
 # {% endfor %}
 # </div>

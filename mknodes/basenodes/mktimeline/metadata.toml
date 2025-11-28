@@ -62,12 +62,10 @@ item = """
 # [output.markdown]
 # template = """
 
-
 # <section class="timeline">
-# {% for item in node.items %}
+# {% for item in node.get_items() %}
 # {{ "fragments/item" | render_template(node=item) }}
 # {% endfor %}
 # </section>
-
 
 # """

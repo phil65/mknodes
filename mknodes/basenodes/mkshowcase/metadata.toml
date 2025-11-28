@@ -44,9 +44,10 @@ jinja = """
     "Title 4" | MkCard(target=url, image=img_url, caption="Caption 4"),
     "Title 5" | MkCard(target=url, image=img_url, caption="Caption 5")] | MkShowcase }}
 """
+
 [output.markdown]
 template = """
-{% for items in node.items | batch(node.column_count) %}
+{% for items in node.get_items() | batch(node.column_count) %}
 <div class="row">
 {% for item in items %}
   <div class="column">

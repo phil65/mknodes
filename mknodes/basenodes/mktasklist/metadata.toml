@@ -12,11 +12,11 @@ jinja = """
 
 [fragments]
 task = """
-- [{{ "x" if node.value else " " }}] {{ node.items | join(node.block_separator) | indent }}
+- [{{ "x" if node.value else " " }}] {{ node.get_items() | join(node.block_separator) | indent }}
 
 """
 
 [output.markdown]
 template = """
-{{ node.items | join(node.block_separator) }}
+{{ node.get_items() | join(node.block_separator) }}
 """

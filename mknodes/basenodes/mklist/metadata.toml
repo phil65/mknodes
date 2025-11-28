@@ -31,10 +31,10 @@ jinja = """
 
 [output.markdown]
 template = """
-{% for item in node.items[: node.shorten_after] %}
+{% for item in node.get_items()[: node.shorten_after] %}
   {{ (loop.index ~ ".") if node.ordered else "*" }} {{ node._prep(item)}}
 {% endfor %}
-{% if node.shorten_after and node.items | length > node.shorten_after %}
+{% if node.shorten_after and node.get_items() | length > node.shorten_after %}
   {{ (node.shorten_after + 1 ~ ".") if node.ordered else "*" }} ...
 {% endif %}
 
@@ -42,8 +42,8 @@ template = """
 
 [output.html]
 template = """
-<{{ "ol" if node.ordered else "ul" }}>{% for item in node.items[: node.shorten_after] %}<li>{{ node._prep(item)}}</li>{% endfor %}
-{% if node.shorten_after and node.items | length > node.shorten_after %}
+<{{ "ol" if node.ordered else "ul" }}>{% for item in node.get_items()[: node.shorten_after] %}<li>{{ node._prep(item)}}</li>{% endfor %}
+{% if node.shorten_after and node.get_items() | length > node.shorten_after %}
 <li>...</li>{% endif %}
 </{{ "ol" if node.ordered else "ul" }}>
 """

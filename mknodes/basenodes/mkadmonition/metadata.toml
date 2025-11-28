@@ -3,7 +3,9 @@ icon = "octicon:info-16"
 name = "MkAdmonition"
 
 [requirements.extension.admonition]
+
 [requirements.extension."pymdownx.details"]
+
 [requirements.extension."pymdownx.superfences"]
 
 [examples.annotations]
@@ -35,27 +37,27 @@ jinja = """
 
 [output.markdown]
 template = """
-{% if node.title or node.items %}
+{% if node.title or node.get_items() %}
 {{ node.title_line }}
-{{ node.items | join(node.block_separator) | indent(first=True) }}
+{{ node.get_items() | join(node.block_separator) | indent(first=True) }}
 {% endif %}
 """
 
 [output.block]
 template = """
 {{ node.fence_boundary }} admonition {{ node.typ }}{{ node.title | add(" | ") }}
-{{ node.items | join }}
+{{ node.get_items() | join }}
 {{ node.fence_boundary }}
 """
 
 [output.github]
 template = """
 > [!{{ node.typ | upper }}]\
-{{ node.items | join | indent(width="> ", first=True) }}
+{{ node.get_items() | join | indent(width="> ", first=True) }}
 """
 
 [output.rst]
 template = """
 .. {{ node.typ }}:: {{ node.title or "" }}
-{{ node.items | join(node.block_separator) | indent(first=True) }}
+{{ node.get_items() | join(node.block_separator) | indent(first=True) }}
 """

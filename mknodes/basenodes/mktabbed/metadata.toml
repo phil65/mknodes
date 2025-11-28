@@ -3,6 +3,7 @@ name = "MkTabbed"
 icon = "mdi:tab"
 
 [requirements.extension."pymdownx.tabbed"]
+
 [requirements.extension."pymdownx.superfences"]
 
 [examples.regular]
@@ -21,7 +22,7 @@ jinja = """
 [fragments.tab]
 template = """
 ==={% if tab.new %}!{% endif %}{% if tab.select %}+{% endif %} "{{ tab.title }}"
-    {{ tab.items | join(tab.block_separator) | rstrip("\n") | indent }}
+    {{ tab.get_items() | join(tab.block_separator) | rstrip("\n") | indent }}
     {% if tab.annotations %}
     { .annotate }
 
@@ -31,5 +32,5 @@ template = """
 
 [output.markdown]
 template = """
-{{ node.items | join(node.block_separator) }}
+{{ node.get_items() | join(node.block_separator) }}
 """

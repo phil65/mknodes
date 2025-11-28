@@ -17,19 +17,19 @@ jinja = """
 
 [output.markdown]
 template = """
-{{ node.items | join(node.block_separator) | indent(width="> ", first=True) | rstrip("\n") }}
+{{ node.get_items() | join(node.block_separator) | indent(width="> ", first=True) | rstrip("\n") }}
 
 """
 
 # [output.html]
 # template = """
 # <blockquote>
-# {{ node.items | join(node.block_separator)  }}
+# {{ node.get_items() | join(node.block_separator)  }}
 # </blockquote>
 # """
 
 [output.rst]
 template = """
-{{ node.items | join(node.block_separator) | indent(width="    ", first=True) | rstrip("\n") }}
+{{ node.get_items() | join(node.block_separator) | indent(width="    ", first=True) | rstrip("\n") }}
 
 """

@@ -3,6 +3,7 @@ name = "MkTab"
 icon = "mdi:tab"
 
 [requirements.extension."pymdownx.tabbed"]
+
 [requirements.extension."pymdownx.superfences"]
 
 [examples.regular]
@@ -26,7 +27,7 @@ tab
 [output.markdown]
 template = """
 ==={% if node.new %}!{% endif %}{% if node.select %}+{% endif %} "{{ node.title }}"
-    {{ node.items | join(node.block_separator) | rstrip("\n") | indent }}
+    {{ node.get_items() | join(node.block_separator) | rstrip("\n") | indent }}
 {% if node.annotations %}
     { .annotate }
 

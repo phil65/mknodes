@@ -4,7 +4,6 @@ name = "MkDetailsBlock"
 
 [requirements.extension."pymdownx.blocks.details"]
 
-
 [examples.regular]
 title = "Regular"
 jinja = """
@@ -16,6 +15,7 @@ title = "Collapsible and expandable"
 jinja = """
 {{ "MkDetailsBlocks can also be expanded." | MkDetailsBlock(expanded=True) }}
 """
+
 [output.markdown]
 template = """
 {{ node.fence_boundary }} details{% if node.argument %}" | " ~ {{ node.argument }}{% endif %}
@@ -24,7 +24,7 @@ template = """
 {% if node.expanded %}    open: True
 {% endif %}
 
-{{ node.items | join }}
+{{ node.get_items() | join }}
 {{ node.fence_boundary }}
 
 """

@@ -32,7 +32,7 @@ jinja = """
 template = """
 {% raw %}{{% endraw %}{{ node.marks[0] }}
 
-{{ node.items | join(node.block_separator) }}
+{{ node.get_items() | join(node.block_separator) }}
 
 {{ node.marks[1] }}{% raw %}}{% endraw %}
 """
