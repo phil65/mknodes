@@ -38,7 +38,7 @@ class MkCode(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: str | mk.MkNode | list = "",
+        content: str | mk.MkNode | list[mk.MkNode] = "",
         *,
         language: str = "python",
         title: str = "",

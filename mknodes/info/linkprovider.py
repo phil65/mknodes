@@ -1,3 +1,5 @@
+"""LinkProvider class to get links from a central registry."""
+
 from __future__ import annotations
 
 from importlib import metadata

@@ -22,7 +22,7 @@ class MkBlock(mkcontainer.MkContainer):
     def __init__(
         self,
         name: str,
-        content: list | str | mk.MkNode = "",
+        content: list[mk.MkNode] | str | mk.MkNode = "",
         *,
         argument: str = "",
         attributes: dict[str, Any] | None = None,

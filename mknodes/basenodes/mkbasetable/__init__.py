@@ -23,7 +23,10 @@ class MkBaseTable(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        data: Sequence[Sequence[str]] | Sequence[dict] | Mapping[str, list] | None = None,
+        data: Sequence[Sequence[str]]
+        | Sequence[dict[str, mk.MkNode | str]]
+        | Mapping[str, list[mk.MkNode | str]]
+        | None = None,
         columns: Sequence[str] | None = None,
         **kwargs: Any,
     ):
@@ -46,10 +49,7 @@ class MkBaseTable(mkcontainer.MkContainer):
                 for i, col in enumerate(data):
                     self._data[h[i]] = [self.to_child_node(j) for j in col]
             case (dict(), *_):
-                self._data = {
-                    k: [self.to_child_node(dic[k]) for dic in data]  # type: ignore[index]
-                    for k in data[0]
-                }
+                self._data = {k: [self.to_child_node(dic[k]) for dic in data] for k in data[0]}  # type: ignore[call-overload]
             case _:
                 raise TypeError(data)
 
@@ -60,11 +60,11 @@ class MkBaseTable(mkcontainer.MkContainer):
         return reprhelpers.get_repr(self, data=kwarg_data)
 
     @property
-    def data(self):
+    def data(self) -> dict[str, list[mk.MkNode]]:
         return self._data
 
     @data.setter
-    def data(self, value) -> None:
+    def data(self, value: dict[str, list[mk.MkNode]]) -> None:
         self._data = value
 
     @property

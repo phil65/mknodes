@@ -34,7 +34,7 @@ class MkDiagram(mkcode.MkCode):
     def __init__(
         self,
         names: list[str] | None = None,
-        connections: list[tuple] | None = None,
+        connections: list[tuple[str, str] | tuple[str, str, str]] | None = None,
         *,
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         **kwargs: Any,
