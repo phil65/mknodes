@@ -21,12 +21,7 @@ class MkAnnotation(mkcontainer.MkContainer):
 
     REQUIRED_EXTENSIONS = [resources.Extension("pymdownx.superfences")]
 
-    def __init__(
-        self,
-        num: int,
-        content: str | mk.MkNode,
-        **kwargs: Any,
-    ) -> None:
+    def __init__(self, num: int, content: str | mk.MkNode, **kwargs: Any) -> None:
         """Constructor.
 
         Args:

@@ -62,7 +62,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         self.use_gitlab_style = use_gitlab_style
 
     @property
-    def badge_content(self) -> list[tuple]:  # noqa: PLR0911
+    def badge_content(self) -> list[tuple[str, str | None, str | None]]:  # noqa: PLR0911
         ctx = (
             packageregistry.get_info(self._package)
             if self._package
@@ -70,7 +70,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         )
         match self.typ:
             case "classifiers":
-                items: list[tuple] = []
+                items: list[tuple[str, str | None, str | None]] = []
                 for category, labels in ctx.classifier_map.items():
                     items.extend([(i, category, None) for i in labels])
                 return items
