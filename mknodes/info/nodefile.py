@@ -39,7 +39,7 @@ def find_file(klass: type) -> pathlib.Path | None:
     return None
 
 
-def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
+async def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
     import mknodes as mk
 
     parent.env.render_string(jinja)
@@ -50,7 +50,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
         Repr=mk.MkCode(textfilters.format_code(repr(node))),
         Rendered=node.__copy__(),  # noqa: PLC2801
         Markdown=mk.MkCode(node, language="markdown"),
-        Html=mk.MkCode(node.to_html(), language="html"),
+        Html=mk.MkCode(await node.to_html(), language="html"),
     )
     nodefile = node.get_nodefile()
     assert nodefile
@@ -95,7 +95,7 @@ class NodeFile(configfile.TomlFile):
         """Return the examples section."""
         return self._data.get("examples", {})
 
-    def get_examples(self, parent: mk.MkNode) -> dict[str, dict[str, Any]]:
+    async def get_examples(self, parent: mk.MkNode) -> dict[str, dict[str, Any]]:
         """Return a dictionary containing examples.
 
         Contains example-name->dict-with-representations key-value pairs.
@@ -115,7 +115,7 @@ class NodeFile(configfile.TomlFile):
             if "condition" in v and not parent.env.render_condition(v["condition"]):
                 continue
             if "jinja" in v:
-                examples[v["title"]] = get_representations(v["jinja"], parent)
+                examples[v["title"]] = await get_representations(v["jinja"], parent)
         return examples
 
     def iter_example_instances(self, parent: mk.MkNode) -> Generator[mk.MkNode]:

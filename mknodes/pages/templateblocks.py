@@ -63,7 +63,7 @@ class BaseBlock(mknode.MkNode):
     def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
-    def to_markdown(self, md: markdown.Markdown | None = None) -> str:
+    async def to_markdown(self, md: markdown.Markdown | None = None) -> str:
         """Return HTML for the block.
 
         Args:

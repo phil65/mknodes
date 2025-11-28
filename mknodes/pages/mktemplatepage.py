@@ -34,7 +34,11 @@ class MkTemplatePage(mkpage.MkPage):
 
     @property
     def items(self):
-        self._to_markdown()
+        self.env.render_template(
+            self.template_path,
+            parent_template=self.template_parent,
+            variables=self.extra_variables,
+        )
         return self.env.rendered_children
 
     @items.setter

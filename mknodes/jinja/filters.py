@@ -68,13 +68,13 @@ def link_for_module(env: NodeEnvironment, module: types.ModuleType | str | griff
     return env.node.ctx.links.link_for_module(module)
 
 
-def to_html(node: mk.MkNode) -> str:
+async def to_html(node: mk.MkNode) -> str:
     """Return HTML for given node.
 
     Args:
         node: The node to add a mod to
     """
-    return node.to_html()
+    return await node.to_html()
 
 
 def apply_mod(node: mk.MkNode, mod_name: str, **kwargs: Any) -> mk.MkNode:
