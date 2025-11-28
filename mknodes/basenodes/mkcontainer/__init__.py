@@ -43,7 +43,7 @@ class MkContainerBase(mknode.MkNode):
         self.append(other)
         return self
 
-    def __iter__(self) -> Iterator[mknode.MkNode]:  # type: ignore
+    def __iter__(self) -> Iterator[mknode.MkNode]:
         return iter(self.get_items())
 
     def _to_markdown(self) -> str:
@@ -59,11 +59,11 @@ class MkContainerBase(mknode.MkNode):
         """Set the list of contained items."""
         ...
 
-    def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]
+    def get_children(self) -> list[mknode.MkNode]:
         """Return children - delegates to get_items for containers."""
         return self.get_items()
 
-    def set_children(self, children: list[mknode.MkNode]) -> None:  # type: ignore[override]
+    def set_children(self, children: list[mknode.MkNode]) -> None:
         """Set children - delegates to set_items for containers."""
         self.set_items(children)
 

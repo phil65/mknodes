@@ -80,36 +80,22 @@ def _parse_toc_token(token: _TocToken) -> AnchorLink:
     return AnchorLink(token["name"], token["id"], token["level"], tokens)
 
 
-if __name__ == "__main__":
-    import re
-
-    import markdown
-
-    from mknodes.treelib import node
-
-    TEXT = "# **test**\n\n### test3\n\n## tsexx\n\n# tsexx\n"
-
-    class TocNode(node.Node):
-        def __init__(self, name: str, **kwargs) -> None:
-            super().__init__(**kwargs)
-            self.name = name
-
-    def stripped(md: str):
-        html = markdown.Markdown(extensions=["toc"]).convert(md)
-        res = re.sub(r"(<[^>]+>)", "", html)
-        return re.sub(r"(&[\#a-zA-Z0-9]+;)", "", res)
-
-    # page = mk.MkPage()
-    # node = MkText(TEXT)
-    # page += node
-    # print(repr(page.toc))
-    root = TocNode("")
-    pat = re.compile(r"^(#+) (.*)$", re.MULTILINE)
-    prev_level = 0
-
-    items = [
-        {"level": len(match[1]), "name": match[2], "cleaned": stripped(match[2])}
-        for match in pat.finditer(TEXT)
-    ]
-    # from markdown.extensions import toc
-    # print(toc.nest_toc_tokens(items))
+# if __name__ == "__main__":
+#     import re
+#
+#     import markdown
+#
+#     TEXT = "# **test**\n\n### test3\n\n## tsexx\n\n# tsexx\n"
+#
+#     def stripped(md: str):
+#         html = markdown.Markdown(extensions=["toc"]).convert(md)
+#         res = re.sub(r"(<[^>]+>)", "", html)
+#         return re.sub(r"(&[\#a-zA-Z0-9]+;)", "", res)
+#
+#     pat = re.compile(r"^(#+) (.*)$", re.MULTILINE)
+#     prev_level = 0
+#
+#     items = [
+#         {"level": len(match[1]), "name": match[2], "cleaned": stripped(match[2])}
+#         for match in pat.finditer(TEXT)
+#     ]
