@@ -71,13 +71,10 @@ class MkBaseTable(mkcontainer.MkContainer):
     def columns(self):
         return list(self.data.keys())
 
-    @property
-    def items(self):
-        data = self.data  # property
-        return [i for k in data for i in data[k]]
+    def get_items(self):
+        return [i for k in self._data for i in self._data[k]]
 
-    @items.setter
-    def items(self, data):
+    def set_items(self, data):  # pyright: ignore[reportIncompatibleMethodOverride]
         match data:
             case Mapping():
                 self._data = {str(k): [self.to_child_node(i) for i in v] for k, v in data.items()}
