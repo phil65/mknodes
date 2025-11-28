@@ -40,6 +40,6 @@ template = """
 {{ node.fence_boundary }} tab | {{ node.title }}
 {{ node.attributes_block }}
 
-{{ node.content_block }}{{ node.fence_boundary }}
+{{ node.get_content_block }}{{ node.fence_boundary }}
 
 """

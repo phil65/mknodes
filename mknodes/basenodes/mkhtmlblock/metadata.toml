@@ -4,7 +4,6 @@ name = "MkHtmlBlock"
 
 [requirements.extension."pymdownx.blocks.html"]
 
-
 [examples.regular]
 title = "Regular"
 jinja = """
@@ -16,6 +15,6 @@ template = """
 {{ node.fence_boundary }} html{% if node.argument %}{{ node.argument | add(prefix=' | ')}}{% endif %}
 {{ node.attributes_block }}
 
-{{ node.content_block }}{{ node.fence_boundary }}
+{{ node.get_content_block() }}{{ node.fence_boundary }}
 
 """

@@ -48,7 +48,7 @@ class MkBlock(mkcontainer.MkContainer):
         block_level = sum(isinstance(i, MkBlock) for i in self.ancestors)
         return "/" * (block_level + 3)
 
-    async def content_block(self) -> str:
+    async def get_content_block(self) -> str:
         """Returns the block content. Can be reimplemented by subclasses."""
         text = await super()._to_markdown()
         return textwrap.indent(text, self.indent).rstrip("\n") + "\n"
@@ -69,7 +69,7 @@ class MkBlock(mkcontainer.MkContainer):
         base = f"{boundary} {self.name}"
         if self.argument:
             base += f" | {self.argument}"
-        content = await self.content_block()
+        content = await self.get_content_block()
         return f"{base}\n{self.attributes_block}\n{content}{boundary}\n"
 
 
