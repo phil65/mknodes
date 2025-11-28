@@ -156,8 +156,8 @@ reportSelfClsParameterName = false
 reportPrivateImportUsage = false
 reportUnreachable = false
 
-[tool.pytest.options]
-addopts = "--cov=mknodes/ --cov-report=term-missing"
+[tool.pytest]
+addopts = ["--cov-report=term-missing", "--cov=mknodes/"]
 log_cli = true
 log_date_format = "%Y-%m-%d %H:%M:%S"
 log_format = "%(asctime)s %(levelname)s %(message)s"
