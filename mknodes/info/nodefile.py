@@ -52,10 +52,12 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
         Markdown=mk.MkCode(node, language="markdown"),
         Html=mk.MkCode(node.to_html(), language="html"),
     )
-    if "rst" in node.nodefile.output:
+    nodefile = node.get_nodefile()
+    assert nodefile
+    if "rst" in nodefile.output:
         output = node.env.render_template("output/rst/template")
         dct["reST"] = mk.MkCode(output, language="rst")
-    if "github" in node.nodefile.output:
+    if "github" in nodefile.output:
         output = node.env.render_template("output/github/template")
         dct["GitHub"] = mk.MkCode(output, language="markdown")
     if len(node.children) > 0:

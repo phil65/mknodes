@@ -18,7 +18,9 @@ class MkTemplateTable(mknode.MkNode):
         yield from ()
 
     def _to_markdown(self) -> str:
-        layout = self.nodefile._data.get("layouts").get(self.layout)
+        nodefile = self.get_nodefile()
+        assert nodefile
+        layout = nodefile._data.get("layouts", {}).get(self.layout)
         header = "| " + " | ".join(layout.keys()) + " |"
         divider = "|" + " | ".join(["---"] * len(layout.keys())) + " |"
         text = ""
@@ -33,7 +35,9 @@ class MkTemplateTable(mknode.MkNode):
     @property
     def children(self):
         children = []
-        layout = self.nodefile._data.get("layouts").get(self.layout)
+        nodefile = self.get_nodefile()
+        assert nodefile
+        layout = nodefile._data.get("layouts", {}).get(self.layout)
         for dct in self.iter_items():
             for k in layout:
                 self.env.render_template(f"layouts/{self.layout}/{k}", variables=dct)

@@ -91,8 +91,9 @@ class NodeEnvironment(jinjarope.Environment):
             jinjarope.FileSystemLoader(class_path),
             jinjarope.FsSpecProtocolPathLoader(),
         ]
-        if self.node.nodefile:
-            loader = jinjarope.NestedDictLoader(self.node.nodefile._data)
+        nodefile = self.node.get_nodefile()
+        if nodefile:
+            loader = jinjarope.NestedDictLoader(nodefile._data)
             loaders.insert(0, loader)
         self.loader = jinjarope.ChoiceLoader(loaders)
 
@@ -100,7 +101,7 @@ class NodeEnvironment(jinjarope.Environment):
         self.globals["parent_page"] = self.node.parent_page  # pyright: ignore[reportArgumentType]
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None  # pyright: ignore[reportArgumentType]
         self.globals["node"] = self.node  # pyright: ignore[reportArgumentType]
-        self.globals["file"] = self.node.nodefile
+        self.globals["file"] = nodefile  # pyright: ignore[reportArgumentType]
         self.globals["mk"] = self._wrapped_klasses  # pyright: ignore[reportArgumentType]
         self.globals |= self.node.ctx.as_dict()
 
