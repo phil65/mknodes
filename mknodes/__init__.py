@@ -62,7 +62,6 @@ from .templatenodes.mkinstallguide import MkInstallGuide
 from .templatenodes.mkchangelog import MkChangelog
 from .templatenodes.mkcodeofconduct import MkCodeOfConduct
 from .templatenodes.mkcommitconventions import MkCommitConventions
-from .templatenodes.mkpullrequestguidelines import MkPullRequestGuidelines
 from .templatenodes.mkdevenvsetup import MkDevEnvSetup
 from .templatenodes.mkdevtools import MkDevTools
 from .templatenodes.mkclassdiagram import MkClassDiagram
@@ -166,7 +165,6 @@ __all__ = [
     "MkPipDepTree",
     "MkPluginFlow",
     "MkProgressBar",
-    "MkPullRequestGuidelines",
     "MkPyDeps",
     "MkPyScript",
     "MkPyodideTerminal",

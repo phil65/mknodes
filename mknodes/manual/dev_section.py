@@ -28,7 +28,6 @@ def _(page: mk.MkPage) -> None:
 @nav.route.page("Contributing", icon="help")
 def _(page: mk.MkPage) -> None:
     page += mk.MkCommitConventions()
-    page += mk.MkPullRequestGuidelines()
 
 
 @nav.route.page("License", hide="toc", icon="license")

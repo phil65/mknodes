@@ -60,7 +60,6 @@ ABOUT_THE_PROJECT_NODES: list[type[mk.MkNode]] = [
     mk.MkDependencyTable,
     mk.MkInstallGuide,
     mk.MkCommitConventions,
-    mk.MkPullRequestGuidelines,
     mk.MkDevTools,
     mk.MkShields,
     mk.MkMetadataBadges,
