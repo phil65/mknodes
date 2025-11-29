@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import copy
 import functools
 import re
@@ -11,33 +10,15 @@ from mknodes.data import treestyles
 from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
-from mknodes.utils import icons, log, mdconverter, reprhelpers, resources
+from mknodes.utils import icons, log, mdconverter, reprhelpers, resources, coroutines
 
 
 if TYPE_CHECKING:
-    from collections.abc import Coroutine
     from collections.abc import Callable, Iterable, Iterator, Sequence
     import types
 
     from mknodes.data import datatypes
     import mknodes as mk
-
-
-def _run_sync[T](coro: Coroutine[Any, Any, T]) -> T:
-    """Run a coroutine synchronously, handling nested event loops."""
-    try:
-        _loop = asyncio.get_running_loop()
-    except RuntimeError:
-        # No event loop running, safe to use asyncio.run
-        return asyncio.run(coro)
-    else:
-        # Already in an event loop - need nest_asyncio or similar
-        # For now, try to create a new loop in a thread
-        import concurrent.futures
-
-        with concurrent.futures.ThreadPoolExecutor() as pool:
-            future = pool.submit(asyncio.run, coro)
-            return future.result()
 
 
 class IllegalArgumentError(ValueError):
@@ -421,10 +402,10 @@ class MkNode:
         return nodeenvironment.NodeEnvironment(self)
 
     def __str__(self) -> str:
-        return _run_sync(self.to_markdown())
+        return coroutines.run_sync(self.to_markdown())
 
     def __hash__(self):
-        return hash(_run_sync(self.to_markdown()))
+        return hash(coroutines.run_sync(self.to_markdown()))
 
     def __eq__(self, other: object):
         if type(other) is not type(self):
