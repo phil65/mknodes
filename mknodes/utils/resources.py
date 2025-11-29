@@ -327,8 +327,8 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
         def merge_extensions(
             dicts: list[dict[str, dict[str, Any]]],
         ) -> list[dict[str, dict[str, Any]]]:
-            seen = set()
-            result = []
+            seen: set[str] = set()
+            result: list[dict[str, dict[str, Any]]] = []
             dicts = [{k: dct[k]} for dct in dicts for k in dct]
             for dct in dicts:
                 dct = dict(sorted(dct.items()))

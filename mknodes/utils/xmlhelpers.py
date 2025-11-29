@@ -37,8 +37,8 @@ class HTMLElement(ET.Element):
         if parent is not None:
             parent.append(self)
         if markdown:
-            node = self
-            while node is not None:
+            node: ET.Element | None = self
+            while node is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 node.set("markdown", "1")
                 if isinstance(node, HTMLElement) and node.parent:
                     node = node.parent

@@ -180,8 +180,8 @@ class Inventory(BaseInventory):
     ):  # sourcery skip: assign-if-exp
         inv = cls(base_url)
         domains = domains or ["py"]
-        if isinstance(path, io.BytesIO):  # noqa: SIM108
-            file = path
+        if isinstance(path, io.BytesIO):
+            file: io.BytesIO | io.BufferedReader = path
         else:
             file = pathlib.Path(path).open("rb")  # noqa: SIM115
         with file:
