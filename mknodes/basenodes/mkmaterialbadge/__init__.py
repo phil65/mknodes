@@ -46,7 +46,7 @@ class MkMaterialBadge(mktemplate.MkTemplate):
         self.align_right = align_right
         self.target = target
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         return self._text
 
 

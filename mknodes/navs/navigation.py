@@ -46,7 +46,7 @@ class Navigation(dict[tuple[Any, ...], NavSubType]):
 
     def register(self, node: NavSubType):
         match node:
-            case mknav.MkNav() | mkpage.MkPage() | mklink.MkLink():
+            case mknav.MkNav() | mkpage.MkPage():  # | mklink.MkLink():
                 self[node.title,] = node
             case _:
                 raise TypeError(node)

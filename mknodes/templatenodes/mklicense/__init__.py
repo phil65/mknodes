@@ -31,7 +31,7 @@ class MkLicense(mktext.MkText):
         super().__init__(**kwargs)
         self.license_type = license_type
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         if self.license_type:
             obj = lic.License.from_name(self.license_type)
             return obj.content

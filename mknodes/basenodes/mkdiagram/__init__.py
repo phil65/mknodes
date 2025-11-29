@@ -53,7 +53,7 @@ class MkDiagram(mkcode.MkCode):
         self.names = iterfilters.reduce_list(names or [])
         self.connections = set(connections or [])
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         """MkCode override."""
         return f"graph {self.direction}\n{self.mermaid_code}"
 

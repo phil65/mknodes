@@ -37,5 +37,5 @@ jinja = """
 
 [output.html]
 template = """
-<body>{{ node.data | replace("\n", "") | html_link(node.url) }}</body>
+<body>{{ node.data | replace("\n", "") | html_link(node.get_url()) }}</body>
 """

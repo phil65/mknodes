@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 @jinja2.pass_environment
-def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = None) -> str:
+async def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = None) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -30,11 +30,11 @@ def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = Non
         target: The thing to link to
         title: The title to use for the link
     """
-    return env.node.ctx.links.get_link(target, title)
+    return await env.node.ctx.links.get_link(target, title)
 
 
 @jinja2.pass_environment
-def get_url(env: NodeEnvironment, target: LinkableType) -> str:
+async def get_url(env: NodeEnvironment, target: LinkableType) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -43,7 +43,7 @@ def get_url(env: NodeEnvironment, target: LinkableType) -> str:
         env: jinja environment
         target: The thing to link to
     """
-    return env.node.ctx.links.get_url(target)
+    return await env.node.ctx.links.get_url(target)
 
 
 @jinja2.pass_environment

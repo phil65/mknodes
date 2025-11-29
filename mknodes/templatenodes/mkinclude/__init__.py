@@ -32,7 +32,7 @@ class MkInclude(mktext.MkText):
         super().__init__(**kwargs)
         self.target = target
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         match self.target:
             case os.PathLike() | str():
                 return pathhelpers.load_file_cached(os.fspath(self.target))

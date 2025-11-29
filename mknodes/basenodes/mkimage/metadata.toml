@@ -38,8 +38,8 @@ image = """
 ![{{ node.title ~ "](" ~ path ~ (mode | add("#only-")) ~ ")" ~ (node.align | add("{ align=", " }")) ~ (node.width | add('{ width="', '" }')) }}{% if node.lazy %}{ loading=lazy }{% endif %}
 """
 linked_image = """
-{% if node.url %}
-[{{ "fragments/image" | render_template(node=node, path=path, mode=mode) }}]({{ node.url }}){% else %}
+{% if node.get_url() %}
+[{{ "fragments/image" | render_template(node=node, path=path, mode=mode) }}]({{ node.get_url() }}){% else %}
 {{ "fragments/image" | render_template(node=node, path=path, mode=mode) }}{% endif %}
 """
 
@@ -78,5 +78,5 @@ template = """
 {% if node.width %}    :width: {{ node.width }}{% endif %}
 {% if node.caption %}    :alt: {{ node.caption }}{% endif %}
 {% if node.align %}    :align: {{ node.align }}{% endif %}
-{% if node.url %}    :target: {{ node.url }}{% endif %}
+{% if node.get_url() %}    :target: {{ node.get_url() }}{% endif %}
 """

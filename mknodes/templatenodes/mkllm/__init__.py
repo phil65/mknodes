@@ -89,7 +89,7 @@ class MkLlm(mktext.MkText):
 
         return context_items
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         """Generate text using the LLM.
 
         Returns:

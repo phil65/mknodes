@@ -41,7 +41,7 @@ class MkHeader(mknode.MkNode):
         suffix = " { data-search-exclude }" if self.exclude_from_search else ""
         return f"{level_str} {self._text}{suffix}"
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         return self._text
 
 

@@ -44,7 +44,7 @@ class MkCompactAdmonition(mknode.MkNode):
         text_div.text = str(self._text)
         return root.to_string()
 
-    def get_text(self) -> str | mknode.MkNode:
+    async def get_text(self) -> str | mknode.MkNode:
         return self._text
 
 

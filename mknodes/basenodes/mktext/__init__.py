@@ -44,7 +44,7 @@ class MkText(mknode.MkNode):
         section_text = mdfilters.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         if not self.render_jinja:
             return self._text
         return self.env.render_string(self._text)
@@ -53,7 +53,7 @@ class MkText(mknode.MkNode):
         self._text = value
 
     async def to_md_unprocessed(self) -> str:
-        return self.get_text()
+        return await self.get_text()
 
     def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]
         """Return children nodes.
@@ -65,9 +65,6 @@ class MkText(mknode.MkNode):
             return []
         self.env.render_string(self._text, variables=self.variables)
         return self.env.rendered_children
-
-    def set_children(self, val: list[mknode.MkNode]) -> None:  # type: ignore[override]
-        """Set children (no-op for MkText)."""
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:

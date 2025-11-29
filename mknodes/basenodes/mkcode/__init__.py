@@ -66,7 +66,7 @@ class MkCode(mkcontainer.MkContainer):
         self._fence_level = fence_level
         super().__init__(content=content, **kwargs)
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         """Text content."""
         return "\n".join(str(i) for i in self.get_items())
 
@@ -102,7 +102,7 @@ class MkCode(mkcontainer.MkContainer):
     async def to_md_unprocessed(self) -> str:
         space = " " if self.fence_title else ""
         first_line = f"{self.fence_boundary}{space}{self.fence_title}"
-        return f"{first_line}\n{self.get_text()}\n{self.fence_boundary}"
+        return f"{first_line}\n{await self.get_text()}\n{self.fence_boundary}"
 
     @classmethod
     def for_file(

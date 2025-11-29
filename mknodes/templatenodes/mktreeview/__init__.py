@@ -54,7 +54,7 @@ class MkTreeView(mkcode.MkCode):
             [exclude_folders] if isinstance(exclude_folders, str) else exclude_folders
         )
 
-    def get_text(self) -> str:
+    async def get_text(self) -> str:
         match self.tree:
             case str() | os.PathLike():
                 return filetree.get_directory_tree(self.tree, max_depth=self.maximum_depth)

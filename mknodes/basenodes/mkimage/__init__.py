@@ -74,16 +74,15 @@ class MkImage(mknode.MkNode):
             case _:
                 return None
 
-    @property
-    def url(self) -> str:
-        return self.ctx.links.get_url(self.target) if self.target else ""
+    async def get_url(self) -> str:
+        return await self.ctx.links.get_url(self.target) if self.target else ""
 
     async def to_md_unprocessed(self) -> str:
         if not self.path_dark_mode:
-            markdown_link = self._build(self.path)
+            markdown_link = await self._build(self.path)
         else:
-            link_2 = self._build(self.path, "light")
-            link_1 = self._build(self.path_dark_mode, "dark")
+            link_2 = await self._build(self.path, "light")
+            link_1 = await self._build(self.path_dark_mode, "dark")
             markdown_link = f"{link_1} {link_2}"
         if not self.caption:
             return markdown_link
@@ -95,7 +94,7 @@ class MkImage(mknode.MkNode):
         ]
         return "\n".join(lines) + "\n"
 
-    def _build(self, path: str, mode: Literal["light", "dark"] | None = None) -> str:
+    async def _build(self, path: str, mode: Literal["light", "dark"] | None = None) -> str:
         if mode:
             path += f"#only-{mode}"
         markdown_link = f"![{self.title}]({path})"
@@ -106,7 +105,7 @@ class MkImage(mknode.MkNode):
         if self.lazy:
             markdown_link += "{ loading=lazy }"
         if self.target:
-            markdown_link = f"[{markdown_link}]({self.url})"
+            markdown_link = f"[{markdown_link}]({await self.get_url()})"
         return markdown_link
 
 
