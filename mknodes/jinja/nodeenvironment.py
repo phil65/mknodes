@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import functools
 import pathlib
 from typing import TYPE_CHECKING, Any
@@ -8,7 +10,7 @@ import jinja2
 import jinjarope
 from jinjarope import inspectfilters
 
-from mknodes.utils import log
+from mknodes.utils import coroutines, log
 
 
 if TYPE_CHECKING:
@@ -115,6 +117,16 @@ class NodeEnvironment(jinjarope.Environment):
     #             paths.append(path.as_posix())
     #     return paths
 
+    @contextlib.contextmanager
+    def _patch_asyncio_run(self):
+        """Temporarily patch asyncio.run to handle nested event loops."""
+        original_run = asyncio.run
+        asyncio.run = coroutines.run_sync
+        try:
+            yield
+        finally:
+            asyncio.run = original_run
+
     def render_template(
         self,
         template_name: str,
@@ -136,13 +148,14 @@ class NodeEnvironment(jinjarope.Environment):
         """
         self.rendered_nodes = []
         self.setup_environment()
-        result = super().render_template(
-            template_name,
-            variables=variables,
-            block_name=block_name,
-            parent_template=parent_template,
-            **kwargs,
-        )
+        with self._patch_asyncio_run():
+            result = super().render_template(
+                template_name,
+                variables=variables,
+                block_name=block_name,
+                parent_template=parent_template,
+                **kwargs,
+            )
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
@@ -194,7 +207,8 @@ class NodeEnvironment(jinjarope.Environment):
         """
         self.rendered_nodes = []
         self.setup_environment()
-        result = super().render_string(string, variables, **kwargs)
+        with self._patch_asyncio_run():
+            result = super().render_string(string, variables, **kwargs)
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
 
