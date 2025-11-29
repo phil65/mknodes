@@ -439,6 +439,7 @@ class MkNode:
         container = mk.MkContainer(parent=self.parent, block_separator=" ")
         container.append(other)
         container.append(self)
+        return container
 
     @property
     def ctx(self) -> contexts.ProjectContext:

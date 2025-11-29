@@ -16,7 +16,7 @@ GraphTypeStr = Literal["flow", "sequence", "state"]
 
 config = {
     "custom_fences": [
-        {"name": "mermaid", "class": "mermaid", "format": superfences.fence_code_format},
+        {"name": "mermaid", "class": "mermaid", "format": superfences.fence_code_format},  # pyright: ignore[reportUnknownMemberType]
     ],
 }
 
