@@ -129,7 +129,7 @@ class MkPyodideTerminal(mknode.MkNode):
         self.width = width
         self.terminal_id = terminal_id or f"pyodide-terminal-{id(self)}"
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         """Convert the terminal to HTML."""
         html = f"""
 <div id="{self.terminal_id}" style="height: {self.height}; width: {self.width};"></div>

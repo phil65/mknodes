@@ -526,12 +526,12 @@ class MkNode:
 
         return toc.get_toc(await self.to_markdown())
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return NotImplemented
 
     async def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
-        text = await self._to_markdown()
+        text = await self.to_md_unprocessed()
         for proc in self.get_processors():
             text = proc.run(text)
         return text

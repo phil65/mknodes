@@ -50,7 +50,7 @@ class MkTemplatePage(mkpage.MkPage):
         """Extra variables for the environment. Can be overridden by subclasses."""
         return {}
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return self.env.render_template(
             self.template_path,
             parent_template=self.template_parent,

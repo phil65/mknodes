@@ -39,7 +39,7 @@ class MkGrid(mkcontainer.MkContainer):
         root.text = "\n\n" + content + "\n"
         return root
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         root = await self.get_element()
         return root.to_string(space="")
 

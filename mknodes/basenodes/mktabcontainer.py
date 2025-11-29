@@ -59,7 +59,7 @@ class MkTabContainer(mkcontainer.MkContainer):
                 return tab in items
             case str():
                 return any(i.title == tab for i in items)
-            case _:
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise TypeError(tab)
 
     def add_tab(
@@ -119,7 +119,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             _filter_empty=True,
         )
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items:
             return ""

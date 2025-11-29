@@ -72,7 +72,7 @@ class MkAdmonition(mkcontainer.MkContainer):
         optional = ann_marker + inline_label
         return f"{block_start} {self.typ}{optional}{title}"
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items and not self.title:
             return ""

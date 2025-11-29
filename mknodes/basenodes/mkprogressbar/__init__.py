@@ -58,7 +58,7 @@ class MkProgressBar(mknode.MkNode):
             case _:
                 return ""
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return rf'[={self.percentage}% "{self.label}"]'
 
 

@@ -48,7 +48,7 @@ class MkList(mkcontainer.MkContainer):
     def _prep(self, item: mknode.MkNode) -> str:
         return linkprovider.linked(str(item)) if self.as_links else str(item)
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items:
             return ""

@@ -12,7 +12,7 @@ class MkTable(mkbasetable.MkBaseTable):
 
     REQUIRED_EXTENSIONS = [resources.Extension("tables")]
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         table_data = self.data  # property
         if not any(table_data[k] for k in table_data):
             return ""

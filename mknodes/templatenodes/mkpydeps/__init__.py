@@ -117,7 +117,7 @@ class MkPyDeps(mknode.MkNode):
         )
         return insert_links(content, self.ctx.links.inv_manager)  # type: ignore
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return f"<body>\n\n{self.svg}\n\n</body>\n"
 
 

@@ -99,7 +99,7 @@ class MkCode(mkcontainer.MkContainer):
             attr_str = " " + attr_str
         return f"{{{classes}{attr_str}}}"
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         space = " " if self.fence_title else ""
         first_line = f"{self.fence_boundary}{space}{self.fence_title}"
         return f"{first_line}\n{self.get_text()}\n{self.fence_boundary}"

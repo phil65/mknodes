@@ -62,7 +62,7 @@ class MkShowcase(mkcontainer.MkContainer):
             case _:
                 return super().to_child_node(item)
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         text = ""
         for items in filters.do_batch(self.get_items(), self.column_count):
             text += '<div class="row">'

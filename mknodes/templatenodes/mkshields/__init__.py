@@ -96,7 +96,7 @@ class MkShields(mkcontainer.MkContainer):
     def set_items(self, items: list[mknode.MkNode]) -> None:
         """Set items (no-op for computed shields)."""
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = [await i.to_markdown() for i in self.get_items()]
         return self.block_separator.join(items)
 

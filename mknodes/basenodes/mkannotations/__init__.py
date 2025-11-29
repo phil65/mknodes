@@ -35,7 +35,7 @@ class MkAnnotation(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = [await i.to_markdown() for i in self.get_items()]
         item_str = "\n\n".join(items)
         prefix = f"{self.num}."
@@ -71,7 +71,7 @@ class MkAnnotations(mkcontainer.MkContainer):
                 ]
             case Mapping():
                 items = [MkAnnotation(k, content=v) for k, v in annotations.items()]
-            case _:
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise TypeError(annotations)
         super().__init__(content=items, **kwargs)
 
@@ -126,7 +126,7 @@ class MkAnnotations(mkcontainer.MkContainer):
         else:
             items.append(node)
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items:
             return ""

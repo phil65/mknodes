@@ -75,7 +75,7 @@ class MkIcon(mknode.MkNode):
             logger.warning("Could not find icon %r", self.icon_name)
             return ""
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return self.svg
 
 

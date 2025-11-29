@@ -43,7 +43,7 @@ class MkPyScript(mknode.MkNode):
         self.height = height
         self.width = width
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         packages_str = ", ".join(repr(pkg) for pkg in self.packages)
         html = f"""
 <div style="height: {self.height}; width: {self.width};">

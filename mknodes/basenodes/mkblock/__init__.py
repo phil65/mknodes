@@ -50,7 +50,7 @@ class MkBlock(mkcontainer.MkContainer):
 
     async def get_content_block(self) -> str:
         """Returns the block content. Can be reimplemented by subclasses."""
-        text = await super()._to_markdown()
+        text = await super().to_md_unprocessed()
         return textwrap.indent(text, self.indent).rstrip("\n") + "\n"
 
     @property
@@ -64,7 +64,7 @@ class MkBlock(mkcontainer.MkContainer):
         lines = [f"    {k}: {v}" for k, v in self.attributes.items() if v is not None]
         return "\n".join(lines) + "\n"
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         boundary = self.fence_boundary
         base = f"{boundary} {self.name}"
         if self.argument:

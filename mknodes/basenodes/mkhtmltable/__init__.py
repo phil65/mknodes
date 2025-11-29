@@ -31,11 +31,11 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
                 td.text = "\n" + item + "\n"
         return root
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         root = await self.get_element()
         return root.to_string(space="") if root is not None else ""
 
 
 if __name__ == "__main__":
     table = MkHtmlTable(data={"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]})
-    print(table._to_markdown())
+    print(table.to_md_unprocessed())

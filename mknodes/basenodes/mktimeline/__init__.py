@@ -147,7 +147,7 @@ class MkTimeline(mkcontainer.MkContainer):
             root.append(elem)
         return root
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         root = await self.get_element()
         return "\n\n" + root.to_string(space="") + "\n\n"
 

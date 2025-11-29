@@ -55,7 +55,7 @@ class MkTemplate(mkcontainer.MkContainer):
     def items(self, _val: Any) -> None:
         pass
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return self.env.render_template(
             self.template,
             variables=self.variables,

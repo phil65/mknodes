@@ -33,8 +33,8 @@ class MkTask(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.value = value
 
-    async def _to_markdown(self) -> str:
-        text = await super()._to_markdown()
+    async def to_md_unprocessed(self) -> str:
+        text = await super().to_md_unprocessed()
         val = "x" if self.value else " "
         return f"- [{val}] {filters.do_indent(str(text))}\n"
 

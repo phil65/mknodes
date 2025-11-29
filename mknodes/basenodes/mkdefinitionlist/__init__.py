@@ -32,8 +32,8 @@ class MkDefinition(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.title = title
 
-    async def _to_markdown(self) -> str:
-        text = await super()._to_markdown()
+    async def to_md_unprocessed(self) -> str:
+        text = await super().to_md_unprocessed()
         return f"{self.title}\n:   {filters.do_indent(text)}\n"
 
 
@@ -71,10 +71,10 @@ class MkDefinitionList(mkcontainer.MkContainer):
                 self.data = {str(i): self.to_child_node(item) for i, item in enumerate(data)}
             case None:
                 self.data = {}
-            case _:
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise TypeError(data)
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = [f"{k}\n:   {filters.do_indent(str(v))}\n" for k, v in self.data.items()]
         return "".join(items)
 

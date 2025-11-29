@@ -21,7 +21,7 @@ class MkTemplateTable(mknode.MkNode):
     def iter_items(self) -> Iterator[Any]:
         yield from ()
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         nodefile = self.get_nodefile()
         assert nodefile
         layout = nodefile._data.get("layouts", {}).get(self.layout)

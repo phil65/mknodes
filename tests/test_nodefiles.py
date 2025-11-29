@@ -45,7 +45,7 @@ async def test_if_template_output_equals_code_output(node: mk.MkNode):
             if k not in {"markdown", "html"}:
                 continue
             result = await node.env.render_string_async(v.template, dict(node=node))
-            assert result == await node._to_markdown()
+            assert result == await node.to_md_unprocessed()
             break
 
 

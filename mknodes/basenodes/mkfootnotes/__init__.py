@@ -39,7 +39,7 @@ class MkFootNote(mkcontainer.MkContainer):
     def __repr__(self):
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = [await i.to_markdown() for i in self.get_items()]
         item_str = "\n".join(items)
         indented = textwrap.indent(item_str, "    ")
@@ -128,7 +128,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         else:
             items.append(node)
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items:
             return ""

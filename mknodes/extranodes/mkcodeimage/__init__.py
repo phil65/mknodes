@@ -73,7 +73,7 @@ class MkCodeImage(mknode.MkNode):
             case _:
                 return inspecthelpers.get_source(self._code)
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         content = get_svg_for_code(
             self.code,
             language=self.language,

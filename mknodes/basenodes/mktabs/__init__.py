@@ -19,7 +19,7 @@ class MkTabBlock(mkblock.MkBlock):
 
     def __init__(
         self,
-        content: str | mknode.MkNode | list | None = None,
+        content: str | mknode.MkNode | list[Any] | None = None,
         title: str = "",
         *,
         new: bool | None = None,
@@ -75,7 +75,7 @@ class MkTab(mkcontainer.MkContainer):
 
     def __init__(
         self,
-        content: list | str | mknode.MkNode | None = None,
+        content: list[Any] | str | mknode.MkNode | None = None,
         title: str = "",
         *,
         new: bool = False,
@@ -121,7 +121,7 @@ class MkTab(mkcontainer.MkContainer):
         # we deal with attaching annotations ourselves.
         return text
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = [await i.to_markdown() for i in self.get_items()]
         text = "\n\n".join(items)
         text = text.rstrip("\n")

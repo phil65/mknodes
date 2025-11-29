@@ -99,7 +99,7 @@ class MkBadge(mkimage.MkImage):
             return self._badge_color
         return self.ctx.theme.primary_color
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         inner = htmlfilters.html_link(self.data.replace("\n", ""), self.url)
         return f"<body>{inner}</body>"
 

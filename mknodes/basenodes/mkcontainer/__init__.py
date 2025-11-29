@@ -46,7 +46,7 @@ class MkContainerBase(mknode.MkNode):
     def __iter__(self) -> Iterator[mknode.MkNode]:
         return iter(self.get_items())
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         items = [await i.to_markdown() for i in self.get_items()]
         return self.block_separator.join(items)
 

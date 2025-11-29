@@ -31,7 +31,7 @@ class MkSnippet(mknode.MkNode):
         super().__init__(**kwargs)
         self.path = path
 
-    async def _to_markdown(self) -> str:
+    async def to_md_unprocessed(self) -> str:
         return f"--8<--\n{self.path}\n--8<--\n"
 
 
