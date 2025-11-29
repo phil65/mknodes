@@ -26,7 +26,7 @@ class MkTemplateTable(mknode.MkNode):
         text = ""
         for dct in self.iter_items():
             strs = [
-                self.env.render_template(f"layouts/{self.layout}/{k}", variables=dct)
+                await self.env.render_template_async(f"layouts/{self.layout}/{k}", variables=dct)
                 for k in layout
             ]
             text += "| " + " | ".join(strs) + " |\n"
