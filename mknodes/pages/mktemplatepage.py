@@ -51,7 +51,7 @@ class MkTemplatePage(mkpage.MkPage):
         return {}
 
     async def to_md_unprocessed(self) -> str:
-        return self.env.render_template(
+        return await self.env.render_template_async(
             self.template_path,
             parent_template=self.template_parent,
             variables=self.extra_variables,
