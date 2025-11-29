@@ -20,8 +20,6 @@ def get_mermaid(
     package: str | tuple[str] | None = None,
     local_only: bool = True,
     user_only: bool = False,
-    include_editables: bool = True,
-    editables_only: bool = False,
     reverse: bool = False,
     exclude: str = "",
 ) -> str:
@@ -33,8 +31,6 @@ def get_mermaid(
         package: package / packages to get a graph for. If None, include all packages
         local_only: Whether to return installs local to the current virtualenv if used
         user_only: If True, only report installation in the user
-        include_editables: Whether to include editable installs
-        editables_only: Only return editable installs
         reverse: Whether to reverse the graph
         exclude: Packages to exclude from the graph
     """
@@ -50,8 +46,6 @@ def get_mermaid(
     # dists = packagehelpers.list_pip_packages(
     #     local_only=local_only,
     #     user_only=user_only,
-    #     include_editables=include_editables,
-    #     editables_only=editables_only,
     # )
     # pkgs = [d._dist for d in dists]  # type: ignore[attr-defined]
     pkgs = get_installed_distributions(
@@ -100,8 +94,6 @@ class MkPipDepTree(mkdiagram.MkDiagram):
         direction: Literal["TD", "DT", "LR", "RL"] = "TD",
         local_only: bool = False,
         user_only: bool = False,
-        include_editables: bool = True,
-        editables_only: bool = False,
         **kwargs: Any,
     ) -> None:
         """Constructor.
@@ -111,15 +103,11 @@ class MkPipDepTree(mkdiagram.MkDiagram):
             direction: diagram direction
             local_only: Show ony local packages
             user_only: Show only user packages
-            include_editables: Whether to include editable installs
-            editables_only: Only return editable installs
             kwargs: Keyword arguments passed to parent
         """
         self._package = package
         self.local_only = local_only
         self.user_only = user_only
-        self.include_editables = include_editables
-        self.editables_only = editables_only
         super().__init__(direction=direction, **kwargs)
 
     @property
@@ -134,13 +122,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
 
     @property
     def mermaid_code(self) -> str:
-        return get_mermaid(
-            self.package,
-            local_only=self.local_only,
-            user_only=self.user_only,
-            include_editables=self.include_editables,
-            editables_only=self.editables_only,
-        )
+        return get_mermaid(self.package, local_only=self.local_only, user_only=self.user_only)
 
 
 if __name__ == "__main__":
