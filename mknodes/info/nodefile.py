@@ -189,11 +189,11 @@ class NodeFile(configfile.TomlFile):
         res = self._data.get("resources", {})
         for item in res.get("js", []):
             if "link" in item:
-                instance = resources.JSFile(**item)
-                js.append(instance)
+                file_instance = resources.JSFile(**item)
+                js.append(file_instance)
             elif "content" in item:
-                instance = resources.JSText(**item)
-                js.append(instance)
+                text_instance = resources.JSText(**item)
+                js.append(text_instance)
         return js
 
     # @property

@@ -190,8 +190,8 @@ class FolderInfo:
     def license_file_path(self) -> pathlib.Path | None:
         """Return license file path (relative to project root) from metadata."""
         for path in ["LICENSE", "LICENSE.md", "LICENSE.txt"]:
-            if (file := self.path / path).exists():
-                return file
+            if (file_path := self.path / path).exists():
+                return file_path
         if file := self.info.metadata.get("license_file"):
             return self.path / file if isinstance(file, str) else self.path / file[0]
         return None

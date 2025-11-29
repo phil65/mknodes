@@ -251,8 +251,8 @@ class NavParser:
                 # if not, add as regular page:
                 else:
                     p = m[2] if m[2].startswith(("->", r"{{")) else path.parent / m[2]
-                    page = str2node(path=p, name=m[1], parent=self._nav, **kwargs)
-                    self._nav[m[1]] = page
+                    node = str2node(path=p, name=m[1], parent=self._nav, **kwargs)
+                    self._nav[m[1]] = node
                     logger.debug("Created page %s from %s", m[1], m[2])
 
             # * Section/

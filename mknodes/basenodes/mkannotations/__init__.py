@@ -99,8 +99,10 @@ class MkAnnotations(mkcontainer.MkContainer):
         for item in self.get_items():
             item_children = item.get_items()
             if len(item_children) == 1:
-                item = reprhelpers.to_str_if_textnode(item_children[0])
-            notes.append(item)
+                string = reprhelpers.to_str_if_textnode(item_children[0])
+                notes.append(string)
+            else:
+                notes.append(item)
         return reprhelpers.get_repr(self, annotations=notes)
 
     def _get_item_pos(self, num: int) -> int:
