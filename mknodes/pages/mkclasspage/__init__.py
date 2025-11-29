@@ -70,5 +70,10 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 if __name__ == "__main__":
     import mknodes as mk
 
-    doc = MkClassPage(mk.MkPluginFlow, template_path="classpage_custom.jinja")
-    print(doc.get_resources())
+    async def main():
+        doc = MkClassPage(mk.MkPluginFlow, template_path="classpage_custom.jinja")
+        print(await doc.get_resources())
+
+    import asyncio
+
+    asyncio.run(main())

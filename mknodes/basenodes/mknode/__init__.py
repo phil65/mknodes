@@ -645,7 +645,7 @@ class MkNode:
             css=css_resources,
         )
 
-    def get_resources(self) -> resources.Resources:
+    async def get_resources(self) -> resources.Resources:
         """Return the "final" resources object."""
         nodes = [*list(self.descendants), self]
         extensions: dict[str, dict[str, Any]] = {
@@ -683,7 +683,7 @@ class MkNode:
     async def to_html(self) -> str:
         """Convert node to HTML using the resources from node + children."""
         md = await self.to_markdown()
-        reqs = self.get_resources()
+        reqs = await self.get_resources()
         configs = reqs.markdown_extensions
         exts = list(configs.keys())
         converter = mdconverter.MdConverter(extensions=exts, extension_configs=configs)

@@ -64,5 +64,10 @@ class MkTemplate(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    node = MkTemplate("nodes_index.jinja")
-    print(node.get_resources())
+
+    async def main():
+        print(await MkTemplate("nodes_index.jinja").get_resources())
+
+    import asyncio
+
+    asyncio.run(main())
