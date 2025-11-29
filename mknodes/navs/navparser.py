@@ -76,7 +76,9 @@ def str2node(
     return mk.MkPage.from_file(path, title=name, parent=parent, **kwargs)
 
 
-def from_list(ls: list, nav: mk.MkNav, base_path: str = "") -> None:
+def from_list(
+    ls: list[dict[str, dict[str, Any] | str | list[Any]] | str], nav: mk.MkNav, base_path: str = ""
+) -> None:
     """Parse given list recursively and add found content to given MkNav.
 
     Args:
@@ -108,7 +110,9 @@ def from_list(ls: list, nav: mk.MkNav, base_path: str = "") -> None:
                 nav += page
 
 
-def from_dict(dct: dict[str, str | list | dict], nav: mk.MkNav, base_path: str = "") -> None:
+def from_dict(
+    dct: dict[str, str | list[Any] | dict[str, Any]], nav: mk.MkNav, base_path: str = ""
+) -> None:
     """Parse given dict recursively and add found content to given MkNav.
 
     Args:
@@ -141,7 +145,7 @@ class NavParser:
         """
         self._nav = nav
 
-    def json(self, obj: list | dict[str, str | list | dict]) -> None:
+    def json(self, obj: list[Any] | dict[str, str | list[Any] | dict[str, Any]]) -> None:
         """Parse given list or dict and attach it to given MkNav.
 
         If no Nav is given, create a new one

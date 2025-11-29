@@ -52,14 +52,14 @@ def list_to_tuple[**P, R](fn: Callable[P, R]) -> Callable[P, R]:
         fn: The function to decorate
     """
 
-    def wrapper(*args: P.args, **kwargs: P.kwargs: Any) -> R:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         safe_args = [tuple(item) if isinstance(item, list) else item for item in args]
         if kwargs:
-            kwargs = {
+            kwargs = {  # pyright: ignore[reportAssignmentType]
                 key: tuple(value) if isinstance(value, list) else value
                 for key, value in kwargs.items()
             }  # type: ignore[assignment]
-        return fn(*safe_args, **kwargs)  # type: ignore[arg-type]
+        return fn(*safe_args, **kwargs)  # type: ignore[arg-type]  # pyright: ignore[reportCallIssue]
 
     return wrapper
 
