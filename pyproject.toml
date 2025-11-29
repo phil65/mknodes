@@ -101,6 +101,8 @@ dev = [
   "pytest-codspeed",
   "pytest-cov",
   "ruff",
+  "types-Markdown",
+  "types-python-dateutil",
 ]
 
 [build-system]
