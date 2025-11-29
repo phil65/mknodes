@@ -65,7 +65,7 @@ def get_mermaid(
         tree = tree.reverse()
     match package:
         case str():
-            include_list = package.split(",")
+            include_list: list[str] | None = package.split(",")
         case list() | tuple():
             include_list = list(package)
         case None:

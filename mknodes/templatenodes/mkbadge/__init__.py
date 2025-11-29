@@ -29,7 +29,7 @@ def get_badge(
     text_color: str | None = None,
     use_gitlab_style: bool = False,
 ) -> str:
-    import anybadge
+    import anybadge  # type: ignore[import-untyped]
 
     badge = anybadge.Badge(
         label=html.escape(label),

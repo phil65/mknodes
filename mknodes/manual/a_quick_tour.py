@@ -58,8 +58,8 @@ def a_quick_tour(page: mk.MkPage) -> None:
     #
     # To not overboard him, lets pick a package without too many dependencies:
 
-    node = mk.MkPipDepTree("gitpython", direction="LR")
-    str(node)
+    node_1 = mk.MkPipDepTree("gitpython", direction="LR")
+    str(node_1)
     # {{ "gitpython" | MkPipDepTree(direction="LR") }}
 
     # We now come to the last [MkNode][mknodes.MkNode] of our quick tour.
@@ -68,8 +68,8 @@ def a_quick_tour(page: mk.MkPage) -> None:
     #
     # [MkMetadataBadges][mknodes.MkMetadataBadges] just loves Badges. He creates them
     # himself and doesnt rely on webservies.
-    node = mk.MkMetadataBadges("classifiers", package="mkdocstrings")
-    str(node)
+    node_2 = mk.MkMetadataBadges("classifiers", package="mkdocstrings")
+    str(node_2)
     # {{ "classifiers" | MkMetadataBadges(package="mkdocstrings") }}
 
     # Looks neat, right?
@@ -91,12 +91,12 @@ def a_quick_tour(page: mk.MkPage) -> None:
     # unless we explicitely tell him to do otherwise. It will become his new "default".
     #
     # You dont believe me? Let me show you:
-    node = mk.MkMetadataBadges("websites", parent=page)
+    node_3 = mk.MkMetadataBadges("websites", parent=page)
 
     # Now that node is connected. If we ask him to draw now, he will create website
     # badges for **mknodes**!
 
-    str(node)
+    str(node_3)
     # {{ "websites" | MkMetadataBadges }}
 
     # This mechanism is the same for many **MkNodes**. For example, our earlier guest
@@ -120,8 +120,8 @@ def a_quick_tour(page: mk.MkPage) -> None:
     # Before we end the tour, let's take a look at the raw material.
     # We can use the [MkCode][mknodes.MkCode] node for that.
     #
-    node = mk.MkCode.for_object(a_quick_tour)
-    text = str(node).replace(r"{", "<").replace(r"}", ">")
+    node_5 = mk.MkCode.for_object(a_quick_tour)
+    text = str(node_5).replace(r"{", "<").replace(r"}", ">")
     page += text
     # As you can see, we added the [MkCode][mknodes.MkCode] node to the page.
     # It will be displayed right after the [MkCommentedCode][mknodes.MkCommentedCode]

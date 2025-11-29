@@ -220,8 +220,8 @@ class ExtraHeadBlock(Block):
 
     def __init__(self) -> None:
         super().__init__()
-        self.robots_rule = None
-        self.redirect_url = None
+        self.robots_rule: str | None = None
+        self.redirect_url: str | None = None
 
     def block_content(self, md: markdown.Markdown | None = None):
         content = self.content

@@ -100,9 +100,9 @@ class MaterialTheme(theme.Theme):
         self.content_area_width: int | None = None
         self.default_icons: dict[IconTypeStr, str] = {}
         self.status_icons: dict[str, StatusIcon] = {}
-        self.accent_fg_color = None
-        self.primary_bg_color = None
-        self.color_theme = None
+        self.accent_fg_color: str | None = None
+        self.primary_bg_color: str | None = None
+        self.color_theme: colortheme.ColorTheme | None = None
         self.tags: dict[str, Tag] = {}
         self.alternate_selector: list[dict[str, str]] = []
         """Layout:
@@ -208,7 +208,7 @@ class MaterialTheme(theme.Theme):
     def set_primary_background_color(
         self,
         color: datatypes.RGBColorType,
-    ):
+    ) -> str:
         """Set the primary background color.
 
         Args:
