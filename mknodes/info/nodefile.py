@@ -4,6 +4,7 @@ import functools
 from typing import TYPE_CHECKING, Any
 
 from jinjarope import inspectfilters, textfilters
+from pydantic import BaseModel
 
 from mknodes.info import configfile
 from mknodes.utils import resources
@@ -15,6 +16,22 @@ if TYPE_CHECKING:
     import pathlib
 
     import mknodes as mk
+
+
+class Example(BaseModel, extra="forbid"):
+    """Model for a single example definition."""
+
+    title: str | None = None
+    jinja: str | None = None
+    python: str | None = None
+    description: str | None = None
+    condition: str | None = None
+
+
+class Output(BaseModel, extra="forbid"):
+    """Model for a single output definition."""
+
+    template: str
 
 
 @functools.cache
@@ -91,9 +108,9 @@ class NodeFile(configfile.TomlFile):
         return self._data["metadata"].get("group")
 
     @property
-    def examples(self) -> dict[str, str]:
+    def examples(self) -> dict[str, Example]:
         """Return the examples section."""
-        return self._data.get("examples", {})
+        return {k: Example.model_validate(v) for k, v in self._data.get("examples", {}).items()}
 
     async def get_examples(self, parent: mk.MkNode) -> dict[str, dict[str, Any]]:
         """Return a dictionary containing examples.
@@ -111,24 +128,24 @@ class NodeFile(configfile.TomlFile):
             ```
         """
         examples = {}
-        for v in self._data.get("examples", {}).values():
-            if "condition" in v and not await parent.env.render_condition_async(v["condition"]):
+        for example in self.examples.values():
+            if example.condition and not await parent.env.render_condition_async(example.condition):
                 continue
-            if "jinja" in v:
-                examples[v["title"]] = await get_representations(v["jinja"], parent)
+            if example.jinja:
+                examples[example.title] = await get_representations(example.jinja, parent)
         return examples
 
     async def iter_example_instances(self, parent: mk.MkNode) -> AsyncIterator[mk.MkNode]:
-        for v in self._data.get("examples", {}).values():
-            if "jinja" in v:
-                await parent.env.render_string_async(v["jinja"])
+        for example in self.examples.values():
+            if example.jinja:
+                await parent.env.render_string_async(example.jinja)
                 for child in parent.env.rendered_children:
                     yield child
 
     @property
-    def output(self) -> dict[str, str]:
+    def output(self) -> dict[str, Output]:
         """Return the `output` section of the file."""
-        return self._data.get("output", {})
+        return {k: Output.model_validate(v) for k, v in self._data.get("output", {}).items()}
 
     @property
     def layouts(self) -> dict[str, str]:

@@ -32,10 +32,10 @@ instances = asyncio.run(collect())
 async def test_if_example_can_get_rendered(node: mk.MkNode):
     if nodefile := node.get_nodefile():
         for v in nodefile.examples.values():
-            if "jinja" in v:
-                await node.env.render_string_async(v["jinja"])
-            if "python" in v:
-                node.env.evaluate(v["python"])
+            if v.jinja:
+                await node.env.render_string_async(v.jinja)
+            if v.python:
+                node.env.evaluate(v.python)
 
 
 @pytest.mark.parametrize("node", instances, ids=lambda x: x.__class__.__name__)
@@ -44,7 +44,7 @@ async def test_if_template_output_equals_code_output(node: mk.MkNode):
         for k, v in nodefile.output.items():
             if k not in {"markdown", "html"}:
                 continue
-            result = await node.env.render_string_async(v["template"], dict(node=node))
+            result = await node.env.render_string_async(v.template, dict(node=node))
             assert result == await node._to_markdown()
             break
 
