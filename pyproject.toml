@@ -104,6 +104,7 @@ dev = [
   "ruff",
   "types-Markdown",
   "types-python-dateutil",
+  "types-requests",
 ]
 
 [build-system]
