@@ -108,7 +108,7 @@ class Theme:
         )
         self.admonitions.append(adm)
 
-    def get_resources(self) -> resources.Resources:
+    async def get_resources(self) -> resources.Resources:
         """Return resources required for the theme.
 
         Usually, the resources consist of static templates and CSS.
@@ -116,7 +116,7 @@ class Theme:
         req: list[resources.CSSFile | resources.CSSText] = []
         if self.css_template:
             tmpl_ctx = self.get_css_context()
-            css_text = self.env.render_template(self.css_template, variables=tmpl_ctx)
+            css_text = await self.env.render_template_async(self.css_template, variables=tmpl_ctx)
             req = [resources.CSSText(content=css_text, filename="mknodes_theme.css")]
         return resources.Resources(css=req)
 
