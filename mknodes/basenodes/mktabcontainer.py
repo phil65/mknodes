@@ -41,7 +41,7 @@ class MkTabContainer(mkcontainer.MkContainer):
             case _:
                 items = [self.Tab(title=k, content=v) for k, v in tabs.items()]
         self.select_tab: int | str | None = select_tab
-        super().__init__(content=items, **kwargs)
+        super().__init__(content=list(items), **kwargs)
         self.block_separator = "\n"
 
     def get_items(self) -> list[mktabs.MkTab | mktabs.MkTabBlock]:  # type: ignore[override]

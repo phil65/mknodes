@@ -148,7 +148,7 @@ class JSFile:
 
 
 class TextResource:
-    EXTENSION: str
+    EXTENSION: ClassVar[str]
     filename: str | None
     content: str
 

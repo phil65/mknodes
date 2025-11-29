@@ -136,7 +136,6 @@ docstring-style = "google"
 
 [tool.mypy]
 python_version = "3.13"
-disable_error_code = ["misc"]
 check_untyped_defs = true
 
 [tool.pyright]

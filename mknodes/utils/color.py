@@ -36,8 +36,8 @@ class Color(coloraide.Color):
                     self["alpha"] = alpha
             case (int(), int(), int()):
                 super().__init__("srgb", [i / 255 for i in color], alpha=alpha, **kwargs)
-            case tuple():
-                super().__init__("srgb", [i / 255 for i in color[:3]], color[3], **kwargs)
+            case (int(), int(), int(), float() as a):
+                super().__init__("srgb", [i / 255 for i in color[:3]], a, **kwargs)
             case _:
                 raise TypeError(color)
 
