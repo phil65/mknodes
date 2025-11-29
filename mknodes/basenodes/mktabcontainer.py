@@ -7,7 +7,7 @@ from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Mapping, Sequence
 
 
 logger = log.get_logger(__name__)
@@ -35,7 +35,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         """
         match tabs:
             case None:
-                items = []
+                items: Sequence[mktabs.MkTab | mktabs.MkTabBlock] = []
             case list():
                 items = tabs
             case _:

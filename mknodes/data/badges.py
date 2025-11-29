@@ -9,7 +9,7 @@ from typing import Literal
 
 @dataclasses.dataclass(frozen=True)
 class Badge:
-    identifier: str
+    identifier: BadgeTypeStr
     title: str
     image_url: str
     url: str

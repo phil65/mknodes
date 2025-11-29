@@ -172,7 +172,7 @@ def get_nondefault_repr(
     """
     args: list[Any] = []
     kwargs: dict[str, Any] = {}
-    signature = inspectfilters.get_signature(instance.__init__)
+    signature = inspectfilters.get_signature(instance.__init__)  # type: ignore[misc]
     for arg, v in signature.parameters.items():
         if v.kind in {v.VAR_POSITIONAL, v.VAR_KEYWORD}:
             continue
