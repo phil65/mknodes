@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.utils import resources
@@ -10,7 +11,7 @@ class MkTemplateTable(mknode.MkNode):
     ICON = "material/database"
     REQUIRED_EXTENSIONS = [resources.Extension("tables")]
 
-    def __init__(self, layout: str = "default", **kwargs) -> None:
+    def __init__(self, layout: str = "default", **kwargs: Any) -> None:
         self.layout = layout
         super().__init__(**kwargs)
 

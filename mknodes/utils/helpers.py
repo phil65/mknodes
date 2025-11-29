@@ -52,7 +52,7 @@ def list_to_tuple[**P, R](fn: Callable[P, R]) -> Callable[P, R]:
         fn: The function to decorate
     """
 
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+    def wrapper(*args: P.args, **kwargs: P.kwargs: Any) -> R:
         safe_args = [tuple(item) if isinstance(item, list) else item for item in args]
         if kwargs:
             kwargs = {

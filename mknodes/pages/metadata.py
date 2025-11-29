@@ -26,7 +26,7 @@ class Metadata(dict[str, Any]):
     course also add any non-documented stuff to the Metadata.
     """
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         search_dict = {}
         if "search_boost" in kwargs and kwargs["search_boost"] is not None:
             search_dict["boost"] = kwargs.pop("search_boost")
