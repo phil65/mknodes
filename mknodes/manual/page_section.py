@@ -56,6 +56,7 @@ def _(page: mk.MkPage) -> None:
 @nav.route.page("Templates", hide="toc", status="new")
 def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("pages/page_templates.jinja")
+    assert page.template
     page.template.announce.content = mk.MkMetadataBadges(typ="classifiers")
     page.template.footer.content = mk.MkProgressBar(50)
     code = "information = 'You can even put MkNodes here!'"

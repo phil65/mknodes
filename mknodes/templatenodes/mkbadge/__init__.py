@@ -81,6 +81,7 @@ class MkBadge(mkimage.MkImage):
             kwargs: Keyword arguments passed to parent
         """
         super().__init__("", **kwargs)
+        self.value: str | None
         if isinstance(label, tuple):
             self.label, self.value = label
         else:

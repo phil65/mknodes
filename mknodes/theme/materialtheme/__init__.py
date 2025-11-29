@@ -332,4 +332,4 @@ class MaterialTheme(theme.Theme):
 
 
 if __name__ == "__main__":
-    theme = MaterialTheme()
+    material_theme = MaterialTheme()
