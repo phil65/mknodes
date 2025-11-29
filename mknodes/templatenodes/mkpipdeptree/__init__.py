@@ -48,10 +48,7 @@ def get_mermaid(
     #     user_only=user_only,
     # )
     # pkgs = [d._dist for d in dists]  # type: ignore[attr-defined]
-    pkgs = get_installed_distributions(
-        local_only=local_only,
-        user_only=user_only,
-    )
+    pkgs = get_installed_distributions(local_only=local_only, user_only=user_only)
     tree = PackageDAG.from_pkgs(pkgs)
     # Reverse the tree (if applicable) before filtering,
     # thus ensuring, that the filter will be applied on ReverseTree
@@ -76,7 +73,7 @@ def get_mermaid(
     # Capture stdout since render_mermaid now prints instead of returning
     stdout_buffer = io.StringIO()
     with contextlib.redirect_stdout(stdout_buffer):
-        render_mermaid(tree)
+        render_mermaid(tree)  # pyright: ignore[reportArgumentType]
     text = stdout_buffer.getvalue()
     return "\n".join(text.splitlines()[1:])
 

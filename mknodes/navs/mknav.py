@@ -71,11 +71,7 @@ class MkNav(mknode.MkNode):
     # The child items are managed by the Navigation object. We forward relevant calls
     # to the Navigation instance.
 
-    def __setitem__(
-        self,
-        index: tuple[Any, ...] | str,
-        node: navigation.NavSubType,
-    ) -> None:
+    def __setitem__(self, index: tuple[Any, ...] | str, node: navigation.NavSubType) -> None:
         self.nav[index] = node
 
     def __getitem__(self, index: tuple[Any, ...] | str) -> navigation.NavSubType:

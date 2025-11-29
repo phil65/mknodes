@@ -95,7 +95,7 @@ class MkImage(mknode.MkNode):
         ]
         return "\n".join(lines) + "\n"
 
-    def _build(self, path, mode: Literal["light", "dark"] | None = None) -> str:
+    def _build(self, path: str, mode: Literal["light", "dark"] | None = None) -> str:
         if mode:
             path += f"#only-{mode}"
         markdown_link = f"![{self.title}]({path})"

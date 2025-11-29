@@ -3,7 +3,7 @@ from __future__ import annotations
 import functools
 import importlib
 from importlib import metadata
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
@@ -25,12 +25,12 @@ def get_requires(dist: metadata.Distribution) -> list[str]:
 
 
 @functools.cache
-def get_marker(marker) -> Marker:
+def get_marker(marker: str) -> Marker:
     return Marker(marker)
 
 
-def get_extras(markers: list) -> list[str]:
-    extras = []
+def get_extras(markers: list[list[Any] | tuple[Any, ...]]) -> list[str]:
+    extras: list[str] = []
     for marker in markers:
         match marker:
             case list():
