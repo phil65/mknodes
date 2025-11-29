@@ -85,7 +85,7 @@ class MkBlog(mknav.MkNav):
         author = Author(name=name, description=description, avatar=avatar)
         self.authors[username] = author
 
-    def get_node_resources(self) -> resources.Resources:
+    async def get_node_resources(self) -> resources.Resources:
         """Return required resources for this node."""
         authors_file = configfile.YamlFile()
         dct = {k: dataclasses.asdict(v) for k, v in self.authors.items()}
