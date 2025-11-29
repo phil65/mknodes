@@ -76,11 +76,7 @@ def str2node(
     return mk.MkPage.from_file(path, title=name, parent=parent, **kwargs)
 
 
-def from_list(
-    ls: list,
-    nav: mk.MkNav,
-    base_path: str = "",
-) -> None:
+def from_list(ls: list, nav: mk.MkNav, base_path: str = "") -> None:
     """Parse given list recursively and add found content to given MkNav.
 
     Args:
@@ -112,11 +108,7 @@ def from_list(
                 nav += page
 
 
-def from_dict(
-    dct: dict[str, str | list | dict],
-    nav: mk.MkNav,
-    base_path: str = "",
-) -> None:
+def from_dict(dct: dict[str, str | list | dict], nav: mk.MkNav, base_path: str = "") -> None:
     """Parse given dict recursively and add found content to given MkNav.
 
     Args:
@@ -149,10 +141,7 @@ class NavParser:
         """
         self._nav = nav
 
-    def json(
-        self,
-        obj: list | dict[str, str | list | dict],
-    ) -> None:
+    def json(self, obj: list | dict[str, str | list | dict]) -> None:
         """Parse given list or dict and attach it to given MkNav.
 
         If no Nav is given, create a new one
@@ -165,11 +154,7 @@ class NavParser:
             case list():
                 from_list(obj, self._nav)
 
-    def file(
-        self,
-        path: str | os.PathLike[str],
-        **kwargs: Any,
-    ) -> mk.MkNav:
+    def file(self, path: str | os.PathLike[str], **kwargs: Any) -> mk.MkNav:
         """Load an existing SUMMARY.md style file.
 
         For each indentation level in SUMMARY.md, a new sub-nav is created.
@@ -191,12 +176,7 @@ class NavParser:
             **kwargs,
         )
 
-    def text(
-        self,
-        text: str,
-        path: pathlib.Path,
-        **kwargs: Any,
-    ) -> mk.MkNav:
+    def text(self, text: str, path: pathlib.Path, **kwargs: Any) -> mk.MkNav:
         """Create a nav based on a SUMMARY.md-style list, given as text.
 
         This method parses a text input formatted similar to a SUMMARY.md file and
