@@ -95,7 +95,7 @@ class MkAnnotations(mkcontainer.MkContainer):
                 raise TypeError(item)
 
     def __repr__(self):
-        notes = []
+        notes: list[str | MkAnnotation] = []
         for item in self.get_items():
             item_children = item.get_items()
             if len(item_children) == 1:

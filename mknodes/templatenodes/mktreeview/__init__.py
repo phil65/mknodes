@@ -47,7 +47,7 @@ class MkTreeView(mkcode.MkCode):
         """
         super().__init__(language="", **kwargs)
         self.tree = tree
-        self.style = style
+        self.style: treestyles.TreeStyleStr | tuple[str, str, str, str] = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
         self.exclude_folders = (

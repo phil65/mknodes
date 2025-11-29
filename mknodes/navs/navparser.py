@@ -370,7 +370,7 @@ class NavParser:
         return self._nav
 
 
-def parse_new_style_nav(root_nav: mk.MkNav, items: list | dict) -> None:
+def parse_new_style_nav(root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[str, Any]) -> None:
     """Parse and add navigation items to the root navigation in a new style format.
 
     This function processes a list or dictionary of navigation items and adds them to the

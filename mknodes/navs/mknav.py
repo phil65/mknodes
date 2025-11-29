@@ -10,7 +10,7 @@ from mknodes.utils import inspecthelpers, log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Iterator, Sequence
     import types
 
     import mknodes as mk
@@ -87,7 +87,7 @@ class MkNav(mknode.MkNode):
     # def __len__(self):
     #     return len(self.children)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[navigation.NavSubType]:
         yield from self.get_children()
 
     @property

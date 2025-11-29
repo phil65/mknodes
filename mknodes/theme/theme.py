@@ -206,7 +206,7 @@ class Theme:
         """
         return "#333333"
 
-    def adapt_extensions(self, extensions: MutableMapping[str, dict]) -> None:
+    def adapt_extensions(self, extensions: MutableMapping[str, dict[str, Any]]) -> None:
         """Make adaptions to markdown extensions for the theme if required.
 
         Args:
@@ -220,7 +220,7 @@ class Theme:
                 # default style "table" looks broken with mkdocs
                 ext["linenums_style"] = "inline"  # pymdownx-inline
 
-    def adapt_extras(self, extras: dict) -> None:
+    def adapt_extras(self, extras: dict[str, Any]) -> None:
         """Adapt the "extras" dictionary containing additional information."""
 
     @property

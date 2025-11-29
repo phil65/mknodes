@@ -54,7 +54,7 @@ class MkMetadataBadges(mkcontainer.MkContainer):
         super().__init__(block_separator=block_separator, **kwargs)
         self._package = package
         self.typ = typ
-        self.font_size = font_size
+        self.font_size: Literal[10, 11, 12] | None = font_size
         self.font_name = font_name
         self.num_padding_chars = num_padding_chars
         self.badge_color = badge_color

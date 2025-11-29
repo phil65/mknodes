@@ -52,7 +52,7 @@ class MkTemplate(mkcontainer.MkContainer):
         return self.env.rendered_children
 
     @items.setter
-    def items(self, val) -> None:
+    def items(self, _val: Any) -> None:
         pass
 
     async def _to_markdown(self) -> str:

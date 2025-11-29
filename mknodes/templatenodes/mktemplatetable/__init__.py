@@ -49,7 +49,7 @@ class MkTemplateTable(mknode.MkNode):
         return children
 
     @children.setter
-    def children(self, val) -> None:
+    def children(self, _val: Any) -> None:
         pass
 
 
