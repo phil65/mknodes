@@ -61,6 +61,7 @@ dependencies = [
   "pytest-asyncio>=1.3.0",
   "python-dotenv",
   # Serialization
+  "setuptools>=80.9.0",
   "tomli-w",
   "universal_pathlib",
   "upathtools[httpx]",
@@ -135,7 +136,7 @@ docstring-style = "google"
 
 [tool.mypy]
 python_version = "3.13"
-disable_error_code = ["assignment", "misc", "import"]
+disable_error_code = ["assignment", "misc"]
 check_untyped_defs = true
 
 [tool.pyright]

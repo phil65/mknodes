@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, Any
 
-from pymdownx import superfences
+from pymdownx import superfences  # type: ignore[import-untyped]
 
 
 if TYPE_CHECKING:

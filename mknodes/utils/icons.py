@@ -39,7 +39,7 @@ def icon_for_url(url: str) -> str | None:
 
 @functools.cache
 def _patch_index_with_sets(_icon_sets: Sequence[str]) -> dict[str, Any]:
-    from pymdownx import twemoji_db
+    from pymdownx import twemoji_db  # type: ignore[import-untyped]
 
     # Copy the Twemoji index
     index: dict[str, Any] = {
@@ -78,7 +78,7 @@ def to_svg(
 
     Used for pymdownx.emoji.
     """
-    from pymdownx.emoji import TWEMOJI_SVG_CDN, add_attributes
+    from pymdownx.emoji import TWEMOJI_SVG_CDN, add_attributes  # type: ignore[import-untyped]
 
     is_unicode = uc is not None
     if is_unicode:

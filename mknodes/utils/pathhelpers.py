@@ -33,7 +33,7 @@ def fsspec_copy(
         output_path: path where file should get copied to.
         exist_ok: Whether exception should be raised in case stuff would get overwritten
     """
-    import fsspec
+    import fsspec  # type: ignore[import-untyped]
 
     if isinstance(source_path, upath.UPath):
         src = fsspec.FSMap(source_path.path, source_path.fs)
