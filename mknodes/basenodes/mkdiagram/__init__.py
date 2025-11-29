@@ -6,7 +6,7 @@ import textwrap
 from typing import Any, Literal
 
 from jinjarope import iterfilters, utils
-from pymdownx import superfences
+from pymdownx import superfences  # type: ignore[import-untyped]
 
 from mknodes.basenodes import mkcode
 from mknodes.utils import resources

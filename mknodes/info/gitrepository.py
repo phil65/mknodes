@@ -86,7 +86,7 @@ class GitRepository(git.Repo):
         }
 
     def get_commit(self, commit: str) -> git.Commit | None:
-        import gitdb.exc
+        import gitdb.exc  # type: ignore[import-untyped]
 
         try:
             return self.commit(commit)

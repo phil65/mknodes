@@ -25,9 +25,9 @@ def get_dependency_svg(
     clusters: bool = False,
 ) -> str:
     """Get svg for given folder (like "src/module" or just "module")."""
-    from pydeps import cli, colors, dot, py2depgraph
-    from pydeps.pydeps import depgraph_to_dotsrc
-    from pydeps.target import Target
+    from pydeps import cli, colors, dot, py2depgraph  # type: ignore[import-untyped]
+    from pydeps.pydeps import depgraph_to_dotsrc  # type: ignore[import-untyped]
+    from pydeps.target import Target  # type: ignore[import-untyped]
 
     def noop(*_args: Any, **_kwargs: Any):
         pass
