@@ -39,7 +39,7 @@ class NodeEnvironment(jinjarope.Environment):
             node: Node this environment belongs to.
             kwargs: Optional keyword arguments passed to parent
         """
-        super().__init__(enable_async=True, **kwargs)  # pyright: ignore[reportUnknownMemberType]
+        super().__init__(enable_async=True, **kwargs)
         self.node = node
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()

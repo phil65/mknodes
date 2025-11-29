@@ -78,14 +78,14 @@ class GitRepository(git.Repo):
         return self.remotes.origin.url.split(".git")[0] + "/"
 
     @functools.cached_property
-    def commit_to_tag(self) -> dict[git.Commit, str]:  # type: ignore[name-defined]
+    def commit_to_tag(self) -> dict[git.Commit, str]:
         """Dictionary mapping git.Commits to tag strings."""
         return {
             self.commit(i.commit): i.name
             for i in sorted(self.tags, key=lambda x: x.commit.committed_date)
         }
 
-    def get_commit(self, commit: str) -> git.Commit | None:  # type: ignore[name-defined]
+    def get_commit(self, commit: str) -> git.Commit | None:
         import gitdb.exc
 
         try:
@@ -93,10 +93,7 @@ class GitRepository(git.Repo):
         except gitdb.exc.BadName:
             return None
 
-    def get_version_for_commit(
-        self,
-        commit: git.Commit | str,  # type: ignore[name-defined]
-    ) -> str | None:
+    def get_version_for_commit(self, commit: git.Commit | str) -> str | None:
         """Iterate commit parents to find the associated version of the commit.
 
         Args:
@@ -118,7 +115,7 @@ class GitRepository(git.Repo):
             return None
 
     @functools.cached_property
-    def version_changes(self) -> dict[str, dict[str, list[git.Commit]]]:  # type: ignore[name-defined]
+    def version_changes(self) -> dict[str, dict[str, list[git.Commit]]]:
         """Returns a nested dictionary of commits, grouped by version and commit type.
 
         Shape of retuned dict:
@@ -134,14 +131,10 @@ class GitRepository(git.Repo):
         return {k: iterfilters.groupby(v, get_commit_group) for k, v in groups.items()}
 
     @functools.cached_property
-    def all_commits(self) -> list[git.Commit]:  # type: ignore[name-defined]
+    def all_commits(self) -> list[git.Commit]:
         return self.get_commits()
 
-    def get_commits(
-        self,
-        num: int | None = None,
-        branch: str | None = None,
-    ) -> list[git.Commit]:  # type: ignore[name-defined]
+    def get_commits(self, num: int | None = None, branch: str | None = None) -> list[git.Commit]:
         """Return last x commits.
 
         Args:
