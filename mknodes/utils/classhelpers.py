@@ -94,7 +94,7 @@ def to_class(klass: griffe.Class | type | str | tuple[str, ...] | list[str]):
         case tuple() | list():
             mod = import_module(".".join(klass[:-1]))
             return getattr(mod, klass[-1])
-        case _:
+        case _:  # pyright: ignore[reportUnnecessaryComparison]
             raise TypeError(klass)
 
 

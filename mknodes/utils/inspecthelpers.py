@@ -68,7 +68,7 @@ def get_stack_info(frame: types.FrameType | None, level: int) -> dict[str, Any] 
     )
 
 
-def get_deprecated_message(obj) -> str | None:
+def get_deprecated_message(obj: Any) -> str | None:
     """Return deprecated message (created by deprecated decorator).
 
     Args:
@@ -80,7 +80,7 @@ def get_deprecated_message(obj) -> str | None:
             p = str(paths[0].value)
             # ast.literal_eval(str(paths[0].value.arguments[0]))
             return p[p.find("(") + 2 : p.find(")") - 1]
-    return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None
+    return obj.__deprecated__ if hasattr(obj, "__deprecated__") else None  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
 
 
 def is_abstract(obj: type | griffe.Class | griffe.Function) -> bool:
@@ -131,7 +131,7 @@ def get_file(obj: datatypes.HasCodeType | griffe.Object) -> pathlib.Path | None:
     return inspectfilters.get_file(obj)
 
 
-def get_argspec(obj, remove_self: bool = True) -> inspect.FullArgSpec:
+def get_argspec(obj: Any, remove_self: bool = True) -> inspect.FullArgSpec:
     """Return a cleaned-up FullArgSpec for given callable.
 
     ArgSpec is cleaned up by removing `self` from method callables.

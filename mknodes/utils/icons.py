@@ -83,12 +83,8 @@ def to_svg(
     is_unicode = uc is not None
     if is_unicode:
         image_path = options.get("image_path", TWEMOJI_SVG_CDN)
-        attributes = {
-            "class": options.get("classes", index),
-            "alt": alt,
-            "src": f"{image_path}{uc}.svg",
-        }
-
+        classes = options.get("classes", index)
+        attributes = {"class": classes, "alt": alt, "src": f"{image_path}{uc}.svg"}
         if title:
             attributes["title"] = title
 

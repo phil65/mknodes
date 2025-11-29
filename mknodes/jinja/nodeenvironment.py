@@ -121,7 +121,7 @@ class NodeEnvironment(jinjarope.Environment):
     def _patch_asyncio_run(self):
         """Temporarily patch asyncio.run to handle nested event loops."""
         original_run = asyncio.run
-        asyncio.run = coroutines.run_sync
+        asyncio.run = coroutines.run_sync  # type: ignore[assignment]
         try:
             yield
         finally:
