@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
 import functools
 from typing import TYPE_CHECKING, Any
 
@@ -10,7 +11,6 @@ from mknodes.utils import resources
 
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
     import os
     import pathlib
 
@@ -118,11 +118,12 @@ class NodeFile(configfile.TomlFile):
                 examples[v["title"]] = await get_representations(v["jinja"], parent)
         return examples
 
-    def iter_example_instances(self, parent: mk.MkNode) -> Generator[mk.MkNode]:
+    async def iter_example_instances(self, parent: mk.MkNode) -> AsyncIterator[mk.MkNode]:
         for v in self._data.get("examples", {}).values():
             if "jinja" in v:
-                parent.env.render_string(v["jinja"])
-                yield from parent.env.rendered_children
+                await parent.env.render_string_async(v["jinja"])
+                for child in parent.env.rendered_children:
+                    yield child
 
     @property
     def output(self) -> dict[str, str]:

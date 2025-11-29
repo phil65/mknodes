@@ -10,14 +10,14 @@ def test_empty():
     assert not str(node)
 
 
-def test_getitem_ending_with_eof():
+async def test_getitem_ending_with_eof():
     node = mk.MkText("## Test section\nTest")
-    assert str(node["Test section"]) == "Test"
+    assert str(await node.get_section("Test section")) == "Test"
 
 
-def test_getitem_ending_with_another_section():
+async def test_getitem_ending_with_another_section():
     node = mk.MkText("## Test section\nTest\n## Another section")
-    assert str(node["Test section"]) == "Test\n"
+    assert str(await node.get_section("Test section")) == "Test\n"
 
 
 def test_fetch_from_url():
