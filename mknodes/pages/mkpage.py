@@ -217,7 +217,7 @@ class MkPage(mkcontainer.MkContainer):
         """
         if isinstance(value, pagetemplate.PageTemplate):
             self.metadata.template = value.filename
-            self._template: pagetemplate.PageTemplate | None = value
+            self._template = value
         else:
             self.metadata.template = value
             self._template = None
