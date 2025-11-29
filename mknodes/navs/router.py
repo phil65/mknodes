@@ -174,8 +174,8 @@ if __name__ == "__main__":
     router = Router()
 
     @router.route_page("Test")
-    def _(page) -> None:
+    def _(_page: mkpage.MkPage) -> None:
         pass
 
     router.register_nodes(nav)
-    print(nav.nav.pages)
+    print(nav.nav.pages)  # type: ignore[has-type]
