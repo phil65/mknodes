@@ -73,8 +73,7 @@ def profile(ctx, *args: str):
 @duty(capture=False)
 def version(
     ctx,
-    bump_type: Literal["major", "minor", "patch", "stable"] = "patch",
-    extra: Literal["alpha", "beta", "rc", "post", "dev"] | None = None,
+    *bump_type: Literal["major", "minor", "patch", "stable", "alpha", "beta", "rc", "post", "dev"],
 ):
     """Release a new version with git operations. (major|minor|patch|stable|alpha|beta|rc|post|dev)."""
     # Check for uncommitted changes
@@ -86,8 +85,8 @@ def version(
     # Read current version
     old_version = ctx.run("uv version --short", capture=True).strip()
     print(f"Current version: {old_version}")
-    extra_str = "" if extra is None else f" --bump {extra}"
-    ctx.run(f"uv version --bump {bump_type}{extra_str}")
+    bump_str = " ".join(f"--bump {i}" for i in bump_type)
+    ctx.run(f"uv version {bump_str}")
     new_version = ctx.run("uv version --short", capture=True).strip()
     print(f"New version: {new_version}")
     ctx.run("git add pyproject.toml")
