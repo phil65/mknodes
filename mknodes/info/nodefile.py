@@ -132,7 +132,9 @@ class NodeFile(configfile.TomlFile):
             if example.condition and not await parent.env.render_condition_async(example.condition):
                 continue
             if example.jinja:
-                examples[example.title] = await get_representations(example.jinja, parent)
+                examples[example.title or "Default"] = await get_representations(
+                    example.jinja, parent
+                )
         return examples
 
     async def iter_example_instances(self, parent: mk.MkNode) -> AsyncIterator[mk.MkNode]:

@@ -42,7 +42,7 @@ class MkTemplatePage(mkpage.MkPage):
         return self.env.rendered_children
 
     @items.setter
-    def items(self, val) -> None:
+    def items(self, _val: Any) -> None:
         pass
 
     @property

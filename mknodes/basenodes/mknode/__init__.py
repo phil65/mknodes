@@ -15,6 +15,7 @@ from mknodes.utils import icons, log, mdconverter, reprhelpers, resources
 
 
 if TYPE_CHECKING:
+    from collections.abc import Coroutine
     from collections.abc import Callable, Iterable, Iterator, Sequence
     import types
 
@@ -22,7 +23,7 @@ if TYPE_CHECKING:
     import mknodes as mk
 
 
-def _run_sync(coro):
+def _run_sync[T](coro: Coroutine[Any, Any, T]) -> T | None:
     """Run a coroutine synchronously, handling nested event loops."""
     try:
         _loop = asyncio.get_running_loop()
