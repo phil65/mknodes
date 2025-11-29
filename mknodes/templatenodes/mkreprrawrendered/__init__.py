@@ -29,8 +29,7 @@ class MkReprRawRendered(mktemplate.MkTemplate):
         self._node = node
         super().__init__("output/markdown/template", **kwargs)
 
-    @property
-    def node(self):
+    def get_mknode(self) -> mk.MkNode | None:
         match self._node:
             case None:
                 return None

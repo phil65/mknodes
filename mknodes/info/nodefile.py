@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
 import functools
 from typing import TYPE_CHECKING, Any
 
@@ -11,6 +10,7 @@ from mknodes.utils import resources
 
 
 if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
     import os
     import pathlib
 
@@ -42,7 +42,7 @@ def find_file(klass: type) -> pathlib.Path | None:
 async def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
     import mknodes as mk
 
-    parent.env.render_string(jinja)
+    await parent.env.render_string_async(jinja)
     nodes = parent.env.rendered_nodes
     node = mk.MkContainer(nodes) if len(nodes) > 1 else nodes[0]
     dct: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
@@ -112,7 +112,7 @@ class NodeFile(configfile.TomlFile):
         """
         examples = {}
         for v in self._data.get("examples", {}).values():
-            if "condition" in v and not parent.env.render_condition(v["condition"]):
+            if "condition" in v and not await parent.env.render_condition_async(v["condition"]):
                 continue
             if "jinja" in v:
                 examples[v["title"]] = await get_representations(v["jinja"], parent)
