@@ -10,6 +10,7 @@ from mknodes.utils import classhelpers, log, reprhelpers
 if TYPE_CHECKING:
     from collections.abc import Sequence
     import types
+    from types import ModuleType
 
 
 logger = log.get_logger(__name__)
@@ -45,7 +46,7 @@ class MkDoc(mknav.MkNav):
             kwargs: Keyword arguments passed to parent
         """
         if module:
-            self._module = classhelpers.to_module(module, return_none=False)
+            self._module: ModuleType | None = classhelpers.to_module(module, return_none=False)
         else:
             self._module = None
         self.class_template = class_template

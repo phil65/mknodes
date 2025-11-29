@@ -280,20 +280,24 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
     def __or__(self, other):
         return self.merge(other)
 
-    def remove(self, *resources) -> None:
+    def remove(self, *resources: CSSType | Plugin | JSType | Asset | Package | str) -> None:
         for resource in resources:
-            if resource in self.css:
-                self.css.remove(resource)
-            if resource in self.plugins:
-                self.plugins.remove(resource)
-            if resource in self.js:
-                self.js.remove(resource)
-            if resource in self.assets:
-                self.assets.remove(resource)
-            if resource in self.packages:
-                self.packages.remove(resource)
-            if resource in self.markdown_extensions:
-                self.markdown_extensions.pop(resource)
+            match resource:
+                case CSSFile() | CSSText() if resource in self.css:
+                    self.css.remove(resource)
+                case Plugin() if resource in self.plugins:
+                    self.plugins.remove(resource)
+                case JSFile() | JSText() if resource in self.js:
+                    self.js.remove(resource)
+                case Asset() if resource in self.assets:
+                    self.assets.remove(resource)
+                case Package() if resource in self.packages:
+                    self.packages.remove(resource)
+                case str() if resource in self.markdown_extensions:
+                    self.markdown_extensions.pop(resource)
+                case _:
+                    msg = f"Invalid resource type: {type(resource)}"
+                    raise ValueError(msg)
 
     @property
     def js_files(self) -> list[JSText]:
@@ -313,7 +317,7 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
     def merge(
         self,
         other: collections.abc.Mapping[Hashable, Any] | Self,
-        additive: bool = False,
+        _additive: bool = False,
     ):
         """Merge resources with another resources instance or dict.
 
@@ -321,7 +325,7 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
 
         Args:
             other: The resources to merge into this one.
-            additive: Merge strategy. Either additive or replace.
+            _additive: Merge strategy. Either additive or replace.
         """
 
         def merge_extensions(

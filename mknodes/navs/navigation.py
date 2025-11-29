@@ -88,7 +88,7 @@ class Navigation(dict[tuple[Any, ...], NavSubType]):
         for path, item in self.items():
             data = dct
             for part in path[:-1]:
-                data = data.setdefault(part, {})  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
+                data = data.setdefault(part, {})  # type: ignore[assignment]  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
             assert isinstance(data, dict)
             match item:
                 case mk.MkNav():
