@@ -1,8 +1,11 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mknode
 from mknodes.utils import resources
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class MkTemplateTable(mknode.MkNode):
@@ -15,7 +18,7 @@ class MkTemplateTable(mknode.MkNode):
         self.layout = layout
         super().__init__(**kwargs)
 
-    def iter_items(self):
+    def iter_items(self) -> Iterator[Any]:
         yield from ()
 
     async def _to_markdown(self) -> str:
