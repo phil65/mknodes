@@ -94,7 +94,7 @@ class MaterialTheme(theme.Theme):
     css_template = "css/theme_material.css"
 
     def __init__(self, **kwargs: Any) -> None:
-        self._foreground_color = None
+        self._foreground_color: Any = None
         self.classic_admonition_style = True
         self.tooltip_width: int | None = None
         self.content_area_width: int | None = None
@@ -303,7 +303,7 @@ class MaterialTheme(theme.Theme):
             tag: Tag name
             icon: Optional Iconify icon identifier
         """
-        self.status_icons[identifier] = Tag(identifier, tag, icon)
+        self.tags[identifier] = Tag(identifier, tag, icon)
 
     def adapt_extensions(self, extensions: MutableMapping[str, dict]) -> None:
         """MkDocs-Material needs some custom configuration for extensions.
