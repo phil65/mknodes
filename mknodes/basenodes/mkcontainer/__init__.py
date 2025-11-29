@@ -26,7 +26,7 @@ class MkContainerBase(mknode.MkNode):
         *,
         block_separator: str = "\n\n",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -104,7 +104,7 @@ class MkContainer(MkContainerBase):
         *,
         block_separator: str = "\n\n",
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

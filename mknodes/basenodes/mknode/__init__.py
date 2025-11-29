@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     import mknodes as mk
 
 
-def _run_sync[T](coro: Coroutine[Any, Any, T]) -> T | None:
+def _run_sync[T](coro: Coroutine[Any, Any, T]) -> T:
     """Run a coroutine synchronously, handling nested event loops."""
     try:
         _loop = asyncio.get_running_loop()
@@ -420,7 +420,7 @@ class MkNode:
         """
         return nodeenvironment.NodeEnvironment(self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _run_sync(self.to_markdown())
 
     def __hash__(self):
@@ -493,7 +493,7 @@ class MkNode:
         """Return the NodeFile if existing."""
         return nodefile.get_nodefile(cls)  # type: ignore[arg-type]
 
-    def to_child_node(self, other: Any):  # type: ignore[return]
+    def to_child_node(self, other: str | list[Any] | mk.MkNode | None):  # type: ignore[return]
         """Convert given nodes / strings to child nodes.
 
         Either converts text to an MkNode sets parent of node to self.

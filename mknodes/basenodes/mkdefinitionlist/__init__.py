@@ -62,7 +62,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
         """Return the list of definition values."""
         return list(self.data.values())  # type: ignore[arg-type]
 
-    def set_items(self, data: Mapping[str, Any] | list | None) -> None:
+    def set_items(self, data: Mapping[str, Any] | list[Any] | None) -> None:
         """Set items from data."""
         match data:
             case Mapping():
