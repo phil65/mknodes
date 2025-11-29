@@ -92,6 +92,7 @@ class MkPage(mkcontainer.MkContainer):
             template=None,
             tags=tags,
         )
+        self._template: pagetemplate.PageTemplate | None = None
         self.template = template or pagetemplate.PageTemplate(
             parent=self,
             extends="main.html",
