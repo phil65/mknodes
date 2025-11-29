@@ -36,8 +36,7 @@ class MkTemplateTable(mknode.MkNode):
             text += "| " + " | ".join(strs) + " |\n"
         return f"{header}\n{divider}\n{text}"
 
-    @property
-    def children(self):
+    def get_children(self):
         children = []
         nodefile = self.get_nodefile()
         assert nodefile
@@ -47,10 +46,6 @@ class MkTemplateTable(mknode.MkNode):
                 self.env.render_template(f"layouts/{self.layout}/{k}", variables=dct)
                 children += self.env.rendered_children
         return children
-
-    @children.setter
-    def children(self, _val: Any) -> None:
-        pass
 
 
 if __name__ == "__main__":

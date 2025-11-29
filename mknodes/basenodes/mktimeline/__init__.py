@@ -70,13 +70,8 @@ class MkTimelineItem(mknode.MkNode):
         self.button_text = button_text
         self.fade_direction: Literal["left", "right"] | None = None
 
-    @property
-    def children(self):
+    def get_children(self):
         return [self.content]
-
-    @children.setter
-    def children(self, _val: Any) -> None:
-        pass
 
     async def get_element(self) -> xml.Div:
         root = xml.Div("timeline-item")
