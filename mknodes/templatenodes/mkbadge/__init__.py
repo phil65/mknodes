@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import functools
 import html
 
@@ -101,7 +102,8 @@ class MkBadge(mkimage.MkImage):
         return self.ctx.theme.primary_color
 
     async def to_md_unprocessed(self) -> str:
-        inner = htmlfilters.html_link(self.data.replace("\n", ""), await self.get_url())
+        data = await self.get_data()
+        inner = htmlfilters.html_link(data.replace("\n", ""), await self.get_url())
         return f"<body>{inner}</body>"
 
     @property
@@ -111,9 +113,9 @@ class MkBadge(mkimage.MkImage):
         color = self.ctx.theme.text_color
         return f"{color},#fff" if self.use_gitlab_style else f"#fff,{color}"
 
-    @property
-    def data(self) -> str:
-        return get_badge(
+    async def get_data(self) -> str:
+        return await asyncio.to_thread(
+            get_badge,
             label=self.label,
             value=self.value,
             font_size=self.font_size,
@@ -133,4 +135,9 @@ class MkBadge(mkimage.MkImage):
 
 if __name__ == "__main__":
     img = MkBadge("Left", "right")
-    print(img.data)
+
+    async def main():
+        data = await img.get_data()
+        print(data)
+
+    asyncio.run(main())

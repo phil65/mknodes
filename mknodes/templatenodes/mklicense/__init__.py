@@ -33,7 +33,7 @@ class MkLicense(mktext.MkText):
 
     async def get_text(self) -> str:
         if self.license_type:
-            obj = lic.License.from_name(self.license_type)
+            obj = await lic.License.from_name(self.license_type)
             return obj.content
         return self.ctx.metadata.license_text or ""
 

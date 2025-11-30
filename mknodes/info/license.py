@@ -5,6 +5,8 @@ import functools
 import pathlib
 from typing import Any, Self
 
+import anyenv
+
 from mknodes.utils import log
 
 
@@ -13,10 +15,8 @@ DB_URL = "https://raw.githubusercontent.com/fsfe/reuse-tool/refs/heads/main/src/
 
 
 @functools.cache
-def get_db() -> list[dict[str, Any]]:
-    import anyenv
-
-    response = anyenv.get_json_sync(DB_URL, return_type=dict, cache=True)
+async def get_db() -> list[dict[str, Any]]:
+    response = await anyenv.get_json(DB_URL, return_type=dict, cache=True)
     return response["licenses"]
 
 
@@ -30,20 +30,18 @@ class License:
     osi_approved: bool | None = None
 
     @classmethod
-    def from_name(cls, name_or_id: str) -> Self:
+    async def from_name(cls, name_or_id: str) -> Self:
         """Get license based on license name.
 
         Args:
             name_or_id: Name or id of the license to get.
         """
-        import anyenv
-
-        db = get_db()
+        db = await get_db()
         name_or_id = name_or_id.lower()
         for lic in db:
             if name_or_id in {lic["name"].lower(), lic["licenseId"].lower()}:
                 url = lic["detailsUrl"]
-                response = anyenv.get_json_sync(url, return_type=dict[str, Any], cache=True)
+                response = await anyenv.get_json(url, return_type=dict[str, Any], cache=True)
                 return cls(
                     name=lic["name"],
                     identifier=lic["licenseId"],
@@ -62,14 +60,16 @@ class License:
             path: Path to get license from.
         """
         p = pathlib.Path(path)
-        return cls(
-            path=str(p),
-            content=p.read_text(encoding="utf-8"),
-            name=p.name,
-            identifier=p.name,
-        )
+        content = p.read_text(encoding="utf-8")
+        return cls(path=str(p), content=content, name=p.name, identifier=p.name)
 
 
 if __name__ == "__main__":
-    db = License.from_name("BSD-3-Clause")
-    print(db)
+
+    async def main():
+        db = await License.from_name("BSD-3-Clause")
+        print(db)
+
+    import asyncio
+
+    asyncio.run(main())
