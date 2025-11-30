@@ -55,10 +55,9 @@ class MkDiagram(mkcode.MkCode):
 
     async def get_text(self) -> str:
         """MkCode override."""
-        return f"graph {self.direction}\n{self.mermaid_code}"
+        return f"graph {self.direction}\n{await self.get_mermaid_code()}"
 
-    @property
-    def mermaid_code(self) -> str:
+    async def get_mermaid_code(self) -> str:
         """Return code block, excluding fences and (graph type direction) line.
 
         Can be overriden by subclasses.

@@ -113,8 +113,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             case _:
                 raise ValueError(self.mode)
 
-    @property
-    def mermaid_code(self) -> str:
+    async def get_mermaid_code(self) -> str:
         return self.builder.get_graph_connection_text()
 
 

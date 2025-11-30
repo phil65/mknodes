@@ -117,8 +117,7 @@ class MkPipDepTree(mkdiagram.MkDiagram):
             case _:
                 return self._package
 
-    @property
-    def mermaid_code(self) -> str:
+    async def get_mermaid_code(self) -> str:
         return get_mermaid(self.package, local_only=self.local_only, user_only=self.user_only)
 
 
