@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import functools
 import io
@@ -17,7 +18,7 @@ logger = log.get_logger(__name__)
 @functools.cache
 @helpers.list_to_tuple
 def get_mermaid(
-    package: str | tuple[str] | None = None,
+    package: str | tuple[str] | list[str] | None = None,
     local_only: bool = True,
     user_only: bool = False,
     reverse: bool = False,
@@ -118,7 +119,9 @@ class MkPipDepTree(mkdiagram.MkDiagram):
                 return self._package
 
     async def get_mermaid_code(self) -> str:
-        return get_mermaid(self.package, local_only=self.local_only, user_only=self.user_only)
+        return await asyncio.to_thread(
+            get_mermaid, self.package, local_only=self.local_only, user_only=self.user_only
+        )
 
 
 if __name__ == "__main__":
