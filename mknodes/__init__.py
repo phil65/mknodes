@@ -90,7 +90,7 @@ from .theme.theme import Theme
 from .theme.materialtheme import MaterialTheme
 
 
-def parse(project=None, **kwargs):
+async def parse(project=None, **kwargs):
     if project:
         kwargs["context"] = project.context
     from mknodes.navs.navparser import parse_new_style_nav
@@ -98,7 +98,7 @@ def parse(project=None, **kwargs):
     pages = kwargs.pop("pages")
     root_nav = MkNav(**kwargs)
     project.root = root_nav
-    parse_new_style_nav(root_nav, pages)
+    await parse_new_style_nav(root_nav, pages)
     return root_nav
 
 

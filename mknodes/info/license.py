@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import dataclasses
-import functools
 import pathlib
 from typing import Any, Self
 
 import anyenv
+from anyio import functools as anyio_functools
 
 from mknodes.utils import log
 
@@ -14,7 +14,7 @@ logger = log.get_logger(__name__)
 DB_URL = "https://raw.githubusercontent.com/fsfe/reuse-tool/refs/heads/main/src/reuse/resources/licenses.json"
 
 
-@functools.cache
+@anyio_functools.cache
 async def get_db() -> list[dict[str, Any]]:
     response = await anyenv.get_json(DB_URL, return_type=dict, cache=True)
     return response["licenses"]

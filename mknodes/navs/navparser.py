@@ -370,7 +370,9 @@ class NavParser:
         return self._nav
 
 
-def parse_new_style_nav(root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[str, Any]) -> None:
+async def parse_new_style_nav(
+    root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[str, Any]
+) -> None:
     """Parse and add navigation items to the root navigation in a new style format.
 
     This function processes a list or dictionary of navigation items and adds them to the
@@ -414,9 +416,9 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[s
         items = [items]
     for item in items:
         if "type" in item and "title" in item:
-            if (condition := item.pop("condition", False)) and not root_nav.env.render_condition(
-                condition
-            ):
+            if (
+                condition := item.pop("condition", False)
+            ) and not await root_nav.env.render_condition_async(condition):
                 continue
             kls = getattr(mk, item.pop("type"))
             title = item.pop("title")
@@ -433,7 +435,7 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[s
                     for node_dct in nodes:
                         if (
                             condition := node_dct.pop("condition", False)
-                        ) and not instance.env.render_condition(condition):
+                        ) and not await instance.env.render_condition_async(condition):
                             continue
                         kls = getattr(mk, node_dct.pop("type"))
                         if header := node_dct.pop("title", None):
@@ -443,11 +445,7 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[s
                     instance.title = title
                     root_nav += instance
                 case _:
-                    page = root_nav.add_page(
-                        title,
-                        is_index=is_index,
-                        is_homepage=is_homepage,
-                    )
+                    page = root_nav.add_page(title, is_index=is_index, is_homepage=is_homepage)
                     page += instance
         else:
             name, items = next(iter(item.items()))
@@ -455,7 +453,7 @@ def parse_new_style_nav(root_nav: mk.MkNav, items: list[dict[str, Any]] | dict[s
                 root_nav += mk.MkPage.from_file(items, title=name)
             else:
                 nav = root_nav.add_nav(name)
-                parse_new_style_nav(nav, items)
+                await parse_new_style_nav(nav, items)
 
 
 if __name__ == "__main__":

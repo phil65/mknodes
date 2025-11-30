@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-import functools
 from typing import Any, TYPE_CHECKING
 from upathtools import to_upath
 
 from mknodes.basenodes import mktext
 from mknodes.utils import log, resources
+from anyio import functools as anyio_functools
 
 if TYPE_CHECKING:
+    from tokonomics import ModelName
     from upath import UPath
     import os
     from collections.abc import Sequence
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
 logger = log.get_logger(__name__)
 
 
-@functools.cache
+@anyio_functools.cache
 async def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
     from llmling_agent.functional import run
 
@@ -39,7 +40,7 @@ class MkLlm(mktext.MkText):
         self,
         user_prompt: str,
         system_prompt: str | None = None,
-        model: str = "openai:gpt-4o-mini",
+        model: str | ModelName = "openai:gpt-4o-mini",
         context: str | None = None,
         extra_files: Sequence[str | os.PathLike[str]] | None = None,
         **kwargs: Any,
@@ -106,5 +107,5 @@ class MkLlm(mktext.MkText):
 
 
 if __name__ == "__main__":
-    node = MkLlm("Say hello, introduce yourself", model="openai:gpt-4o-mini")
+    node = MkLlm("Say hello, introduce yourself", model="openai:gpt-5-nano")
     print(node)

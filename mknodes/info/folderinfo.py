@@ -8,6 +8,7 @@ import pathlib
 import re
 from typing import TYPE_CHECKING
 
+from anyenv import run_sync
 import epregistry
 import yamling
 
@@ -206,7 +207,7 @@ class FolderInfo:
         if self.license_file_path:
             return self.license_file_path.read_text(encoding="utf-8")
         if license_name := self.info.license_name:
-            obj = lic.License.from_name(license_name)
+            obj = run_sync(lic.License.from_name(license_name))
             return obj.content
         return None
 
