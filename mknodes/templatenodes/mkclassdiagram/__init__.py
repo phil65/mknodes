@@ -20,7 +20,7 @@ DiagramModeStr = Literal["baseclasses", "subclasses", "mro"]
 class BaseClassConnector(connector.Connector[type]):
     def __init__(
         self,
-        objects,
+        objects: Any,
         *,
         title_style: Literal["package.classname", "qualname"] = "package.classname",
         max_depth: int | None = None,

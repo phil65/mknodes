@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import functools
 import io
@@ -108,7 +109,8 @@ class MkChangelog(mktext.MkText):
             cfg := self.ctx.metadata.pyproject_file.tool.get("git-changelog")
         ):
             filter_commits = cfg.get("filter-commits")
-        return get_changelog(
+        return await asyncio.to_thread(
+            get_changelog,
             repository=str(self.repository),
             template=self.template,
             convention=self.convention,
