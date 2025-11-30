@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import functools
 from typing import Any, TYPE_CHECKING
+from upathtools import to_upath
 
 from mknodes.basenodes import mktext
 from mknodes.utils import log, resources
@@ -18,10 +19,10 @@ logger = log.get_logger(__name__)
 
 
 @functools.cache
-def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
+async def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
     from llmling_agent.functional import run
 
-    return run.run_agent_sync(
+    return await run.run_agent(
         user_prompt + "\n\n" + context,
         model=model,
         system_prompt=system_prompt,
@@ -66,8 +67,6 @@ class MkLlm(mktext.MkText):
         Returns:
             List of context strings.
         """
-        from upathtools import to_upath
-
         context_items: list[str] = []
 
         def process_dir(path: UPath) -> list[str]:
@@ -98,7 +97,7 @@ class MkLlm(mktext.MkText):
         context_items = self._process_extra_files()
         combined_context = "\n".join(filter(None, [self._context, *context_items])) or None
 
-        return complete_llm(
+        return await complete_llm(
             self.user_prompt,
             self.system_prompt or "",
             model=self._model,

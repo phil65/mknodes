@@ -14,7 +14,7 @@ group = "documentation"
 # template = """
 # <body>
 
-# {{ node.svg }}
+# {{ node.get_svg() }}
 
 # </body>
 

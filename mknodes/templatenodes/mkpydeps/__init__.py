@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import functools
 import os
 import types
@@ -42,16 +43,16 @@ def get_dependency_svg(
         cmd.append("--only-cycles")
     if clusters:
         cmd.append("--clusters")
-    options = cli.parse_args(cmd)
+    options = cli.parse_args(cmd)  # pyright: ignore[reportUnknownMemberType]
     colors.START_COLOR = options["start_color"]
     target = Target(options["fname"])
     logger.debug("run py2dep for folder %r", str(folder_name))
     with target.chdir_work():
-        dep_graph = py2depgraph.py2dep(target, **options)
+        dep_graph = py2depgraph.py2dep(target, **options)  # pyright: ignore[reportUnknownMemberType]
     logger.debug("run depgraph_to_dotsrc")
     dot_src = depgraph_to_dotsrc(target, dep_graph, **options)
     logger.debug("run call_graphviz_dot")
-    svg = dot.call_graphviz_dot(dot_src, "svg").decode()
+    svg = dot.call_graphviz_dot(dot_src, "svg").decode()  # pyright: ignore[reportUnknownMemberType]
     svg = "".join(svg.splitlines()[6:])
     return svg.replace('fill="white"', 'fill="transparent"')
 
@@ -106,19 +107,19 @@ class MkPyDeps(mknode.MkNode):
             case _:
                 return self.ctx.metadata.distribution_name
 
-    @property
-    def svg(self):
-        content = get_dependency_svg(
+    async def get_svg(self) -> str:
+        content = await asyncio.to_thread(
+            get_dependency_svg,
             self.module,
             max_bacon=self.max_bacon,
             max_module_depth=self.max_module_depth,
             only_cycles=self.only_cycles,
             clusters=self.clusters,
         )
-        return insert_links(content, self.ctx.links.inv_manager)  # type: ignore
+        return insert_links(content, self.ctx.links.inv_manager)  # type: ignore  # pyright: ignore[reportArgumentType]
 
     async def to_md_unprocessed(self) -> str:
-        return f"<body>\n\n{self.svg}\n\n</body>\n"
+        return f"<body>\n\n{await self.get_svg()}\n\n</body>\n"
 
 
 if __name__ == "__main__":
