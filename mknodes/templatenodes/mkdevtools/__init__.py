@@ -6,7 +6,7 @@ from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
 
 if TYPE_CHECKING:
-    from mknodes.data import tools
+    from mknodes.data.tools import Tool
 
 
 logger = log.get_logger(__name__)
@@ -19,11 +19,7 @@ class MkDevTools(mktemplate.MkTemplate):
     STATUS = "new"
     VIRTUAL_CHILDREN = True
 
-    def __init__(
-        self,
-        tools: list[tools.Tool] | None = None,
-        **kwargs: Any,
-    ) -> None:
+    def __init__(self, tools: list[Tool] | None = None, **kwargs: Any) -> None:
         """Constructor.
 
         Args:
@@ -35,7 +31,7 @@ class MkDevTools(mktemplate.MkTemplate):
         self._tools = tools
 
     @property
-    def tools(self) -> list[tools.Tool]:
+    def tools(self) -> list[Tool]:
         match self._tools:
             case list():
                 return self._tools

@@ -53,14 +53,14 @@ IconTypeStr = Literal[
     "tasklist_checked",
 ]
 
-ICON_TYPE: dict[IconTypeStr, str] = dict(
-    footnotes="md-footnotes-icon",
-    details="md-details-icon",
-    previous_tab="md-tabbed-icon--prev",
-    next_tab="md-tabbed-icon--next",
-    tasklist="md-tasklist-icon",
-    tasklist_checked="md-tasklist-icon--checked",
-)
+ICON_TYPE: dict[IconTypeStr, str] = {
+    "footnotes": "md-footnotes-icon",
+    "details": "md-details-icon",
+    "previous_tab": "md-tabbed-icon--prev",
+    "next_tab": "md-tabbed-icon--next",
+    "tasklist": "md-tasklist-icon",
+    "tasklist_checked": "md-tasklist-icon--checked",
+}
 
 
 @dataclasses.dataclass(frozen=True)
