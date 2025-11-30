@@ -101,7 +101,7 @@ class MkNav(mknode.MkNode):
 
     def get_children(self) -> list[navigation.NavSubType]:  # type: ignore[override]  # pyright: ignore[reportIncompatibleMethodOverride]
         """Return all child items from the navigation."""
-        return self.nav.all_items
+        return self.nav.get_all_items()
 
     def set_children(self, items: list[navigation.NavSubType]) -> None:  # type: ignore[override]  # pyright: ignore[reportIncompatibleMethodOverride]
         """Set children by replacing the navigation."""

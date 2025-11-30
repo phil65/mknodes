@@ -51,19 +51,16 @@ class Navigation(dict[tuple[Any, ...], NavSubType]):
             case _:
                 raise TypeError(node)
 
-    @property
-    def all_items(self) -> list[NavSubType]:
+    def get_all_items(self) -> list[NavSubType]:
         nodes: list[NavSubType] = [self.index_page] if self.index_page else []
         nodes += list(self.values())
         return nodes
 
-    @property
-    def navs(self) -> list[mknav.MkNav]:
+    def get_navs(self) -> list[mknav.MkNav]:
         """Return all registered navs."""
         return [node for node in self.values() if isinstance(node, mknav.MkNav)]  # pyright: ignore[reportReturnType]
 
-    @property
-    def pages(self) -> list[mkpage.MkPage]:
+    def get_pages(self) -> list[mkpage.MkPage]:
         """Return all registered pages."""
         return [node for node in self.values() if isinstance(node, mkpage.MkPage)]
 
