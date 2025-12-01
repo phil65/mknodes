@@ -13,7 +13,7 @@ from mknodes.pages import mkpage
 
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable, Callable, Iterator
+    from collections.abc import Awaitable, Callable
 
     from mknodes.navs import mknav
 
@@ -110,29 +110,9 @@ class Navigation:
             index = (index,)
         return index in self._data
 
-    def __len__(self) -> int:
-        self._ensure_materialized()
-        return len(self._data)
-
-    def __iter__(self) -> Iterator[tuple[Any, ...]]:
-        self._ensure_materialized()
-        return iter(self._data)
-
     def __bool__(self) -> bool:
         self._ensure_materialized()
         return bool(self._data) or self._index_page is not None
-
-    def keys(self):
-        self._ensure_materialized()
-        return self._data.keys()
-
-    def values(self):
-        self._ensure_materialized()
-        return self._data.values()
-
-    def items(self):
-        self._ensure_materialized()
-        return self._data.items()
 
     def register(self, node: mknav.MkNav | mkpage.MkPage | mklink.MkLink) -> None:
         from mknodes.navs import mknav as mknav_module
