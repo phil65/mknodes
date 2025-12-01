@@ -107,7 +107,9 @@ class MkNav(mknode.MkNode):
         """Set children by replacing the navigation."""
         from mknodes.navs import navigation as nav_module
 
-        self.nav = nav_module.Navigation(items)
+        self.nav = nav_module.Navigation()
+        for item in items:
+            self.nav.register(item)
 
     def __add__(self, other: navigation.NavSubType):
         """Use this to to register MkNodes."""

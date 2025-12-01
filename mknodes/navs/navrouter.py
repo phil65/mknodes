@@ -48,13 +48,16 @@ class NavRouter:
             fn: NavSubTypeCallable,
             path: tuple[str, ...] = path,
         ) -> NavSubTypeCallable:
-            node = fn()
-            node.parent = self._nav
-            if isinstance(node, mkpage.MkPage):
-                node.created_by = fn
-            elif isinstance(node, mknav.MkNav) and node.index_page:
-                node.index_page.created_by = fn
-            self._nav.nav[path] = node
+            def register() -> None:
+                node = fn()
+                node.parent = self._nav
+                if isinstance(node, mkpage.MkPage):
+                    node.created_by = fn
+                elif isinstance(node, mknav.MkNav) and node.index_page:
+                    node.index_page.created_by = fn
+                self._nav.nav[path] = node
+
+            self._nav.nav.add_pending(register)
             return fn
 
         return decorator
@@ -86,12 +89,15 @@ class NavRouter:
             path: tuple[str, ...] = path,
             kwargs: dict[str, Any] = kwargs,
         ) -> NavCallable:
-            node = mknav.MkNav(path[-1], parent=self._nav, **kwargs)
-            node = fn(node) or node
-            node.parent = self._nav  # in case a new MkPage was generated
-            if node.index_page:
-                node.index_page.created_by = fn
-            self._nav.nav[path] = node
+            def register() -> None:
+                node = mknav.MkNav(path[-1], parent=self._nav, **kwargs)
+                result = fn(node) or node
+                result.parent = self._nav
+                if result.index_page:
+                    result.index_page.created_by = fn
+                self._nav.nav[path] = result
+
+            self._nav.nav.add_pending(register)
             return fn
 
         return decorator
@@ -125,12 +131,15 @@ class NavRouter:
             path: tuple[str, ...] = path,
             kwargs: dict[str, Any] = kwargs,
         ) -> PageCallable:
-            p = path[-1] if path else (self._nav.title or "Home")
-            node = mkpage.MkPage(title=p, parent=self._nav, **kwargs)
-            node = fn(node) or node
-            node.parent = self._nav  # in case a new MkPage was generated
-            node.created_by = fn
-            self._nav.nav[path or self._nav.title or "Home"] = node
+            def register() -> None:
+                p = path[-1] if path else (self._nav.title or "Home")
+                node = mkpage.MkPage(title=p, parent=self._nav, **kwargs)
+                result = fn(node) or node
+                result.parent = self._nav
+                result.created_by = fn
+                self._nav.nav[path or self._nav.title or "Home"] = result
+
+            self._nav.nav.add_pending(register)
             return fn
 
         return decorator

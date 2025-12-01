@@ -1,91 +1,159 @@
 from __future__ import annotations
 
 import pathlib
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mklink
-from mknodes.navs import mknav, navbuilder
+from mknodes.navs import navbuilder
 from mknodes.pages import mkpage
 
 
-NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator
+
+    from mknodes.navs import mknav
+
+    type NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
 
 
-class Navigation(dict[tuple[Any, ...], NavSubType]):
-    """An object representing A Website structure.
+class Navigation:
+    """An object representing a website structure.
 
-    The dict data consists of a mapping of a path-tuple -> NavSubType.
-    It can contain navs, which in turn have their own navigation object.
-
-    A special item is the index page. It can be accessed via the corresponding attributes.
+    Contains a mapping of path-tuple -> NavSubType (navs, pages, links).
+    Supports lazy execution of decorated route functions.
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-        self.index_page: mkpage.MkPage | None = None
+    def __init__(self) -> None:
+        self._data: dict[tuple[Any, ...], mknav.MkNav | mkpage.MkPage | mklink.MkLink] = {}
+        self._index_page: mkpage.MkPage | None = None
+        self._pending: list[Callable[[], None]] = []
+        self._materialized: bool = True
 
-    def __setitem__(self, index: tuple[Any, ...] | str, node: NavSubType) -> None:
-        """Put a Navigation-type instance into the registry.
+    def _ensure_materialized(self) -> None:
+        """Execute all pending route registrations."""
+        if self._materialized:
+            return
+        pending = self._pending
+        self._pending = []
+        self._materialized = True
+        for fn in pending:
+            fn()
 
-        Index must be a unique path / title for this navigation object.
-        If given a tuple, it is considered a nested path.
-        """
+    def add_pending(self, register_fn: Callable[[], None]) -> None:
+        """Add a pending registration to be executed lazily."""
+        self._pending.append(register_fn)
+        self._materialized = False
+
+    @property
+    def index_page(self) -> mkpage.MkPage | None:
+        self._ensure_materialized()
+        return self._index_page
+
+    @index_page.setter
+    def index_page(self, value: mkpage.MkPage | None) -> None:
+        self._index_page = value
+
+    def __setitem__(
+        self,
+        index: tuple[Any, ...] | str,
+        node: mknav.MkNav | mkpage.MkPage | mklink.MkLink,
+    ) -> None:
+        """Put a Navigation-type instance into the registry."""
         if isinstance(index, str):
             index = (index,)
-        super().__setitem__(index, node)
+        self._data[index] = node
 
-    def __getitem__(self, index: tuple[Any, ...] | str) -> NavSubType:
+    def __getitem__(
+        self, index: tuple[Any, ...] | str
+    ) -> mknav.MkNav | mkpage.MkPage | mklink.MkLink:
+        self._ensure_materialized()
         if isinstance(index, str):
             index = (index,)
-        return super().__getitem__(index)
+        return self._data[index]
 
     def __delitem__(self, index: tuple[Any, ...] | str) -> None:
+        self._ensure_materialized()
         if isinstance(index, str):
             index = (index,)
-        super().__delitem__(index)
+        del self._data[index]
 
-    def register(self, node: NavSubType):
+    def __contains__(self, index: tuple[Any, ...] | str) -> bool:
+        self._ensure_materialized()
+        if isinstance(index, str):
+            index = (index,)
+        return index in self._data
+
+    def __len__(self) -> int:
+        self._ensure_materialized()
+        return len(self._data)
+
+    def __iter__(self) -> Iterator[tuple[Any, ...]]:
+        self._ensure_materialized()
+        return iter(self._data)
+
+    def __bool__(self) -> bool:
+        self._ensure_materialized()
+        return bool(self._data) or self._index_page is not None
+
+    def keys(self):
+        self._ensure_materialized()
+        return self._data.keys()
+
+    def values(self):
+        self._ensure_materialized()
+        return self._data.values()
+
+    def items(self):
+        self._ensure_materialized()
+        return self._data.items()
+
+    def register(self, node: mknav.MkNav | mkpage.MkPage | mklink.MkLink) -> None:
+        from mknodes.navs import mknav as mknav_module
+
         match node:
-            case mknav.MkNav() | mkpage.MkPage():  # | mklink.MkLink():
+            case mknav_module.MkNav() | mkpage.MkPage():
                 self[node.title,] = node
             case _:
                 raise TypeError(node)
 
-    def get_all_items(self) -> list[NavSubType]:
-        nodes: list[NavSubType] = [self.index_page] if self.index_page else []
-        nodes += list(self.values())
+    def get_all_items(self) -> list[mknav.MkNav | mkpage.MkPage | mklink.MkLink]:
+        self._ensure_materialized()
+        nodes: list[mknav.MkNav | mkpage.MkPage | mklink.MkLink] = (
+            [self._index_page] if self._index_page else []
+        )
+        nodes += list(self._data.values())
         return nodes
 
     def get_navs(self) -> list[mknav.MkNav]:
         """Return all registered navs."""
-        return [node for node in self.values() if isinstance(node, mknav.MkNav)]  # pyright: ignore[reportReturnType]
+        from mknodes.navs import mknav as mknav_module
+
+        self._ensure_materialized()
+        return [node for node in self._data.values() if isinstance(node, mknav_module.MkNav)]
 
     def get_pages(self) -> list[mkpage.MkPage]:
         """Return all registered pages."""
-        return [node for node in self.values() if isinstance(node, mkpage.MkPage)]
+        self._ensure_materialized()
+        return [node for node in self._data.values() if isinstance(node, mkpage.MkPage)]
 
     @property
     def links(self) -> list[mklink.MkLink]:
         """Return all registered links."""
-        return [node for node in self.values() if isinstance(node, mklink.MkLink)]
+        self._ensure_materialized()
+        return [node for node in self._data.values() if isinstance(node, mklink.MkLink)]
 
     def to_nav_dict(self) -> dict[str, str | dict[str, Any]]:
-        """Return a nested dictionary ready to be used in the Mkocs nav section.
-
-        The nav dict is a nested mapping describing the complete site navigation
-        and contains all relative links to the markdown files of the pages
-        as well as (external) URLs.
-
-        """
+        """Return a nested dictionary for the MkDocs nav section."""
         import mknodes as mk
 
+        self._ensure_materialized()
         dct: dict[str, str | dict[str, Any]] = {}
-        if idx := self.index_page:
+        if idx := self._index_page:
             dct[idx.title] = pathlib.Path(idx.resolved_file_path).as_posix()
-        for path, item in self.items():
+        for path, item in self._data.items():
             data = dct
             for part in path[:-1]:
-                data = data.setdefault(part, {})  # type: ignore[assignment]  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
+                data = data.setdefault(part, {})  # type: ignore[assignment]
             assert isinstance(data, dict)
             match item:
                 case mk.MkNav():
@@ -97,26 +165,24 @@ class Navigation(dict[tuple[Any, ...], NavSubType]):
         return dct
 
     def to_literate_nav(self) -> str:
-        """Return a literate-nav-style str representation of the nav.
-
-        Literate-Nav indexes equal to a (possibly nested) markdown link list.
-
-        That markdown list only contains the direct child links of this nav, sub-navs
-        are referenced to as subfolders.
-        """
+        """Return a literate-nav-style str representation of the nav."""
+        self._ensure_materialized()
         nav = navbuilder.NavBuilder()
-        if idx := self.index_page:
+        if idx := self._index_page:
             nav[idx.title] = pathlib.Path(idx.path).as_posix()
-        for path, item in self.items():
+        for path, item in self._data.items():
             match item:
                 case mkpage.MkPage():
                     nav[path] = pathlib.Path(item.path).as_posix()
-                case mknav.MkNav():
-                    nav[path] = f"{item.title}/"
-                case mklink.MkLink():
-                    nav[path] = str(item.target)
                 case _:
-                    raise TypeError(item)
+                    from mknodes.navs import mknav as mknav_module
+
+                    if isinstance(item, mknav_module.MkNav):
+                        nav[path] = f"{item.title}/"
+                    elif isinstance(item, mklink.MkLink):
+                        nav[path] = str(item.target)
+                    else:
+                        raise TypeError(item)
         return "".join(nav.build_literate_nav())
 
 
