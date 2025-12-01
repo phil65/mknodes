@@ -14,25 +14,22 @@ from mknodes.utils import icons, log, mdconverter, reprhelpers, resources, corou
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Iterator, Sequence
+    from collections.abc import Callable, Iterable, Iterator
     import types
 
     from mknodes.data import datatypes
     import mknodes as mk
 
 
+logger = log.get_logger(__name__)
+HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
+fallback_ctx = contexts.ProjectContext()
+
+
 class IllegalArgumentError(ValueError):
     def __init__(self, node: mk.MkNode, kwargs: Any) -> None:
         msg = f"Invalid keyword arguments for {type(node)!r}: {kwargs}"
         super().__init__(msg)
-
-
-logger = log.get_logger(__name__)
-
-
-HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
-
-fallback_ctx = contexts.ProjectContext()
 
 
 class MkNode:
@@ -146,27 +143,6 @@ class MkNode:
             setattr(result, k, copy.deepcopy(v, memo))
         return result
 
-    def append_child(self, item: MkNode) -> None:
-        """Append a node as a child.
-
-        Args:
-            item: Node to add as a child
-        """
-        item.parent = self
-        self.get_children().append(item)
-
-    def insert_children(self, idx: int, items: Sequence[MkNode]) -> None:
-        """Insert a list of child nodes at given index.
-
-        Args:
-            idx: The index of insertion
-            items: A sequence of nodes to add as children
-        """
-        children = self.get_children()
-        children[idx:idx] = items
-        for item in items:
-            item.parent = self
-
     @property
     def ancestors(self) -> Iterable[MkNode]:
         """Get iterator to yield all ancestors of self, does not include self."""
@@ -187,11 +163,6 @@ class MkNode:
             kls: The class (union) the check the ancestors for
         """
         return any(isinstance(i, kls) for i in self.ancestors)
-
-    @property
-    def leaves(self) -> Iterable[MkNode]:
-        """Get iterator to yield all leaf nodes from self."""
-        yield from self._preorder_iter(filter_condition=lambda _node: _node.is_leaf)
 
     @property
     def siblings(self) -> Iterable[MkNode]:
@@ -238,16 +209,6 @@ class MkNode:
     def is_leaf(self) -> bool:
         """Get indicator if self is leaf node."""
         return not list(self.get_children())
-
-    @property
-    def is_first_child(self) -> bool:
-        """Get indicator if self is first child of parent."""
-        return not bool(self.left_sibling)
-
-    @property
-    def is_last_child(self) -> bool:
-        """Get indicator if self is last child of parent."""
-        return not bool(self.right_sibling)
 
     @property
     def root(self) -> MkNode:
@@ -418,28 +379,6 @@ class MkNode:
             if attr in dct_2:
                 dct_2.pop(attr)
         return dct_1 == dct_2
-
-    def __rshift__(self, other: mk.MkNode | str):
-        import mknodes as mk
-
-        if self.parent or (isinstance(other, mk.MkNode) and other.parent):
-            msg = "Can only perform shift when nodes have no parent"
-            raise RuntimeError(msg)
-        container = mk.MkContainer(parent=self.parent, block_separator=" ")
-        container.append(self)
-        container.append(other)
-        return container
-
-    def __rrshift__(self, other: mk.MkNode | str):
-        import mknodes as mk
-
-        if self.parent or (isinstance(other, mk.MkNode) and other.parent):
-            msg = "Can only perform shift when nodes have no parent"
-            raise RuntimeError(msg)
-        container = mk.MkContainer(parent=self.parent, block_separator=" ")
-        container.append(other)
-        container.append(self)
-        return container
 
     @property
     def ctx(self) -> contexts.ProjectContext:
@@ -671,10 +610,3 @@ class MkNode:
         exts = list(configs.keys())
         converter = mdconverter.MdConverter(extensions=exts, extension_configs=configs)
         return converter.convert(md)
-
-
-if __name__ == "__main__":
-    import mknodes as mk
-
-    section = "pre" >> mk.MkText("hello\n# Header\nfdsfds") >> "test" >> "xx"
-    print(section)
