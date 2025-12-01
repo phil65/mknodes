@@ -76,7 +76,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     def get_module(
         self,
         module: str | types.ModuleType,
-        docstring_style: str = "google",
+        docstring_style: griffe.Parser = griffe.Parser.auto,
     ) -> griffe.Module | griffe.Alias:
         """Get griffe Module for given module.
 
@@ -105,7 +105,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     def get_class(
         self,
         klass: str | type,
-        docstring_style: str = "google",
+        docstring_style: griffe.Parser = griffe.Parser.auto,
     ) -> griffe.Class | griffe.Alias:
         """Get griffe Class for given class.
 
