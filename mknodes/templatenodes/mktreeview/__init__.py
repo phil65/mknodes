@@ -4,7 +4,7 @@ import os
 import upath
 
 from typing import Any, TYPE_CHECKING
-from jinjarope import filetree
+from upathtools import filetree
 from mknodes.basenodes import mkcode, mknode
 from mknodes.utils import log
 
@@ -65,6 +65,12 @@ class MkTreeView(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    p = upath.UPath("github://phil65:jinjarope@main/tests/testresources")
-    node = MkTreeView(p, style="ascii", maximum_depth=2)
-    print(node.to_markdown())
+    import asyncio
+
+    async def main() -> None:
+        """Example."""
+        p = upath.UPath("github://phil65:jinjarope@main/tests/testresources")
+        node = MkTreeView(p, style="ascii", maximum_depth=2)
+        print(await node.to_markdown())
+
+    asyncio.run(main())
