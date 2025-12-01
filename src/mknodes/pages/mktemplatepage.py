@@ -32,18 +32,13 @@ class MkTemplatePage(mkpage.MkPage):
         self.template_path = template_path
         self.template_parent = template_parent
 
-    @property
-    def items(self):
+    def get_items(self):
         self.env.render_template(
             self.template_path,
             parent_template=self.template_parent,
             variables=self.extra_variables,
         )
         return self.env.rendered_children
-
-    @items.setter
-    def items(self, _val: Any) -> None:
-        pass
 
     @property
     def extra_variables(self) -> dict[str, Any]:

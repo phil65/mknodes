@@ -42,18 +42,13 @@ class MkTemplate(mkcontainer.MkContainer):
         self.block = block
         self.variables = variables or {}
 
-    @property
-    def items(self):
+    def get_items(self):
         self.env.render_template(
             self.template,
             variables=self.variables,
             block_name=self.block,
         )
         return self.env.rendered_children
-
-    @items.setter
-    def items(self, _val: Any) -> None:
-        pass
 
     async def to_md_unprocessed(self) -> str:
         return await self.env.render_template_async(
