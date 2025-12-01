@@ -53,10 +53,6 @@ class MkContainerBase(mknode.MkNode):
         """Return children - delegates to get_items for containers."""
         return self.get_items()
 
-    def set_children(self, children: list[mknode.MkNode]) -> None:
-        """Set children - delegates to set_items for containers."""
-        self.set_items(children)
-
     def append(self, other: str | mknode.MkNode) -> None:
         """Append a MkNode to the end of this container.
 

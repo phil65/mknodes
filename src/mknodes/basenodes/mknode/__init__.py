@@ -109,10 +109,6 @@ class MkNode:
         """Return the list of children nodes."""
         return self._children
 
-    def set_children(self, children: list[MkNode]) -> None:
-        """Set the list of children nodes."""
-        self._children = children
-
     def __repr__(self):
         return reprhelpers.get_nondefault_repr(self)
 
