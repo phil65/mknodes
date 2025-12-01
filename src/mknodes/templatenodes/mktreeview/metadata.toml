@@ -5,31 +5,31 @@ name = "MkTreeView"
 [examples.regular]
 title = "Different styles"
 jinja = """
-{{ "mknodes/manual" | MkTreeView }}
+{{ "src/mknodes/manual" | MkTreeView }}
 """
 
 [examples.ansi]
 title = "Style 'ansi'"
 jinja = """
-{{ "mknodes/manual" | MkTreeView(style="ansi") }}
+{{ "src/mknodes/manual" | MkTreeView(style="ansi") }}
 """
 
 [examples.ascii]
 title = "Style 'ascii'"
 jinja = """
-{{ "mknodes/manual" | MkTreeView(style="ascii") }}
+{{ "src/mknodes/manual" | MkTreeView(style="ascii") }}
 """
 
 [examples.rounded]
 title = "Style 'rounded'"
 jinja = """
-{{ "mknodes/manual" | MkTreeView(style="rounded") }}
+{{ "src/mknodes/manual" | MkTreeView(style="rounded") }}
 """
 
 [examples.spaces]
 title = "Style 'spaces'"
 jinja = """
-{{ "mknodes/manual" | MkTreeView(style="spaces") }}
+{{ "src/mknodes/manual" | MkTreeView(style="spaces") }}
 """
 
 # [examples.remote]
