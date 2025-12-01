@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, TYPE_CHECKING
+from typing import Any
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 
 logger = log.get_logger(__name__)
@@ -21,12 +18,7 @@ class MkContainerBase(mknode.MkNode):
 
     ICON = "material/database"
 
-    def __init__(
-        self,
-        *,
-        block_separator: str = "\n\n",
-        **kwargs: Any,
-    ) -> None:
+    def __init__(self, *, block_separator: str = "\n\n", **kwargs: Any) -> None:
         """Constructor.
 
         Args:
@@ -42,9 +34,6 @@ class MkContainerBase(mknode.MkNode):
     def __add__(self, other: str | mknode.MkNode):
         self.append(other)
         return self
-
-    def __iter__(self) -> Iterator[mknode.MkNode]:
-        return iter(self.get_items())
 
     async def to_md_unprocessed(self) -> str:
         items = [await i.to_markdown() for i in self.get_items()]
@@ -77,17 +66,6 @@ class MkContainerBase(mknode.MkNode):
         node = self.to_child_node(other)
         items = self.get_items()
         items.append(node)
-
-    def insert(self, index: int, other: str | mknode.MkNode) -> None:
-        """Insert a MkNode into desired position of this container.
-
-        Args:
-            index: Position where node should get inserted
-            other: The node / text to insert
-        """
-        node = self.to_child_node(other)
-        items = self.get_items()
-        items.insert(index, node)
 
 
 class MkContainer(MkContainerBase):
