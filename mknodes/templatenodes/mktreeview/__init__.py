@@ -56,18 +56,15 @@ class MkTreeView(mkcode.MkCode):
 
     async def get_text(self) -> str:
         match self.tree:
-            case str() | os.PathLike():
+            case str() | os.PathLike() | upath.UPath():
                 return filetree.get_directory_tree(self.tree, max_depth=self.maximum_depth)
             case mknode.MkNode() as tree:
                 return tree.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
-            case _:
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise TypeError(self.tree)
 
 
 if __name__ == "__main__":
-    node = MkTreeView(
-        upath.UPath("github://phil65:jinjarope@main/tests/testresources"),
-        style="ascii",
-        maximum_depth=2,
-    )
+    p = upath.UPath("github://phil65:jinjarope@main/tests/testresources")
+    node = MkTreeView(p, style="ascii", maximum_depth=2)
     print(node.to_markdown())

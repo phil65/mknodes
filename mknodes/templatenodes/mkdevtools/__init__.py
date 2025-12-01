@@ -37,7 +37,7 @@ class MkDevTools(mktemplate.MkTemplate):
                 return self._tools
             case None:
                 return self.ctx.metadata.tools
-            case _:
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise TypeError(self._tools)
 
 

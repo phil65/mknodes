@@ -153,7 +153,7 @@ class Navigation:
         for path, item in self._data.items():
             data = dct
             for part in path[:-1]:
-                data = data.setdefault(part, {})  # type: ignore[assignment]
+                data = data.setdefault(part, {})  # type: ignore[assignment]  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
             assert isinstance(data, dict)
             match item:
                 case mk.MkNav():
