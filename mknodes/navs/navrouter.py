@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mklink
@@ -9,13 +10,18 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Awaitable, Callable
 
     NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
     PageCallable = Callable[[mkpage.MkPage], mkpage.MkPage | None]
+    AsyncPageCallable = Callable[[mkpage.MkPage], Awaitable[mkpage.MkPage | None]]
     NavCallable = Callable[[mknav.MkNav], mknav.MkNav | None]
+    AsyncNavCallable = Callable[[mknav.MkNav], Awaitable[mknav.MkNav | None]]
     NavSubTypeCallable = Callable[..., NavSubType]
-    PageDecorator = Callable[[PageCallable], Any]
+    AsyncNavSubTypeCallable = Callable[..., Awaitable[NavSubType]]
+    AnyPageCallable = PageCallable | AsyncPageCallable
+    AnyNavCallable = NavCallable | AsyncNavCallable
+    AnyNavSubTypeCallable = NavSubTypeCallable | AsyncNavSubTypeCallable
 
 logger = log.get_logger(__name__)
 
@@ -31,7 +37,7 @@ class NavRouter:
         """
         self._nav = nav
 
-    def __call__(self, *path: str) -> Callable[[NavSubTypeCallable], Any]:
+    def __call__(self, *path: str) -> Callable[[AnyNavSubTypeCallable], Any]:
         """Decorator method to use for routing.
 
         The decorated functions need to return either a MkPage or an MkNav.
@@ -45,11 +51,15 @@ class NavRouter:
         """
 
         def decorator(
-            fn: NavSubTypeCallable,
+            fn: AnyNavSubTypeCallable,
             path: tuple[str, ...] = path,
-        ) -> NavSubTypeCallable:
-            def register() -> None:
-                node = fn()
+        ) -> AnyNavSubTypeCallable:
+            async def register() -> None:
+                result = fn()
+                if inspect.iscoroutine(result):
+                    node = await result
+                else:
+                    node = result
                 node.parent = self._nav
                 if isinstance(node, mkpage.MkPage):
                     node.created_by = fn
@@ -62,7 +72,7 @@ class NavRouter:
 
         return decorator
 
-    def nav(self, *path: str, **kwargs: Any) -> Callable[[NavCallable], Any]:
+    def nav(self, *path: str, **kwargs: Any) -> Callable[[AnyNavCallable], Any]:
         """Decorator method to use for routing Navs.
 
         The decorated functions will get passed an MkNav as an argument which can be
@@ -85,24 +95,29 @@ class NavRouter:
         """
 
         def decorator(
-            fn: NavCallable,
+            fn: AnyNavCallable,
             path: tuple[str, ...] = path,
             kwargs: dict[str, Any] = kwargs,
-        ) -> NavCallable:
-            def register() -> None:
+        ) -> AnyNavCallable:
+            async def register() -> None:
                 node = mknav.MkNav(path[-1], parent=self._nav, **kwargs)
-                result = fn(node) or node
-                result.parent = self._nav
-                if result.index_page:
-                    result.index_page.created_by = fn
-                self._nav.nav[path] = result
+                result = fn(node)
+                if inspect.iscoroutine(result):
+                    awaited = await result
+                    final = awaited or node
+                else:
+                    final = result or node
+                final.parent = self._nav
+                if final.index_page:
+                    final.index_page.created_by = fn
+                self._nav.nav[path] = final
 
             self._nav.nav.add_pending(register)
             return fn
 
         return decorator
 
-    def page(self, *path: str, **kwargs: Any) -> PageDecorator:
+    def page(self, *path: str, **kwargs: Any) -> Callable[[AnyPageCallable], Any]:
         """Decorator method to use for routing Pages.
 
         The decorated functions will get passed an MkPage as an argument which can be
@@ -127,17 +142,22 @@ class NavRouter:
         """
 
         def decorator(
-            fn: PageCallable,
+            fn: AnyPageCallable,
             path: tuple[str, ...] = path,
             kwargs: dict[str, Any] = kwargs,
-        ) -> PageCallable:
-            def register() -> None:
+        ) -> AnyPageCallable:
+            async def register() -> None:
                 p = path[-1] if path else (self._nav.title or "Home")
                 node = mkpage.MkPage(title=p, parent=self._nav, **kwargs)
-                result = fn(node) or node
-                result.parent = self._nav
-                result.created_by = fn
-                self._nav.nav[path or self._nav.title or "Home"] = result
+                result = fn(node)
+                if inspect.iscoroutine(result):
+                    awaited = await result
+                    final = awaited or node
+                else:
+                    final = result or node
+                final.parent = self._nav
+                final.created_by = fn
+                self._nav.nav[path or self._nav.title or "Home"] = final
 
             self._nav.nav.add_pending(register)
             return fn
@@ -152,3 +172,9 @@ class NavRouter:
 if __name__ == "__main__":
     nav = mknav.MkNav()
     router = NavRouter(nav)
+
+    @router.page("Test")
+    async def _(_page: mkpage.MkPage) -> None:
+        pass
+
+    print(nav.nav.get_pages())

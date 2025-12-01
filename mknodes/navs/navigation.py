@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import concurrent.futures
+import inspect
 import pathlib
 from typing import TYPE_CHECKING, Any
+
+from anyenv import run_sync
 
 from mknodes.basenodes import mklink
 from mknodes.navs import navbuilder
@@ -9,37 +13,76 @@ from mknodes.pages import mkpage
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
+    from collections.abc import Awaitable, Callable, Iterator
 
     from mknodes.navs import mknav
 
     type NavSubType = mknav.MkNav | mkpage.MkPage | mklink.MkLink
+    type PendingFn = Callable[[], None] | Callable[[], Awaitable[None]]
 
 
 class Navigation:
     """An object representing a website structure.
 
     Contains a mapping of path-tuple -> NavSubType (navs, pages, links).
-    Supports lazy execution of decorated route functions.
+    Supports lazy execution of decorated route functions (sync and async).
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, parallel: bool = False, max_workers: int | None = None) -> None:
         self._data: dict[tuple[Any, ...], mknav.MkNav | mkpage.MkPage | mklink.MkLink] = {}
         self._index_page: mkpage.MkPage | None = None
-        self._pending: list[Callable[[], None]] = []
+        self._pending: list[PendingFn] = []
         self._materialized: bool = True
+        self._parallel: bool = parallel
+        self._max_workers: int | None = max_workers
 
-    def _ensure_materialized(self) -> None:
-        """Execute all pending route registrations."""
+    async def materialize(self) -> None:
+        """Execute all pending route registrations (async)."""
         if self._materialized:
             return
         pending = self._pending
         self._pending = []
         self._materialized = True
         for fn in pending:
-            fn()
+            result = fn()
+            if inspect.iscoroutine(result):
+                await result
 
-    def add_pending(self, register_fn: Callable[[], None]) -> None:
+    def _ensure_materialized(self) -> None:
+        """Execute all pending route registrations."""
+        if self._materialized:
+            return
+        if self._parallel:
+            self._materialize_parallel()
+        else:
+            self._materialize_sequential()
+
+    def _materialize_sequential(self) -> None:
+        pending = self._pending
+        self._pending = []
+        self._materialized = True
+        for fn in pending:
+            result = fn()
+            if inspect.iscoroutine(result):
+                run_sync(result)
+
+    def _materialize_parallel(self) -> None:
+        pending = self._pending
+        self._pending = []
+        self._materialized = True
+
+        def run_fn(fn: PendingFn) -> None:
+            result = fn()
+            if inspect.iscoroutine(result):
+                run_sync(result)
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self._max_workers) as executor:
+            futures = [executor.submit(run_fn, fn) for fn in pending]
+            concurrent.futures.wait(futures)
+            for future in futures:
+                future.result()
+
+    def add_pending(self, register_fn: PendingFn) -> None:
         """Add a pending registration to be executed lazily."""
         self._pending.append(register_fn)
         self._materialized = False
