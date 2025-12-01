@@ -63,7 +63,7 @@ def build(
     The build script should be a function that takes a root MkNav and populates it.
 
     Example:
-        mknodes build -s mypackage.docs:build -o ./docs
+        mkdocs-mknodes build -s mypackage.docs:build -o ./docs
     """
     asyncio.run(_build_async(script, output, repo_url, render_jinja))
 

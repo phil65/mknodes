@@ -13,7 +13,7 @@ def build(ctx, *args: str):
     if sysconfig.get_config_var("Py_GIL_DISABLED"):
         os.environ["PYTHON_GIL"] = "0"
     args_str = " " + " ".join(args) if args else ""
-    ctx.run(f"uv run mknodes build{args_str}")
+    ctx.run(f"uv run mkdocs-mknodes build{args_str}")
 
 
 @duty(capture=False)
