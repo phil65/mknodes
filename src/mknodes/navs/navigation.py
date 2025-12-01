@@ -28,12 +28,11 @@ class Navigation:
     Supports lazy execution of decorated route functions (sync and async).
     """
 
-    def __init__(self, *, parallel: bool = False, max_workers: int | None = None) -> None:
+    def __init__(self, *, max_workers: int | None = None) -> None:
         self._data: dict[tuple[Any, ...], mknav.MkNav | mkpage.MkPage | mklink.MkLink] = {}
         self._index_page: mkpage.MkPage | None = None
         self._pending: list[PendingFn] = []
         self._materialized: bool = True
-        self._parallel: bool = parallel
         self._max_workers: int | None = max_workers
 
     async def materialize(self) -> None:
@@ -52,21 +51,6 @@ class Navigation:
         """Execute all pending route registrations."""
         if self._materialized:
             return
-        if self._parallel:
-            self._materialize_parallel()
-        else:
-            self._materialize_sequential()
-
-    def _materialize_sequential(self) -> None:
-        pending = self._pending
-        self._pending = []
-        self._materialized = True
-        for fn in pending:
-            result = fn()
-            if inspect.iscoroutine(result):
-                run_sync(result)
-
-    def _materialize_parallel(self) -> None:
         pending = self._pending
         self._pending = []
         self._materialized = True
