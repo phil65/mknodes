@@ -56,7 +56,7 @@ class MkTemplate(mkcontainer.MkContainer):
         pass
 
     async def to_md_unprocessed(self) -> str:
-        return self.env.render_template(
+        return await self.env.render_template_async(
             self.template,
             variables=self.variables,
             block_name=self.block,
