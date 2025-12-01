@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from collections.abc import Collection, Iterator, Mapping
+from collections.abc import Mapping
 import io
 import itertools
 import os
@@ -15,6 +15,7 @@ from mknodes.utils import downloadhelpers, helpers, log
 
 
 if TYPE_CHECKING:
+    from collections.abc import Collection, Iterator
     import types
 
 

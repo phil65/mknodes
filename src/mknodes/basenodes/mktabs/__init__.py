@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import textwrap
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-from mknodes.basenodes import mkblock, mkcontainer, mknode
+from mknodes.basenodes import mkblock, mkcontainer
 from mknodes.utils import log, reprhelpers, resources
+
+if TYPE_CHECKING:
+    from mknodes.basenodes import mknode
 
 
 logger = log.get_logger(__name__)

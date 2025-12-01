@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable
 import contextlib
 import functools
 import importlib
@@ -18,6 +18,7 @@ from mknodes.utils import log
 
 
 if typing.TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
     import os
 
 

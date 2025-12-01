@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta
-from collections.abc import Iterator, MutableMapping
+from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Literal, Self, TypeVar
 
 from jinjarope import serializefilters
@@ -10,6 +10,7 @@ from mknodes.utils import pathhelpers, reprhelpers
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     import os
 
 

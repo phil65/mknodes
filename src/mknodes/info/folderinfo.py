@@ -12,7 +12,7 @@ from anyenv import run_sync
 import epregistry
 import yamling
 
-from mknodes.data import commitconventions, installmethods, taskrunners, tools
+from mknodes.data import installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
     grifferegistry,
@@ -32,6 +32,7 @@ if TYPE_CHECKING:
     import griffe
     from griffe import Alias
 
+    from mknodes.data import commitconventions
     from mknodes.info import packageinfo
 
 logger = log.get_logger(__name__)

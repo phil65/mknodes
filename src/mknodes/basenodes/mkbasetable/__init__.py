@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Mapping, Sequence
+from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer
@@ -8,6 +8,7 @@ from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator, Sequence
     import mknodes as mk
 
 logger = log.get_logger(__name__)

@@ -36,7 +36,7 @@ class MkDocsConfigFile(configfile.YamlFile):
     def remove_plugin(self, name: str) -> None:
         for plg in self.plugins:
             if plg == name or (isinstance(plg, dict) and next(iter(plg.keys())) == name):
-                self.plugins.remove(plg)  # noqa: B909
+                self.plugins.remove(plg)
 
     def update_mknodes_section(
         self,

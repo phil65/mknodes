@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import jinja2
-from jinja2 import runtime
 from jinjarope import htmlfilters
 from markupsafe import Markup
 
@@ -12,6 +11,7 @@ if TYPE_CHECKING:
     import types
 
     import griffe
+    from jinja2 import runtime
 
     import mknodes as mk
     from mknodes.info.linkprovider import LinkableType

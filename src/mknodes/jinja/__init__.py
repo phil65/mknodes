@@ -5,13 +5,16 @@ from __future__ import annotations
 import functools
 import logging
 
-import jinjarope
 import tomli_w
 from jinjarope import inspectfilters
 import yamling
 
 from mknodes import paths
 from mknodes.utils import classhelpers, inspecthelpers
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import jinjarope
 
 logger = logging.getLogger(__name__)
 

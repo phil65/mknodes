@@ -11,11 +11,9 @@ import githarbor
 import jinjarope
 
 import mknodes as mk
-from mknodes.data import buildsystems, commitconventions, installmethods, tools
+from mknodes.data import buildsystems
 from mknodes.info import (
-    folderinfo,
     linkprovider,
-    mkdocsconfigfile,
     packageregistry,
     pyproject,
 )
@@ -29,6 +27,11 @@ if TYPE_CHECKING:
     import clinspector
     from griffe import Alias, Module
 
+    from mknodes.data import commitconventions, installmethods, tools
+    from mknodes.info import (
+        folderinfo,
+        mkdocsconfigfile,
+    )
     from mknodes.info.packageinfo import PackageInfo
     from mknodes.utils.packagehelpers import Dependency
 

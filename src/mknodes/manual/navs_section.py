@@ -24,7 +24,7 @@ def _(nav: mk.MkNav) -> None:
     nav.parse.file(summary_file, hide="toc")
     page = nav.add_page(is_index=True, hide="toc", icon="file")
     text = summary_file.read_text("utf-8")
-    text = text.replace("](", "] (")  ##  # noqa: E262
+    text = text.replace("](", "] (")
     path = paths.TEST_RESOURCES / "nav_tree/"
     variables = dict(path=path, text=text)
     page += mk.MkTemplate("navs/nav_from_file.jinja", variables=variables)

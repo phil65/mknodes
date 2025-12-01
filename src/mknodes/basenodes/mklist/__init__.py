@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from typing import Any, TYPE_CHECKING
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.info import linkprovider
 from mknodes.utils import log, resources
 
 if TYPE_CHECKING:
+    from mknodes.basenodes import mknode
     from collections.abc import Sequence
 
 

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import functools
 import importlib
-from importlib import metadata
 from typing import TYPE_CHECKING, Any
 
 from packaging.markers import Marker
@@ -13,6 +12,7 @@ from mknodes.utils import log
 
 if TYPE_CHECKING:
     from collections.abc import Container
+    from importlib import metadata
     import types
 
 

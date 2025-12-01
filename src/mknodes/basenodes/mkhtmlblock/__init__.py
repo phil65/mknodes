@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 
-from mknodes.basenodes import mkblock, mknode
+from mknodes.basenodes import mkblock
 from mknodes.utils import log, reprhelpers, resources
+
+if TYPE_CHECKING:
+    from mknodes.basenodes import mknode
 
 
 logger = log.get_logger(__name__)

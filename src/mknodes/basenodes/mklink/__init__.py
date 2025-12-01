@@ -4,13 +4,14 @@ import inspect
 import os
 import types
 from typing import TYPE_CHECKING, Any
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 import json
 from mknodes.basenodes import mknode
 from mknodes.utils import icons, log
 from upathtools import to_upath
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from mknodes.info import linkprovider
 
 logger = log.get_logger(__name__)

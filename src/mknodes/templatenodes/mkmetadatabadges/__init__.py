@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from urllib import parse
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.data import datatypes
 from mknodes.info import packageregistry
 from mknodes.templatenodes import mkbadge
 from mknodes.utils import log
+
+if TYPE_CHECKING:
+    from mknodes.basenodes import mknode
 
 
 logger = log.get_logger(__name__)

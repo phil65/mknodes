@@ -7,7 +7,7 @@ from urllib import parse
 
 from jinjarope import textfilters
 
-from mknodes.basenodes import mkcontainer, mkfootnotes, mknode, processors
+from mknodes.basenodes import mkcontainer, mkfootnotes, processors
 from mknodes.pages import metadata, pagetemplate
 from mknodes.utils import inspecthelpers, log, pathhelpers, reprhelpers
 
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     import os
 
+    from mknodes.basenodes import mknode
     from mknodes.data import datatypes
 
 

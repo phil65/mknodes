@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 import jinjarope
 from jinjarope import iconfilters
 
-from mknodes.data import admonition, datatypes
+from mknodes.data import admonition
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
 from mknodes.utils import color, log, reprhelpers, resources
@@ -13,6 +13,8 @@ from mknodes.utils import color, log, reprhelpers, resources
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
+
+    from mknodes.data import datatypes
 
 
 logger = log.get_logger(__name__)

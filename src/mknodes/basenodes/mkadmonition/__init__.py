@@ -4,10 +4,11 @@ import textwrap
 
 from typing import Any, Literal, TYPE_CHECKING
 
-from mknodes.basenodes import mkcontainer, mknode
+from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, resources
 
 if TYPE_CHECKING:
+    from mknodes.basenodes import mknode
     from mknodes.data import datatypes
 
 

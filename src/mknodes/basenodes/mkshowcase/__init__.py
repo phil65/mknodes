@@ -8,12 +8,13 @@ from typing import TYPE_CHECKING, Any
 
 from jinja2 import filters
 
-from mknodes.basenodes import mkcard, mkcontainer, mknode
+from mknodes.basenodes import mkcard, mkcontainer
 from mknodes.pages import mkpage
 from mknodes.utils import log, pathhelpers
 
 
 if TYPE_CHECKING:
+    from mknodes.basenodes import mknode
     import mknodes as mk
 
 

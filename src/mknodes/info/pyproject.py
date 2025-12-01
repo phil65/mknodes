@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from upathtools import to_upath
 
-from mknodes.data import buildsystems, commitconventions, installmethods
+from mknodes.data import buildsystems
 from mknodes.info import configfile
 from mknodes.utils import pathhelpers, superdict
 
@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     import os
 
     import upath
+
+    from mknodes.data import commitconventions, installmethods
 
 
 class PyProject(configfile.TomlFile):
