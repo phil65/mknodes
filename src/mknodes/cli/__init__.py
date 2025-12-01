@@ -68,12 +68,7 @@ def build(
     asyncio.run(_build_async(script, output, repo_url, render_jinja))
 
 
-async def _build_async(
-    script: str,
-    output: Path,
-    repo_url: str | None,
-    render_jinja: bool,
-) -> None:
+async def _build_async(script: str, output: Path, repo_url: str | None, render_jinja: bool) -> None:
     """Async implementation of build command."""
     import mknodes as mk
     from mknodes.build import DocBuilder, MarkdownExporter
@@ -125,11 +120,7 @@ def render(
     asyncio.run(_render_async(input_file, output_file, repo_url))
 
 
-async def _render_async(
-    input_file: str,
-    output_file: str,
-    repo_url: str | None,
-) -> None:
+async def _render_async(input_file: str, output_file: str, repo_url: str | None) -> None:
     """Async implementation of render command."""
     import mknodes as mk
     from mknodes.jinja import nodeenvironment
