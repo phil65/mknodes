@@ -303,6 +303,3 @@ combine-as-imports = true
 # Enable preview style formatting.
 preview = true
 docstring-code-format = true
-
-[tool.uv.build-backend]
-module-root = ""

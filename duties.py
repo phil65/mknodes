@@ -52,7 +52,7 @@ def lint(ctx):
     """Lint and fix the code."""
     ctx.run("uv run ruff check --fix .")
     ctx.run("uv run ruff format .")
-    ctx.run("uv run mypy mknodes/ --fixed-format-cache")
+    ctx.run("uv run mypy src/ --fixed-format-cache")
 
 
 @duty(capture=False)
@@ -60,14 +60,14 @@ def lint_check(ctx):
     """Lint the code."""
     ctx.run("uv run ruff check .")
     ctx.run("uv run ruff format --check .")
-    ctx.run("uv run mypy mknodes/ --fixed-format-cache")
+    ctx.run("uv run mypy src/ --fixed-format-cache")
 
 
 @duty(capture=False)
 def profile(ctx, *args: str):
     """Run generating the docs using pyinstrument."""
     args_str = " " + " ".join(args) if args else ""
-    ctx.run(f"uv run pyinstrument mknodes/manual/root.py{args_str}")
+    ctx.run(f"uv run pyinstrument src/mknodes/manual/root.py{args_str}")
 
 
 @duty(capture=False)

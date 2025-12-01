@@ -459,5 +459,5 @@ async def parse_new_style_nav(
 if __name__ == "__main__":
     log.basic()
     nav = mknav.MkNav()
-    nav.parse.module("mknodes/manual/")
+    nav.parse.module("mknodes/src/manual/")
     print(nav)

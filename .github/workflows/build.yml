@@ -36,7 +36,7 @@ jobs:
               run: |
                   uv run ruff check .
                   uv run ruff format --check .
-                  uv run mypy mknodes/
+                  uv run mypy src/
             - name: Test
               run: |
                   uv run pytest --cov-report=xml
