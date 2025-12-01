@@ -56,6 +56,8 @@ from .pages.mkmodulepage import MkModulePage
 from .navs.mknav import MkNav
 from .navs.mkdoc import MkDoc
 
+from .build import BuildOutput, DocBuilder, MarkdownExporter
+
 from .templatenodes.mkinclude import MkInclude
 from .templatenodes.mkshields import MkShields
 from .templatenodes.mkinstallguide import MkInstallGuide
@@ -105,6 +107,9 @@ async def parse(project=None, **kwargs):
 __version__ = version("mknodes")
 
 __all__ = [
+    "BuildOutput",
+    "DocBuilder",
+    "MarkdownExporter",
     "MaterialTheme",
     "Metadata",
     "MkAdmonition",
@@ -119,7 +124,6 @@ __all__ = [
     "MkClassPage",
     "MkClassTable",
     "MkCliDoc",
-    # "MkGrid",
     "MkCode",
     "MkCodeOfConduct",
     "MkCommandOutput",
