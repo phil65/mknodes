@@ -71,13 +71,13 @@ class MkLlm(mktext.MkText):
         context_items: list[str] = []
 
         def process_dir(path: UPath) -> list[str]:
-            return [f.read_text() for f in path.rglob("*") if f.is_file()]
+            return [f.read_text("utf-8") for f in path.rglob("*") if f.is_file()]
 
         for item in self._extra_files:
             try:
                 path = to_upath(item)
                 if path.is_file():
-                    context_items.append(path.read_text())
+                    context_items.append(path.read_text("utf-8"))
                 elif path.is_dir():
                     context_items.extend(process_dir(path))
                 else:
