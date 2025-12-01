@@ -103,9 +103,6 @@ class MkDoc(mknav.MkNav):
         self.index_page = page
         return pages + navs + [page]
 
-    def set_children(self, val) -> None:  # type: ignore[override]
-        """Set children (no-op for MkDoc)."""
-
     @property
     def module(self):
         return self.ctx.metadata.module if self._module is None else self._module
