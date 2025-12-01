@@ -39,7 +39,7 @@ class Theme:
         self.data = data or {}
         self.features = self.data.get("features")
         loader = jinjarope.registry.get_package_loader("mknodes.resources")
-        self.env = jinjarope.Environment(loader=loader)
+        self.env = jinjarope.Environment(loader=loader, enable_async=True)
         self.templates = templateregistry.TemplateRegistry()
         self.main_template = self.templates["main.html"]
         self.error_page = self.templates["404.html"]
