@@ -19,13 +19,15 @@ logger = log.get_logger(__name__)
 class DocBuilder:
     """Traverses node tree, renders markdown, collects resources."""
 
-    def __init__(self, render_jinja: bool = True):
+    def __init__(self, render_jinja: bool = True, max_workers: int | None = None):
         """Constructor.
 
         Args:
             render_jinja: Whether to render Jinja templates in pages.
+            max_workers: Maximum number of worker threads for parallel processing.
         """
         self.render_jinja = render_jinja
+        self.max_workers = max_workers
         self._files: dict[str, str | bytes] = {}
         self._resources = resources.Resources()
 

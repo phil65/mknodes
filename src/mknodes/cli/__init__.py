@@ -33,6 +33,7 @@ VERBOSE_HELP = "Enable verbose output (DEBUG level)."
 QUIET_HELP = "Suppress output during build."
 INPUT_HELP = "Input markdown file to render (use - for stdin)."
 OUTPUT_FILE_HELP = "Output file (use - for stdout, default)."
+WORKERS_HELP = "Number of parallel workers for page processing. Set PYTHON_GIL=0 for best performance with Python 3.14t."
 
 SCRIPT_CMDS = "-s", "--script"
 OUTPUT_CMDS = "-o", "--output"
@@ -41,6 +42,7 @@ VERBOSE_CMDS = "-v", "--verbose"
 QUIET_CMDS = "-q", "--quiet"
 INPUT_CMDS = "-i", "--input"
 OUTPUT_FILE_CMDS = "-o", "--output"
+WORKERS_CMDS = "-w", "--workers"
 
 
 def verbose_callback(ctx: t.Context, _param: t.CallbackParam, value: bool):
@@ -59,6 +61,7 @@ def build(
     output: Path = t.Option(Path("docs"), *OUTPUT_CMDS, help=OUTPUT_HELP),  # noqa: B008
     repo_url: str | None = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
     render_jinja: bool = t.Option(True, "--render-jinja/--no-render-jinja", help=RENDER_JINJA_HELP),
+    workers: int | None = t.Option(None, *WORKERS_CMDS, help=WORKERS_HELP),
     _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose_callback),
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet_callback),
 ) -> None:
@@ -66,13 +69,22 @@ def build(
 
     The build script should be a function that takes a root MkNav and populates it.
 
+    For best parallel performance with Python 3.14t (free-threaded), run with:
+        PYTHON_GIL=0 mknodes build -s mypackage.docs:build
+
     Example:
-        mkdocs-mknodes build -s mypackage.docs:build -o ./docs
+        mknodes build -s mypackage.docs:build -o ./docs
     """
-    asyncio.run(_build_async(script, output, repo_url, render_jinja))
+    asyncio.run(_build_async(script, output, repo_url, render_jinja, workers))
 
 
-async def _build_async(script: str, output: Path, repo_url: str | None, render_jinja: bool) -> None:
+async def _build_async(
+    script: str,
+    output: Path,
+    repo_url: str | None,
+    render_jinja: bool,
+    max_workers: int | None,
+) -> None:
     """Async implementation of build command."""
     from mknodes.build import DocBuilder, MarkdownExporter
 
@@ -106,7 +118,7 @@ async def _build_async(script: str, output: Path, repo_url: str | None, render_j
         root = result
 
     logger.info("Building documentation tree...")
-    builder = DocBuilder(render_jinja=render_jinja)
+    builder = DocBuilder(render_jinja=render_jinja, max_workers=max_workers)
     build_output = await builder.build(root)
 
     logger.info("Exporting to %s...", output)
