@@ -8,7 +8,6 @@ import pathlib
 import re
 from typing import TYPE_CHECKING
 
-from anyenv import run_sync
 import epregistry
 import yamling
 
@@ -16,7 +15,6 @@ from mknodes.data import installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
     grifferegistry,
-    license as lic,
     mkdocsconfigfile,
     packageregistry,
     pyproject,
@@ -199,20 +197,6 @@ class FolderInfo:
         return None
 
     @functools.cached_property
-    def license_text(self) -> str | None:
-        """Return full license text.
-
-        Text comes either from a local license file or from a template populated with
-        metadata.
-        """
-        if self.license_file_path:
-            return self.license_file_path.read_text(encoding="utf-8")
-        if license_name := self.info.license_name:
-            obj = run_sync(lic.License.from_name(license_name))
-            return obj.content
-        return None
-
-    @functools.cached_property
     def social_info(self) -> list[dict[str, str]]:
         result = []
         if url := self.repository_url:
@@ -260,7 +244,6 @@ class FolderInfo:
             classifier_map=self.info.classifier_map,
             keywords=self.info.keywords,
             license_name=self.info.license_name,
-            license_text=self.license_text,
             required_python_version=self.info.required_python_version,
             required_packages=self.info.required_packages,
             required_package_names=self.info.required_package_names,
