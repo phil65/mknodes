@@ -28,7 +28,7 @@ def get_logger(name: str | None = None):
 
 
 def basic() -> None:
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 log_stream = io.StringIO()
