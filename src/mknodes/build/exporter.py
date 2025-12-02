@@ -52,23 +52,36 @@ class MarkdownExporter:
                 full_path.write_bytes(content)
             else:
                 full_path.write_text(content, encoding="utf-8")
-            # Write metadata sidecar
-            metadata = {"generated_by": "mknodes", "path": file_path}
+            # Write metadata sidecar with per-file resources
+            metadata: dict[str, Any] = {"generated_by": "mknodes", "path": file_path}
+            if file_resources := output.file_resources.get(file_path):
+                metadata["resources"] = self._serialize_resources(file_resources)
             meta_path = full_path.with_suffix(full_path.suffix + self.metadata_suffix)
             meta_path.write_text(yamling.dump_yaml(metadata, indent=2), encoding="utf-8")
 
         # Write combined metadata file
         meta: dict[str, Any] = {}
-        if output.resources:
-            meta["resources"] = {
-                "markdown_extensions": output.resources.markdown_extensions,
-                "css": output.resources.css,
-                "js": output.resources.js,
-                "plugins": output.resources.plugins,
-                "packages": output.resources.packages,
-            }
+        merged = output.merged_resources
+        if any([
+            merged.markdown_extensions,
+            merged.css,
+            merged.js,
+            merged.plugins,
+            merged.packages,
+        ]):
+            meta["resources"] = self._serialize_resources(merged)
         if output.nav_structure:
             meta["nav"] = output.nav_structure
         if meta:
             meta_path = target_path / ".mknodes.meta.yaml"
             meta_path.write_text(yamling.dump_yaml(meta, indent=2), encoding="utf-8")
+
+    def _serialize_resources(self, res) -> dict[str, Any]:
+        """Serialize a Resources object to a dict."""
+        return {
+            "markdown_extensions": res.markdown_extensions,
+            "css": res.css,
+            "js": res.js,
+            "plugins": res.plugins,
+            "packages": res.packages,
+        }
