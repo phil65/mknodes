@@ -54,9 +54,7 @@ class DocBuilder:
                 case mk.MkNav() as nav:
                     await self._process_nav(nav)
 
-        # Build nav structure
         nav_structure = root.nav.to_nav_dict()
-
         return BuildOutput(
             files=self._files,
             resources=self._resources,

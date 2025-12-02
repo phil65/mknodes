@@ -25,7 +25,7 @@ class Exporter(Protocol):
 class MarkdownExporter:
     """Writes markdown files with per-file metadata sidecars."""
 
-    def __init__(self, metadata_suffix: str = ".meta.json"):
+    def __init__(self, metadata_suffix: str = ".meta.yaml"):
         """Constructor.
 
         Args:
