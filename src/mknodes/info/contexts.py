@@ -182,6 +182,8 @@ class PackageContext(Context):
     """The main website of the distribution."""
     license_name: str | None = ""
     """Name of the license"""
+    license_text: str | None = ""
+    """The complete license text"""
     pretty_name: str = ""
     """A pretty name for the distribution (like **MkNodes**) *[MkDocs site name]*"""
     repository_url: str = ""

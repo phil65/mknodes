@@ -35,12 +35,7 @@ class MkLicense(mktext.MkText):
         if self.license_type:
             obj = await lic.License.from_name(self.license_type)
             return obj.content
-        if path := self.ctx.metadata.license_file_path:
-            return path.read_text(encoding="utf-8")
-        if license_name := self.ctx.metadata.license_name:
-            obj = await lic.License.from_name(license_name)
-            return obj.content
-        return ""
+        return self.ctx.metadata.license_text or ""
 
 
 if __name__ == "__main__":
