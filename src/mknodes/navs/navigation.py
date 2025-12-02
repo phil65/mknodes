@@ -73,7 +73,6 @@ class Navigation:
 
     @property
     def index_page(self) -> mkpage.MkPage | None:
-        self._ensure_materialized()
         return self._index_page
 
     @index_page.setter
