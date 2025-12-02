@@ -22,7 +22,7 @@ class MkConfigSetting(mktemplate.MkTemplate):
         default: str | int | None = None,
         version_added: str | None = None,
         optional: bool | None = None,
-        mode: superdict.MarkupTypeStr | None = None,
+        mode: superdict.MarkupTypeStr = "yaml",
         **kwargs: Any,
     ) -> None:
         """Constructor.

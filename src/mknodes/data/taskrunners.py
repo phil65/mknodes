@@ -16,19 +16,6 @@ class TaskRunner:
 TaskRunnerStr = Literal["makefile", "task", "just", "duty", "invoke", "doit"]
 
 
-# class MakeFile(TaskRunner):
-#     def get_commands(self) -> dict[str, str]:
-#         import re
-
-#         dct = {}
-#         text = ""
-#         for line in text.splitlines():
-#             if match := re.match(r"^([a-zA-Z_-]+):.*?## (.*)$$", line):
-#                 target, help_text = match.groups()
-#                 dct[target] = help_text
-#         return dct
-
-
 makefile = TaskRunner(
     identifier="makefile",
     website="https://www.gnu.org/software/make/manual/make.html",

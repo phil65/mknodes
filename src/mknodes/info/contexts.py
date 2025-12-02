@@ -12,11 +12,7 @@ import jinjarope
 
 import mknodes as mk
 from mknodes.data import buildsystems
-from mknodes.info import (
-    linkprovider,
-    packageregistry,
-    pyproject,
-)
+from mknodes.info import linkprovider, packageregistry, pyproject
 from mknodes.utils import log, superdict
 
 
@@ -28,10 +24,7 @@ if TYPE_CHECKING:
     from griffe import Alias, Module
 
     from mknodes.data import commitconventions, installmethods, tools
-    from mknodes.info import (
-        folderinfo,
-        mkdocsconfigfile,
-    )
+    from mknodes.info import folderinfo, mkdocsconfigfile
     from mknodes.info.packageinfo import PackageInfo
     from mknodes.utils.packagehelpers import Dependency
 

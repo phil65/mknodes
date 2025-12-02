@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 import dataclasses
-import pathlib
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 
 import anyenv
 from anyio import functools as anyio_functools
+import upath
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from upath.types import JoinablePathLike
 
 
 logger = log.get_logger(__name__)
@@ -53,13 +57,13 @@ class License:
         raise ValueError(name_or_id)
 
     @classmethod
-    def from_path(cls, path: str) -> Self:
+    def from_path(cls, path: JoinablePathLike) -> Self:
         """Get a license from a file path.
 
         Args:
             path: Path to get license from.
         """
-        p = pathlib.Path(path)
+        p = upath.Uath(path)
         content = p.read_text(encoding="utf-8")
         return cls(path=str(p), content=content, name=p.name, identifier=p.name)
 
