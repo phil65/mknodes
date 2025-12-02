@@ -39,7 +39,7 @@ jobs:
             - name: Setup Graphviz
               uses: ts-graphviz/setup-graphviz@v2
             - name: Serve Ollama Model
-              uses: phil65/ollama-github-action@v1
+              uses: pydantic/ollama-action@v3
               with:
                   model: "smollm2:360m"
             - name: Install uv
@@ -49,6 +49,8 @@ jobs:
                   uv sync --all-extras
             - name: Build
               run: uv run mkdocs-mknodes build -v
+              env:
+                  PYTHON_GIL: "0"
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v4
               with:
