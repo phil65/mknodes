@@ -29,5 +29,6 @@ jobs:
             - name: Run benchmarks
               uses: CodSpeedHQ/action@v4
               with:
+                  mode: simulation
                   token: ${{ secrets.CODSPEED_TOKEN }}
                   run: "uv run pytest benchmarks/ --codspeed"
