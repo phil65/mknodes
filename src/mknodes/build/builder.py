@@ -42,9 +42,7 @@ class DocBuilder:
         from mknodes.build.output import BuildOutput
 
         logger.info("Starting documentation build...")
-
         page_count = 0
-
         # First pass: collect all pages and navs
         for _level, node in root.iter_nodes():
             self._files |= node.files
@@ -77,19 +75,13 @@ class DocBuilder:
 
         path = page.resolved_file_path
         logger.debug("Processing page: %s", path)
-
-        # Collect resources
         req = await page.get_resources()
         self._resources.merge(req)
-
-        # Render markdown
         md = await page.to_markdown()
-
         if self.render_jinja:
             render = page.metadata.get("render_macros", True)
             if render:
                 md = await page.env.render_string_async(md)
-
         self._files[path] = md
 
     async def _process_nav(self, nav: mk.MkNav) -> None:
@@ -100,11 +92,7 @@ class DocBuilder:
         """
         path = nav.resolved_file_path
         logger.debug("Processing nav: %s", nav.title or "[ROOT]")
-
-        # Collect resources
         req = await nav.get_node_resources()
         self._resources.merge(req)
-
-        # Render nav markdown (SUMMARY.md style)
         md = await nav.to_markdown()
         self._files[path] = md

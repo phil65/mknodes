@@ -7,9 +7,13 @@ import logging
 import sys
 from pathlib import Path
 
+import jinjarope
 import typer as t
 
 from mknodes.utils import classhelpers, log
+import mknodes as mk
+from mknodes.info import contexts, folderinfo, reporegistry
+from mknodes.info.linkprovider import LinkProvider
 
 
 logger = log.get_logger(__name__)
@@ -70,14 +74,29 @@ def build(
 
 async def _build_async(script: str, output: Path, repo_url: str | None, render_jinja: bool) -> None:
     """Async implementation of build command."""
-    import mknodes as mk
     from mknodes.build import DocBuilder, MarkdownExporter
 
     logger.info("Loading build script: %s", script)
     build_fn = classhelpers.to_callable(script)
 
-    # Create root nav with optional repo context
-    root = mk.MkNav.with_context(repo_url=repo_url) if repo_url else mk.MkNav()
+    linkprovider = LinkProvider(
+        base_url="",
+        use_directory_urls=True,
+        include_stdlib=True,
+    )
+    theme = mk.Theme.get_theme(theme_name="material")
+    git_repo = reporegistry.get_repo(".", clone_depth=50)
+    assert theme
+    info = folderinfo.FolderInfo(git_repo.working_dir)
+    context = contexts.ProjectContext(
+        metadata=info.context,
+        git=info.git.context,
+        # github=info.github.context,
+        theme=theme.context,
+        links=linkprovider,
+        env_config=jinjarope.EnvConfig(loader=contexts.DEFAULT_LOADER),
+    )
+    root = mk.MkNav(context=context)
 
     logger.info("Executing build script...")
     result = build_fn(root)
@@ -122,7 +141,6 @@ def render(
 
 async def _render_async(input_file: str, output_file: str, repo_url: str | None) -> None:
     """Async implementation of render command."""
-    import mknodes as mk
     from mknodes.jinja import nodeenvironment
 
     # Read input

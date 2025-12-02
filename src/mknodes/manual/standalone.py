@@ -7,6 +7,14 @@ Usage:
 from __future__ import annotations
 
 import mknodes as mk
+from mknodes.manual import (
+    dev_section,
+    get_started_section,
+    navs_section,
+    nodes_section,
+    page_section,
+    templating_section,
+)
 
 
 def build(root: mk.MkNav) -> mk.MkNav:
@@ -27,47 +35,13 @@ def build(root: mk.MkNav) -> mk.MkNav:
         typ="info",
         title="About MkNodes",
     )
-
-    # Create a getting started section
-    getting_started = root.add_nav("Getting Started")
-
-    install_page = getting_started.add_page("Installation")
-    install_page += mk.MkHeader("Installation")
-    install_page += mk.MkCode("pip install mknodes", language="bash")
-
-    usage_page = getting_started.add_page("Basic Usage")
-    usage_page += mk.MkHeader("Basic Usage")
-    usage_page += mk.MkText("Create a build script and run the CLI:")
-    usage_page += mk.MkCode(
-        """
-import mknodes as mk
-
-def build(root: mk.MkNav) -> mk.MkNav:
-    page = root.add_page("Hello", is_index=True)
-    page += mk.MkText("Hello, World!")
-    return root
-""".strip(),
-        language="python",
-    )
-
-    # Create an examples section
-    examples = root.add_nav("Examples")
-
-    nodes_page = examples.add_page("Node Examples")
-    nodes_page += mk.MkHeader("Available Nodes")
-    nodes_page += mk.MkText("MkNodes provides many node types:")
-
-    nodes_page += mk.MkHeader("Admonitions", level=2)
-    nodes_page += mk.MkAdmonition("This is a note", typ="note", title="Note")
-    nodes_page += mk.MkAdmonition("This is a warning", typ="warning", title="Warning")
-    nodes_page += mk.MkAdmonition("This is a tip", typ="tip", title="Tip")
-
-    nodes_page += mk.MkHeader("Code Blocks", level=2)
-    nodes_page += mk.MkCode("print('Hello, World!')", language="python")
-
-    nodes_page += mk.MkHeader("Lists", level=2)
-    nodes_page += mk.MkList(["Item 1", "Item 2", "Item 3"])
-
+    root.page_template.announcement_bar = mk.MkMetadataBadges("websites")
+    root += get_started_section.nav
+    root += navs_section.nav
+    root += page_section.nav
+    root += nodes_section.nav
+    root += templating_section.nav
+    root += dev_section.nav
     return root
 
 

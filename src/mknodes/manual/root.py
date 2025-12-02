@@ -9,13 +9,6 @@ from mknodes.manual import (
 )
 
 
-def build(project) -> mk.MkNav:
-    build = Build()
-    project.linkprovider.add_inv_file("https://mkdocstrings.github.io/objects.inv")
-    build.on_theme(project.theme)
-    return build.on_root(project.root) or project.root
-
-
 class Build:
     @classmethod
     def build(cls, root: mk.MkNav, theme: mk.Theme):
