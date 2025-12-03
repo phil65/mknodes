@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
     import griffe
     from jinja2 import runtime
+    from mkdocs.config.config_options import ExtraScriptValue
 
     import mknodes as mk
     from mknodes.info.linkprovider import LinkableType
@@ -114,7 +115,7 @@ def url(context: runtime.Context, value: str) -> str:
 
 
 @jinja2.pass_context
-def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText):
+def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText | ExtraScriptValue):
     """Converts an ExtraScript value / JSResource to an HTML <script> tag line.
 
     Args:
@@ -123,7 +124,10 @@ def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText):
     """
     html = '<script src="{0}"'
     if not isinstance(extra_script, str):
-        if extra_script.typ:
+        # bw compat for now, should all be type at some point.
+        if hasattr(extra_script, "typ") and extra_script.typ:  # pyright: ignore[reportAttributeAccessIssue]
+            html += ' type="{1.type}"'  # type or typ?
+        if hasattr(extra_script, "type") and extra_script.type:
             html += ' type="{1.type}"'  # type or typ?
         if extra_script.defer:
             html += " defer"
