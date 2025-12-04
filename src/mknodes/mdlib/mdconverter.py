@@ -30,7 +30,7 @@ class MdConverter(markdown.Markdown):
         self,
         extensions: Sequence[str | markdown.Extension] | None = None,
         extension_configs: dict[str, dict[str, Any]] | None = None,
-        custom_fences: list[dict] | None = None,
+        custom_fences: list[dict[str, Any]] | None = None,
         output_format: Literal["xhtml", "html"] = "html",
         tab_length: int = 4,
     ) -> None:

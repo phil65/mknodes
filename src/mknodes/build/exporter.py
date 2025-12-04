@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from mknodes.build.output import BuildOutput
+    from mknodes.utils.resources import Resources
 
 
 class Exporter(Protocol):
@@ -76,7 +77,7 @@ class MarkdownExporter:
             meta_path = target_path / ".mknodes.meta.yaml"
             meta_path.write_text(yamling.dump_yaml(meta, indent=2), encoding="utf-8")
 
-    def _serialize_resources(self, res) -> dict[str, Any]:
+    def _serialize_resources(self, res: Resources) -> dict[str, Any]:
         """Serialize a Resources object to a dict."""
         return {
             "markdown_extensions": res.markdown_extensions,

@@ -56,7 +56,9 @@ class NavBuilder:
         return self._items(self._data, 0)
 
     @classmethod
-    def _items(cls, data: Mapping, level: int) -> Iterable[Item]:
+    def _items(
+        cls, data: Mapping[str | None, Mapping[None | str, Any]], level: int
+    ) -> Iterable[Item]:
         for key, value in data.items():
             if key is not None:
                 yield Item(level=level, title=key, filename=value.get(None))

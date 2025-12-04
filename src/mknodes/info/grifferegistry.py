@@ -3,10 +3,15 @@ from __future__ import annotations
 from abc import ABCMeta
 from collections.abc import MutableMapping
 import types
+from typing import TYPE_CHECKING
 
 import griffe
 
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 logger = log.get_logger(__name__)
@@ -67,7 +72,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     def __repr__(self) -> str:
         return f"{type(self).__name__}()"
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self._modules.keys())
 
     def __len__(self) -> int:

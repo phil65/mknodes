@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 import coloraide
 
@@ -45,7 +45,7 @@ class Color(coloraide.Color):
         """Return str in form of rgb(255, 0, 0)."""
         return self.to_string(comma=True)
 
-    def brightness(self, value: float, **kwargs: Any):
+    def brightness(self, value: float, **kwargs: Any) -> Self:
         """Change brightness of given color.
 
         Args:

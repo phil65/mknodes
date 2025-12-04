@@ -171,7 +171,7 @@ class Inventory(BaseInventory):
         base_url: str,
         *,
         domains: list[str] | None = None,
-    ):  # sourcery skip: assign-if-exp
+    ) -> Self:  # sourcery skip: assign-if-exp
         inv = cls(base_url)
         domains = domains or ["py"]
         if isinstance(path, io.BytesIO):

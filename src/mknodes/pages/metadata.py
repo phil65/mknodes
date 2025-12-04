@@ -167,7 +167,7 @@ class Metadata(dict[str, Any]):
     @property
     def tags(self) -> list[str]:
         """A list of tags associated with the page."""
-        return self.get("tags", [])
+        return self.get("tags", [])  # type: ignore[no-any-return]
 
     @tags.setter
     def tags(self, val: list[str] | None) -> None:

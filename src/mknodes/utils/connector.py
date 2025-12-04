@@ -37,11 +37,11 @@ class Connector[T]:
             add_connections(obj)
 
     @property
-    def items(self):
+    def items(self) -> list[Hashable]:
         return list(self.item_dict.keys())
 
     @property
-    def titles(self):
+    def titles(self) -> list[str]:
         return list(self.item_dict.values())
 
     def get_children(self, item: T) -> list[T] | tuple[T, ...]:  # pyright: ignore[reportUnusedParameter]

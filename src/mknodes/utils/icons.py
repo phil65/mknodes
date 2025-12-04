@@ -68,7 +68,7 @@ def to_svg(
     _category: str,
     options: dict[str, str],
     md: markdown.Markdown,
-):
+) -> ET.Element[str]:
     """Return svg element (wrapped in a span element).
 
     Used for pymdownx.emoji.
