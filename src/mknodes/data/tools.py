@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 import tomllib
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from mknodes import paths
 from mknodes.utils import pathhelpers
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     import upath
 
     from mknodes.info import folderinfo
+    from mknodes.info.folderinfo import FolderInfo
 
 
 @dataclasses.dataclass
@@ -66,13 +67,13 @@ class Tool:
         return None
 
     @classmethod
-    def from_file(cls, path: upath.UPath | pathlib.Path):
+    def from_file(cls, path: upath.UPath | pathlib.Path) -> Self:
         txt = path.read_text(encoding="utf-8")
         dct = tomllib.loads(txt)
         return cls(**dct)
 
 
-def get_tools_for_folder(folder) -> list[Tool]:
+def get_tools_for_folder(folder: FolderInfo) -> list[Tool]:
     tools = []
     for file in (paths.RESOURCES / "toolfiles").iterdir():
         tool = Tool.from_file(file)

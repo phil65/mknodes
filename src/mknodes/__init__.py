@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 from .jinja.nodeenvironment import NodeEnvironment
 from importlib.metadata import version
@@ -92,7 +93,7 @@ from .theme.theme import Theme
 from .theme.materialtheme import MaterialTheme
 
 
-async def parse(project=None, **kwargs):
+async def parse(project=None, **kwargs: Any) -> MkNav:
     if project:
         kwargs["context"] = project.context
     from mknodes.navs.navparser import parse_new_style_nav

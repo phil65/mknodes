@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import jinjarope
+    import mknodes as mk
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ def setup_env(env: jinjarope.Environment) -> None:
 
 
 @functools.cache
-def get_nodes():
+def get_nodes() -> dict[str, type[mk.MkNode]]:
     import mknodes as mk
 
     return {k.__name__: k for k in inspectfilters.list_subclasses(mk.MkNode)}

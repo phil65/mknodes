@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import mknodes as mk
 from mknodes.info import contexts
 
@@ -28,7 +30,7 @@ def _(page: mk.MkPage) -> None:
 
 @nav.route.nav("Jinja Namespace")
 def _(nav: mk.MkNav) -> None:
-    def add_context_doc(container, context) -> None:
+    def add_context_doc(container: mk.MkPage, context: Any) -> None:
         container += mk.MkDocStrings(
             context,
             show_root_toc_entry=False,

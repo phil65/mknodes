@@ -123,7 +123,7 @@ class FolderInfo:
         Checks MkDocs config file, Git repository info and project metadata.
         """
         if url := self.mkdocs_config.get("repo_url"):
-            return url
+            return url  # type: ignore[no-any-return]
         if url := self.git.repo_url:
             return url
         if url := self.info.repository_url:
@@ -185,7 +185,7 @@ class FolderInfo:
         if style := self.pyproject.docstring_style:
             return style
         if section := self.mkdocs_config.mkdocstrings_config:
-            return section.get("options", {}).get("docstring_style")
+            return section.get("options", {}).get("docstring_style")  # type: ignore[no-any-return]
         return None
 
     @functools.cached_property

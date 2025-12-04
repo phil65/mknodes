@@ -13,7 +13,7 @@ logger = log.get_logger(__name__)
 
 
 class NodeConnector(connector.Connector["mk.MkNode"]):
-    def get_children(self, item: mk.MkNode):  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get_children(self, item: mk.MkNode) -> list[mk.MkNode]:
         return item.get_children()
 
     def get_id(self, item: mk.MkNode) -> str:

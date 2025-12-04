@@ -35,7 +35,7 @@ class RepoRegistry(MutableMapping[str, gitrepository.GitRepository], metaclass=A
     def __init__(self) -> None:
         self._repos: dict[str, gitrepository.GitRepository] = {}
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> gitrepository.GitRepository:
         return self._repos.__getitem__(key)
 
     def __setitem__(self, index: str, value: gitrepository.GitRepository) -> None:
