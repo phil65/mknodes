@@ -25,7 +25,6 @@ some_code = 1 + 2
 }}
 """
 
-
 [examples.from_function]
 title = "From function"
 jinja = """
@@ -34,7 +33,7 @@ jinja = """
 
 [output.markdown]
 template = """
-{% for section in inspecthelpers.iter_code_sections(node.code, node.linenums) %}
+{% for section in node.iter_code_sections() %}
 {% if section.typ == "code" %}
 {{ section.code | MkCode(linenums=section.start_line) }}
 {% elif node.style == "text" %}
@@ -46,4 +45,3 @@ template = """
 {% endif %}
 {% endfor %}
 """
-

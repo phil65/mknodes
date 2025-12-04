@@ -41,12 +41,7 @@ def icon_for_url(url: str) -> str | None:
 def _patch_index_with_sets(_icon_sets: Sequence[str]) -> dict[str, Any]:
     from pymdownx import twemoji_db  # type: ignore[import-untyped]
 
-    # Copy the Twemoji index
-    index: dict[str, Any] = {
-        "name": "twemoji",
-        "emoji": twemoji_db.emoji,
-        "aliases": twemoji_db.aliases,
-    }
+    index = {"name": "twemoji", "emoji": twemoji_db.emoji, "aliases": twemoji_db.aliases}
     # icon_index = _get_pyconify_icon_index(*icon_sets)
     icon_index = icons.load_icon_index()
     index["emoji"].update(icon_index)

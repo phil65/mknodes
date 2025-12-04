@@ -14,10 +14,6 @@ class Logger:
     def __getattr__(self, val: Any):
         return getattr(self.logger, val)
 
-    def log_dict(self, dct: dict[str, Any], level: int = logging.INFO) -> None:
-        for k, v in dct.items():
-            self.logger.log(level, "%s: %s", k, v)
-
 
 def get_logger(name: str | None = None):
     if importlib.util.find_spec("mkdocs"):

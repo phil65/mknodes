@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import dataclasses
 import functools
 import inspect
 from typing import TYPE_CHECKING, Any
@@ -14,43 +13,6 @@ if TYPE_CHECKING:
     import types
 
     from mknodes.data import datatypes
-
-
-def iter_code_sections(code_string: str, start_line: int | None = None):
-    @dataclasses.dataclass
-    class Section:
-        typ: str
-        code: str
-        start_line: int | None = None
-
-    lines: list[str] = []
-    mode = ""
-    line_num = start_line or 0
-    for i, line in enumerate(code_string.split("\n"), start=line_num):
-        if not line.strip() or line.rstrip().endswith("##"):
-            continue
-        if line.strip().startswith("#"):
-            if mode == "code":
-                code = "\n".join(lines)
-                yield Section(mode, code, start_line=line_num if start_line else None)
-                lines = []
-                line_num = i
-            lines.append(line.strip().removeprefix("#")[1:])
-            mode = "comment"
-        elif not line.strip().startswith("#"):
-            if mode == "comment":
-                text = "\n".join(lines)
-                yield Section("comment", text)
-                lines = []
-                line_num = i
-            lines.append(line)
-            mode = "code"
-    if mode == "code":
-        code = "\n".join(lines)
-        yield Section("code", code, start_line=line_num if start_line else None)
-    elif mode == "comment":
-        text = "\n".join(lines)
-        yield Section("comment", text)
 
 
 def get_stack_info(frame: types.FrameType | None, level: int) -> dict[str, Any] | None:
@@ -106,9 +68,7 @@ def get_source(obj: datatypes.HasCodeType | griffe.Object) -> str:
 
 
 @functools.cache
-def get_source_lines(
-    obj: datatypes.HasCodeType | griffe.Object,
-) -> tuple[list[str], int]:
+def get_source_lines(obj: datatypes.HasCodeType | griffe.Object) -> tuple[list[str], int]:
     """Cached wrapper for inspect.getsourcelines.
 
     Args:

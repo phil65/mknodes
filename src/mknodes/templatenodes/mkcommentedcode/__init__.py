@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+import dataclasses
 from typing import Any, Literal, TYPE_CHECKING
 
 from mknodes.templatenodes import mktemplate
 from mknodes.utils import inspecthelpers, log
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from mknodes.data import datatypes
 
 
 logger = log.get_logger(__name__)
+
+
+@dataclasses.dataclass
+class Section:
+    typ: str
+    code: str
+    start_line: int | None = None
 
 
 class MkCommentedCode(mktemplate.MkTemplate):
@@ -47,6 +56,37 @@ class MkCommentedCode(mktemplate.MkTemplate):
         self.linenums = linenums
         self.style = style
         super().__init__(template="output/markdown/template", **kwargs)
+
+    def iter_code_sections(self) -> Iterator[Section]:
+
+        lines: list[str] = []
+        mode = ""
+        line_num = self.linenums or 0
+        for i, line in enumerate(self.code.split("\n"), start=line_num):
+            if not line.strip() or line.rstrip().endswith("##"):
+                continue
+            if line.strip().startswith("#"):
+                if mode == "code":
+                    code = "\n".join(lines)
+                    yield Section(mode, code, start_line=line_num if self.linenums else None)
+                    lines = []
+                    line_num = i
+                lines.append(line.strip().removeprefix("#")[1:])
+                mode = "comment"
+            elif not line.strip().startswith("#"):
+                if mode == "comment":
+                    text = "\n".join(lines)
+                    yield Section("comment", text)
+                    lines = []
+                    line_num = i
+                lines.append(line)
+                mode = "code"
+        if mode == "code":
+            code = "\n".join(lines)
+            yield Section("code", code, start_line=line_num if self.linenums else None)
+        elif mode == "comment":
+            text = "\n".join(lines)
+            yield Section("comment", text)
 
     @property
     def code(self) -> str:

@@ -127,7 +127,7 @@ def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText | E
         # bw compat for now, should all be type at some point.
         if hasattr(extra_script, "typ") and extra_script.typ:  # pyright: ignore[reportAttributeAccessIssue]
             html += ' type="{1.type}"'  # type or typ?
-        if hasattr(extra_script, "type") and extra_script.type:
+        if hasattr(extra_script, "type") and extra_script.type:  # pyright: ignore[reportAttributeAccessIssue]
             html += ' type="{1.type}"'  # type or typ?
         if extra_script.defer:
             html += " defer"
