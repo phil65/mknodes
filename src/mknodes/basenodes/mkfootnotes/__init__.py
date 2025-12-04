@@ -95,7 +95,7 @@ class MkFootNotes(mkcontainer.MkContainer):
                 notes.append(item)
         return reprhelpers.get_repr(self, footnotes=notes)
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int) -> MkFootNote:
         for node in self.get_items():
             if node.num == index:
                 return node

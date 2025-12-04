@@ -114,7 +114,7 @@ class MkCode(mkcontainer.MkContainer):
         title: str | None = None,
         language: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> Self:
         """Create a MkCode node based on a code file.
 
         Line numbers will be shown by default. If `highlight_caller` is `True`,

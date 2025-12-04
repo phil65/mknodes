@@ -38,7 +38,7 @@ class MkCritic(mkcontainer.MkContainer):
         self.typ = typ
 
     @property
-    def marks(self):
+    def marks(self) -> tuple[str, str]:
         match self.typ:
             case "addition":
                 return ("++", "++")

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Self
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log
@@ -31,7 +31,7 @@ class MkContainerBase(mknode.MkNode):
     def __bool__(self) -> bool:
         return bool(self.get_items())
 
-    def __add__(self, other: str | mknode.MkNode):
+    def __add__(self, other: str | mknode.MkNode) -> Self:
         self.append(other)
         return self
 
