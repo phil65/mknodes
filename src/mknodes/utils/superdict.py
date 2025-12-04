@@ -5,8 +5,9 @@ from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Literal, Self, TypeVar
 
 from jinjarope import serializefilters
+from upathtools.helpers import write_file
 
-from mknodes.utils import pathhelpers, reprhelpers
+from mknodes.utils import reprhelpers
 
 
 if TYPE_CHECKING:
@@ -79,7 +80,7 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
 
     def write(self, path: str | os.PathLike[str], mode: MarkupTypeStr) -> None:
         text = self.serialize(mode)
-        pathhelpers.write_file(text, path)
+        write_file(text, path)
 
 
 if __name__ == "__main__":
