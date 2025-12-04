@@ -44,7 +44,7 @@ def get_nodefile(klass: type) -> NodeFile | None:
 
 
 def find_file(klass: type) -> pathlib.Path | None:
-    path = inspectfilters.get_file(klass)  # type: ignore[arg-type]
+    path = inspectfilters.get_file(klass)
     assert path
     if (file := path.parent / f"{klass.__name__}.toml").exists():
         return file
@@ -61,7 +61,7 @@ async def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | 
     await parent.env.render_string_async(jinja)
     nodes = parent.env.rendered_nodes
     node = mk.MkContainer(nodes) if len(nodes) > 1 else nodes[0]
-    dct: dict[str, str | mk.MkNode] = dict(  # type: ignore[annotation-unchecked]
+    dct: dict[str, str | mk.MkNode] = dict(
         Jinja=mk.MkCode(jinja, language="jinja"),
         Repr=mk.MkCode(textfilters.format_code(repr(node))),
         Rendered=node.__copy__(),

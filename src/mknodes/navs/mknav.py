@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 import pathlib
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.basenodes import mknode
 from mknodes.pages import metadata as metadata_, mkpage, pagetemplate
@@ -103,7 +103,7 @@ class MkNav(mknode.MkNode):
         """Return all child items from the navigation."""
         return self.nav.get_all_items()
 
-    def __add__(self, other: navigation.NavSubType):
+    def __add__(self, other: navigation.NavSubType) -> Self:
         """Use this to to register MkNodes."""
         other.parent = self
         self.nav.register(other)

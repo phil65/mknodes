@@ -17,6 +17,7 @@ from mknodes.utils import log, superdict
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     import datetime
     import types
 
@@ -332,7 +333,7 @@ class EnvironmentContext(MutableMapping[str, Any], metaclass=abc.ABCMeta):
     def __len__(self) -> int:
         return len(dataclasses.fields(self))
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(i.name for i in dataclasses.fields(self))
 
 

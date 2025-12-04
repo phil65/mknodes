@@ -2,11 +2,16 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
+from typing import TYPE_CHECKING
 
 import epregistry
 
 from mknodes.info import packageinfo
 from mknodes.utils import log
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 logger = log.get_logger(__name__)
@@ -56,7 +61,7 @@ class PackageRegistry(MutableMapping[str, packageinfo.PackageInfo], metaclass=AB
     def __repr__(self) -> str:
         return f"{type(self).__name__}()"
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self._packages.keys())
 
     def __len__(self) -> int:

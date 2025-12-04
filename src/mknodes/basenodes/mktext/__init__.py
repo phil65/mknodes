@@ -55,7 +55,7 @@ class MkText(mknode.MkNode):
     async def to_md_unprocessed(self) -> str:
         return await self.get_text()
 
-    def get_children(self) -> list[mknode.MkNode]:  # type: ignore[override]
+    def get_children(self) -> list[mknode.MkNode]:
         """Return children nodes.
 
         For MkText with render_jinja=True, this triggers Jinja rendering

@@ -67,7 +67,7 @@ class MkDoc(mknav.MkNav):
             filename=self.filename,
         )
 
-    def get_children(self):  # type: ignore[override]
+    def get_children(self):
         """Return computed children for module documentation."""
         if self.module is None:
             return []

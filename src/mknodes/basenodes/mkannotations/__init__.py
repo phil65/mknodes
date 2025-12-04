@@ -64,9 +64,7 @@ class MkAnnotations(mkcontainer.MkContainer):
                 items = []
             case list():
                 items = [
-                    (
-                        ann if isinstance(ann, MkAnnotation) else MkAnnotation(i, ann)  # type: ignore
-                    )
+                    (ann if isinstance(ann, MkAnnotation) else MkAnnotation(i, ann))
                     for i, ann in enumerate(annotations, start=1)
                 ]
             case Mapping():

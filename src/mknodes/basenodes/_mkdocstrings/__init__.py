@@ -189,7 +189,7 @@ class MkDocStrings(mknode.MkNode):
                 raise TypeError(self.obj)
 
     @property
-    def options(self):
+    def options(self) -> dict[str, Any]:
         import mknodes as mk
 
         # The default section style does not work well inside Annotations,
