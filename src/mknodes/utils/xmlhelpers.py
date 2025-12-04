@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 from xml.etree import ElementTree as ET
 
-from mknodes.utils import icons, log
+from mknodes.utils import log
 
 
 logger = log.get_logger(__name__)
@@ -157,21 +157,6 @@ class A(HTMLElement):
     ) -> None:
         super().__init__(klass, parent, **kwargs)
         self.text = text
-
-
-def get_source_button(icon: str = "material/code-json") -> A:
-    href = (
-        "{{ config.site_url | rstrip('/') + '/src/' + page.file.src_uri | replace('.md',"
-        " '.original') }}"
-    )
-    elem = A(
-        "md-content__button md-icon",
-        title="Source",
-        href=href,
-    )
-    svg = icons.get_icon_xml(icon)
-    elem.append(svg)
-    return elem
 
 
 if __name__ == "__main__":
