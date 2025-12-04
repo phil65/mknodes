@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any
 import dateutil.parser
 
 from mknodes.theme import mkblog
-from mknodes.utils import downloadhelpers
 
 
 if TYPE_CHECKING:
@@ -48,8 +47,7 @@ async def get_latest_commits(owner: str, repo: str, page: int = 1) -> list[Commi
     import anyenv
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=100&page={page}"
-    response = await downloadhelpers.download_async(url)
-    commits = anyenv.load_json(response.decode(), return_type=list)
+    commits = anyenv.get_json(url, return_type=list, cache=True)
     return [
         Commit(
             sha=dct["commit"]["tree"]["sha"],
