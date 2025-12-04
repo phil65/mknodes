@@ -35,7 +35,7 @@ class Extension(dict):
         super().__init__(**kwargs)
         self.extension_name = extension_name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.extension_name
 
     def __repr__(self) -> str:
@@ -61,7 +61,7 @@ class Plugin(dict[str, Any]):
         super().__init__(**kwargs)
         self.plugin_name = plugin_name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.plugin_name
 
     def __repr__(self) -> str:
@@ -82,10 +82,10 @@ class CSSFile:
     color_scheme: Literal["dark", "light"] | None = None
     onload: str | None = None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_dataclass_repr(self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.link
 
     def __fspath__(self):
@@ -119,10 +119,10 @@ class JSFile:
     typ: str = ""
     is_library: bool = False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_dataclass_repr(self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.link
 
     def __fspath__(self):
@@ -168,7 +168,7 @@ class TextResource:
     def __hash__(self):
         return hash(self.content)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, filename=self.resolved_filename)
 
 
@@ -261,14 +261,14 @@ class Resources(collections.abc.Mapping[str, Any], metaclass=abc.ABCMeta):
     def __setitem__(self, index, value) -> None:
         setattr(self, index, value)
 
-    def __contains__(self, other):
+    def __contains__(self, other) -> bool:
         if any(i == other for i in self.markdown_extensions):
             return True
         if any(i.plugin_name == other for i in self.plugins):
             return True
         return super().__contains__(other)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(dataclasses.fields(self))
 
     def __iter__(self):

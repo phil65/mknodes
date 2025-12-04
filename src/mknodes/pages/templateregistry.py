@@ -25,7 +25,7 @@ class TemplateRegistry:
     def __iter__(self) -> Iterator[pagetemplate.PageTemplate]:
         return iter(self.templates.values())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.templates)
 
 

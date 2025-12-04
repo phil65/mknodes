@@ -32,7 +32,7 @@ class MkAnnotation(mkcontainer.MkContainer):
         self.num = num
         super().__init__(content=content, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
     async def to_md_unprocessed(self) -> str:
@@ -52,7 +52,7 @@ class MkAnnotations(mkcontainer.MkContainer):
         self,
         annotations: Mapping[int, str | mk.MkNode] | list[mk.MkNode | str] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -94,7 +94,7 @@ class MkAnnotations(mkcontainer.MkContainer):
             case _:
                 raise TypeError(item)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         notes: list[str | MkAnnotation] = []
         for item in self.get_items():
             item_children = item.get_items()

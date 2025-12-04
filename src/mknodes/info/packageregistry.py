@@ -59,7 +59,7 @@ class PackageRegistry(MutableMapping[str, packageinfo.PackageInfo], metaclass=AB
     def __iter__(self):
         return iter(self._packages.keys())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._packages)
 
     def get_info(self, mod_name: str) -> packageinfo.PackageInfo:

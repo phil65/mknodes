@@ -30,7 +30,7 @@ class MkBaseTable(mkcontainer.MkContainer):
         | None = None,
         columns: Sequence[str] | None = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -54,7 +54,7 @@ class MkBaseTable(mkcontainer.MkContainer):
             case _:
                 raise TypeError(data)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         kwarg_data = {
             k: [reprhelpers.to_str_if_textnode(i) for i in v] for k, v in self.data.items()
         }

@@ -57,7 +57,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
         self.data: dict[str, str | mknode.MkNode] = {}
         self.set_items(data)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         kws = {k: reprhelpers.to_str_if_textnode(v) for k, v in self.data.items()}
         return reprhelpers.get_repr(self, data=kws)
 

@@ -135,7 +135,7 @@ class MaterialTheme(theme.Theme):
             css_default_bg="var(--md-code-bg-color)",
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self)
 
     @functools.cached_property

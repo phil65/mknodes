@@ -99,7 +99,7 @@ class FolderInfo:
         mod_name = epregistry.distribution_to_package(self.git.repo_name, fallback=True)
         return grifferegistry.get_module(mod_name)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, path=self.path)
 
     @functools.cached_property

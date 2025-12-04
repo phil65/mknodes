@@ -49,7 +49,7 @@ class MkDevEnvSetup(mktemplate.MkTemplate):
         self._repo_url = value
 
     @property
-    def build_backend(self) -> buildsystems.BuildSystem:  # type: ignore[return]
+    def build_backend(self) -> buildsystems.BuildSystem:
         if self._build_backend is None:
             return self.ctx.metadata.build_system or buildsystems.setuptools
         return buildsystems.BUILD_SYSTEMS[self._build_backend]

@@ -45,12 +45,12 @@ OUTPUT_FILE_CMDS = "-o", "--output"
 WORKERS_CMDS = "-w", "--workers"
 
 
-def verbose_callback(ctx: t.Context, _param: t.CallbackParam, value: bool):
+def verbose_callback(ctx: t.Context, _param: t.CallbackParam, value: bool) -> None:
     if value:
         logging.getLogger("mknodes").setLevel(logging.DEBUG)
 
 
-def quiet_callback(ctx: t.Context, _param: t.CallbackParam, value: bool):
+def quiet_callback(ctx: t.Context, _param: t.CallbackParam, value: bool) -> None:
     if value:
         logging.getLogger("mknodes").setLevel(logging.ERROR)
 

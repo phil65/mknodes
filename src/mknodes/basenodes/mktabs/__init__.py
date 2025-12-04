@@ -102,7 +102,7 @@ class MkTab(mkcontainer.MkContainer):
         self.attrs = attrs
         super().__init__(content=content, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         content: str | list[str]
         items = self.get_items()
         if len(items) == 1:

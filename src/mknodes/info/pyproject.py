@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 class PyProject(configfile.TomlFile):
     """Class representing a PyProject config file."""
 
-    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None):
+    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None) -> None:
         """Constructor.
 
         Args:

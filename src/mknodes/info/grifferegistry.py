@@ -70,7 +70,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     def __iter__(self):
         return iter(self._modules.keys())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._modules)
 
     def get_module(

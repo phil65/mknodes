@@ -29,7 +29,7 @@ class NavBuilder:
     def __init__(self) -> None:
         self._data: dict[str | None, Any] = {}
 
-    def __setitem__(self, keys: str | tuple[str, ...], value: str):
+    def __setitem__(self, keys: str | tuple[str, ...], value: str) -> None:
         """Add a link to a file into the nav, under the sequence of titles.
 
         For example, writing `nav["Foo", "Bar"] = "foo/bar.md"` would mean creating a nav:

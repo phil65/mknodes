@@ -32,7 +32,7 @@ logger = log.get_logger(__name__)
 class DocBuilder:
     """Traverses node tree, renders markdown, collects resources."""
 
-    def __init__(self, render_jinja: bool = True, max_workers: int | None = None):
+    def __init__(self, render_jinja: bool = True, max_workers: int | None = None) -> None:
         """Constructor.
 
         Args:

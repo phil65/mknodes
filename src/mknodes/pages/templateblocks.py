@@ -51,7 +51,7 @@ REDIRECT = """
 class Super:
     """Simple class to use for the jinja super expression."""
 
-    def __str__(self):
+    def __str__(self) -> str:
         return SUPER_TEXT
 
 
@@ -88,7 +88,7 @@ class HtmlBlock(BaseBlock):
         self.block_id = block_id
         self.items = [Super()]
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return len(self.items) != 1 or not isinstance(self.items[0], Super)
 
     def block_content(self, md: markdown.Markdown | None = None) -> str:
@@ -127,7 +127,7 @@ class Block(BaseBlock):
     def __init__(self) -> None:
         self.content = ""
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.block_content())
 
     def block_content(self, md: markdown.Markdown | None = None):
@@ -142,7 +142,7 @@ class TitleBlock(BaseBlock):
     def __init__(self, content: str | None = None) -> None:
         self.content = content
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.content)
 
     def block_content(self, md: markdown.Markdown | None = None) -> str:
@@ -176,7 +176,7 @@ class BaseJSBlock(BaseBlock):
             script = resources.JSFile(str(script))
         self.scripts.append(script)
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.scripts)
 
     def block_content(self, md: markdown.Markdown | None = None):
@@ -280,7 +280,7 @@ class StylesBlock(BaseBlock):
         text = resources.CSSText(filename=filename, content=css_str)
         self.styles.append(text)
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.styles)
 
     def block_content(self, md: markdown.Markdown | None = None):

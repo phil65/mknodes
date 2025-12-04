@@ -19,7 +19,7 @@ logger = log.get_logger(__name__)
 
 
 class CommitList(list[git.Commit]):
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.limit_repr.repr(list(self))
 
 
@@ -38,7 +38,7 @@ class GitRepository(git.Repo):
         except Exception:  # noqa: BLE001
             self.remote_repo = Repository(githarbor.BaseRepository())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(list(self.iter_commits("HEAD")))
 
     @functools.cached_property

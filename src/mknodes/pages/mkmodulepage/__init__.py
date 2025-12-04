@@ -47,7 +47,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         tpl_name = template_path or self.DEFAULT_TPL
         super().__init__(template_path=tpl_name, title=title or self.parts[-1], **kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, module=self.module, path=self.path)
 
     @property

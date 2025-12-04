@@ -28,7 +28,7 @@ class MkContainerBase(mknode.MkNode):
         super().__init__(**kwargs)
         self.block_separator = block_separator
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.get_items())
 
     def __add__(self, other: str | mknode.MkNode):

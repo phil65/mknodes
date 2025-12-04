@@ -50,7 +50,7 @@ class RepoRegistry(MutableMapping[str, gitrepository.GitRepository], metaclass=A
     def __iter__(self):
         return iter(self._repos.keys())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._repos)
 
     def get_repo(

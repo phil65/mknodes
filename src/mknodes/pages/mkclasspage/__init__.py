@@ -45,7 +45,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         tpl = template_path or self.DEFAULT_TPL
         super().__init__(title=title or klass.__name__, template_path=tpl, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_nondefault_repr(self)
 
     @property
@@ -70,7 +70,7 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
 if __name__ == "__main__":
     import mknodes as mk
 
-    async def main():
+    async def main() -> None:
         doc = MkClassPage(mk.MkPluginFlow, template_path="classpage_custom.jinja")
         print(await doc.get_resources())
 

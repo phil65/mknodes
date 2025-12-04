@@ -20,7 +20,7 @@ class Color(coloraide.Color):
         data: Sequence[float] | None = None,
         alpha: float = ALPHA_DEFAULT,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:

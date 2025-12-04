@@ -329,7 +329,7 @@ class EnvironmentContext(MutableMapping[str, Any], metaclass=abc.ABCMeta):
     def __delitem__(self, index) -> None:
         setattr(self, index, None)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(dataclasses.fields(self))
 
     def __iter__(self):
@@ -351,7 +351,7 @@ class ContextConfig(Mapping[str, Any], metaclass=abc.ABCMeta):
     def __setitem__(self, index, value) -> None:
         setattr(self, index, value)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(dataclasses.fields(self))
 
     def __iter__(self):

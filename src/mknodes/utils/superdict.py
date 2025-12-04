@@ -37,16 +37,16 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
     def __delitem__(self, index: str) -> None:
         del self._data[index]
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self._data)
 
     def __iter__(self) -> Iterator[str]:
         return iter(self._data.keys())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._data)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, data=dict(self._data))
 
     def rename_key(self, old: str, new: str) -> Self:

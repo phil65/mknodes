@@ -136,7 +136,7 @@ class MkBadge(mkimage.MkImage):
 if __name__ == "__main__":
     img = MkBadge("Left", "right")
 
-    async def main():
+    async def main() -> None:
         data = await img.get_data()
         print(data)
 

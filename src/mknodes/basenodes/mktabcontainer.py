@@ -111,7 +111,7 @@ class MkTabContainer(mkcontainer.MkContainer):
         else:
             items.append(tab)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(
             self,
             tabs=self.get_items(),

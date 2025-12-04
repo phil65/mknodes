@@ -59,7 +59,7 @@ class MkDoc(mknav.MkNav):
         super().__init__(**kwargs)
         self.title = section_name or self.module_name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(
             self,
             module=self.module_name,

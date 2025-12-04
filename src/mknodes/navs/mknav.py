@@ -64,7 +64,7 @@ class MkNav(mknode.MkNode):
         if frame := inspect.currentframe():
             self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=1)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         title = self.title or "<root>"
         return reprhelpers.get_repr(self, section=title, filename=self.filename)
 

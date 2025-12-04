@@ -30,7 +30,7 @@ def get_dependency_svg(
     from pydeps.pydeps import depgraph_to_dotsrc  # type: ignore[import-untyped]
     from pydeps.target import Target  # type: ignore[import-untyped]
 
-    def noop(*_args: Any, **_kwargs: Any):
+    def noop(*_args: Any, **_kwargs: Any) -> None:
         pass
 
     cli.verbose = noop

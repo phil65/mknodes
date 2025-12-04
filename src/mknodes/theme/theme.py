@@ -74,7 +74,7 @@ class Theme:
             font_color=self.text_color,
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, name=self.name)
 
     def add_admonition_type(

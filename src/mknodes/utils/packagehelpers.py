@@ -13,6 +13,8 @@ if TYPE_CHECKING:
     from collections.abc import Container
     from importlib import metadata
 
+    from pip._internal.metadata import BaseDistribution
+
 
 logger = log.get_logger(__name__)
 
@@ -79,7 +81,7 @@ def list_pip_packages(
     skip: Container[str] = stdlib_pkgs,
     include_editables: bool = True,
     editables_only: bool = False,
-):
+) -> list[BaseDistribution]:
     """Returns a list of installed distributions.
 
     This is based on ``iter_all_distributions()`` with additional filtering

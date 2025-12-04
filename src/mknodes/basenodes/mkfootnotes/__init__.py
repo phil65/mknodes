@@ -36,7 +36,7 @@ class MkFootNote(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.num = num
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
     async def to_md_unprocessed(self) -> str:
@@ -56,7 +56,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         self,
         footnotes: (Mapping[int, str | mk.MkNode] | list[MkFootNote] | list[str] | None) = None,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -83,7 +83,7 @@ class MkFootNotes(mkcontainer.MkContainer):
         """Return the list of footnotes."""
         return self._items  # type: ignore[return-value]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         notes: list[mk.MkNode | str] = []
         for item in self.get_items():
             item_children = item.get_items()

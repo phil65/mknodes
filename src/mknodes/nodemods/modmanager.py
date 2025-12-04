@@ -27,7 +27,7 @@ class ModManager:
         """Needed for Mknode comparison."""
         return hash(self) == hash(other)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, mods=self.mods, css_classes=self._css_classes)
 
     def append(self, other: str | mod.Mod) -> None:

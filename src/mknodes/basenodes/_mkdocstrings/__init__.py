@@ -165,7 +165,7 @@ class MkDocStrings(mknode.MkNode):
         opts = self.OPTIONS_DEFAULT.copy() | opts
         self._options = {k: v for k, v in opts.items() if v is not None}
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         option_kwargs = {k: v for k, v in self.options.items() if v is not None}
         return reprhelpers.get_repr(self, obj=self.obj, **option_kwargs)
 

@@ -201,7 +201,7 @@ class Metadata(dict[str, Any]):
             text = text[match.span()[1] :]
         return cls(**dct), text
 
-    def __str__(self):
+    def __str__(self) -> str:
         dct = {k: v for k, v in self.items() if v is not None}
         return yamling.dump_yaml(dct) if dct else ""
 

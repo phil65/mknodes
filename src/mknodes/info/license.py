@@ -70,7 +70,7 @@ class License:
 
 if __name__ == "__main__":
 
-    async def main():
+    async def main() -> None:
         db = await License.from_name("BSD-3-Clause")
         print(db)
 

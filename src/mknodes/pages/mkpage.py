@@ -102,7 +102,7 @@ class MkPage(mkcontainer.MkContainer):
             self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         kwargs = {k: v for k, v in self.metadata.items() if v is not None}
         return reprhelpers.get_repr(self, path=str(self.path), **kwargs)
 

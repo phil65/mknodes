@@ -35,7 +35,7 @@ class PackageInfo:
         self.description: str = self.metadata.get("description") or ""  # type: ignore[assignment]
         self.summary: str = self.metadata.get("summary") or ""  # type: ignore[assignment]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(self, pkg_name=self.package_name)
 
     def __hash__(self):

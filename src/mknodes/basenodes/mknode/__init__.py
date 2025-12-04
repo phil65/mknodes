@@ -68,7 +68,7 @@ class MkNode:
         context: contexts.ProjectContext | None = None,
         parent: MkNode | None = None,
         **_kwargs: Any,
-    ):
+    ) -> None:
         """Constructor.
 
         Args:
@@ -109,7 +109,7 @@ class MkNode:
         """Return the list of children nodes."""
         return self._children
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_nondefault_repr(self)
 
     def __iter__(self) -> Iterator[MkNode]:

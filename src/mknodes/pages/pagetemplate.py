@@ -55,7 +55,7 @@ class PageTemplate:
         self.hero = templateblocks.HtmlBlock("hero", parent=parent)
         self.announce = templateblocks.HtmlBlock("announce", parent=parent)
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return any(self.blocks)  # or self.extends
 
     def __hash__(self):
@@ -81,7 +81,7 @@ class PageTemplate:
             self.scripts,
         ]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(
             self,
             filename=self.filename,
@@ -125,7 +125,7 @@ class PageTemplate:
 if __name__ == "__main__":
     import mknodes as mk
 
-    async def main():
+    async def main() -> None:
         md = mdconverter.MdConverter()
         template = PageTemplate(filename="main.html")
         template.announce.content = mk.MkAdmonition("test")

@@ -92,7 +92,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
         self._max_depth = max_depth
         super().__init__(direction=direction, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return reprhelpers.get_repr(
             self,
             klass=self.klass,

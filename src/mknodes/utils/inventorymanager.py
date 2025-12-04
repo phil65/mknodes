@@ -48,7 +48,7 @@ class InventoryItem:
     dispname: str | None = None
     """The item display name."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.dispname = self.dispname or self.name
 
     def format_sphinx(self) -> str:
@@ -194,7 +194,7 @@ class Inventory(BaseInventory):
         *,
         base_url: str | None = None,
         domains: list[str] | None = None,
-    ):
+    ) -> Self:
         """Return an Inventory based on an inventory file located at given url.
 
         Args:

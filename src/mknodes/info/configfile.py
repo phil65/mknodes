@@ -30,7 +30,7 @@ class ConfigFile(superdict.SuperDict[Any]):
     def __repr__(self) -> str:
         return f"{type(self).__name__}({self.path!r})"
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self._data or self.path)
 
     def get_section_text(self, *sections: str, keep_path: bool = False) -> str:
