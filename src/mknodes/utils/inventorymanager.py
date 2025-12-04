@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 from collections.abc import Mapping
+from dataclasses import dataclass
 import io
 import itertools
 import os
@@ -30,34 +31,25 @@ INV_HEADER = """\
 """
 
 
+@dataclass
 class InventoryItem:
     """Inventory item."""
 
-    def __init__(
-        self,
-        name: str,
-        domain: str,
-        role: str,
-        uri: str,
-        priority: int = 1,
-        dispname: str | None = None,
-    ) -> None:
-        """Initialize the object.
+    name: str
+    """The item name."""
+    domain: str
+    """The item domain, like 'python'"""
+    role: str
+    """The item role, like 'class' or 'method'."""
+    uri: str
+    """The item URI."""
+    priority: int = 1
+    """The item priority."""
+    dispname: str | None = None
+    """The item display name."""
 
-        Args:
-            name: The item name.
-            domain: The item domain, like 'python'
-            role: The item role, like 'class' or 'method'.
-            uri: The item URI.
-            priority: The item priority.
-            dispname: The item display name.
-        """
-        self.name: str = name
-        self.domain: str = domain
-        self.role: str = role
-        self.uri: str = uri
-        self.priority: int = priority
-        self.dispname: str = dispname or name
+    def __post_init__(self):
+        self.dispname = self.dispname or self.name
 
     def format_sphinx(self) -> str:
         """Format this item as a Sphinx inventory line and return it."""
@@ -143,10 +135,11 @@ class BaseInventory(dict[str, InventoryItem]):
     def format_sphinx(self) -> bytes:
         """Format this inventory as a Sphinx `objects.inv` file and return it."""
         header = INV_HEADER.format(project=self.project, version=self.version).encode()
-        lines = [
-            item.format_sphinx().encode()
-            for item in sorted(self.values(), key=lambda item: (item.domain, item.name))
-        ]
+
+        def get_key(item: InventoryItem) -> tuple[str, str]:
+            return (item.domain, item.name)
+
+        lines = [item.format_sphinx().encode() for item in sorted(self.values(), key=get_key)]
         return header + zlib.compress(b"\n".join(lines) + b"\n", 9)
 
     @classmethod
