@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import functools
-import importlib
 from typing import TYPE_CHECKING, Any
 
 from packaging.markers import Marker
@@ -13,7 +12,6 @@ from mknodes.utils import log
 if TYPE_CHECKING:
     from collections.abc import Container
     from importlib import metadata
-    import types
 
 
 logger = log.get_logger(__name__)
@@ -39,15 +37,6 @@ def get_extras(markers: list[list[Any] | tuple[Any, ...]]) -> list[str]:
                 if str(marker[0]) == "extra":
                     extras.append(str(marker[2]))
     return extras
-
-
-def import_dotted_path(path: str) -> type | types.ModuleType:
-    if ":" in path:
-        mod_name, kls_name = path.split(":")
-    else:
-        mod_name, kls_name = path, None
-    mod = importlib.import_module(mod_name)
-    return getattr(mod, kls_name) if kls_name else mod
 
 
 class Dependency:

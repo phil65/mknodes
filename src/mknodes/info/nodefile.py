@@ -46,7 +46,6 @@ def get_nodefile(klass: type) -> NodeFile | None:
 def find_file(klass: type) -> pathlib.Path | None:
     path = inspectfilters.get_file(klass)  # type: ignore[arg-type]
     assert path
-    # text = pathhelpers.load_file_cached(path.parent / "metadata.toml")
     if (file := path.parent / f"{klass.__name__}.toml").exists():
         return file
     if (file := path.parent / f"{klass.__name__}.toml".lower()).exists():
