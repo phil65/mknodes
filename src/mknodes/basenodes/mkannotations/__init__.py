@@ -79,7 +79,7 @@ class MkAnnotations(mkcontainer.MkContainer):
         """Return the list of annotations."""
         return self._items  # type: ignore[return-value]
 
-    def __getitem__(self, item: int):
+    def __getitem__(self, item: int) -> MkAnnotation:
         for node in self.get_items():
             if node.num == item:
                 return node

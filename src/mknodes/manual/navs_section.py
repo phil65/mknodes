@@ -41,7 +41,7 @@ def _(nav: mk.MkNav) -> None:
 
 
 @nav.route.nav("Routing")
-def _(nav: mk.MkNav):
+def _(nav: mk.MkNav) -> mk.MkNav:
     page = routing.nav.add_page(is_index=True, icon="material/call-split", hide="toc")
     page += mk.MkCode.for_file(routing.__file__, header="Code for this section")
     page += mk.MkDocStrings(navrouter.NavRouter, header="MkNav.route Docstrings")

@@ -11,7 +11,7 @@ from mknodes.manual import (
 
 class Build:
     @classmethod
-    def build(cls, root: mk.MkNav, theme: mk.Theme):
+    def build(cls, root: mk.MkNav, theme: mk.Theme) -> mk.MkNav:
         b = cls()
         b.on_theme(theme)
         return b.on_root(root)
@@ -24,7 +24,7 @@ class Build:
             theme.add_status_icon("js", "fa6-brands:js", "Uses JavaScript")
             theme.add_status_icon("css", "vaadin:css", "Uses CSS")
 
-    def on_root(self, nav: mk.MkNav):
+    def on_root(self, nav: mk.MkNav) -> mk.MkNav:
         nav.page_template.announcement_bar = mk.MkMetadataBadges("websites")
         nav += get_started_section.nav
         nav += navs_section.nav

@@ -89,7 +89,7 @@ class MkCodeImage(mknode.MkNode):
         storage_options: dict[str, Any] | None = None,
         title: str | None = None,
         **kwargs: Any,
-    ):
+    ) -> Self:
         """Create a MkCode node based on a code file.
 
         Args:

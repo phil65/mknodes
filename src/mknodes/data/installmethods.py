@@ -27,7 +27,7 @@ class InstallMethod:
         return {i.ID: i for i in cls.__subclasses__()}
 
     @classmethod
-    def by_id(cls, identifier: str):
+    def by_id(cls, identifier: str) -> type[InstallMethod]:
         return cls.get_installmethods()[identifier]
 
 

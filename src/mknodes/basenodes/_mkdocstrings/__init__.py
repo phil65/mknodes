@@ -170,7 +170,7 @@ class MkDocStrings(mknode.MkNode):
         return reprhelpers.get_repr(self, obj=self.obj, **option_kwargs)
 
     @property
-    def obj_path(self):
+    def obj_path(self) -> str:
         match self.obj:
             case types.ModuleType():
                 return self.obj.__name__

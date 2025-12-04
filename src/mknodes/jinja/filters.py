@@ -115,7 +115,9 @@ def url(context: runtime.Context, value: str) -> str:
 
 
 @jinja2.pass_context
-def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText | ExtraScriptValue):
+def script_tag(
+    context: runtime.Context, extra_script: str | JSFile | JSText | ExtraScriptValue
+) -> Markup:
     """Converts an ExtraScript value / JSResource to an HTML <script> tag line.
 
     Args:

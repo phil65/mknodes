@@ -59,7 +59,7 @@ class Connector[T]:
         """This can be overridden for a nicer label."""
         return str(self.get_id(item))
 
-    def get_graph_connection_text(self):
+    def get_graph_connection_text(self) -> str:
         lines = [f'{identifier}["{title}"]' for identifier, title in zip(self.items, self.titles)]
         lines += [f"{a} --> {b}" for a, b in self.connections]
         return textwrap.indent("\n".join(lines), "  ")

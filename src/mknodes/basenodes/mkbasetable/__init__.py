@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.basenodes import mkcontainer
 from mknodes.utils import log, reprhelpers
@@ -93,7 +93,7 @@ class MkBaseTable(mkcontainer.MkContainer):
     def add_row(
         self,
         row: Sequence[str | mk.MkNode | None] | dict[str, str | None],
-    ):
+    ) -> None:
         if len(row) != len(self.columns):
             msg = "Row to add doesnt have same length as header"
             raise ValueError(msg)
@@ -112,7 +112,7 @@ class MkBaseTable(mkcontainer.MkContainer):
             yield [data[k][j] for k in data]
 
     @classmethod
-    def for_items(cls, items: list[dict[str, Any]], columns: dict[str, Callable[..., Any]]):
+    def for_items(cls, items: list[dict[str, Any]], columns: dict[str, Callable[..., Any]]) -> Self:
         ls = [{k: v(item) for k, v in columns.items()} for item in items]
         return cls(ls)
 
