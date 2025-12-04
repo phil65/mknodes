@@ -11,7 +11,7 @@ class Logger:
     def __init__(self, logger: logging.Logger) -> None:
         self.logger = logger
 
-    def __getattr__(self, val: Any):
+    def __getattr__(self, val: Any) -> Any:
         return getattr(self.logger, val)
 
 

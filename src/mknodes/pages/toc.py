@@ -24,7 +24,7 @@ def get_toc(md: str, toc_config: dict[str, Any] | None = None) -> TableOfContent
     kwargs: dict[str, Any] = {"extensions": ["toc"]}
     if toc_config:
         kwargs["extension_configs"] = {"toc": toc_config}
-    converter = markdown.Markdown(**kwargs)  # type: ignore[arg-type]
+    converter = markdown.Markdown(**kwargs)
     converter.convert(md)
     toc_tokens = getattr(converter, "toc_tokens", [])
     toc = [_parse_toc_token(i) for i in toc_tokens]

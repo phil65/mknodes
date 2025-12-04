@@ -60,7 +60,7 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
         self.expand_wildcards = expand_wildcards
         self._modules: dict[str, griffe.Module] = {}
 
-    def __getitem__(self, value: str):
+    def __getitem__(self, value: str) -> griffe.Module:
         return self._modules.__getitem__(value)
 
     def __setitem__(self, index: str, value: griffe.Module) -> None:

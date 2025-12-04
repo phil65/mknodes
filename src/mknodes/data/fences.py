@@ -24,7 +24,7 @@ class Fences:
     class_name: str
     format_fn: str | Callable[..., Any]
 
-    def as_dict(self):
+    def as_dict(self) -> dict[str, Any]:
         """Return fence data as a dictionary."""
         return {"name": self.name, "class": self.class_name, "format": self.format_fn}
 

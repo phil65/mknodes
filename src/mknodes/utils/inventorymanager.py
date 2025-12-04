@@ -225,7 +225,7 @@ class InventoryManager(Mapping[str, InventoryItem], metaclass=abc.ABCMeta):
         path: str | os.PathLike[str],
         base_url: str | None = None,
         domains: list[str] | None = None,
-    ):
+    ) -> None:
         import urllib.error
 
         path = str(path)

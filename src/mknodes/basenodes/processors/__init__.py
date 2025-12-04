@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 import textwrap
 
 from jinjarope import mdfilters
@@ -9,6 +9,7 @@ from mknodes.pages.metadata import Metadata
 from mknodes.utils import log
 
 if TYPE_CHECKING:
+    import jinjarope
     import mknodes as mk
 
 logger = log.get_logger(__name__)
@@ -24,7 +25,7 @@ class TextProcessor:
 class AnnotationProcessor(TextProcessor):
     ID = "annotations"
 
-    def __init__(self, item) -> None:
+    def __init__(self, item: mk.MkNode) -> None:
         self.item = item
 
     def run(self, text: str) -> str:
@@ -66,18 +67,18 @@ class ShiftHeaderLevelProcessor(TextProcessor):
 class RenderJinjaProcessor(TextProcessor):
     ID = "render_jinja_templates"
 
-    def __init__(self, env, variables=None) -> None:
+    def __init__(self, env: jinjarope.Environment, variables: dict[str, Any] | None = None) -> None:
         self.env = env
         self.variables = variables or {}
 
     def run(self, text: str) -> str:
-        return self.env.render(text, self.variables)
+        return self.env.render_string(text, self.variables)
 
 
 class AppendCssClassesProcessor(TextProcessor):
     ID = "append_css_classes"
 
-    def __init__(self, item) -> None:
+    def __init__(self, item: mk.MkNode) -> None:
         self.item = item
 
     def run(self, text: str) -> str:
