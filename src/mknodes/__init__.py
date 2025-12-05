@@ -56,6 +56,7 @@ from .pages.mkmodulepage import MkModulePage
 
 from .navs.mknav import MkNav
 from .navs.mkdoc import MkDoc
+from .navs.mkclinav import MkCliNav
 
 from .build import BuildOutput, DocBuilder, MarkdownExporter
 
@@ -126,6 +127,7 @@ __all__ = [
     "MkClassPage",
     "MkClassTable",
     "MkCliDoc",
+    "MkCliNav",
     "MkCode",
     "MkCodeOfConduct",
     "MkCommandOutput",

@@ -46,5 +46,13 @@ def test_creating_module_document():
     assert module_docs.get_children()
 
 
+def test_cli_nav():
+    nav = mk.MkCliNav("mkdocs_mknodes.cli:cli", section_name="CLI")
+    assert nav.cli_info is not None
+    assert nav.cli_info.subcommands
+    children = nav.get_children()
+    assert children
+
+
 if __name__ == "__main__":
     pytest.main([__file__])
