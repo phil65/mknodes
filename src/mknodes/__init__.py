@@ -73,6 +73,7 @@ from .templatenodes.mkreprrawrendered import MkReprRawRendered
 from .templatenodes.mktreeview import MkTreeView
 from .templatenodes.mklicense import MkLicense
 from .templatenodes.mkdependencytable import MkDependencyTable
+from .templatenodes.mkdependencygroups import MkDependencyGroups
 from .templatenodes.mkcommandoutput import MkCommandOutput
 from .templatenodes.mkbadge import MkBadge
 from .templatenodes.mkmetadatabadges import MkMetadataBadges
@@ -136,6 +137,7 @@ __all__ = [
     "MkCritic",
     "MkDataClassInfo",
     "MkDefinitionList",
+    "MkDependencyGroups",
     "MkDependencyTable",
     "MkDetailsBlock",
     "MkDevEnvSetup",

@@ -57,6 +57,25 @@ class ConfigFile(superdict.SuperDict[Any]):
 
 class TomlFile(ConfigFile):
     filetype = "toml"
+    _raw_text: str = ""
+
+    def load_file(self, path: JoinablePathLike, **storage_options: Any) -> None:
+        """Load a file with loader of given file type.
+
+        Args:
+            path: Path to the config file (also supports fsspec protocol URLs)
+            storage_options: Options for fsspec backend
+        """
+        from upath import UPath
+
+        upath = UPath(path, **storage_options) if storage_options else UPath(path)
+        self._raw_text = upath.read_text(encoding="utf-8")
+        self._data = yamling.load(self._raw_text, mode="toml")
+
+    @property
+    def raw_text(self) -> str:
+        """Return raw TOML text (preserves comments)."""
+        return self._raw_text
 
 
 class YamlFile(ConfigFile):

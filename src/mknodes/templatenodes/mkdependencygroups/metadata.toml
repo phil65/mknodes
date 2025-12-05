@@ -1,0 +1,11 @@
+[metadata]
+name = "MkDependencyGroups"
+icon = "mdi:package-variant"
+status = "new"
+group = "documentation"
+
+[examples.extras]
+title = "Optional Dependencies (extras)"
+jinja = """
+{{ mk.MkDependencyGroups(source="extras") }}
+"""
