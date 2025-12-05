@@ -122,7 +122,7 @@ class MkCliNav(mknav.MkNav):
                 self.nav.register(page)
                 children.append(page)
 
-        return children + [index_page]
+        return [*children, index_page]
 
     def _create_index_page(self) -> mkpage.MkPage:
         """Create index page with command table."""
@@ -161,7 +161,7 @@ class MkCliNav(mknav.MkNav):
                     "Description": subcmd.description or "",
                 })
             if table_data:
-                page += mk.MkTable(table_data, columns=["Command", "Description"])
+                page += mk.MkTable(table_data, columns=["Command", "Description"])  # type: ignore[arg-type]
 
         return page
 
