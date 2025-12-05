@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mkcontainer
+from mknodes.pages import metadata
 from mknodes.utils import log
 
 
@@ -51,11 +52,14 @@ class MkTemplate(mkcontainer.MkContainer):
         return self.env.rendered_children
 
     async def to_md_unprocessed(self) -> str:
-        return await self.env.render_template_async(
+        result = await self.env.render_template_async(
             self.template,
             variables=self.variables,
             block_name=self.block,
         )
+        # Strip YAML frontmatter if present
+        _, result = metadata.Metadata.parse(result)
+        return result
 
 
 if __name__ == "__main__":
