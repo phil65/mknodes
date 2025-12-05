@@ -8,15 +8,13 @@ from mknodes.utils import superdict
 
 
 if TYPE_CHECKING:
-    import os
-
-    import upath
+    from upath.types import JoinablePathLike
 
 
 class ConfigFile(superdict.SuperDict[Any]):
     filetype: yamling.SupportedFormats | None = None
 
-    def __init__(self, path: str | os.PathLike[str] | upath.UPath | None = None) -> None:
+    def __init__(self, path: JoinablePathLike | None = None) -> None:
         """Constructor.
 
         Args:
@@ -47,11 +45,7 @@ class ConfigFile(superdict.SuperDict[Any]):
         s = self.get_section(*sections, keep_path=keep_path)
         return "" if s is None else yamling.dump(s, mode=self.filetype or "json")
 
-    def dump_config(self) -> str:
-        """Dump to string with dumper of given file type."""
-        return yamling.dump(self._data, mode=self.filetype or "json")
-
-    def load_file(self, path: str | os.PathLike[str], **storage_options: Any) -> None:
+    def load_file(self, path: JoinablePathLike, **storage_options: Any) -> None:
         """Load a file with loader of given file type.
 
         Args:
@@ -68,7 +62,7 @@ class TomlFile(ConfigFile):
 class YamlFile(ConfigFile):
     filetype = "yaml"
 
-    def load_file(self, path: str | os.PathLike[str], **storage_options: Any) -> None:
+    def load_file(self, path: JoinablePathLike, **storage_options: Any) -> None:
         """Load a file with loader of given file type.
 
         Args:

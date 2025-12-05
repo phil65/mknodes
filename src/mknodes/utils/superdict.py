@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Literal, Self, TypeVar
+from typing import TYPE_CHECKING, Any, Literal
 
 from jinjarope import serializefilters
 from upathtools.helpers import write_file
@@ -18,10 +18,7 @@ if TYPE_CHECKING:
 MarkupTypeStr = Literal["yaml", "json", "toml"]
 
 
-V = TypeVar("V")
-
-
-class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
+class SuperDict[V](MutableMapping[str, V], metaclass=ABCMeta):
     def __init__(self, data: dict[str, V] | None = None, **kwargs: Any) -> None:
         self._data: dict[str, V] = data or {}
         self._data |= kwargs
@@ -48,17 +45,6 @@ class SuperDict(MutableMapping[str, V], metaclass=ABCMeta):
 
     def __repr__(self) -> str:
         return reprhelpers.get_repr(self, data=dict(self._data))
-
-    def rename_key(self, old: str, new: str) -> Self:
-        """Rename a key of the dict while preserving key order.
-
-        Args:
-            old: the old key
-            new: the new key
-        """
-        dct = {new if k == old else k: v for k, v in self.items()}
-        self.update(dct)
-        return self
 
     def get_section(self, *sections: str, keep_path: bool = False) -> Any:
         """Try to get data with given section path from a dict-list structure.
