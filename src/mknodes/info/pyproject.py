@@ -88,11 +88,6 @@ class PyProject(configfile.TomlFile):
         return self.mknodes_section.get("allowed-commit-types", [])
 
     @property
-    def extras_descriptions(self) -> dict[str, str]:
-        """Return a dictionary with descriptions for dependency extras."""
-        return self.mknodes_section.get("extras-descriptions", {})
-
-    @property
     def package_repos(self) -> list[installmethods.InstallMethodStr]:
         """Return a list of package repositories the package is available on."""
         return self.mknodes_section.get("package-repositories", [])
@@ -147,7 +142,6 @@ class PyProject(configfile.TomlFile):
     # @functools.cached_property
     # def context(self):
     #     return contexts.PyProjectContext(
-    #         extras_descriptions=self.extras_descriptions,
     #         configured_build_systems=self.configured_build_systems,
     #         build_system=self.build_system,
     #         package_repos=self.package_repos,

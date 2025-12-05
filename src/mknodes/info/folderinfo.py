@@ -112,8 +112,7 @@ class FolderInfo:
         """Return a dict containing extras and the packages {extra: [package_1, ...]}."""
         dct = {}
         for k, v in self.info.extras.items():
-            desc = self.pyproject.extras_descriptions.get(k, "")
-            dct[k] = PackageExtra(k, packages=v, description=desc)
+            dct[k] = PackageExtra(k, packages=v)
         return dct
 
     @functools.cached_property
