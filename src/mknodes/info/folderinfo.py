@@ -282,7 +282,6 @@ class FolderInfo:
             tool_section=self.pyproject.tool,
             commit_types=self.pyproject.allowed_commit_types,
             package_repos=self.package_repos,
-            line_length=self.pyproject.line_length,
         )
 
 

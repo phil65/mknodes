@@ -113,32 +113,6 @@ class PyProject(configfile.TomlFile):
         """
         return self.mknodes_section.get("cli-obj-path")
 
-    @property
-    def line_length(self) -> int | None:
-        # sourcery skip: assign-if-exp, reintroduce-else
-        """Return the line length (taken from black / ruff / isort config)."""
-        if length := self.tool.get("ruff", {}).get("line-length"):
-            return int(length)
-        if length := self.tool.get("isort", {}).get("line_length"):
-            return int(length)
-        if length := self.tool.get("black", {}).get("line-length"):
-            return int(length)
-        return None
-
-    @property
-    def min_tool_python_version(self) -> tuple[int, int] | None:
-        """Return python target version of the tools.
-
-        Taken from black / ruff / mypy config.
-        """
-        if version := self.tool.get("mypy", {}).get("python_version"):
-            return (3, int(version[-2:]))
-        if version := self.tool.get("black", {}).get("target-version"):
-            return (3, int(version[-2:]))
-        if version := self.tool.get("ruff", {}).get("target-version"):
-            return (3, int(version[-2:]))
-        return None
-
     # @functools.cached_property
     # def context(self):
     #     return contexts.PyProjectContext(
@@ -154,4 +128,3 @@ class PyProject(configfile.TomlFile):
 
 if __name__ == "__main__":
     info = PyProject()
-    print(info.min_tool_python_version)

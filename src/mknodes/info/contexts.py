@@ -115,8 +115,6 @@ class ThemeContext(Context):
 #     """A list of build systems which are configured in pyproject *[pyproject]*"""
 #     tool_section: dict[str, Any] = dataclasses.field(default_factory=dict)
 #     """The tool section of the pyproject file (as a dict) *[pyproject]*"""
-#     line_length: int | None = None
-#     """The line length, if defined by any popular tool *[pyproject]*"""
 #     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
 #         default_factory=list,
 #     )
@@ -226,8 +224,6 @@ class PackageContext(Context):
 
     Comes as a SuperDict. (A Mutable mapping with extended capabilities) *[pyproject]*
     """
-    line_length: int | None = None
-    """The line length, if defined by any popular tool *[pyproject]*"""
     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
         default_factory=list,
     )
