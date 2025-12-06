@@ -94,10 +94,7 @@ class MkPage(mkcontainer.MkContainer):
             tags=tags,
         )
         self._template: pagetemplate.PageTemplate | None = None
-        self.template = template or pagetemplate.PageTemplate(
-            parent=self,
-            extends="main.html",
-        )
+        self.template = template or pagetemplate.PageTemplate(parent=self, extends="main.html")
         if frame := inspect.currentframe():
             self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
@@ -266,8 +263,7 @@ class MkPage(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    doc = MkPage.from_file(
-        "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md",
-    )
+    url = "https://raw.githubusercontent.com/mkdocs/mkdocs/master/docs/getting-started.md"
+    doc = MkPage.from_file(url)
     print(doc)
     # print(doc.children)

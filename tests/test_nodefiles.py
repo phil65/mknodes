@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from jinjarope import inspectfilters
 import pytest
-import yaml  # type: ignore[import-untyped]
 
 import mknodes as mk
 
@@ -71,7 +70,9 @@ async def test_resource_collection_snapshot(node: mk.MkNode, snapshot):
     }
 
     # Convert to YAML string for snapshot (handles functions properly)
-    snapshot_str = yaml.dump(
+    import yamling
+
+    snapshot_str = yamling.dump(
         snapshot_data,
         allow_unicode=True,
         default_flow_style=False,

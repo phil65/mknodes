@@ -69,7 +69,11 @@ class DocBuilder:
                     navs.append(nav)
 
         # Process pages in parallel
-        page_results = await self._process_pages_parallel(pages)
+        loop = asyncio.get_running_loop()
+        with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
+            futures = [loop.run_in_executor(pool, self._process_page_sync, page) for page in pages]
+            page_results = list(await asyncio.gather(*futures))
+
         for result in page_results:
             if result:
                 self._files[result.path] = result.content
@@ -86,20 +90,6 @@ class DocBuilder:
             nav_structure=nav_structure,
             page_count=len([r for r in page_results if r]),
         )
-
-    async def _process_pages_parallel(self, pages: list[mk.MkPage]) -> list[PageResult | None]:
-        """Process pages in parallel using threads.
-
-        Args:
-            pages: Pages to process.
-
-        Returns:
-            List of PageResult objects (None for skipped pages).
-        """
-        loop = asyncio.get_running_loop()
-        with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
-            futures = [loop.run_in_executor(pool, self._process_page_sync, page) for page in pages]
-            return list(await asyncio.gather(*futures))
 
     def _process_page_sync(self, page: mk.MkPage) -> PageResult | None:
         """Process a page synchronously (for thread pool).

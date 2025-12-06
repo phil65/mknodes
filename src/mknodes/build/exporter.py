@@ -47,8 +47,6 @@ class MarkdownExporter:
         for file_path, content in output.files.items():
             full_path = target_path / file_path
             full_path.parent.mkdir(parents=True, exist_ok=True)
-
-            # Write content
             if isinstance(content, bytes):
                 full_path.write_bytes(content)
             else:

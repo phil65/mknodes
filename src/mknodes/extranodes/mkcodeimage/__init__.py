@@ -74,11 +74,7 @@ class MkCodeImage(mknode.MkNode):
                 return inspecthelpers.get_source(self._code)
 
     async def to_md_unprocessed(self) -> str:
-        content = get_svg_for_code(
-            self.code,
-            language=self.language,
-            title=self.title,
-        )
+        content = get_svg_for_code(self.code, language=self.language, title=self.title)
         return f"<body>\n\n{content}\n\n</body>\n"
 
     @classmethod
