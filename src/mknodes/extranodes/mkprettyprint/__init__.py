@@ -1,15 +1,41 @@
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import Any
 
+import collections
+from collections.abc import ItemsView, KeysView, ValuesView
+from types import MappingProxyType, SimpleNamespace
+
+
+from mknodes.data.datatypes import DataclassInstance
 from mknodes.templatenodes import mktemplate
 from mknodes.utils import log
 
-if TYPE_CHECKING:
-    from mknodes.data import datatypes
-
 
 logger = log.get_logger(__name__)
+
+
+PrettyPrintableType = (
+    dict[str, Any]
+    | list[Any]
+    | str
+    | tuple[Any, ...]
+    | set[Any]
+    | bytes
+    | bytearray
+    | MappingProxyType[str, Any]
+    | SimpleNamespace
+    | ValuesView[Any]
+    | KeysView[Any]
+    | collections.Counter[Any]
+    | collections.ChainMap[Any, Any]
+    | collections.deque[Any]
+    | collections.UserDict[Any, Any]
+    | collections.UserList[Any]
+    | collections.UserString
+    | ItemsView[str, Any]
+    | DataclassInstance
+)
 
 
 class MkPrettyPrint(mktemplate.MkTemplate):
@@ -19,7 +45,7 @@ class MkPrettyPrint(mktemplate.MkTemplate):
 
     def __init__(
         self,
-        obj: datatypes.PrettyPrintableType,
+        obj: PrettyPrintableType,
         *,
         nest_indent: int = 1,
         maximum_depth: int | None = None,

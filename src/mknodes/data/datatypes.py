@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import collections
-from collections.abc import Callable, ItemsView, KeysView, ValuesView
+from collections.abc import Callable
 import types
-from types import MappingProxyType, SimpleNamespace
 from typing import TYPE_CHECKING, Any, ClassVar, Literal, Protocol, runtime_checkable
 
 
@@ -78,29 +76,6 @@ MetadataTypeStr = (
 @runtime_checkable
 class DataclassInstance(Protocol):
     __dataclass_fields__: ClassVar[dict[str, Field[Any]]]
-
-
-PrettyPrintableType = (
-    dict[str, Any]
-    | list[Any]
-    | str
-    | tuple[Any, ...]
-    | set[Any]
-    | bytes
-    | bytearray
-    | MappingProxyType[str, Any]
-    | SimpleNamespace
-    | ValuesView[Any]
-    | KeysView[Any]
-    | collections.Counter[Any]
-    | collections.ChainMap[Any, Any]
-    | collections.deque[Any]
-    | collections.UserDict[Any, Any]
-    | collections.UserList[Any]
-    | collections.UserString
-    | ItemsView[str, Any]
-    | DataclassInstance
-)
 
 
 PageStatusStr = Literal["new", "deprecated", "encrypted"]

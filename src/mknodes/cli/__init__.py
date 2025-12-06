@@ -109,7 +109,6 @@ async def _build_async(
     context = contexts.ProjectContext(
         metadata=info.context,
         git=info.git.context,
-        # github=info.github.context,
         theme=theme.context,
         links=linkprovider,
         env_config=jinjarope.EnvConfig(loader=contexts.DEFAULT_LOADER),

@@ -66,10 +66,8 @@ class MkShowcase(mkcontainer.MkContainer):
     async def get_content(self) -> resources.NodeContent:
         """Single-pass: get content with grid formatting and resources."""
         items = self.get_items()
-
         # Collect content from children
         child_contents = [await item.get_content() for item in items]
-
         # Build markdown with grid formatting
         text = ""
         content_iter = iter(zip(items, child_contents))
