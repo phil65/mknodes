@@ -99,9 +99,5 @@ class MkShields(mkcontainer.MkContainer):
 
 
 if __name__ == "__main__":
-    shields = MkShields(
-        shields=["version", "status", "codecov"],
-        user="phil65",
-        project="prettyqt",
-    )
+    shields = MkShields(shields=["version", "status", "codecov"], user="phil65", project="prettyqt")
     print(shields)

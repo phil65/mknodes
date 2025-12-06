@@ -44,11 +44,7 @@ class MkTemplate(mkcontainer.MkContainer):
         self.variables = variables or {}
 
     def get_items(self):
-        self.env.render_template(
-            self.template,
-            variables=self.variables,
-            block_name=self.block,
-        )
+        self.env.render_template(self.template, variables=self.variables, block_name=self.block)
         return self.env.rendered_children
 
     async def get_content(self) -> resources.NodeContent:
@@ -61,7 +57,6 @@ class MkTemplate(mkcontainer.MkContainer):
         )
         # Strip YAML frontmatter if present
         _, md = metadata.Metadata.parse(result)
-
         # Collect resources from rendered children (already created by render above)
         aggregated = await self._build_node_resources()
         for child in self.env.rendered_children:
