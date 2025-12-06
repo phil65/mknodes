@@ -36,10 +36,16 @@ class MkTask(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.value = value
 
-    async def to_md_unprocessed(self) -> str:
-        text = await super().to_md_unprocessed()
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content with task formatting and resources."""
+        content = await super().get_content()
         val = "x" if self.value else " "
-        return f"- [{val}] {filters.do_indent(str(text))}\n"
+        md = f"- [{val}] {filters.do_indent(content.markdown)}\n"
+        return resources.NodeContent(markdown=md, resources=content.resources)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 class MkTaskList(mkcontainer.MkContainer):

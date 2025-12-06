@@ -39,11 +39,35 @@ class MkFootNote(mkcontainer.MkContainer):
     def __repr__(self) -> str:
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
-    async def to_md_unprocessed(self) -> str:
-        items = [await i.to_markdown() for i in self.get_items()]
-        item_str = "\n".join(items)
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content with footnote formatting and resources."""
+        items = self.get_items()
+
+        # Collect content from children
+        child_contents = [await item.get_content() for item in items]
+
+        # Build markdown with footnote formatting
+        child_markdowns = []
+        for item, child_content in zip(items, child_contents):
+            md = child_content.markdown
+            for proc in item.get_processors():
+                md = proc.run(md)
+            child_markdowns.append(md)
+
+        item_str = "\n".join(child_markdowns)
         indented = textwrap.indent(item_str, "    ")
-        return f"[^{self.num}]:\n{indented}\n"
+        md = f"[^{self.num}]:\n{indented}\n"
+
+        # Aggregate resources
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 class MkFootNotes(mkcontainer.MkContainer):
@@ -128,13 +152,40 @@ class MkFootNotes(mkcontainer.MkContainer):
         else:
             items.append(node)
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content from sorted footnotes and resources."""
         items = self.get_items()
         if not items:
-            return ""
+            return resources.NodeContent(
+                markdown="",
+                resources=await self._build_node_resources(),
+            )
+
         items = sorted(items, key=lambda x: x.num)
-        texts = [await i.to_markdown() for i in items]
-        return "".join(texts)
+
+        # Collect content from children
+        child_contents = [await item.get_content() for item in items]
+
+        # Build markdown - children already formatted
+        child_markdowns = []
+        for item, child_content in zip(items, child_contents):
+            md = child_content.markdown
+            for proc in item.get_processors():
+                md = proc.run(md)
+            child_markdowns.append(md)
+
+        md = "".join(child_markdowns)
+
+        # Aggregate resources
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

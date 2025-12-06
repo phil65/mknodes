@@ -99,10 +99,20 @@ class MkCode(mkcontainer.MkContainer):
             attr_str = " " + attr_str
         return f"{{{classes}{attr_str}}}"
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get code block markdown and resources."""
         space = " " if self.fence_title else ""
         first_line = f"{self.fence_boundary}{space}{self.fence_title}"
-        return f"{first_line}\n{await self.get_text()}\n{self.fence_boundary}"
+        md = f"{first_line}\n{await self.get_text()}\n{self.fence_boundary}"
+
+        # Get own resources (don't aggregate children since we format them as text)
+        aggregated = await self._build_node_resources()
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
     @classmethod
     def for_file(

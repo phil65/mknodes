@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.pages import mkpage
-from mknodes.utils import log
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -45,9 +45,23 @@ class MkTemplatePage(mkpage.MkPage):
         """Extra variables for the environment. Can be overridden by subclasses."""
         return {}
 
-    async def to_md_unprocessed(self) -> str:
-        return await self.env.render_template_async(
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: render template once, return both markdown and resources."""
+        # Render template once
+        md = await self.env.render_template_async(
             self.template_path,
             parent_template=self.template_parent,
             variables=self.extra_variables,
         )
+
+        # Collect resources from rendered children (already created by render above)
+        aggregated = await self._build_node_resources()
+        for child in self.env.rendered_children:
+            child_content = await child.get_content()
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown

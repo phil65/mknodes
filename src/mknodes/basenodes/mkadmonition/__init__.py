@@ -4,7 +4,7 @@ import textwrap
 
 from typing import Any, Literal, TYPE_CHECKING
 
-from mknodes.basenodes import mkcontainer
+from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, resources
 
 if TYPE_CHECKING:
@@ -73,15 +73,41 @@ class MkAdmonition(mkcontainer.MkContainer):
         optional = ann_marker + inline_label
         return f"{block_start} {self.typ}{optional}{title}"
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get markdown with custom admonition formatting and resources."""
         items = self.get_items()
         if not items and not self.title:
-            return ""
-        annotations = f"\n{self.annotations}\n" if self.annotations else ""
-        texts = [await i.to_markdown() for i in items]
-        text = "\n".join(texts)
+            return resources.NodeContent(
+                markdown="",
+                resources=await self._build_node_resources(),
+            )
+
+        # Collect content from children
+        child_contents = [await item.get_content() for item in items]
+
+        # Build markdown with admonition formatting
+        child_markdowns = []
+        for item, child_content in zip(items, child_contents):
+            md = child_content.markdown
+            for proc in item.get_processors():
+                md = proc.run(md)
+            child_markdowns.append(md)
+
+        text = "\n".join(child_markdowns)
         indented = textwrap.indent(text, "    ")
-        return f"{self.title_line}\n{indented}\n{annotations}"
+        annotations = f"\n{self.annotations}\n" if self.annotations else ""
+        md = f"{self.title_line}\n{indented}\n{annotations}"
+
+        # Aggregate resources
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer, mknode, mktabs, mktext
-from mknodes.utils import log, reprhelpers
+from mknodes.utils import log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
@@ -119,15 +119,42 @@ class MkTabContainer(mkcontainer.MkContainer):
             _filter_empty=True,
         )
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content from tabs and resources."""
         items = self.get_items()
         if not items:
-            return ""
+            return resources.NodeContent(
+                markdown="",
+                resources=await self._build_node_resources(),
+            )
+
         if self.select_tab is not None:
             self.set_selected(self.select_tab)
         items[0].new = True
-        texts = [await i.to_markdown() for i in items]
-        return self.block_separator.join(texts)
+
+        # Collect content from children
+        child_contents = [await item.get_content() for item in items]
+
+        # Build markdown - apply each child's processors
+        child_markdowns = []
+        for item, child_content in zip(items, child_contents):
+            md = child_content.markdown
+            for proc in item.get_processors():
+                md = proc.run(md)
+            child_markdowns.append(md)
+
+        md = self.block_separator.join(child_markdowns)
+
+        # Aggregate resources
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

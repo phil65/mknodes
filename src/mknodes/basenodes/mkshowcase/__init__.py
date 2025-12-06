@@ -10,7 +10,7 @@ from jinja2 import filters
 
 from mknodes.basenodes import mkcard, mkcontainer
 from mknodes.pages import mkpage
-from mknodes.utils import log, pathhelpers
+from mknodes.utils import log, pathhelpers, resources
 
 
 if TYPE_CHECKING:
@@ -63,17 +63,39 @@ class MkShowcase(mkcontainer.MkContainer):
             case _:
                 return super().to_child_node(item)
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content with grid formatting and resources."""
+        items = self.get_items()
+
+        # Collect content from children
+        child_contents = [await item.get_content() for item in items]
+
+        # Build markdown with grid formatting
         text = ""
-        for items in filters.do_batch(self.get_items(), self.column_count):
+        content_iter = iter(zip(items, child_contents))
+        for batch in filters.do_batch(items, self.column_count):
             text += '<div class="row">'
-            for item in items:
+            for _ in batch:
+                item, child_content = next(content_iter)
+                # Apply child's processors
+                md = child_content.markdown
+                for proc in item.get_processors():
+                    md = proc.run(md)
                 text += '\n  <div class="column">\n'
-                item_md = await item.to_markdown()
-                text += textwrap.indent(item_md, "    ")
+                text += textwrap.indent(md, "    ")
                 text += "  </div>"
             text += "\n</div>"
-        return text
+
+        # Aggregate resources
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=text, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
     def add_card(
         self,

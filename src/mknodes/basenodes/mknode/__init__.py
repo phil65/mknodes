@@ -444,7 +444,60 @@ class MkNode:
         return toc.get_toc(await self.to_markdown())
 
     async def to_md_unprocessed(self) -> str:
-        return NotImplemented
+        """Return raw markdown for this node. Override in subclasses for custom markdown."""
+        return ""
+
+    async def get_content(self) -> resources.NodeContent:
+        """Return markdown and resources for this node in a single pass.
+
+        Override this method in subclasses to compute both markdown and resources
+        together when they share expensive computation.
+
+        Default implementation calls legacy methods `to_md_unprocessed()` and
+        `_build_node_resources()` for backward compatibility.
+        """
+        return resources.NodeContent(
+            markdown=await self.to_md_unprocessed(),
+            resources=await self._build_node_resources(),
+        )
+
+    async def _build_node_resources(self) -> resources.Resources:
+        """Build resources from class attributes and mods. Internal helper."""
+        extension: dict[str, dict[str, Any]] = {
+            k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS
+        }
+
+        mod_resources = self.mods.get_resources()
+        css_resources: list[resources.CSSType] = []
+        for css in self.CSS + mod_resources.css:
+            if isinstance(css, resources.CSSFile) and css.is_local():
+                text = await self.env.render_template_async(css.link)
+                css_resource = resources.CSSText(text, css.link)
+                css_resources.append(css_resource)
+            else:
+                css_resources.append(css)
+        js_resources: list[resources.JSType] = []
+        for js_file in self.JS_FILES + mod_resources.js:
+            if isinstance(js_file, resources.JSFile) and js_file.is_local():
+                text = await self.env.render_template_async(js_file.link)
+                js_resource = resources.JSText(
+                    text,
+                    js_file.link,
+                    defer=js_file.defer,
+                    async_=js_file.async_,
+                    crossorigin=js_file.crossorigin,
+                    typ=js_file.typ,
+                    is_library=js_file.is_library,
+                )
+                js_resources.append(js_resource)
+            else:
+                js_resources.append(js_file)
+        return resources.Resources(
+            js=js_resources,
+            markdown_extensions=extension,
+            plugins=self.REQUIRED_PLUGINS,
+            css=css_resources,
+        )
 
     async def to_markdown(self) -> str:
         """Outputs markdown for self and all children."""
@@ -526,42 +579,12 @@ class MkNode:
         self.mods._css_classes.append(class_name)
 
     async def get_node_resources(self) -> resources.Resources:
-        """Return the resources specific for this node."""
-        extension: dict[str, dict[str, Any]] = {
-            k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS
-        }
+        """Return the resources specific for this node.
 
-        mod_resources = self.mods.get_resources()
-        css_resources: list[resources.CSSType] = []
-        for css in self.CSS + mod_resources.css:
-            if isinstance(css, resources.CSSFile) and css.is_local():
-                text = await self.env.render_template_async(css.link)
-                css_resource = resources.CSSText(text, css.link)
-                css_resources.append(css_resource)
-            else:
-                css_resources.append(css)
-        js_resources: list[resources.JSType] = []
-        for js_file in self.JS_FILES + mod_resources.js:
-            if isinstance(js_file, resources.JSFile) and js_file.is_local():
-                text = await self.env.render_template_async(js_file.link)
-                js_resource = resources.JSText(
-                    text,
-                    js_file.link,
-                    defer=js_file.defer,
-                    async_=js_file.async_,
-                    crossorigin=js_file.crossorigin,
-                    typ=js_file.typ,
-                    is_library=js_file.is_library,
-                )
-                js_resources.append(js_resource)
-            else:
-                js_resources.append(js_file)
-        return resources.Resources(
-            js=js_resources,
-            markdown_extensions=extension,
-            plugins=self.REQUIRED_PLUGINS,
-            css=css_resources,
-        )
+        Default implementation calls `_build_node_resources()`. Override
+        `get_content()` if you need to compute markdown and resources together.
+        """
+        return await self._build_node_resources()
 
     async def get_resources(self) -> resources.Resources:
         """Return the "final" resources object."""

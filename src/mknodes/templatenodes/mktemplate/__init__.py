@@ -4,7 +4,7 @@ from typing import Any
 
 from mknodes.basenodes import mkcontainer
 from mknodes.pages import metadata
-from mknodes.utils import log
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -51,15 +51,28 @@ class MkTemplate(mkcontainer.MkContainer):
         )
         return self.env.rendered_children
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: render template once, return both markdown and resources."""
+        # Render template once
         result = await self.env.render_template_async(
             self.template,
             variables=self.variables,
             block_name=self.block,
         )
         # Strip YAML frontmatter if present
-        _, result = metadata.Metadata.parse(result)
-        return result
+        _, md = metadata.Metadata.parse(result)
+
+        # Collect resources from rendered children (already created by render above)
+        aggregated = await self._build_node_resources()
+        for child in self.env.rendered_children:
+            child_content = await child.get_content()
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

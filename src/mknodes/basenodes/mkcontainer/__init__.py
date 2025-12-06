@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import Any, Self
 
 from mknodes.basenodes import mknode
-from mknodes.utils import log
+from mknodes.utils import log, resources
 
 
 logger = log.get_logger(__name__)
@@ -36,8 +36,32 @@ class MkContainerBase(mknode.MkNode):
         return self
 
     async def to_md_unprocessed(self) -> str:
-        items = [await i.to_markdown() for i in self.get_items()]
-        return self.block_separator.join(items)
+        content = await self.get_content()
+        return content.markdown
+
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: collect markdown and resources from children."""
+        items = self.get_items()
+
+        # Collect content from all children in one pass
+        child_contents = [await item.get_content() for item in items]
+
+        # Aggregate child markdown - apply each child's processors
+        child_markdowns = []
+        for item, child_content in zip(items, child_contents):
+            md = child_content.markdown
+            for proc in item.get_processors():
+                md = proc.run(md)
+            child_markdowns.append(md)
+
+        md = self.block_separator.join(child_markdowns)
+
+        # Aggregate resources: own + all children
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
 
     @abstractmethod
     def get_items(self) -> list[mknode.MkNode]:

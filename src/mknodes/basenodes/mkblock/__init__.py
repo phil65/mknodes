@@ -5,7 +5,7 @@ import textwrap
 from typing import TYPE_CHECKING, Any
 
 from mknodes.basenodes import mkcontainer
-from mknodes.utils import log
+from mknodes.utils import log, resources
 
 
 if TYPE_CHECKING:
@@ -48,11 +48,6 @@ class MkBlock(mkcontainer.MkContainer):
         block_level = sum(isinstance(i, MkBlock) for i in self.ancestors)
         return "/" * (block_level + 3)
 
-    async def get_content_block(self) -> str:
-        """Returns the block content. Can be reimplemented by subclasses."""
-        text = await super().to_md_unprocessed()
-        return textwrap.indent(text, self.indent).rstrip("\n") + "\n"
-
     @property
     def attributes_block(self) -> str:
         """The text block for attributes.
@@ -64,13 +59,29 @@ class MkBlock(mkcontainer.MkContainer):
         lines = [f"    {k}: {v}" for k, v in self.attributes.items() if v is not None]
         return "\n".join(lines) + "\n"
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content_block(self) -> str:
+        """Returns the block content. Can be reimplemented by subclasses."""
+        content = await super().get_content()
+        return textwrap.indent(content.markdown, self.indent).rstrip("\n") + "\n"
+
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content with block formatting and resources."""
+        # Get content from children
+        parent_content = await super().get_content()
+
+        # Build the block-formatted markdown
         boundary = self.fence_boundary
         base = f"{boundary} {self.name}"
         if self.argument:
             base += f" | {self.argument}"
-        content = await self.get_content_block()
-        return f"{base}\n{self.attributes_block}\n{content}{boundary}\n"
+        content_text = await self.get_content_block()
+        md = f"{base}\n{self.attributes_block}\n{content_text}{boundary}\n"
+
+        return resources.NodeContent(markdown=md, resources=parent_content.resources)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

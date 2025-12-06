@@ -51,10 +51,16 @@ class MkCritic(mkcontainer.MkContainer):
             case _:
                 raise TypeError(self.typ)
 
-    async def to_md_unprocessed(self) -> str:
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content with critic formatting and resources."""
+        content = await super().get_content()
         left, right = self.marks
-        content = await super().to_md_unprocessed()
-        return f"{{{left}\n\n{content}\n\n{right}}}"
+        md = f"{{{left}\n\n{content.markdown}\n\n{right}}}"
+        return resources.NodeContent(markdown=md, resources=content.resources)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

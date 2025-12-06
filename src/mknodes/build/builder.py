@@ -5,14 +5,13 @@ from __future__ import annotations
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from mknodes.utils import log
+from mknodes.utils import icons, log, resources
 
 
 if TYPE_CHECKING:
     import mknodes as mk
-    from mknodes.utils import resources
 
     from .output import BuildOutput
 
@@ -132,8 +131,13 @@ class DocBuilder:
 
         path = page.resolved_file_path
         logger.debug("Processing page: %s", path)
-        req = await page.get_resources()
-        md = await page.to_markdown()
+        # Single-pass: get markdown and aggregated resources together
+        content = await page.get_content()
+        req = self._with_base_extensions(content.resources, page)
+        md = content.markdown
+        # Apply page's processors
+        for proc in page.get_processors():
+            md = proc.run(md)
         if self.render_jinja:
             render = page.metadata.get("render_macros", True)
             if render:
@@ -148,7 +152,32 @@ class DocBuilder:
         """
         path = nav.resolved_file_path
         logger.debug("Processing nav: %s", nav.title or "[ROOT]")
-        req = await nav.get_node_resources()
-        self._file_resources[path] = req
-        md = await nav.to_markdown()
+        # Single-pass: get markdown and aggregated resources together
+        content = await nav.get_content()
+        self._file_resources[path] = self._with_base_extensions(content.resources, nav)
+        md = content.markdown
+        # Apply nav's processors
+        for proc in nav.get_processors():
+            md = proc.run(md)
         self._files[path] = md
+
+    def _with_base_extensions(
+        self, req: resources.Resources, node: mk.MkNode
+    ) -> resources.Resources:
+        """Add base markdown extensions to resources."""
+        base_extensions: dict[str, dict[str, Any]] = {
+            "attr_list": {},
+            "md_in_html": {},
+            "pymdownx.emoji": {
+                "emoji_index": icons.twemoji,
+                "emoji_generator": icons.to_svg,
+            },
+            "pymdownx.magiclink": dict(
+                repo_url_shorthand=True,
+                user=node.ctx.metadata.repository_username,
+                repo=node.ctx.metadata.repository_name,
+            ),
+        }
+        result = resources.Resources(markdown_extensions=base_extensions)
+        result.merge(req)
+        return result

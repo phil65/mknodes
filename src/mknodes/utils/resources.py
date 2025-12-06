@@ -357,6 +357,14 @@ CSSType = CSSFile | CSSText
 JSType = JSFile | JSText
 
 
+@dataclasses.dataclass
+class NodeContent:
+    """Result of rendering a node - markdown and resources combined."""
+
+    markdown: str
+    resources: Resources
+
+
 if __name__ == "__main__":
     link = JSText("jkfdjl", "kfjdsdkljf", async_=True)
     print(link)

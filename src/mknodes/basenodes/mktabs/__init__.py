@@ -7,6 +7,7 @@ from typing import Any, TYPE_CHECKING
 from mknodes.basenodes import mkblock, mkcontainer
 from mknodes.utils import log, reprhelpers, resources
 
+
 if TYPE_CHECKING:
     from mknodes.basenodes import mknode
 
@@ -124,9 +125,22 @@ class MkTab(mkcontainer.MkContainer):
         # we deal with attaching annotations ourselves.
         return text
 
-    async def to_md_unprocessed(self) -> str:
-        items = [await i.to_markdown() for i in self.get_items()]
-        text = "\n\n".join(items)
+    async def get_content(self) -> resources.NodeContent:
+        """Single-pass: get content with tab formatting and resources."""
+        items = self.get_items()
+
+        # Collect content from children
+        child_contents = [await item.get_content() for item in items]
+
+        # Build markdown with tab formatting
+        child_markdowns = []
+        for item, child_content in zip(items, child_contents):
+            md = child_content.markdown
+            for proc in item.get_processors():
+                md = proc.run(md)
+            child_markdowns.append(md)
+
+        text = "\n\n".join(child_markdowns)
         text = text.rstrip("\n")
         if self.annotations:
             annotates = str(self.annotations)
@@ -139,7 +153,18 @@ class MkTab(mkcontainer.MkContainer):
         else:
             mark = ""
         lines = [f'==={mark} "{self.title}"', text]
-        return "\n".join(lines) + "\n"
+        md = "\n".join(lines) + "\n"
+
+        # Aggregate resources
+        aggregated = await self._build_node_resources()
+        for child_content in child_contents:
+            aggregated.merge(child_content.resources)
+
+        return resources.NodeContent(markdown=md, resources=aggregated)
+
+    async def to_md_unprocessed(self) -> str:
+        content = await self.get_content()
+        return content.markdown
 
 
 if __name__ == "__main__":

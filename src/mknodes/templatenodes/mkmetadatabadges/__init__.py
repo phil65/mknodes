@@ -113,10 +113,6 @@ class MkMetadataBadges(mkcontainer.MkContainer):
             for label, value, link in self.badge_content
         ]
 
-    async def to_md_unprocessed(self) -> str:
-        items = [await i.to_markdown() for i in self.get_items()]
-        return self.block_separator.join(items)
-
 
 if __name__ == "__main__":
     node = MkMetadataBadges.with_context("websites")
