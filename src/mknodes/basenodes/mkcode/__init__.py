@@ -15,6 +15,7 @@ from mknodes.utils import classhelpers, inspecthelpers, log, resources
 
 
 if TYPE_CHECKING:
+    from upath.types import JoinablePathLike
     import os
     import mknodes as mk
 
@@ -117,7 +118,7 @@ class MkCode(mkcontainer.MkContainer):
     @classmethod
     def for_file(
         cls,
-        path: str | os.PathLike[str],
+        path: JoinablePathLike,
         *,
         linenums: bool = True,
         highlight_caller: bool = True,

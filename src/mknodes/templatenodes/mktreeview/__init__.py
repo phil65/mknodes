@@ -9,6 +9,7 @@ from mknodes.basenodes import mkcode, mknode
 from mknodes.utils import log
 
 if TYPE_CHECKING:
+    from upath.types import JoinablePathLike
     from mknodes.data import treestyles
     from collections.abc import Callable
 
@@ -27,7 +28,7 @@ class MkTreeView(mkcode.MkCode):
 
     def __init__(
         self,
-        tree: str | os.PathLike[str] | upath.UPath | mknode.MkNode,
+        tree: JoinablePathLike | mknode.MkNode,
         *,
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] = "rounded",
         maximum_depth: int | None = None,
