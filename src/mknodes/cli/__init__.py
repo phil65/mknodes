@@ -9,7 +9,7 @@ from pathlib import Path
 
 import jinjarope
 import typer as t
-
+import logfire
 from mknodes.utils import classhelpers, log
 import mknodes as mk
 from mknodes.info import contexts, folderinfo, reporegistry
@@ -80,6 +80,7 @@ def build(
     Example:
         mknodes build -s mypackage.docs:build -o ./docs
     """
+    logfire.configure()
     asyncio.run(_build_async(script, output, repo_url, render_jinja, workers))
 
 

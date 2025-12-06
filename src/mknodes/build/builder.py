@@ -7,6 +7,8 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
+import logfire
+
 from mknodes.utils import icons, log, resources
 
 
@@ -107,6 +109,7 @@ class DocBuilder:
         finally:
             loop.close()
 
+    @logfire.instrument("Processing page {page.title}")
     async def _process_page(self, page: mk.MkPage) -> PageResult | None:
         """Process a single page: render and collect resources.
 
@@ -134,6 +137,7 @@ class DocBuilder:
                 md = await page.env.render_string_async(md)
         return PageResult(path=path, content=md, resources=req)
 
+    @logfire.instrument("Processing nav {nav.title}")
     async def _process_nav(self, nav: mk.MkNav) -> None:
         """Process a navigation section.
 

@@ -72,7 +72,7 @@ async def test_resource_collection_snapshot(node: mk.MkNode, snapshot):
     # Convert to YAML string for snapshot (handles functions properly)
     import yamling
 
-    snapshot_str = yamling.dump(
+    snapshot_str = yamling.dump_yaml(
         snapshot_data,
         allow_unicode=True,
         default_flow_style=False,
