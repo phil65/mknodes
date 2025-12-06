@@ -1,0 +1,20 @@
+assets: []
+css: []
+js: []
+markdown_extensions:
+  attr_list: {}
+  md_in_html: {}
+  pymdownx.emoji:
+    emoji_generator: !!python/name:mknodes.utils.icons.to_svg ''
+    emoji_index: !!python/name:mknodes.utils.icons.twemoji ''
+  pymdownx.magiclink:
+    repo: mknodes
+    repo_url_shorthand: true
+    user: phil65
+  pymdownx.superfences:
+    custom_fences:
+    - class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format ''
+      name: mermaid
+packages: []
+plugins: []

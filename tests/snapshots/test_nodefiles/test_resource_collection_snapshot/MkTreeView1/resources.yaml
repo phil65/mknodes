@@ -1,0 +1,20 @@
+assets: []
+css: []
+js: []
+markdown_extensions:
+  attr_list: {}
+  md_in_html: {}
+  pymdownx.emoji:
+    emoji_generator: !!python/name:mknodes.utils.icons.to_svg ''
+    emoji_index: !!python/name:mknodes.utils.icons.twemoji ''
+  pymdownx.highlight:
+    anchor_linenums: true
+    line_spans: __span
+    pygments_lang_class: true
+  pymdownx.magiclink:
+    repo: mknodes
+    repo_url_shorthand: true
+    user: phil65
+  pymdownx.superfences: {}
+packages: []
+plugins: []

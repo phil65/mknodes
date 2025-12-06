@@ -1,0 +1,17 @@
+assets: []
+css: []
+js:
+- https://rawgit.com/ruyadorno/simple-slider/master/dist/simpleslider.min.js
+- JSText(filename='slideshow_fbe16a9.js')
+markdown_extensions:
+  attr_list: {}
+  md_in_html: {}
+  pymdownx.emoji:
+    emoji_generator: !!python/name:mknodes.utils.icons.to_svg ''
+    emoji_index: !!python/name:mknodes.utils.icons.twemoji ''
+  pymdownx.magiclink:
+    repo: mknodes
+    repo_url_shorthand: true
+    user: phil65
+packages: []
+plugins: []

@@ -1,0 +1,16 @@
+assets: []
+css: []
+js: []
+markdown_extensions:
+  attr_list: {}
+  md_in_html: {}
+  pymdownx.critic: {}
+  pymdownx.emoji:
+    emoji_generator: !!python/name:mknodes.utils.icons.to_svg ''
+    emoji_index: !!python/name:mknodes.utils.icons.twemoji ''
+  pymdownx.magiclink:
+    repo: mknodes
+    repo_url_shorthand: true
+    user: phil65
+packages: []
+plugins: []
