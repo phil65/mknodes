@@ -8,9 +8,6 @@ from markupsafe import Markup
 
 
 if TYPE_CHECKING:
-    import types
-
-    import griffe
     from jinja2 import runtime
     from mkdocs.config.config_options import ExtraScriptValue
 
@@ -45,28 +42,6 @@ async def get_url(env: NodeEnvironment, target: LinkableType) -> str:
         target: The thing to link to
     """
     return await env.node.ctx.links.get_url(target)
-
-
-@jinja2.pass_environment
-def link_for_class(env: NodeEnvironment, kls: type | str | griffe.Class) -> str:
-    """Return a markdown link for given class.
-
-    Args:
-        env: jinja environment
-        kls: Klass to get a link for
-    """
-    return env.node.ctx.links.link_for_klass(kls)
-
-
-@jinja2.pass_environment
-def link_for_module(env: NodeEnvironment, module: types.ModuleType | str | griffe.Module) -> str:
-    """Return a markdown link for given module.
-
-    Args:
-        env: jinja environment
-        module: Klass to get a link for
-    """
-    return env.node.ctx.links.link_for_module(module)
 
 
 async def to_html(node: mk.MkNode) -> str:

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import abc
-from collections.abc import Mapping, MutableMapping
 import dataclasses
 import pathlib
 from typing import TYPE_CHECKING, Any
@@ -17,7 +15,7 @@ from mknodes.utils import log, superdict
 
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Mapping
     import datetime
     import types
 
@@ -305,53 +303,6 @@ class GitHubContext(Context):
             name=user.name,
             twitter_username=user.twitter_username,
         )
-
-
-@dataclasses.dataclass
-class EnvironmentContext(MutableMapping[str, Any], metaclass=abc.ABCMeta):
-    loader: dict[str, dict[str, Any]] = dataclasses.field(default_factory=dict)
-    block_start_string: str | None = None
-    block_end_string: str | None = None
-    variable_start_string: str | None = None
-    variable_end_string: str | None = None
-    undefined: str | None = None
-
-    def __getitem__(self, value):
-        return getattr(self, value)
-
-    def __setitem__(self, index, value) -> None:
-        setattr(self, index, value)
-
-    def __delitem__(self, index) -> None:
-        setattr(self, index, None)
-
-    def __len__(self) -> int:
-        return len(dataclasses.fields(self))
-
-    def __iter__(self) -> Iterator[str]:
-        return iter(i.name for i in dataclasses.fields(self))
-
-
-@dataclasses.dataclass
-class ContextConfig(Mapping[str, Any], metaclass=abc.ABCMeta):
-    repo_url: str = "."
-    clone_depth: int = 100
-    jinja_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
-    llm_config: Mapping[str, Any] = dataclasses.field(default_factory=dict)
-    base_url: str = ""
-    use_directory_urls: bool = True
-
-    def __getitem__(self, value):
-        return getattr(self, value)
-
-    def __setitem__(self, index, value) -> None:
-        setattr(self, index, value)
-
-    def __len__(self) -> int:
-        return len(dataclasses.fields(self))
-
-    def __iter__(self):
-        return iter(i.name for i in dataclasses.fields(self))
 
 
 @dataclasses.dataclass

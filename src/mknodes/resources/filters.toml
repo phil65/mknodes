@@ -7,7 +7,6 @@ template = """
 {{ _mk.MkAdmonition | get_link }}
 """
 
-
 [filters.get_url]
 fn = "mknodes.jinja.filters.get_url"
 group = "node"
@@ -17,22 +16,6 @@ template = """
 {{ _mk.MkAdmonition | get_url }}
 """
 
-
-[filters.link_for_class]
-fn = "mknodes.jinja.filters.link_for_class"
-group = "node"
-
-[filters.link_for_class.examples.class]
-template = """
-{{ _mk.MkAdmonition | link_for_class }}
-"""
-
-
-[filters.link_for_module]
-fn = "mknodes.jinja.filters.link_for_module"
-group = "node"
-
-
 [filters.to_html]
 fn = "mknodes.jinja.filters.to_html"
 group = "node"
@@ -41,7 +24,6 @@ group = "node"
 template = """
 {{ "test" | MkAdmonition | to_html }}
 """
-
 
 [filters.apply_mod]
 fn = "mknodes.jinja.filters.apply_mod"
@@ -61,7 +43,6 @@ template = """
 {{ "test[1]" | MkAdmonition | add_annotation(1, "An annotation")) }}
 """
 
-
 [filters.get_emoji_slug]
 fn = "mknodes.utils.icons.get_emoji_slug"
 group = "icon"
@@ -70,7 +51,6 @@ group = "icon"
 template = """
 {{ "mdi:file" | get_emoji_slug }}
 """
-
 
 [filters.to_class]
 fn = "mknodes.utils.classhelpers.to_class"
@@ -81,11 +61,9 @@ template = """
 {{ "mknodes.MkAdmonition" | to_class }}
 """
 
-
 [filters.url]
 fn = "mknodes.jinja.filters.url"
 group = "url"
-
 
 [filters.script_tag]
 fn = "mknodes.jinja.filters.script_tag"
