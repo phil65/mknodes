@@ -16,7 +16,6 @@ from mknodes.utils import classhelpers, inspecthelpers, log, resources
 
 if TYPE_CHECKING:
     from upath.types import JoinablePathLike
-    import os
     import mknodes as mk
 
 logger = log.get_logger(__name__)
