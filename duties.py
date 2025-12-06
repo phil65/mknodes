@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import sysconfig
 from typing import Literal
 
 from duty import duty
@@ -10,8 +9,7 @@ from duty import duty
 @duty(capture=False)
 def build(ctx, *args: str):
     """Build a MkNodes page."""
-    if sysconfig.get_config_var("Py_GIL_DISABLED"):
-        os.environ["PYTHON_GIL"] = "0"
+    os.environ["PYTHON_GIL"] = "0"
     args_str = " " + " ".join(args) if args else ""
     ctx.run(f"uv run mkdocs-mknodes build{args_str}")
 
@@ -19,8 +17,7 @@ def build(ctx, *args: str):
 @duty(capture=False)
 def serve(ctx, *args: str):
     """Serve a MkNodes page."""
-    if sysconfig.get_config_var("Py_GIL_DISABLED"):
-        os.environ["PYTHON_GIL"] = "0"
+    os.environ["PYTHON_GIL"] = "0"
     args_str = " " + " ".join(args) if args else ""
     ctx.run(f"uv run mknodes serve{args_str}")
 
@@ -28,8 +25,7 @@ def serve(ctx, *args: str):
 @duty(capture=False)
 def test(ctx, *args: str):
     """Serve a MkNodes page."""
-    if sysconfig.get_config_var("Py_GIL_DISABLED"):
-        os.environ["PYTHON_GIL"] = "0"
+    os.environ["PYTHON_GIL"] = "0"
     args_str = " " + " ".join(args) if args else ""
     ctx.run(f"uv run pytest{args_str}")
 
