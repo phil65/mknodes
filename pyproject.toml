@@ -91,7 +91,7 @@ dev = [
   "cairosvg; python_version < '3.14'",
   "markdown-exec[ansi]",
   "mkdocs-material >= 9.4",
-  "mkdocs_mknodes>= 1.1.0alpha1",
+  "mkdocs_mknodes>= 1.0",
   # Docs
   "mkdocs >=1.5",
   # Linting
