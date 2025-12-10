@@ -132,12 +132,15 @@ class MkNodesBlock(Block):
                     content_div.text = rendered_html
 
         except Exception as e:  # noqa: BLE001
-            # On error, show the error message
+            # On error, show the error message with the template that failed
             block.clear()
             error_elem = ET.SubElement(block, "div")
             error_elem.set("class", "mknodes-error")
             error_elem.set("style", "color: red; border: 1px solid red; padding: 0.5rem;")
-            error_elem.text = f"MkNodes rendering error: {e}"
+
+            # Create a more informative error message
+            error_msg = f"MkNodes rendering error: {e}\n\nFailed to render:\n{jinja_content}"
+            error_elem.text = error_msg
 
 
 class MkNodesExtension(BlocksExtension):
