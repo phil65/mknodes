@@ -83,6 +83,9 @@ mknodes = "mknodes.cli:main"
 [project.entry-points."jinjarope.environment"]
 mknodes = "mknodes.jinja:setup_env"
 
+[project.entry-points."markdown.extensions"]
+mknodes = "mknodes.mdext:makeExtension"
+
 [dependency-groups]
 dev = [
   # black is used by mkdocstrings to format signatures
