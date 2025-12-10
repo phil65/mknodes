@@ -6,7 +6,6 @@ using the MkNodes NodeEnvironment within markdown documents.
 
 from __future__ import annotations
 
-import functools
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -99,6 +98,11 @@ class MkNodesBlock(Block):
                 # Get markdown extensions (from zensical config, mkdocs.yml, or fallback)
                 ext_names, ext_configs = _get_markdown_config()
 
+                # Exclude mkdocstrings - it's a MkDocs plugin, not a regular markdown
+                # extension, and its config contains dict-format extensions that cause errors
+                ext_names = [e for e in ext_names if e != "mkdocstrings"]
+                ext_configs = {k: v for k, v in ext_configs.items() if k != "mkdocstrings"}
+
                 # Create a markdown instance with the loaded extensions
                 md = markdown.Markdown(extensions=ext_names, extension_configs=ext_configs)
                 rendered_html = md.convert(rendered_markdown)
@@ -152,9 +156,12 @@ class MkNodesExtension(BlocksExtension):
         block_mgr.register(MkNodesBlock, self.getConfigs())
 
 
-@functools.lru_cache(maxsize=1)
 def _get_markdown_config() -> tuple[list[str], dict[str, Any]]:
     """Get markdown extensions and configs, trying zensical config first.
+
+    Note: This function is intentionally NOT cached because zensical's config
+    may not be available when this module is first imported, but becomes
+    available later during the build process.
 
     Returns:
         Tuple of (extension_names, extension_configs) for markdown.Markdown.
