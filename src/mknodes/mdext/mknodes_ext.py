@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 
 from pymdownx.blocks import BlocksExtension  # type: ignore[import-untyped]
 from pymdownx.blocks.block import Block  # type: ignore[import-untyped]
-from pymdownx.superfences import fence_div_format  # type: ignore[import-untyped]
+from pymdownx.superfences import fence_code_format  # type: ignore[import-untyped]
 import yamling
 
 
@@ -209,7 +209,7 @@ def _load_markdown_extensions() -> list[Any]:
                     {
                         "name": "mermaid",
                         "class": "mermaid",
-                        "format": fence_div_format,
+                        "format": fence_code_format,
                     }
                 ]
             }
