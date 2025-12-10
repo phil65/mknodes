@@ -17,7 +17,7 @@ class MkNodesBlock(Block):
     """A block for rendering Jinja templates using MkNodes."""
 
     NAME = "mknodes"
-    ARGUMENT = False
+    ARGUMENT = None  # Optional argument for per-block context mode
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the MkNodes block processor."""
@@ -30,8 +30,28 @@ class MkNodesBlock(Block):
             # Import here to avoid circular imports
             import mknodes as mk
 
-            # Create a minimal context node for the environment
-            node = mk.MkText.with_context()
+            # Check context mode: per-block argument takes precedence over global config
+            context_mode = "full"  # default
+
+            # Check for per-block argument first (e.g., /// mknodes | fallback)
+            if hasattr(self, "argument") and self.argument:
+                arg = self.argument.strip().lower()
+                if arg in ("fallback", "fast", "minimal"):
+                    context_mode = "fallback"
+                elif arg in ("full", "complete", "rich"):
+                    context_mode = "full"
+
+            # Fall back to global config if no block argument
+            if context_mode == "full" and hasattr(self, "config"):
+                context_mode = self.config.get("context_mode", "full")
+
+            if context_mode == "fallback":
+                # Create a lightweight fallback node without expensive context
+                node = mk.MkText()
+            else:
+                # Create a fully populated context node (default behavior)
+                node = mk.MkText.with_context()
+
             from mknodes.jinja.nodeenvironment import NodeEnvironment
 
             self._node_env = NodeEnvironment(node)
@@ -121,6 +141,12 @@ class MkNodesExtension(BlocksExtension):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the extension."""
+        self.config = {
+            "context_mode": [
+                "full",
+                "Context mode: 'full' for complete context (expensive), 'fallback' for minimal context (fast)",
+            ]
+        }
         super().__init__(*args, **kwargs)
 
     def extendMarkdownBlocks(self, md, block_mgr):  # noqa: N802
@@ -129,5 +155,17 @@ class MkNodesExtension(BlocksExtension):
 
 
 def makeExtension(**kwargs: Any):  # noqa: N802
-    """Create the markdown extension."""
+    """Create the markdown extension.
+
+    Args:
+        context_mode: Context creation mode. Options:
+            - "full" (default): Create full context with project info (expensive but complete)
+            - "fallback": Create minimal context (fast but limited functionality)
+
+    Note:
+        Context mode can also be specified per-block:
+        /// mknodes | fallback
+        {{ "Fast rendering" | MkHeader(level=2) }}
+        ///
+    """
     return MkNodesExtension(**kwargs)

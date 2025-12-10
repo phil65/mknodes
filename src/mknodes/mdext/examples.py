@@ -217,6 +217,45 @@ And we can continue with regular markdown after the MkNodes block.
     print("\n" + "=" * 60 + "\n")
 
 
+def context_modes_example():
+    """Example showing different context modes."""
+    print("=== Context Modes Example ===")
+
+    markdown_content = """
+# Context Mode Comparison
+
+## Full Context (Default - Expensive)
+/// mknodes
+{{ "Full Context Header" | MkHeader(level=3) }}
+{{ mk.MkAdmonition(content="This uses full context with complete project info", typ="info") }}
+///
+
+## Fallback Context (Fast)
+/// mknodes
+{{ "Fallback Context Header" | MkHeader(level=3) }}
+{{ mk.MkAdmonition(content="This uses minimal context for better performance", typ="success") }}
+///
+"""
+
+    from mknodes.mdext import makeExtension
+
+    print("Testing with full context mode (default):")
+    md_full = markdown.Markdown(extensions=[makeExtension(context_mode="full")])
+    result_full = md_full.convert(markdown_content)
+    print("✅ Full context rendered successfully")
+
+    print("\nTesting with fallback context mode:")
+    md_fallback = markdown.Markdown(extensions=[makeExtension(context_mode="fallback")])
+    result_fallback = md_fallback.convert(markdown_content)
+    print("✅ Fallback context rendered successfully")
+
+    print("\nPerformance comparison:")
+    print("- Full context: Complete project context (slower initialization)")
+    print("- Fallback context: Minimal context (faster initialization)")
+
+    print("\n" + "=" * 60 + "\n")
+
+
 def usage_instructions():
     """Print usage instructions."""
     print("=== Usage Instructions ===")
@@ -265,6 +304,7 @@ if __name__ == "__main__":
         filter_syntax_example()
         nested_content_example()
         integration_example()
+        context_modes_example()
         usage_instructions()
 
         print("✅ All examples completed successfully!")
