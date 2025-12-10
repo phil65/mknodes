@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import upath
 
 from typing import Any, TYPE_CHECKING
@@ -33,7 +34,7 @@ class MkTreeView(mkcode.MkCode):
         style: treestyles.TreeStyleStr | tuple[str, str, str, str] = "rounded",
         maximum_depth: int | None = None,
         predicate: Callable[..., bool] | None = None,
-        exclude_folders: list[str] | str | None = None,
+        exclude_patterns: list[str] | str | None = None,
         **kwargs: Any,
     ) -> None:
         """Constructor.
@@ -43,7 +44,7 @@ class MkTreeView(mkcode.MkCode):
             style: Print style. If tuple, parts are used for stems
             maximum_depth: Maximum nesting depth to print
             predicate: Predicate to filter results
-            exclude_folders: Folders to exclude from listing
+            exclude_patterns: Glob patterns to exclude (e.g., "*.pyc", "__pycache__")
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(language="", **kwargs)
@@ -51,15 +52,38 @@ class MkTreeView(mkcode.MkCode):
         self.style: treestyles.TreeStyleStr | tuple[str, str, str, str] = style
         self.predicate = predicate
         self.maximum_depth = maximum_depth
-        self.exclude_folders = (
-            [exclude_folders] if isinstance(exclude_folders, str) else exclude_folders
+        self.exclude_patterns = (
+            [exclude_patterns] if isinstance(exclude_patterns, str) else exclude_patterns
         )
 
     async def get_text(self) -> str:
         match self.tree:
             case str() | os.PathLike() | upath.UPath():
+                # Convert exclude_patterns list to regex pattern
+                exclude_pattern = None
+                if self.exclude_patterns:
+                    # Convert glob patterns to regex
+                    patterns = []
+                    for pattern in self.exclude_patterns:
+                        # Convert glob wildcards to regex
+                        # ** for recursive directories, * for any characters
+                        regex_pattern = (
+                            pattern.replace(".", r"\.")
+                            .replace("**", "DOUBLESTAR")
+                            .replace("*", "[^/]*")
+                            .replace("DOUBLESTAR", ".*")
+                        )
+                        patterns.append(regex_pattern)
+                    # Combine all patterns with OR
+                    combined = "|".join(f"({p})" for p in patterns)
+                    exclude_pattern = re.compile(combined)
+
                 return filetree.get_directory_tree(
-                    self.tree, max_depth=self.maximum_depth, show_size=True
+                    self.tree,
+                    max_depth=self.maximum_depth,
+                    show_size=True,
+                    show_hidden=True,
+                    exclude_pattern=exclude_pattern,
                 )
             case mknode.MkNode() as tree:
                 return tree.get_tree_repr(style=self.style, max_depth=self.maximum_depth)
