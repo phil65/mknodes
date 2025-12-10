@@ -98,12 +98,14 @@ class MkNodesBlock(Block):
                 # Get markdown extensions (from zensical config, mkdocs.yml, or fallback)
                 ext_names, ext_configs = _get_markdown_config()
 
-                # Exclude mkdocstrings - it's a MkDocs plugin, not a regular markdown
-                # extension, and its config contains dict-format extensions that cause errors
-                ext_names = [e for e in ext_names if e != "mkdocstrings"]
-                ext_configs = {k: v for k, v in ext_configs.items() if k != "mkdocstrings"}
+                # Exclude problematic extensions:
+                # - mkdocstrings: MkDocs plugin with dict-format extensions that cause errors
+                # - mknodes.mdext: our own extension, to prevent recursion
+                excluded = {"mkdocstrings", "mknodes.mdext"}
+                ext_names = [e for e in ext_names if e not in excluded]
+                ext_configs = {k: v for k, v in ext_configs.items() if k not in excluded}
 
-                # Create a markdown instance with the loaded extensions
+                # Create a markdown instance with the extensions
                 md = markdown.Markdown(extensions=ext_names, extension_configs=ext_configs)
                 rendered_html = md.convert(rendered_markdown)
 
