@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 
 from pymdownx.blocks import BlocksExtension  # type: ignore[import-untyped]
 from pymdownx.blocks.block import Block  # type: ignore[import-untyped]
-from pymdownx.superfences import fence_code_format  # type: ignore[import-untyped]
+from pymdownx.superfences import fence_div_format  # type: ignore[import-untyped]
 import yamling
 
 
@@ -98,8 +98,11 @@ class MkNodesBlock(Block):
                 # Load markdown extensions from mkdocs.yml or use fallback
                 extensions = _load_markdown_extensions()
 
+                # Convert extension configs to markdown-compatible format
+                ext_names, ext_configs = _parse_extension_configs(extensions)
+
                 # Create a markdown instance with the loaded extensions
-                md = markdown.Markdown(extensions=extensions)
+                md = markdown.Markdown(extensions=ext_names, extension_configs=ext_configs)
                 rendered_html = md.convert(rendered_markdown)
 
                 # Create a div to hold the HTML content
@@ -151,6 +154,31 @@ class MkNodesExtension(BlocksExtension):
         block_mgr.register(MkNodesBlock, self.getConfigs())
 
 
+def _parse_extension_configs(extensions: list[Any]) -> tuple[list[str], dict[str, dict[str, Any]]]:
+    """Parse extension list into names and configs for markdown.Markdown.
+
+    Args:
+        extensions: List of extension names and/or dicts with configs.
+
+    Returns:
+        Tuple of (extension_names, extension_configs) for markdown.Markdown.
+    """
+    ext_names = []
+    ext_configs = {}
+
+    for ext in extensions:
+        if isinstance(ext, dict):
+            # Dict format: {"extension.name": {"option": value}}
+            for ext_name, config in ext.items():
+                ext_names.append(ext_name)
+                ext_configs[ext_name] = config
+        else:
+            # String format: "extension.name"
+            ext_names.append(ext)
+
+    return ext_names, ext_configs
+
+
 def _load_markdown_extensions() -> list[Any]:
     """Load markdown extensions from mkdocs.yml or use fallback.
 
@@ -181,7 +209,7 @@ def _load_markdown_extensions() -> list[Any]:
                     {
                         "name": "mermaid",
                         "class": "mermaid",
-                        "format": fence_code_format,
+                        "format": fence_div_format,
                     }
                 ]
             }
