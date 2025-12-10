@@ -6,15 +6,22 @@ using the MkNodes NodeEnvironment within markdown documents.
 
 from __future__ import annotations
 
+import logging
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 import xml.etree.ElementTree as ET
 
 from pymdownx.blocks import BlocksExtension  # type: ignore[import-untyped]
 from pymdownx.blocks.block import Block  # type: ignore[import-untyped]
+from pymdownx.superfences import fence_code_format  # type: ignore[import-untyped]
+import yamling
 
 
 if TYPE_CHECKING:
     from mknodes.jinja.nodeenvironment import NodeEnvironment
+
+
+logger = logging.getLogger(__name__)
 
 
 class MkNodesBlock(Block):
@@ -88,17 +95,11 @@ class MkNodesBlock(Block):
                 # Import markdown to parse the rendered content
                 import markdown
 
-                # Create a markdown instance with extensions that MkNodes uses
-                md = markdown.Markdown(
-                    extensions=[
-                        "admonition",
-                        "pymdownx.superfences",
-                        "pymdownx.highlight",
-                        "pymdownx.progressbar",
-                        "tables",
-                        "fenced_code",
-                    ]
-                )
+                # Load markdown extensions from mkdocs.yml or use fallback
+                extensions = _load_markdown_extensions()
+
+                # Create a markdown instance with the loaded extensions
+                md = markdown.Markdown(extensions=extensions)
                 rendered_html = md.convert(rendered_markdown)
 
                 # Create a div to hold the HTML content
@@ -148,6 +149,86 @@ class MkNodesExtension(BlocksExtension):
     def extendMarkdownBlocks(self, md, block_mgr):  # noqa: N802
         """Register the MkNodes block with the block manager."""
         block_mgr.register(MkNodesBlock, self.getConfigs())
+
+
+def _load_markdown_extensions() -> list[Any]:
+    """Load markdown extensions from mkdocs.yml or use fallback.
+
+    Attempts to load extensions from mkdocs.yml using unsafe mode.
+    Falls back to default extensions with mermaid support if loading fails.
+
+    Returns:
+        List of markdown extensions and their configurations.
+    """
+    fallback_extensions = [
+        "tables",
+        "admonition",
+        "attr_list",
+        "md_in_html",
+        "pymdownx.details",
+        "pymdownx.mark",
+        "pymdownx.snippets",
+        "pymdownx.tilde",
+        "pymdownx.inlinehilite",
+        {
+            "pymdownx.highlight": {
+                "pygments_lang_class": True,
+            }
+        },
+        {
+            "pymdownx.superfences": {
+                "custom_fences": [
+                    {
+                        "name": "mermaid",
+                        "class": "mermaid",
+                        "format": fence_code_format,
+                    }
+                ]
+            }
+        },
+        {
+            "pymdownx.tabbed": {
+                "alternate_style": True,
+            }
+        },
+        {
+            "pymdownx.tasklist": {
+                "custom_checkbox": True,
+            }
+        },
+        "sane_lists",
+    ]
+
+    try:
+        # Look for mkdocs.yml in the current directory or parent directories
+        current = Path.cwd()
+        mkdocs_path = None
+
+        for parent in [current, *current.parents]:
+            candidate = parent / "mkdocs.yml"
+            if candidate.exists():
+                mkdocs_path = candidate
+                break
+
+        if not mkdocs_path:
+            logger.debug("mkdocs.yml not found, using fallback extensions")
+            return fallback_extensions
+
+        # Load mkdocs.yml (yamling uses unsafe mode by default, supporting !!python/name tags)
+        config = yamling.load_yaml_file(mkdocs_path)
+
+        if not config or "markdown_extensions" not in config:
+            logger.debug("No markdown_extensions in mkdocs.yml, using fallback")
+            return fallback_extensions
+
+        extensions = config["markdown_extensions"]
+        logger.debug("Loaded %d extensions from mkdocs.yml", len(extensions))
+
+    except Exception:  # noqa: BLE001
+        logger.debug("Failed to load mkdocs.yml extensions, using fallback")
+        return fallback_extensions
+    else:
+        return extensions
 
 
 def makeExtension(**kwargs: Any):  # noqa: D417, N802
