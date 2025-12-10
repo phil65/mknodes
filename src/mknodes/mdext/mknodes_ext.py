@@ -6,6 +6,7 @@ using the MkNodes NodeEnvironment within markdown documents.
 
 from __future__ import annotations
 
+import functools
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -95,11 +96,8 @@ class MkNodesBlock(Block):
                 # Import markdown to parse the rendered content
                 import markdown
 
-                # Load markdown extensions from mkdocs.yml or use fallback
-                extensions = _load_markdown_extensions()
-
-                # Convert extension configs to markdown-compatible format
-                ext_names, ext_configs = _parse_extension_configs(extensions)
+                # Get markdown extensions (from zensical config, mkdocs.yml, or fallback)
+                ext_names, ext_configs = _get_markdown_config()
 
                 # Create a markdown instance with the loaded extensions
                 md = markdown.Markdown(extensions=ext_names, extension_configs=ext_configs)
@@ -154,7 +152,32 @@ class MkNodesExtension(BlocksExtension):
         block_mgr.register(MkNodesBlock, self.getConfigs())
 
 
-def _parse_extension_configs(extensions: list[Any]) -> tuple[list[str], dict[str, dict[str, Any]]]:
+@functools.lru_cache(maxsize=1)
+def _get_markdown_config() -> tuple[list[str], dict[str, Any]]:
+    """Get markdown extensions and configs, trying zensical config first.
+
+    Returns:
+        Tuple of (extension_names, extension_configs) for markdown.Markdown.
+    """
+    # Try to get config from zensical if available (already parsed)
+    try:
+        from zensical.config import get_config  # type: ignore[import-untyped]
+
+        config = get_config()
+        if config and "markdown_extensions" in config and "mdx_configs" in config:
+            logger.debug("Using zensical parsed config")
+            return config["markdown_extensions"], config["mdx_configs"]
+    except ImportError:
+        pass
+    except Exception:  # noqa: BLE001
+        logger.debug("Failed to get zensical config")
+
+    # Fallback: load and parse from mkdocs.yml or use defaults
+    extensions = _load_markdown_extensions_raw()
+    return _parse_extension_configs(extensions)
+
+
+def _parse_extension_configs(extensions: list[Any]) -> tuple[list[str], dict[str, Any]]:
     """Parse extension list into names and configs for markdown.Markdown.
 
     Args:
@@ -164,14 +187,15 @@ def _parse_extension_configs(extensions: list[Any]) -> tuple[list[str], dict[str
         Tuple of (extension_names, extension_configs) for markdown.Markdown.
     """
     ext_names = []
-    ext_configs = {}
+    ext_configs: dict[str, Any] = {}
 
     for ext in extensions:
         if isinstance(ext, dict):
             # Dict format: {"extension.name": {"option": value}}
             for ext_name, config in ext.items():
                 ext_names.append(ext_name)
-                ext_configs[ext_name] = config
+                # Ensure config is always a dict, not None
+                ext_configs[ext_name] = config if isinstance(config, dict) else {}
         else:
             # String format: "extension.name"
             ext_names.append(ext)
@@ -179,16 +203,16 @@ def _parse_extension_configs(extensions: list[Any]) -> tuple[list[str], dict[str
     return ext_names, ext_configs
 
 
-def _load_markdown_extensions() -> list[Any]:
+def _load_markdown_extensions_raw() -> list[Any]:
     """Load markdown extensions from mkdocs.yml or use fallback.
 
     Attempts to load extensions from mkdocs.yml using unsafe mode.
     Falls back to default extensions with mermaid support if loading fails.
 
     Returns:
-        List of markdown extensions and their configurations.
+        List of markdown extensions and their configurations (raw format).
     """
-    fallback_extensions = [
+    fallback_extensions: list[Any] = [
         "tables",
         "admonition",
         "attr_list",
@@ -251,7 +275,6 @@ def _load_markdown_extensions() -> list[Any]:
 
         extensions = config["markdown_extensions"]
         logger.debug("Loaded %d extensions from mkdocs.yml", len(extensions))
-
     except Exception:  # noqa: BLE001
         logger.debug("Failed to load mkdocs.yml extensions, using fallback")
         return fallback_extensions

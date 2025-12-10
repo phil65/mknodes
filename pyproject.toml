@@ -68,6 +68,7 @@ dependencies = [
   "upathtools[httpx]",
   "yamling",
   # "marimo>=0.11.2; python_version < '3.14'",
+  "zensical>=0.0.11",
 ]
 
 [project.urls]
