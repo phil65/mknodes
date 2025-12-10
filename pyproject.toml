@@ -86,6 +86,9 @@ mknodes = "mknodes.jinja:setup_env"
 [project.entry-points."markdown.extensions"]
 mknodes = "mknodes.mdext:makeExtension"
 
+[project.optional-dependencies]
+llm = ["llmling-agent[default]"]
+
 [dependency-groups]
 dev = [
   # black is used by mkdocstrings to format signatures
