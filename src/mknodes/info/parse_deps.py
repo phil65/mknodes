@@ -81,11 +81,11 @@ def _extract_comments(toml_content: str, dep_names: set[str]) -> dict[str, str]:
     comments: dict[str, str] = {}
     lines = toml_content.splitlines()
     # Pattern for single-line: `name = [...]  # comment`
-    single_line_pattern = re.compile(r"^(\w+)\s*=\s*\[.*?\]\s*#\s*(.+)$")
+    single_line_pattern = re.compile(r"^([\w-]+)\s*=\s*\[.*?\]\s*#\s*(.+)$")
     # Pattern for multi-line closing: `]  # comment`
     closing_pattern = re.compile(r"^\s*\]\s*#\s*(.+)$")
     # Pattern for multi-line opening: `name = [`
-    opening_pattern = re.compile(r"^(\w+)\s*=\s*\[\s*$")
+    opening_pattern = re.compile(r"^([\w-]+)\s*=\s*\[\s*$")
     current_dep: str | None = None
     for line in lines:
         # Check single-line definition

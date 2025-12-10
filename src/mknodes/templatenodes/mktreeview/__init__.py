@@ -90,7 +90,7 @@ class MkTreeView(mkcode.MkCode):
         self.show_permissions = show_permissions
         self.show_icons = show_icons
         self.hide_empty = hide_empty
-        self.sort_by = sort_by
+        self.sort_by: SortCriteria = sort_by
         self.reverse_sort = reverse_sort
         self.date_format = date_format
 
