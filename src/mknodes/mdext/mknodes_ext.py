@@ -6,11 +6,15 @@ using the MkNodes NodeEnvironment within markdown documents.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 import xml.etree.ElementTree as ET
 
-from pymdownx.blocks import BlocksExtension
-from pymdownx.blocks.block import Block
+from pymdownx.blocks import BlocksExtension  # type: ignore[import-untyped]
+from pymdownx.blocks.block import Block  # type: ignore[import-untyped]
+
+
+if TYPE_CHECKING:
+    from mknodes.jinja.nodeenvironment import NodeEnvironment
 
 
 class MkNodesBlock(Block):
@@ -22,7 +26,7 @@ class MkNodesBlock(Block):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the MkNodes block processor."""
         super().__init__(*args, **kwargs)
-        self._node_env = None
+        self._node_env: NodeEnvironment | None = None
 
     def _get_node_environment(self):
         """Get or create a NodeEnvironment for rendering."""
@@ -30,27 +34,19 @@ class MkNodesBlock(Block):
             # Import here to avoid circular imports
             import mknodes as mk
 
-            # Check context mode: per-block argument takes precedence over global config
-            context_mode = "full"  # default
+            # Check context: per-block argument takes precedence over global config
+            use_context = False  # default: no context (fast)
 
-            # Check for per-block argument first (e.g., /// mknodes | fallback)
+            # Check for per-block argument first (e.g., /// mknodes | context)
             if hasattr(self, "argument") and self.argument:
                 arg = self.argument.strip().lower()
-                if arg in ("fallback", "fast", "minimal"):
-                    context_mode = "fallback"
-                elif arg in ("full", "complete", "rich"):
-                    context_mode = "full"
+                use_context = arg in ("context", "true", "1", "yes")
 
-            # Fall back to global config if no block argument
-            if context_mode == "full" and hasattr(self, "config"):
-                context_mode = self.config.get("context_mode", "full")
+            # Fall back to global config if no block argument specified
+            elif hasattr(self, "config"):
+                use_context = self.config.get("context", False)
 
-            if context_mode == "fallback":
-                # Create a lightweight fallback node without expensive context
-                node = mk.MkText()
-            else:
-                # Create a fully populated context node (default behavior)
-                node = mk.MkText.with_context()
+            node = mk.MkText.with_context() if use_context else mk.MkText()
 
             from mknodes.jinja.nodeenvironment import NodeEnvironment
 
@@ -142,9 +138,9 @@ class MkNodesExtension(BlocksExtension):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the extension."""
         self.config = {
-            "context_mode": [
-                "full",
-                "Context mode: 'full' for complete context (expensive), 'fallback' for minimal context (fast)",
+            "context": [
+                False,
+                "Whether to create full project context (expensive). Default: False",
             ]
         }
         super().__init__(*args, **kwargs)
@@ -154,18 +150,17 @@ class MkNodesExtension(BlocksExtension):
         block_mgr.register(MkNodesBlock, self.getConfigs())
 
 
-def makeExtension(**kwargs: Any):  # noqa: N802
+def makeExtension(**kwargs: Any):  # noqa: D417, N802
     """Create the markdown extension.
 
     Args:
-        context_mode: Context creation mode. Options:
-            - "full" (default): Create full context with project info (expensive but complete)
-            - "fallback": Create minimal context (fast but limited functionality)
+        context: Whether to create full project context. Default: False (fast).
+            Set to True for complete project info (expensive but complete).
 
     Note:
-        Context mode can also be specified per-block:
-        /// mknodes | fallback
-        {{ "Fast rendering" | MkHeader(level=2) }}
+        Context can also be specified per-block:
+        /// mknodes | context
+        {{ "With full context" | MkHeader(level=2) }}
         ///
     """
     return MkNodesExtension(**kwargs)

@@ -1,10 +1,10 @@
 # MkNodes Markdown Extension
 
-A powerful markdown extension that allows you to use MkNodes components within markdown documents via Jinja templating.
+A markdown extension that allows rendering Jinja templates using MkNodes components within markdown documents.
 
 ## Overview
 
-The MkNodes markdown extension enables you to embed dynamic content generation directly in your markdown files. It uses pymdownx blocks syntax with Jinja templating to render MkNodes components, giving you programmatic control over your markdown content.
+The MkNodes markdown extension enables you to embed dynamic content generation directly in your markdown files using the `/// mknodes` block syntax.
 
 ## Installation
 
@@ -14,239 +14,164 @@ The extension is included with the MkNodes package:
 pip install mknodes
 ```
 
-## Usage
+## Quick Start
 
-### Basic Setup
+### MkDocs Configuration
+
+```yaml
+# mkdocs.yml
+markdown_extensions:
+  - mknodes.mdext
+```
+
+### Markdown Usage
+
+```markdown
+# My Document
+
+/// mknodes
+{{ "Dynamic Header" | MkHeader(level=2) }}
+{{ mk.MkAdmonition(content="Generated content!", typ="info") }}
+{{ 75 | MkProgressBar }}
+///
+```
+
+## Configuration
+
+### The `context` Option
+
+The extension has a single boolean option `context` that controls whether to create a full project context:
+
+| Setting | Performance | Use Case |
+|---------|-------------|----------|
+| `context: false` (default) | **~50x faster** | Most use cases, simple content |
+| `context: true` | Slower | When you need full project metadata |
+
+#### MkDocs Configuration
+
+```yaml
+# Default - no context (fast)
+markdown_extensions:
+  - mknodes.mdext
+
+# With full context (when needed)
+markdown_extensions:
+  - mknodes.mdext:
+      context: true
+```
+
+#### Programmatic Configuration
 
 ```python
 import markdown
 from mknodes.mdext import makeExtension
 
-# Create markdown processor with MkNodes extension
+# Default (fast)
 md = markdown.Markdown(extensions=[makeExtension()])
 
-# Convert markdown with MkNodes blocks
-html = md.convert(your_markdown_content)
+# With full context
+md = markdown.Markdown(extensions=[makeExtension(context=True)])
 ```
 
-### MkDocs Configuration
+### Per-Block Context
 
-The recommended way to configure the extension is via `mkdocs.yml`:
-
-```yaml
-# mkdocs.yml
-markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback  # or "full"
-```
-
-**Context modes:**
-- `fallback`: Fast initialization, basic functionality (recommended for production)
-- `full`: Complete project context, all features (default, good for development)
-
-### Per-Block Configuration
-
-You can also specify context mode per block for fine-grained control:
+You can enable full context for specific blocks using the `| context` argument:
 
 ```markdown
-# Uses global configuration
+## Fast content (default)
 /// mknodes
-{{ "Default mode" | MkHeader(level=2) }}
+{{ "Quick render" | MkHeader(level=2) }}
 ///
 
-# Force fallback mode for this block
-/// mknodes | fallback
-{{ "Fast rendering" | MkHeader(level=2) }}
-///
-
-# Force full context for this block  
-/// mknodes | full
-{{ "Complete features" | MkHeader(level=2) }}
+## Content needing full context
+/// mknodes | context
+{{ "With project metadata" | MkHeader(level=2) }}
 ///
 ```
 
-#### Context Mode Comparison
-
-| Mode | Performance | Functionality | Use Case |
-|------|-------------|---------------|----------|
-| `full` | Slower initialization | Complete project context | Development, full features needed |
-| `fallback` | Fast initialization | Basic components only | Production, high-frequency rendering |
-
-**When to use `full` context:**
-- Development environments
-- When you need complete project information
-- Complex content generation with metadata
-- Full MkNodes feature set required
-
-**When to use `fallback` context:**
-- Production web servers
-- CI/CD pipelines
-- High-frequency rendering
-- Simple content generation
-- Performance-critical applications
-
-**Per-block context modes:**
-Use `/// mknodes | fallback` or `/// mknodes | full` to override the global setting for specific blocks. Aliases: `fast`/`minimal` for fallback, `complete`/`rich` for full.
-
-### Markdown Syntax
-
-Use `/// mknodes` blocks to embed Jinja templates that generate MkNodes components:
-
-```markdown
-# Your Document
-
-Regular markdown content here.
-
-/// mknodes
-{{ "Dynamic Header" | MkHeader(level=2) }}
-{{ "This content was generated dynamically!" | MkText }}
-{{ 75 | MkProgressBar }}
-///
-
-Back to regular markdown.
-```
-
-## Syntax Options
+## Syntax
 
 ### Filter Syntax
-Use Jinja filters for simple component creation:
 
 ```markdown
 /// mknodes
-{{ "Welcome!" | MkHeader(level=1) }}
-{{ "Success rate" | MkText }}
+{{ "Title" | MkHeader(level=2) }}
+{{ "Some text" | MkText }}
 {{ 85 | MkProgressBar }}
 ///
 ```
 
 ### Direct Calls
-Use the `mk` namespace for direct component instantiation:
 
 ```markdown
 /// mknodes
-{{ mk.MkAdmonition(content="Important information", typ="warning") }}
-{{ mk.MkCode(content="print('Hello World!')", language="python") }}
-{{ mk.MkTable([["Name", "Value"], ["foo", "bar"], ["baz", "qux"]]) }}
+{{ mk.MkAdmonition(content="Important!", typ="warning") }}
+{{ mk.MkCode(content="print('hello')", language="python") }}
+{{ mk.MkTable([["Name", "Value"], ["foo", "bar"]]) }}
 ///
 ```
 
-### Mixed Approach
-Combine both syntaxes as needed:
+### Jinja Features
 
 ```markdown
 /// mknodes
-{{ "Section Title" | MkHeader(level=2) }}
-{{ mk.MkAdmonition(content="This combines both approaches", typ="info") }}
-{{ 90 | MkProgressBar }}
+{% for i in range(3) %}
+{{ ("Item " ~ (i + 1)) | MkText }}
+{% endfor %}
 ///
 ```
 
-## Supported Components
+## Available Components
 
-All MkNodes components are available within the Jinja environment:
+All MkNodes components are available:
 
-- **Text & Headers**: `MkText`, `MkHeader`
+- **Text**: `MkText`, `MkHeader`
 - **Code**: `MkCode` (with syntax highlighting)
 - **Admonitions**: `MkAdmonition` (info, warning, error, success, etc.)
 - **Data**: `MkTable`, `MkList`, `MkDefinitionList`
 - **Interactive**: `MkProgressBar`, `MkTabs`, `MkDetails`
-- **Media**: `MkImage`, `MkIcon`
-- **Containers**: `MkContainer`, `MkCard`
 - **And many more...**
 
-## Configuration Options
+## Performance
 
-### MkDocs Configuration (Recommended)
+The default `context=false` setting is approximately **50x faster** than `context=true`:
 
-```yaml
-# mkdocs.yml
-markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback  # or "full"
-  - admonition
-  - pymdownx.superfences
-  - tables
-```
+| Setting | Typical Render Time |
+|---------|---------------------|
+| `context=false` | ~0.04s |
+| `context=true` | ~2.0s |
 
-### Programmatic Configuration
-
-```python
-md = markdown.Markdown(extensions=[
-    makeExtension(
-        context_mode="fallback",  # or "full"
-    )
-])
-```
-
-### Per-Block Configuration
-
-```markdown
-/// mknodes | fallback
-{{ "This block uses fallback context" | MkText }}
-///
-
-/// mknodes | full
-{{ "This block uses full context" | MkText }}
-///
-```
-
-### Available Options
-
-- **`context_mode`** (default: `"full"`):
-  - `"full"`: Complete project context with all features (slower)
-  - `"fallback"`: Minimal context for better performance (faster)
-- **Per-block arguments**: `fallback`, `full`, `fast`, `minimal`, `complete`, `rich`
-
-## Performance Considerations
-
-### Benchmarking
-
-Run the performance test to see the difference on your system:
-
-```bash
-python -m mknodes.mdext.performance_test
-```
-
-### Typical Performance Impact
-
-- **Full context**: 2-10x slower initialization, complete functionality
-- **Fallback context**: Fast initialization, basic components work
-
-### Optimization Tips
-
-1. **Use fallback context** for production environments
-2. **Cache markdown processors** instead of creating new ones
-3. **Profile your specific use case** to choose the right mode
-4. **Consider context switching** based on content complexity
+**Recommendation**: Use the default (`context=false`) unless you specifically need project metadata.
 
 ## Examples
 
-### Simple Content Generation
+### Basic Content
 
 ```markdown
 /// mknodes
-{{ "Project Status" | MkHeader(level=2) }}
-{{ mk.MkAdmonition(content="All systems operational!", typ="success") }}
+{{ "Welcome" | MkHeader(level=1) }}
+{{ mk.MkAdmonition(content="Hello World!", typ="success") }}
 ///
 ```
 
-### Data-Driven Content
+### Tables
 
 ```markdown
 /// mknodes
-{% set data = [["Feature", "Status"], ["Auth", "✅"], ["API", "✅"], ["UI", "🚧"]] %}
-{{ "Current Status" | MkHeader(level=2) }}
-{{ mk.MkTable(data) }}
+{{ mk.MkTable([
+    ["Feature", "Status"],
+    ["Headers", "✅"],
+    ["Tables", "✅"],
+    ["Code", "✅"]
+]) }}
 ///
 ```
 
-### Code Documentation
+### Code Blocks
 
 ```markdown
 /// mknodes
-{{ "Example Code" | MkHeader(level=3) }}
-{{ mk.MkCode(content="def hello():\n    return 'Hello, World!'", language="python") }}
-{{ mk.MkAdmonition(content="This function returns a greeting", typ="info") }}
+{{ mk.MkCode(content="def hello():\n    return 'world'", language="python") }}
 ///
 ```
 
@@ -254,179 +179,62 @@ python -m mknodes.mdext.performance_test
 
 ```markdown
 /// mknodes
-{{ "Build Progress" | MkHeader(level=2) }}
-{{ "Compilation: " | MkText }}{{ 100 | MkProgressBar }}
-{{ "Testing: " | MkText }}{{ 75 | MkProgressBar }}
-{{ "Deployment: " | MkText }}{{ 25 | MkProgressBar }}
-///
-```
-
-## Features
-
-- **Seamless Integration**: Works alongside regular markdown content
-- **Full Jinja Support**: Use variables, loops, conditions, and filters
-- **Rich Components**: Access to all MkNodes components
-- **Proper Rendering**: Automatically handles markdown extensions (admonitions, code highlighting, tables, etc.)
-- **Error Handling**: Graceful error display when templates fail
-- **Performance Options**: Choose between full functionality or fast rendering
-- **Context Caching**: Efficient rendering with component caching
-
-## Advanced Usage
-
-### Using Jinja Features
-
-```markdown
-/// mknodes
-{% set progress_items = [
-    {"name": "Setup", "progress": 100},
-    {"name": "Development", "progress": 75},
-    {"name": "Testing", "progress": 50}
-] %}
-
-{{ "Project Progress" | MkHeader(level=2) }}
-
-{% for item in progress_items %}
-{{ item.name + ":" | MkText }}
-{{ item.progress | MkProgressBar }}
-{% endfor %}
-///
-```
-
-### Conditional Content
-
-```markdown
-/// mknodes
-{% set is_production = true %}
-
-{% if is_production %}
-{{ mk.MkAdmonition(content="Production environment active", typ="warning") }}
-{% else %}
-{{ mk.MkAdmonition(content="Development environment active", typ="info") }}
-{% endif %}
+{{ "Completion: " | MkText }}{{ 100 | MkProgressBar }}
+{{ "In Progress: " | MkText }}{{ 60 | MkProgressBar }}
 ///
 ```
 
 ## Integration with Other Extensions
 
-The MkNodes extension works well with other markdown extensions:
-
-**MkDocs configuration:**
 ```yaml
 markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
-  - pymdownx.superfences
-  - pymdownx.tabbed
+  - mknodes.mdext
   - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight
   - tables
-  - toc
-```
-
-**Programmatic configuration:**
-```python
-md = markdown.Markdown(extensions=[
-    makeExtension(context_mode="fallback"),  # MkNodes extension
-    'pymdownx.superfences',    # Enhanced code blocks
-    'pymdownx.tabbed',         # Tabbed content
-    'admonition',              # Admonitions
-    'tables',                  # Table support
-    'toc',                     # Table of contents
-])
 ```
 
 ## Error Handling
 
-When a template fails to render, the extension displays a clear error message:
+When a template fails, a visible error is displayed:
 
 ```html
-<div class="mknodes-error" style="color: red; border: 1px solid red; padding: 0.5rem;">
-MkNodes rendering error: [specific error message]
+<div class="mknodes-error">
+MkNodes rendering error: [error message]
 </div>
 ```
 
-## Component Parameters
-
-Each MkNodes component has specific parameters. Common patterns:
-
-- **MkHeader**: `{{ "Title" | MkHeader(level=2) }}`
-- **MkText**: `{{ "Content with **markdown**" | MkText }}`
-- **MkCode**: `{{ mk.MkCode(content="code here", language="python") }}`
-- **MkAdmonition**: `{{ mk.MkAdmonition(content="message", typ="info", title="Optional") }}`
-- **MkTable**: `{{ mk.MkTable([["Col1", "Col2"], ["row1", "row2"]]) }}`
-- **MkList**: `{{ mk.MkList(["item1", "item2", "item3"]) }}`
-- **MkProgressBar**: `{{ 75 | MkProgressBar }}`
-
-## Best Practices
-
-1. **Configure via mkdocs.yml**: Use YAML configuration instead of programmatic setup
-2. **Choose the right context mode**: Use fallback for performance, full for features
-3. **Use per-block overrides**: Mix context modes for optimal performance
-4. **Keep templates simple**: Complex logic should be in your Python code, not templates
-5. **Use meaningful variable names**: Makes templates more readable
-6. **Handle errors gracefully**: Test templates before deployment
-7. **Combine with regular markdown**: Use MkNodes blocks for dynamic content only
-8. **Leverage Jinja features**: Use loops, conditions, and filters for powerful templating
-9. **Cache markdown processors**: Don't create new instances for every conversion
-10. **Profile your use case**: Measure performance with your actual content
-
 ## Troubleshooting
 
-### Common Issues
+### Block not recognized
 
-1. **Component not found**: Ensure the component name is correct and available in MkNodes
-2. **Parameter errors**: Check component documentation for correct parameter names
-3. **Template syntax errors**: Verify Jinja syntax is correct
-4. **Missing dependencies**: Ensure required markdown extensions are installed
-5. **Performance issues**: Consider switching to fallback context mode
+Ensure proper spacing around the block:
 
-### Context Mode Issues
+```markdown
+Regular paragraph.
 
-- **Full context fails**: May indicate project context issues, try fallback mode
-- **Fallback context limited**: Some features need full context, switch if needed
-- **Slow performance**: Use fallback context for better speed
+/// mknodes
+{{ "Content" | MkHeader }}
+///
 
-### Debug Mode
-
-Enable debugging by catching exceptions:
-
-```python
-try:
-    html = md.convert(markdown_content)
-except Exception as e:
-    print(f"Rendering error: {e}")
+Another paragraph.
 ```
 
-## Migration Guide
+### Component errors
 
-### From Previous Versions
+Check parameter names match the component's constructor:
 
-If upgrading from a version without context modes:
-
-**Old mkdocs.yml:**
-```yaml
-markdown_extensions:
-  - mknodes.mdext
+```markdown
+/// mknodes
+{{ mk.MkCode(content="code here", language="python") }}
+///
 ```
 
-**New mkdocs.yml (recommended):**
-```yaml
-markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback  # or "full"
-```
+### Performance issues
 
-**Programmatic migration:**
-```python
-# Old way (still works - defaults to full context)
-md = markdown.Markdown(extensions=[makeExtension()])
-
-# New way with explicit context mode
-md = markdown.Markdown(extensions=[makeExtension(context_mode="full")])
-
-# New optimized way
-md = markdown.Markdown(extensions=[makeExtension(context_mode="fallback")])
-```
+Use the default `context=false` setting. Only use `context=true` or `| context` when you specifically need project metadata.
 
 ## License
 
-This extension is part of the MkNodes project and follows the same license terms.
+Part of the MkNodes project.

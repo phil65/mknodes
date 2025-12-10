@@ -241,12 +241,12 @@ def context_modes_example():
 
     print("Testing with full context mode (default):")
     md_full = markdown.Markdown(extensions=[makeExtension(context_mode="full")])
-    result_full = md_full.convert(markdown_content)
+    md_full.convert(markdown_content)
     print("✅ Full context rendered successfully")
 
     print("\nTesting with fallback context mode:")
     md_fallback = markdown.Markdown(extensions=[makeExtension(context_mode="fallback")])
-    result_fallback = md_fallback.convert(markdown_content)
+    md_fallback.convert(markdown_content)
     print("✅ Fallback context rendered successfully")
 
     print("\nPerformance comparison:")

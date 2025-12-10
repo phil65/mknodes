@@ -1,6 +1,6 @@
 """Configuration examples for MkNodes markdown extension.
 
-This file demonstrates the different ways to configure the context mode
+This file demonstrates the different ways to configure the context option
 for the MkNodes extension, both globally via mkdocs.yml and per-block.
 """
 
@@ -13,15 +13,19 @@ def mkdocs_yml_examples():
     """Show how to configure the extension in mkdocs.yml."""
     print("=== MkDocs YAML Configuration Examples ===")
     print("""
-# mkdocs.yml - Global fallback context for better performance
+# mkdocs.yml - Default (no context, fast)
 markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
+  - mknodes.mdext
 
-# mkdocs.yml - Full context for complete functionality (default)
+# mkdocs.yml - With full context (expensive)
 markdown_extensions:
   - mknodes.mdext:
-      context_mode: full
+      context: true
+
+# mkdocs.yml - Explicit no context (default behavior)
+markdown_extensions:
+  - mknodes.mdext:
+      context: false
 
 # mkdocs.yml - Combined with other extensions
 markdown_extensions:
@@ -30,7 +34,7 @@ markdown_extensions:
   - pymdownx.tabbed
   - tables
   - mknodes.mdext:
-      context_mode: fallback  # Fast rendering for production
+      context: false  # Fast rendering (default)
 """)
 
 
@@ -40,48 +44,37 @@ def per_block_examples():
 
     # Example markdown with different block modes
     markdown_content = """
-# Per-Block Context Mode Demo
+# Per-Block Context Demo
 
 ## Default Mode (uses global config)
 /// mknodes
-{{ "Default Context" | MkHeader(level=3) }}
-{{ mk.MkAdmonition(content="Uses the globally configured context mode", typ="info") }}
+{{ "Default" | MkHeader(level=3) }}
+{{ mk.MkAdmonition(content="Uses the globally configured context setting", typ="info") }}
 ///
 
-## Explicit Fallback Mode
-/// mknodes | fallback
+## No Context (fast, default)
+/// mknodes
 {{ "Fast Rendering" | MkHeader(level=3) }}
-{{ mk.MkAdmonition(content="This block uses fallback context for speed", typ="success") }}
+{{ mk.MkAdmonition(content="This block uses no context for speed", typ="success") }}
 {{ 85 | MkProgressBar }}
 ///
 
-## Explicit Full Mode
-/// mknodes | full
-{{ "Complete Context" | MkHeader(level=3) }}
+## With Full Context
+/// mknodes | context
+{{ "Full Context" | MkHeader(level=3) }}
 {{ mk.MkAdmonition(content="This block uses full context with all features", typ="warning") }}
 {{ mk.MkCode(content="print('Full context available!')", language="python") }}
-///
-
-## Alternative Syntax (aliases work)
-/// mknodes | fast
-{{ "Fast Alias" | MkHeader(level=3) }}
-{{ mk.MkText("'fast', 'minimal' are aliases for 'fallback'") }}
-///
-
-/// mknodes | complete
-{{ "Complete Alias" | MkHeader(level=3) }}
-{{ mk.MkText("'complete', 'rich' are aliases for 'full'") }}
 ///
 """
 
     from mknodes.mdext import makeExtension
 
-    # Test with global fallback config
-    print("Testing with global fallback config + per-block overrides:")
-    md = markdown.Markdown(extensions=[makeExtension(context_mode="fallback")])
+    # Test with default config (no context)
+    print("Testing with default config + per-block overrides:")
+    md = markdown.Markdown(extensions=[makeExtension()])
     result = md.convert(markdown_content)
 
-    print("✅ Rendered successfully with mixed context modes")
+    print("✅ Rendered successfully with mixed context settings")
     print(f"Result length: {len(result)} characters")
     print("\n" + "=" * 60 + "\n")
 
@@ -91,7 +84,7 @@ def programmatic_examples():
     print("=== Programmatic Configuration Examples ===")
 
     simple_content = """
-/// mknodes | fallback
+/// mknodes
 {{ "Programmatic Test" | MkHeader(level=2) }}
 {{ mk.MkAdmonition(content="Testing programmatic configuration", typ="info") }}
 ///
@@ -99,20 +92,20 @@ def programmatic_examples():
 
     from mknodes.mdext import makeExtension
 
-    print("1. Extension with global fallback context:")
-    md1 = markdown.Markdown(extensions=[makeExtension(context_mode="fallback")])
-    result1 = md1.convert(simple_content)
-    print("✅ Configured for fallback context")
+    print("1. Extension with default (no context, fast):")
+    md1 = markdown.Markdown(extensions=[makeExtension()])
+    md1.convert(simple_content)
+    print("✅ Configured with context=False (default)")
 
-    print("\n2. Extension with global full context:")
-    md2 = markdown.Markdown(extensions=[makeExtension(context_mode="full")])
-    result2 = md2.convert(simple_content)
-    print("✅ Configured for full context")
+    print("\n2. Extension with explicit context=False:")
+    md2 = markdown.Markdown(extensions=[makeExtension(context=False)])
+    md2.convert(simple_content)
+    print("✅ Configured with context=False")
 
-    print("\n3. Extension with default settings:")
-    md3 = markdown.Markdown(extensions=[makeExtension()])
-    result3 = md3.convert(simple_content)
-    print("✅ Using default context mode")
+    print("\n3. Extension with context=True (full context):")
+    md3 = markdown.Markdown(extensions=[makeExtension(context=True)])
+    md3.convert(simple_content)
+    print("✅ Configured with context=True")
 
     print("\n4. Multiple extensions with MkNodes:")
     md4 = markdown.Markdown(
@@ -120,10 +113,10 @@ def programmatic_examples():
             "admonition",
             "pymdownx.superfences",
             "tables",
-            makeExtension(context_mode="fallback"),
+            makeExtension(),  # Default: no context
         ]
     )
-    result4 = md4.convert(simple_content)
+    md4.convert(simple_content)
     print("✅ Configured with multiple extensions")
 
     print("\n" + "=" * 60 + "\n")
@@ -135,54 +128,51 @@ def performance_scenario_examples():
 
     scenarios = [
         {
-            "name": "Development Environment",
-            "config": "full",
+            "name": "Development Environment (needs full context)",
+            "config": "context: true",
             "reason": "Complete functionality needed during development",
             "yaml": """
 markdown_extensions:
   - mknodes.mdext:
-      context_mode: full
+      context: true
 """,
         },
         {
             "name": "Production Website",
-            "config": "fallback",
+            "config": "context: false (default)",
             "reason": "Fast rendering for better user experience",
             "yaml": """
 markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
+  - mknodes.mdext
 """,
         },
         {
             "name": "CI/CD Documentation Build",
-            "config": "fallback",
+            "config": "context: false (default)",
             "reason": "Faster build times in automated pipelines",
             "yaml": """
 markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
+  - mknodes.mdext
 """,
         },
         {
             "name": "Mixed Content Site",
-            "config": "fallback",
-            "reason": "Global fallback with per-block full context when needed",
+            "config": "default + per-block context",
+            "reason": "Default fast rendering with per-block full context when needed",
             "yaml": """
 markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
+  - mknodes.mdext
 """,
             "markdown": """
 # Mixed content example
 
-## Fast content
+## Fast content (default)
 /// mknodes
 {{ "Quick render" | MkHeader(level=3) }}
 ///
 
 ## Complex content (when full context needed)
-/// mknodes | full
+/// mknodes | context
 {{ "Rich content with full context" | MkHeader(level=3) }}
 ///
 """,
@@ -213,8 +203,7 @@ site_name: My Personal Blog
 markdown_extensions:
   - admonition
   - pymdownx.superfences
-  - mknodes.mdext:
-      context_mode: fallback  # Fast rendering
+  - mknodes.mdext  # Default: no context (fast)
 """,
             "usage": "Most content is static, MkNodes used for simple dynamic elements",
         },
@@ -228,7 +217,7 @@ markdown_extensions:
   - pymdownx.tabbed
   - tables
   - mknodes.mdext:
-      context_mode: full  # Need all features
+      context: true  # Need all features
 """,
             "usage": "Heavy use of MkNodes for API examples, tables, code blocks",
         },
@@ -239,10 +228,9 @@ site_name: Corporate Website
 markdown_extensions:
   - admonition
   - pymdownx.superfences
-  - mknodes.mdext:
-      context_mode: fallback  # Performance critical
+  - mknodes.mdext  # Default: no context (fast)
 """,
-            "usage": "Performance is key, use per-block 'full' mode only when needed",
+            "usage": "Performance is key, use per-block '| context' only when needed",
         },
         "Development Docs": {
             "description": "Internal documentation with rich content",
@@ -256,7 +244,7 @@ markdown_extensions:
   - tables
   - toc
   - mknodes.mdext:
-      context_mode: full  # All features available
+      context: true  # All features available
 """,
             "usage": "Internal use, full functionality more important than performance",
         },
@@ -276,7 +264,7 @@ def migration_examples():
     print("=== Migration Examples ===")
 
     print("""
-**Before (no context mode configuration):**
+**Default behavior (no context, fast):**
 
 mkdocs.yml:
 ```yaml
@@ -284,32 +272,25 @@ markdown_extensions:
   - mknodes.mdext
 ```
 
-**After (explicit configuration):**
+**With full context (when needed):**
 
-Option 1 - Keep existing behavior (full context):
 ```yaml
 markdown_extensions:
   - mknodes.mdext:
-      context_mode: full
+      context: true
 ```
 
-Option 2 - Optimize for performance:
+**Mixed approach (default fast, per-block context when needed):**
+
+mkdocs.yml:
 ```yaml
 markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
+  - mknodes.mdext  # Default: context=false
 ```
 
-Option 3 - Mixed approach (fallback by default, full when needed):
-```yaml
-markdown_extensions:
-  - mknodes.mdext:
-      context_mode: fallback
-```
-
-Then use per-block full context when needed:
+Then use per-block context when needed:
 ```markdown
-/// mknodes | full
+/// mknodes | context
 {{ "Complex content needing full context" | MkHeader }}
 ///
 ```
@@ -330,11 +311,11 @@ if __name__ == "__main__":
 
         print("✅ All configuration examples completed!")
         print("\nRecommendation:")
-        print("- Use 'fallback' context mode for production/performance")
-        print("- Use 'full' context mode for development/full features")
-        print("- Use per-block overrides for fine-grained control")
+        print("- Default (context=false) is ~50x faster - use for most cases")
+        print("- Use context=true only when you need full project info")
+        print("- Use '/// mknodes | context' for per-block full context")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"❌ Error in configuration examples: {e}")
         import traceback
 
