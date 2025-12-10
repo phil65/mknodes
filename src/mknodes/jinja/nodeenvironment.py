@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import functools
+import inspect
 import pathlib
 from typing import TYPE_CHECKING, Any
 
@@ -71,9 +72,40 @@ class NodeEnvironment(jinjarope.Environment):
                 **kwargs: Any,
             ) -> mk.MkNode:
                 kls = getattr(mk, kls_name)
-                node = kls(*args, parent=self.node, **kwargs)
-                self.rendered_nodes.append(node)
-                return node
+                try:
+                    node = kls(*args, parent=self.node, **kwargs)
+                    self.rendered_nodes.append(node)
+                except Exception as e:
+                    # Create error message with signature
+                    sig = inspect.signature(kls.__init__)
+                    params = []
+                    for param_name, param in sig.parameters.items():
+                        if param_name in ("self", "parent"):
+                            continue
+                        if param.kind == inspect.Parameter.VAR_KEYWORD:
+                            params.append(f"**{param_name}")
+                        elif param.kind == inspect.Parameter.VAR_POSITIONAL:
+                            params.append(f"*{param_name}")
+                        elif param.default is inspect.Parameter.empty:
+                            params.append(f"{param_name}")
+                        else:
+                            params.append(f"{param_name}={param.default!r}")
+                    signature_str = f"{kls_name}({', '.join(params)})"
+
+                    error_msg = (
+                        f"Failed to create {kls_name} node in Jinja template.\n"
+                        f"Error: {type(e).__name__}: {e}\n"
+                        f"Signature: {signature_str}\n"
+                        f"Called with args={args!r}, kwargs={kwargs!r}"
+                    )
+                    logger.error(error_msg)  # noqa: TRY400
+
+                    # Create MkText node with error message
+                    error_node = mk.MkText(error_msg, parent=self.node)
+                    self.rendered_nodes.append(error_node)
+                    return error_node
+                else:
+                    return node
 
             self._node_filters[kls_name] = jinja2.pass_context(wrapped)
         self.setup_environment()
