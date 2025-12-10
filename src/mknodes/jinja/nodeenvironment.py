@@ -75,7 +75,7 @@ class NodeEnvironment(jinjarope.Environment):
                 try:
                     node = kls(*args, parent=self.node, **kwargs)
                     self.rendered_nodes.append(node)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     # Create error message with signature
                     sig = inspect.signature(kls.__init__)
                     params = []
