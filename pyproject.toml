@@ -2,7 +2,7 @@
 
 [project]
 name = "mknodes"
-version = "2.2.2"
+version = "2.2.3"
 description = "Don't write docs. Code them."
 readme = "README.md"
 requires-python = ">=3.13"
