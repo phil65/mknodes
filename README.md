@@ -69,6 +69,22 @@ def _(page: mk.MkPage):
 ```
 
 
+## Execute Python code in markdown
+
+``` python exec="true"
+print("# Generated at build time!")
+print("Current timestamp:", __import__('datetime').datetime.now())
+```
+
+Use `session="name"` to persist variables between code blocks:
+
+``` python exec="true" session="demo"
+counter = 1
+```
+
+``` python exec="true" session="demo" 
+print(f"Counter is now: {counter + 1}")
+```
 
 
 ## How to install

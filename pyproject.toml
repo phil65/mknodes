@@ -85,7 +85,8 @@ mknodes = "mknodes.cli:main"
 mknodes = "mknodes.jinja:setup_env"
 
 [project.entry-points."markdown.extensions"]
-mknodes = "mknodes.mdext:makeExtension"
+"mknodes.blocks" = "mknodes.mdext:makeMkNodesExtension"
+"mknodes.execute" = "mknodes.mdext:makeExecuteExtension"
 
 [project.optional-dependencies]
 llm = ["llmling-agent[default]"]

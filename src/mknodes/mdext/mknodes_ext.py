@@ -16,6 +16,8 @@ from pymdownx.blocks.block import Block  # type: ignore[import-untyped]
 from pymdownx.superfences import fence_code_format  # type: ignore[import-untyped]
 import yamling
 
+from mknodes.utils import icons
+
 
 if TYPE_CHECKING:
     from mknodes.jinja.nodeenvironment import NodeEnvironment
@@ -234,6 +236,12 @@ def _load_markdown_extensions_raw() -> list[Any]:
         "pymdownx.snippets",
         "pymdownx.tilde",
         "pymdownx.inlinehilite",
+        {
+            "pymdownx.emoji": {
+                "emoji_index": icons.twemoji,
+                "emoji_generator": icons.to_svg,
+            }
+        },
         {
             "pymdownx.highlight": {
                 "pygments_lang_class": True,
