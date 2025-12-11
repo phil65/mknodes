@@ -67,11 +67,11 @@ def per_block_examples():
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
     # Test with default config (no context)
     print("Testing with default config + per-block overrides:")
-    md = markdown.Markdown(extensions=[makeExtension()])
+    md = markdown.Markdown(extensions=[makeMkNodesExtension()])
     result = md.convert(markdown_content)
 
     print("✅ Rendered successfully with mixed context settings")
@@ -90,20 +90,20 @@ def programmatic_examples():
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
     print("1. Extension with default (no context, fast):")
-    md1 = markdown.Markdown(extensions=[makeExtension()])
+    md1 = markdown.Markdown(extensions=[makeMkNodesExtension()])
     md1.convert(simple_content)
     print("✅ Configured with context=False (default)")
 
     print("\n2. Extension with explicit context=False:")
-    md2 = markdown.Markdown(extensions=[makeExtension(context=False)])
+    md2 = markdown.Markdown(extensions=[makeMkNodesExtension(context=False)])
     md2.convert(simple_content)
     print("✅ Configured with context=False")
 
     print("\n3. Extension with context=True (full context):")
-    md3 = markdown.Markdown(extensions=[makeExtension(context=True)])
+    md3 = markdown.Markdown(extensions=[makeMkNodesExtension(context=True)])
     md3.convert(simple_content)
     print("✅ Configured with context=True")
 
@@ -113,7 +113,7 @@ def programmatic_examples():
             "admonition",
             "pymdownx.superfences",
             "tables",
-            makeExtension(),  # Default: no context
+            makeMkNodesExtension(),  # Default: no context
         ]
     )
     md4.convert(simple_content)

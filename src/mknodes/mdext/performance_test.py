@@ -13,7 +13,7 @@ import markdown
 
 def measure_performance(context: bool, iterations: int = 10) -> dict[str, float]:
     """Measure performance for a given context setting."""
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
     markdown_content = """
 # Performance Test Document
@@ -42,7 +42,7 @@ This is regular markdown content that should render normally.
     for _i in range(iterations):
         # Measure extension initialization
         init_start = time.perf_counter()
-        md = markdown.Markdown(extensions=[makeExtension(context=context)])
+        md = markdown.Markdown(extensions=[makeMkNodesExtension(context=context)])
         init_end = time.perf_counter()
         init_times.append(init_end - init_start)
 
@@ -153,13 +153,13 @@ def test_functionality_differences():
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
     print("\n🔍 Testing functionality in both modes...")
 
     # Test with context=True
     try:
-        md_context = markdown.Markdown(extensions=[makeExtension(context=True)])
+        md_context = markdown.Markdown(extensions=[makeMkNodesExtension(context=True)])
         result_context = md_context.convert(test_content)
         context_success = (
             "mknodes-rendered" in result_context and "Basic Components Test" in result_context
@@ -171,7 +171,7 @@ def test_functionality_differences():
 
     # Test with context=False (default)
     try:
-        md_no_context = markdown.Markdown(extensions=[makeExtension(context=False)])
+        md_no_context = markdown.Markdown(extensions=[makeMkNodesExtension(context=False)])
         result_no_context = md_no_context.convert(test_content)
         no_context_success = (
             "mknodes-rendered" in result_no_context and "Basic Components Test" in result_no_context

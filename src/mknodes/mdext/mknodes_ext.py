@@ -302,17 +302,10 @@ def _load_markdown_extensions_raw() -> list[Any]:
         return extensions
 
 
-def makeExtension(**kwargs: Any):  # noqa: D417, N802
+def makeExtension(**kwargs: Any) -> MkNodesExtension:  # noqa: N802
     """Create the markdown extension.
 
     Args:
-        context: Whether to create full project context. Default: False (fast).
-            Set to True for complete project info (expensive but complete).
-
-    Note:
-        Context can also be specified per-block:
-        /// mknodes | context
-        {{ "With full context" | MkHeader(level=2) }}
-        ///
+        kwargs: Keyword arguments to pass to the extension.
     """
     return MkNodesExtension(**kwargs)

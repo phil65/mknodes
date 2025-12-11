@@ -11,3 +11,12 @@ __all__ = [
     "makeExecuteExtension",
     "makeMkNodesExtension",
 ]
+
+
+def makeExtension(**kwargs):  # noqa: N802
+    """Create MkNodes extension for markdown module loading.
+
+    Markdown loads extensions by module path and looks for makeExtension().
+    Usage in mkdocs.yml: `- mknodes.mdext`
+    """
+    return makeMkNodesExtension(**kwargs)

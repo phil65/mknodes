@@ -27,9 +27,9 @@ Back to regular markdown.
 """
 
     # Create markdown instance with our extension
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
-    md = markdown.Markdown(extensions=[makeExtension()])
+    md = markdown.Markdown(extensions=[makeMkNodesExtension()])
     result = md.convert(markdown_content)
 
     print("Markdown input:")
@@ -81,9 +81,9 @@ def advanced_components_example():
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
-    md = markdown.Markdown(extensions=[makeExtension()])
+    md = markdown.Markdown(extensions=[makeMkNodesExtension()])
     result = md.convert(markdown_content)
 
     print("Rendered HTML:")
@@ -115,9 +115,9 @@ MkNodes supports both direct calls and Jinja filters:
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
-    md = markdown.Markdown(extensions=[makeExtension()])
+    md = markdown.Markdown(extensions=[makeMkNodesExtension()])
     result = md.convert(markdown_content)
 
     print("Rendered HTML:")
@@ -156,9 +156,9 @@ def nested_content_example():
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
-    md = markdown.Markdown(extensions=[makeExtension()])
+    md = markdown.Markdown(extensions=[makeMkNodesExtension()])
     result = md.convert(markdown_content)
 
     print("Rendered HTML:")
@@ -207,9 +207,9 @@ And we can continue with regular markdown after the MkNodes block.
 > With multiple lines
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
-    md = markdown.Markdown(extensions=[makeExtension(), "fenced_code", "tables"])
+    md = markdown.Markdown(extensions=[makeMkNodesExtension(), "fenced_code", "tables"])
     result = md.convert(markdown_content)
 
     print("Rendered HTML:")
@@ -237,15 +237,15 @@ def context_modes_example():
 ///
 """
 
-    from mknodes.mdext import makeExtension
+    from mknodes.mdext import makeMkNodesExtension
 
     print("Testing with full context mode (default):")
-    md_full = markdown.Markdown(extensions=[makeExtension(context_mode="full")])
+    md_full = markdown.Markdown(extensions=[makeMkNodesExtension(context_mode="full")])
     md_full.convert(markdown_content)
     print("✅ Full context rendered successfully")
 
     print("\nTesting with fallback context mode:")
-    md_fallback = markdown.Markdown(extensions=[makeExtension(context_mode="fallback")])
+    md_fallback = markdown.Markdown(extensions=[makeMkNodesExtension(context_mode="fallback")])
     md_fallback.convert(markdown_content)
     print("✅ Fallback context rendered successfully")
 
