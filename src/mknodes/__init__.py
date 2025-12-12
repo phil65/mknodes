@@ -62,7 +62,6 @@ from .build import BuildOutput, DocBuilder, MarkdownExporter
 
 from .templatenodes.mkinclude import MkInclude
 from .templatenodes.mkshields import MkShields
-from .templatenodes.mkinstallguide import MkInstallGuide
 from .templatenodes.mkchangelog import MkChangelog
 from .templatenodes.mkcodeofconduct import MkCodeOfConduct
 from .templatenodes.mkcommitconventions import MkCommitConventions
@@ -157,7 +156,6 @@ __all__ = [
     "MkImageCompare",
     "MkImageSlideshow",
     "MkInclude",
-    "MkInstallGuide",
     "MkJupyterLite",
     "MkKeys",
     "MkLicense",

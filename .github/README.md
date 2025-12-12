@@ -6,7 +6,6 @@ def create_github_index_md() -> mk.MkPage:
     page += mk.MkHeader("Don't write docs. Code them.", level=4)
     page += mk.MkShields()
     page += mk.MkLink(DOC_URL, "Read the completely coded documentation!")
-    page += mk.MkInstallGuide(header="How to install")
     page += mk.MkHeader("All the nodes!")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR")
     return page
@@ -113,7 +112,6 @@ graph LR
   2257954941968["mktasklist.MkTaskList"]
   2257954944896["mkmetadatabadges.MkMetadataBadges"]
   2257954981984["mkshields.MkShields"]
-  2257954992720["mkinstallguide.MkInstallGuide"]
   2257991178064["mkcommitconventions.MkCommitConventions"]
   2257952053104["mkdevenvsetup.MkDevEnvSetup"]
   2257952110688["mkcommentedcode.MkCommentedCode"]
