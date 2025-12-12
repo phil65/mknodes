@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     import clinspector
     from griffe import Alias, Module
 
-    from mknodes.data import commitconventions, tools
+    from mknodes.data import commitconventions, installmethods, tools
     from mknodes.info import folderinfo, mkdocsconfigfile
     from mknodes.info.packageinfo import PackageInfo
     from mknodes.utils.packagehelpers import Dependency
@@ -116,7 +116,11 @@ class ThemeContext(Context):
 #     commit_types: list[commitconventions.CommitTypeStr] = dataclasses.field(
 #         default_factory=list,
 #     )
+#     """Commit types defined in pyproject mknodes section *[pyproject]*"""
 
+#     package_repos: list[installmethods.InstallMethod] = dataclasses.field(
+#         default_factory=list,
+#     )
 #     """Package repositories the distribution is distributed on."""
 #     docstring_style: str | None = None
 #     """Defined in pyproject mknodes section *[pyproject]*"""
@@ -222,7 +226,9 @@ class PackageContext(Context):
         default_factory=list,
     )
     """Commit types defined in pyproject mknodes section *[pyproject]*"""
-
+    package_repos: list[installmethods.InstallMethod] = dataclasses.field(
+        default_factory=list,
+    )
     """Package repositories the distribution is distributed on.
     Defined in pyproject mknodes section *[pyproject]*
     """

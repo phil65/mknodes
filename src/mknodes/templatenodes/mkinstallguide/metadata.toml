@@ -1,0 +1,35 @@
+[metadata]
+name = "MkInstallGuide"
+icon = "mdi:help"
+group = "documentation"
+virtual_children = true
+
+[examples.regular]
+title = "Regular"
+jinja = """
+{{ mk.MkInstallGuide() }}
+"""
+
+[examples.explicit]
+title = "Explicit"
+jinja = """
+{{ "mkdocs" | MkInstallGuide(package_repos=["pip", "pipx"]) }}
+"""
+
+[output.markdown]
+template = """
+{% for method in node.package_repos %}
+{{ method.ID | MkHeader(level=node.header_level) }}
+
+{{ method.info_text() }}
+
+{{ method.install_instructions() | MkCode }}
+{% endfor %}
+"""
+
+# proj = self.associated_distribution
+# if method.ID == "pip" and proj and (extras := proj.info.extras):
+#     extras_str = ",".join(extras)
+#     text = f"{method.install_instructions()}[{extras_str}]"
+#     code = mkcode.MkCode(text)
+#     items.append(code)

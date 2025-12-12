@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     import upath
 
-    from mknodes.data import commitconventions
+    from mknodes.data import commitconventions, installmethods
 
 
 class PyProject(configfile.TomlFile):
@@ -88,6 +88,11 @@ class PyProject(configfile.TomlFile):
         return self.mknodes_section.get("allowed-commit-types", [])
 
     @property
+    def package_repos(self) -> list[installmethods.InstallMethodStr]:
+        """Return a list of package repositories the package is available on."""
+        return self.mknodes_section.get("package-repositories", [])
+
+    @property
     def docstring_style(self) -> str | None:
         """Return the style used for docstring."""
         if convention := self.tool.get("pydocstyle", {}).get("convention"):
@@ -113,6 +118,7 @@ class PyProject(configfile.TomlFile):
     #     return contexts.PyProjectContext(
     #         configured_build_systems=self.configured_build_systems,
     #         build_system=self.build_system,
+    #         package_repos=self.package_repos,
     #         commit_types=self.allowed_commit_types,
     #         docstring_style=self.docstring_style,
     #         line_length=self.line_length,
