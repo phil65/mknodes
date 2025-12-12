@@ -1,6 +1,6 @@
-# MkNodes Markdown Extension
+# MkNodes Markdown Extensions
 
-A markdown extension that allows rendering Jinja templates using MkNodes components within markdown documents.
+A collection of markdown extensions for MkNodes, including dynamic content rendering and code file inclusion.
 
 ## Overview
 
@@ -234,6 +234,221 @@ Check parameter names match the component's constructor:
 ### Performance issues
 
 Use the default `context=false` setting. Only use `context=true` or `| context` when you specifically need project metadata.
+
+---
+
+# Code Include Extension
+
+A markdown extension that automatically wraps included files in fenced code blocks with syntax highlighting and filename titles.
+
+## Overview
+
+The Code Include extension automatically wraps included file content in fenced code blocks with proper syntax highlighting and the filename as title. It uses UPath for flexible file access including URLs and cloud storage.
+
+## Installation
+
+Included with MkNodes:
+
+```bash
+pip install mknodes
+```
+
+## Quick Start
+
+### MkDocs Configuration
+
+```yaml
+# mkdocs.yml
+markdown_extensions:
+  - mknodes.mdext.codeinclude:
+      base_path:
+        - docs/examples
+        - src
+```
+
+### Markdown Usage
+
+```markdown
+# Documentation
+
+Include a Python file:
+
+@@@codeinclude "myapp/main.py"
+
+The file is automatically wrapped with syntax highlighting!
+```
+
+This renders as:
+
+````markdown
+```python title="main.py"
+<content of myapp/main.py>
+```
+````
+
+## Configuration
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `base_path` | list[str] | `["."]` | Base directories for file resolution |
+| `check_paths` | bool | `False` | Fail build if file not found |
+
+### Example Configuration
+
+```yaml
+markdown_extensions:
+  - pymdownx.superfences  # Required for code block rendering
+  - mknodes.mdext.codeinclude:
+      base_path:
+        - docs/examples
+        - src
+      check_paths: true
+```
+
+## Supported Languages
+
+The extension automatically detects language from file extensions:
+
+| Extension | Language | Extension | Language |
+|-----------|----------|-----------|----------|
+| `.py` | python | `.js` | javascript |
+| `.ts` | typescript | `.jsx` | jsx |
+| `.java` | java | `.c`, `.h` | c |
+| `.cpp`, `.cc` | cpp | `.cs` | csharp |
+| `.go` | go | `.rs` | rust |
+| `.rb` | ruby | `.php` | php |
+| `.sh`, `.bash` | bash | `.sql` | sql |
+| `.html`, `.htm` | html | `.css` | css |
+| `.json` | json | `.yaml`, `.yml` | yaml |
+| `.toml` | toml | `.md` | markdown |
+
+And many more...
+
+## Usage Examples
+
+### Single File
+
+```markdown
+# My Documentation
+
+@@@codeinclude "examples/hello.py"
+```
+
+Renders as:
+
+````markdown
+```python title="hello.py"
+def hello():
+    return "Hello, World!"
+```
+````
+
+### Multiple Files
+
+```markdown
+# API Documentation
+
+## Python Implementation
+@@@codeinclude "api/handler.py"
+
+## Configuration
+@@@codeinclude "config/settings.yaml"
+
+## Tests
+@@@codeinclude "tests/test_api.py"
+```
+
+### With Regular Markdown
+
+```markdown
+# Documentation
+
+Regular markdown content here.
+
+## Code Example
+
+@@@codeinclude "examples/demo.py"
+
+You can continue with regular markdown after the include.
+```
+
+## Comparison with pymdownx.snippets
+
+| Feature | pymdownx.snippets | codeinclude |
+|---------|------------------|-------------|
+| **Syntax** | `--8<-- "file.py"` | `@@@codeinclude "file.py"` |
+| **Purpose** | Include raw content for processing | Show code with syntax highlighting |
+| **Output** | Raw file content | Fenced code block with language and title |
+| **Line selection** | ✅ Supported | ❌ Not supported |
+| **Sections** | ✅ Supported | ❌ Not supported |
+| **Best for** | Including markdown partials | Displaying code examples |
+
+### When to Use Each
+
+**Use `pymdownx.snippets`:**
+- Including markdown content to be processed
+- Embedding reusable text snippets
+- Need line/section selection
+
+**Use `codeinclude`:**
+- Showing code examples from files
+- Want automatic syntax highlighting
+- Need filename display in title
+
+## UPath Support
+
+The extension uses UPath which supports various file systems and protocols out of the box:
+
+**Local files:**
+```markdown
+@@@codeinclude "path/to/file.py"
+@@@codeinclude "/absolute/path/to/file.py"
+```
+
+**URLs:**
+```markdown
+@@@codeinclude "https://raw.githubusercontent.com/user/repo/main/example.py"
+```
+
+**Cloud storage (requires appropriate UPath extras):**
+```markdown
+@@@codeinclude "s3://bucket/path/to/file.py"
+@@@codeinclude "gs://bucket/path/to/file.py"
+@@@codeinclude "azure://container/path/to/file.py"
+```
+
+Note: Cloud storage and HTTP access may require additional dependencies (e.g., `s3fs`, `gcsfs`, `aiohttp`).
+
+## Programmatic Usage
+
+```python
+import markdown
+from mknodes.mdext import makeCodeIncludeExtension
+
+md = markdown.Markdown(
+    extensions=[
+        "fenced_code",
+        makeCodeIncludeExtension(
+            base_path=["./examples", "./src"],
+            check_paths=True
+        )
+    ]
+)
+
+result = md.convert(your_markdown_content)
+```
+
+## Error Handling
+
+### Missing Files
+
+With `check_paths=False` (default):
+- Missing files are silently ignored
+- Build continues without error
+
+With `check_paths=True`:
+- Missing files raise `CodeIncludeError`
+- Build fails with error message
 
 ## License
 
