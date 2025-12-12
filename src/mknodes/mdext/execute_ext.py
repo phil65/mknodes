@@ -251,8 +251,43 @@ def formatter(
     if show_source:
         output = _add_source(source, output, show_source, tabs)
 
-    # Convert markdown output to HTML
-    return md.convert(output)
+    # Convert markdown output to HTML.
+    # We must use md.htmlStash.store() to inject raw HTML and return a placeholder,
+    # because calling md.convert() recursively corrupts superfences state
+    # (self.ws becomes None, causing "None" to be prepended to output).
+    html = _convert_markdown_safe(output, md)
+    return html
+
+
+def _convert_markdown_safe(text: str, md: Markdown) -> str:
+    """Convert markdown to HTML without corrupting parent markdown state.
+
+    Creates a minimal new Markdown instance for conversion to avoid
+    state corruption when called from within a superfences formatter.
+    """
+    from markdown import Markdown as MD
+
+    # Create minimal markdown instance with just the extensions needed for code blocks
+    fresh_md = MD(
+        extensions=[
+            "tables",
+            "pymdownx.superfences",
+        ],
+        extension_configs={
+            "pymdownx.superfences": {
+                "custom_fences": [
+                    {
+                        "name": "mermaid",
+                        "class": "mermaid",
+                        "format": __import__(
+                            "pymdownx.superfences", fromlist=["fence_code_format"]
+                        ).fence_code_format,
+                    }
+                ]
+            }
+        },
+    )
+    return fresh_md.convert(text)
 
 
 class ExecuteExtension(Extension):
