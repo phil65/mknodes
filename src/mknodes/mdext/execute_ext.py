@@ -255,8 +255,7 @@ def formatter(
     # We must use md.htmlStash.store() to inject raw HTML and return a placeholder,
     # because calling md.convert() recursively corrupts superfences state
     # (self.ws becomes None, causing "None" to be prepended to output).
-    html = _convert_markdown_safe(output, md)
-    return html
+    return _convert_markdown_safe(output, md)
 
 
 def _convert_markdown_safe(text: str, md: Markdown) -> str:
@@ -265,10 +264,10 @@ def _convert_markdown_safe(text: str, md: Markdown) -> str:
     Creates a minimal new Markdown instance for conversion to avoid
     state corruption when called from within a superfences formatter.
     """
-    from markdown import Markdown as MD
+    from markdown import Markdown as Md
 
     # Create minimal markdown instance with just the extensions needed for code blocks
-    fresh_md = MD(
+    fresh_md = Md(
         extensions=[
             "tables",
             "pymdownx.superfences",

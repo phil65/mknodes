@@ -107,9 +107,9 @@ class CodeIncludePreprocessor(Preprocessor):
         base = config.get("base_path")
         if isinstance(base, (str, os.PathLike)):
             base = [base]
-        self.base_path = [Path(b).resolve() for b in base]
+        self.base_path = [Path(b).resolve() for b in base] if base is not None else []
         self.check_paths = config.get("check_paths")
-        self.placeholder_cache = {}
+        self.placeholder_cache: dict[str, str] = {}
         self.placeholder_counter = 0
         super().__init__()
 
@@ -139,14 +139,16 @@ class CodeIncludePreprocessor(Preprocessor):
         snippet_path = self.get_snippet_path(path)
         if not snippet_path:
             if self.check_paths:
-                raise CodeIncludeError(f"File at path '{path}' could not be found")
+                msg = f"File at path '{path}' could not be found"
+                raise CodeIncludeError(msg)
             return ""
 
         try:
             content = snippet_path.read_text()
         except Exception as e:
             if self.check_paths:
-                raise CodeIncludeError(f"Error reading '{path}': {e}") from e
+                msg = f"Error reading '{path}': {e}"
+                raise CodeIncludeError(msg) from e
             return ""
 
         # Get language and filename
@@ -206,7 +208,7 @@ class CodeIncludeExtension(Extension):
 
         super().__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md: Markdown) -> None:
+    def extendMarkdown(self, md: Markdown) -> None:  # noqa: N802
         """Register extension."""
         self.md = md
         md.registerExtension(self)
@@ -215,6 +217,6 @@ class CodeIncludeExtension(Extension):
         md.preprocessors.register(processor, "codeinclude", 32)
 
 
-def makeExtension(*args, **kwargs):
+def makeExtension(*args, **kwargs):  # noqa: N802
     """Return extension instance."""
     return CodeIncludeExtension(*args, **kwargs)

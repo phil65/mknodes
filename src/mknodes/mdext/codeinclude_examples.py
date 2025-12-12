@@ -395,7 +395,7 @@ if __name__ == "__main__":
 
         print("✅ All examples completed successfully!")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"❌ Error running examples: {e}")
         import traceback
 
