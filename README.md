@@ -43,6 +43,7 @@ def create_github_index_md() -> mk.MkPage:
     page += mk.MkHeader("Don't write docs. Code them.", level=4)
     page += mk.MkShields()
     page += mk.MkLink(DOC_URL, "Read the completely coded documentation!")
+    page += mk.MkInstallGuide(header="How to install")
     page += mk.MkHeader("All the nodes!")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR")
     return page
@@ -81,7 +82,7 @@ Use `session="name"` to persist variables between code blocks:
 counter = 1
 ```
 
-``` python exec="true" session="demo"
+``` python exec="true" session="demo" 
 print(f"Counter is now: {counter + 1}")
 ```
 
