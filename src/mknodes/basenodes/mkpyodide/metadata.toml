@@ -42,7 +42,7 @@ class PyodideTerminal {
         });
         await this.pyodide.loadPackage(["micropip"]);
         const micropip = this.pyodide.pyimport("micropip");
-        await micropip.install("llmling-agent");
+        await micropip.install("agentpool");
         await micropip.install("textual");
         await this.pyodide.runPythonAsync(this.code);
     }

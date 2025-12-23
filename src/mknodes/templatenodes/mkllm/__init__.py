@@ -21,7 +21,7 @@ logger = log.get_logger(__name__)
 
 @anyio_functools.cache
 async def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
-    from llmling_agent.functional import run
+    from agentpool.functional import run
 
     return await run.run_agent(
         user_prompt + "\n\n" + context,

@@ -36,6 +36,8 @@ classifiers = [
   "Topic :: Text Processing :: Markup :: Markdown",
 ]
 dependencies = [
+  # TODO: make these optional
+  "agentpool[default]>=0.99.54",
   "anybadge",
   "anyenv[httpx]>=1.9.0",
   "clinspector",
@@ -51,8 +53,6 @@ dependencies = [
   "griffe",
   "jinja2",
   "jinjarope[icons]",
-  # TODO: make these optional
-  "llmling-agent[default]>=0.99.54",
   "mkdocstrings[python]",
   "natsort",
   "pipdeptree",
@@ -88,7 +88,7 @@ mknodes = "mknodes.jinja:setup_env"
 "mknodes.execute" = "mknodes.mdext.execute_ext:makeExtension"
 
 [project.optional-dependencies]
-llm = ["llmling-agent[default]"]
+llm = ["agentpool[default]"]
 
 [dependency-groups]
 dev = [
