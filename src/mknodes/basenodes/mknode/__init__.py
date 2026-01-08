@@ -23,7 +23,11 @@ if TYPE_CHECKING:
 
 logger = log.get_logger(__name__)
 HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
-fallback_ctx = contexts.ProjectContext()
+
+
+@functools.lru_cache
+def get_fallback_ctx() -> contexts.ProjectContext:
+    return contexts.ProjectContext()
 
 
 class IllegalArgumentError(ValueError):
@@ -388,7 +392,7 @@ class MkNode:
         for ancestor in self.ancestors:
             if ancestor._ctx:
                 return ancestor._ctx
-        return fallback_ctx
+        return get_fallback_ctx()
 
     @property
     def parent_navs(self) -> list[mk.MkNav]:
