@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import collections
 import functools
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from upathtools import to_upath
@@ -34,7 +35,7 @@ class PyProject(configfile.TomlFile):
         if path is None:
             path = pathhelpers.find_cfg_for_folder("pyproject.toml")
         if path is None:
-            msg = "Could not find pyproject.toml"
+            msg = f"Could not find pyproject.toml in {Path.cwd()!r}"
             raise FileNotFoundError(msg)
         p = to_upath(path)
         if p.is_dir():
