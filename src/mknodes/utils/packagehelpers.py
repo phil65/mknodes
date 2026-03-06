@@ -29,7 +29,7 @@ def get_marker(marker: str) -> Marker:
     return Marker(marker)
 
 
-def get_extras(markers: list[list[Any] | tuple[Any, ...]]) -> list[str]:
+def get_extras(markers: list[Any]) -> list[str]:
     extras: list[str] = []
     for marker in markers:
         match marker:
@@ -66,9 +66,9 @@ def get_dependency(name: str) -> Dependency:
 
 @functools.cache
 def list_installed_packages() -> dict[str, str]:
-    import pkg_resources
+    from importlib.metadata import distributions
 
-    return {i.project_name: i.key for i in pkg_resources.working_set}
+    return {d.metadata["Name"]: d.metadata["Name"].lower() for d in distributions()}
 
 
 stdlib_pkgs = {"python", "wsgiref", "argparse"}
