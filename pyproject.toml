@@ -50,7 +50,7 @@ dependencies = [
   "githarbor",
   # Git(Hub)
   "gitpython",
-  "griffe",
+  "griffelib",
   "jinja2",
   "jinjarope[icons]",
   "mkdocstrings[python]",
