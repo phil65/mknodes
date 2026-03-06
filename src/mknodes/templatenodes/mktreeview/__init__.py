@@ -106,7 +106,8 @@ class MkTreeView(mkcode.MkCode):
                         # Convert glob wildcards to regex
                         # ** for recursive directories, * for any characters
                         regex_pattern = (
-                            pattern.replace(".", r"\.")
+                            pattern
+                            .replace(".", r"\.")
                             .replace("**", "DOUBLESTAR")
                             .replace("*", "[^/]*")
                             .replace("DOUBLESTAR", ".*")
@@ -122,7 +123,8 @@ class MkTreeView(mkcode.MkCode):
                     patterns = []
                     for pattern in self.include_patterns:
                         regex_pattern = (
-                            pattern.replace(".", r"\.")
+                            pattern
+                            .replace(".", r"\.")
                             .replace("**", "DOUBLESTAR")
                             .replace("*", "[^/]*")
                             .replace("DOUBLESTAR", ".*")
