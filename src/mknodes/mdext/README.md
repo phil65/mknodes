@@ -428,10 +428,7 @@ from mknodes.mdext import makeCodeIncludeExtension
 md = markdown.Markdown(
     extensions=[
         "fenced_code",
-        makeCodeIncludeExtension(
-            base_path=["./examples", "./src"],
-            check_paths=True
-        )
+        makeCodeIncludeExtension(base_path=["./examples", "./src"], check_paths=True),
     ]
 )
 

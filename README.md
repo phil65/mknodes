@@ -47,7 +47,6 @@ def create_github_index_md() -> mk.MkPage:
     page += mk.MkHeader("All the nodes!")
     page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR")
     return page
-
 ```
 
 
@@ -73,7 +72,7 @@ def _(page: mk.MkPage):
 
 ``` python exec="true"
 print("# Generated at build time!")
-print("Current timestamp:", __import__('datetime').datetime.now())
+print("Current timestamp:", __import__("datetime").datetime.now())
 ```
 
 Use `session="name"` to persist variables between code blocks:
