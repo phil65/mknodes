@@ -39,7 +39,7 @@ dependencies = [
   # TODO: make these optional
   "agentpool[default]>=0.99.54",
   "anybadge",
-  "anyenv[httpx]>=1.9.0",
+  "anyenv[httpx]>=2.0.17",
   "clinspector",
   "coloraide",
   "epregistry",
@@ -52,7 +52,7 @@ dependencies = [
   "gitpython",
   "griffelib",
   "jinja2",
-  "jinjarope[icons]",
+  "jinjarope[icons]>=1.0.9",
   "mkdocstrings[python]",
   "natsort",
   "pipdeptree",
