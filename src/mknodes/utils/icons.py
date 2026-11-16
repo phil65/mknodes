@@ -30,7 +30,7 @@ def icon_for_url(url: str) -> str | None:
 
     # Try to find a matching brand icon
     domain = netloc.split(".")[-2]
-    icon_index = icons._get_pyconify_icon_index()
+    icon_index = icons.load_icon_index()
     if (icon_name := f":fa-brands-{domain}:") in icon_index:
         return iconfilters.get_pyconify_key(icon_index[icon_name]["name"])
 
