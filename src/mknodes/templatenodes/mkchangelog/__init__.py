@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 logger = log.get_logger(__name__)
 
 
-@functools.cache
 @helpers.list_to_tuple
+@functools.cache
 def get_changelog(
     repository: str,
     template: str,
