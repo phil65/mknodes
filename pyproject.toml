@@ -55,7 +55,7 @@ dependencies = [
   "jinjarope[icons]>=1.0.9",
   "mkdocstrings[python]",
   "natsort",
-  "pipdeptree",
+  "pipdeptree>=3.0.0",
   "pydantic",
   # Tools
   "pytest-asyncio>=1.3.0",

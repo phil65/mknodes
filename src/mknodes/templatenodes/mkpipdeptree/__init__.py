@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import functools
-import io
 import types
 
 from typing import Any, Literal
@@ -15,8 +13,8 @@ from mknodes.utils import helpers, log, resources
 logger = log.get_logger(__name__)
 
 
-@functools.cache
 @helpers.list_to_tuple
+@functools.cache
 def get_mermaid(
     package: str | tuple[str] | list[str] | None = None,
     local_only: bool = True,
@@ -35,42 +33,26 @@ def get_mermaid(
         reverse: Whether to reverse the graph
         exclude: Packages to exclude from the graph
     """
-    import warnings
+    import pipdeptree
 
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-
-        from pipdeptree._models import PackageDAG
-        from pipdeptree._render.mermaid import render_mermaid
-        from pipdeptree._discovery import get_installed_distributions
-
-    pkgs = get_installed_distributions(local_only=local_only, user_only=user_only)
-    tree = PackageDAG.from_pkgs(pkgs)
-    # Reverse the tree (if applicable) before filtering,
-    # thus ensuring, that the filter will be applied on ReverseTree
-    if reverse:
-        tree = tree.reverse()
     match package:
-        case str():
-            include_list: list[str] | None = package.split(",")
+        case str() | None:
+            packages = package
         case list() | tuple():
-            include_list = list(package)
-        case None:
-            include_list = None
-    exclude_list = set(exclude.split(",")) if exclude else None
-    if include_list is not None or exclude_list is not None:
-        try:
-            tree = tree.filter_nodes(include_list, exclude_list)
-        except ValueError:
-            msg = f"Error when building tree for {include_list}. Is the package on PyPi?."
-            logger.exception(msg)
-            return ""
-    tree = [tree] if isinstance(tree, str) else tree
-    # Capture stdout since render_mermaid now prints instead of returning
-    stdout_buffer = io.StringIO()
-    with contextlib.redirect_stdout(stdout_buffer):
-        render_mermaid(tree)  # pyright: ignore[reportArgumentType]
-    text = stdout_buffer.getvalue()
+            packages = ",".join(package)
+    try:
+        text = pipdeptree.render(
+            packages=packages,
+            exclude=exclude or None,
+            output_format="mermaid",
+            reverse=reverse,
+            local_only=local_only,
+            user_only=user_only,
+        )
+    except ValueError:
+        msg = f"Error when building tree for {packages}. Is the package on PyPi?."
+        logger.exception(msg)
+        return ""
     return "\n".join(text.splitlines()[1:])
 
 
