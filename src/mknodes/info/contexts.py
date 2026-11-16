@@ -16,7 +16,7 @@ from mknodes.utils import log, superdict
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    import datetime
+    import datetime as dt
     import types
 
     import clinspector
@@ -63,11 +63,11 @@ class GitContext(Context):
     """SHA of last commit."""
     current_committer: str = ""
     """Committer name for last commit."""
-    current_date_committed: datetime.datetime | None = None
+    current_date_committed: dt.datetime | None = None
     """Date committed for last commit."""
     current_author: str = ""
     """Author email for last commit."""
-    current_date_authored: datetime.datetime | None = None
+    current_date_authored: dt.datetime | None = None
     """Date authored for last commit."""
     last_version: str | None = None
     """Name of last commit tag."""

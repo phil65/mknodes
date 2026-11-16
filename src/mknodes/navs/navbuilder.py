@@ -57,7 +57,7 @@ class NavBuilder:
 
     @classmethod
     def _items(
-        cls, data: Mapping[str | None, Mapping[None | str, Any]], level: int
+        cls, data: Mapping[str | None, Mapping[str | None, Any]], level: int
     ) -> Iterable[Item]:
         for key, value in data.items():
             if key is not None:

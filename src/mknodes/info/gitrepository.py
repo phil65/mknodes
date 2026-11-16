@@ -143,7 +143,7 @@ class GitRepository(git.Repo):
         """
         rev = branch or self.main_branch
         try:
-            kwargs = {} if not num else {"max_count": str(num)}
+            kwargs: dict[str, Any] = {} if not num else {"max_count": num}
             return CommitList(self.iter_commits(rev, **kwargs))
         except git.GitCommandError:
             logger.warning("Could not fetch commits for %r", rev)
