@@ -10,7 +10,7 @@ from jinjarope import inspectfilters
 import yamling
 
 from mknodes import paths
-from mknodes.utils import classhelpers, inspecthelpers
+from mknodes.utils import classhelpers, iconcache, inspecthelpers
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -37,6 +37,8 @@ def setup_env(env: jinjarope.Environment) -> None:
             "dump_yaml": yamling.dump_yaml,
             "dump_toml": tomli_w.dumps,
             "load_yaml": yamling.load_yaml,
+            # Same signature as jinjarope's filter, but backed by the on-disk icon cache.
+            "get_icon_svg": iconcache.get_icon_svg,
         }
     except Exception as e:  # noqa: BLE001
         logger.warning("Could not setup jinjarope environment: %s", e)

@@ -44,13 +44,18 @@ jobs:
               run: |
                   uv sync --all-extras
             # Iconify's public API rate-limits shared runner IPs; reuse fetched icons
-            - name: Cache HTTP responses
+            # (mknodes' icon cache never expires) and HTTP responses (anyenv).
+            - name: Cache icons and HTTP responses
               uses: actions/cache@v5
               with:
-                  path: ~/.cache/anyenv
-                  key: anyenv-${{ runner.os }}-${{ github.run_id }}
-                  restore-keys: anyenv-${{ runner.os }}-
+                  path: |
+                      ~/.cache/mknodes
+                      ~/.cache/anyenv
+                  key: docs-http-${{ runner.os }}-${{ github.run_id }}
+                  restore-keys: docs-http-${{ runner.os }}-
             - name: Build
+              env:
+                  MKNODES_CACHE_DIR: ~/.cache/mknodes
               run: uv run mkdocs-mknodes build --engine zensical -v
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v4

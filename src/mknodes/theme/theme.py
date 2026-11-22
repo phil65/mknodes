@@ -3,12 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import jinjarope
-from jinjarope import iconfilters
 
 from mknodes.data import admonition
 from mknodes.info import contexts
 from mknodes.pages import templateblocks, templateregistry
-from mknodes.utils import color, log, reprhelpers, resources
+from mknodes.utils import color, iconcache, log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
@@ -102,7 +101,7 @@ class Theme:
         font_col_str = str(color.Color(font_color or (255, 255, 255)))
         adm = admonition.AdmonitionType(
             name=name,
-            svg=iconfilters.get_icon_svg(icon) if not icon.startswith("<") else icon,
+            svg=iconcache.get_icon_svg(icon) if not icon.startswith("<") else icon,
             header_color=header_col_str,
             icon_color=icon_col_str,
             border_color=border_col_str,

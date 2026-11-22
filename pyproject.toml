@@ -59,6 +59,7 @@ dependencies = [
   "natsort",
   "packaging>=23.0",
   "pipdeptree>=3.0.0",
+  "platformdirs",
   "pydantic",
   "pymdown-extensions>=10.0",
   # Tools

@@ -5,10 +5,10 @@ import functools
 
 from typing import Any, Literal, TYPE_CHECKING
 
-from jinjarope import iconfilters
+
 from mknodes.theme import colortheme, theme
 from mknodes.theme.materialtheme import palette
-from mknodes.utils import color as col, log, reprhelpers
+from mknodes.utils import color as col, iconcache, log, reprhelpers
 
 if TYPE_CHECKING:
     from mknodes.data import datatypes
@@ -284,7 +284,7 @@ class MaterialTheme(theme.Theme):
             icon: Iconify icon name
             description: Optional status description (used for tooltip)
         """
-        data = iconfilters.get_icon_svg(icon)
+        data = iconcache.get_icon_svg(icon)
         self.status_icons[name] = StatusIcon(name, data, description)
 
     def add_tag(

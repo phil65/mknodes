@@ -4,10 +4,10 @@ import upath
 
 from typing import Any, Literal, Self, TYPE_CHECKING
 
-from jinjarope import textfilters, iconfilters
+from jinjarope import textfilters
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import log
+from mknodes.utils import iconcache, log
 
 if TYPE_CHECKING:
     from mknodes.info import linkprovider
@@ -75,7 +75,7 @@ class MkBinaryImage(mkimage.MkImage):
             icon: Icon to get a MkBinaryImage for (example: material/file-image)
             kwargs: Keyword arguments passed to constructor
         """
-        content = iconfilters.get_icon_svg(icon)
+        content = iconcache.get_icon_svg(icon)
         path = f"{textfilters.slugify(icon)}.svg"
         return cls(data=content, path=path, **kwargs)
 

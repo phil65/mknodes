@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from jinjarope import iconfilters
 from mknodes.basenodes import mknode
-from mknodes.utils import log
+from mknodes.utils import iconcache, log
+
+
+if TYPE_CHECKING:
+    from jinjarope import iconfilters
 
 
 logger = log.get_logger(__name__)
@@ -62,7 +65,7 @@ class MkIcon(mknode.MkNode):
     @property
     def svg(self) -> str:
         try:
-            return iconfilters.get_icon_svg(
+            return iconcache.get_icon_svg(
                 self.icon_name,
                 color=self.color,
                 height=self.height,

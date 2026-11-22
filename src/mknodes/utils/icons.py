@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 
 from jinjarope import iconfilters, icons
 
+from mknodes.utils import iconcache
+
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -89,7 +91,7 @@ def to_svg(
     el = ET.Element("span", {"class": options.get("classes", index)})
     svg_path = md.inlinePatterns["emoji"].emoji_index["emoji"][shortname]["path"]  # type: ignore[attr-defined]  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]
     assert isinstance(svg_path, str)
-    svg = iconfilters.get_icon_svg(svg_path)
+    svg = iconcache.get_icon_svg(svg_path)
     el.text = md.htmlStash.store(svg)
     return el
 
@@ -113,5 +115,5 @@ def get_icon_xml(icon: str) -> ET.Element:
               then it will try to get the icon from material/ folder.
     """
     ET.register_namespace("", "http://www.w3.org/2000/svg")
-    svg_text = iconfilters.get_icon_svg(icon)
+    svg_text = iconcache.get_icon_svg(icon)
     return ET.fromstring(svg_text)
