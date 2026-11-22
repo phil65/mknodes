@@ -49,12 +49,47 @@ class MkClassPage(mktemplatepage.MkTemplatePage):
         return reprhelpers.get_nondefault_repr(self)
 
     @property
+    def path(self) -> str:
+        """Return the last part of the page path.
+
+        An explicitly set path is used as-is (case preserved, `ClassName.md`),
+        otherwise the slugified title.
+        """
+        if self._path and not self._is_index and not self._is_homepage:
+            return f"{self._path.removesuffix('.md')}.md"
+        return mktemplatepage.MkTemplatePage.path.fget(self)  # type: ignore[attr-defined]
+
+    @path.setter
+    def path(self, value: str | None) -> None:
+        self._path = value
+
+    @property
+    def obj_path(self) -> str:
+        """Dotted path used for the mkdocstrings `:::` directive.
+
+        The path of the defining module (or `module_path` if given). If griffe can only
+        resolve the class via another module (e.g. classes of `collections.abc`, which
+        are defined in `_collections_abc`), that path is used.
+        """
+        qual_name = self.klass.__qualname__.split("[")[0]
+        if self.module_path:
+            mod = self.module_path
+            mod_path = mod if isinstance(mod, str) else ".".join(mod)
+            return f"{mod_path}.{qual_name}"
+        try:
+            griffe_obj = grifferegistry.registry.get_class(self.klass)
+        except Exception:  # noqa: BLE001
+            return f"{self.klass.__module__}.{qual_name}"
+        return griffe_obj.path
+
+    @property
     def extra_variables(self) -> dict[str, Any]:
         # right now, we inject the cls and the griffe Class into jinja namespace.
         subclasses = inspectfilters.list_subclasses(self.klass, recursive=False)
         griffe_obj = grifferegistry.registry.get_class(self.klass)
         variables: dict[str, Any] = {
             "cls": self.klass,
+            "obj_path": self.obj_path,
             "subclasses": subclasses,
             "griffe_obj": griffe_obj,
         }

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from importlib import metadata
+import posixpath
 import sys
 import types
 from typing import TYPE_CHECKING
@@ -54,7 +55,8 @@ def linked(identifier: str, title: str | None = None) -> str:
         identifier: Target url
         title: Title to show as label
     """
-    suffix = "" if helpers.is_url(identifier) or identifier.endswith(".md") else ".md"
+    is_path = identifier.endswith((".md", "/"))
+    suffix = "" if helpers.is_url(identifier) or is_path else ".md"
     return f"[{title or identifier}]({identifier}{suffix})"
 
 
@@ -76,6 +78,8 @@ class LinkProvider:
         self.base_url = base_url
         self.excludes: set[str] = set()
         self.use_directory_urls = use_directory_urls
+        self.object_pages: dict[str, mk.MkPage] = {}
+        """Dotted path of a class / module -> page documenting it (filled by MkDoc)."""
         if include_stdlib:
             self.add_inv_file(
                 paths.RESOURCES / "python_objects.inv",
@@ -92,6 +96,36 @@ class LinkProvider:
         """
         self.excludes.update(excludes)
 
+    def register_object_page(self, dotted_path: str, page: mk.MkPage) -> None:
+        """Register the page documenting given class / module.
+
+        Links to the object then point to that page instead of an external URL.
+
+        Args:
+            dotted_path: Dotted path of the object (`module.path.ClassName`)
+            page: The page documenting the object
+        """
+        self.object_pages[dotted_path] = page
+
+    def page_link_for(self, dotted_path: str, from_page: mk.MkPage | None = None) -> str | None:
+        """Return a link to the registered page for given dotted path, if any.
+
+        Relative to `from_page` (as a `.md` path the site engine resolves) if given,
+        otherwise the final URL of the page.
+
+        Args:
+            dotted_path: Dotted path of the object
+            from_page: The page the link will be placed on
+        """
+        if (page := self.object_pages.get(dotted_path)) is None:
+            return None
+        if from_page is None:
+            return self.url_for_page(page)
+        start = posixpath.dirname(from_page.resolved_file_path)
+        path = posixpath.relpath(page.resolved_file_path, start or ".")
+        # always include a folder part, bare `file.md` links get rewritten by link replacers
+        return path if "/" in path else f"./{path}"
+
     def add_inv_file(self, path: str | os.PathLike[str], base_url: str | None = None) -> None:
         """Add an inventory file to the inventory manager.
 
@@ -105,12 +139,14 @@ class LinkProvider:
         self,
         mod: types.ModuleType | str | griffe.Module,
         fallback_to_homepage: bool = True,
+        from_page: mk.MkPage | None = None,
     ) -> str | None:
         """Return a url for given module.
 
         Args:
             mod: Module to get a url for
             fallback_to_homepage: Whether to get a link from Metadata if no other found
+            from_page: Page the link is for (to create relative links to own pages)
         """
         match mod:
             case types.ModuleType():
@@ -119,16 +155,23 @@ class LinkProvider:
                 dotted_path = mod
             case griffe.Module():
                 dotted_path = mod.canonical_path
+        if url := self.page_link_for(dotted_path, from_page):
+            return url
         if dotted_path in self.inv_manager:
             return self.inv_manager[dotted_path]  # type: ignore[return-value] # pyright: ignore[reportReturnType]
         module = dotted_path.split(".")[0]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_module(self, mod: types.ModuleType | str | griffe.Module) -> str:
+    def link_for_module(
+        self,
+        mod: types.ModuleType | str | griffe.Module,
+        from_page: mk.MkPage | None = None,
+    ) -> str:
         """Return a markdown link for given module.
 
         Args:
             mod: Module to get a link for
+            from_page: Page the link is for (to create relative links to own pages)
         """
         match mod:
             case types.ModuleType():
@@ -138,7 +181,7 @@ class LinkProvider:
             case griffe.Module():
                 dotted_path = mod.canonical_path
         fallback = dotted_path not in self.excludes
-        if url := self.url_for_module(mod, fallback_to_homepage=fallback):
+        if url := self.url_for_module(mod, fallback_to_homepage=fallback, from_page=from_page):
             return linked(url, dotted_path)
         return linked(dotted_path)
 
@@ -146,12 +189,14 @@ class LinkProvider:
         self,
         kls: type | str | griffe.Class,
         fallback_to_homepage: bool = True,
+        from_page: mk.MkPage | None = None,
     ) -> str | None:
         """Return a url for given class.
 
         Args:
             kls: Klass to get a url for
             fallback_to_homepage: Whether to get a link from Metadata if no other found
+            from_page: Page the link is for (to create relative links to own pages)
         """
         match kls:
             case type():
@@ -166,15 +211,22 @@ class LinkProvider:
             case str():
                 dotted_path = kls
                 module = dotted_path.split(".")[0]
+        if url := self.page_link_for(dotted_path, from_page):
+            return url
         if dotted_path in self.inv_manager:
             return self.inv_manager[dotted_path]  # type: ignore[return-value]  # pyright: ignore[reportReturnType]
         return homepage_for_distro(module) if fallback_to_homepage else None
 
-    def link_for_klass(self, kls: type | str | griffe.Class) -> str:
+    def link_for_klass(
+        self,
+        kls: type | str | griffe.Class,
+        from_page: mk.MkPage | None = None,
+    ) -> str:
         """Return a markdown link for given class.
 
         Args:
             kls: Klass to get a link for
+            from_page: Page the link is for (to create relative links to own pages)
         """
         match kls:
             case type():
@@ -185,7 +237,7 @@ class LinkProvider:
             case str():
                 qual_name = kls
         fallback = qual_name not in self.excludes
-        if url := self.url_for_klass(kls, fallback_to_homepage=fallback):
+        if url := self.url_for_klass(kls, fallback_to_homepage=fallback, from_page=from_page):
             return linked(url, qual_name)
         return linked(qual_name)
 
@@ -225,7 +277,12 @@ class LinkProvider:
         suffix = "#" + textfilters.slugify(await header.get_text())
         return self.url_for_page(page) + suffix
 
-    async def get_link(self, target: LinkableType, title: str | None = None):
+    async def get_link(
+        self,
+        target: LinkableType,
+        title: str | None = None,
+        from_page: mk.MkPage | None = None,
+    ):
         """Return a markdown link for given target.
 
         Target can be a class, a module, a MkPage, MkNav or a string.
@@ -233,11 +290,12 @@ class LinkProvider:
         Args:
             target: The thing to link to
             title: The title to use for the link
+            from_page: Page the link is for (to create relative links to own pages)
         """
         if isinstance(target, type) and not title:
-            return self.link_for_klass(target)
+            return self.link_for_klass(target, from_page=from_page)
         if isinstance(target, types.ModuleType) and not title:
-            return self.link_for_module(target)
+            return self.link_for_module(target, from_page=from_page)
         url = await self.get_url(target)
         return linked(url, title)
 

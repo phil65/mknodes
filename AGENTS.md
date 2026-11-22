@@ -102,9 +102,14 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - Container nodes (`MkContainerBase` subclasses) render via `get_content()`; a subclass that only
   overrides `to_md_unprocessed()` is detected by `_overrides_markdown_only()` in
   `basenodes/mkcontainer/__init__.py`. Check nested rendering (`page += node`) when adding nodes.
-- `MkDoc` (`navs/mkdoc.py`) only adds submodule navs with `recursive=True`. Known issue: it
-  filters classes with `module_filter=self.module_name` (the short name), so submodule navs list
-  no classes; switching to the full name roughly triples class pages on downstream sites.
+- `MkDoc` (`navs/mkdoc.py`) only adds submodule navs with `recursive=True`. Which module
+  documents which class is computed once per tree by `navs/apiscope.py` (`ApiScope`): every
+  class gets one page below its defining module (`pkg.sub.Klass` -> `API/sub/Klass/`, module
+  -> `API/sub/`), re-exports only link to it, private modules get no navs. Class page names keep
+  their case; a clash with a sibling module folder / `index` gets a `-class` suffix, so API
+  URLs can't collide. Class pages are registered in `ctx.links` (`register_object_page`), so
+  `get_link` on a class / module yields a relative link to its page. Changing the scheme
+  changes live URLs of all docs sites (minor release at least). `flatten_nav` has no effect.
 - `mknodes.execute` (`mdext/execute_ext.py`) `auto_register` does not take effect; register the
   fences explicitly via `get_custom_fences()` in the superfences config.
 - `MkTemplate` paths are relative to `docs/`; the manual breaks if templates move.

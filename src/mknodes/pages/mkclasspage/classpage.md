@@ -14,7 +14,7 @@
 
 {{ "🛈 DocStrings" | MkHeader(level=3) }}
 
-{{ cls | MkDocStrings }}
+{{ (obj_path or cls) | MkDocStrings }}
 
 {% if github_url %}
 {{ github_url | MkLink(title="Show source on GitHub", icon="fa-brands:github") }}

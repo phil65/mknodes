@@ -27,7 +27,11 @@ async def get_link(env: NodeEnvironment, target: LinkableType, title: str | None
         target: The thing to link to
         title: The title to use for the link
     """
-    return await env.node.ctx.links.get_link(target, title)
+    import mknodes as mk
+
+    node = env.node
+    page = node if isinstance(node, mk.MkPage) else node.parent_page
+    return await env.node.ctx.links.get_link(target, title, from_page=page)
 
 
 @jinja2.pass_environment

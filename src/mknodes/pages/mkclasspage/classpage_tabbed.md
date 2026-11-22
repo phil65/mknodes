@@ -1,6 +1,6 @@
 {% block content %}
 === "DocStrings"
-{{ cls | MkDocStrings | string | indent(first=True) }}
+{{ (obj_path or cls) | MkDocStrings | string | indent(first=True) }}
 
 {% if subclasses %}
 === "Sub classes"

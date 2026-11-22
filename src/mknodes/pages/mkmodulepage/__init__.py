@@ -25,6 +25,7 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         module: tuple[str, ...] | str | types.ModuleType,
         *,
         klasses: list[type] | set[type] | None = None,
+        reexported: list[type] | None = None,
         title: str | None = None,
         template_path: str | None = None,
         **kwargs: Any,
@@ -34,16 +35,19 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
         Args:
             module: ModuleType or path to model to show info for.
             klasses: klasses to use
+            reexported: Classes the module re-exports, documented on other pages
             title: Optional title override. Defaults to module name
             template_path: Name of the template to load
             kwargs: further keyword arguments passed to parent
         """
         self.module = classhelpers.to_module(module)
         self.parts = tuple(self.module.__name__.split("."))
-        self.klasses = klasses or classhelpers.list_classes(
-            module,
-            module_filter=self.parts[0],
+        self.klasses = (
+            klasses
+            if klasses is not None
+            else classhelpers.list_classes(module, module_filter=self.parts[0])
         )
+        self.reexported = reexported or []
         tpl_name = template_path or self.DEFAULT_TPL
         super().__init__(template_path=tpl_name, title=title or self.parts[-1], **kwargs)
 
@@ -54,7 +58,10 @@ class MkModulePage(mktemplatepage.MkTemplatePage):
     def extra_variables(self) -> dict[str, Any]:
         griffe_obj = grifferegistry.get_module(self.module)
         variables: dict[str, Any] = dict(
-            module=self.module, klasses=self.klasses, griffe_obj=griffe_obj
+            module=self.module,
+            klasses=self.klasses,
+            reexported=self.reexported,
+            griffe_obj=griffe_obj,
         )
         path = inspecthelpers.get_file(self.module)
         url = self.ctx.metadata.repository_url
