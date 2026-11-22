@@ -54,5 +54,26 @@ def test_cli_nav():
     assert children
 
 
+@pytest.fixture
+def doc_package(tmp_path, monkeypatch):
+    pkg = tmp_path / "docpkg"
+    (pkg / "sub").mkdir(parents=True)
+    (pkg / "__init__.py").write_text("")
+    (pkg / "broken.py").write_text("raise ImportError('optional dependency missing')\n")
+    (pkg / "sub" / "impl.py").write_text("class Foo:\n    pass\n")
+    (pkg / "sub" / "__init__.py").write_text(
+        "from docpkg.sub.impl import Foo\n\n__all__ = ['Foo']\n"
+    )
+    monkeypatch.syspath_prepend(str(tmp_path))
+    return "docpkg"
+
+
+def test_doc_not_recursive_skips_submodules(doc_package):
+    nav = mk.MkNav()
+    docs = nav.add_doc(doc_package)
+    children = docs.get_children()  # must not import docpkg.broken
+    assert not [c for c in children if isinstance(c, mk.MkDoc)]
+
+
 if __name__ == "__main__":
     pytest.main([__file__])

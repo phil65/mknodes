@@ -252,14 +252,12 @@ def get_submodules(
     else:
         msg = f"Module {mod} has no path"
         raise ValueError(msg)
-    modules = [
-        importlib.import_module(f"{mod.__name__}.{mod_name}")
-        for _importer, mod_name, _ispkg in pkgutil.iter_modules(path)
-    ]
+    names = [mod_name for _importer, mod_name, _ispkg in pkgutil.iter_modules(path)]
     if filter_by___all__:
+        # filter before importing, so unlisted (e.g. optional) submodules are never imported
         export = mod.__all__ if hasattr(mod, "__all__") else []
-        return [m for m in modules if m.__name__.split(".")[-1] in export]
-    return modules
+        names = [name for name in names if name in export]
+    return [importlib.import_module(f"{mod.__name__}.{name}") for name in names]
     # return [
     #     mod
     #     for name, mod in get_members(module, inspect.ismodule)

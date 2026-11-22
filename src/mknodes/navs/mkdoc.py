@@ -37,7 +37,7 @@ class MkDoc(mknav.MkNav):
         Args:
             module: Module to document
             filter_by___all__: Whether to filter stuff according to "__all__"
-            recursive: Whether to search modules recursively
+            recursive: Whether to add navs for submodules (recursively)
             exclude_modules: List of modules to exclude
             section_name: Optional section title override
             class_template: Override for the default ClassPage template
@@ -81,13 +81,17 @@ class MkDoc(mknav.MkNav):
         for klass in klasses:
             p = self.add_class_page(klass=klass, flatten=self.flatten_nav)
             pages.append(p)
-        for submod in classhelpers.get_submodules(
-            self.module, filter_by___all__=self.filter_by___all__
-        ):
+        submodules = (
+            classhelpers.get_submodules(self.module, filter_by___all__=self.filter_by___all__)
+            if self.recursive
+            else []
+        )
+        for submod in submodules:
             nav = self.add_doc(
                 submod,
                 class_template=self.class_template,
                 filter_by___all__=self.filter_by___all__,
+                recursive=True,
                 module_template=self.module_template,
                 flatten_nav=self.flatten_nav,
             )
