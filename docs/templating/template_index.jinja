@@ -54,10 +54,10 @@ via code of course though), but has a much larger built-in set of macros and fil
     # lets assume "my_template.jinja" uses an MkBadge node right at the start as a filter.
     # This could look like { { "A label" | MkBadge } } at the very start of the template file.
     # These assertions would pass then:
-    assert type(node.items[0]) == MkBadge
-    assert node.items[0].parent == node
-    resources = node.get_resources()
-    assert "admonition" in resources
+    assert type(node.get_items()[0]) == MkBadge
+    assert node.get_items()[0].parent == node
+    resources = await node.get_resources()
+    assert "admonition" in resources.markdown_extensions
     ```
 
 * Each node environment contains a bunch of loaders, with some of them being context-specific. These are:

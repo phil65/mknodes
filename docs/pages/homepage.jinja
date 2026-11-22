@@ -17,7 +17,7 @@ If decorators are used for routing, `is_homepage` can be passed as decorator key
 with the same effect.
 
 ``` py title="setting `is_homepage` via decorator"
-nav = root_nav.get_nav("My child nav")
+nav = root_nav["My child nav"]
 
 @nav.route.page("My first Homepage", is_homepage=True)
 def _(page: mk.MkPage):

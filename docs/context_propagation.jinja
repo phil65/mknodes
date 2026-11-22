@@ -7,8 +7,7 @@ The most common case is to have one single context for one website. That context
 about the package you want to document. It is set automatically for the root nav.
 
 ``` py
-def build(project):
-    root = project.get_root()
+def build(root: mk.MkNav):
     assert root.ctx.metadata.distribution_name == "mknodes"
 ```
 
@@ -16,7 +15,7 @@ Once a node has access to the context, that context will become injected into th
 
 
 ``` py
-@nav.route_page("My page")
+@nav.route.page("My page")
 def _(page):
     node = mk.MkText("{{ metadata.required_python_version }}", render_jinja=True)
     assert str(node) == ""  # not connected to any context, so returns empty string
@@ -27,9 +26,9 @@ def _(page):
 Some nodes will also show the context metadata by default if no other data is explicitely set.
 
 ``` py
-@nav.route_page("My page")
+@nav.route.page("My page")
 def _(page):
-    node = MkLicense()
+    node = mk.MkLicense()
     assert str(node) == ""  # not connected to any context, so returns empty string
     page += node  # Add MkLicense to the nav and allow accessing its context (assuming that nav is connected to root nav).
     assert str(node) != ""  # this now returns the license text for the context.
