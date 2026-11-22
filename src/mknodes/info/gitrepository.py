@@ -110,8 +110,8 @@ class GitRepository(git.Repo):
             all_commits = list(reversed(self.all_commits[:idx]))
             return next((mapping[c] for c in all_commits if c in mapping), None)
         except ValueError:
-            msg = f"Could not get version for {commit_obj}"
-            logger.exception(msg)
+            # Commit not on the main branch (e.g. detached / unmerged HEAD): no version.
+            logger.debug("Commit %s not found on main branch, no version", commit_obj)
             return None
 
     @functools.cached_property
