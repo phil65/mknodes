@@ -51,8 +51,12 @@ class MkDocsConfigFile(configfile.YamlFile):
             build_fn: Build function to set
             clone_depth: Amount of commits to fetch when cloning a repository.
         """
-        for plugin in self._data["plugins"]:
-            if "mknodes" in plugin:
+        plugins = self._data["plugins"]
+        for i, plugin in enumerate(plugins):
+            if plugin == "mknodes":  # bare `- mknodes` entry without options
+                plugin = plugins[i] = {"mknodes": {}}
+            if isinstance(plugin, dict) and "mknodes" in plugin:
+                plugin["mknodes"] = plugin["mknodes"] or {}
                 if repo_url is not None:
                     plugin["mknodes"]["repo_path"] = repo_url
                 if build_fn is not None:
