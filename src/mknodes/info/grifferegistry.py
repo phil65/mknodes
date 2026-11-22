@@ -35,6 +35,10 @@ def get_class(klass: str | type) -> griffe.Class | griffe.Alias:
     return registry.get_class(klass)
 
 
+# Modules that only re-export members of another module, mapped to the defining module.
+_MODULE_ALIASES = {"collections.abc": "_collections_abc"}
+
+
 class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
     """Registry for Griffe Modules.
 
@@ -129,8 +133,17 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
         else:
             parts = klass.split(".", 1)
             mod_name, kls_name = parts if len(parts) > 1 else ("builtins", parts[0])
+        kls_name = kls_name.split("[")[0]
         module = self.get_module(mod_name, docstring_style=docstring_style)
-        return module[kls_name.split("[")[0]]
+        try:
+            return module[kls_name]
+        except KeyError:
+            # Some stdlib modules only re-export their members (e.g. `collections.abc`
+            # is `from _collections_abc import *`), which griffe can't resolve statically.
+            full_mod, _, name = f"{mod_name}.{kls_name}".rpartition(".")
+            if (alias := _MODULE_ALIASES.get(full_mod)) is None:
+                raise
+            return self.get_module(alias, docstring_style=docstring_style)[name]
 
 
 registry = GriffeRegistry()
