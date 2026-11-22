@@ -2,7 +2,7 @@
 
 [project]
 name = "mknodes"
-version = "2.3.0"
+version = "2.3.1"
 description = "Build MkDocs / Markdown documentation in Python from composable, project-aware nodes."
 readme = "README.md"
 requires-python = ">=3.13"
