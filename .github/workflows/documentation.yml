@@ -51,7 +51,7 @@ jobs:
                   key: anyenv-${{ runner.os }}-${{ github.run_id }}
                   restore-keys: anyenv-${{ runner.os }}-
             - name: Build
-              run: uv run mkdocs-mknodes build -v
+              run: uv run mkdocs-mknodes build --engine zensical -v
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v4
               with:

@@ -108,9 +108,10 @@ dev = [
   "cairosvg; python_version < '3.14'",
   "markdown-exec[ansi]",
   "mkdocs-material >= 9.4",
-  "mkdocs_mknodes>= 1.0",
+  "mkdocs_mknodes>=1.2.0",
   # Docs
   "mkdocs >=1.5",
+  "mkdocstrings[python]",
   # Linting
   "mypy",
   "pillow; python_version < '3.14'",
@@ -131,6 +132,7 @@ dev = [
   "types-python-dateutil",
   "types-pyyaml>=6.0.12.20250915",
   "types-requests",
+  "zensical",
 ]
 
 [build-system]
