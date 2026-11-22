@@ -212,7 +212,7 @@ class PackageInfo:
     @functools.cached_property
     def entry_points(self) -> epregistry.ModuleEntryPointRegistry[Any]:
         """Get entry points for this package."""
-        name = epregistry.distribution_to_package(self.package_name)
+        name = epregistry.distribution_to_package(self.package_name, fallback=True)
         return epregistry.ModuleEntryPointRegistry(name)
 
 
