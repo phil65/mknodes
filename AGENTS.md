@@ -91,9 +91,20 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 
 - Not copier-managed: pyproject, workflows and pre-commit config are edited by hand.
 - Many nodes need network or external tools: icons come from the Iconify API via
-  `jinjarope`/`pycons` (cached by anyenv in `~/.cache/anyenv`; rate limits cause 429s),
-  `MkPyDeps` needs Graphviz (`dot`) and the dev-only `pydeps` package, `MkLlm` needs an LLM API key (`OPENAI_API_KEY`
-  in CI), git-based nodes need a git checkout with history.
+  `jinjarope`/`pycons` (meant to be cached by anyenv in `~/.cache/anyenv`; 429 rate limits
+  break docs builds and the `MkIcon` tests), `MkPyDeps` needs Graphviz (`dot`) and the dev-only
+  `pydeps` package, `MkLlm` needs an LLM API key (`OPENAI_API_KEY` in CI), git-based nodes need
+  a git checkout with history.
+- Tests that run git must clear `GIT_*` env vars (the pre-commit hook runs pytest with
+  `GIT_DIR`/`GIT_INDEX_FILE` set), see `tests/test_gitrepository.py`.
+- Container nodes (`MkContainerBase` subclasses) render via `get_content()`; a subclass that only
+  overrides `to_md_unprocessed()` is detected by `_overrides_markdown_only()` in
+  `basenodes/mkcontainer/__init__.py`. Check nested rendering (`page += node`) when adding nodes.
+- `MkDoc` (`navs/mkdoc.py`) only adds submodule navs with `recursive=True`. Known issue: it
+  filters classes with `module_filter=self.module_name` (the short name), so submodule navs list
+  no classes; switching to the full name roughly triples class pages on downstream sites.
+- `mknodes.execute` (`mdext/execute_ext.py`) `auto_register` does not take effect; register the
+  fences explicitly via `get_custom_fences()` in the superfences config.
 - `MkTemplate` paths are relative to `docs/`; the manual breaks if templates move.
 - `src/mknodes/info/packageinfo.py` uses CRLF line endings; keep them.
 - Downstream users: `mkdocs-mknodes` and many docs sites import node classes and helpers directly.
