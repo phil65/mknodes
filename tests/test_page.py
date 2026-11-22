@@ -67,5 +67,22 @@ def test_metadata():
     assert page.metadata.as_page_header() == EXPECTED
 
 
+@pytest.mark.parametrize(
+    "node",
+    [
+        mk.MkList(["a", "b"]),
+        mk.MkTable({"A": ["1", "2"], "B": ["3", "4"]}),
+        mk.MkDefinitionList({"key": "value"}),
+    ],
+    ids=lambda x: type(x).__name__,
+)
+async def test_nested_node_keeps_its_own_markdown(node: mk.MkNode):
+    """Containers must not discard markdown of subclasses overriding to_md_unprocessed."""
+    expected = await node.to_md_unprocessed()
+    page = mk.MkPage()
+    page += node
+    assert expected.strip() in await page.to_markdown()
+
+
 if __name__ == "__main__":
     pytest.main([__file__])

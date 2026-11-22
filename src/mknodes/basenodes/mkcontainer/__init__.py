@@ -10,6 +10,19 @@ from mknodes.utils import log, resources
 logger = log.get_logger(__name__)
 
 
+def _overrides_markdown_only(cls: type[MkContainerBase]) -> bool:
+    """Check whether cls customizes to_md_unprocessed() without customizing get_content().
+
+    Such subclasses (tables, lists, ...) render their own markdown, so get_content()
+    must use it instead of joining the children's markdown.
+    """
+
+    def owner_index(name: str) -> int:
+        return next(i for i, klass in enumerate(cls.__mro__) if name in klass.__dict__)
+
+    return owner_index("to_md_unprocessed") < owner_index("get_content")
+
+
 class MkContainerBase(mknode.MkNode):
     """Abstract base class for nodes containing other MkNodes.
 
@@ -36,11 +49,22 @@ class MkContainerBase(mknode.MkNode):
         return self
 
     async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+        if _overrides_markdown_only(type(self)):
+            # Reached via super() from a subclass override: return the joined children.
+            content = await self._get_children_content()
+        else:
+            content = await self.get_content()
         return content.markdown
 
     async def get_content(self) -> resources.NodeContent:
         """Single-pass: collect markdown and resources from children."""
+        content = await self._get_children_content()
+        if _overrides_markdown_only(type(self)):
+            content.markdown = await self.to_md_unprocessed()
+        return content
+
+    async def _get_children_content(self) -> resources.NodeContent:
+        """Join the children's markdown and merge own and children's resources."""
         items = self.get_items()
 
         # Collect content from all children in one pass
