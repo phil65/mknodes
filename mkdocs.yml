@@ -1,5 +1,5 @@
 site_name: MkNodes
-site_description: "Don´t write docs. Code them."
+site_description: "Build MkDocs / Markdown documentation in Python from composable, project-aware nodes."
 repo_url: "https://github.com/phil65/mknodes/"
 site_url: https://phil65.github.io/mknodes/
 site_author: Philipp Temminghoff
