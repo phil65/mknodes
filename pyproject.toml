@@ -104,7 +104,7 @@ dev = [
   # Material Social addon
   "cairosvg; python_version < '3.14'",
   "markdown-exec[ansi]",
-  "mkdocs_mknodes>=1.2.0",
+  "mkdocs_mknodes>=2.1.0",
   # Docs
   "mkdocstrings[python]",
   # Linting
