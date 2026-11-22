@@ -38,7 +38,7 @@ classifiers = [
 dependencies = [
   # TODO: make these optional
   "anybadge",
-  "anyenv[httpx]>=2.0.17",
+  "anyenv[httpx]>=2.0.20",
   "anyio>=4.0",
   "clinspector>=1.0.4",
   "coloraide",
