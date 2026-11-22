@@ -40,7 +40,7 @@ dependencies = [
   "agentpool[default]>=0.99.54",
   "anybadge",
   "anyenv[httpx]>=2.0.17",
-  "clinspector",
+  "clinspector>=1.0.4",
   "coloraide",
   "epregistry",
   "fieldz",
