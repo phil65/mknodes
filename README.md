@@ -31,67 +31,112 @@
 
 [Read the completely coded documentation!](https://phil65.github.io/mknodes/)
 
+MkNodes lets you build documentation from Python objects instead of hand-written Markdown.
+Pages, navigation sections and content blocks are *nodes* that render to
+[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)-flavored Markdown and know
+which Markdown extensions, CSS and JavaScript they need. Many nodes pull their content directly
+from your project (pyproject.toml, git history, installed packages, docstrings), so the docs stay
+in sync with the code.
 
+## Installation
 
-## Programatically create web pages
-
-``` py title='__main__.create_github_index_md' linenums="86" hl_lines="3"
-def create_github_index_md() -> mk.MkPage:
-    page = mk.MkPage("Github index")
-    page += mk.MkCode.for_object(create_github_index_md)
-    page += mk.MkHeader("MkNodes", level=1)
-    page += mk.MkHeader("Don't write docs. Code them.", level=4)
-    page += mk.MkShields()
-    page += mk.MkLink(DOC_URL, "Read the completely coded documentation!")
-    page += mk.MkInstallGuide(header="How to install")
-    page += mk.MkHeader("All the nodes!")
-    page += mk.MkClassDiagram(mk.MkNode, mode="subclasses", direction="LR")
-    return page
-```
-
-
-## Create a website tree
-
-
-``` py
-@nav.route.page("Changelog", icon="format-list-group")
-def _(page: mk.MkPage):
-    page += mk.MkChangelog()
-```
-
-
-## Powerful templating
-
-
-``` jinja
-{{ "Inlined text" | MkAdmonition(inline="left") }}
-```
-
-
-## Execute Python code in markdown
-
-``` python exec="true"
-print("# Generated at build time!")
-print("Current timestamp:", __import__("datetime").datetime.now())
-```
-
-Use `session="name"` to persist variables between code blocks:
-
-``` python exec="true" session="demo"
-counter = 1
-```
-
-``` python exec="true" session="demo" 
-print(f"Counter is now: {counter + 1}")
-```
-
-
-## How to install
-
-### pip
-
-The latest released version is available at the [Python package index](https://pypi.org/project/mknodes).
-
-``` py
+```bash
 pip install mknodes
 ```
+
+To build a full MkDocs site from MkNodes, use the
+[mkdocs-mknodes](https://github.com/phil65/mkdocs-mknodes) plugin.
+
+## Quickstart
+
+```py
+import asyncio
+
+import mknodes as mk
+
+page = mk.MkPage("Overview")
+page += mk.MkHeader("My project", level=1)
+page += mk.MkAdmonition("Generated with MkNodes!", typ="tip", title="Note")
+page += mk.MkTable({"Feature": ["Nodes", "Templating"], "Status": ["yes", "yes"]})
+page += mk.MkCode("print('hello')", language="py")
+
+print(asyncio.run(page.to_markdown()))
+```
+
+## Features
+
+- **75+ nodes**: admonitions, tabs, tables, code blocks, diagrams, cards, timelines, badges, ...
+- **Project-aware nodes**: `MkChangelog`, `MkInstallGuide`, `MkDependencyTable`, `MkLicense`,
+  `MkShields`, `MkClassDiagram`, ... build their content from your package and repository.
+- **Navigation trees**: `MkNav` sections with decorator-based routing, API docs via `MkDoc`,
+  CLI docs via `MkCliNav`, or parse an existing `SUMMARY.md` / folder.
+- **Jinja templating**: every node is also a Jinja filter, e.g.
+  `{{ "Inlined text" | MkAdmonition(inline="left") }}`.
+- **Resource tracking**: required Markdown extensions, CSS and JS are collected per page.
+- **Markdown extensions**: `/// mknodes` blocks and executable Python code blocks
+  (`mknodes.mdext`).
+
+### Build a website tree
+
+```py
+import mknodes as mk
+
+
+def build(root: mk.MkNav) -> None:
+    @root.route.page("Home", is_index=True)
+    def _(page: mk.MkPage):
+        page += mk.MkHeader("Welcome", level=1)
+        page += mk.MkInstallGuide()
+
+    @root.route.page("Changelog", icon="format-list-group")
+    def _(page: mk.MkPage):
+        page += mk.MkChangelog()
+```
+
+Render it to a folder of Markdown files with the CLI (run inside your project's repository):
+
+```bash
+mknodes build -s mypackage.docs:build -o docs
+```
+
+or point the `mkdocs-mknodes` plugin to it in `mkdocs.yml`:
+
+```yaml
+plugins:
+  - mknodes:
+      build_fn: mypackage.docs:build
+```
+
+The CLI also renders Jinja-enhanced Markdown: `mknodes render -i template.md -o output.md`
+and `mknodes render-folder -i src_docs -o docs`.
+
+### Markdown extensions
+
+```py
+import markdown
+
+from mknodes.mdext.execute_ext import get_custom_fences
+
+md = markdown.Markdown(
+    extensions=["pymdownx.superfences", "mknodes.mdext"],
+    extension_configs={"pymdownx.superfences": {"custom_fences": get_custom_fences()}},
+)
+```
+
+````markdown
+/// mknodes
+{{ "Dynamic Header" | MkHeader(level=2) }}
+///
+
+```python exec="true"
+print("**Generated at build time!**")
+```
+````
+
+Use `session="name"` on `exec` blocks to share variables between them. See
+[`src/mknodes/mdext/README.md`](src/mknodes/mdext/README.md) for all options.
+
+## Documentation
+
+The [documentation](https://phil65.github.io/mknodes/) is itself built with MkNodes
+(see `src/mknodes/manual/`) and shows every node with examples.
