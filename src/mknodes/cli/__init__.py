@@ -80,7 +80,7 @@ def build(
     Example:
         mknodes build -s mypackage.docs:build -o ./docs
     """
-    logfire.configure()
+    logfire.configure(send_to_logfire="if-token-present")
     asyncio.run(_build_async(script, output, repo_url, render_jinja, workers))
 
 
