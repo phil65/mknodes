@@ -225,13 +225,6 @@ class Theme:
     def adapt_extras(self, extras: dict[str, Any]) -> None:
         """Adapt the "extras" dictionary containing additional information."""
 
-    @property
-    def template_path(self) -> str:
-        """Return the template directory."""
-        from mkdocs import utils
-
-        return utils.get_theme_dir(self.name)
-
 
 if __name__ == "__main__":
     theme = Theme.get_theme("material")

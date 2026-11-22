@@ -46,5 +46,22 @@ def test_version_for_commit_off_main_branch(tmp_path, caplog, monkeypatch):
     assert not caplog.records
 
 
+def test_repository_without_origin_remote(tmp_path, monkeypatch):
+    import git
+
+    for var in [k for k in os.environ if k.startswith("GIT_")]:
+        monkeypatch.delenv(var)
+    path = tmp_path / "my-project"
+    repo = git.Repo.init(path, initial_branch="main")
+    gitrepo = gitrepository.GitRepository(path)
+    assert gitrepo.remote_url is None
+    assert gitrepo.repo_name == "my-project"
+    assert gitrepo.repo_url == ""
+    repo.create_remote("upstream", "https://github.com/phil65/other.git")
+    gitrepo = gitrepository.GitRepository(path)
+    assert gitrepo.repo_name == "other"
+    assert gitrepo.repo_url == "https://github.com/phil65/other/"
+
+
 if __name__ == "__main__":
     pytest.main([__file__])

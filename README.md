@@ -44,8 +44,10 @@ in sync with the code.
 pip install mknodes
 ```
 
-To build a full MkDocs site from MkNodes, use the
-[mkdocs-mknodes](https://github.com/phil65/mkdocs-mknodes) plugin.
+To build a full website from MkNodes, use the site generator
+[mkdocs-mknodes](https://github.com/phil65/mkdocs-mknodes) (builds with
+[Zensical](https://zensical.org)). MkNodes itself does not depend on MkDocs or any other
+site engine.
 
 ## Quickstart
 
@@ -99,12 +101,12 @@ Render it to a folder of Markdown files with the CLI (run inside your project's 
 mknodes build -s mypackage.docs:build -o docs
 ```
 
-or point the `mkdocs-mknodes` plugin to it in `mkdocs.yml`:
+or build a complete website with [mkdocs-mknodes](https://github.com/phil65/mkdocs-mknodes)
+(`mkdocs-mknodes build`), configured in `pyproject.toml`:
 
-```yaml
-plugins:
-  - mknodes:
-      build_fn: mypackage.docs:build
+```toml
+[tool.mknodes]
+build-fn = "mypackage.docs:build"
 ```
 
 The CLI also renders Jinja-enhanced Markdown: `mknodes render -i template.md -o output.md`

@@ -81,7 +81,6 @@ from .templatenodes.mkmetadatabadges import MkMetadataBadges
 from .templatenodes.mkcommentedcode import MkCommentedCode
 from .templatenodes.mkconfigsetting import MkConfigSetting
 from .templatenodes.mkmoduletable import MkModuleTable
-from .templatenodes.mkpluginflow import MkPluginFlow
 from .templatenodes.mktemplate import MkTemplate
 from .templatenodes.mkpydeps import MkPyDeps
 from .templatenodes.mkpipdeptree import MkPipDepTree
@@ -172,7 +171,6 @@ __all__ = [
     "MkNode",
     "MkPage",
     "MkPipDepTree",
-    "MkPluginFlow",
     "MkProgressBar",
     "MkPyDeps",
     "MkPyScript",

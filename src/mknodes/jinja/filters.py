@@ -9,7 +9,6 @@ from markupsafe import Markup
 
 if TYPE_CHECKING:
     from jinja2 import runtime
-    from mkdocs.config.config_options import ExtraScriptValue
 
     import mknodes as mk
     from mknodes.info.linkprovider import LinkableType
@@ -90,10 +89,8 @@ def url(context: runtime.Context, value: str) -> str:
 
 
 @jinja2.pass_context
-def script_tag(
-    context: runtime.Context, extra_script: str | JSFile | JSText | ExtraScriptValue
-) -> Markup:
-    """Converts an ExtraScript value / JSResource to an HTML <script> tag line.
+def script_tag(context: runtime.Context, extra_script: str | JSFile | JSText | Any) -> Markup:
+    """Converts an extra script config value / JSResource to an HTML <script> tag line.
 
     Args:
         context: The environment context

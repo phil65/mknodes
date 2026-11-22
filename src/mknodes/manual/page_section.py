@@ -22,9 +22,9 @@ def _(page: mk.MkPage) -> None:
 
 @nav.route.page("MkModulePage")
 def _(page: mk.MkPage) -> None:
-    import mkdocs.config
+    from mknodes import info
 
-    variables = dict(example_module=mkdocs.config)
+    variables = dict(example_module=info)
     page += mk.MkTemplate("pages/mkmodulepage.jinja", variables=variables)
 
 

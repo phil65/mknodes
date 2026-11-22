@@ -49,7 +49,6 @@ DOCUMENTATION_NODES = [
     mk.MkConfigSetting,
     mk.MkClassTable,
     mk.MkModuleTable,
-    mk.MkPluginFlow,
     mk.MkCliDoc,
 ]
 

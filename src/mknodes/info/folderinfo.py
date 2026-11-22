@@ -87,17 +87,24 @@ class FolderInfo:
         return str(self.path)
 
     @functools.cached_property
+    def _module_name(self) -> str:
+        # The repository name decides if there is a remote, else the pyproject name
+        # (the folder name of a repo without remote says nothing about the package).
+        name = self.git.repo_name
+        if not self.git.remote_url and self.pyproject.name:
+            name = self.pyproject.name
+        return epregistry.distribution_to_package(name, fallback=True)
+
+    @functools.cached_property
     def module(self) -> types.ModuleType:
         """Return the module itself."""
-        mod_name = epregistry.distribution_to_package(self.git.repo_name, fallback=True)
-        return importlib.import_module(mod_name)
+        return importlib.import_module(self._module_name)
 
     @functools.cached_property
     def griffe_module(self) -> griffe.Module | Alias:
         """Return a griffe Module containing information about the module."""
         # Long-term ideally we would pull all information from here.
-        mod_name = epregistry.distribution_to_package(self.git.repo_name, fallback=True)
-        return grifferegistry.get_module(mod_name)
+        return grifferegistry.get_module(self._module_name)
 
     def __repr__(self) -> str:
         return reprhelpers.get_repr(self, path=self.path)
@@ -120,6 +127,7 @@ class FolderInfo:
         """Return url of the repository by querying multiple sources.
 
         Checks MkDocs config file, Git repository info and project metadata.
+        Returns an empty string if none of them contains a repository url.
         """
         if url := self.mkdocs_config.get("repo_url"):
             return url  # type: ignore[no-any-return]
@@ -127,24 +135,22 @@ class FolderInfo:
             return url
         if url := self.info.repository_url:
             return url
-        msg = "Could not find any repository url"
-        raise RuntimeError(msg)
+        logger.warning("Could not find any repository url for %s", self.path)
+        return ""
 
     @functools.cached_property
     def repository_username(self) -> str:
-        """Return the username for the remote repository."""
+        """Return the username for the remote repository (empty if not detectable)."""
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(1)
-        msg = "Could not detect repository username"
-        raise RuntimeError(msg)
+        return ""
 
     @functools.cached_property
     def repository_name(self) -> str:
-        """Return the name of the remote repository."""
+        """Return the name of the remote repository (falls back to the local repo name)."""
         if match := GITHUB_REGEX.match(self.repository_url or ""):
             return match.group(2)
-        msg = "Could not detect repository name"
-        raise RuntimeError(msg)
+        return self.git.repo_name
 
     @functools.cached_property
     def inventory_url(self) -> str | None:

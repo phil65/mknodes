@@ -3,10 +3,12 @@
 ## Overview
 
 MkNodes is a Python library for building documentation as a tree of objects ("nodes") that
-render to Markdown/HTML with the resources they need (CSS, JS, Markdown extensions, MkDocs
-plugins). Nodes can be created from Python or from Jinja templates (every node is also a Jinja
-filter). It is the engine behind the `mkdocs-mknodes` MkDocs plugin and ~20 docs sites, so keep
-the public API (`import mknodes as mk; mk.MkXyz`) stable: fixes only, no breaking changes.
+render to Markdown/HTML with the resources they need (CSS, JS, Markdown extensions). Nodes
+can be created from Python or from Jinja templates (every node is also a Jinja filter). It is
+the engine behind the `mkdocs-mknodes` site generator (sites are built with Zensical) and ~30
+docs sites, so keep the public API (`import mknodes as mk; mk.MkXyz`) stable.
+Since 3.0 MkNodes is site-engine agnostic: `mkdocs` / `mkdocs-material` are not runtime
+dependencies and must not be imported by library code (`MkPluginFlow` was removed).
 
 ## Architecture
 
@@ -45,7 +47,7 @@ the public API (`import mknodes as mk; mk.MkXyz`) stable: fixes only, no breakin
 
 Flow: build function populates a root `MkNav` -> nodes resolve context (`ctx`) -> each page
 renders to Markdown via Jinja/`to_markdown()` and collects `Resources` -> `DocBuilder` /
-`mkdocs-mknodes` writes files and merges resources into the MkDocs config.
+`mkdocs-mknodes` writes files and a generated site config (`mkdocs.generated.yml`) -> zensical.
 
 ## Where to look
 
@@ -60,7 +62,7 @@ renders to Markdown via Jinja/`to_markdown()` and collects `Resources` -> `DocBu
 | CLI | `src/mknodes/cli/__init__.py` |
 | Markdown extensions | `src/mknodes/mdext/` |
 | Project docs content | `src/mknodes/manual/` + `docs/*.jinja` |
-| Docs site config | `mkdocs.yml` (`mknodes` plugin with `build_fn: mknodes.manual.root:Build.build`) |
+| Docs site config | `mkdocs.yml` (settings in the `mknodes` plugins entry: `build_fn: mknodes.manual.root:Build.build`, read by `mkdocs-mknodes`) |
 
 ## Commands
 
@@ -69,7 +71,7 @@ uv sync --all-extras                 # setup (CI uses this)
 uv run pytest                        # tests (also run by the pre-commit hook)
 uv run ruff check . && uv run ruff format --check .
 uv run mypy src/                     # type checker (mypy, not ty)
-uv run mkdocs-mknodes build          # docs build, as in documentation.yml
+uv run mkdocs-mknodes build --engine zensical -v   # docs build, as in documentation.yml
 uv run pytest benchmarks/ --codspeed # benchmarks (codspeed.yml)
 uv build
 uv run duty lint | test | build | serve   # wrappers in duties.py
@@ -108,3 +110,9 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - `MkTemplate` paths are relative to `docs/`; the manual breaks if templates move.
 - `src/mknodes/info/packageinfo.py` uses CRLF line endings; keep them.
 - Downstream users: `mkdocs-mknodes` and many docs sites import node classes and helpers directly.
+- `utils.log.get_logger(name)` returns loggers below `mknodes` (names outside the namespace get
+  prefixed), so all output can be configured via the `mknodes` logger.
+- Repositories without an `origin` remote work: `GitRepository.remote_url` falls back to the
+  first remote, `repo_name` to the folder name; the package name then comes from pyproject.
+- `uv run` re-syncs `mkdocs-mknodes` from PyPI; to test against a local checkout use
+  `uv pip install -e ../mkdocs_mknodes` and `.venv/bin/mkdocs-mknodes build`.

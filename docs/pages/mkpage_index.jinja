@@ -93,10 +93,10 @@ when the tree gets "serialized" into markdown. The HTML filename is inferred fro
 title in case no specific path is given.
 
 
-MkPages do **NOT** inherit from the [MkDocs](https://www.mkdocs.org) [Page](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) object.
-In fact, [MkDocs](https://www.mkdocs.org) is not even a requirement for building an **MkNodes** tree, the "conversion" to [MkDocs](https://www.mkdocs.org) is done solely in the [mkdocs-mknodes](https://phil65.github.io/mkdocs_mknodes/) plugin, which happens after the tree was built.
-
-During the build process, MkPages get serialized to Markdown and are put into the build folder, where [MkDocs](https://www.mkdocs.org) picks the files up and creates [MkDocs](https://www.mkdocs.org) File / Page objects in following steps.
+MkPages are not tied to a static site engine: **MkNodes** does not depend on [MkDocs](https://www.mkdocs.org) or any other engine.
+The site generator [mkdocs-mknodes](https://phil65.github.io/mkdocs-mknodes/) serializes the MkPages of a tree to Markdown
+(including the front matter), writes them into the docs folder together with the nav and the required resources,
+and the site engine ([Zensical](https://zensical.org)) builds the HTML website from there.
 
 
 ## Template MkPages

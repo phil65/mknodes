@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import contextlib
 import functools
+import pathlib
 from typing import TYPE_CHECKING, Any, Self
 
 import git
@@ -33,10 +35,10 @@ class GitRepository(git.Repo):
         super().__init__(path or ".", **kwargs)
         # to keep a reference to a TempDirectory instance
         self.temp_directory: tempfile.TemporaryDirectory[str] | None = None
-        try:
-            self.remote_repo = githarbor.create_repository(self.remotes.origin.url)
-        except Exception:  # noqa: BLE001
-            self.remote_repo = Repository(githarbor.BaseRepository())
+        self.remote_repo = Repository(githarbor.BaseRepository())
+        if url := self.remote_url:
+            with contextlib.suppress(Exception):
+                self.remote_repo = githarbor.create_repository(url)
 
     def __len__(self) -> int:
         return len(list(self.iter_commits("HEAD")))
@@ -68,14 +70,35 @@ class GitRepository(git.Repo):
         return super().clone_from(url, to_path, **kwargs)  # type: ignore[return-value]  # pyright: ignore[reportReturnType]
 
     @functools.cached_property
+    def remote_url(self) -> str | None:
+        """URL of the `origin` remote (else of the first remote, None without remotes)."""
+        remotes = list(self.remotes)
+        remote = next((r for r in remotes if r.name == "origin"), None)
+        for candidate in [remote, *remotes]:
+            if candidate is None:
+                continue
+            try:
+                return candidate.url
+            except Exception:  # noqa: BLE001
+                continue
+        return None
+
+    @functools.cached_property
     def repo_name(self) -> str:
-        """Name (aka the last part of the url) of the Git repository."""
-        return self.remotes.origin.url.split(".git")[0].split("/")[-1]
+        """Name (aka the last part of the url) of the Git repository.
+
+        Falls back to the name of the working directory if there is no remote.
+        """
+        if url := self.remote_url:
+            return url.split(".git")[0].rstrip("/").split("/")[-1].split(":")[-1]
+        return pathlib.Path(self.working_dir).name
 
     @functools.cached_property
     def repo_url(self) -> str:
-        """Url of the remote repository (without .git)."""
-        return self.remotes.origin.url.split(".git")[0] + "/"
+        """Url of the remote repository (without .git). Empty if there is no remote."""
+        if url := self.remote_url:
+            return url.split(".git")[0] + "/"
+        return ""
 
     @functools.cached_property
     def commit_to_tag(self) -> dict[git.Commit, str]:

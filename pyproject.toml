@@ -3,7 +3,7 @@
 [project]
 name = "mknodes"
 version = "2.3.1"
-description = "Build MkDocs / Markdown documentation in Python from composable, project-aware nodes."
+description = "Build Markdown documentation in Python from composable, project-aware nodes."
 readme = "README.md"
 requires-python = ">=3.13"
 license = { file = "LICENSE" }
@@ -17,13 +17,11 @@ keywords = [
   "documentation-generator",
   "jinja2",
   "markdown",
-  "mkdocs",
-  "mkdocs-material",
   "static-site-generator",
+  "zensical",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
-  "Framework :: MkDocs",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
@@ -58,7 +56,6 @@ dependencies = [
   "logfire>=3.0",
   "markdown>=3.5",
   "markupsafe>=2.1",
-  "mkdocstrings[python]",
   "natsort",
   "packaging>=23.0",
   "pipdeptree>=3.0.0",
@@ -106,10 +103,8 @@ dev = [
   # Material Social addon
   "cairosvg; python_version < '3.14'",
   "markdown-exec[ansi]",
-  "mkdocs-material >= 9.4",
   "mkdocs_mknodes>=1.2.0",
   # Docs
-  "mkdocs >=1.5",
   "mkdocstrings[python]",
   # Linting
   "mypy",
