@@ -39,7 +39,6 @@ classifiers = [
 ]
 dependencies = [
   # TODO: make these optional
-  "agentpool>=0.99.54",
   "anybadge",
   "anyenv[httpx]>=2.0.17",
   "anyio>=4.0",
@@ -98,7 +97,7 @@ mknodes = "mknodes.jinja:setup_env"
 "mknodes.execute" = "mknodes.mdext.execute_ext:makeExtension"
 
 [project.optional-dependencies]
-llm = ["agentpool"]
+llm = ["agentpool>=2.10"]
 
 [dependency-groups]
 dev = [
