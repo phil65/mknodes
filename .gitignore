@@ -59,3 +59,5 @@ uv.lock
 .ruff_cache/
 
 .zed/
+# mkdocs-mknodes generate (generated pages in docs/ are ignored via docs/.gitignore)
+mkdocs.generated.yml
