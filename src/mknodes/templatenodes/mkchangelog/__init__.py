@@ -7,7 +7,7 @@ import io
 
 from typing import Any, Literal, TYPE_CHECKING
 
-from git_changelog import cli
+import git_changelog
 
 from mknodes.basenodes import mktext
 from mknodes.utils import helpers, log, resources
@@ -39,7 +39,7 @@ def get_changelog(
     """
     with contextlib.redirect_stdout(io.StringIO()):
         try:
-            _changelog, text = cli.build_and_render(
+            _changelog, text = git_changelog.build_and_render(
                 repository=repository,
                 template=template,
                 convention=convention,
@@ -50,7 +50,7 @@ def get_changelog(
             )
         except ValueError:
             # try without commit range
-            _changelog, text = cli.build_and_render(
+            _changelog, text = git_changelog.build_and_render(
                 repository=repository,
                 template=template,
                 convention=convention,

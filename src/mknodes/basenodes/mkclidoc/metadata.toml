@@ -17,10 +17,10 @@ jinja = """
 [examples.argparse]
 title = "ArgumentParser"
 python = """
-from git_changelog import cli
+import git_changelog
 import mknodes as mk
 
-parser = cli.get_parser()
+parser = git_changelog.get_parser()
 mk.MkCliDoc(parser)
 """
 
