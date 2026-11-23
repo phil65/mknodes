@@ -1,8 +1,11 @@
+import inspect
 import pathlib
+import sys
 import types
 
 import pytest
 
+from mknodes.utils import classhelpers
 from mknodes.utils.classhelpers import import_file, to_class, to_dotted_path, to_module
 
 
@@ -163,3 +166,31 @@ def test_import_file_with_non_string():
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+
+def test_get_members_skips_non_identifier_names():
+    """Names like `Foo[int]` can't be referenced by a dotted path."""
+    mod = types.ModuleType("fake_mod")
+    setattr(mod, "Foo", type("Foo", (), {}))  # noqa: B010
+    setattr(mod, "Foo[int]", type("FooOfInt", (), {}))
+    names = [name for name, _ in classhelpers.get_members(mod, inspect.isclass)]
+    assert names == ["Foo"]
+
+
+def test_iter_classes_skips_parametrized_pydantic_generics():
+    """Pydantic stores parametrized generics such as `RootModel[Hint]` in the module."""
+    pytest.importorskip("pydantic")
+    mod = types.ModuleType("fake_pydantic_mod")
+    sys.modules[mod.__name__] = mod
+    code = (
+        "from pydantic import BaseModel, RootModel\n"
+        "class Hint(BaseModel):\n    hint: str\n"
+        "class Input(RootModel[Hint]):\n    root: Hint\n"
+    )
+    try:
+        exec(compile(code, "<fake_pydantic_mod>", "exec"), mod.__dict__)
+        assert any("[" in name for name in vars(mod))
+        found = {k.__name__ for k in classhelpers.iter_classes(mod, module_filter=mod.__name__)}
+        assert found == {"Hint", "Input"}
+    finally:
+        del sys.modules[mod.__name__]

@@ -279,11 +279,19 @@ def import_module(mod: str) -> types.ModuleType:
 def get_members(obj: object, predicate: Callable[[Any], Any] | None = None):
     """Cached version of inspect.getmembers.
 
+    Members whose name is not a Python identifier are skipped: they can't be
+    referenced by a dotted path. Pydantic, for example, stores parametrized
+    generics such as `RootModel[Foo]` in the module namespace of the module
+    that parametrizes them (with that module as `__module__`), so they would
+    otherwise look like classes defined there.
+
     Args:
         obj: Object to get members for
         predicate: Optional predicate for the members
     """
-    return inspect.getmembers(obj, predicate)
+    return [
+        (name, member) for name, member in inspect.getmembers(obj, predicate) if name.isidentifier()
+    ]
 
 
 @functools.cache
