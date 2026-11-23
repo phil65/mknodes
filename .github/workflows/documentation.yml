@@ -46,7 +46,7 @@ jobs:
             # Iconify's public API rate-limits shared runner IPs; reuse fetched icons
             # (mknodes' icon cache never expires) and HTTP responses (anyenv).
             - name: Cache icons and HTTP responses
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: |
                       ~/.cache/mknodes
