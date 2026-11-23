@@ -31,14 +31,27 @@ class MkClassTable(mktemplatetable.MkTemplateTable):
         for kls in self.klasses:
             match kls:
                 case type():
-                    yield dict(kls=kls, griffe_kls=grifferegistry.get_class(kls))
+                    yield dict(kls=kls, griffe_kls=_get_griffe_class(kls))
                 case griffe.Class():
                     yield dict(kls=classhelpers.import_module(kls.path), griffe_kls=kls)
                 case str():
                     yield dict(
                         kls=classhelpers.import_module(kls),
-                        griffe_kls=grifferegistry.get_class(kls),
+                        griffe_kls=_get_griffe_class(kls),
                     )
+
+
+def _get_griffe_class(kls: type | str) -> griffe.Class | griffe.Alias | None:
+    """Griffe info for a table row, or None if griffe doesn't know the class.
+
+    griffe's `builtins` has no `type` / `object`, so e.g. the base class table of a
+    metaclass would fail. The built-in layouts only need the class itself.
+    """
+    try:
+        return grifferegistry.get_class(kls)
+    except KeyError:
+        logger.debug("No griffe info for %r", kls)
+        return None
 
 
 if __name__ == "__main__":

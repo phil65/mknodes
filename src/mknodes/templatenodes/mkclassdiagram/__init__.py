@@ -62,7 +62,8 @@ class ParentClassConnector(BaseClassConnector):
 
 class MroConnector(BaseClassConnector):
     def _connect(self, objects: Sequence[type]) -> None:
-        mro = list(objects[0].mro())[: self.max_depth]
+        # __mro__, not .mro(): for a metaclass, Meta.mro is the unbound type.mro
+        mro = list(objects[0].__mro__)[: self.max_depth]
         self.item_dict = {self.get_id(kls): self.get_title(kls) for kls in mro}
         self.connections = [(self.get_id(i), self.get_id(j)) for i, j in itertools.pairwise(mro)]
 
