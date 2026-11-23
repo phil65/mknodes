@@ -194,3 +194,29 @@ def test_iter_classes_skips_parametrized_pydantic_generics():
         assert found == {"Hint", "Input"}
     finally:
         del sys.modules[mod.__name__]
+
+
+def test_to_callable_with_module_path():
+    assert classhelpers.to_callable("os.path:join") is __import__("os").path.join
+
+
+def test_to_callable_splits_at_last_colon(monkeypatch: pytest.MonkeyPatch):
+    """A file path may contain a colon itself (Windows drive letter)."""
+    module = types.ModuleType("build_script")
+    setattr(module, "build", lambda: "built")  # noqa: B010
+    seen: list[str] = []
+
+    def fake_import_file(path):
+        seen.append(str(path))
+        return module
+
+    monkeypatch.setattr(classhelpers, "import_file", fake_import_file)
+    fn = classhelpers.to_callable(r"C:\proj\docs\build_script.py:build")
+    assert fn() == "built"
+    assert seen == [r"C:\proj\docs\build_script.py"]
+
+
+@pytest.mark.parametrize("path", ["os.path.join", "os.path:", ":join"])
+def test_to_callable_rejects_paths_without_object(path: str):
+    with pytest.raises(ValueError, match=r"module\.path:object"):
+        classhelpers.to_callable(path)

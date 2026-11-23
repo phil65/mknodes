@@ -333,7 +333,12 @@ def to_callable(path: str | Callable[..., Any]) -> Callable[..., Any]:
     """
     if callable(path):
         return path
-    modname, _sep, qualname = path.partition(":")
+    # Split at the last colon: a file path may contain one itself (Windows drive
+    # letter, "C:\\docs\\build.py:build"), the object path after it never does.
+    modname, sep, qualname = path.rpartition(":")
+    if not sep or not modname or not qualname:
+        msg = f"Expected 'module.path:object' or 'file.py:object', got {path!r}"
+        raise ValueError(msg)
     obj = import_file(modname) if modname.endswith(".py") else import_module(modname)
     for attr in qualname.split("."):
         obj = getattr(obj, attr)
