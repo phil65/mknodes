@@ -16,7 +16,7 @@ jobs:
                 python_version: ["3.13", "3.14", "3.15"]
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
               with:
                   fetch-depth: 0
             - name: Setup Python
@@ -55,7 +55,7 @@ jobs:
             id-token: write
             contents: write
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
