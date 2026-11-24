@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from jinja2 import filters
 
+from mknodes import rendering
 from mknodes.basenodes import mkcard, mkcontainer
 from mknodes.pages import mkpage
 from mknodes.utils import log, pathhelpers, resources
@@ -67,18 +68,16 @@ class MkShowcase(mkcontainer.MkContainer):
         """Single-pass: get content with grid formatting and resources."""
         items = self.get_items()
         # Collect content from children
-        child_contents = [await item.get_content() for item in items]
+        renderer = rendering.current()
+        child_contents = [await renderer.render_child(item) for item in items]
         # Build markdown with grid formatting
         text = ""
         content_iter = iter(zip(items, child_contents))
         for batch in filters.do_batch(items, self.column_count):
             text += '<div class="row">'
             for _ in batch:
-                item, child_content = next(content_iter)
-                # Apply child's processors
+                _item, child_content = next(content_iter)
                 md = child_content.markdown
-                for proc in item.get_processors():
-                    md = proc.run(md)
                 text += '\n  <div class="column">\n'
                 text += textwrap.indent(md, "    ")
                 text += "  </div>"

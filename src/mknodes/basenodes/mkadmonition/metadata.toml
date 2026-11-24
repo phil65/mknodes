@@ -50,12 +50,6 @@ template = """
 {{ node.fence_boundary }}
 """
 
-[output.github]
-template = """
-> [!{{ node.typ | upper }}]\
-{{ node.get_items() | join | indent(width="> ", first=True) }}
-"""
-
 [output.rst]
 template = """
 .. {{ node.typ }}:: {{ node.title or "" }}

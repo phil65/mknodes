@@ -38,6 +38,7 @@ OUTPUT_DIR_HELP = "Output directory for rendered files."
 GLOB_HELP = "Glob pattern for files to render as Jinja templates."
 COPY_OTHER_HELP = "Copy files not matching the glob pattern as-is."
 WORKERS_HELP = "Number of parallel workers for page processing. Set PYTHON_GIL=0 for best performance with Python 3.14t."
+FLAVOR_HELP = "Markdown flavour of the pages (`material`, `github`)."
 
 SCRIPT_CMDS = "-s", "--script"
 OUTPUT_CMDS = "-o", "--output"
@@ -67,6 +68,7 @@ def build(
     repo_url: str | None = t.Option(None, *REPO_CMDS, help=REPO_HELP, show_default=False),
     render_jinja: bool = t.Option(True, "--render-jinja/--no-render-jinja", help=RENDER_JINJA_HELP),
     workers: int | None = t.Option(None, *WORKERS_CMDS, help=WORKERS_HELP),
+    flavor: str = t.Option("material", "--flavor", help=FLAVOR_HELP),
     _verbose: bool = t.Option(False, *VERBOSE_CMDS, help=VERBOSE_HELP, callback=verbose_callback),
     _quiet: bool = t.Option(False, *QUIET_CMDS, help=QUIET_HELP, callback=quiet_callback),
 ) -> None:
@@ -81,7 +83,7 @@ def build(
         mknodes build -s mypackage.docs:build -o ./docs
     """
     logfire.configure(send_to_logfire="if-token-present")
-    asyncio.run(_build_async(script, output, repo_url, render_jinja, workers))
+    asyncio.run(_build_async(script, output, repo_url, render_jinja, workers, flavor))
 
 
 async def _build_async(
@@ -90,6 +92,7 @@ async def _build_async(
     repo_url: str | None,
     render_jinja: bool,
     max_workers: int | None,
+    flavor: str = "material",
 ) -> None:
     """Async implementation of build command."""
     from mknodes.build import DocBuilder, MarkdownExporter
@@ -123,17 +126,17 @@ async def _build_async(
         root = result
 
     logger.info("Building documentation tree...")
-    builder = DocBuilder(render_jinja=render_jinja, max_workers=max_workers)
-    build_output = await builder.build(root)
+    builder = DocBuilder(render_jinja=render_jinja, max_workers=max_workers, flavor=flavor)
+    build_output = await builder.build(root, theme)
 
     logger.info("Exporting to %s...", output)
     exporter = MarkdownExporter()
     await exporter.export(build_output, output)
 
     logger.info(
-        "Build complete: %d files, %d pages",
-        len(build_output.files),
-        build_output.page_count,
+        "Build complete: %d pages, %d assets",
+        len(build_output.pages),
+        len(build_output.assets),
     )
 
 

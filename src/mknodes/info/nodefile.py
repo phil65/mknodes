@@ -73,8 +73,11 @@ async def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | 
     if "rst" in nodefile.output:
         output = await node.env.render_template_async("output/rst/template")
         dct["reST"] = mk.MkCode(output, language="rst")
-    if "github" in nodefile.output:
-        output = await node.env.render_template_async("output/github/template")
+    from mknodes import rendering
+
+    github = rendering.get_renderer_class("github")
+    if github.supports(type(node)):
+        output = await node.to_markdown(flavor="github")
         dct["GitHub"] = mk.MkCode(output, language="markdown")
     if len(node.get_children()) > 0:
         dct["Repr tree"] = mk.MkTreeView(node)

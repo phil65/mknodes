@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextvars
 from typing import TYPE_CHECKING, Any
 
 
@@ -26,5 +27,8 @@ def run_sync[T](coro: Coroutine[Any, Any, T]) -> T:
         import concurrent.futures
 
         with concurrent.futures.ThreadPoolExecutor() as pool:
-            future = pool.submit(_original_asyncio_run, coro)
+            # Copy the context, so context variables (like the active renderer)
+            # are visible inside the thread.
+            ctx = contextvars.copy_context()
+            future = pool.submit(ctx.run, _original_asyncio_run, coro)
             return future.result()

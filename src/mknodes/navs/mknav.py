@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     import types
 
     import mknodes as mk
+    from mknodes import rendering
     from mknodes.data.datatypes import PageStatusStr
     from mknodes.navs import navigation
 
@@ -125,7 +126,8 @@ class MkNav(mknode.MkNode):
         self.nav.register(navi)
         return navi
 
-    async def to_markdown(self) -> str:
+    async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Return the nav as literate-nav Markdown (the same for every flavour)."""
         return self.nav.to_literate_nav()
 
     def add_page(

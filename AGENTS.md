@@ -33,9 +33,27 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
 - `jinja/`: `NodeEnvironment` (`nodeenvironment.py`, a `jinjarope.Environment` exposing all nodes
   as filters/globals) and `filters.py`. Registered as `jinjarope.environment` entry point.
 - `theme/`: `Theme`, `MaterialTheme` (palette, colors, status icons).
-- `build/`: `DocBuilder` (`builder.py`, walks a root `MkNav` and renders pages, optionally in
-  parallel), `BuildOutput`, `MarkdownExporter`.
+- `build/`: tree -> engine-neutral output. `DocBuilder` (`builder.py`): renders every page in
+  a flavour (`flavor=`), page info box, wires page templates (`pagetemplates.py`, also moves
+  per-page CSS / JS into templates with `global_resources=False`), turns resources (+ theme
+  resources / templates / extras) into `assets`, `extra_css`, `extra_javascript`,
+  `markdown_extensions`, `templates` and the nav into a `NavItem` tree (`output.py`
+  `BuildOutput`). Sequential unless `max_workers > 1`. `MarkdownExporter` (`exporter.py`) writes
+  pages + assets + `SUMMARY.md`. Used by the `mknodes build` CLI and by `mkdocs-mknodes`.
 - `cli/__init__.py`: Typer CLI `mknodes` with `build`, `render`, `render-folder`.
+- `rendering/`: Markdown flavours. A `Renderer` (`base.py`) per flavour holds rules
+  (node type -> `async def rule(node, renderer) -> str`, registered with
+  `@GithubRenderer.rule(mk.MkAdmonition)`). Lookup walks the node MRO: Python rule, then an
+  `[output.<template_key>]` template of the class's `metadata.toml`, and stops at a class
+  that renders itself (`get_content` / `to_md_unprocessed`); no rule -> the node renders
+  itself, which is Material flavour (`MaterialRenderer`, the default, has no rules).
+  The active renderer is a context variable (`rendering.use()`, `node.to_markdown(flavor=)`,
+  `DocBuilder(flavor=)`); containers render children with `rendering.current().render_child()`
+  so nested nodes and `{{ node }}` in Jinja keep the flavour. `github.py`: GitHub flavour
+  (alerts, `<details>`, `<kbd>`, Iconify `<img>` icons, title heading instead of front matter).
+  `apidocs.py`: API docs from Griffe objects (for flavours without mkdocstrings; GitHub's
+  `MkDocStrings` rule). `materialtext.py`: converts hand-written Material blocks (`!!!`, `???`,
+  `===`) in page text; GitHub runs it as a page processor.
 - `mdext/`: Python-Markdown extensions (`/// mknodes` blocks, `execute_ext` for
   `python exec="true"` blocks, `codeinclude`); `- mknodes.mdext` in mkdocs.yml. See `mdext/README.md`.
 - `data/`: static data (admonition types, badges, build systems, tools, task runners, ...).
@@ -45,9 +63,10 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `manual/root.py:Build.build`, sections in `manual/*_section.py`. Uses Jinja templates
   from `docs/` (loaded via `contexts.DEFAULT_LOADER = FileSystemLoader("docs")`).
 
-Flow: build function populates a root `MkNav` -> nodes resolve context (`ctx`) -> each page
-renders to Markdown via Jinja/`to_markdown()` and collects `Resources` -> `DocBuilder` /
-`mkdocs-mknodes` writes files and a generated site config (`mkdocs.generated.yml`) -> zensical.
+Flow: build function populates a root `MkNav` -> nodes resolve context (`ctx`) ->
+`DocBuilder` renders each page in a flavour (renderer rules / `to_markdown()`, Jinja) and
+collects `Resources` -> `BuildOutput` -> `MarkdownExporter` (plain files) or a mkdocs-mknodes
+writer (zensical: docs dir + `mkdocs.generated.yml`).
 
 ## Where to look
 
@@ -99,9 +118,16 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
   a git checkout with history.
 - Tests that run git must clear `GIT_*` env vars (the pre-commit hook runs pytest with
   `GIT_DIR`/`GIT_INDEX_FILE` set), see `tests/test_gitrepository.py`.
+- New container-like nodes must render children via `rendering.current().render_child(item)`
+  (not `item.get_content()` + `item.get_processors()`), otherwise flavours don't reach them.
+  Threads don't inherit the active renderer: set it with `rendering.use()` inside the thread
+  (`coroutines.run_sync` copies the context already).
 - Container nodes (`MkContainerBase` subclasses) render via `get_content()`; a subclass that only
   overrides `to_md_unprocessed()` is detected by `_overrides_markdown_only()` in
   `basenodes/mkcontainer/__init__.py`. Check nested rendering (`page += node`) when adding nodes.
+- Route functions (`@nav.route.page/nav`) run lazily and in parallel threads on first access
+  (`Navigation._ensure_materialized`); their entries get re-sorted into declaration order
+  afterwards. Generated output must be reproducible: no `id()`, no thread-order dependence.
 - `MkDoc` (`navs/mkdoc.py`) only adds submodule navs with `recursive=True`. Which module
   documents which class is computed once per tree by `navs/apiscope.py` (`ApiScope`): every
   class gets one page below its defining module (`pkg.sub.Klass` -> `API/sub/Klass/`, module

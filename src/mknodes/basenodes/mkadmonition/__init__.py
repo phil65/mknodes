@@ -4,6 +4,7 @@ import textwrap
 
 from typing import Any, Literal, TYPE_CHECKING
 
+from mknodes import rendering
 from mknodes.basenodes import mkcontainer, mknode
 from mknodes.utils import log, resources
 
@@ -83,15 +84,9 @@ class MkAdmonition(mkcontainer.MkContainer):
             )
 
         # Collect content from children
-        child_contents = [await item.get_content() for item in items]
-
-        # Build markdown with admonition formatting
-        child_markdowns = []
-        for item, child_content in zip(items, child_contents):
-            md = child_content.markdown
-            for proc in item.get_processors():
-                md = proc.run(md)
-            child_markdowns.append(md)
+        renderer = rendering.current()
+        child_contents = [await renderer.render_child(item) for item in items]
+        child_markdowns = [content.markdown for content in child_contents]
 
         text = "\n".join(child_markdowns)
         indented = textwrap.indent(text, "    ")

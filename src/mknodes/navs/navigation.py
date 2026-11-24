@@ -3,6 +3,7 @@ from __future__ import annotations
 import concurrent.futures
 import inspect
 import pathlib
+import threading
 from typing import TYPE_CHECKING, Any
 
 from anyenv import run_sync
@@ -21,6 +22,10 @@ if TYPE_CHECKING:
     type PendingFn = Callable[[], None] | Callable[[], Awaitable[None]]
 
 
+# (navigation, index of the pending route function) of the route function running.
+_registration = threading.local()
+
+
 class Navigation:
     """An object representing a website structure.
 
@@ -34,6 +39,7 @@ class Navigation:
         self._pending: list[PendingFn] = []
         self._materialized: bool = True
         self._max_workers: int | None = max_workers
+        self._ranks: dict[tuple[Any, ...], int] = {}
 
     async def materialize(self) -> None:
         """Execute all pending route registrations (async)."""
@@ -60,11 +66,26 @@ class Navigation:
             if inspect.iscoroutine(result):
                 run_sync(result)
 
+        def run_ranked(rank: int, fn: PendingFn) -> None:
+            _registration.current = (self, rank)
+            try:
+                run_fn(fn)
+            finally:
+                _registration.current = None
+
+        # Route functions run in parallel, but the entries they register get sorted by
+        # the order of the route functions afterwards (thread timing must not decide).
+        before = set(self._data)
+        self._ranks = {}
         with concurrent.futures.ThreadPoolExecutor(max_workers=self._max_workers) as executor:
-            futures = [executor.submit(run_fn, fn) for fn in pending]
+            futures = [executor.submit(run_ranked, i, fn) for i, fn in enumerate(pending)]
             concurrent.futures.wait(futures)
             for future in futures:
                 future.result()
+        new = [k for k in self._data if k not in before]
+        new.sort(key=lambda k: self._ranks.get(k, len(pending)))
+        ordered = [k for k in self._data if k in before] + new
+        self._data = {k: self._data[k] for k in ordered}
 
     def add_pending(self, register_fn: PendingFn) -> None:
         """Add a pending registration to be executed lazily."""
@@ -87,6 +108,9 @@ class Navigation:
         """Put a Navigation-type instance into the registry."""
         if isinstance(index, str):
             index = (index,)
+        current = getattr(_registration, "current", None)
+        if current and current[0] is self:
+            self._ranks.setdefault(index, current[1])
         self._data[index] = node
 
     def __getitem__(

@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     import markdown
 
     import mknodes as mk
+    from mknodes import rendering
 
 
 BlockStr = Literal[
@@ -63,10 +64,16 @@ class BaseBlock(mknode.MkNode):
     def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
-    async def to_markdown(self, md: markdown.Markdown | None = None) -> str:
-        """Return HTML for the block.
+    async def to_markdown(
+        self,
+        flavor: str | rendering.Renderer | None = None,
+        *,
+        md: markdown.Markdown | None = None,
+    ) -> str:
+        """Return the Jinja block (with HTML content) for the page template.
 
         Args:
+            flavor: Unused: template blocks are theme overrides, not Markdown
             md: Markdown parser to use
         """
         instance = md or mdconverter.MdConverter()

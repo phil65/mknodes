@@ -10,6 +10,7 @@ from mknodes.data import treestyles
 from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
+from mknodes import rendering
 from mknodes.utils import icons, log, mdconverter, reprhelpers, resources, coroutines
 
 
@@ -503,12 +504,18 @@ class MkNode:
             css=css_resources,
         )
 
-    async def to_markdown(self) -> str:
-        """Outputs markdown for self and all children."""
-        text = await self.to_md_unprocessed()
-        for proc in self.get_processors():
-            text = proc.run(text)
-        return text
+    async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Outputs markdown for self and all children.
+
+        Args:
+            flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
+                    Defaults to the active renderer (Material for MkDocs).
+        """
+        if flavor is not None:
+            with rendering.use(rendering.get_renderer(flavor)):
+                return await self.to_markdown()
+        renderer = rendering.current()
+        return renderer.process(self, await renderer.render_markdown(self))
 
     def get_processors(self) -> list[processors.TextProcessor]:
         """Return list of processors used to created markdown."""

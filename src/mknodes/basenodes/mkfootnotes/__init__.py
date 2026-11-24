@@ -5,6 +5,7 @@ import textwrap
 
 from typing import TYPE_CHECKING, Any
 
+from mknodes import rendering
 from mknodes.basenodes import mkcontainer, mktext
 from mknodes.utils import log, reprhelpers, resources
 
@@ -44,15 +45,9 @@ class MkFootNote(mkcontainer.MkContainer):
         items = self.get_items()
 
         # Collect content from children
-        child_contents = [await item.get_content() for item in items]
-
-        # Build markdown with footnote formatting
-        child_markdowns = []
-        for item, child_content in zip(items, child_contents):
-            md = child_content.markdown
-            for proc in item.get_processors():
-                md = proc.run(md)
-            child_markdowns.append(md)
+        renderer = rendering.current()
+        child_contents = [await renderer.render_child(item) for item in items]
+        child_markdowns = [content.markdown for content in child_contents]
 
         item_str = "\n".join(child_markdowns)
         indented = textwrap.indent(item_str, "    ")
@@ -164,15 +159,9 @@ class MkFootNotes(mkcontainer.MkContainer):
         items = sorted(items, key=lambda x: x.num)
 
         # Collect content from children
-        child_contents = [await item.get_content() for item in items]
-
-        # Build markdown - children already formatted
-        child_markdowns = []
-        for item, child_content in zip(items, child_contents):
-            md = child_content.markdown
-            for proc in item.get_processors():
-                md = proc.run(md)
-            child_markdowns.append(md)
+        renderer = rendering.current()
+        child_contents = [await renderer.render_child(item) for item in items]
+        child_markdowns = [content.markdown for content in child_contents]
 
         md = "".join(child_markdowns)
 

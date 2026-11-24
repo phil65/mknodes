@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import zlib
+
 import itertools
 
 from typing import Any, Literal, TYPE_CHECKING
@@ -29,7 +31,8 @@ class BaseClassConnector(connector.Connector[type]):
         super().__init__(objects, max_depth=max_depth)
 
     def get_id(self, item: type) -> int:
-        return id(item)
+        """Stable id for the class (based on its path, so the output is reproducible)."""
+        return zlib.crc32(f"{item.__module__}.{item.__qualname__}".encode())
 
     def get_title(self, item: type) -> str:
         return (

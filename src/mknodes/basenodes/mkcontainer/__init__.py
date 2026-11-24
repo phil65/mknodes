@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Self
 
+from mknodes import rendering
 from mknodes.basenodes import mknode
 from mknodes.utils import log, resources
 
@@ -68,15 +69,9 @@ class MkContainerBase(mknode.MkNode):
         items = self.get_items()
 
         # Collect content from all children in one pass
-        child_contents = [await item.get_content() for item in items]
-
-        # Aggregate child markdown - apply each child's processors
-        child_markdowns = []
-        for item, child_content in zip(items, child_contents):
-            md = child_content.markdown
-            for proc in item.get_processors():
-                md = proc.run(md)
-            child_markdowns.append(md)
+        renderer = rendering.current()
+        child_contents = [await renderer.render_child(item) for item in items]
+        child_markdowns = [content.markdown for content in child_contents]
 
         md = self.block_separator.join(child_markdowns)
 

@@ -4,6 +4,7 @@ import textwrap
 
 from typing import Any, TYPE_CHECKING
 
+from mknodes import rendering
 from mknodes.basenodes import mkblock, mkcontainer
 from mknodes.utils import log, reprhelpers, resources
 
@@ -130,15 +131,9 @@ class MkTab(mkcontainer.MkContainer):
         items = self.get_items()
 
         # Collect content from children
-        child_contents = [await item.get_content() for item in items]
-
-        # Build markdown with tab formatting
-        child_markdowns = []
-        for item, child_content in zip(items, child_contents):
-            md = child_content.markdown
-            for proc in item.get_processors():
-                md = proc.run(md)
-            child_markdowns.append(md)
+        renderer = rendering.current()
+        child_contents = [await renderer.render_child(item) for item in items]
+        child_markdowns = [content.markdown for content in child_contents]
 
         text = "\n\n".join(child_markdowns)
         text = text.rstrip("\n")
