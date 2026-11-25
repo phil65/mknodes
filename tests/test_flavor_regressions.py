@@ -132,3 +132,12 @@ async def test_badge_is_shields_image_github():
     url = "https://img.shields.io/badge/Doc--s-my__site-ff9800"
     assert md == f"[![Doc-s: my_site]({url})](https://example.org)"
     assert "<svg" in await badge.to_markdown()
+
+
+async def test_nested_admonitions_github():
+    inner = mk.MkAdmonition("x", typ="tip")
+    outer = mk.MkAdmonition(mk.MkAdmonition(inner, typ="warning", title="W"), typ="note")
+    md = await outer.to_markdown(flavor="github")
+    assert md == "> [!NOTE]\n> > **W**\n> >\n> > > **Tip**\n> > >\n> > > x\n"
+    collapsible = mk.MkAdmonition(mk.MkAdmonition("y", typ="tip"), collapsible=True)
+    assert "> [!TIP]\n> y" in await collapsible.to_markdown(flavor="github")

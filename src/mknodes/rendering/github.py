@@ -206,7 +206,22 @@ async def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
     if node.collapsible:
         summary = node.title or node.typ.capitalize()
         return details(summary, text, open_=bool(node.expanded))
+    if _inside_alert(node):  # GitHub renders alerts only at the top level
+        label = node.title or node.typ.capitalize()
+        return quote(f"**{label}**\n\n{text.strip()}") + "\n"
     return alert(node.typ, text, node.title)
+
+
+def _inside_alert(node: mknode.MkNode) -> bool:
+    """Whether an ancestor of given node renders as a GitHub alert (a blockquote)."""
+    parent = node.parent
+    while parent is not None:
+        if isinstance(parent, mk.MkCompactAdmonition):
+            return True
+        if isinstance(parent, mk.MkAdmonition) and not parent.collapsible:
+            return True
+        parent = parent.parent
+    return False
 
 
 @GithubRenderer.rule(mk.MkCompactAdmonition)
