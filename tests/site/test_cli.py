@@ -52,3 +52,10 @@ def test_removed_commands():
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+
+def test_help_keeps_brackets():
+    # Rich markup used to swallow "[tool.mknodes]" ("configured in `` of ...").
+    result = CliRunner().invoke(cli.cli, ["generate", "--help"], terminal_width=200)
+    assert result.exit_code == 0
+    assert "[tool.mknodes]" in result.output

@@ -17,6 +17,8 @@ cli = t.Typer(
         "site engine. Docs: https://phil65.github.io/mknodes/"
     ),
     no_args_is_help=True,
+    # Help texts are Markdown (`code`) with literal brackets (`[tool.mknodes]`).
+    rich_markup_mode="markdown",
 )
 
 VERBOSE_HELP = "Enable verbose output. (`DEBUG` level)"
