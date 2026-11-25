@@ -1,0 +1,14 @@
+It is possible to construct a basic documentation website without writing any Python code by
+describing the node tree in the config. The default build function (`mknodes.site:parse`)
+builds the nav from the `pages` setting.
+
+The following config...
+
+{{ config | MkCode(language="toml") }}
+
+Combined with this CLI call...
+
+{{"mknodes build" | MkCode(language="terminal")}}
+
+...creates a website with a home page, a usage section, API docs, a CLI page
+(if the project has a CLI) and a development section.

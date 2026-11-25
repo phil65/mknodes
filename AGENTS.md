@@ -4,9 +4,10 @@
 
 MkNodes is a Python library for building documentation as a tree of objects ("nodes") that
 render to Markdown/HTML with the resources they need (CSS, JS, Markdown extensions). Nodes
-can be created from Python or from Jinja templates (every node is also a Jinja filter). It is
-the engine behind the `mkdocs-mknodes` site generator (sites are built with Zensical) and ~30
-docs sites, so keep the public API (`import mknodes as mk; mk.MkXyz`) stable.
+can be created from Python or from Jinja templates (every node is also a Jinja filter). It also
+contains the site generator (`mknodes build` / `serve` / `generate`, formerly the separate
+`mkdocs-mknodes` package) used by ~36 docs sites (built with Zensical), so keep the public API
+(`import mknodes as mk; mk.MkXyz`) and the `[tool.mknodes]` settings stable.
 Since 3.0 MkNodes is site-engine agnostic: `mkdocs` / `mkdocs-material` are not runtime
 dependencies and must not be imported by library code (`MkPluginFlow` was removed).
 
@@ -39,8 +40,31 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   resources / templates / extras) into `assets`, `extra_css`, `extra_javascript`,
   `markdown_extensions`, `templates` and the nav into a `NavItem` tree (`output.py`
   `BuildOutput`). Sequential unless `max_workers > 1`. `MarkdownExporter` (`exporter.py`) writes
-  pages + assets + `SUMMARY.md`. Used by the `mknodes build` CLI and by `mkdocs-mknodes`.
-- `cli/__init__.py`: Typer CLI `mknodes` with `build`, `render`, `render-folder`.
+  pages + assets + `SUMMARY.md`.
+- `site/`: the site generator. Layering: core modules never import `mknodes.site` / `mknodes.cli`
+  (`tests/test_layering.py`).
+  - `settings.py` `GeneratorSettings`: read from the `mknodes` entry of the `plugins` list in
+    `mkdocs.yml` (existing sites have `- mknodes` there; zensical ignores it), then
+    `[tool.mknodes]` in `pyproject.toml` (preferred, `-`/`_` interchangeable), then CLI options.
+    Unknown keys are ignored. Docstrings are shown on the manual's "Configuration" page.
+  - `generator.py` `SiteGenerator`: theme, `ProjectContext.for_project()` (the only context
+    factory), runs the build fn, `DocBuilder(flavor=...).build(root, theme)`, then URL collision
+    renames (safety net) and bare `[x](file.md)` link fixing (needs docs_dir's hand-written files).
+  - Build fn contract: `build_fn(root=..., theme=..., **kwargs)` (kwargs from settings), sync or
+    async, mutates `root`. Paths: `module:callable`, `path/file.py:callable`,
+    `module:Class.classmethod`. Default `mknodes.site:parse`: with `pages` setting the nav is
+    parsed (`navs/navparser.py`, example `resources/site/pages_example.toml`), else
+    `defaultsite.populate_default_website()` (README index, API docs, CLI page, Development nav).
+  - `writers/`: `Writer` base (`flavor`, `write()`, `build_command()` / None = no build step),
+    `GeneratedFolder` manifest (`docs/.gitignore`; hand-written files are never overwritten; old
+    `mkdocs-mknodes` manifests are still recognized), `ZensicalWriter` (docs dir + template
+    overrides into `custom_dir` + `mkdocs.generated.yml` with `INHERIT: mkdocs.yml`),
+    `MarkdownWriter` (engine `markdown`, GitHub flavour, `MarkdownExporter` files).
+  - `yamlconfig.py` (YAML round-trip keeping `!ENV` / `!!python/name` tags, `INHERIT`),
+    `watch.py` (polling watcher, regenerates in a subprocess via `python -m mknodes generate`).
+- `cli/`: Typer app `mknodes` (`app.py`, rich logging via `richstate.py`); `site.py`: `build`,
+  `serve`, `generate` (`--engine zensical|markdown`, `--flavor`); `render.py`: `render`,
+  `render-folder`. Entry point `cli:main` (configures logfire).
 - `rendering/`: Markdown flavours. A `Renderer` (`base.py`) per flavour holds rules
   (node type -> `async def rule(node, renderer) -> str`, registered with
   `@GithubRenderer.rule(mk.MkAdmonition)`). Lookup walks the node MRO: Python rule, then an
@@ -65,7 +89,7 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
 
 Flow: build function populates a root `MkNav` -> nodes resolve context (`ctx`) ->
 `DocBuilder` renders each page in a flavour (renderer rules / `to_markdown()`, Jinja) and
-collects `Resources` -> `BuildOutput` -> `MarkdownExporter` (plain files) or a mkdocs-mknodes
+collects `Resources` -> `BuildOutput` -> `MarkdownExporter` (plain files) or a site
 writer (zensical: docs dir + `mkdocs.generated.yml`).
 
 ## Where to look
@@ -81,7 +105,8 @@ writer (zensical: docs dir + `mkdocs.generated.yml`).
 | CLI | `src/mknodes/cli/__init__.py` |
 | Markdown extensions | `src/mknodes/mdext/` |
 | Project docs content | `src/mknodes/manual/` + `docs/*.jinja` |
-| Docs site config | `mkdocs.yml` (settings in the `mknodes` plugins entry: `build_fn: mknodes.manual.root:Build.build`, read by `mkdocs-mknodes`) |
+| Docs site config | `mkdocs.yml` (settings in the `mknodes` plugins entry: `build_fn: mknodes.manual.root:Build.build`) |
+| Site generator settings / CLI / writers | `src/mknodes/site/`, `src/mknodes/cli/` |
 
 ## Commands
 
@@ -90,7 +115,7 @@ uv sync --all-extras                 # setup (CI uses this)
 uv run pytest                        # tests (also run by the pre-commit hook)
 uv run ruff check . && uv run ruff format --check .
 uv run mypy src/                     # type checker (mypy, not ty)
-uv run mkdocs-mknodes build --engine zensical -v   # docs build, as in documentation.yml
+uv run mknodes build -v         # docs build, as in documentation.yml
 uv run pytest benchmarks/ --codspeed # benchmarks (codspeed.yml)
 uv build
 uv run duty lint | test | build | serve   # wrappers in duties.py
@@ -140,10 +165,10 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
   fences explicitly via `get_custom_fences()` in the superfences config.
 - `MkTemplate` paths are relative to `docs/`; the manual breaks if templates move.
 - `src/mknodes/info/packageinfo.py` uses CRLF line endings; keep them.
-- Downstream users: `mkdocs-mknodes` and many docs sites import node classes and helpers directly.
+- Downstream users: many docs sites import node classes and helpers directly.
 - `utils.log.get_logger(name)` returns loggers below `mknodes` (names outside the namespace get
   prefixed), so all output can be configured via the `mknodes` logger.
 - Repositories without an `origin` remote work: `GitRepository.remote_url` falls back to the
   first remote, `repo_name` to the folder name; the package name then comes from pyproject.
-- `uv run` re-syncs `mkdocs-mknodes` from PyPI; to test against a local checkout use
-  `uv pip install -e ../mkdocs_mknodes` and `.venv/bin/mkdocs-mknodes build`.
+- Generated files: `docs/.gitignore` / `overrides/.gitignore` are manifests written by the
+  site generator; `mkdocs.generated.yml` is regenerated on every run.

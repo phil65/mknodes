@@ -67,5 +67,5 @@ class MkCliDoc(mktemplate.MkTemplate):
 
 
 if __name__ == "__main__":
-    docstrings = MkCliDoc.with_context("mkdocs_mknodes.cli:cli", show_subcommands=True)
+    docstrings = MkCliDoc.with_context("mknodes.cli:cli", show_subcommands=True)
     print(docstrings)

@@ -44,10 +44,9 @@ in sync with the code.
 pip install mknodes
 ```
 
-To build a full website from MkNodes, use the site generator
-[mkdocs-mknodes](https://github.com/phil65/mkdocs-mknodes) (builds with
-[Zensical](https://zensical.org)). MkNodes itself does not depend on MkDocs or any other
-site engine.
+MkNodes includes a site generator (`mknodes build` / `serve` / `generate`) that builds
+websites with [Zensical](https://zensical.org) or writes plain Markdown. It does not depend on
+MkDocs. (It used to be the separate `mkdocs-mknodes` package.)
 
 ## Quickstart
 
@@ -84,7 +83,7 @@ print(asyncio.run(page.to_markdown()))
 import mknodes as mk
 
 
-def build(root: mk.MkNav) -> None:
+def build(root: mk.MkNav, theme: mk.Theme) -> None:
     @root.route.page("Home", is_index=True)
     def _(page: mk.MkPage):
         page += mk.MkHeader("Welcome", level=1)
@@ -95,19 +94,22 @@ def build(root: mk.MkNav) -> None:
         page += mk.MkChangelog()
 ```
 
-Render it to a folder of Markdown files with the CLI (run inside your project's repository):
-
-```bash
-mknodes build -s mypackage.docs:build -o docs
-```
-
-or build a complete website with [mkdocs-mknodes](https://github.com/phil65/mkdocs-mknodes)
-(`mkdocs-mknodes build`), configured in `pyproject.toml`:
+Configure it in `pyproject.toml` and build the website (run inside your project's repository):
 
 ```toml
 [tool.mknodes]
 build-fn = "mypackage.docs:build"
 ```
+
+```bash
+mknodes build                      # pages + mkdocs.generated.yml, then `zensical build`
+mknodes serve                      # live preview
+mknodes generate --engine markdown --flavor github --generated-dir out  # plain Markdown
+```
+
+Without a build function, a default website gets generated (README, API docs, CLI docs,
+development pages). Build functions are called as `build_fn(root=..., theme=..., **kwargs)`
+(sync or async) and populate `root`.
 
 The CLI also renders Jinja-enhanced Markdown: `mknodes render -i template.md -o output.md`
 and `mknodes render-folder -i src_docs -o docs`.

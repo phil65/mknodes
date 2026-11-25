@@ -56,7 +56,7 @@ jobs:
             - name: Build
               env:
                   MKNODES_CACHE_DIR: ~/.cache/mknodes
-              run: uv run mkdocs-mknodes build --engine zensical -v
+              run: uv run mknodes build -v
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v5
               with:

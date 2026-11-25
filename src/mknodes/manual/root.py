@@ -5,6 +5,7 @@ from mknodes.manual import (
     navs_section,
     nodes_section,
     page_section,
+    site,
     templating_section,
 )
 
@@ -31,6 +32,7 @@ class Build:
         nav += page_section.nav
         nav += nodes_section.nav
         nav += templating_section.nav
+        nav += site.nav
         nav += dev_section.nav
         return nav
 

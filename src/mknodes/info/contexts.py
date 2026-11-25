@@ -17,6 +17,7 @@ from mknodes.utils import log, superdict
 if TYPE_CHECKING:
     from collections.abc import Mapping
     import datetime as dt
+    import os
     import types
 
     import clinspector
@@ -330,42 +331,48 @@ class ProjectContext(Context):
     # )
 
     @classmethod
-    def for_config(
+    def for_project(
         cls,
-        *args: dict[str, Any],
-        theme_context: ThemeContext | None = None,
-        **kwargs: Any,
-    ):
-        """The main project to create a website.
+        repo: str | os.PathLike[str] = ".",
+        *,
+        clone_depth: int = 100,
+        base_url: str = "",
+        use_directory_urls: bool = True,
+        theme: ThemeContext | None = None,
+        env_config: jinjarope.EnvConfig | None = None,
+    ) -> ProjectContext:
+        """Create the context for a project (local folder or remote repository URL).
+
+        Remote repositories get cloned. A local folder without git works too (no git info).
 
         Args:
-            args: Config mapping
-            theme_context: Optional theme context
-            kwargs: Keyword arguments to override config values
+            repo: Local path or repository URL
+            clone_depth: Clone depth for remote repositories
+            base_url: Base URL of the website (for absolute links)
+            use_directory_urls: Whether pages are served as `page/` instead of `page.html`
+            theme: Theme context (default: an empty one)
+            env_config: Jinja environment config (default: templates from `docs/`)
         """
-        from mknodes.info import folderinfo as fi, linkprovider, reporegistry
+        from mknodes.info import folderinfo as fi, reporegistry
 
-        cfg = {k: v for d in args for k, v in d.items()}
-        cfg.update(kwargs)
         links = linkprovider.LinkProvider(
-            base_url=cfg.get("base_url", ""),
-            use_directory_urls=cfg.get("use_directory_urls", True),
+            base_url=base_url,
+            use_directory_urls=use_directory_urls,
             include_stdlib=True,
         )
-        repo_url = cfg.get("repo_url") or "."
-        clone_depth = cfg.get("clone_depth", 100)
         try:
-            git_repo = reporegistry.get_repo(repo_url, clone_depth=clone_depth)
+            git_repo = reporegistry.get_repo(str(repo), clone_depth=clone_depth)
+            folder = git_repo.working_dir
         except Exception as e:  # noqa: BLE001
-            print(f"Error fetching repository: {e}")
-            git_repo = None
-        folderinfo = fi.FolderInfo(git_repo.working_dir if git_repo else ".")
+            logger.warning("No git repository for %s (%s), git infos are unavailable", repo, e)
+            folder = repo
+        info = fi.FolderInfo(folder)
         return cls(
-            metadata=folderinfo.context,
-            git=folderinfo.git.context,
-            theme=theme_context or ThemeContext(),
+            metadata=info.context,
+            git=info.git.context,
+            theme=theme or ThemeContext(),
             links=links,
-            env_config=cfg.get("env_config", jinjarope.EnvConfig(loader=DEFAULT_LOADER)),
+            env_config=env_config or jinjarope.EnvConfig(loader=DEFAULT_LOADER),
         )
 
     async def populate_linkprovider(self) -> None:

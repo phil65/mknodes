@@ -186,5 +186,5 @@ class MkCliNav(mknav.MkNav):
 
 
 if __name__ == "__main__":
-    nav = MkCliNav("mkdocs_mknodes.cli:cli")
+    nav = MkCliNav("mknodes.cli:cli")
     print(nav)

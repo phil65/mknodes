@@ -629,7 +629,7 @@ class MkNode:
         **kwargs: Any,
     ) -> Self:
         """Same as the Ctor, but auto-adds a context for the repo url (or the cwd)."""
-        ctx = contexts.ProjectContext.for_config(repo_url=repo_url, base_url=base_url)
+        ctx = contexts.ProjectContext.for_project(repo_url or ".", base_url=base_url)
         return cls(*args, **kwargs, context=ctx)
 
     async def to_html(self) -> str:

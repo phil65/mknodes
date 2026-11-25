@@ -47,7 +47,7 @@ def test_creating_module_document():
 
 
 def test_cli_nav():
-    nav = mk.MkCliNav("mkdocs_mknodes.cli:cli", section_name="CLI")
+    nav = mk.MkCliNav("mknodes.cli:cli", section_name="CLI")
     assert nav.cli_info is not None
     assert nav.cli_info.subcommands
     children = nav.get_children()

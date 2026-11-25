@@ -64,6 +64,7 @@ dependencies = [
   "pymdown-extensions>=10.0",
   # Tools
   "pytest-asyncio>=1.3.0",
+  "pyyaml",
   "python-dotenv",
   "requests>=2.28",
   "rich>=13.0",
@@ -104,7 +105,6 @@ dev = [
   # Material Social addon
   "cairosvg; python_version < '3.14'",
   "markdown-exec[ansi]",
-  "mkdocs_mknodes>=2.1.0",
   # Docs
   "mkdocstrings[python]",
   # Linting
@@ -113,7 +113,6 @@ dev = [
   "pydeps",
   "pygments",
   "pyinstrument",
-  # "mkdocs_mknodes @ git+https://github.com/phil65/mkdocs_mknodes.git@main",
   "pymdown-extensions",
   # Debugging
   "pyreadline3",

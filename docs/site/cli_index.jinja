@@ -1,0 +1,24 @@
+**MkNodes** offers a CLI to generate and build websites from MkNodes build functions.
+The CLI is based on `Typer` and uses a `rich` based handler for nice, colored output.
+
+Site generator commands:
+
+- `mknodes generate`: Runs the build function (or the default website) and writes the
+  generated pages, assets and theme template overrides into the docs folder, plus a generated
+  config (`mkdocs.generated.yml`, inheriting from `mkdocs.yml`) containing the nav, the required
+  Markdown extensions and extra CSS / JS. With `--watch`, the site gets regenerated whenever
+  project sources change.
+
+- `mknodes build`: `generate`, followed by `zensical build -f mkdocs.generated.yml`.
+  The build function can also run on a remote repository (`--repo-url`).
+
+- `mknodes serve`: `generate --watch` running next to `zensical serve`
+  (live preview on http://localhost:8000/).
+
+Engines (`--engine`): `zensical` (default, HTML website) or `markdown` (plain Markdown files
+plus a `SUMMARY.md` nav, GitHub flavour). `--flavor` overrides the Markdown flavour.
+
+Other commands:
+
+- `mknodes render`: Render a single Markdown file with the MkNodes Jinja environment.
+- `mknodes render-folder`: Render a folder of Markdown files (other files get copied).

@@ -5,13 +5,13 @@ name = "MkCliDoc"
 [examples.cli]
 title = "MkDocs-MkNodes CLI"
 jinja = """
-{{ "mkdocs_mknodes.cli:cli" | MkCliDoc }}
+{{ "mknodes.cli:cli" | MkCliDoc }}
 """
 
 [examples.sub_command]
 title = "SubCommand"
 jinja = """
-{{ "mkdocs_mknodes.cli:cli" | MkCliDoc(prog_name="build") }}
+{{ "mknodes.cli:cli" | MkCliDoc(prog_name="build") }}
 """
 
 [examples.argparse]

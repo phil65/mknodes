@@ -75,8 +75,6 @@ plugins:
                         domains: [std, py]
                       - url: https://phil65.github.io/jinjarope/objects.inv
                         domains: [std, py]
-                      - url: https://phil65.github.io/mkdocs-mknodes/objects.inv
-                        domains: [std, py]
                   options:
                       # https://mkdocstrings.github.io/python/usage/
                       show_docstring_returns: false
