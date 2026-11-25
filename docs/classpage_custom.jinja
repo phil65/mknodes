@@ -8,14 +8,16 @@
 {{ cls | get_doc(only_description=True) | MkAdmonition(title="Description") }}
 {% endif %}
 
-{% if cls | hasattr("nodefile") and cls.nodefile %}
+{% set nodefile = cls.get_nodefile() if cls | hasattr("get_nodefile") else None %}
+{% if nodefile %}
 === "Examples"
-{% for k, v in cls.nodefile.get_examples(node).items() %}
+{% for k, v in nodefile.get_examples(node).items() %}
     {{ ("Example: " ~ k | md_style(bold=True)) | MkHeader(level=3) | string  | indent }}
     {{ v.pop("Jinja") | MkAdmonition(title="Jinja", typ="jinja") | string  | indent  }}
     {{ v.pop("Repr") | MkAdmonition(title="Python", typ="python") | string  | indent  }}
     {{ v | MkTabbed | string  | indent }}
 {% endfor %}
+{% endif %}
 
 === "DocStrings"
 {{ cls | MkDocStrings(show_docstring_description=False) | string | indent(first=True) }}
@@ -31,10 +33,9 @@
 === "⋔ Inheritance diagram"
 {{ cls | MkClassDiagram(mode="baseclasses") | string | indent(first=True) }}
 {% endif %}
-{% endif %}
-{% if cls | hasattr("nodefile") and cls.nodefile %}
+{% if nodefile %}
 === "NodeFile"
-    {{ cls.nodefile.path | load_file | MkCode(language="toml", title=cls.nodefile.path) | string | indent  }}
+    {{ nodefile.path | load_file | MkCode(language="toml", title=nodefile.path) | string | indent  }}
 === "Code"
     {{ _mk.MkCode.for_object(cls) | string | indent  }}
 {% endif %}
