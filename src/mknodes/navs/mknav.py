@@ -63,7 +63,7 @@ class MkNav(mknode.MkNode):
         self.page_template = pagetemplate.PageTemplate(parent=self, extends="main.html")
         super().__init__(**kwargs)
         if frame := inspect.currentframe():
-            self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=1)
+            self.metadata["created"] = inspecthelpers.get_creation_info(frame)
 
     def __repr__(self) -> str:
         title = self.title or "<root>"

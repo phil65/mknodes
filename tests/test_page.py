@@ -86,3 +86,43 @@ async def test_nested_node_keeps_its_own_markdown(node: mk.MkNode):
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+
+def _create_page() -> mk.MkPage:
+    return mk.MkPage("Created")
+
+
+def test_created_metadata_points_to_user_code():
+    import asyncio
+    import threading
+
+    from anyenv import run_sync
+
+    async def create_async() -> mk.MkPage:
+        return _create_page()
+
+    pages = [_create_page(), run_sync(create_async()), asyncio.run(create_async())]
+    thread = threading.Thread(target=lambda: pages.append(_create_page()))
+    thread.start()
+    thread.join()
+    nav = mk.MkNav()
+    pages.append(nav.add_page("Added"))
+    for page in pages:
+        created = page.metadata["created"]
+        assert created["source_filename"] == __file__
+        expected = {"_create_page", "test_created_metadata_points_to_user_code"}
+        assert created["source_function"] in expected
+
+
+def test_created_metadata_of_routed_page():
+    nav = mk.MkNav()
+
+    @nav.route.page("Routed")
+    def routed(page: mk.MkPage):
+        page += "text"
+
+    page = nav.nav["Routed"]
+    assert page.created_by is routed
+    created = page.metadata["created"]
+    assert created["source_filename"] == __file__
+    assert created["source_function"].endswith("routed")

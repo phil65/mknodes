@@ -9,6 +9,7 @@ from jinjarope import inspectfilters
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     import pathlib
     import types
 
@@ -21,12 +22,75 @@ def get_stack_info(frame: types.FrameType | None, level: int) -> dict[str, Any] 
         frame = frame.f_back
     if not frame:
         return None
+    return _frame_info(frame)
+
+
+def _frame_info(frame: types.FrameType) -> dict[str, Any]:
     fn_name = qual if (qual := frame.f_code.co_qualname) != "<module>" else None
     return dict(
         source_filename=frame.f_code.co_filename,
         source_function=fn_name,
         source_line_no=frame.f_lineno,
-        # klass=frame.f_locals["self"].__class__.__name__,
+    )
+
+
+# Packages whose frames sit between user code and a node constructor: event loop /
+# thread machinery (route functions run in threads and via `anyenv.run_sync`) and
+# template engines.
+_INFRASTRUCTURE_PACKAGES = frozenset({
+    "anyenv",
+    "anyio",
+    "asyncio",
+    "concurrent",
+    "contextlib",
+    "contextvars",
+    "functools",
+    "jinja2",
+    "jinjarope",
+    "logfire",
+    "threading",
+})
+
+
+def _is_internal_module(module: str) -> bool:
+    # The manual (mknodes' own docs) is user code.
+    if module.startswith("mknodes.manual"):
+        return False
+    if module == "mknodes" or module.startswith("mknodes."):
+        return True
+    return module.partition(".")[0] in _INFRASTRUCTURE_PACKAGES
+
+
+def get_creation_info(frame: types.FrameType | None) -> dict[str, Any] | None:
+    """Return location info of the user code which caused the creation of a node.
+
+    Walks up the stack from the caller of given frame, skipping frames of mknodes
+    itself and of event loop / thread machinery.
+
+    Args:
+        frame: The frame of the constructor (usually `inspect.currentframe()`)
+    """
+    frame = frame.f_back if frame else None
+    while frame:
+        if not _is_internal_module(frame.f_globals.get("__name__") or ""):
+            return _frame_info(frame)
+        frame = frame.f_back
+    return None
+
+
+def get_callable_info(fn: Callable[..., Any]) -> dict[str, Any] | None:
+    """Return location info (like `get_creation_info`) for the definition of a callable.
+
+    Args:
+        fn: The callable to get info for
+    """
+    code = getattr(inspect.unwrap(fn), "__code__", None)
+    if code is None:
+        return None
+    return dict(
+        source_filename=code.co_filename,
+        source_function=code.co_qualname,
+        source_line_no=code.co_firstlineno,
     )
 
 

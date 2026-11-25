@@ -79,7 +79,7 @@ class MkPage(mkcontainer.MkContainer):
         self._is_index = is_index
         self._is_homepage = is_homepage
         self.footnotes = mkfootnotes.MkFootNotes(parent=self)
-        self.created_by: Callable[..., Any] | None = None
+        self._created_by: Callable[..., Any] | None = None
         self.metadata = metadata.Metadata(
             hide=hide,
             search_boost=search_boost,
@@ -96,12 +96,23 @@ class MkPage(mkcontainer.MkContainer):
         self._template: pagetemplate.PageTemplate | None = None
         self.template = template or pagetemplate.PageTemplate(parent=self, extends="main.html")
         if frame := inspect.currentframe():
-            self.metadata["created"] = inspecthelpers.get_stack_info(frame, level=2)
+            self.metadata["created"] = inspecthelpers.get_creation_info(frame)
         logger.debug("Created %s, %r", type(self).__name__, self.resolved_file_path)
 
     def __repr__(self) -> str:
         kwargs = {k: v for k, v in self.metadata.items() if v is not None}
         return reprhelpers.get_repr(self, path=str(self.path), **kwargs)
+
+    @property
+    def created_by(self) -> Callable[..., Any] | None:
+        """The function which created the page (like a route function)."""
+        return self._created_by
+
+    @created_by.setter
+    def created_by(self, fn: Callable[..., Any] | None) -> None:
+        self._created_by = fn
+        if fn is not None and (info := inspecthelpers.get_callable_info(fn)):
+            self.metadata["created"] = info
 
     def is_index(self) -> bool:
         """Returns True if the page is the index page for the parent Nav."""
