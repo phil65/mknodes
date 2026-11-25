@@ -136,6 +136,7 @@ class DocBuilder:
                 path = pathlib.PurePath(page.resolved_file_path).as_posix()
                 output.edit_paths[path] = page._edit_path
         self._add_files(output, files)
+        self.renderer.finalize(output, root)
         if theme:
             req.merge(await theme.get_resources())
             theme.adapt_extensions(req.markdown_extensions)

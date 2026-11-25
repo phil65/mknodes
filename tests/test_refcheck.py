@@ -192,3 +192,43 @@ def test_generator_logs_issues(caplog: pytest.LogCaptureFixture):
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+
+def test_link_references():
+    api = '## <a id="mknodes.MkNav"></a>`mknodes.MkNav`\n\n### <a id="mknodes.MkNav.add_page"></a>'
+    pages = {
+        "api/navs.md": api,
+        "tour.md": '<a id="mknodes.MkNav"></a>\n\n[nav][mknodes.MkNav]',
+        "guide/usage.md": """\
+[MkNav][mknodes.MkNav], [add_page][mknodes.MkNav.add_page], [`MkNav`][mknodes.navs.mknav.MkNav]
+[parse][mknodes.MkNav.parse] (member without anchor: its class)
+[MkText][mknodes.MkText], [some text][mknodes.Nope], [heading][some-heading]
+`[a][mknodes.MkNav]` and [label][mknodes.Label]
+
+[mknodes.label]: https://example.com
+""",
+    }
+    output = BuildOutput(pages=pages)
+    refcheck.link_references(output, inventory={"mknodes.MkText": "https://x.org/#MkText"})
+    lines = output.pages["guide/usage.md"].splitlines()
+    url = "../api/navs.md#mknodes.MkNav"
+    member_url = "../api/navs.md#mknodes.MkNav.add_page"
+    assert lines[0] == f"[MkNav]({url}), [add_page]({member_url}), [`MkNav`]({url})"
+    assert lines[1] == f"[parse]({url}) (member without anchor: its class)"
+    assert lines[2] == "[MkText](https://x.org/#MkText), some text, [heading][some-heading]"
+    assert lines[3] == "`[a][mknodes.MkNav]` and [label][mknodes.Label]"
+    # A heading wins over an object rendered without one.
+    assert output.pages["tour.md"].endswith(f"[nav]({url.removeprefix('../')})")
+    assert "[" not in refcheck.ReferenceLinker({}).link("[MkFoo][mknodes.MkFoo]", "a.md")
+
+
+async def test_github_build_links_references():
+    from mknodes.build.builder import DocBuilder
+
+    nav = mk.MkNav()
+    nav += mk.MkPage("api", content=mk.MkDocStrings("mknodes.rendering.use"))
+    nav += mk.MkPage("guide", content="See [use][mknodes.rendering.use].")
+    output = await DocBuilder(render_jinja=False, flavor="github").build(nav)
+    assert "See [use](api.md#mknodes.rendering.use)." in output.pages["guide.md"]
+    output = await DocBuilder(render_jinja=False).build(nav)
+    assert "See [use][mknodes.rendering.use]." in output.pages["guide.md"]

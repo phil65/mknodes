@@ -25,8 +25,10 @@ import dataclasses
 import difflib
 import inspect
 import pathlib
+import posixpath
 import re
 from typing import TYPE_CHECKING, Any
+import urllib.parse
 
 from mknodes.info import grifferegistry
 from mknodes.utils import log
@@ -569,3 +571,161 @@ def fix_references(output: BuildOutput, issues: Iterable[RefIssue]) -> list[RefI
         output.pages[issue.page] = "\n".join(lines)
         fixed.append(issue)
     return fixed
+
+
+ANCHOR_RE = re.compile(r'<a id="(?P<id>[A-Za-z_][\w.]*)"></a>')
+HEADING_ANCHOR_RE = re.compile(r'^(?P<level>#{1,6}) +<a id="(?P<id>[A-Za-z_][\w.]*)"></a>')
+CODE_TITLE_RE = re.compile(r"[\w.]+(?:\(\))?")
+
+
+def find_anchors(output: BuildOutput) -> dict[str, tuple[str, str]]:
+    """Return the objects documented with anchors (`<a id="dotted.path">`).
+
+    Flavours without mkdocstrings render API docs with an anchor per object
+    (see `rendering.apidocs`). Both the documented path and the canonical path of the
+    object are mapped. If an object is documented several times, a heading wins over
+    an object rendered without heading (top-level headings first), then the first one.
+
+    Args:
+        output: The build output
+
+    Returns:
+        Identifier -> (page path, anchor id).
+    """
+    ranked: dict[str, tuple[int, str, str]] = {}
+    for path, markdown in output.pages.items():
+        for _, line in iter_markdown_lines(markdown):
+            heading = HEADING_ANCHOR_RE.match(line)
+            for match in ANCHOR_RE.finditer(line):
+                identifier = match["id"]
+                rank = len(heading["level"]) if heading and heading["id"] == identifier else 9
+                if identifier not in ranked or rank < ranked[identifier][0]:
+                    ranked[identifier] = (rank, path, identifier)
+    anchors = {k: (page, anchor) for k, (_, page, anchor) in ranked.items()}
+    canonical: dict[str, tuple[str, str]] = {}
+    for identifier, target in anchors.items():
+        if (obj := _resolve(identifier)) is not None and (canon := _canonical(obj)):
+            canonical.setdefault(canon, target)
+    return canonical | anchors
+
+
+def _page_url(source: str, target: str, anchor: str) -> str:
+    if source == target:
+        return f"#{anchor}"
+    rel = posixpath.relpath(target, posixpath.dirname(source) or ".")
+    return f"{urllib.parse.quote(rel)}#{anchor}"
+
+
+class ReferenceLinker:
+    """Turns `[title][dotted.path]` references into plain Markdown links.
+
+    For Markdown read without a site engine (GitHub flavour): engines with autorefs
+    resolve the references themselves.
+    """
+
+    def __init__(
+        self,
+        anchors: Mapping[str, tuple[str, str]],
+        inventory: Mapping[str, Any] | None = None,
+    ) -> None:
+        """Constructor.
+
+        Args:
+            anchors: Identifier -> (page path, anchor id) of the documented objects
+            inventory: Identifier -> URL (or inventory item) of objects documented
+                       elsewhere
+        """
+        self.anchors = anchors
+        self.inventory = inventory
+
+    def target(self, identifier: str) -> tuple[str, str] | None:
+        """Return (page, anchor) documenting given identifier.
+
+        Objects without an own anchor (members not rendered, members of import
+        aliases) link to the class documenting them.
+
+        Args:
+            identifier: The identifier of a reference
+        """
+        if target := self.anchors.get(identifier):
+            return target
+        obj = _resolve(identifier)
+        if obj is not None and (canonical := _canonical(obj)) and canonical in self.anchors:
+            return self.anchors[canonical]
+        parent = identifier
+        while "." in parent:
+            parent = parent.rsplit(".", 1)[0]
+            if (owner := _resolve(parent)) is None or _is_module(owner):
+                return None
+            if target := self.target(parent):
+                return target
+        return None
+
+    def url(self, identifier: str, page: str) -> str | None:
+        """Return the URL for given identifier, relative to given page (None: unknown).
+
+        Args:
+            identifier: The identifier of a reference
+            page: Path of the page containing the reference
+        """
+        if target := self.target(identifier):
+            return _page_url(page, *target)
+        if self.inventory is not None and identifier in self.inventory:
+            item = self.inventory[identifier]
+            return str(getattr(item, "uri", item))
+        return None
+
+    def link(self, markdown: str, page: str) -> str:
+        """Replace the dotted-path references of given page Markdown.
+
+        Unknown objects become code (or plain text, for prose titles). References inside
+        code and references to link definitions of the page stay untouched.
+
+        Args:
+            markdown: Markdown of the page
+            page: Path of the page (relative to the docs root)
+        """
+        refs = {lineno for lineno, _, _ in find_references(markdown)}
+        if not refs:
+            return markdown
+        lines = markdown.split("\n")
+        code_free = dict(iter_markdown_lines(markdown))
+        labels = {m[1].lower() for line in code_free.values() if (m := LABEL_DEF_RE.match(line))}
+        for lineno in refs:
+            line, blanked = lines[lineno - 1], code_free[lineno]
+            parts: list[str] = []
+            pos = 0
+            for match in REF_RE.finditer(blanked):
+                title = line[match.start(1) : match.end(1)]
+                identifier = line[match.start(2) : match.end(2)] or title
+                if identifier.lower() in labels or not DOTTED_PATH_RE.fullmatch(identifier):
+                    continue
+                parts.append(line[pos : match.start()])
+                if url := self.url(identifier, page):
+                    parts.append(f"[{title}]({url})")
+                elif CODE_TITLE_RE.fullmatch(title):
+                    parts.append(f"`{title}`")
+                else:
+                    parts.append(title)
+                pos = match.end()
+            parts.append(line[pos:])
+            lines[lineno - 1] = "".join(parts)
+        return "\n".join(lines)
+
+
+def link_references(
+    output: BuildOutput,
+    inventory: Mapping[str, Any] | None = None,
+) -> None:
+    """Turn the `[title][dotted.path]` references of all pages into links (in place).
+
+    References to objects documented on the site link to their anchor, others to
+    their inventory URL; unknown objects become code.
+
+    Args:
+        output: The build output
+        inventory: Identifier -> URL (or inventory item) of objects documented elsewhere
+    """
+    linker = ReferenceLinker(find_anchors(output), inventory)
+    for path, markdown in output.pages.items():
+        output.pages[path] = linker.link(markdown, path)

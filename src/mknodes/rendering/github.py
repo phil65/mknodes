@@ -20,6 +20,7 @@ from mknodes.utils import log
 
 if TYPE_CHECKING:
     from mknodes.basenodes import mknode
+    from mknodes.build.output import BuildOutput
 
 
 logger = log.get_logger(__name__)
@@ -65,6 +66,12 @@ class GithubRenderer(base.Renderer):
         if isinstance(node, mk.MkPage):
             result.append(MaterialTextProcessor())
         return result
+
+    def finalize(self, output: BuildOutput, root: mk.MkNav) -> None:
+        """Link `[title][dotted.path]` references (GitHub has no autorefs)."""
+        from mknodes.build import refcheck
+
+        refcheck.link_references(output, inventory=root.ctx.links.inv_manager)
 
 
 def _material_admonition(adm: materialtext.Admonition) -> str:

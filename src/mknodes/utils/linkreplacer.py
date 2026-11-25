@@ -21,7 +21,7 @@ logger = log.get_logger(__name__)
 #       3: Filename e.g. filename.md
 #       4: File extension e.g. .md, .png, etc.
 #       5. hash anchor e.g. #my-sub-heading-link
-AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#.*)*)\)"
+AUTOLINK_RE = r"\[([^\]]+)\]\((([^)/]+\.(md|png|jpg))(#[^)\s]*)?)\)"
 
 
 class LinkReplacer:
@@ -37,7 +37,7 @@ class LinkReplacer:
         if len(filenames) > 1:
             text = "%s: %s has %s targets"
             logger.debug(text, self.page_url, len(filenames), match.group(3))
-        new_link = htmlfilters.relative_url(self.page_url, filenames[0])
+        new_link = htmlfilters.relative_url(self.page_url, filenames[0]) + (match.group(5) or "")
         return match.group(0).replace(match.group(2), new_link)
         # new_text = new_text.replace("\\", "/")
         # text = "LinkReplacer: : %s -> %s"

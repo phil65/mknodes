@@ -5,6 +5,9 @@ common mkdocstrings options: `heading_level`, `show_root_heading`, `show_root_fu
 `show_signature`, `show_bases`, `members`, `members_order`, `filters`, `inherited_members`,
 `show_submodules`, `show_if_no_docstring`, `merge_init_into_class`,
 `show_docstring_description`.
+
+Every rendered object gets an HTML anchor (`<a id="dotted.path"></a>`, in its heading),
+so references to it can be linked.
 """
 
 from __future__ import annotations
@@ -32,6 +35,15 @@ KIND_ORDER = {
 }
 
 
+def anchor(path: str) -> str:
+    """Return the HTML anchor marking where the object with given path is documented.
+
+    `[title][dotted.path]` references get linked to these anchors
+    (see `refcheck.link_references`).
+    """
+    return f'<a id="{path}"></a>'
+
+
 def render(obj: griffe.Object | griffe.Alias, options: dict[str, Any] | None = None) -> str:
     """Render API docs for given Griffe object (like mkdocstrings' `::: path`)."""
     opts = options or {}
@@ -52,6 +64,8 @@ class _Renderer:
         if not root or self.opts.get("show_root_heading"):
             parts.append(self.heading(obj, level, root=root))
             level += 1
+        else:
+            parts.append(anchor(obj.path))
         if self.opts.get("show_signature", True) and (sig := self.signature(obj)):
             parts.append(f"```python\n{sig}\n```")
         if self.opts.get("show_docstring_description", True):
@@ -62,7 +76,7 @@ class _Renderer:
     def heading(self, obj: griffe.Object | griffe.Alias, level: int, *, root: bool) -> str:
         full = root and self.opts.get("show_root_full_path", True)
         name = obj.path if full else obj.name
-        return f"{'#' * min(level, 6)} `{name}`"
+        return f"{'#' * min(level, 6)} {anchor(obj.path)}`{name}`"
 
     # --- signatures ---
 

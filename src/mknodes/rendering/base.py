@@ -21,7 +21,9 @@ from mknodes.utils import log, resources
 if TYPE_CHECKING:
     from collections.abc import Generator
 
+    import mknodes as mk
     from mknodes.basenodes import mknode, processors
+    from mknodes.build.output import BuildOutput
 
 
 logger = log.get_logger(__name__)
@@ -99,6 +101,14 @@ class Renderer:
     def processors(self, node: mknode.MkNode) -> list[processors.TextProcessor]:
         """Return the text processors to run on the Markdown of given node."""
         return node.get_processors()
+
+    def finalize(self, output: BuildOutput, root: mk.MkNav) -> None:
+        """Post-process a whole build (all pages rendered), in place. Default: nothing.
+
+        Args:
+            output: The build output
+            root: The root nav of the build
+        """
 
     async def render(self, node: mknode.MkNode) -> resources.NodeContent:
         """Render given node (unprocessed Markdown) and collect its resources."""

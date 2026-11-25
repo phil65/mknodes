@@ -121,8 +121,10 @@ async def test_github_page_title_instead_of_front_matter():
 async def test_github_api_docs_from_griffe():
     md = await mk.MkDocStrings("mknodes.rendering.base.Renderer").to_markdown(flavor="github")
     assert ":::" not in md
-    assert md.startswith("```python\nclass Renderer\n```")
-    assert "## `find_rule`\n\n```python\ndef find_rule(node_type: type) -> Rule | None\n```" in md
+    path = "mknodes.rendering.base.Renderer"
+    assert md.startswith(f'<a id="{path}"></a>\n\n```python\nclass Renderer\n```')
+    heading = f'## <a id="{path}.find_rule"></a>`find_rule`'
+    assert f"{heading}\n\n```python\ndef find_rule(node_type: type) -> Rule | None\n```" in md
     assert "def rule(*node_types: type) -> Callable[[R], R]" in md
     assert "_lookup_cache" not in md  # private
 
@@ -133,11 +135,12 @@ async def test_api_docs_sections_and_options():
 
     fn = grifferegistry.registry.get_module("mknodes.rendering.apidocs")["render"]
     md = apidocs.render(fn, {"show_root_heading": True, "heading_level": 3})
-    assert md.startswith("### `mknodes.rendering.apidocs.render`")
+    path = "mknodes.rendering.apidocs.render"
+    assert md.startswith(f'### <a id="{path}"></a>`{path}`')
     mod = grifferegistry.registry.get_module("mknodes.rendering")
     md = apidocs.render(mod, {"members": ["use"]})
-    assert "## `use`" in md
-    assert "## `current`" not in md
+    assert '## <a id="mknodes.rendering.use"></a>`use`' in md
+    assert "`current`" not in md
     func = grifferegistry.registry.get_module("mknodes.rendering")["get_renderer_class"]
     md = apidocs.render(func, {})
     assert "**Parameters:**" not in md  # no Args section in that docstring
