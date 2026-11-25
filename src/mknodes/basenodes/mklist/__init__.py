@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mkcontainer
@@ -49,14 +51,17 @@ class MkList(mkcontainer.MkContainer):
     def _prep(self, item: mknode.MkNode) -> str:
         return linkprovider.linked(str(item)) if self.as_links else str(item)
 
+    def _line(self, index: int, item: mknode.MkNode) -> str:
+        marker = f"  {f'{index}.' if self.ordered else '*'} "
+        # Continuation lines of multi-line items (admonitions, code) belong to the item.
+        text = self._prep(item).rstrip("\n").replace("\n", "\n" + " " * len(marker))
+        return marker + re.sub(r"^ +$", "", text, flags=re.MULTILINE)
+
     async def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items:
             return ""
-        lines = [
-            f"  {f'{i}.' if self.ordered else '*'} {self._prep(item)}"
-            for i, item in enumerate(items[: self.shorten_after], start=1)
-        ]
+        lines = [self._line(i, item) for i, item in enumerate(items[: self.shorten_after], 1)]
         if self.shorten_after and len(items) > self.shorten_after:
             prefix = f"{self.shorten_after + 1}." if self.ordered else "*"
             lines.append(f"  {prefix} ...")
