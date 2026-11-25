@@ -156,7 +156,7 @@ def _get_template_rule(klass: type, renderers: list[type[Renderer]]) -> Rule | N
         return None
     try:
         file = nodefile.get_nodefile(klass)
-    except (AssertionError, TypeError, OSError):  # classes without a source file
+    except AssertionError, TypeError, OSError:  # classes without a source file
         return None
     if not file:
         return None

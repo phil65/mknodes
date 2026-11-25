@@ -111,7 +111,7 @@ def _is_manifest(path: pathlib.Path) -> bool:
     try:
         with path.open(encoding="utf-8") as f:
             return f.readline().strip() in {MANIFEST_MARKER, *LEGACY_MANIFEST_MARKERS}
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         return False
 
 

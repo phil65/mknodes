@@ -451,7 +451,7 @@ def _node_sources(node: mk.MkNode) -> Iterator[tuple[str, str | None, int]]:
             try:
                 lines, start = inspect.getsourcelines(code)
                 yield "".join(lines), inspect.getsourcefile(code), max(start, 1)
-            except (OSError, TypeError):
+            except OSError, TypeError:
                 pass
         case mk.MkTemplate():
             try:

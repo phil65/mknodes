@@ -78,7 +78,7 @@ class MkDocsConfigFile(configfile.YamlFile):
         """Name of currently used theme."""
         try:
             return self._data["theme"]["name"]
-        except (KeyError, TypeError):
+        except KeyError, TypeError:
             return self._data["theme"]
 
 
