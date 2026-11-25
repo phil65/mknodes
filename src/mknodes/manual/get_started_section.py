@@ -7,9 +7,19 @@ from mknodes.manual.a_quick_tour import a_quick_tour
 
 nav = mk.MkNav("Get started")
 
+# The same build function, rendered by every site engine (see documentation.yml).
+ENGINE_SITES = {
+    "Zensical": "https://phil65.github.io/mknodes/",
+    "MkDocs": "https://phil65.github.io/mknodes/mkdocs/",
+    "mdBook": "https://phil65.github.io/mknodes/mdbook/",
+    "GitHub Markdown": "https://github.com/phil65/mknodes/tree/docs-github",
+}
+
 
 @nav.route.page("Welcome to MkNodes", hide="toc", is_homepage=True)
 def _(page: mk.MkPage) -> None:
+    links = " · ".join(f"[{name}]({url})" for name, url in ENGINE_SITES.items())
+    page += mk.MkText(f"This site is also available as: {links}")
     page += mk.MkShields(["version", "status", "codecov"])
     fn_code = mk.MkCode.for_file(__file__)
     node = mk.MkAdmonition(content=fn_code, title="")

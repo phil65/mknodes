@@ -31,6 +31,18 @@
 
 [Read the completely coded documentation!](https://phil65.github.io/mknodes/)
 
+The documentation is available in four variants:
+
+| Variant | Engine / flavour |
+| --- | --- |
+| [Zensical](https://phil65.github.io/mknodes/) | `--engine zensical` (default), Material flavour |
+| [MkDocs](https://phil65.github.io/mknodes/mkdocs/) | `--engine mkdocs`, Material for MkDocs |
+| [mdBook](https://phil65.github.io/mknodes/mdbook/) | `--engine mdbook`, mdBook flavour |
+| [GitHub Markdown](https://github.com/phil65/mknodes/tree/docs-github) | `--engine markdown --flavor github`, rendered by GitHub itself |
+
+They are all generated from the same build function (`mknodes.manual.root:Build.build`):
+the node tree is written once and each engine gets the Markdown flavour it understands.
+
 MkNodes lets you build documentation from Python objects instead of hand-written Markdown.
 Pages, navigation sections and content blocks are *nodes* that render to
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)-flavored Markdown and know
