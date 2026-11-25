@@ -31,13 +31,15 @@
 
 [Read the completely coded documentation!](https://phil65.github.io/mknodes/)
 
-The documentation is available in four variants:
+The documentation is available in six variants:
 
 | Variant | Engine / flavour |
 | --- | --- |
 | [Zensical](https://phil65.github.io/mknodes/) | `--engine zensical` (default), Material flavour |
 | [MkDocs](https://phil65.github.io/mknodes/mkdocs/) | `--engine mkdocs`, Material for MkDocs |
 | [mdBook](https://phil65.github.io/mknodes/mdbook/) | `--engine mdbook`, mdBook flavour |
+| [Sphinx](https://phil65.github.io/mknodes/sphinx/) | `--engine sphinx`, MyST flavour (Furo theme) |
+| [Docsify](https://phil65.github.io/mknodes/docsify/) | `--engine docsify`, GitHub flavour, rendered in the browser |
 | [GitHub Markdown](https://github.com/phil65/mknodes/tree/docs-github) | `--engine markdown --flavor github`, rendered by GitHub itself |
 
 They are all generated from the same build function (`mknodes.manual.root:Build.build`):
@@ -58,8 +60,9 @@ pip install mknodes
 
 MkNodes includes a site generator (`mknodes build` / `serve` / `generate`) that builds
 websites with [Zensical](https://zensical.org) (default), [MkDocs](https://www.mkdocs.org)
-(`pip install mknodes[mkdocs]`) or [mdBook](https://rust-lang.github.io/mdBook/) (the `mdbook`
-binary), or writes plain Markdown. MkDocs is not required. (The generator used to be the
+(`pip install mknodes[mkdocs]`), [mdBook](https://rust-lang.github.io/mdBook/) (the `mdbook`
+binary), [Sphinx](https://www.sphinx-doc.org) with MyST (`pip install mknodes[sphinx]`) or
+[Docsify](https://docsify.js.org) (no build step), or writes plain Markdown. MkDocs is not required. (The generator used to be the
 separate `mkdocs-mknodes` package.)
 
 ## Quickstart
@@ -119,11 +122,13 @@ mknodes build                      # pages + mkdocs.generated.yml, then `zensica
 mknodes serve                      # live preview
 mknodes build --engine mkdocs      # same input, built with MkDocs + Material
 mknodes build --engine mdbook      # book/ (book.toml, src/SUMMARY.md), then `mdbook build`
+mknodes build --engine sphinx      # sphinx/ (conf.py, MyST pages, toctrees), then `sphinx-build`
+mknodes build --engine docsify     # site/ (index.html, _sidebar.md, pages): no build step
 mknodes generate --engine markdown --flavor github --generated-dir out  # plain Markdown
 ```
 
 Each engine renders its own Markdown flavour (`material` for Zensical / MkDocs, `mdbook`,
-`github` for plain Markdown): admonitions, tabs, code blocks and API docs degrade to what the
+`myst` for Sphinx, `github` for Docsify and plain Markdown): admonitions, tabs, code blocks and API docs degrade to what the
 target understands. See [Site engines](https://phil65.github.io/mknodes/Site%20generator/site_engines/).
 
 Without a build function, a default website gets generated (README, API docs, CLI docs,

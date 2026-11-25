@@ -77,13 +77,23 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
     `MdbookWriter` (engine `mdbook`, flavour `mdbook`: owned `book/` folder with `book.toml`
     (+ `mdbook` setting) and `src/` incl. `SUMMARY.md` (`SummaryWriter`: index pages become
     section links, no duplicates / external links); needs the `mdbook` binary only for
-    build / serve), `MarkdownWriter` (engine `markdown`, GitHub flavour, `MarkdownExporter`
-    files). Engine -> default flavour: zensical / mkdocs `material`, mdbook `mdbook`,
-    markdown `github`. User docs: `docs/site/engines.jinja`.
+    build / serve), `SphinxWriter` (engine `sphinx`, flavour `myst`: owned `sphinx/` source
+    folder with generated `conf.py` (+ `sphinx` setting: `theme`, `extensions`, other keys
+    become conf variables; default `suppress_warnings` in `SUPPRESS_WARNINGS`) and the nav as
+    `{toctree}`s (`TocTreeWriter`: root `index.md` gets one captioned hidden toctree per
+    top-level section, section index pages / generated `_sections/*.md` pages the nested
+    ones, every doc only once, pages without heading get the nav title); extra `sphinx`;
+    `--strict` = `-W --keep-going`; serve needs `sphinx-autobuild`), `DocsifyWriter` (engine
+    `docsify`, GitHub flavour, no build step: owned site folder with `index.html` (Docsify 5
+    pinned from jsDelivr, `docsify` setting merged into `window.$docsify`), `_sidebar.md`
+    (absolute links), pages; serve = `python -m http.server`), `MarkdownWriter` (engine
+    `markdown`, GitHub flavour, `MarkdownExporter` files). Engine -> default flavour:
+    zensical / mkdocs `material`, mdbook `mdbook`, sphinx `myst`, docsify / markdown
+    `github`. User docs: `docs/site/engines.jinja`.
   - `yamlconfig.py` (YAML round-trip keeping `!ENV` / `!!python/name` tags, `INHERIT`),
     `watch.py` (polling watcher, regenerates in a subprocess via `python -m mknodes generate`).
 - `cli/`: Typer app `mknodes` (`app.py`, rich logging via `richstate.py`); `site.py`: `build`,
-  `serve`, `generate` (`--engine zensical|mkdocs|mdbook|markdown`, `--flavor`); `render.py`: `render`,
+  `serve`, `generate` (`--engine zensical|mkdocs|mdbook|sphinx|docsify|markdown`, `--flavor`); `render.py`: `render`,
   `render-folder`. Entry point `cli:main` (configures logfire).
 - `rendering/`: Markdown flavours. A `Renderer` (`base.py`) per flavour holds rules
   (node type -> `async def rule(node, renderer) -> str`, registered with
@@ -99,8 +109,16 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `MkDocStrings` rule, `api_docs()`). `materialtext.py`: converts hand-written Material
   blocks (`!!!`, `???`, `===`, `/// block`, `::: path`, code fence options) in page text;
   GitHub runs it as a page processor. `mdbook.py`: `MdbookRenderer` (GitHub flavour;
-  `admonish=True` writes `mdbook-admonish` blocks). `build/fencecheck.py`: `DocBuilder`
-  warns about unrecognised / unclosed code fences in rendered pages.
+  `admonish=True` writes `mdbook-admonish` blocks). `myst.py`: `MystRenderer` (GitHub
+  flavour + MyST directives for Sphinx: colon-fenced `{note}` / `{admonition}`,
+  sphinx-design `{dropdown}` / `{tab-set}`, `{code-block}` options; fence length grows
+  with nesting; directives converted from page text by `MystTextProcessor` use backtick
+  fences, since the page processor runs after the nodes rendered their colon fences;
+  `finalize` adds `(dotted.path)=` targets for the API anchors and lowercases the links to
+  them, MyST checks `page.md#id` against targets, not raw HTML ids). `build/fencecheck.py`:
+  `DocBuilder` warns about unrecognised / unclosed code fences in rendered pages
+  (`{directive}` info strings are valid); `refcheck.iter_markdown_lines` looks into
+  backtick-fenced MyST directives with Markdown content.
 - `utils/diagnostics.py`: build diagnostics (`report()` / `collect()`): failed nodes in
   templates, failing `/// mknodes` / `python exec` blocks (they still render the error into
   the page), broken fences, unresolved references; page from `page_context()` (set by

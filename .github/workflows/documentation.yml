@@ -59,7 +59,8 @@ jobs:
               with:
                   tool: mdbook@0.5.4
             # The same build function, built by every engine into one Pages site:
-            # Zensical at the root, MkDocs at /mkdocs/, mdBook at /mdbook/.
+            # Zensical at the root, MkDocs at /mkdocs/, mdBook at /mdbook/,
+            # Sphinx at /sphinx/, Docsify at /docsify/.
             # Zensical runs first: its --clean would remove the other variants.
             - name: Build (Zensical)
               env:
@@ -81,6 +82,19 @@ jobs:
               run: |
                   printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/mdbook/\n' > mkdocs.variant.yml
                   uv run mknodes build -v --strict --engine mdbook -p mkdocs.variant.yml -d site/mdbook
+            - name: Build (Sphinx)
+              env:
+                  MKNODES_CACHE_DIR: ~/.cache/mknodes
+              run: |
+                  printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/sphinx/\n' > mkdocs.variant.yml
+                  uv run mknodes build -v --strict --engine sphinx -p mkdocs.variant.yml -d site/sphinx
+            # No build step: the generated folder (index.html, _sidebar.md, pages) is the site.
+            - name: Build (Docsify)
+              env:
+                  MKNODES_CACHE_DIR: ~/.cache/mknodes
+              run: |
+                  printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/docsify/\n' > mkdocs.variant.yml
+                  uv run mknodes build -v --strict --engine docsify -p mkdocs.variant.yml -d site/docsify
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v5
               with:
