@@ -66,7 +66,8 @@ The [MkNavs / Using decorators](<../MkNavs/Using decorators/index.md>) section i
     "MkNode": """\
 The base class of every node, page and nav: tree handling (`parent`, `children`,
 `iter_nodes()`), the project context (`ctx`), the Jinja environment (`env`) and the async
-rendering API (`to_markdown()`, `to_html()`, `get_resources()`). Its node page
+rendering API (`await node.to_markdown()`, `to_html()`, `get_resources()`; sync code uses
+`to_markdown_sync()`). Its node page
 ([MkNode](<../The nodes/Base nodes/mknode.md>)) shows the examples.
 """,
     "Theming": """\

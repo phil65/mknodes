@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import inspect
+
 import markdown
 import pytest
 
@@ -86,3 +88,15 @@ def test_collapse_blank_lines_keeps_code_blocks():
     text = "a\n\n\n\nb\n```py\nx\n\n\n\ny\n```\n\n\nc ```inline``` d\n\n\ne"
     expected = "a\n\nb\n```py\nx\n\n\n\ny\n```\n\nc ```inline``` d\n\ne"
     assert github.collapse_blank_lines(text) == expected
+
+
+def test_to_markdown_sync_wrapper():
+    assert inspect.iscoroutinefunction(mk.MkNode.to_markdown)
+    node = mk.MkAdmonition("x", typ="warning")
+    assert node.to_markdown_sync(flavor="github") == "> [!WARNING]\n> x\n"
+    assert node.to_markdown_sync() == "!!! warning\n    x\n"
+
+
+async def test_to_markdown_sync_inside_running_loop():
+    node = mk.MkText("x")
+    assert node.to_markdown_sync(flavor="github") == await node.to_markdown(flavor="github")

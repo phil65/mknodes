@@ -505,7 +505,9 @@ class MkNode:
         )
 
     async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
-        """Outputs markdown for self and all children.
+        """Outputs markdown for self and all children (a coroutine: `await` it).
+
+        Sync code (scripts, no running event loop) can use `to_markdown_sync()`.
 
         Args:
             flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
@@ -516,6 +518,18 @@ class MkNode:
                 return await self.to_markdown()
         renderer = rendering.current()
         return renderer.process(self, await renderer.render_markdown(self))
+
+    def to_markdown_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Blocking version of `to_markdown()` for sync code.
+
+        Also works while an event loop is running (it then renders in a worker thread),
+        async code should `await node.to_markdown()` instead.
+
+        Args:
+            flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
+                    Defaults to the active renderer (Material for MkDocs).
+        """
+        return coroutines.run_sync(self.to_markdown(flavor))
 
     def get_processors(self) -> list[processors.TextProcessor]:
         """Return list of processors used to created markdown."""

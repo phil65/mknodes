@@ -53,8 +53,6 @@ separate `mkdocs-mknodes` package.)
 ## Quickstart
 
 ```py
-import asyncio
-
 import mknodes as mk
 
 page = mk.MkPage("Overview")
@@ -63,7 +61,8 @@ page += mk.MkAdmonition("Generated with MkNodes!", typ="tip", title="Note")
 page += mk.MkTable({"Feature": ["Nodes", "Templating"], "Status": ["yes", "yes"]})
 page += mk.MkCode("print('hello')", language="py")
 
-print(asyncio.run(page.to_markdown()))
+print(page.to_markdown_sync())  # async code: `await page.to_markdown()`
+print(page.to_markdown_sync(flavor="github"))  # GitHub flavour (READMEs)
 ```
 
 ## Features
