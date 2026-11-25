@@ -1,0 +1,19 @@
+**MkDocs-MkNodes** offers a CLI to generate and build websites from MkNodes build functions.
+The CLI is based on `Typer` and uses a `rich` based handler for nice, colored output.
+
+There are 3 commands:
+
+- `mkdocs-mknodes generate`: Runs the build function (or the default website) and writes the
+  generated pages, assets and theme template overrides into the docs folder, plus a generated
+  config (`mkdocs.generated.yml`, inheriting from `mkdocs.yml`) containing the nav, the required
+  Markdown extensions and extra CSS / JS. With `--watch`, the site gets regenerated whenever
+  project sources change.
+
+- `mkdocs-mknodes build`: `generate`, followed by `zensical build -f mkdocs.generated.yml`.
+  The build function can also run on a remote repository (`--repo-url`).
+
+- `mkdocs-mknodes serve`: `generate --watch` running next to `zensical serve`
+  (live preview on http://localhost:8000/).
+
+**Zensical** is the only (and default) site engine. `--engine zensical` / `-e zensical` is still
+accepted for compatibility with existing workflows.

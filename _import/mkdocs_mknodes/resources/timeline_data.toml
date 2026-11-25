@@ -1,0 +1,77 @@
+[step_1]
+label = "Step 1"
+content = """
+### Load settings
+
+Settings are read from the `mknodes` entry of the `plugins` list in `mkdocs.yml`,
+`[tool.mknodes]` in `pyproject.toml` and the CLI options. The target repository gets
+cloned in case it is a remote one.
+"""
+
+[step_2]
+label = "Step 2"
+content = """
+### Create theme
+
+Initialize the theme object based on the theme configured in `mkdocs.yml`
+(default: `material`).
+"""
+
+[step_3]
+label = "Step 3"
+content = """
+### Create context
+
+All available information from following sources is extracted in order to build
+a project context:
+
+* metadata.Distribution
+* PyProject File
+* Site config file (`mkdocs.yml`)
+* Other config files in the repository
+* Git repository info
+* Information from GitHub
+"""
+
+[step_4]
+label = "Step 4"
+content = """
+### Build **MkNodes** tree
+
+The build function (`build_fn`) is executed with the root `MkNav` and the theme
+and the node tree is generated. Without any configuration, the default build function
+creates a default website (README, API docs, CLI docs, development pages).
+"""
+
+[step_5]
+label = "Step 5"
+content = """
+### Collect build artifacts
+
+MkNodes' `DocBuilder` walks the node tree and renders every page in the Markdown
+flavour of the engine (`material` for Zensical, `github` for plain Markdown), incl.
+front matter, rendered with **jinja2**. It aggregates the required resources
+(CSS / JS / Markdown extensions) and the page templates and converts the template
+blocks to HTML. The result is an engine-neutral `BuildOutput`.
+"""
+
+[step_6]
+label = "Step 6"
+content = """
+### Write the site input
+
+A writer turns the `BuildOutput` into the engine input. The `ZensicalWriter` writes the
+pages and assets into the docs folder and the
+template overrides into the theme `custom_dir` (both tracked in a generated
+`.gitignore`, hand-written files are never overwritten) as well as
+`mkdocs.generated.yml`, which inherits from `mkdocs.yml` and adds the nav,
+the Markdown extensions and the extra CSS / JS.
+"""
+
+[step_7]
+label = "Step 7"
+content = """
+### Build with **Zensical**
+
+`zensical build -f mkdocs.generated.yml` renders the website.
+"""
