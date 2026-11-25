@@ -11,10 +11,20 @@ if TYPE_CHECKING:
     from mknodes.jinja.nodeenvironment import NodeEnvironment, RenderResult
 
 
+_epoch = 0
+
+
+def invalidate_all() -> None:
+    """Drop all cached template renders (e.g. after global state like link excludes changed)."""
+    global _epoch
+    _epoch += 1
+
+
 class _State:
-    __slots__ = ("results", "tree")
+    __slots__ = ("epoch", "results", "tree")
 
     def __init__(self) -> None:
+        self.epoch = _epoch
         self.results: dict[type, RenderResult] = {}
         self.tree: RenderResult | None = None
 
@@ -40,7 +50,8 @@ class TemplateRenderMixin:
         super().__setattr__(name, value)
 
     def _get_state(self) -> _State:
-        if (state := self.__dict__.get("_render_state")) is None:
+        state = self.__dict__.get("_render_state")
+        if state is None or state.epoch != _epoch:
             state = self.__dict__["_render_state"] = _State()
         return state
 

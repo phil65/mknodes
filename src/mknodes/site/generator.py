@@ -14,6 +14,7 @@ import mknodes as mk
 from mknodes import rendering
 from mknodes.build import DocBuilder
 from mknodes.info import contexts
+from mknodes.jinja import rendercache
 from mknodes.site import yamlconfig
 from mknodes.utils import linkreplacer, log
 
@@ -124,6 +125,9 @@ class SiteGenerator:
                 if isinstance(node, mk.MkPage | mk.MkNav)
             ]
         ctx.links.set_excludes(paths)
+        # Link output depends on the excludes: templates rendered by the walk above
+        # (pages can come from templates) render again in the build.
+        rendercache.invalidate_all()
 
         builder = DocBuilder(
             flavor=self.flavor,
