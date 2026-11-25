@@ -1,5 +1,6 @@
 import mknodes as mk
 from mknodes.manual import (
+    api_section,
     dev_section,
     get_started_section,
     navs_section,
@@ -33,6 +34,7 @@ class Build:
         nav += nodes_section.nav
         nav += templating_section.nav
         nav += site.nav
+        nav += api_section.nav
         nav += dev_section.nav
         return nav
 

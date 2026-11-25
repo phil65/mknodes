@@ -32,10 +32,10 @@ def a_quick_tour(page: mk.MkPage) -> None:
 
     # Okay, that's enough DocStrings for today. You can find more of
     # [MkDocStrings][mknodes.MkDocStrings] work
-    # in the API documentation, he will tell you something about every
-    # [MkNode][mknodes.MkNode] there.
+    # on the [node pages](<../The nodes/index.md>) (he tells you something about every
+    # [MkNode][mknodes.MkNode] there) and in the [Core API](<../Core API/index.md>).
     #
-    # Another [MkNode][mknodes.MkNode] who is displaying his skills in the API docs is
+    # Another [MkNode][mknodes.MkNode] who is displaying his skills on the node pages is
     # [MkClassDiagram][mknodes.MkClassDiagram].
     #
     # He's a very talented painter. Perhaps he can draw us something about
