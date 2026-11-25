@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from mknodes.site.writers.base import EngineNotFoundError, GeneratedFolder, Writer
+from mknodes.site.writers.docsify import DocsifyWriter
 from mknodes.site.writers.markdown import MarkdownWriter
 from mknodes.site.writers.mdbook import MdbookWriter
 from mknodes.site.writers.mkdocs import MkDocsWriter
+from mknodes.site.writers.sphinx import SphinxWriter
 from mknodes.site.writers.zensical import ZensicalWriter
 
 
@@ -13,6 +15,8 @@ WRITERS: dict[str, type[Writer]] = {
     "zensical": ZensicalWriter,
     "mkdocs": MkDocsWriter,
     "mdbook": MdbookWriter,
+    "sphinx": SphinxWriter,
+    "docsify": DocsifyWriter,
     "markdown": MarkdownWriter,
 }
 
@@ -28,11 +32,13 @@ def get_writer(engine: str) -> type[Writer]:
 
 __all__ = [
     "WRITERS",
+    "DocsifyWriter",
     "EngineNotFoundError",
     "GeneratedFolder",
     "MarkdownWriter",
     "MdbookWriter",
     "MkDocsWriter",
+    "SphinxWriter",
     "Writer",
     "ZensicalWriter",
     "get_writer",

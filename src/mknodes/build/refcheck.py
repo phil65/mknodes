@@ -52,6 +52,12 @@ DOTTED_PATH_RE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+")
 DIRECTIVE_RE = re.compile(r"^(?P<indent>[ \t]*)::: +(?P<identifier>\S+)\s*$")
 LABEL_DEF_RE = re.compile(r"^[ \t]{0,3}\[([^\]]+)\]:\s")
 FENCE_RE = re.compile(r"^[ \t]*(?P<fence>`{3,}|~{3,})")
+# MyST directives in backtick fences whose content is Markdown (`{note}`, `{tab-item}`),
+# unlike code-like ones (`{code-block}`, `{toctree}`, ...).
+MARKDOWN_DIRECTIVE_RE = re.compile(
+    r"^[ \t]*`{3,}\{(?!(?:code-block|code|sourcecode|literalinclude|toctree|math|raw"
+    r"|eval-rst|mermaid)\})[\w-]+\}"
+)
 INLINE_CODE_RE = re.compile(r"(`+)(?:(?!\1).)+?\1")
 HTML_OPEN_RE = re.compile(r"<div\b", re.IGNORECASE)
 HTML_CLOSE_RE = re.compile(r"</div\s*>", re.IGNORECASE)
@@ -110,11 +116,17 @@ def iter_markdown_lines(markdown: str) -> Iterator[tuple[int, str]]:
         markdown: Markdown text
     """
     fence: str | None = None
+    directives: list[str] = []  # open MyST directive fences with Markdown content
     for i, line in enumerate(markdown.splitlines(), start=1):
         if match := FENCE_RE.match(line):
             marker = match["fence"]
             if fence is None:
-                fence = marker
+                if MARKDOWN_DIRECTIVE_RE.match(line):
+                    directives.append(marker)
+                elif directives and marker == directives[-1] and not line.strip(" \t`"):
+                    directives.pop()
+                else:
+                    fence = marker
                 continue
             if marker == fence and not line.strip(" \t" + marker[0]):
                 fence = None

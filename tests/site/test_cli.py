@@ -55,9 +55,9 @@ def test_build_propagates_exit_code(generate):
 
 @pytest.mark.parametrize("command", ["build", "serve", "generate"])
 def test_unsupported_engine_is_rejected(generate, command: str):
-    result = CliRunner().invoke(cli.cli, [command, "--engine", "sphinx"])
+    result = CliRunner().invoke(cli.cli, [command, "--engine", "hugo"])
     assert result.exit_code == 2  # noqa: PLR2004
-    assert "Unsupported engine 'sphinx'" in result.output
+    assert "Unsupported engine 'hugo'" in result.output
     generate.assert_not_called()
 
 

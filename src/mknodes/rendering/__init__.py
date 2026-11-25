@@ -21,6 +21,7 @@ FLAVORS: dict[str, type[Renderer] | str] = {
     "material": MaterialRenderer,
     "github": "mknodes.rendering.github:GithubRenderer",
     "mdbook": "mknodes.rendering.mdbook:MdbookRenderer",
+    "myst": "mknodes.rendering.myst:MystRenderer",
 }
 
 

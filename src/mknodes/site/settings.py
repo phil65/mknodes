@@ -64,10 +64,10 @@ class GeneratorSettings:
     mode they get logged as warnings. Also passed to the engine (`zensical build --strict`).
     """
     flavor: str | None = None
-    """Markdown flavour of the generated pages (`material`, `github`, `mdbook`).
+    """Markdown flavour of the generated pages (`material`, `github`, `mdbook`, `myst`).
 
     Defaults to the flavour of the engine: `material` for `zensical` and `mkdocs`,
-    `mdbook` for `mdbook`, `github` for `markdown`.
+    `mdbook` for `mdbook`, `github` for `markdown` and `docsify`, `myst` for `sphinx`.
     """
     docs_dir: str | None = None
     """Docs folder (default: `docs_dir` of the site config, else `docs`)."""
@@ -75,7 +75,9 @@ class GeneratorSettings:
     """Folder to write generated pages into (default: `docs_dir`).
 
     If it differs from `docs_dir`, hand-written pages get mirrored into it and it becomes
-    the docs dir of the generated config. For `mdbook`: the book folder (default `book`).
+    the docs dir of the generated config. For `mdbook`: the book folder (default `book`),
+    for `sphinx`: the Sphinx source folder (default `sphinx`), for `docsify`: the site
+    folder (default: `site_dir`).
     """
     generated_config: str = GENERATED_CONFIG
     """Filename of the generated site config (relative to the project dir)."""
@@ -85,6 +87,15 @@ class GeneratorSettings:
     """Extra `book.toml` content for the `mdbook` engine (deep-merged into the generated
     config, e.g. `output.html.default-theme`). A `preprocessor.admonish` entry switches
     admonitions to the `mdbook-admonish` syntax.
+    """
+    docsify: dict[str, Any] = dataclasses.field(default_factory=dict)
+    """Extra `window.$docsify` options for the `docsify` engine (deep-merged into the
+    generated ones, e.g. `themeColor`, `subMaxLevel`).
+    """
+    sphinx: dict[str, Any] = dataclasses.field(default_factory=dict)
+    """`conf.py` settings for the `sphinx` engine: `theme` (`html_theme`, default `furo`),
+    `extensions` (added to `myst_parser` / `sphinx_design`); any other key becomes a
+    `conf.py` variable (e.g. `html_theme_options`, `suppress_warnings`).
     """
     jinja_loaders: list[dict[str, Any]] | None = None
     jinja_extensions: list[str] | None = None

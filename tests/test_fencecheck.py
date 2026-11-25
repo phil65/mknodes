@@ -32,6 +32,11 @@ fn main() {{}}
 c
 ~~~
 
+```{{code-block}} python
+:caption: MyST directive
+d = 1
+```
+
 Inline ```code``` is fine.
 """
     assert fencecheck.check_fences(md) == []

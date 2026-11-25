@@ -13,8 +13,9 @@ import re
 FENCE_RE = re.compile(r"^(?P<indent>[ \t]*)(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
 # Info strings Python-Markdown / SuperFences / GitHub understand: nothing, a language
 # (`python`, `.python`, `c++`, `objective-c`, `rust,ignore`, ...) optionally followed by
-# options (`py title="x"`), or an attribute list (`{.python title='x'}`).
-VALID_INFO_RE = re.compile(r"^(|\{[^{}]*\}|[\w.+#-][^\s]*(\s+.*)?)$")
+# options (`py title="x"`), an attribute list (`{.python title='x'}`) or a MyST
+# directive (`{code-block} python`, `{toctree}`).
+VALID_INFO_RE = re.compile(r"^(|\{[^{}]*\}|\{[\w-]+\}(\s+.*)?|[\w.+#-][^\s]*(\s+.*)?)$")
 
 
 def check_fences(markdown: str) -> list[str]:

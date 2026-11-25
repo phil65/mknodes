@@ -36,12 +36,14 @@ STRICT_HELP = (
 )
 ENGINE_HELP = (
     "Site engine: `zensical` (HTML site, default), `mkdocs` (HTML site, needs the "
-    "`mkdocs` extra), `mdbook` (HTML book, needs the `mdbook` binary to build / serve) "
-    "or `markdown` (plain Markdown files)."
+    "`mkdocs` extra), `mdbook` (HTML book, needs the `mdbook` binary to build / serve), "
+    "`sphinx` (HTML site from MyST Markdown, needs the `sphinx` extra), `docsify` "
+    "(Markdown rendered in the browser, no build step) or `markdown` (plain Markdown files)."
 )
 FLAVOR_HELP = (
-    "Markdown flavour (`material`, `github`, `mdbook`). Default: the engine's flavour "
-    "(zensical / mkdocs: `material`, mdbook: `mdbook`, markdown: `github`)."
+    "Markdown flavour (`material`, `github`, `mdbook`, `myst`). Default: the engine's "
+    "flavour (zensical / mkdocs: `material`, mdbook: `mdbook`, sphinx: `myst`, "
+    "docsify / markdown: `github`)."
 )
 WATCH_HELP = "Keep running and regenerate when project sources change."
 GEN_DIR_HELP = "Folder for generated pages (default: the docs dir)."
@@ -62,8 +64,8 @@ def check_engine(value: str) -> str:
     if value not in WRITERS:
         msg = (
             f"Unsupported engine {value!r} (available: {', '.join(WRITERS)}). "
-            "Zensical / MkDocs / mdBook build HTML sites, `markdown` writes plain "
-            "Markdown files."
+            "Zensical / MkDocs / mdBook / Sphinx build HTML sites, Docsify renders "
+            "Markdown in the browser, `markdown` writes plain Markdown files."
         )
         raise t.BadParameter(msg)
     return value
@@ -91,7 +93,8 @@ def build(
     Runs the build function on given repository (either locally or a hosted one),
     writes the generated pages and config (see `generate`) and builds the HTML website
     with the engine (`zensical build -f <generated config>`, `mkdocs build -f ...`,
-    `mdbook build <book dir>`).
+    `mdbook build <book dir>`, `sphinx-build <source dir> <site dir>`). Docsify has no
+    build step: the generated site dir is the website.
 
     Problems which leave pages broken (build diagnostics) get logged as warnings and
     summarized at the end; in strict mode they fail the build.
@@ -157,7 +160,8 @@ def serve(
 
     This is `mknodes generate --watch` running next to the engine's server
     (`zensical serve -f <generated config>`, http://localhost:8000/;
-    `mdbook serve <book dir>`, http://localhost:3000/).
+    `mdbook serve <book dir>`, http://localhost:3000/; Docsify: a static file server,
+    http://localhost:3000/; Sphinx: `sphinx-autobuild`).
 
     Further info here: https://phil65.github.io/mknodes/CLI/
     """
@@ -213,7 +217,9 @@ def generate(
     a generated config (`mkdocs.generated.yml`) inheriting from `mkdocs.yml`.
     Build afterwards with `zensical build -f mkdocs.generated.yml`
     (`mkdocs build -f ...` for `--engine mkdocs`). `--engine mdbook` writes a book folder
-    (`book/`: `book.toml`, `src/`), `--engine markdown` plain Markdown + `SUMMARY.md`.
+    (`book/`: `book.toml`, `src/`), `--engine sphinx` a Sphinx project (`sphinx/`:
+    `conf.py`, MyST pages), `--engine docsify` a Docsify site (`index.html`,
+    `_sidebar.md`), `--engine markdown` plain Markdown + `SUMMARY.md`.
     """
     opts: dict[str, Any] = dict(
         config_path=config_path,

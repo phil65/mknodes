@@ -38,6 +38,7 @@ PAGES: dict[str, list[str]] = {
         "mknodes.rendering.Renderer",
         "mknodes.rendering.MaterialRenderer",
         "mknodes.rendering.github.GithubRenderer",
+        "mknodes.rendering.myst.MystRenderer",
     ],
 }
 

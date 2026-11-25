@@ -35,6 +35,12 @@ def test_fences_close_only_with_the_same_fence():
     assert [d.identifier for d in directives] == ["mknodes.MkText"]
 
 
+def test_myst_directives_with_markdown_are_not_code():
+    md = "````{note}\n[x][mknodes.MkText]\n```{code-block} py\n[y][a.b]\n```\n````\n[z][c.d]\n"
+    refs = [identifier for _, _, identifier in refcheck.find_references(md)]
+    assert refs == ["mknodes.MkText", "c.d"]
+
+
 def test_find_directives_anchor_options():
     md = """\
 ::: mknodes.MkText

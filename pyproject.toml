@@ -97,6 +97,7 @@ mknodes = "mknodes.jinja:setup_env"
 [project.optional-dependencies]
 llm = ["agentpool>=2.10"]
 mkdocs = ["mkdocs>=1.6", "mkdocs-material>=9.6"]
+sphinx = ["furo>=2024.8", "myst-parser>=4", "sphinx>=8", "sphinx-design>=0.6"]
 
 [dependency-groups]
 dev = [

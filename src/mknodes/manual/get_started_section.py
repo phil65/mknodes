@@ -12,6 +12,8 @@ ENGINE_SITES = {
     "Zensical": "https://phil65.github.io/mknodes/",
     "MkDocs": "https://phil65.github.io/mknodes/mkdocs/",
     "mdBook": "https://phil65.github.io/mknodes/mdbook/",
+    "Sphinx": "https://phil65.github.io/mknodes/sphinx/",
+    "Docsify": "https://phil65.github.io/mknodes/docsify/",
     "GitHub Markdown": "https://github.com/phil65/mknodes/tree/docs-github",
 }
 

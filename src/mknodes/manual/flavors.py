@@ -27,7 +27,8 @@ Zensical, using Python-Markdown / PyMdown extensions (admonitions, tabs, attribu
 lists, ...). The `github` flavour produces GitHub flavoured Markdown for READMEs, issues
 and wikis: alerts, `<details>` blocks, `<kbd>` and plain fenced code. The `mdbook`
 flavour is the GitHub flavour for [mdBook](https://rust-lang.github.io/mdBook/)
-(optionally with `mdbook-admonish` admonitions).
+(optionally with `mdbook-admonish` admonitions), the `myst` flavour the GitHub flavour
+with MyST directives (admonitions, dropdowns, tab sets, `{code-block}`) for Sphinx.
 
 ```py
 import mknodes as mk
