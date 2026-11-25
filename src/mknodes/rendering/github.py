@@ -194,6 +194,32 @@ async def render_block(node: mk.MkBlock, r: base.Renderer) -> str:
     return await r.render_children(node.get_items())
 
 
+# Elements whose content is not Markdown (and must not get blank lines inserted).
+RAW_HTML_TAGS = {"pre", "code", "canvas", "math", "option", "script", "style", "picture"}
+
+
+@GithubRenderer.rule(mk.MkHtmlBlock)
+async def render_html_block(node: mk.MkHtmlBlock, r: base.Renderer) -> str:
+    """The element itself (`/// html | picture` -> `<picture>...</picture>`).
+
+    Markdown content gets surrounded by blank lines (GitHub only parses Markdown
+    separated from HTML tags), HTML / raw content stays tight.
+    """
+    text = (await r.render_children(node.get_items())).strip()
+    tag = node.argument or "div"
+    attrs = "".join(
+        f' {k}="{html.escape(str(v), quote=True)}"'
+        for k, v in node.attributes.items()
+        if k != "markdown" and v is not None
+    )
+    mode = node.markdown_mode
+    if mode in {"raw", "html"} or tag in RAW_HTML_TAGS or text.startswith("<"):
+        return f"<{tag}{attrs}>\n{text}\n</{tag}>"
+    if mode == "inline" or tag == "span":
+        return f"<{tag}{attrs}>{text}</{tag}>"
+    return f"<{tag}{attrs}>\n\n{text}\n\n</{tag}>"
+
+
 @GithubRenderer.rule(mk.MkTab, mk.MkTabBlock)
 async def render_tab(node: mk.MkTab | mk.MkTabBlock, r: base.Renderer) -> str:
     text = await r.render_children(node.get_items())
