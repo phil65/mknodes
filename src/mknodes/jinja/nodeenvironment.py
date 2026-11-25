@@ -176,19 +176,24 @@ class NodeEnvironment(jinjarope.Environment):
         to auto-set the node parent (and that way the context) and to collect
         the rendered nodes.
         """
-        path = inspectfilters.get_file(self.node.__class__)  # type: ignore[arg-type]
-        class_path = pathlib.Path(path or "").parent.as_posix()
-
-        loaders = [
-            self.node.ctx.env_config.loader or jinjarope.FileSystemLoader("docs/"),
-            jinjarope.FileSystemLoader(class_path),
-            jinjarope.FsSpecProtocolPathLoader(),
-        ]
         nodefile = self.node.get_nodefile()
-        if nodefile:
-            loader = jinjarope.NestedDictLoader(nodefile._data)
-            loaders.insert(0, loader)
-        self.loader = jinjarope.ChoiceLoader(loaders)
+        ctx_loader = self.node.ctx.env_config.loader
+        # Keep the loader while its inputs stay the same: Jinja caches compiled
+        # templates per loader, a new loader per render means compiling every time.
+        loader_key = (ctx_loader, type(self.node))
+        if getattr(self, "_loader_key", None) != loader_key:
+            path = inspectfilters.get_file(self.node.__class__)  # type: ignore[arg-type]
+            class_path = pathlib.Path(path or "").parent.as_posix()
+            loaders = [
+                ctx_loader or jinjarope.FileSystemLoader("docs/"),
+                jinjarope.FileSystemLoader(class_path),
+                jinjarope.FsSpecProtocolPathLoader(),
+            ]
+            if nodefile:
+                loader = jinjarope.NestedDictLoader(nodefile._data)
+                loaders.insert(0, loader)
+            self.loader = jinjarope.ChoiceLoader(loaders)
+            self._loader_key = loader_key
 
         self.filters.update(self._node_filters)
         self.globals["parent_page"] = self.node.parent_page  # pyright: ignore[reportArgumentType]
