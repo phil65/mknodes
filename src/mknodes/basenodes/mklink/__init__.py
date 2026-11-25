@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 from collections.abc import Mapping
 import json
 from mknodes.basenodes import mknode
-from mknodes.utils import icons, log
+from mknodes.utils import helpers, icons, log
 from upathtools import to_upath
 
 if TYPE_CHECKING:
@@ -65,6 +65,8 @@ class MkLink(mknode.MkNode):
         return icons.get_emoji_slug(self._icon) if self._icon else ""
 
     async def get_url(self) -> str:
+        if isinstance(self.target, str) and helpers.is_url(self.target):
+            return self.target  # no project context needed
         return await self.ctx.links.get_url(self.target)
 
     async def get_title(self) -> str:

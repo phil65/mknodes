@@ -187,7 +187,7 @@ class PackageContext(Context):
     mkdocs_config: mkdocsconfigfile.MkDocsConfigFile | None = None
     """A dict-like File containing the MkDocs config."""
     pyproject_file: pyproject.PyProject = dataclasses.field(
-        default_factory=pyproject.PyProject,
+        default_factory=pyproject.PyProject.find,
     )
     """A dict-like File containing the PyProject data."""
     tools: list[tools.Tool] = dataclasses.field(default_factory=list)

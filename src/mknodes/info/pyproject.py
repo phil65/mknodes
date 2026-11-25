@@ -42,6 +42,18 @@ class PyProject(configfile.TomlFile):
             p /= "pyproject.toml"
         super().__init__(p)
 
+    @classmethod
+    def find(cls) -> PyProject:
+        """Return the pyproject.toml of the cwd (or a parent), an empty one if there is none.
+
+        Used for contexts outside of a Python project (e.g. a profile README).
+        """
+        if pathhelpers.find_cfg_for_folder("pyproject.toml") is not None:
+            return cls()
+        empty = cls.__new__(cls)
+        configfile.TomlFile.__init__(empty)
+        return empty
+
     @property
     def mknodes_section(self) -> dict[str, Any]:
         """Return our very own config section."""
