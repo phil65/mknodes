@@ -27,8 +27,15 @@ SITE_DIR_HELP = "Path to the folder where the HTML should get written."
 DEPTH_HELP = "Git clone depth in case repository is remote. Important for changelog generation."
 CFG_PATH_HELP = "Path to the config file."
 STRICT_HELP = "Strict mode (fails on warnings)"
-ENGINE_HELP = "Site engine: `zensical` (HTML site, default) or `markdown` (plain Markdown files)."
-FLAVOR_HELP = "Markdown flavour (`material`, `github`). Default: the engine's flavour."
+ENGINE_HELP = (
+    "Site engine: `zensical` (HTML site, default), `mkdocs` (HTML site, needs the "
+    "`mkdocs` extra), `mdbook` (HTML book, needs the `mdbook` binary to build / serve) "
+    "or `markdown` (plain Markdown files)."
+)
+FLAVOR_HELP = (
+    "Markdown flavour (`material`, `github`, `mdbook`). Default: the engine's flavour "
+    "(zensical / mkdocs: `material`, mdbook: `mdbook`, markdown: `github`)."
+)
 WATCH_HELP = "Keep running and regenerate when project sources change."
 GEN_DIR_HELP = "Folder for generated pages (default: the docs dir)."
 SITE_DIR_CMDS = "-d", "--site-dir"
@@ -48,7 +55,8 @@ def check_engine(value: str) -> str:
     if value not in WRITERS:
         msg = (
             f"Unsupported engine {value!r} (available: {', '.join(WRITERS)}). "
-            "Zensical builds HTML sites, `markdown` writes plain Markdown files."
+            "Zensical / MkDocs / mdBook build HTML sites, `markdown` writes plain "
+            "Markdown files."
         )
         raise t.BadParameter(msg)
     return value
@@ -75,7 +83,8 @@ def build(
 
     Runs the build function on given repository (either locally or a hosted one),
     writes the generated pages and config (see `generate`) and builds the HTML website
-    with `zensical build -f <generated config>`.
+    with the engine (`zensical build -f <generated config>`, `mkdocs build -f ...`,
+    `mdbook build <book dir>`).
 
     Further info here: https://phil65.github.io/mknodes/CLI/
     """
@@ -87,6 +96,7 @@ def build(
         site_dir=site_dir,
         flavor=flavor,
     )
+    _ensure_available(settings, engine)
     writer = _generate(settings, engine)
     args = ["--strict"] if strict else []
     if (cmd := writer.build_command(extra_args=args)) is None:
@@ -107,8 +117,9 @@ def serve(
 ):
     """Serve a MkNodes-based website, locally or remotely.
 
-    This is `mknodes generate --watch` running next to
-    `zensical serve -f <generated config>` (serves on http://localhost:8000/).
+    This is `mknodes generate --watch` running next to the engine's server
+    (`zensical serve -f <generated config>`, http://localhost:8000/;
+    `mdbook serve <book dir>`, http://localhost:3000/).
 
     Further info here: https://phil65.github.io/mknodes/CLI/
     """
@@ -120,6 +131,7 @@ def serve(
         flavor=flavor,
     )
     settings = _load_settings(**opts)
+    _ensure_available(settings, engine)
     writer = _generate(settings, engine)
     if (cmd := writer.build_command(serve=True)) is None:
         msg = f"Engine {engine!r} has no server. Use `generate --watch` instead."
@@ -160,7 +172,9 @@ def generate(
     configured in `[tool.mknodes]` of `pyproject.toml` or in the `mknodes` entry of the
     `plugins` list of `mkdocs.yml`) and writes the generated pages into the docs dir plus
     a generated config (`mkdocs.generated.yml`) inheriting from `mkdocs.yml`.
-    Build afterwards with `zensical build -f mkdocs.generated.yml`.
+    Build afterwards with `zensical build -f mkdocs.generated.yml`
+    (`mkdocs build -f ...` for `--engine mkdocs`). `--engine mdbook` writes a book folder
+    (`book/`: `book.toml`, `src/`), `--engine markdown` plain Markdown + `SUMMARY.md`.
     """
     opts: dict[str, Any] = dict(
         config_path=config_path,
@@ -202,12 +216,28 @@ def _load_settings(
     )
 
 
-def _generate(settings: GeneratorSettings, engine: str) -> Writer:
-    from mknodes.site import generate_output
+def _create_writer(settings: GeneratorSettings, engine: str) -> Writer:
     from mknodes.site.writers import get_writer
 
-    writer = get_writer(engine)(settings)
-    output = generate_output(settings, flavor=writer.resolved_flavor)
+    return get_writer(engine)(settings)
+
+
+def _ensure_available(settings: GeneratorSettings, engine: str) -> None:
+    """Exit with an error before generating if the engine can't build."""
+    from mknodes.site.writers import EngineNotFoundError
+
+    try:
+        _create_writer(settings, engine).ensure_available()
+    except EngineNotFoundError as e:
+        logger.error("%s", e)  # noqa: TRY400
+        raise t.Exit(1) from None
+
+
+def _generate(settings: GeneratorSettings, engine: str) -> Writer:
+    from mknodes.site import generate_output
+
+    writer = _create_writer(settings, engine)
+    output = generate_output(settings, flavor=writer.get_renderer())
     cfg_path = writer.write(output)
     logger.info("Generated %s pages, config: %s", len(output.pages), cfg_path)
     return writer

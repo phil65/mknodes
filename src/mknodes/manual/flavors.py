@@ -25,7 +25,9 @@ Nodes render to the Markdown of a *flavour*. The default flavour, `material`, is
 Markdown for [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) /
 Zensical, using Python-Markdown / PyMdown extensions (admonitions, tabs, attribute
 lists, ...). The `github` flavour produces GitHub flavoured Markdown for READMEs, issues
-and wikis: alerts, `<details>` blocks, `<kbd>` and plain fenced code.
+and wikis: alerts, `<details>` blocks, `<kbd>` and plain fenced code. The `mdbook`
+flavour is the GitHub flavour for [mdBook](https://rust-lang.github.io/mdBook/)
+(optionally with `mdbook-admonish` admonitions).
 
 ```py
 import mknodes as mk
@@ -42,6 +44,7 @@ plain Markdown files plus a `SUMMARY.md` nav and defaults to `github`:
 mknodes generate --engine markdown --flavor github --generated-dir build/markdown
 ```
 
+Each engine has a default flavour, see [Site engines](<../Site generator/site_engines.md>).
 The flavour can also be set with the `flavor` setting (see
 [Configuration](<../Site generator/configuration.md>)) or passed to
 [DocBuilder][mknodes.DocBuilder]. The renderer classes are documented in

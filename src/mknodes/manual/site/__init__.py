@@ -33,6 +33,11 @@ def _(page: mk.MkPage):
     )
 
 
+@nav.route.page("Site engines", hide="toc")
+def _(page: mk.MkPage):
+    page += mk.MkTemplate("site/engines.jinja")
+
+
 @nav.route.page("The build process", hide="toc")
 def _(page: mk.MkPage):
     page += INTRO

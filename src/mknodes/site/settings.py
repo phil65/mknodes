@@ -56,9 +56,10 @@ class GeneratorSettings:
     global_resources: bool = True
     """Put CSS / JS into the site config instead of per-page template blocks."""
     flavor: str | None = None
-    """Markdown flavour of the generated pages (`material`, `github`).
+    """Markdown flavour of the generated pages (`material`, `github`, `mdbook`).
 
-    Defaults to the flavour of the engine: `material` for `zensical`, `github` for `markdown`.
+    Defaults to the flavour of the engine: `material` for `zensical` and `mkdocs`,
+    `mdbook` for `mdbook`, `github` for `markdown`.
     """
     docs_dir: str | None = None
     """Docs folder (default: `docs_dir` of the site config, else `docs`)."""
@@ -66,12 +67,17 @@ class GeneratorSettings:
     """Folder to write generated pages into (default: `docs_dir`).
 
     If it differs from `docs_dir`, hand-written pages get mirrored into it and it becomes
-    the docs dir of the generated config.
+    the docs dir of the generated config. For `mdbook`: the book folder (default `book`).
     """
     generated_config: str = GENERATED_CONFIG
     """Filename of the generated site config (relative to the project dir)."""
     site_dir: str | None = None
     """Output folder for the HTML build (default: the site config's `site_dir`)."""
+    mdbook: dict[str, Any] = dataclasses.field(default_factory=dict)
+    """Extra `book.toml` content for the `mdbook` engine (deep-merged into the generated
+    config, e.g. `output.html.default-theme`). A `preprocessor.admonish` entry switches
+    admonitions to the `mdbook-admonish` syntax.
+    """
     jinja_loaders: list[dict[str, Any]] | None = None
     jinja_extensions: list[str] | None = None
     jinja_block_start_string: str | None = None

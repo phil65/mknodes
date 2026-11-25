@@ -20,6 +20,7 @@ from mknodes.rendering.base import MaterialRenderer, Renderer, Rule, current, us
 FLAVORS: dict[str, type[Renderer] | str] = {
     "material": MaterialRenderer,
     "github": "mknodes.rendering.github:GithubRenderer",
+    "mdbook": "mknodes.rendering.mdbook:MdbookRenderer",
 }
 
 

@@ -7,7 +7,7 @@ file) render their default (Material) Markdown.
 from __future__ import annotations
 
 import html
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 import urllib.parse
 
 import griffe
@@ -87,9 +87,36 @@ def _material_tabs(tabs: list[materialtext.Tab]) -> str:
     )
 
 
+def _material_fence(fence: str, info: str) -> str:
+    """Plain language info string, the title as bold line above the block."""
+    if "=" not in info and not info.strip().startswith("{"):
+        return f"{fence}{info}"  # no Material options (`rust,ignore`, `admonish note`)
+    lang, options = materialtext.parse_fence_info(info)
+    line = f"{fence}{lang}"
+    return f"**{options['title']}**\n\n{line}" if options.get("title") else line
+
+
+def material_block(block: materialtext.Block) -> str:
+    """PyMdown blocks: details / admonitions / tabs as GitHub blocks, others: the content."""
+    if block.name in {"details", "tab"}:
+        return details(block.argument or block.name.capitalize(), block.text)
+    if block.name == "admonition" or block.name in ALERT_TYPES:
+        typ = "note" if block.name == "admonition" else block.name
+        return alert(typ, block.text, block.argument)
+    return block.text
+
+
+def _material_autodoc(path: str, options: dict[str, Any]) -> str:
+    """`::: path` directives: API docs from Griffe (GitHub has no mkdocstrings)."""
+    return api_docs(path, options)
+
+
 MATERIAL_CONVERTERS = materialtext.Converters(
     admonition=_material_admonition,
     tabs=_material_tabs,
+    fence_info=_material_fence,
+    block=material_block,
+    autodoc=_material_autodoc,
 )
 
 
@@ -234,24 +261,29 @@ async def render_definition_list(node: mk.MkDefinitionList, r: base.Renderer) ->
     return "<dl>\n" + "\n".join(items) + "\n</dl>\n"
 
 
+def api_docs(obj: str | griffe.Object | griffe.Alias, options: dict[str, Any] | None = None) -> str:
+    """API docs rendered from Griffe (for flavours without mkdocstrings)."""
+    from mknodes.info import grifferegistry
+
+    path = obj if isinstance(obj, str) else obj.path
+    if isinstance(obj, str):
+        try:
+            obj = grifferegistry.registry.get_module(obj)
+        except (KeyError, ImportError, griffe.AliasResolutionError) as e:
+            logger.warning("Could not load API docs for %s: %s", path, e)
+            return f"`{path}`"
+    try:
+        return apidocs.render(obj, options)
+    except (griffe.AliasResolutionError, griffe.CyclicAliasError) as e:
+        logger.warning("Could not render API docs for %s: %s", path, e)
+        return f"`{path}`"
+
+
 @GithubRenderer.rule(mk.MkDocStrings)
 async def render_docstrings(node: mk.MkDocStrings, r: base.Renderer) -> str:
     """API docs rendered from Griffe (GitHub has no mkdocstrings)."""
-    from mknodes.info import grifferegistry
-
-    if isinstance(node.obj, griffe.Object):
-        obj: griffe.Object | griffe.Alias = node.obj
-    else:
-        try:
-            obj = grifferegistry.registry.get_module(node.obj_path)
-        except (KeyError, ImportError, griffe.AliasResolutionError) as e:
-            logger.warning("Could not load API docs for %s: %s", node.obj_path, e)
-            return f"`{node.obj_path}`"
-    try:
-        return apidocs.render(obj, node.options)
-    except (griffe.AliasResolutionError, griffe.CyclicAliasError) as e:
-        logger.warning("Could not render API docs for %s: %s", node.obj_path, e)
-        return f"`{node.obj_path}`"
+    obj = node.obj if isinstance(node.obj, griffe.Object) else node.obj_path
+    return api_docs(obj, node.options)
 
 
 ICONIFY_URL = "https://api.iconify.design/{prefix}/{name}.svg"

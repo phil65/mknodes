@@ -17,13 +17,17 @@ from mknodes.site.settings import GeneratorSettings
 if TYPE_CHECKING:
     import pathlib
 
+    from mknodes.rendering import Renderer
 
-def generate_output(settings: GeneratorSettings, flavor: str | None = None) -> BuildOutput:
+
+def generate_output(
+    settings: GeneratorSettings, flavor: str | Renderer | None = None
+) -> BuildOutput:
     """Run the build function of given settings and return the collected output.
 
     Args:
         settings: Generator settings
-        flavor: Markdown flavour (default: the `flavor` setting, else `material`)
+        flavor: Markdown flavour or renderer (default: the `flavor` setting, else `material`)
     """
     from mknodes.site.generator import SiteGenerator
 
@@ -46,7 +50,7 @@ def generate(
 
     settings = settings or GeneratorSettings.load(**overrides)
     writer = get_writer(engine)(settings)
-    output = generate_output(settings, flavor=writer.resolved_flavor)
+    output = generate_output(settings, flavor=writer.get_renderer())
     return writer.write(output)
 
 

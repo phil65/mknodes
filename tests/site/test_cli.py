@@ -39,10 +39,25 @@ def test_build_propagates_exit_code(generate):
 
 @pytest.mark.parametrize("command", ["build", "serve", "generate"])
 def test_unsupported_engine_is_rejected(generate, command: str):
-    result = CliRunner().invoke(cli.cli, [command, "--engine", "mkdocs"])
+    result = CliRunner().invoke(cli.cli, [command, "--engine", "sphinx"])
     assert result.exit_code == 2  # noqa: PLR2004
-    assert "Unsupported engine 'mkdocs'" in result.output
+    assert "Unsupported engine 'sphinx'" in result.output
     generate.assert_not_called()
+
+
+@pytest.mark.parametrize("command", ["build", "serve"])
+def test_missing_mdbook_fails_before_generating(generate, command: str):
+    with mock.patch("shutil.which", return_value=None):
+        result = CliRunner().invoke(cli.cli, [command, "--engine", "mdbook"])
+    assert result.exit_code == 1
+    generate.assert_not_called()
+
+
+def test_generate_works_without_mdbook(generate):
+    with mock.patch("shutil.which", return_value=None):
+        result = CliRunner().invoke(cli.cli, ["generate", "--engine", "mdbook"])
+    assert result.exit_code == 0
+    assert generate.call_args.args[1] == "mdbook"
 
 
 def test_removed_commands():

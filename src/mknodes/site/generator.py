@@ -79,7 +79,9 @@ def resolve_url_collisions(output: BuildOutput) -> None:
 class SiteGenerator:
     """Runs the configured build function and returns an engine-neutral `BuildOutput`."""
 
-    def __init__(self, settings: GeneratorSettings, flavor: str | None = None) -> None:
+    def __init__(
+        self, settings: GeneratorSettings, flavor: str | rendering.Renderer | None = None
+    ) -> None:
         self.settings = settings
         self.flavor = flavor or settings.flavor or "material"
         self.root: mk.MkNav | None = None
