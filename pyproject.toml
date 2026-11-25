@@ -52,7 +52,7 @@ dependencies = [
   "gitpython",
   "griffelib",
   "jinja2",
-  "jinjarope[icons]>=1.2.0",
+  "jinjarope[icons]>=1.2.1",
   "logfire>=3.0",
   "markdown>=3.5",
   "markupsafe>=2.1",
