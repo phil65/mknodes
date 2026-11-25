@@ -27,6 +27,22 @@ logger = log.get_logger(__name__)
 ASSETS_DIR = "assets"
 
 
+async def _render_page_jinja(page: mk.MkPage, md: str) -> str:
+    """Render the page Markdown with Jinja (skipped if it contains no Jinja syntax).
+
+    Compiling a whole page is expensive; text without delimiters renders to itself
+    (newlines normalized, one trailing newline dropped).
+    """
+    env = page.env
+    markers = (env.variable_start_string, env.block_start_string, env.comment_start_string)
+    if env.line_statement_prefix or env.line_comment_prefix or any(m in md for m in markers):
+        return await env.render_string_async(md)
+    md = md.replace("\r\n", "\n").replace("\r", "\n")
+    if not env.keep_trailing_newline and md.endswith("\n"):
+        md = md[:-1]
+    return md.replace("\n", env.newline_sequence)
+
+
 @dataclasses.dataclass
 class PageResult:
     """Result of rendering a single page."""
@@ -171,7 +187,7 @@ class DocBuilder:
         md = self.renderer.process(page, md)
         render = page.metadata.get("render_macros")
         if self.render_jinja if render is None else render:
-            md = await page.env.render_string_async(md)
+            md = await _render_page_jinja(page, md)
         return PageResult(path=path, markdown=md, resources=req)
 
     @staticmethod
