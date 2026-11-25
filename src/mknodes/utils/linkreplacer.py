@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import collections
+import posixpath
 import re
 import urllib.parse
 
@@ -34,10 +35,16 @@ class LinkReplacer:
         if filename not in self.mapping:
             return f"`{match.group(1)}`"
         filenames = self.mapping[filename]
-        if len(filenames) > 1:
-            text = "%s: %s has %s targets"
-            logger.debug(text, self.page_url, len(filenames), match.group(3))
-        new_link = htmlfilters.relative_url(self.page_url, filenames[0]) + (match.group(5) or "")
+        # A file next to the page wins (the link is relative to the page).
+        sibling = posixpath.join(posixpath.dirname(self.page_url), filename)
+        if sibling in filenames:
+            target = sibling
+        else:
+            target = filenames[0]
+            if len(filenames) > 1:
+                text = "%s: %s has %s targets"
+                logger.debug(text, self.page_url, match.group(3), len(filenames))
+        new_link = htmlfilters.relative_url(self.page_url, target) + (match.group(5) or "")
         return match.group(0).replace(match.group(2), new_link)
         # new_text = new_text.replace("\\", "/")
         # text = "LinkReplacer: : %s -> %s"

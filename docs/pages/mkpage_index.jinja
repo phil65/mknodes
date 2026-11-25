@@ -27,7 +27,7 @@ Each [MkPage][mknodes.MkPage] also carries a [PageTemplate][mknodes.PageTemplate
 Like metadata, the templates also inherit from MkNavs, meaning that a [MkPage][mknodes.MkPage] will use the
 template of a parent [MkNav][mknodes.MkNav] if it has one defined.
 
-More information about templates can be found [here](Templates.md).
+More information about templates can be found [here](templates.md).
 
 
 ## Using MkPages
@@ -48,7 +48,7 @@ MkPages can get created in many ways:
     def _(page): ...
     ```
 
-  More information about routing can be found [here](Routing.md).
+  More information about routing can be found [here](<../MkNavs/Using decorators/index.md>).
 
 * By using [MkNav.add_page][mknodes.MkNav.add_page]:
 
@@ -63,7 +63,7 @@ MkPages can get created in many ways:
     ```
 
 * Or indirectly by using "batch operations" like [nav.parse.folder][mknodes.navs.navparser.NavParser.folder]
-  and similar (see also: [NavParser](NavParser.md):
+  and similar (see also: [NavParser][mknodes.navs.navparser.NavParser]):
 
     ``` py title="Via parse.folder or similar"
     nav = MkNav()
