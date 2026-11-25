@@ -67,15 +67,23 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
     `module:Class.classmethod`. Default `mknodes.site:parse`: with `pages` setting the nav is
     parsed (`navs/navparser.py`, example `resources/site/pages_example.toml`), else
     `defaultsite.populate_default_website()` (README index, API docs, CLI page, Development nav).
-  - `writers/`: `Writer` base (`flavor`, `write()`, `build_command()` / None = no build step),
+  - `writers/`: `Writer` base (`flavor`, `get_renderer()`, `write()`, `build_command()` /
+    None = no build step, `ensure_available()` raising `EngineNotFoundError`),
     `GeneratedFolder` manifest (`docs/.gitignore`; hand-written files are never overwritten; old
-    `mkdocs-mknodes` manifests are still recognized), `ZensicalWriter` (docs dir + template
-    overrides into `custom_dir` + `mkdocs.generated.yml` with `INHERIT: mkdocs.yml`),
-    `MarkdownWriter` (engine `markdown`, GitHub flavour, `MarkdownExporter` files).
+    `mkdocs-mknodes` manifests are still recognized; mirroring skips files of other runs'
+    manifests), `ZensicalWriter` (docs dir + template overrides into `custom_dir` +
+    `mkdocs.generated.yml` with `INHERIT: mkdocs.yml`), `MkDocsWriter` (subclass: `python -m
+    mkdocs`, Material's bundled icons, drops the `mknodes` plugin entry; extra `mkdocs`),
+    `MdbookWriter` (engine `mdbook`, flavour `mdbook`: owned `book/` folder with `book.toml`
+    (+ `mdbook` setting) and `src/` incl. `SUMMARY.md` (`SummaryWriter`: index pages become
+    section links, no duplicates / external links); needs the `mdbook` binary only for
+    build / serve), `MarkdownWriter` (engine `markdown`, GitHub flavour, `MarkdownExporter`
+    files). Engine -> default flavour: zensical / mkdocs `material`, mdbook `mdbook`,
+    markdown `github`. User docs: `docs/site/engines.jinja`.
   - `yamlconfig.py` (YAML round-trip keeping `!ENV` / `!!python/name` tags, `INHERIT`),
     `watch.py` (polling watcher, regenerates in a subprocess via `python -m mknodes generate`).
 - `cli/`: Typer app `mknodes` (`app.py`, rich logging via `richstate.py`); `site.py`: `build`,
-  `serve`, `generate` (`--engine zensical|markdown`, `--flavor`); `render.py`: `render`,
+  `serve`, `generate` (`--engine zensical|mkdocs|mdbook|markdown`, `--flavor`); `render.py`: `render`,
   `render-folder`. Entry point `cli:main` (configures logfire).
 - `rendering/`: Markdown flavours. A `Renderer` (`base.py`) per flavour holds rules
   (node type -> `async def rule(node, renderer) -> str`, registered with
@@ -88,8 +96,11 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   so nested nodes and `{{ node }}` in Jinja keep the flavour. `github.py`: GitHub flavour
   (alerts, `<details>`, `<kbd>`, Iconify `<img>` icons, title heading instead of front matter).
   `apidocs.py`: API docs from Griffe objects (for flavours without mkdocstrings; GitHub's
-  `MkDocStrings` rule). `materialtext.py`: converts hand-written Material blocks (`!!!`, `???`,
-  `===`) in page text; GitHub runs it as a page processor.
+  `MkDocStrings` rule, `api_docs()`). `materialtext.py`: converts hand-written Material
+  blocks (`!!!`, `???`, `===`, `/// block`, `::: path`, code fence options) in page text;
+  GitHub runs it as a page processor. `mdbook.py`: `MdbookRenderer` (GitHub flavour;
+  `admonish=True` writes `mdbook-admonish` blocks). `build/fencecheck.py`: `DocBuilder`
+  warns about unrecognised / unclosed code fences in rendered pages.
 - `mdext/`: Python-Markdown extensions (`/// mknodes` blocks, `execute_ext` for
   `python exec="true"` blocks, `codeinclude`); `- mknodes.mdext` in mkdocs.yml. See `mdext/README.md`.
 - `data/`: static data (admonition types, badges, build systems, tools, task runners, ...).

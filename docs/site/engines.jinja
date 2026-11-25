@@ -1,0 +1,69 @@
+## Site engines
+
+The generator builds an engine-neutral output (pages, nav, assets, Markdown extensions,
+template overrides) and a *writer* turns it into the input of a site engine. Choose the
+engine with `--engine` (`mknodes build`, `serve`, `generate`). Each engine has a default
+Markdown flavour, `--flavor` (or the `flavor` setting) overrides it.
+
+| Engine | Default flavour | Config file | Build command | Needs |
+| --- | --- | --- | --- | --- |
+| `zensical` (default) | `material` | `mkdocs.generated.yml` (`INHERIT: mkdocs.yml`) | `zensical build -f mkdocs.generated.yml` | (installed with mknodes) |
+| `mkdocs` | `material` | `mkdocs.generated.yml` (`INHERIT: mkdocs.yml`) | `mkdocs build -f mkdocs.generated.yml` | the `mkdocs` extra (`mknodes[mkdocs]`) |
+| `mdbook` | `mdbook` | `book/book.toml` (+ `book/src/SUMMARY.md`) | `mdbook build book` | the [`mdbook`](https://rust-lang.github.io/mdBook/) binary on the `PATH` |
+| `markdown` | `github` | `SUMMARY.md` in the generated folder | none (the files are the result) | nothing |
+
+``` bash
+mknodes build --engine mkdocs
+mknodes serve --engine mdbook
+mknodes generate --engine mdbook   # works without mdBook installed
+```
+
+### Zensical and MkDocs
+
+Both read the same config: the generated pages go into the docs folder (hand-written files
+are never overwritten) and `mkdocs.generated.yml` adds nav, extensions, CSS / JS and site
+metadata on top of the project's `mkdocs.yml`. For MkDocs, the `mknodes` entry of the
+`plugins` list (generator settings of former `mkdocs-mknodes` sites) gets dropped from the
+generated config, since MkDocs can't load it. Page icons from Iconify are mapped to the
+icons bundled with the theme or downloaded into the theme override folder.
+
+### mdBook
+
+The book folder (default `book/`, the `generated_dir` setting) is fully generated:
+`book.toml`, `src/SUMMARY.md`, the pages and assets plus the hand-written files of the docs
+folder. The HTML goes into the site dir (default `site/`). Additional `book.toml` content
+comes from the `mdbook` setting:
+
+``` toml
+# pyproject.toml
+[tool.mknodes.mdbook.output.html]
+default-theme = "navy"
+```
+
+The `mdbook` flavour is the GitHub flavour (mdBook renders GitHub alerts, raw HTML and
+`.md` links natively). Configure the
+[`mdbook-admonish`](https://tommilligan.github.io/mdbook-admonish/) preprocessor
+(`[tool.mknodes.mdbook.preprocessor.admonish]`) to get its fenced admonitions instead.
+Note: `mdbook-admonish` 1.20 does not run with mdBook 0.5 (its preprocessor fails to parse
+the book), so stay with the default alerts there.
+
+The nav becomes `SUMMARY.md`: a section's index page becomes the section link, the
+top-level index page the (unnumbered) intro chapter, sections without index page become
+draft chapters. mdBook renders only pages listed there and every file only once, so
+external links and duplicate entries are left out (pages missing from the nav get a warning).
+
+### What degrades outside Material
+
+| Feature | `github` / `mdbook` flavour | with `mdbook-admonish` |
+| --- | --- | --- |
+| Admonitions (`!!!`, `MkAdmonition`) | GitHub alerts (5 types), collapsible ones as `<details>` | all Material types, titles, collapsible |
+| Content tabs (`===`, `MkTabbed`) | one `<details>` block per tab, the selected one open | same |
+| PyMdown blocks (`/// details`) | `<details>` / alerts, other blocks keep their content | admonitions |
+| Code blocks | plain language info string, the title as bold line above, no line numbers / highlighted lines | same |
+| API docs (`:::`, `MkDocStrings`) | rendered from Griffe (no mkdocstrings) | same |
+| `[title][dotted.path]` references | linked to the anchors of the rendered API docs / inventories | same |
+| Icons (`MkIcon`, link icons) | Iconify `<img>` (needs network access when viewing) | same |
+| Mermaid diagrams | code blocks (GitHub renders them, mdBook needs `mdbook-mermaid`) | same |
+| Grids, cards, speech bubbles, ... (Material CSS) | plain HTML / Markdown without Material's styling | same |
+| Attribute lists, code annotations, theme templates | dropped | same |
+| Page metadata (front matter) | a `# Title` heading only | same |

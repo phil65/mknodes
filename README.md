@@ -45,8 +45,10 @@ pip install mknodes
 ```
 
 MkNodes includes a site generator (`mknodes build` / `serve` / `generate`) that builds
-websites with [Zensical](https://zensical.org) or writes plain Markdown. It does not depend on
-MkDocs. (It used to be the separate `mkdocs-mknodes` package.)
+websites with [Zensical](https://zensical.org) (default), [MkDocs](https://www.mkdocs.org)
+(`pip install mknodes[mkdocs]`) or [mdBook](https://rust-lang.github.io/mdBook/) (the `mdbook`
+binary), or writes plain Markdown. MkDocs is not required. (The generator used to be the
+separate `mkdocs-mknodes` package.)
 
 ## Quickstart
 
@@ -104,8 +106,14 @@ build-fn = "mypackage.docs:build"
 ```bash
 mknodes build                      # pages + mkdocs.generated.yml, then `zensical build`
 mknodes serve                      # live preview
+mknodes build --engine mkdocs      # same input, built with MkDocs + Material
+mknodes build --engine mdbook      # book/ (book.toml, src/SUMMARY.md), then `mdbook build`
 mknodes generate --engine markdown --flavor github --generated-dir out  # plain Markdown
 ```
+
+Each engine renders its own Markdown flavour (`material` for Zensical / MkDocs, `mdbook`,
+`github` for plain Markdown): admonitions, tabs, code blocks and API docs degrade to what the
+target understands. See [Site engines](https://phil65.github.io/mknodes/Site%20generator/site_engines/).
 
 Without a build function, a default website gets generated (README, API docs, CLI docs,
 development pages). Build functions are called as `build_fn(root=..., theme=..., **kwargs)`
