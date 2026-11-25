@@ -101,6 +101,13 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   GitHub runs it as a page processor. `mdbook.py`: `MdbookRenderer` (GitHub flavour;
   `admonish=True` writes `mdbook-admonish` blocks). `build/fencecheck.py`: `DocBuilder`
   warns about unrecognised / unclosed code fences in rendered pages.
+- `utils/diagnostics.py`: build diagnostics (`report()` / `collect()`): failed nodes in
+  templates, failing `/// mknodes` / `python exec` blocks (they still render the error into
+  the page), broken fences, unresolved references; page from `page_context()` (set by
+  `DocBuilder`) or Zensical's `rendering_context` preprocessor. The Markdown extensions run in
+  the engine process: `mknodes build` passes `MKNODES_DIAGNOSTICS_FILE` (JSON lines) to it.
+  `BuildOutput.diagnostics`; strict mode (`--strict`, `strict` setting) fails the build and
+  runs `zensical build --strict --clean` (cached pages don't report again).
 - `mdext/`: Python-Markdown extensions (`/// mknodes` blocks, `execute_ext` for
   `python exec="true"` blocks, `codeinclude`); `- mknodes.mdext` in mkdocs.yml. See `mdext/README.md`.
 - `data/`: static data (admonition types, badges, build systems, tools, task runners, ...).
