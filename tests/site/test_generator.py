@@ -3,6 +3,7 @@ from __future__ import annotations
 import functools
 import importlib.util
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -429,7 +430,10 @@ def test_markdown_writer_has_no_server(project: pathlib.Path, monkeypatch: pytes
     monkeypatch.chdir(project)
     result = CliRunner().invoke(cli.cli, ["serve", "--engine", "markdown"])
     assert result.exit_code != 0
-    assert "generate --watch" in result.output
+    # CI forces colored output: ANSI codes split the option names in the error box.
+    output = re.sub(r"\x1b\[[0-9;]*m", "", result.output)
+    assert "has no server" in output
+    assert "generate --watch" in output
 
 
 def test_flavor_option_overrides_engine_flavor(
