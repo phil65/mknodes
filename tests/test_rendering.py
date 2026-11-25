@@ -219,3 +219,14 @@ def test_api_docs_skip_cyclic_aliases(tmp_path, monkeypatch):
     module = griffe.load("cyclicpkg", search_paths=[str(tmp_path)])
     for target in (module, module["mod"]):  # raised CyclicAliasError before
         assert isinstance(apidocs.render(target, {"show_submodules": True}), str)
+
+
+async def test_mkllm_without_agentpool(monkeypatch):
+    """A missing / broken optional LLM dependency must not break the build."""
+    import sys
+
+    from mknodes.templatenodes import mkllm
+
+    monkeypatch.setitem(sys.modules, "agentpool", None)  # makes `import agentpool` fail
+    monkeypatch.setitem(sys.modules, "agentpool.functional", None)
+    assert await mk.MkLlm("Say hi").to_markdown() == mkllm.UNAVAILABLE_TEXT

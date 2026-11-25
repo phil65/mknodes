@@ -18,6 +18,8 @@ if TYPE_CHECKING:
 
 logger = log.get_logger(__name__)
 
+UNAVAILABLE_TEXT = "*(LLM-generated text unavailable: install `mknodes[llm]`)*"
+
 
 @anyio_functools.cache
 async def complete_llm(user_prompt: str, system_prompt: str, model: str, context: str) -> str:
@@ -97,6 +99,11 @@ class MkLlm(mktext.MkText):
         """
         context_items = self._process_extra_files()
         combined_context = "\n".join(filter(None, [self._context, *context_items])) or None
+        try:
+            import agentpool.functional  # noqa: F401
+        except ImportError as e:  # optional extra (`mknodes[llm]`), missing or broken
+            logger.warning("MkLlm: agentpool unavailable (%s), using a placeholder", e)
+            return UNAVAILABLE_TEXT
 
         return await complete_llm(
             self.user_prompt,
