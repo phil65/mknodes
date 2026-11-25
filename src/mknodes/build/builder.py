@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 import logfire
 
 from mknodes import rendering
-from mknodes.build import pagetemplates
+from mknodes.build import fencecheck, pagetemplates
 from mknodes.build.output import BuildOutput, Script, SiteMetadata, nav_from_dict
 from mknodes.mdlib import mdconverter
 from mknodes.utils import log, resources
@@ -137,6 +137,9 @@ class DocBuilder:
                 output.edit_paths[path] = page._edit_path
         self._add_files(output, files)
         self.renderer.finalize(output, root)
+        for path, md in output.pages.items():
+            for problem in fencecheck.check_fences(md):
+                logger.warning("%s: %s", path, problem)
         if theme:
             req.merge(await theme.get_resources())
             theme.adapt_extensions(req.markdown_extensions)
