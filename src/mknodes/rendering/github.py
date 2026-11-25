@@ -65,6 +65,8 @@ class GithubRenderer(base.Renderer):
                     result.append(proc)
         if isinstance(node, mk.MkPage):
             result.append(MaterialTextProcessor())
+        if isinstance(node, mk.MkContainer):
+            result.append(BlankLinesProcessor())
         return result
 
     def finalize(self, output: BuildOutput, root: mk.MkNav) -> None:
@@ -127,6 +129,39 @@ class MaterialTextProcessor(processors.TextProcessor):
 
     def run(self, text: str) -> str:
         return materialtext.convert(text, MATERIAL_CONVERTERS)
+
+
+class BlankLinesProcessor(processors.TextProcessor):
+    """Collapse runs of blank lines outside code fences into one.
+
+    Blocks ending with a newline (`<details>`, alerts) joined by blank lines would leave
+    2-3 blank lines in a row.
+    """
+
+    ID = "blank_lines"
+
+    def run(self, text: str) -> str:
+        return collapse_blank_lines(text)
+
+
+def collapse_blank_lines(text: str) -> str:
+    """Return text with at most one blank line in a row (code fences stay untouched)."""
+    from mknodes.build.fencecheck import FENCE_RE
+
+    out: list[str] = []
+    fence: str | None = None
+    for line in text.split("\n"):
+        if match := FENCE_RE.match(line):
+            mark, info = match["fence"], match["info"].strip()
+            if fence is None:
+                if not (mark[0] == "`" and "`" in info):  # inline code, not a fence
+                    fence = mark
+            elif mark[0] == fence[0] and len(mark) >= len(fence) and not info:
+                fence = None
+        elif fence is None and not line.strip() and out and not out[-1].strip():
+            continue
+        out.append(line)
+    return "\n".join(out)
 
 
 class PrependTitleProcessor(processors.TextProcessor):

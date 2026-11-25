@@ -6,6 +6,7 @@ import markdown
 import pytest
 
 import mknodes as mk
+from mknodes.rendering import github
 
 
 FLAVORS = ["material", "github"]
@@ -64,3 +65,24 @@ async def test_table_list_of_lists_are_rows(flavor: str):
     headed = mk.MkTable([["A", "B"], ["1", 2]])
     assert headed.columns == ["A", "B"]
     assert await headed.to_markdown(flavor=flavor) == "| A | B |\n| - | - |\n| 1 | 2 |\n"
+
+
+@pytest.mark.parametrize("flavor", FLAVORS)
+async def test_no_runs_of_blank_lines_around_details(flavor: str):
+    page = mk.MkPage("P")
+    page += "Intro"
+    page += mk.MkAdmonition("body", collapsible=True, title="T")
+    page += mk.MkAdmonition("alert body", typ="warning")
+    page += "Outro"
+    md = await page.to_markdown(flavor=flavor)
+    if flavor == "github":
+        assert "\n\n\n" not in md
+        assert "</details>\n\n> [!WARNING]" in md
+    else:
+        assert '??? info "T"\n    body' in md
+
+
+def test_collapse_blank_lines_keeps_code_blocks():
+    text = "a\n\n\n\nb\n```py\nx\n\n\n\ny\n```\n\n\nc ```inline``` d\n\n\ne"
+    expected = "a\n\nb\n```py\nx\n\n\n\ny\n```\n\nc ```inline``` d\n\ne"
+    assert github.collapse_blank_lines(text) == expected
