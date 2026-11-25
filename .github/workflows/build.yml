@@ -66,8 +66,7 @@ jobs:
               run: |
                   uv build
             - name: Publish on PyPI
-              env:
-                  UV_PUBLISH_TOKEN: ${{ secrets.UV_PUBLISH_TOKEN }}
+              # Trusted Publishing (OIDC, needs `id-token: write`): no token secret.
               run: |
                   uv publish
             - name: Create release
