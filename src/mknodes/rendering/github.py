@@ -192,8 +192,9 @@ async def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str
 @GithubRenderer.rule(mk.MkCode)
 async def render_code(node: mk.MkCode, r: base.Renderer) -> str:
     """Fenced code block with plain language info string (no attributes)."""
-    fence = node.fence_boundary
-    code = f"{fence}{node.language or ''}\n{await node.get_text()}\n{fence}"
+    text = await node.get_text()
+    fence = node.fence_for(text)
+    code = f"{fence}{node.language or ''}\n{text}\n{fence}"
     return f"**{node.title}**\n\n{code}" if node.title else code
 
 

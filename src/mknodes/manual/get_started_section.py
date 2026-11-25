@@ -30,7 +30,8 @@ def _(page: mk.MkPage) -> None:
 
 @nav.route.page("A quick node tour", hide="toc", icon="ic:outline-tour")
 def _(page: mk.MkPage) -> None:
-    page.metadata.render_macros = True
+    # Only the commented tour renders Jinja, the raw source at the end must stay as is.
+    page.metadata.render_macros = False
     a_quick_tour(page)
 
 

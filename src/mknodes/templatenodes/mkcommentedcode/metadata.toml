@@ -36,12 +36,15 @@ template = """
 {% for section in node.iter_code_sections() %}
 {% if section.typ == "code" %}
 {{ section.code | MkCode(linenums=section.start_line) }}
-{% elif node.style == "text" %}
-{{ section.code }}
+{% else %}
+{% set comment = section.code | MkText(render_jinja=node.render_comments) %}
+{% if node.style == "text" %}
+{{ comment }}
 {% elif node.style == "bubble" %}
-{{ section.code | MkSpeechBubble }}
+{{ comment | MkSpeechBubble }}
 {% elif node.style == "admonition" %}
-{{ section.code | MkAdmonition }}
+{{ comment | MkAdmonition }}
+{% endif %}
 {% endif %}
 {% endfor %}
 """

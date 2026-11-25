@@ -112,7 +112,7 @@ def a_quick_tour(page: mk.MkPage) -> None:
     # Oh, and if you wonder how this tour was done: I got help from
     # [MkCommentedCode][mknodes.MkCommentedCode]!
     #
-    page += mk.MkCommentedCode(a_quick_tour, style="text")
+    page += mk.MkCommentedCode(a_quick_tour, style="text", render_comments=True)
 
     # [MkCommentedCode][mknodes.MkCommentedCode] parses a function and separates comments
     # from code. These chunks are displayed on a rotating basis then.
@@ -120,15 +120,13 @@ def a_quick_tour(page: mk.MkPage) -> None:
     # Before we end the tour, let's take a look at the raw material.
     # We can use the [MkCode][mknodes.MkCode] node for that.
     #
-    node_5 = mk.MkCode.for_object(a_quick_tour)
-    text = str(node_5).replace(r"{", "<").replace(r"}", ">")
-    page += text
+    page += mk.MkCode.for_object(a_quick_tour)
     # As you can see, we added the [MkCode][mknodes.MkCode] node to the page.
     # It will be displayed right after the [MkCommentedCode][mknodes.MkCommentedCode]
     # block. You will see it right below.
     #
-    # Oh, and the String replacement you probably noticed is a quick hack to prevent
-    # **jinja2** code from getting executed. YOu can ignore that, it's not relevant
-    #  for this tour.
+    # Oh, and `render_comments=True` renders the **jinja2** expressions in the
+    # comments above. The page itself is not rendered with Jinja, so the expressions
+    # in the raw code below stay as they are.
     #
     # That's it. The rest of the nodes you need to check out yourself. Have fun!

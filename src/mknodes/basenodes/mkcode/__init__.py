@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+import re
 import textwrap
 import types
 
@@ -19,6 +20,9 @@ if TYPE_CHECKING:
     import mknodes as mk
 
 logger = log.get_logger(__name__)
+
+# Backtick fences inside the code (the code block's own fence must be longer).
+INNER_FENCE_RE = re.compile(r"^[ \t]*(`{3,})", re.MULTILINE)
 
 
 class MkCode(mkcontainer.MkContainer):
@@ -78,6 +82,12 @@ class MkCode(mkcontainer.MkContainer):
         block_level = sum(isinstance(i, MkCode) for i in self.ancestors)
         return "`" * (block_level + 3)
 
+    def fence_for(self, text: str) -> str:
+        """Return the fence for given code: longer than any fence inside the code."""
+        inner = max((len(i) for i in INNER_FENCE_RE.findall(text)), default=0)
+        boundary = self.fence_boundary
+        return boundary if len(boundary) > inner else "`" * (inner + 1)
+
     @property
     def fence_title(self) -> str:
         """Title in first line."""
@@ -102,8 +112,9 @@ class MkCode(mkcontainer.MkContainer):
     async def get_content(self) -> resources.NodeContent:
         """Single-pass: get code block markdown and resources."""
         space = " " if self.fence_title else ""
-        first_line = f"{self.fence_boundary}{space}{self.fence_title}"
-        md = f"{first_line}\n{await self.get_text()}\n{self.fence_boundary}"
+        text = await self.get_text()
+        fence = self.fence_for(text)
+        md = f"{fence}{space}{self.fence_title}\n{text}\n{fence}"
 
         # Get own resources (don't aggregate children since we format them as text)
         aggregated = await self._build_node_resources()

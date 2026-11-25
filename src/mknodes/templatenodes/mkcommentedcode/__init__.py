@@ -39,6 +39,7 @@ class MkCommentedCode(mktemplate.MkTemplate):
         *,
         linenums: int | None = None,
         style: Literal["text", "admonition", "bubble"] = "bubble",
+        render_comments: bool = False,
         **kwargs: Any,
     ) -> None:
         """Constructor.
@@ -48,6 +49,8 @@ class MkCommentedCode(mktemplate.MkTemplate):
             language: language for syntax highlighting
             linenums: If set, use as start linenumber
             style: Comment style
+            render_comments: Render the comments with Jinja (they can contain
+                             `{{ ... }}` expressions, the code stays as it is)
             kwargs: Keyword arguments passed to parent
         """
         self._code = code
@@ -55,10 +58,10 @@ class MkCommentedCode(mktemplate.MkTemplate):
         self.title = ""
         self.linenums = linenums
         self.style = style
+        self.render_comments = render_comments
         super().__init__(template="output/markdown/template", **kwargs)
 
     def iter_code_sections(self) -> Iterator[Section]:
-
         lines: list[str] = []
         mode = ""
         line_num = self.linenums or 0
