@@ -3,15 +3,15 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mkcontainer
+from mknodes.jinja.rendercache import TemplateRenderMixin
 from mknodes.pages import metadata
 from mknodes.utils import log, resources
-from mknodes.utils.memo import memoize_on
 
 
 logger = log.get_logger(__name__)
 
 
-class MkTemplate(mkcontainer.MkContainer):
+class MkTemplate(TemplateRenderMixin, mkcontainer.MkContainer):
     """Node representing a jinja template.
 
     Renders templates with the context-aware MkNodes jinja environment.
@@ -44,27 +44,20 @@ class MkTemplate(mkcontainer.MkContainer):
         self.block = block
         self.variables = variables or {}
 
-    @memoize_on("template", "block")
+    def render_kwargs(self) -> dict[str, Any]:
+        return dict(template_name=self.template, variables=self.variables, block_name=self.block)
+
     def get_items(self):
-        self.env.render_template(self.template, variables=self.variables, block_name=self.block)
-        return self.env.rendered_children
+        return self.get_render_result().children
 
     async def get_content(self) -> resources.NodeContent:
-        """Single-pass: render template once, return both markdown and resources."""
-        # Render template once
-        result = await self.env.render_template_async(
-            self.template,
-            variables=self.variables,
-            block_name=self.block,
-        )
+        """Render the template once: Markdown + resources of the created nodes."""
+        result = await self.get_render_result_async()
         # Strip YAML frontmatter if present
-        _, md = metadata.Metadata.parse(result)
-        # Collect resources from rendered children (already created by render above)
+        _, md = metadata.Metadata.parse(result.markdown)
         aggregated = await self._build_node_resources()
-        for child in self.env.rendered_children:
-            child_content = await child.get_content()
-            aggregated.merge(child_content.resources)
-
+        for child in result.children:
+            aggregated.merge(await result.get_resources(child))
         return resources.NodeContent(markdown=md, resources=aggregated)
 
     async def to_md_unprocessed(self) -> str:

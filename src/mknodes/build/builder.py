@@ -89,8 +89,12 @@ class DocBuilder:
         pages: list[mk.MkPage] = []
         navs: list[mk.MkNav] = []
         files: dict[str, str | bytes] = {}
-        theme_nodes = list(theme.iter_nodes()) if theme else []
-        for _, node in [*theme_nodes, *root.iter_nodes()]:
+        # Walk the tree in the target flavour: template nodes render once while their
+        # children get collected and reuse that render for their content.
+        with rendering.use(self.renderer):
+            theme_nodes = list(theme.iter_nodes()) if theme else []
+            all_nodes = [*theme_nodes, *root.iter_nodes()]
+        for _, node in all_nodes:
             files |= node.files
             match node:
                 case mk.MkPage() as page if page.resolved_metadata.inclusion_level is not False:

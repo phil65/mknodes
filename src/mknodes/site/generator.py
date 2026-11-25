@@ -11,6 +11,7 @@ import urllib.parse
 from anyenv import run_sync
 
 import mknodes as mk
+from mknodes import rendering
 from mknodes.build import DocBuilder
 from mknodes.info import contexts
 from mknodes.site import yamlconfig
@@ -114,11 +115,14 @@ class SiteGenerator:
         result = self.settings.get_builder()(theme=theme, root=root)
         if inspect.iscoroutine(result):
             run_sync(result)
-        paths = [
-            pathlib.Path(node.resolved_file_path).stem
-            for _level, node in root.iter_nodes()
-            if isinstance(node, mk.MkPage | mk.MkNav)
-        ]
+        # Walk the tree in the target flavour: template nodes render once (for their
+        # children) and reuse that render for their content.
+        with rendering.use(rendering.get_renderer(self.flavor)):
+            paths = [
+                pathlib.Path(node.resolved_file_path).stem
+                for _level, node in root.iter_nodes()
+                if isinstance(node, mk.MkPage | mk.MkNav)
+            ]
         ctx.links.set_excludes(paths)
 
         builder = DocBuilder(

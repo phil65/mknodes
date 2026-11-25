@@ -5,14 +5,14 @@ from typing import Any, Self
 from jinjarope import mdfilters
 
 from mknodes.basenodes import mknode
+from mknodes.jinja.rendercache import TemplateRenderMixin
 from mknodes.utils import log, pathhelpers
-from mknodes.utils.memo import memoize_on
 
 
 logger = log.get_logger(__name__)
 
 
-class MkText(mknode.MkNode):
+class MkText(TemplateRenderMixin, mknode.MkNode):
     """Class for any Markup text.
 
     All classes inheriting from MkNode can get converted to this Type.
@@ -39,16 +39,17 @@ class MkText(mknode.MkNode):
         self.render_jinja = render_jinja
 
     async def get_section(self, section_name: str) -> Self | None:
-        markdown = (
-            self._text if not self.render_jinja else await self.env.render_string_async(self._text)
-        )
+        markdown = await self.get_text()
         section_text = mdfilters.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
+
+    def render_kwargs(self) -> dict[str, Any]:
+        return dict(string=self._text, variables=self.variables)
 
     async def get_text(self) -> str:
         if not self.render_jinja:
             return self._text
-        return await self.env.render_string_async(self._text)
+        return (await self.get_render_result_async()).markdown
 
     def set_text(self, value: str) -> None:
         self._text = value
@@ -56,7 +57,6 @@ class MkText(mknode.MkNode):
     async def to_md_unprocessed(self) -> str:
         return await self.get_text()
 
-    @memoize_on("_text", "render_jinja")
     def get_children(self) -> list[mknode.MkNode]:
         """Return children nodes.
 
@@ -65,8 +65,7 @@ class MkText(mknode.MkNode):
         """
         if not self.render_jinja:
             return []
-        self.env.render_string(self._text, variables=self.variables)
-        return self.env.rendered_children
+        return self.get_render_result().children
 
     @classmethod
     def from_url(cls, url: str) -> Self | None:

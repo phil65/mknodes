@@ -34,8 +34,7 @@ class MkReprRawRendered(mktemplate.MkTemplate):
             case None:
                 return None
             case str():
-                self.env.render_string(self._node)
-                return self.env.rendered_children[0]
+                return self.env.render_nodes(string=self._node).children[0]
             case _:
                 return self._node
 

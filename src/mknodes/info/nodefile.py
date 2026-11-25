@@ -58,8 +58,7 @@ def find_file(klass: type) -> pathlib.Path | None:
 async def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
     import mknodes as mk
 
-    await parent.env.render_string_async(jinja)
-    nodes = parent.env.rendered_nodes
+    nodes = (await parent.env.render_nodes_async(string=jinja)).nodes
     node = mk.MkContainer(nodes) if len(nodes) > 1 else nodes[0]
     dct: dict[str, str | mk.MkNode] = dict(
         Jinja=mk.MkCode(jinja, language="jinja"),
@@ -142,8 +141,8 @@ class NodeFile(configfile.TomlFile):
     async def iter_example_instances(self, parent: mk.MkNode) -> AsyncIterator[mk.MkNode]:
         for example in self.examples.values():
             if example.jinja:
-                await parent.env.render_string_async(example.jinja)
-                for child in parent.env.rendered_children:
+                result = await parent.env.render_nodes_async(string=example.jinja)
+                for child in result.children:
                     yield child
 
     @property
