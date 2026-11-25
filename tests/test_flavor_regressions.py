@@ -100,3 +100,35 @@ def test_to_markdown_sync_wrapper():
 async def test_to_markdown_sync_inside_running_loop():
     node = mk.MkText("x")
     assert node.to_markdown_sync(flavor="github") == await node.to_markdown(flavor="github")
+
+
+async def test_html_table_markdown_cells_github():
+    table = mk.MkHtmlTable({"A": [mk.MkAdmonition("x > y")], "B": [mk.MkCode("a<b")]})
+    md = await table.to_markdown(flavor="github")
+    assert md.startswith("<table>\n<tr><th>A</th><th>B</th></tr>\n<tr>\n")
+    assert "<td>\n\n> [!NOTE]\n> x > y\n\n</td>" in md
+    assert "<td>\n\n```python\na<b\n```\n\n</td>" in md
+    assert "&gt;" not in md
+    assert "&lt;" not in md
+
+
+async def test_speech_bubble_markdown_content_github():
+    bubble = mk.MkSpeechBubble("**b**", arrow="left")
+    md = await bubble.to_markdown(flavor="github")
+    assert md == '<div class="speech left">\n\n**b**\n\n</div>'
+
+
+@pytest.mark.parametrize("flavor", FLAVORS)
+async def test_commented_code_blank_line_after_html(flavor: str):
+    node = mk.MkCommentedCode("# comment\nx = 1\n# another\ny = 2")
+    md = await node.to_markdown(flavor=flavor)
+    assert "</div>\n\n```" in md
+    assert "```\n\n<div" in md
+
+
+async def test_badge_is_shields_image_github():
+    badge = mk.MkBadge("Doc-s", "my_site", badge_color="#ff9800", target="https://example.org")
+    md = await badge.to_markdown(flavor="github")
+    url = "https://img.shields.io/badge/Doc--s-my__site-ff9800"
+    assert md == f"[![Doc-s: my_site]({url})](https://example.org)"
+    assert "<svg" in await badge.to_markdown()

@@ -255,6 +255,52 @@ async def render_html_block(node: mk.MkHtmlBlock, r: base.Renderer) -> str:
     return f"<{tag}{attrs}>\n\n{text}\n\n</{tag}>"
 
 
+def _markdown_in_html(tag: str, text: str, attrs: str = "") -> str:
+    """Return an HTML element with Markdown content (blank lines make GitHub parse it)."""
+    return f"<{tag}{attrs}>\n\n{text.strip()}\n\n</{tag}>"
+
+
+@GithubRenderer.rule(mk.MkSpeechBubble)
+async def render_speech_bubble(node: mk.MkSpeechBubble, r: base.Renderer) -> str:
+    text = await r.render_children(node.get_items())
+    klass = f"speech {node.arrow}" if node.arrow else "speech"
+    return _markdown_in_html("div", text, f' class="{klass}"')
+
+
+@GithubRenderer.rule(mk.MkHtmlTable)
+async def render_html_table(node: mk.MkHtmlTable, r: base.Renderer) -> str:
+    """HTML table with unescaped Markdown cells (Material: `<table markdown="1">`)."""
+    data = node.data
+    if not any(data[k] for k in data):
+        return ""
+    head = "".join(f"<th>{html.escape(str(k))}</th>" for k in data)
+    rows = [f"<tr>{head}</tr>"]
+    for row in node.iter_rows():
+        cells = [_markdown_in_html("td", (await r.render_child(item)).markdown) for item in row]
+        rows.append("<tr>\n{}\n</tr>".format("\n".join(cells)))
+    return "<table>\n{}\n</table>".format("\n".join(rows))
+
+
+def shields_badge_url(label: str, value: str | None = None, color: str | None = None) -> str:
+    """Return the URL of a static shields.io badge."""
+
+    def escape(text: str) -> str:
+        return urllib.parse.quote(text.replace("-", "--").replace("_", "__"), safe="")
+
+    parts = [escape(label), escape(value)] if value else [escape(label)]
+    color = urllib.parse.quote((color or "blue").lstrip("#"), safe="")
+    return f"https://img.shields.io/badge/{'-'.join(parts)}-{color}"
+
+
+@GithubRenderer.rule(mk.MkBadge)
+async def render_badge(node: mk.MkBadge, r: base.Renderer) -> str:
+    """A shields.io badge image (GitHub drops inline SVG)."""
+    url = shields_badge_url(node.label, node.value, node.badge_color)
+    alt = f"{node.label}: {node.value}" if node.value else node.label
+    image = f"![{alt}]({url})"
+    return f"[{image}]({target})" if (target := await node.get_url()) else image
+
+
 @GithubRenderer.rule(mk.MkTab, mk.MkTabBlock)
 async def render_tab(node: mk.MkTab | mk.MkTabBlock, r: base.Renderer) -> str:
     text = await r.render_children(node.get_items())
