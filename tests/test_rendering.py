@@ -200,3 +200,22 @@ async def test_github_material_badge():
         '[<img src="https://api.iconify.design/mdi/flag.svg?height=16" alt="flag">'
         " <code>Flag</code>](https://x.org)"
     )
+
+
+def test_api_docs_skip_cyclic_aliases(tmp_path, monkeypatch):
+    """An import shadowing a class (here: in an `if __name__` block) must not break the docs."""
+    import griffe
+
+    from mknodes.rendering import apidocs
+
+    pkg = tmp_path / "cyclicpkg"
+    pkg.mkdir()
+    (pkg / "__init__.py").write_text('from cyclicpkg.mod import Thing\n\n__all__ = ["Thing"]\n')
+    (pkg / "mod.py").write_text(
+        '__all__ = ["Thing"]\n\n\nclass Thing:\n    """A thing."""\n\n\n'
+        'if __name__ == "__main__":\n    from cyclicpkg import Thing\n'
+    )
+    monkeypatch.syspath_prepend(str(tmp_path))
+    module = griffe.load("cyclicpkg", search_paths=[str(tmp_path)])
+    for target in (module, module["mod"]):  # raised CyclicAliasError before
+        assert isinstance(apidocs.render(target, {"show_submodules": True}), str)

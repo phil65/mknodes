@@ -164,7 +164,6 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - `mknodes.execute` (`mdext/execute_ext.py`) `auto_register` does not take effect; register the
   fences explicitly via `get_custom_fences()` in the superfences config.
 - `MkTemplate` paths are relative to `docs/`; the manual breaks if templates move.
-- `src/mknodes/info/packageinfo.py` uses CRLF line endings; keep them.
 - Downstream users: many docs sites import node classes and helpers directly.
 - `utils.log.get_logger(name)` returns loggers below `mknodes` (names outside the namespace get
   prefixed), so all output can be configured via the `mknodes` logger.

@@ -239,7 +239,11 @@ async def render_docstrings(node: mk.MkDocStrings, r: base.Renderer) -> str:
         except (KeyError, ImportError, griffe.AliasResolutionError) as e:
             logger.warning("Could not load API docs for %s: %s", node.obj_path, e)
             return f"`{node.obj_path}`"
-    return apidocs.render(obj, node.options)
+    try:
+        return apidocs.render(obj, node.options)
+    except (griffe.AliasResolutionError, griffe.CyclicAliasError) as e:
+        logger.warning("Could not render API docs for %s: %s", node.obj_path, e)
+        return f"`{node.obj_path}`"
 
 
 ICONIFY_URL = "https://api.iconify.design/{prefix}/{name}.svg"

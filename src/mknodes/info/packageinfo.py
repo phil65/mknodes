@@ -171,10 +171,9 @@ class PackageInfo:
     def required_packages(self) -> dict[PackageInfo, packagehelpers.Dependency]:
         from mknodes.info import packageregistry
 
-        requires = self.distribution.requires
-        modules: set[str] = (
-            {packagehelpers.get_dependency(i).name for i in requires} if requires else set()
-        )
+        requires = self.distribution.requires or []
+        # Declared order (not a set: the table order must not depend on hash seeds).
+        modules = list(dict.fromkeys(packagehelpers.get_dependency(i).name for i in requires))
         packages = {}
         for mod in modules:
             with contextlib.suppress(Exception):

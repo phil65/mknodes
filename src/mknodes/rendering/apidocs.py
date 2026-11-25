@@ -14,10 +14,14 @@ from typing import TYPE_CHECKING, Any
 
 import griffe
 
+from mknodes.utils import log
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
+
+logger = log.get_logger(__name__)
 
 DEFAULT_FILTERS = ["!^_[^_]"]
 KIND_ORDER = {
@@ -122,6 +126,14 @@ class _Renderer:
         return result
 
     def _is_documented(self, name: str, member: griffe.Object | griffe.Alias) -> bool:
+        try:
+            return self._check_documented(name, member)
+        except (griffe.AliasResolutionError, griffe.CyclicAliasError) as e:
+            # e.g. imports shadowing a class (`from pkg import X` in an `if __name__` block)
+            logger.debug("Skipping unresolvable member %s: %s", member.path, e)
+            return False
+
+    def _check_documented(self, name: str, member: griffe.Object | griffe.Alias) -> bool:
         excluded = (
             (member.is_alias and not member.is_exported)  # imports
             or (member.is_module and not self.opts.get("show_submodules"))
@@ -131,10 +143,7 @@ class _Renderer:
         )
         if excluded:
             return False
-        try:
-            has_docs = bool(member.docstring) or member.has_docstrings
-        except griffe.AliasResolutionError:
-            return False
+        has_docs = bool(member.docstring) or member.has_docstrings
         return has_docs or bool(self.opts.get("show_if_no_docstring"))
 
     def _passes_filters(self, name: str) -> bool:

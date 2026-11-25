@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import ABCMeta
 from collections.abc import MutableMapping
+import threading
 import types
 from typing import TYPE_CHECKING
 
@@ -63,6 +64,8 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
         """
         self.expand_wildcards = expand_wildcards
         self._modules: dict[str, griffe.Module] = {}
+        # Route functions / pages may load packages from several threads at once.
+        self._lock = threading.RLock()
 
     def __getitem__(self, value: str) -> griffe.Module:
         return self._modules.__getitem__(value)
@@ -100,16 +103,21 @@ class GriffeRegistry(MutableMapping[str, griffe.Module], metaclass=ABCMeta):
         else:
             module_name, sub_mod_path = module, ""
         if module_name not in self._modules:
-            parser = griffe.Parser(docstring_style)
-            loader = griffe.GriffeLoader(docstring_parser=parser)
-            griffe_mod = loader.load(module_name)
-            assert isinstance(griffe_mod, griffe.Object)
-            if self.expand_wildcards:
-                loader.expand_wildcards(griffe_mod, external=True)  # pyright: ignore[reportUnknownMemberType]
-            assert isinstance(griffe_mod, griffe.Module)
-            self._modules[module_name] = griffe_mod
+            with self._lock:
+                if module_name not in self._modules:  # another thread may have loaded it
+                    self._modules[module_name] = self._load(module_name, docstring_style)
         griffe_mod = self._modules[module_name]
         return griffe_mod[sub_mod_path] if sub_mod_path else griffe_mod
+
+    def _load(self, module_name: str, docstring_style: griffe.Parser) -> griffe.Module:
+        parser = griffe.Parser(docstring_style)
+        loader = griffe.GriffeLoader(docstring_parser=parser)
+        griffe_mod = loader.load(module_name)
+        assert isinstance(griffe_mod, griffe.Object)
+        if self.expand_wildcards:
+            loader.expand_wildcards(griffe_mod, external=True)  # pyright: ignore[reportUnknownMemberType]
+        assert isinstance(griffe_mod, griffe.Module)
+        return griffe_mod
 
     def get_class(
         self,
