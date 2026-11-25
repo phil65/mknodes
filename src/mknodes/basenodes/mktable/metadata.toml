@@ -10,7 +10,13 @@ jinja = """
 {{ {"Column A": ["A", "B", "C"], "Column B": ["C", "D", "E"]} | MkTable }}
 """
 
-[example.list_of_dicts]
+[examples.rows]
+title = "From rows (the first one is the header unless `columns` are given)"
+jinja = """
+{{ [["Name", "Value"], ["a|b", "1"], ["c", "2"]] | MkTable }}
+"""
+
+[examples.list_of_dicts]
 title = "From list of dicts"
 jinja = """
 {{ [{"col 1": "abc", "col 2": "cde"}, {"col 1": "fgh", "col 2": "ijk"}] | MkTable }}

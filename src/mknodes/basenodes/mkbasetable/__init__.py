@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, Self
 
 from mknodes.basenodes import mkcontainer
@@ -8,7 +8,7 @@ from mknodes.utils import log, reprhelpers
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, Sequence
+    from collections.abc import Callable, Iterator
     import mknodes as mk
 
 logger = log.get_logger(__name__)
@@ -33,6 +33,13 @@ class MkBaseTable(mkcontainer.MkContainer):
     ) -> None:
         """Constructor.
 
+        Data can be given as:
+
+        - a mapping column header -> cells (`{"Name": ["a", "b"], "Value": ["1", "2"]}`),
+        - a list of rows (lists): `columns` are the headers, without `columns` the first
+          row is the header (`[["Name", "Value"], ["a", "1"], ["b", "2"]]`),
+        - a list of dicts (one per row, the keys of the first one are the headers).
+
         Args:
             data: Data show for the table
             columns: Column headers if not provided by data.
@@ -44,11 +51,12 @@ class MkBaseTable(mkcontainer.MkContainer):
                 self._data: dict[str, list[mk.MkNode]] = {c: [] for c in columns or []}
             case Mapping():
                 self._data = {str(k): [self.to_child_node(i) for i in v] for k, v in data.items()}
-            case ((str(), *_), *_):
-                h = columns or [str(i) for i in range(len(data))]
-                self._data = {}
-                for i, col in enumerate(data):
-                    self._data[h[i]] = [self.to_child_node(j) for j in col]
+            case (first, *_) if _is_row(first):
+                rows = [list(row) for row in data]  # type: ignore[arg-type]
+                header = list(columns) if columns is not None else rows.pop(0)
+                self._data = {str(h): [] for h in header}
+                for row in rows:
+                    self.add_row([row[i] if i < len(row) else "" for i in range(len(header))])
             case (dict(), *_):
                 self._data = {k: [self.to_child_node(dic[k]) for dic in data] for k in data[0]}  # type: ignore[call-overload]
             case _:
@@ -100,10 +108,10 @@ class MkBaseTable(mkcontainer.MkContainer):
         match row:
             case dict():
                 for k, v in row.items():
-                    self.data[k].append(self.to_child_node(v))
+                    self.data[k].append(self.to_child_node(_to_cell(v)))
             case _:
                 for i, key in enumerate(self.data.keys()):
-                    self.data[key].append(self.to_child_node(row[i]))
+                    self.data[key].append(self.to_child_node(_to_cell(row[i])))
 
     def iter_rows(self) -> Iterator[list[mk.MkNode]]:
         data = self.data  # property
@@ -127,3 +135,17 @@ class MkBaseTable(mkcontainer.MkContainer):
         col = data[col_name]
         max_len = max((len(str(i).replace("\n", "<br>")) for i in col), default=0)
         return max(len(col_name), max_len)
+
+
+def _is_row(item: Any) -> bool:
+    """Whether given item of the table data is a row (a list / tuple of cells)."""
+    return isinstance(item, Sequence) and not isinstance(item, str | bytes)
+
+
+def _to_cell(value: Any) -> Any:
+    """Cells: nodes and strings stay, None becomes empty, other values text."""
+    from mknodes.basenodes import mknode
+
+    if value is None:
+        return ""
+    return value if isinstance(value, str | mknode.MkNode) else str(value)
