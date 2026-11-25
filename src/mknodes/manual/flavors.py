@@ -85,7 +85,6 @@ def _examples() -> dict[str, mk.MkNode]:
         }),
         "Critic markup": mk.MkCritic("Inserted text", typ="addition"),
         "Progress bar": mk.MkProgressBar(60),
-        "Icon": mk.MkIcon("mdi:github", height=24),
         "Link with icon": mk.MkLink(
             "https://github.com/phil65/mknodes", "Repository", icon="mdi:github"
         ),
