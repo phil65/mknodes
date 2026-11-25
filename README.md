@@ -138,7 +138,7 @@ print("**Generated at build time!**")
 ````
 
 Use `session="name"` on `exec` blocks to share variables between them. See
-[`src/mknodes/mdext/README.md`](src/mknodes/mdext/README.md) for all options.
+[`src/mknodes/mdext/README.md`](https://github.com/phil65/mknodes/blob/main/src/mknodes/mdext/README.md) for all options.
 
 ## Documentation
 
