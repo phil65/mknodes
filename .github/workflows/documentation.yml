@@ -53,10 +53,34 @@ jobs:
                       ~/.cache/anyenv
                   key: docs-http-${{ runner.os }}-${{ github.run_id }}
                   restore-keys: docs-http-${{ runner.os }}-
-            - name: Build
+            # Install mdBook (prebuilt binary, same 0.5.x as used locally)
+            - name: Install mdBook
+              uses: taiki-e/install-action@v2
+              with:
+                  tool: mdbook@0.5.4
+            # The same build function, built by every engine into one Pages site:
+            # Zensical at the root, MkDocs at /mkdocs/, mdBook at /mdbook/.
+            # Zensical runs first: its --clean would remove the other variants.
+            - name: Build (Zensical)
               env:
                   MKNODES_CACHE_DIR: ~/.cache/mknodes
               run: uv run mknodes build -v --strict
+            # Not strict: mkdocs-autorefs warns about objects documented on two pages
+            # ("Multiple primary URLs found"). CI=false disables the social plugin.
+            - name: Build (MkDocs)
+              env:
+                  MKNODES_CACHE_DIR: ~/.cache/mknodes
+                  CI: "false"
+                  NO_MKDOCS_2_WARNING: "1"
+              run: |
+                  printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/mkdocs/\n' > mkdocs.variant.yml
+                  uv run mknodes build -v --engine mkdocs -p mkdocs.variant.yml -d site/mkdocs
+            - name: Build (mdBook)
+              env:
+                  MKNODES_CACHE_DIR: ~/.cache/mknodes
+              run: |
+                  printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/mdbook/\n' > mkdocs.variant.yml
+                  uv run mknodes build -v --strict --engine mdbook -p mkdocs.variant.yml -d site/mdbook
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v5
               with:
@@ -72,3 +96,62 @@ jobs:
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v5
+
+    # GitHub flavour as plain Markdown files on the `docs-github` branch, rendered by GitHub:
+    # https://github.com/phil65/mknodes/tree/docs-github
+    github-markdown:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
+            - name: Set up Python
+              uses: actions/setup-python@v7
+              with:
+                  python-version: "3.14"
+            - name: Setup Graphviz
+              uses: ts-graphviz/setup-graphviz@v2
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+            - name: Install dependencies
+              run: |
+                  uv sync --all-extras
+            - name: Cache icons and HTTP responses
+              uses: actions/cache@v6
+              with:
+                  path: |
+                      ~/.cache/mknodes
+                      ~/.cache/anyenv
+                  key: docs-http-${{ runner.os }}-${{ github.run_id }}-markdown
+                  restore-keys: docs-http-${{ runner.os }}-
+            - name: Generate
+              env:
+                  MKNODES_CACHE_DIR: ~/.cache/mknodes
+              run: |
+                  uv run mknodes generate -v --strict --engine markdown --generated-dir .docs-github
+                  cd .docs-github
+                  rm .gitignore  # generated-files manifest, lists every file
+                  {
+                      echo "> The [mknodes](https://github.com/phil65/mknodes) documentation in GitHub-flavoured"
+                      echo "> Markdown (\`mknodes generate --engine markdown\`), generated from the same build"
+                      echo "> function as the [website](https://phil65.github.io/mknodes/). Contents: [SUMMARY.md](SUMMARY.md)"
+                      echo
+                      cat index.md
+                  } > README.md
+            - name: Push to docs-github (if changed)
+              env:
+                  GIT_AUTHOR_NAME: github-actions[bot]
+                  GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+                  GIT_COMMITTER_NAME: github-actions[bot]
+                  GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+              run: |
+                  export GIT_INDEX_FILE="$RUNNER_TEMP/docs-github.index"
+                  git --git-dir="$PWD/.git" --work-tree="$PWD/.docs-github" -C .docs-github add -A .
+                  tree=$(git write-tree)
+                  old=""
+                  if git fetch origin docs-github; then old=$(git rev-parse "FETCH_HEAD^{tree}"); fi
+                  if [ "$tree" = "$old" ]; then echo "docs-github is up to date"; exit 0; fi
+                  commit=$(git commit-tree "$tree" -m "docs: generate GitHub Markdown docs from ${GITHUB_SHA::7} [skip ci]")
+                  git push --force origin "$commit:refs/heads/docs-github"

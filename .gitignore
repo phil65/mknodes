@@ -61,3 +61,7 @@ uv.lock
 .zed/
 # mkdocs-mknodes generate (generated pages in docs/ are ignored via docs/.gitignore)
 /mkdocs.generated.yml
+# mknodes build --engine mdbook
+/book
+# mknodes markdown/github
+/.docs-github
