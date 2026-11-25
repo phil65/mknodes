@@ -62,24 +62,35 @@ class MkIcon(mknode.MkNode):
         self.rotate = rotate
         self.box = box
 
+    def _svg_params(self) -> dict[str, Any]:
+        return dict(
+            color=self.color,
+            height=self.height,
+            width=self.width,
+            flip=self.flip,
+            rotate=self.rotate,
+            box=self.box,
+        )
+
     @property
     def svg(self) -> str:
+        """The icon SVG (blocking fetch if not cached, async code should use `get_svg`)."""
         try:
-            return iconcache.get_icon_svg(
-                self.icon_name,
-                color=self.color,
-                height=self.height,
-                width=self.width,
-                flip=self.flip,
-                rotate=self.rotate,
-                box=self.box,
-            )
+            return iconcache.get_icon_svg(self.icon_name, **self._svg_params())
+        except Exception:  # noqa: BLE001
+            logger.warning("Could not find icon %r", self.icon_name)
+            return ""
+
+    async def get_svg(self) -> str:
+        """Return the icon SVG, fetching it without blocking the event loop."""
+        try:
+            return await iconcache.get_icon_svg_async(self.icon_name, **self._svg_params())
         except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)
             return ""
 
     async def to_md_unprocessed(self) -> str:
-        return self.svg
+        return await self.get_svg()
 
 
 if __name__ == "__main__":

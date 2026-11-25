@@ -9,11 +9,15 @@ environment variable is set, otherwise in the platform's user cache directory
 (e.g. ``~/.cache/mknodes/icons`` on Linux). Use [clear_icon_cache][] to empty it.
 
 Lookups are resolved without network access, so a build with all icons cached
-works offline.
+works offline. Icons are fetched correctly from sync code as well as from inside a
+running event loop; async code should use [get_icon_svg_async][] (it does not block
+the loop).
 """
 
 from __future__ import annotations
 
+import asyncio
+import contextvars
 import hashlib
 import os
 import pathlib
@@ -124,12 +128,70 @@ def _write(path: pathlib.Path, text: str) -> None:
         logger.debug("Could not cache icon at %s: %s", path, e)
 
 
-def _fetch(icon: str, **params: Any) -> str:
+def _fetch_unisolated(icon: str, **params: Any) -> str:
     from jinjarope import iconfilters
     from pycons.iconify import api
 
     key = iconfilters.get_pyconify_key(icon)
     return api.svg(key, **params).decode()
+
+
+def _fetch(icon: str, **params: Any) -> str:
+    """Fetch an icon from the Iconify API (blocking).
+
+    pycons fetches via anyenv's sync bridge, which runs the request in a new event
+    loop (in a helper thread if the current thread already runs one). The bridge copies
+    the current context, which inside a running loop carries anyio's / sniffio's
+    "current async library" marker, so the helper thread refuses to start its loop and
+    the request coroutine never gets awaited. Running in an empty context avoids that.
+    """
+    return contextvars.Context().run(_fetch_unisolated, icon, **params)
+
+
+def _get_cached(spec: str, params: dict[str, Any]) -> tuple[pathlib.Path, str | None]:
+    path = get_cache_path(spec, **params)
+    return path, _read(path)
+
+
+def _store(path: pathlib.Path, svg: str) -> None:
+    if _is_svg(svg):
+        _write(path, svg)
+
+
+async def get_icon_svg_async(
+    icon: str,
+    color: str | None = None,
+    height: str | int | None = None,
+    width: str | int | None = None,
+    flip: Flip | None = None,
+    rotate: Rotation | None = None,
+    box: bool | None = None,
+) -> str:
+    """Async version of [get_icon_svg][mknodes.utils.iconcache.get_icon_svg].
+
+    Icons missing from the cache are fetched in a worker thread, so the event loop
+    keeps running.
+
+    Args:
+        icon: Icon spec(s)
+        color: Icon color. Replaces currentColor with specific color.
+        height: Icon height
+        width: Icon width
+        flip: Flip icon
+        rotate: Rotate icon. If an integer is provided, it is assumed to be in degrees.
+        box: Add an empty rectangle matching the icon's viewBox
+    """
+    params: dict[str, Any] = dict(
+        color=color, height=height, width=width, flip=flip, rotate=rotate, box=box
+    )
+    label = ""
+    for spec in icon.split("|"):
+        path, svg = _get_cached(spec, params)
+        if svg is None:
+            svg = await asyncio.to_thread(_fetch, spec, **params)
+            _store(path, svg)
+        label += svg
+    return label
 
 
 def get_icon_svg(
@@ -161,10 +223,9 @@ def get_icon_svg(
     )
     label = ""
     for spec in icon.split("|"):
-        path = get_cache_path(spec, **params)
-        if (svg := _read(path)) is None:
+        path, svg = _get_cached(spec, params)
+        if svg is None:
             svg = _fetch(spec, **params)
-            if _is_svg(svg):
-                _write(path, svg)
+            _store(path, svg)
         label += svg
     return label

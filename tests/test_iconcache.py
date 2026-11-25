@@ -156,3 +156,43 @@ def test_mkicon_uses_cache(fetch: FakeFetch):
     _new_process()
     fetch.fail = True
     assert mk.MkIcon("mdi:file").svg == svg
+
+
+def _bridged_fetch(icon: str, **params: Any) -> str:
+    """Fetch like pycons does: a coroutine run via anyenv's sync bridge."""
+    from anyenv import run_sync
+
+    async def get_bytes() -> str:
+        return SVG
+
+    return run_sync(get_bytes())
+
+
+@pytest.mark.parametrize("use_async", [False, True])
+def test_fetch_inside_running_loop(
+    monkeypatch: pytest.MonkeyPatch, cache_dir: pathlib.Path, use_async: bool
+):
+    # Builds run inside anyenv.run_sync. Its context carries anyio's "current async
+    # library" marker, which made the nested sync fetch fail ("Could not find icon",
+    # "coroutine 'get_bytes' was never awaited") on a cold icon cache.
+    from anyenv import run_sync
+
+    import mknodes as mk
+
+    monkeypatch.setattr(iconcache, "_fetch_unisolated", _bridged_fetch)
+
+    async def render() -> str:
+        if use_async:
+            return await mk.MkIcon("mdi:file").to_markdown()
+        return iconcache.get_icon_svg("mdi:file")
+
+    assert run_sync(render()) == SVG
+    assert iconcache.get_cache_path("mdi:file").read_text() == SVG
+
+
+async def test_async_icon_is_fetched_once(fetch: FakeFetch):
+    first = await iconcache.get_icon_svg_async("mdi:file|mdi:folder")
+    _new_process()
+    assert await iconcache.get_icon_svg_async("mdi:file|mdi:folder") == first
+    assert iconcache.get_icon_svg("mdi:folder") == first[len(first) // 2 :]
+    assert len(fetch.calls) == 2  # noqa: PLR2004
