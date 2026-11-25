@@ -196,6 +196,7 @@ class NodeEnvironment(jinjarope.Environment):
             self._loader_key = loader_key
 
         self.filters.update(self._node_filters)
+        self.filters["string"] = self._string_filter
         self.globals["parent_page"] = self.node.parent_page  # pyright: ignore[reportArgumentType]
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None  # pyright: ignore[reportArgumentType]
         self.globals["node"] = self.node  # pyright: ignore[reportArgumentType]
@@ -233,6 +234,12 @@ class NodeEnvironment(jinjarope.Environment):
         if not renderer.supports(type(node)) and (collector := _collector.get()) is not None:
             collector.resources[id(node)] = content.resources
         return renderer.process(node, content.markdown)
+
+    async def _string_filter(self, value: Any) -> str:
+        """`string` filter: nodes get rendered in the running loop (no run_sync thread)."""
+        if isinstance(value, self.node_type):
+            return await self._render_output(value)
+        return jinja2.filters.soft_str(value)
 
     async def render_nodes_async(
         self,
