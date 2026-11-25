@@ -398,7 +398,12 @@ class ZensicalWriter(Writer):
     ) -> list[str]:
         cmd = [sys.executable, "-m", self.module, "serve" if serve else "build"]
         cmd += ["-f", str(self.settings.generated_config_path)]
-        return cmd + list(extra_args or [])
+        args = list(extra_args or [])
+        if "--strict" in args and not serve and "--clean" not in args:
+            # Pages from the cache don't run the Markdown extensions again, so their
+            # diagnostics (failing `/// mknodes` / `python exec` blocks) would get lost.
+            args.append("--clean")
+        return cmd + args
 
     @classmethod
     def is_available(cls) -> bool:

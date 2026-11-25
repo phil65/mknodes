@@ -13,7 +13,7 @@ import jinjarope
 from jinjarope import inspectfilters
 
 from mknodes import rendering
-from mknodes.utils import coroutines, log
+from mknodes.utils import coroutines, diagnostics, log
 
 
 if TYPE_CHECKING:
@@ -125,7 +125,7 @@ class NodeEnvironment(jinjarope.Environment):
         for kls_name in mk.__all__:
 
             def wrapped(
-                ctx: Context,  # pyright: ignore[reportUnusedParameter]
+                ctx: Context,
                 *args: Any,
                 kls_name: str = kls_name,
                 **kwargs: Any,
@@ -157,7 +157,13 @@ class NodeEnvironment(jinjarope.Environment):
                         f"Signature: {signature_str}\n"
                         f"Called with args={args!r}, kwargs={kwargs!r}"
                     )
-                    logger.error(error_msg)  # noqa: TRY400
+                    template = getattr(ctx, "name", None)
+                    diagnostics.report(
+                        "node",
+                        f"Failed to create {kls_name}: {diagnostics.describe_exception(e)}",
+                        page=diagnostics.current_page.get() or diagnostics.node_page(self.node),
+                        location=f"template {template}" if template else None,
+                    )
 
                     # Create MkText node with error message
                     error_node = mk.MkText(error_msg, parent=self.node)

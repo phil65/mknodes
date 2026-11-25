@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from mknodes.info import contexts
+    from mknodes.utils.diagnostics import Diagnostic
 
 
 @dataclasses.dataclass
@@ -107,6 +108,8 @@ class BuildOutput:
     """Page path -> resources required by that page."""
     flavor: str = "material"
     """Markdown flavour the pages are rendered in."""
+    diagnostics: list[Diagnostic] = dataclasses.field(default_factory=list)
+    """Problems reported while building (failed nodes / blocks, broken fences, references)."""
 
     @property
     def files(self) -> dict[str, str | bytes]:

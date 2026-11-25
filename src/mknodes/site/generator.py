@@ -16,7 +16,7 @@ from mknodes.build import DocBuilder, refcheck
 from mknodes.info import contexts
 from mknodes.jinja import rendercache
 from mknodes.site import yamlconfig
-from mknodes.utils import linkreplacer, log
+from mknodes.utils import diagnostics, linkreplacer, log
 
 
 if TYPE_CHECKING:
@@ -108,9 +108,18 @@ class SiteGenerator:
     def generate(self) -> BuildOutput:
         """Run the build function and collect pages, nav and resources.
 
+        Problems which don't stop the build (failed nodes, broken code fences,
+        unresolved references) get logged and collected in `BuildOutput.diagnostics`.
+
         Setup and the build function run synchronously (nodes may
         do blocking I/O on creation), only the collection step runs in an event loop.
         """
+        with diagnostics.collect() as collected:
+            output = self._generate()
+        output.diagnostics = list(collected)
+        return output
+
+    def _generate(self) -> BuildOutput:
         theme = self.create_theme()
         ctx = self.create_context(theme)
         root = mk.MkNav(context=ctx)
@@ -169,7 +178,9 @@ class SiteGenerator:
             logger.info("Pointed %s references to their documented path", len(fixed))
         remaining = [i for i in issues if i not in fixed]
         for issue in remaining:
-            logger.warning("%s", issue)
+            location = f"line {issue.line}" if issue.line else None
+            message = str(issue).split(": ", 1)[1]
+            diagnostics.report("reference", message, page=issue.page, location=location)
         if remaining:
             logger.warning("%s unresolved references (see above)", len(remaining))
         return remaining

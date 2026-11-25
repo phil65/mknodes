@@ -33,6 +33,8 @@ from typing import TYPE_CHECKING, Any
 
 from markdown.extensions import Extension
 
+from mknodes.utils import diagnostics
+
 
 if TYPE_CHECKING:
     from markdown import Markdown
@@ -225,6 +227,12 @@ def formatter(
     try:
         output = _run_python(source, session=session)
     except Exception as e:  # noqa: BLE001
+        diagnostics.report(
+            "exec",
+            diagnostics.describe_exception(e),
+            page=diagnostics.page_of(md),
+            location=f"python exec block: {diagnostics.first_line(source)}",
+        )
         error_md = _format_error(source, e)
         return md.convert(error_md)
 

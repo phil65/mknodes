@@ -16,7 +16,7 @@ from pymdownx.blocks.block import Block  # type: ignore[import-untyped]
 from pymdownx.superfences import fence_code_format  # type: ignore[import-untyped]
 import yamling
 
-from mknodes.utils import icons
+from mknodes.utils import diagnostics, icons
 
 
 if TYPE_CHECKING:
@@ -134,6 +134,12 @@ class MkNodesBlock(Block):
                     content_div.text = rendered_html
 
         except Exception as e:  # noqa: BLE001
+            diagnostics.report(
+                "mknodes-block",
+                diagnostics.describe_exception(e),
+                page=diagnostics.page_of(self.md),
+                location=f"/// mknodes block: {diagnostics.first_line(jinja_content)}",
+            )
             # On error, show the error message with the template that failed
             block.clear()
             error_elem = ET.SubElement(block, "div")

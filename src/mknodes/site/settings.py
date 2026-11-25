@@ -55,6 +55,14 @@ class GeneratorSettings:
     """Render generated pages with the MkNodes Jinja environment."""
     global_resources: bool = True
     """Put CSS / JS into the site config instead of per-page template blocks."""
+    strict: bool = False
+    """Fail the build if it reported problems (build diagnostics).
+
+    Counted are: nodes which failed to get created in templates, failing `/// mknodes`
+    blocks and `python exec="true"` blocks (they render their error into the page),
+    broken code fences and unresolved `[title][identifier]` references. Without strict
+    mode they get logged as warnings. Also passed to the engine (`zensical build --strict`).
+    """
     flavor: str | None = None
     """Markdown flavour of the generated pages (`material`, `github`, `mdbook`).
 

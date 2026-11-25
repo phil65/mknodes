@@ -187,7 +187,7 @@ def test_generator_logs_issues(caplog: pytest.LogCaptureFixture):
     with caplog.at_level(logging.WARNING, logger="mknodes"):
         issues = gen.check_references(output, root)
     assert len(issues) == 1
-    assert "p.md:1: unresolved reference [N][mknodes.MkNav]" in caplog.text
+    assert "p.md (line 1): [reference] unresolved reference [N][mknodes.MkNav]" in caplog.text
 
 
 if __name__ == "__main__":

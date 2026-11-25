@@ -15,8 +15,33 @@ Site generator commands:
 - `mknodes serve`: `generate --watch` running next to `zensical serve`
   (live preview on http://localhost:8000/).
 
-Engines (`--engine`): `zensical` (default, HTML website) or `markdown` (plain Markdown files
-plus a `SUMMARY.md` nav, GitHub flavour). `--flavor` overrides the Markdown flavour, see
+Build diagnostics: problems that leave a page broken without stopping the build get logged as
+warnings and summarized at the end of `mknodes build` / `generate`:
+
+- a node that could not be created in a Jinja template
+  ({% raw %}`{{ "x" | MkAdmonition(nonsense=1) }}`{% endraw %}),
+- a failing `/// mknodes` block or `python exec="true"` block (they run inside the engine,
+  e.g. Zensical, and report back to `mknodes build`),
+- broken code fences in generated pages,
+- unresolved `[title][identifier]` references.
+
+Each diagnostic names the page and where on it (line, template, first line of the block).
+The error stays visible in the page for local work. With `--strict` (or `strict = true` in
+`[tool.mknodes]`) the build fails if there was any diagnostic, which is what CI should use:
+
+``` console
+$ mknodes build --strict
+ERROR    Strict mode: 1 build diagnostics (1 exec):
+           usage.md (python exec block: from pkg import Thing): [exec] ImportError: ...
+```
+
+`--strict` is also passed to the engine (`zensical build --strict --clean`: pages from the
+engine's cache would not run the Markdown extensions again). Diagnostics are also available
+from Python: `BuildOutput.diagnostics` (see `mknodes.utils.diagnostics`).
+
+Engines (`--engine`): `zensical` (default, HTML website), `mkdocs`, `mdbook` or `markdown`
+(plain Markdown files plus a `SUMMARY.md` nav, GitHub flavour), see
+[Site engines](../site_engines.md). `--flavor` overrides the Markdown flavour, see
 [Markdown flavours](<../../The nodes/markdown_flavours.md>).
 
 Other commands:

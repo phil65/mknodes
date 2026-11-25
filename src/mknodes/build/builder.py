@@ -14,7 +14,7 @@ from mknodes import rendering
 from mknodes.build import fencecheck, pagetemplates
 from mknodes.build.output import BuildOutput, Script, SiteMetadata, nav_from_dict
 from mknodes.mdlib import mdconverter
-from mknodes.utils import log, resources
+from mknodes.utils import diagnostics, log, resources
 
 
 if TYPE_CHECKING:
@@ -91,10 +91,19 @@ class DocBuilder:
     async def build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
         """Render given tree.
 
+        Problems which don't stop the build (failed nodes, broken code fences, ...) get
+        logged and collected in `BuildOutput.diagnostics`.
+
         Args:
             root: Root nav of the tree.
             theme: Theme whose resources, templates and extras get included.
         """
+        with diagnostics.collect() as collected:
+            output = await self._build(root, theme)
+        output.diagnostics = list(collected)
+        return output
+
+    async def _build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
         import mknodes as mk
 
         logger.info("Building documentation (flavor: %s)...", self.renderer.name)
@@ -139,7 +148,8 @@ class DocBuilder:
         self.renderer.finalize(output, root)
         for path, md in output.pages.items():
             for problem in fencecheck.check_fences(md):
-                logger.warning("%s: %s", path, problem)
+                location, _, message = problem.partition(": ")
+                diagnostics.report("fence", message, page=path, location=location)
         if theme:
             req.merge(await theme.get_resources())
             theme.adapt_extensions(req.markdown_extensions)
@@ -173,7 +183,11 @@ class DocBuilder:
 
     @logfire.instrument("Rendering page {page.title}")
     async def _render_page(self, page: mk.MkPage) -> PageResult:
-        path = page.resolved_file_path
+        path = pathlib.PurePath(page.resolved_file_path).as_posix()
+        with diagnostics.page_context(path):
+            return await self._render_page_content(page, path)
+
+    async def _render_page_content(self, page: mk.MkPage, path: str) -> PageResult:
         logger.debug("Rendering page %s", path)
         content = await self.renderer.render(page)
         md = content.markdown
