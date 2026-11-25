@@ -4,6 +4,7 @@ import os
 from typing import TYPE_CHECKING
 
 import mknodes as mk
+from mknodes.manual import flavors
 
 
 if TYPE_CHECKING:
@@ -119,6 +120,20 @@ nav = mk.MkNav("The nodes")
 @nav.route.page(is_index=True)
 def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("nodes_index.jinja")
+
+
+@nav.route.page("Markdown flavours", icon="material/language-markdown")
+def _(page: mk.MkPage) -> None:
+    documented = [
+        *BASE_NODES,
+        *IMAGE_NODES,
+        *PRESENTATION_NODES,
+        *DOCUMENTATION_NODES,
+        *ABOUT_THE_PROJECT_NODES,
+        *CONTAINER_NODES,
+        *SPECIAL_NODES,
+    ]
+    flavors.build_page(page, documented)
 
 
 @nav.route.nav("Base nodes")
