@@ -119,6 +119,11 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `DocBuilder` warns about unrecognised / unclosed code fences in rendered pages
   (`{directive}` info strings are valid); `refcheck.iter_markdown_lines` looks into
   backtick-fenced MyST directives with Markdown content.
+  `html.py`: flavour-aware Markdown -> HTML (`Renderer.to_html()`, used by
+  `MkNode.to_html(flavor=)` and the "Html" tab of node examples): Python-Markdown for
+  material, comrak via mkconvert for github / mdbook, markdown-it-py + MyST plugins with a
+  small directive -> HTML mapping for myst (approximation, real MyST needs Sphinx); comrak /
+  markdown-it-py come with the `html` extra, without it Python-Markdown + an HTML comment.
 - `utils/diagnostics.py`: build diagnostics (`report()` / `collect()`): failed nodes in
   templates, failing `/// mknodes` / `python exec` blocks (they still render the error into
   the page), broken fences, unresolved references; page from `page_context()` (set by

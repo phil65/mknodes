@@ -11,7 +11,7 @@ from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
 from mknodes import rendering
-from mknodes.utils import icons, log, mdconverter, reprhelpers, resources, coroutines
+from mknodes.utils import icons, log, reprhelpers, resources, coroutines
 
 
 if TYPE_CHECKING:
@@ -646,11 +646,17 @@ class MkNode:
         ctx = contexts.ProjectContext.for_project(repo_url or ".", base_url=base_url)
         return cls(*args, **kwargs, context=ctx)
 
-    async def to_html(self) -> str:
-        """Convert node to HTML using the resources from node + children."""
-        md = await self.to_markdown()
-        reqs = await self.get_resources()
-        configs = reqs.markdown_extensions
-        exts = list(configs.keys())
-        converter = mdconverter.MdConverter(extensions=exts, extension_configs=configs)
-        return converter.convert(md)
+    async def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Convert node to HTML using the resources from node + children.
+
+        The Markdown is rendered in given flavour (default: the active one) and converted
+        with a parser knowing that flavour (`Renderer.to_html`, see `rendering.html`).
+
+        Args:
+            flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
+        """
+        renderer = rendering.get_renderer(flavor)
+        with rendering.use(renderer):
+            md = await self.to_markdown()
+            reqs = await self.get_resources()
+        return renderer.to_html(md, reqs)

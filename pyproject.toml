@@ -95,6 +95,8 @@ mknodes = "mknodes.jinja:setup_env"
 "mknodes.execute" = "mknodes.mdext.execute_ext:makeExtension"
 
 [project.optional-dependencies]
+# Flavour-aware `to_html()`: comrak for GitHub / mdBook, markdown-it-py + MyST plugins for MyST.
+html = ["markdown-it-py>=3", "mdit-py-plugins>=0.4", "mkconvert[comrak]>=2.1.0"]
 llm = ["agentpool>=2.10"]
 mkdocs = ["mkdocs>=1.6", "mkdocs-material>=9.6"]
 sphinx = ["furo>=2024.8", "myst-parser>=4", "sphinx>=8", "sphinx-design>=0.6"]

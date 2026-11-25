@@ -10,6 +10,7 @@ from mknodes.utils import log, resources
 
 if TYPE_CHECKING:
     from mknodes.basenodes import mknode
+    from mknodes import rendering
     from collections.abc import Sequence
 
 
@@ -67,8 +68,8 @@ class MkList(mkcontainer.MkContainer):
             lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
 
-    async def to_html(self) -> str:
-        """Formats list in html as one single line.
+    async def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Formats list in html as one single line (same in every flavour).
 
         Can be useful for including in Tables.
         """

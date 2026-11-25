@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from mknodes.basenodes.processors import TextProcessor
     from mknodes.build.output import BuildOutput
     from mknodes.rendering import base
+    from mknodes.utils import resources
 
 
 # Material admonition type -> docutils admonition (the ones Sphinx themes style).
@@ -246,6 +247,11 @@ class MystRenderer(github.GithubRenderer):
     """Renders MyST Markdown for Sphinx (`myst-parser` + `sphinx-design`)."""
 
     name = "myst"
+
+    def to_html(self, markdown: str, reqs: resources.Resources | None = None) -> str:
+        from mknodes.rendering import html as html_render
+
+        return html_render.myst(markdown, reqs)
 
     def processors(self, node: mknode.MkNode) -> list[TextProcessor]:
         return [

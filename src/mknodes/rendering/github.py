@@ -21,6 +21,7 @@ from mknodes.utils import log
 if TYPE_CHECKING:
     from mknodes.basenodes import mknode
     from mknodes.build.output import BuildOutput
+    from mknodes.utils import resources
 
 
 logger = log.get_logger(__name__)
@@ -50,6 +51,11 @@ class GithubRenderer(base.Renderer):
 
     name = "github"
     template_key = "github"
+
+    def to_html(self, markdown: str, reqs: resources.Resources | None = None) -> str:
+        from mknodes.rendering import html as html_render
+
+        return html_render.comrak(markdown, reqs, flavor=self.name)
 
     def processors(self, node: mknode.MkNode) -> list[processors.TextProcessor]:
         result: list[processors.TextProcessor] = []

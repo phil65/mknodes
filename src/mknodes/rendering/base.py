@@ -126,6 +126,16 @@ class Renderer:
             return await rule(node, self)
         return await node.to_md_unprocessed()
 
+    def to_html(self, markdown: str, reqs: resources.Resources | None = None) -> str:
+        """Convert Markdown of this flavour to HTML (with a parser knowing the flavour).
+
+        The default uses Python-Markdown with the Markdown extensions of given resources
+        (Material flavour). See `mknodes.rendering.html`.
+        """
+        from mknodes.rendering import html as html_render
+
+        return html_render.python_markdown(markdown, reqs)
+
     def process(self, node: mknode.MkNode, text: str) -> str:
         """Run the text processors of given node on given text."""
         for proc in self.processors(node):

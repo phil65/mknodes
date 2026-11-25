@@ -68,7 +68,10 @@ The [MkNavs / Using decorators](<../MkNavs/Using decorators/index.md>) section i
 The base class of every node, page and nav: tree handling (`parent`, `children`,
 `iter_nodes()`), the project context (`ctx`), the Jinja environment (`env`) and the async
 rendering API (`await node.to_markdown()`, `to_html()`, `get_resources()`; sync code uses
-`to_markdown_sync()`). Its node page
+`to_markdown_sync()`). `to_html(flavor=...)` converts with a parser that knows the flavour:
+Python-Markdown for `material`, comrak for `github` / `mdbook`, markdown-it-py with the MyST
+plugins (directives mapped to Sphinx-like HTML, an approximation) for `myst`; the last two
+need the `html` extra (`pip install mknodes[html]`). Its node page
 ([MkNode](<../The nodes/Base nodes/mknode.md>)) shows the examples.
 """,
     "Theming": """\
@@ -123,6 +126,7 @@ import mknodes as mk
 node = mk.MkAdmonition("Careful!", typ="warning")
 markdown = await node.to_markdown()
 html = await node.to_html()
+github_html = await node.to_html(flavor="github")  # needs mknodes[html]
 resources = await node.get_resources()  # Markdown extensions, CSS, JS
 """,
     "Theming": """\
