@@ -12,7 +12,7 @@ from anyenv import run_sync
 
 import mknodes as mk
 from mknodes import rendering
-from mknodes.build import DocBuilder
+from mknodes.build import DocBuilder, refcheck
 from mknodes.info import contexts
 from mknodes.jinja import rendercache
 from mknodes.site import yamlconfig
@@ -21,6 +21,7 @@ from mknodes.utils import linkreplacer, log
 
 if TYPE_CHECKING:
     from mknodes.build import BuildOutput, NavItem
+    from mknodes.build.refcheck import RefIssue
     from mknodes.site.settings import GeneratorSettings
 
 
@@ -138,7 +139,38 @@ class SiteGenerator:
         output = run_sync(builder.build(root, theme))
         resolve_url_collisions(output)
         self.replace_links(output)
+        self.check_references(output, root)
         return output
+
+    def check_references(self, output: BuildOutput, root: mk.MkNav) -> list[RefIssue]:
+        """Check the `[title][identifier]` references of the pages before the engine runs.
+
+        References engines can't resolve but which point to a rendered object under
+        another path (members of import aliases, inherited members) get rewritten,
+        a warning gets logged for each remaining one (with page, node and the template /
+        source line it comes from).
+
+        Returns:
+            The references which could not get fixed.
+        """
+        package = root.ctx.metadata.distribution_name.replace("-", "_")
+        issues = refcheck.check_output(
+            output,
+            root,
+            packages=[package],
+            inventory=root.ctx.links.inv_manager,
+        )
+        fixed = refcheck.fix_references(output, issues)
+        for issue in fixed:
+            logger.debug("Rewrote reference: %s", issue)
+        if fixed:
+            logger.info("Pointed %s references to their documented path", len(fixed))
+        remaining = [i for i in issues if i not in fixed]
+        for issue in remaining:
+            logger.warning("%s", issue)
+        if remaining:
+            logger.warning("%s unresolved references (see above)", len(remaining))
+        return remaining
 
     def replace_links(self, output: BuildOutput) -> None:
         """Point bare `[title](file.md)` links in generated pages to the actual page path."""

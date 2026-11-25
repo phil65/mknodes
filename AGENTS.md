@@ -49,7 +49,10 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   resources / templates / extras) into `assets`, `extra_css`, `extra_javascript`,
   `markdown_extensions`, `templates` and the nav into a `NavItem` tree (`output.py`
   `BuildOutput`). Sequential unless `max_workers > 1`. `MarkdownExporter` (`exporter.py`) writes
-  pages + assets + `SUMMARY.md`.
+  pages + assets + `SUMMARY.md`. `refcheck.py`: validates `[title][dotted.path]` references
+  (autorefs) of a `BuildOutput` against the objects its `:::` blocks render (+ inventories),
+  with page / node / template line; `fix_references` rewrites the ones pointing to a rendered
+  object under another path. Run by the generator (`SiteGenerator.check_references`).
 - `site/`: the site generator. Layering: core modules never import `mknodes.site` / `mknodes.cli`
   (`tests/test_layering.py`).
   - `settings.py` `GeneratorSettings`: read from the `mknodes` entry of the `plugins` list in
@@ -170,6 +173,12 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
   URLs can't collide. Class pages are registered in `ctx.links` (`register_object_page`), so
   `get_link` on a class / module yields a relative link to its page. Changing the scheme
   changes live URLs of all docs sites (minor release at least). `flatten_nav` has no effect.
+- autorefs (zensical 0.1.3) only resolves `[x][path]` if a page renders the object with
+  mkdocstrings: the rendered path, its members, the canonical path and import aliases
+  (`pkg.Klass` for a rendered `pkg.sub.Klass`), but not members via an alias
+  (`pkg.Klass.method`), inherited members, roots with `show_root_toc_entry: False` or `:::`
+  blocks inside raw HTML (`<div markdown="1">`). The mknodes manual has no API section: link
+  only objects some page renders (node pages, `## API` sections), `refcheck` warns otherwise.
 - `mknodes.execute` (`mdext/execute_ext.py`) `auto_register` does not take effect; register the
   fences explicitly via `get_custom_fences()` in the superfences config.
 - `MkTemplate` paths are relative to `docs/`; the manual breaks if templates move.
