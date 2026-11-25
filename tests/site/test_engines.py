@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import tomllib
 from typing import TYPE_CHECKING
+from unittest import mock
 
 import pytest
 
@@ -115,7 +116,9 @@ def test_mdbook_writer(project: pathlib.Path):
     assert "/src/SUMMARY.md" in (book / ".gitignore").read_text()
     # regenerating without changes keeps files untouched
     assert _write_book(project).folder.changed == []
-    assert writer.build_command(extra_args=["--strict"]) == ["mdbook", "build", str(book)]
+    with mock.patch("shutil.which", return_value="/usr/bin/mdbook"):
+        cmd = writer.build_command(extra_args=["--strict"])
+    assert cmd == ["mdbook", "build", str(book)]
 
 
 def test_mdbook_admonish(project: pathlib.Path):
