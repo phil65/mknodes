@@ -33,6 +33,15 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `pyproject.py`, `linkprovider.py`, registries for packages/repos/griffe.
 - `jinja/`: `NodeEnvironment` (`nodeenvironment.py`, a `jinjarope.Environment` exposing all nodes
   as filters/globals) and `filters.py`. Registered as `jinjarope.environment` entry point.
+  Nodes created by a template are collected **per render** (`NodeEnvironment.render_nodes[_async]()`
+  -> `RenderResult(markdown, nodes, children, resources)`, collector in a context variable; nested
+  renders of the same env add to the outer one). `{{ node }}` is awaited in the running loop via
+  `NodeCodeGenerator` (hooks Jinja's private `_output_child_pre/_post`: re-check on Jinja updates)
+  instead of `str(node)` -> `run_sync`. Template nodes (`MkTemplate`, `MkTemplatePage`,
+  `MkTemplateTable`, `MkText(render_jinja=True)`) use `jinja/rendercache.TemplateRenderMixin`:
+  one render per flavour serves children and content; setting an attribute drops the cache,
+  in-place mutation (e.g. `node.variables["x"] = 1`) does not. `env.rendered_nodes` /
+  `rendered_children` are deprecated (last render only).
 - `theme/`: `Theme`, `MaterialTheme` (palette, colors, status icons).
 - `build/`: tree -> engine-neutral output. `DocBuilder` (`builder.py`): renders every page in
   a flavour (`flavor=`), page info box, wires page templates (`pagetemplates.py`, also moves
