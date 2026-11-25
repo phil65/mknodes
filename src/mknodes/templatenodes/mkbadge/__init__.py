@@ -19,6 +19,25 @@ StyleStr = Literal["default", "gitlab-scoped"]
 
 
 @functools.cache
+def _import_anybadge() -> Any:
+    """Import anybadge, working around its slow emoji check.
+
+    Without the optional `emoji` package, anybadge 1.18 retries `import emoji` for every
+    character of a badge text (a failing import searches the whole `sys.path`): ~40 ms
+    per badge. Use its regex fallback directly in that case.
+    """
+    import importlib.util
+
+    import anybadge  # type: ignore[import-untyped]
+    from anybadge import helpers  # type: ignore[import-untyped]
+
+    if importlib.util.find_spec("emoji") is None:
+        regex = helpers.EMOJI_REGEX
+        helpers.is_emoji = lambda character: bool(regex.match(character))
+    return anybadge
+
+
+@functools.cache
 def get_badge(
     label: str = "",
     value: str = "",
@@ -30,8 +49,7 @@ def get_badge(
     text_color: str | None = None,
     use_gitlab_style: bool = False,
 ) -> str:
-    import anybadge  # type: ignore[import-untyped]
-
+    anybadge = _import_anybadge()
     badge = anybadge.Badge(
         label=html.escape(label),
         value=html.escape(value),

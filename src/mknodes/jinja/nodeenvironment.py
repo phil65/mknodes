@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import asyncio
-import contextlib
 import functools
 import inspect
 import pathlib
@@ -50,20 +48,11 @@ class NodeEnvironment(jinjarope.Environment):
         import mknodes as mk
 
         self._node_filters: dict[str, Callable[..., mk.MkNode]] = {}
-        self._wrapped_klasses: dict[str, type[_WrappedMkNode]] = {}
+        # Wrapper classes for `mk.MkXyz(...)` in templates, created on first access
+        # (creating ~85 classes per environment is expensive and rarely needed).
+        self._wrapped_klasses = _WrappedClasses(self)
 
         for kls_name in mk.__all__:
-            klass: Any = getattr(mk, kls_name)
-
-            class _WrappedMkNode(klass):
-                def __post_init__(_self) -> None:  # noqa: N805
-                    _self.parent = self.node
-                    self.rendered_nodes.append(_self)
-
-            functools.update_wrapper(_WrappedMkNode, klass, updated=[])
-            # we add <locals> here so that the classes get filtered in iter_subclasses
-            _WrappedMkNode.__qualname__ = "<locals>." + _WrappedMkNode.__qualname__
-            self._wrapped_klasses[kls_name] = _WrappedMkNode
 
             def wrapped(
                 ctx: Context,  # pyright: ignore[reportUnusedParameter]
@@ -149,16 +138,6 @@ class NodeEnvironment(jinjarope.Environment):
     #             paths.append(path.as_posix())
     #     return paths
 
-    @contextlib.contextmanager
-    def _patch_asyncio_run(self):
-        """Temporarily patch asyncio.run to handle nested event loops."""
-        original_run = asyncio.run
-        asyncio.run = coroutines.run_sync  # type: ignore[assignment]
-        try:
-            yield
-        finally:
-            asyncio.run = original_run
-
     def render_template(
         self,
         template_name: str,
@@ -178,18 +157,15 @@ class NodeEnvironment(jinjarope.Environment):
             parent_template: The name of the parent template importing this template
             kwargs: Additional variables for the render call
         """
-        self.rendered_nodes = []
-        self.setup_environment()
-        with self._patch_asyncio_run():
-            result = super().render_template(
-                template_name,
-                variables=variables,
-                block_name=block_name,
-                parent_template=parent_template,
-                **kwargs,
-            )
-        self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
-        return result
+        # The environment is async: render via the async version (no global patching).
+        coro = self.render_template_async(
+            template_name,
+            variables=variables,
+            block_name=block_name,
+            parent_template=parent_template,
+            **kwargs,
+        )
+        return coroutines.run_sync(coro)
 
     async def render_template_async(
         self,
@@ -237,12 +213,7 @@ class NodeEnvironment(jinjarope.Environment):
             variables: Extra variables for the environment
             kwargs: Additional variables for the render call
         """
-        self.rendered_nodes = []
-        self.setup_environment()
-        with self._patch_asyncio_run():
-            result = super().render_string(string, variables, **kwargs)
-        self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
-        return result
+        return coroutines.run_sync(self.render_string_async(string, variables, **kwargs))
 
     async def render_string_async(
         self,
@@ -264,6 +235,33 @@ class NodeEnvironment(jinjarope.Environment):
         result = await super().render_string_async(string, variables, **kwargs)
         self.rendered_children = [i for i in self.rendered_nodes if i.parent == self.node]
         return result
+
+
+class _WrappedClasses(dict[str, type]):
+    """`mk` namespace of templates: node classes whose instances get attached to the node."""
+
+    def __init__(self, env: NodeEnvironment) -> None:
+        super().__init__()
+        self.env = env
+
+    def __missing__(self, kls_name: str) -> type:
+        import mknodes as mk
+
+        if kls_name not in mk.__all__:
+            raise KeyError(kls_name)
+        klass: Any = getattr(mk, kls_name)
+        env = self.env
+
+        class _WrappedMkNode(klass):
+            def __post_init__(_self) -> None:  # noqa: N805
+                _self.parent = env.node
+                env.rendered_nodes.append(_self)
+
+        functools.update_wrapper(_WrappedMkNode, klass, updated=[])
+        # we add <locals> here so that the classes get filtered in iter_subclasses
+        _WrappedMkNode.__qualname__ = "<locals>." + _WrappedMkNode.__qualname__
+        self[kls_name] = _WrappedMkNode
+        return _WrappedMkNode
 
 
 if __name__ == "__main__":

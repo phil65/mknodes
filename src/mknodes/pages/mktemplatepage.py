@@ -4,6 +4,7 @@ from typing import Any
 
 from mknodes.pages import mkpage
 from mknodes.utils import log, resources
+from mknodes.utils.memo import memoize_on
 
 
 logger = log.get_logger(__name__)
@@ -32,6 +33,7 @@ class MkTemplatePage(mkpage.MkPage):
         self.template_path = template_path
         self.template_parent = template_parent
 
+    @memoize_on("template_path", "template_parent")
     def get_items(self):
         self.env.render_template(
             self.template_path,

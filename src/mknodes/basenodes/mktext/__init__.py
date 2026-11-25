@@ -6,6 +6,7 @@ from jinjarope import mdfilters
 
 from mknodes.basenodes import mknode
 from mknodes.utils import log, pathhelpers
+from mknodes.utils.memo import memoize_on
 
 
 logger = log.get_logger(__name__)
@@ -47,7 +48,7 @@ class MkText(mknode.MkNode):
     async def get_text(self) -> str:
         if not self.render_jinja:
             return self._text
-        return self.env.render_string(self._text)
+        return await self.env.render_string_async(self._text)
 
     def set_text(self, value: str) -> None:
         self._text = value
@@ -55,6 +56,7 @@ class MkText(mknode.MkNode):
     async def to_md_unprocessed(self) -> str:
         return await self.get_text()
 
+    @memoize_on("_text", "render_jinja")
     def get_children(self) -> list[mknode.MkNode]:
         """Return children nodes.
 

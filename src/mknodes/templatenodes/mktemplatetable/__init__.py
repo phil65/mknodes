@@ -3,6 +3,7 @@ from typing import Any, TYPE_CHECKING
 
 from mknodes.basenodes import mknode
 from mknodes.utils import resources
+from mknodes.utils.memo import memoize_on
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -36,6 +37,7 @@ class MkTemplateTable(mknode.MkNode):
             text += "| " + " | ".join(strs) + " |\n"
         return f"{header}\n{divider}\n{text}"
 
+    @memoize_on("layout")
     def get_children(self):
         children = []
         nodefile = self.get_nodefile()

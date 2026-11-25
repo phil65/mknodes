@@ -5,6 +5,7 @@ from typing import Any
 from mknodes.basenodes import mkcontainer
 from mknodes.pages import metadata
 from mknodes.utils import log, resources
+from mknodes.utils.memo import memoize_on
 
 
 logger = log.get_logger(__name__)
@@ -43,6 +44,7 @@ class MkTemplate(mkcontainer.MkContainer):
         self.block = block
         self.variables = variables or {}
 
+    @memoize_on("template", "block")
     def get_items(self):
         self.env.render_template(self.template, variables=self.variables, block_name=self.block)
         return self.env.rendered_children
