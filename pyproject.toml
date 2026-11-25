@@ -5,7 +5,7 @@ name = "mknodes"
 version = "4.1.0"
 description = "Build Markdown documentation in Python from composable, project-aware nodes."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 license = { file = "LICENSE" }
 authors = [
   { name = "Philipp Temminghoff", email = "philipptemminghoff@gmail.com" },
@@ -26,7 +26,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: Implementation :: CPython",
   "Topic :: Documentation",
@@ -158,7 +157,7 @@ allowed-commit-types = [
 docstring-style = "google"
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 pretty = true
 check_untyped_defs = true
 exclude = ["venv/", ".venv/", "tests/"]
@@ -167,7 +166,7 @@ plugins = []
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-pythonVersion = "3.13"
+pythonVersion = "3.14"
 pythonPlatform = "All"
 typeCheckingMode = "basic"
 deprecateTypingAliases = true
@@ -199,7 +198,7 @@ asyncio_mode = "auto"
 [tool.ruff]
 line-length = 100
 extend-exclude = ["docs"]
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 future-annotations = true
