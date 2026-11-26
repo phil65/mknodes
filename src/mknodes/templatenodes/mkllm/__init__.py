@@ -43,7 +43,7 @@ class MkLlm(mktext.MkText):
         self,
         user_prompt: str,
         system_prompt: str | None = None,
-        model: str | ModelName = "openai:gpt-4o-mini",
+        model: str | ModelName = "openai:gpt-6-luna",
         context: str | None = None,
         extra_files: Sequence[str | os.PathLike[str]] | None = None,
         **kwargs: Any,
@@ -119,5 +119,5 @@ class MkLlm(mktext.MkText):
 
 
 if __name__ == "__main__":
-    node = MkLlm("Say hello, introduce yourself", model="openai:gpt-5-nano")
+    node = MkLlm("Say hello, introduce yourself", model="openai:gpt-6-luna")
     print(node)

@@ -107,10 +107,10 @@
       }
     },
     "llm": {
-      "openai:gpt-5-nano:ba2d52ad4c2739f6c016bad8": {
-        "fetched_at": "2026-11-26T07:50:30Z",
+      "openai:gpt-6-luna:a49d2a7669d6fb73fb694f06": {
+        "fetched_at": "2026-11-26T10:19:46Z",
         "source": "agentpool",
-        "value": "MkDocs wakes with a quiet CLI breath,\na craftsman of pages, a map for the mind.\nFrom Markdown threads, a house takes form,\na documentation library, arranged and kind.\n\nIn mkdocs.yml, the routes are drawn,\nnav lines charting staircases and doors.\nThemes cloak the skeleton in patient light—\nRead the Docs, Material, or colors you adore.\n\nDocs holds the chapters, gloss and guide,\nlabels and headings become rooms you explore.\nLinks thread through nav like constellations,\nthe structure a chorus you can hear once more.\n\nRun mkdocs serve, and watch it wake,\nthe dev server breathing as you save.\nA browser window glows with the growing site,\nlive reload humming like a friendly engine.\n\nBuild to site/, ship to the world outside,\na static harbor where pages load in a blink.\nHost on GitHub Pages, Netlify, or beyond,\nyour knowledge sails steady, bright as dawn.\n\nMkDocs, a quiet poem written in code,\nturning documentation into a place you can walk."
+        "value": "**The MkDocs Lantern**\n\nFrom Markdown’s quiet pages,  \na little lantern grows—  \nMkDocs gathers every heading,  \nevery link, and note, and knows\n\nhow to turn a folder’s whispers  \ninto paths of polished light,  \nwith a theme to frame the reading  \nand a search that shines at night.\n\nOne command, and files are traveling  \nthrough the browser, clean and clear;  \nwhat began as words in plain text  \nbecomes a guide for all to hear.\n\nSo build the map, arrange the chapters,  \nlet each reference find its place—  \nMkDocs makes a home for knowledge,  \none bright page at a time."
       }
     }
   },
