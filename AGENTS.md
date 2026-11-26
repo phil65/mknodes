@@ -29,7 +29,8 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
 - `navs/`: `MkNav` (`mknav.py`), `MkDoc` (auto API docs), `MkCliNav`, `Router` (`router.py`,
   decorator-based routing: `nav.route.page(...)`), `navparser.py` (SUMMARY.md / folder parsing).
 - `info/`: project introspection: `contexts.py` (`ProjectContext`, `PackageContext`,
-  `GitContext`, `ThemeContext`, ...), `folderinfo.py`, `packageinfo.py`, `gitrepository.py`,
+  `GitContext`, `ThemeContext`, ...), `folderinfo.py`, `projectlayout.py` (distribution /
+  import packages / layout, see `design/project-metadata.md`), `packageinfo.py`, `gitrepository.py`,
   `pyproject.py`, `linkprovider.py`, registries for packages/repos/griffe.
 - `jinja/`: `NodeEnvironment` (`nodeenvironment.py`, a `jinjarope.Environment` exposing all nodes
   as filters/globals) and `filters.py`. Registered as `jinjarope.environment` entry point.
@@ -232,7 +233,12 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - Downstream users: many docs sites import node classes and helpers directly.
 - `utils.log.get_logger(name)` returns loggers below `mknodes` (names outside the namespace get
   prefixed), so all output can be configured via the `mknodes` logger.
+- Repository name, distribution name and import packages are independent
+  (`design/project-metadata.md`): never derive a package from the repo / folder name. Import
+  packages come from `[tool.mknodes] packages` / the build backend config / the installed
+  dist / a `src` scan; primary = `[tool.mknodes] package`, else the one matching
+  `[project.name]`. Not installed projects work (metadata synthesized from pyproject).
 - Repositories without an `origin` remote work: `GitRepository.remote_url` falls back to the
-  first remote, `repo_name` to the folder name; the package name then comes from pyproject.
+  first remote, `repo_name` to the folder name.
 - Generated files: `docs/.gitignore` / `overrides/.gitignore` are manifests written by the
   site generator; `mkdocs.generated.yml` is regenerated on every run.
