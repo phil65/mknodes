@@ -10,7 +10,7 @@ import re
 from typing import TYPE_CHECKING, BinaryIO, Self
 import zlib
 
-from mknodes.utils import downloadhelpers, helpers, log
+from mknodes.utils import helpers, log, pathhelpers
 
 
 if TYPE_CHECKING:
@@ -200,7 +200,7 @@ class Inventory(BaseInventory):
             base_url: The base url for the inventory, if different from download url
             domains: The domains to include
         """
-        data = downloadhelpers.download(url)
+        data = pathhelpers.load_bytes(url)
         buffer = io.BytesIO(data)
         if base_url is None:
             base_url = os.path.dirname(url)  # noqa: PTH120

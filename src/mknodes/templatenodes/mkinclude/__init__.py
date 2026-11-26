@@ -1,7 +1,6 @@
 import os
 
 from typing import Any
-from urllib import parse
 
 from mknodes import inputs
 from mknodes.basenodes import mktext
@@ -33,11 +32,8 @@ class MkInclude(mktext.MkText):
         self.target = target
 
     def _remote_url(self) -> str | None:
-        """Return the target if it is an http(s) URL (pinned in the lock file)."""
-        if isinstance(self.target, str) and parse.urlsplit(self.target).scheme in {
-            "http",
-            "https",
-        }:
+        """Return the target if it is a remote URL (pinned in the lock file)."""
+        if isinstance(self.target, str) and pathhelpers.is_remote(self.target):
             return self.target
         return None
 

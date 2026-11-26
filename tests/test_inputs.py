@@ -370,3 +370,114 @@ def test_cli_lock_file_and_offline(tmp_path: pathlib.Path, monkeypatch: pytest.M
     assert result.exit_code == 1
     assert "icon: mdi:folder" in result.output
     assert "missing from the lock file" in result.output
+
+
+async def test_remote_files_go_through_the_store(no_network, tmp_path, monkeypatch):
+    """Remote files (any fsspec protocol) are `file` / `binary_file` inputs, local ones not."""
+    import base64
+
+    from mknodes.inputs import kinds
+    from mknodes.utils import pathhelpers
+
+    files = {
+        "memory://inputs/page.md": b"# Remote page\n\ntext",
+        "memory://inputs/image.png": b"\x89PNG-bytes",
+    }
+
+    async def fake_fetch(url: str) -> bytes:
+        return files[url]
+
+    monkeypatch.setattr(kinds, "_fetch_bytes", fake_fetch)
+    store = InputStore()
+    with inputs.use_store(store):
+        await store.resolve([
+            InputRequest.create("file", url="memory://inputs/page.md"),
+            InputRequest.create("binary_file", url="memory://inputs/image.png"),
+        ])
+        files.clear()  # from now on only the store has them
+        assert pathhelpers.load_file("memory://inputs/page.md").startswith("# Remote page")
+        assert mk.MkText.from_url("memory://inputs/page.md#Remote page") is not None
+        image = mk.MkBinaryImage.for_file("memory://inputs/image.png")
+        assert image.data == b"\x89PNG-bytes"
+        from mknodes.extranodes.mkcodeimage import MkCodeImage
+
+        code = MkCodeImage.for_file("memory://inputs/page.md")
+        assert code.title == "page.md"
+    assert store.entries["binary_file", "memory://inputs/image.png"].value == (
+        base64.b64encode(b"\x89PNG-bytes").decode()
+    )
+    assert pathhelpers.is_remote("https://example.com/a.md")
+    assert pathhelpers.is_remote("github://phil65:mknodes@main/README.md")
+    assert not pathhelpers.is_remote("docs/index.md")
+    assert not pathhelpers.is_remote("file:///tmp/x.md")
+    assert not pathhelpers.is_remote(r"C:\docs\x.md")
+    local = tmp_path / "local.md"
+    local.write_bytes(b"line\r\n")
+    assert pathhelpers.load_file(local) == "line\r\n"
+
+
+async def test_jinja_load_file_reads_remote_files_from_the_store(no_network, tmp_path):
+    url = "https://example.com/snippet.md"
+    ctx = _offline_ctx(tmp_path, {"file": {url: "snippet from the lock"}})
+    with inputs.use_store(ctx.inputs):
+        node = mk.MkText(f"{{{{ '{url}' | load_file }}}}", render_jinja=True, context=ctx)
+        assert await node.to_markdown() == "snippet from the lock"
+
+
+async def test_mkpydeps_and_mkcommandoutput_run_in_the_resolve_phase(monkeypatch):
+    """Pydeps / shell commands are unlocked inputs: computed before rendering."""
+    from jinjarope import envglobals
+
+    from mknodes.templatenodes import mkpydeps
+
+    calls: list[str] = []
+
+    def fake_svg(folder_name: str, **_kwargs: Any) -> str:
+        calls.append(f"pydeps {folder_name}")
+        return "<svg>deps</svg>"
+
+    def fake_call(call: str, cwd: str | None = None, use_cache: bool = False) -> str:
+        calls.append(f"run {call}")
+        return "command output"
+
+    monkeypatch.setattr(mkpydeps, "get_dependency_svg", fake_svg)
+    monkeypatch.setattr(envglobals, "get_output_from_call", fake_call)
+    ctx = contexts.ProjectContext(inputs=InputStore())
+    nav = mk.MkNav(context=ctx)
+    page = nav.add_page("Tools", is_index=True)
+    page += mk.MkPyDeps("src/mknodes", max_bacon=1)
+    page += mk.MkCommandOutput(["mytool", "--help"])
+    page += mk.MkText("{{ ['other', '--version'] | check_output }}", render_jinja=True)
+    output = await DocBuilder().build(nav)
+    md = output.pages["index.md"]
+    assert "<svg>deps</svg>" in md
+    assert md.count("command output") == 2  # noqa: PLR2004
+    assert sorted(calls) == ["pydeps src/mknodes", "run mytool --help", "run other --version"]
+    assert {kind for kind, _ in ctx.inputs.fetched} == {"pydeps", "command"}
+    assert ctx.inputs.to_lock_data()["inputs"] == {}  # unlocked: not in the lock file
+
+
+def test_license_text_without_license_file_comes_from_the_store(monkeypatch, tmp_path):
+    from mknodes.info import folderinfo
+
+    store = InputStore()
+    store.entries["license", "mit"] = inputs.InputEntry({"content": "MIT text"}, "", "tests")
+    info = folderinfo.FolderInfo(pathlib.Path(__file__).parents[1])
+    monkeypatch.setattr(folderinfo.FolderInfo, "license_file_path", None)
+    monkeypatch.setattr(type(info.info), "license_name", property(lambda _self: "MIT"))
+    with inputs.use_store(store):
+        assert info.license_text == "MIT text"
+
+
+def test_build_time_is_fixed_and_honours_source_date_epoch(monkeypatch):
+    from mknodes.utils import buildtime
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    buildtime.build_time.cache_clear()
+    try:
+        assert buildtime.build_time().year == 2023  # noqa: PLR2004
+        assert buildtime.utcnow() == buildtime.build_time()
+        node = mk.MkText("{{ utcnow().year }}", render_jinja=True)
+        assert node.to_markdown_sync() == "2023"
+    finally:
+        buildtime.build_time.cache_clear()

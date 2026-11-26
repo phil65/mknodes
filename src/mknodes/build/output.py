@@ -1,11 +1,11 @@
 """Build output: everything a node tree produced, independent of the target."""
 
 import dataclasses
-from datetime import datetime
 import pathlib
 import posixpath
 from typing import TYPE_CHECKING, Any
 
+from mknodes.utils import buildtime
 from mknodes.utils.resources import Resources
 
 
@@ -69,7 +69,7 @@ class SiteMetadata:
             site_description=info.summary,
             site_author=info.author_name,
             repo_url=info.repository_url,
-            copyright=f"Copyright © {datetime.now().year} {info.author_name}",
+            copyright=f"Copyright © {buildtime.build_time().year} {info.author_name}",
             social=list(info.social_info or []),
         )
 

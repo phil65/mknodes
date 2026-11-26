@@ -21,6 +21,8 @@ from mknodes.inputs.store import (
     InputStore,
     MissingInputError,
     active_store,
+    default_store,
+    get_input,
     use_store,
 )
 
@@ -36,6 +38,8 @@ __all__ = [
     "InputUnavailableError",
     "MissingInputError",
     "active_store",
+    "default_store",
+    "get_input",
     "get_kind",
     "register_kind",
     "use_store",

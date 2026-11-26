@@ -35,6 +35,7 @@ def _isolated_inputs(monkeypatch: pytest.MonkeyPatch):
     resolved inputs (icons, ...) from test to test.
     """
     from mknodes.basenodes import mknode
-    from mknodes.inputs import InputStore
+    from mknodes.inputs import InputStore, store
 
     monkeypatch.setattr(mknode.get_fallback_ctx(), "inputs", InputStore())
+    monkeypatch.setattr(store, "_default", None)

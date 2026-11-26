@@ -6,7 +6,7 @@ from jinjarope import textfilters
 import upath
 
 from mknodes.basenodes import mknode
-from mknodes.utils import classhelpers, inspecthelpers, log
+from mknodes.utils import classhelpers, inspecthelpers, log, pathhelpers
 import os
 
 if TYPE_CHECKING:
@@ -92,10 +92,12 @@ class MkCodeImage(mknode.MkNode):
             title: title to use for the code box. If None is set, filename will be used.
             kwargs: Keyword arguments passed to MkCode ctor
         """
-        opts = storage_options or {}
-        file = upath.UPath(path if isinstance(path, str) else str(path), **opts)
-        content = file.read_text("utf-8")
-        title = file.name if title is None else title
+        if pathhelpers.is_remote(path) and not storage_options:
+            content = pathhelpers.load_file(path)  # inputs store (lock file)
+        else:
+            file = upath.UPath(os.fspath(path), **(storage_options or {}))
+            content = file.read_text("utf-8")
+        title = upath.UPath(os.fspath(path)).name if title is None else title
         return cls(content, title=title, **kwargs)
 
     @classmethod

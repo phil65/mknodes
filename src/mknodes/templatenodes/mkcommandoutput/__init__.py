@@ -1,5 +1,6 @@
 from typing import Any, TYPE_CHECKING
 
+from mknodes import inputs
 from mknodes.templatenodes import mktemplate
 from mknodes.utils import log, resources
 
@@ -30,6 +31,18 @@ class MkCommandOutput(mktemplate.MkTemplate):
     @property
     def cwd(self):
         return self.ctx.metadata.repository_path
+
+    def _command_params(self) -> dict[str, Any]:
+        cwd = self.cwd
+        return dict(call=" ".join(self.call), cwd=str(cwd) if cwd else None)
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        return [inputs.InputRequest.create("command", **self._command_params())]
+
+    @property
+    def output(self) -> str | None:
+        """Output of the command (run in the resolve phase, inputs store kind `command`)."""
+        return self.ctx.inputs.get("command", **self._command_params())
 
 
 if __name__ == "__main__":

@@ -7,14 +7,13 @@ import pathlib
 import re
 from typing import TYPE_CHECKING
 
-from anyenv import run_sync
 import yamling
 
+from mknodes import inputs
 from mknodes.data import installmethods, taskrunners, tools
 from mknodes.info import (
     contexts,
     grifferegistry,
-    license as lic,
     mkdocsconfigfile,
     packageregistry,
     projectlayout,
@@ -240,8 +239,8 @@ class FolderInfo:
         if self.license_file_path:
             return self.license_file_path.read_text(encoding="utf-8")
         if license_name := self.info.license_name:
-            obj = run_sync(lic.License.from_name(license_name))
-            return obj.content
+            # SPDX text: an external input (inputs store kind `license`, lock file).
+            return inputs.get_input("license", name=license_name)["content"]
         return None
 
     @functools.cached_property

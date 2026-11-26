@@ -3,6 +3,7 @@ import contextvars
 import dataclasses
 import functools
 import inspect
+import os
 import pathlib
 from typing import TYPE_CHECKING, Any
 
@@ -11,12 +12,12 @@ from jinja2 import compiler
 import jinjarope
 from jinjarope import inspectfilters
 
-from mknodes import rendering
-from mknodes.utils import coroutines, diagnostics, log
+from mknodes import inputs, rendering
+from mknodes.utils import buildtime, coroutines, diagnostics, log, pathhelpers
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Sequence
 
     from jinja2.runtime import Context
 
@@ -204,8 +205,10 @@ class NodeEnvironment(jinjarope.Environment):
             self._loader_key = loader_key
 
         self.filters.update(self._node_filters)
+        self.filters.update(_INPUT_FILTERS)
         self.filters["string"] = self._string_filter
         self.filters["get_doc"] = _get_doc
+        self.globals.update(_INPUT_GLOBALS)  # pyright: ignore[reportArgumentType]
         self.globals["parent_page"] = self.node.parent_page  # pyright: ignore[reportArgumentType]
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None  # pyright: ignore[reportArgumentType]
         self.globals["node"] = self.node  # pyright: ignore[reportArgumentType]
@@ -425,6 +428,35 @@ class _WrappedClasses(dict[str, type]):
         _WrappedMkNode.__qualname__ = "<locals>." + _WrappedMkNode.__qualname__
         self[kls_name] = _WrappedMkNode
         return _WrappedMkNode
+
+
+def _load_file(path: str | os.PathLike[str]) -> str:
+    """`load_file` filter: remote files come from the inputs store (lock file)."""
+    return pathhelpers.load_file(path)
+
+
+def _check_output(
+    call: str | Sequence[str],
+    cwd: str | os.PathLike[str] | None = None,
+    use_cache: bool = False,
+) -> str | None:
+    """`check_output` filter: the command runs in the resolve phase (inputs kind `command`)."""
+    if not call:
+        return None
+    command = call if isinstance(call, str) else " ".join(call)
+    return inputs.get_input("command", call=command, cwd=os.fspath(cwd) if cwd else None)
+
+
+# jinjarope filters / globals doing I/O or reading the clock, replaced by versions
+# reading resolved inputs (rendering stays free of I/O) / the fixed build time.
+_INPUT_FILTERS: dict[str, Callable[..., Any]] = {
+    "load_file": _load_file,
+    "check_output": _check_output,
+}
+_INPUT_GLOBALS: dict[str, Callable[..., Any]] = {
+    "now": buildtime.now,
+    "utcnow": buildtime.utcnow,
+}
 
 
 def _get_doc(obj: Any, **kwargs: Any) -> str:

@@ -323,6 +323,7 @@ class InputStore:
 
 
 _active: InputStore | None = None
+_default: InputStore | None = None
 
 
 def active_store() -> InputStore | None:
@@ -331,6 +332,24 @@ def active_store() -> InputStore | None:
     Used by code without a node context (themes, icon helpers, Markdown extensions).
     """
     return _active
+
+
+def default_store() -> InputStore:
+    """Return the store for code without a node context: the active one, else a process one.
+
+    The process store keeps inputs in memory only (no lock file).
+    """
+    global _default
+    if _active is not None:
+        return _active
+    if _default is None:
+        _default = InputStore()
+    return _default
+
+
+def get_input(kind: str, **params: Any) -> Any:
+    """Read an input from `default_store()` (code without a node context)."""
+    return default_store().get(kind, **params)
 
 
 @contextlib.contextmanager

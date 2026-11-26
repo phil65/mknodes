@@ -1,3 +1,5 @@
+import os
+
 import upath
 
 from typing import Any, Literal, Self, TYPE_CHECKING
@@ -5,11 +7,10 @@ from typing import Any, Literal, Self, TYPE_CHECKING
 from jinjarope import textfilters
 
 from mknodes.basenodes import mkimage
-from mknodes.utils import iconcache, log
+from mknodes.utils import iconcache, log, pathhelpers
 
 if TYPE_CHECKING:
     from mknodes.info import linkprovider
-    import os
 
 
 logger = log.get_logger(__name__)
@@ -91,9 +92,8 @@ class MkBinaryImage(mkimage.MkImage):
             storage_options: Options for fsspec backend
             kwargs: Keyword arguments passed to constructor
         """
-        opts = storage_options or {}
-        file = upath.UPath(path if isinstance(path, str) else str(path), **opts)
-        return cls(data=file.read_bytes(), path=file.name, **kwargs)
+        data = pathhelpers.load_bytes(path, **(storage_options or {}))
+        return cls(data=data, path=upath.UPath(os.fspath(path)).name, **kwargs)
 
 
 if __name__ == "__main__":

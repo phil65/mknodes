@@ -128,7 +128,11 @@ class LicenseInput(InputKind):
 
 
 class RemoteFileInput(InputKind):
-    """Text of a remote file (params: `url`, an http(s) URL), e.g. for `MkInclude`."""
+    """Text of a remote file (params: `url`: http(s) or another fsspec protocol URL).
+
+    Used by `MkInclude`, `MkText.from_url`, the Jinja `load_file` filter and everything
+    else reading files via `mknodes.utils.pathhelpers` (local paths stay unlocked).
+    """
 
     name = "file"
     source = "http"
@@ -137,14 +141,33 @@ class RemoteFileInput(InputKind):
         return params["url"]
 
     async def fetch(self, params: dict[str, Any]) -> str:
+        return (await _fetch_bytes(params["url"])).decode()
+
+
+class RemoteBinaryFileInput(InputKind):
+    """Bytes of a remote file, base64-encoded (params: `url`), e.g. remote images."""
+
+    name = "binary_file"
+    source = "http"
+
+    def key_id(self, params: dict[str, Any]) -> str:
+        return params["url"]
+
+    async def fetch(self, params: dict[str, Any]) -> str:
+        import base64
+
+        return base64.b64encode(await _fetch_bytes(params["url"])).decode("ascii")
+
+
+async def _fetch_bytes(url: str) -> bytes:
+    """Fetch a remote file: http(s) via anyenv (HTTP cache), other protocols via fsspec."""
+    if urllib.parse.urlsplit(url).scheme in {"http", "https"}:
         import anyenv
 
-        return (await anyenv.get_bytes(params["url"], cache=True)).decode()
+        return await anyenv.get_bytes(url, cache=True)
+    from upath import UPath
 
-    def fetch_sync(self, params: dict[str, Any]) -> str:
-        from mknodes.utils import downloadhelpers
-
-        return downloadhelpers.download(params["url"]).decode()
+    return await asyncio.to_thread(UPath(url).read_bytes)
 
 
 class LlmInput(InputKind):
@@ -213,6 +236,44 @@ class PipDepTreeInput(InputKind):
         return get_mermaid(**params)
 
 
+class PyDepsInput(InputKind):
+    """SVG of a module dependency graph (`pydeps` + Graphviz `dot`), see `MkPyDeps`.
+
+    Unlocked: computed from the local sources every build.
+    """
+
+    name = "pydeps"
+    source = "pydeps"
+    locked = False
+
+    async def fetch(self, params: dict[str, Any]) -> str:
+        return await asyncio.to_thread(self.fetch_sync, params)
+
+    def fetch_sync(self, params: dict[str, Any]) -> str:
+        from mknodes.templatenodes.mkpydeps import get_dependency_svg
+
+        return get_dependency_svg(**params)
+
+
+class CommandInput(InputKind):
+    """Output of a shell command (params: `call`, `cwd`), see `MkCommandOutput`.
+
+    Unlocked: depends on the local environment, runs every build (also offline).
+    """
+
+    name = "command"
+    source = "subprocess"
+    locked = False
+
+    async def fetch(self, params: dict[str, Any]) -> str | None:
+        return await asyncio.to_thread(self.fetch_sync, params)
+
+    def fetch_sync(self, params: dict[str, Any]) -> str | None:
+        from jinjarope import envglobals
+
+        return envglobals.get_output_from_call(params["call"], cwd=params.get("cwd"))
+
+
 # Registered input kinds by name.
 KINDS: dict[str, InputKind] = {}
 
@@ -237,8 +298,11 @@ for _kind in (
     IconPrefixesInput(),
     LicenseInput(),
     RemoteFileInput(),
+    RemoteBinaryFileInput(),
     LlmInput(),
     ChangelogInput(),
     PipDepTreeInput(),
+    PyDepsInput(),
+    CommandInput(),
 ):
     register_kind(_kind)

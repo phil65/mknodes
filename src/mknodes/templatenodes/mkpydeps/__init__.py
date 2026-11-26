@@ -1,10 +1,10 @@
-import asyncio
 import functools
 import os
 import types
 
 from typing import Any, TYPE_CHECKING
 
+from mknodes import inputs
 from mknodes.basenodes import mknode
 from mknodes.utils import inspecthelpers, log, resources
 
@@ -105,15 +105,21 @@ class MkPyDeps(mknode.MkNode):
             case _:
                 return self.ctx.metadata.distribution_name
 
-    async def get_svg(self) -> str:
-        content = await asyncio.to_thread(
-            get_dependency_svg,
-            self.module,
+    def _pydeps_params(self) -> dict[str, Any]:
+        return dict(
+            folder_name=os.fspath(self.module),
             max_bacon=self.max_bacon,
             max_module_depth=self.max_module_depth,
             only_cycles=self.only_cycles,
             clusters=self.clusters,
         )
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        return [inputs.InputRequest.create("pydeps", **self._pydeps_params())]
+
+    async def get_svg(self) -> str:
+        # pydeps + Graphviz run in the resolve phase (inputs store kind `pydeps`).
+        content = self.ctx.inputs.get("pydeps", **self._pydeps_params())
         return insert_links(content, self.ctx.links.inv_manager)  # type: ignore  # pyright: ignore[reportArgumentType]
 
     async def to_md_unprocessed(self) -> str:
