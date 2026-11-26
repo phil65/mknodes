@@ -15,7 +15,7 @@ from mknodes.utils import coroutines, diagnostics, log
 
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable, Callable
+    from collections.abc import Callable
 
 
 logger = log.get_logger(__name__)
@@ -70,30 +70,10 @@ def run_passes[T](fn: Callable[[], T]) -> T:
     raise pending_error(render)
 
 
-async def run_passes_async[T](fn: Callable[[], Awaitable[T]]) -> T:
-    """Async version of `run_passes` (`fn` returns an awaitable render)."""
-    if current_pass() is not None:
-        return await fn()
-    for _ in range(MAX_PASSES):
-        with diagnostics.deferred() as held, render_pass() as render:
-            try:
-                result = await fn()
-            except Exception:
-                if not render:
-                    diagnostics.emit(held)
-                    raise
-        if not render:
-            diagnostics.emit(held)
-            return result
-        await resolve_pending(render)
-    raise pending_error(render)
-
-
 __all__ = [
     "MAX_PASSES",
     "InputPendingError",
     "PendingInputsError",
     "resolve_pending",
     "run_passes",
-    "run_passes_async",
 ]

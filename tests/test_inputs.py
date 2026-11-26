@@ -27,7 +27,7 @@ class FakeKind(inputs.InputKind):
     active = 0
     max_active = 0
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         cls = type(self)
         cls.calls.append(params["key"])
         cls.active += 1
@@ -156,7 +156,7 @@ async def test_offline_missing_input_is_an_error(fake_kinds: type[FakeKind], tmp
     with pytest.raises(MissingInputError):
         offline.get("fake", key="b")
     with pytest.raises(MissingInputError):
-        await offline.aget("fake", key="b")
+        await offline.get_async("fake", key="b")
     assert offline.get("fake", key="a") == "value-a"
     # Unlocked (local) inputs are computed offline as well.
     await offline.resolve(_requests("x", kind="local"))
@@ -504,8 +504,8 @@ def io_guard(monkeypatch: pytest.MonkeyPatch) -> list[str]:
         subprocess.Popen, "__init__", guard("subprocess", subprocess.Popen.__init__)
     )
     for kind in inputs.KINDS.values():
+        monkeypatch.setattr(kind, "fetch_async", guard(f"fetch {kind.name}", kind.fetch_async))
         monkeypatch.setattr(kind, "fetch", guard(f"fetch {kind.name}", kind.fetch))
-        monkeypatch.setattr(kind, "fetch_sync", guard(f"fetch {kind.name}", kind.fetch_sync))
     return violations
 
 

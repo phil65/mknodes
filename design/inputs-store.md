@@ -98,7 +98,7 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
 
 - **Input kinds** (`InputKind`, `inputs.KINDS`, `register_kind`): one per kind of external
   data: `name` (lock-file namespace), `locked` (pinned in the lock file), `source` (shown
-  in the lock file), `key_id(params)` (id of an input), async `fetch(params)` + `fetch_sync`,
+  in the lock file), `key_id(params)` (id of an input), async `fetch_async(params)` + sync `fetch(params)`,
   `available()` (e.g. optional extra installed). Values are JSON-serializable. Built in:
 
   | Kind | Locked | Key id | Used by |
@@ -124,7 +124,7 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
   all nodes (per store) and calls `await store.resolve(requests)`: missing inputs are fetched
   concurrently (`max_concurrency`, default 8) before any page renders. Failed fetches are
   logged and remembered (reading the input raises the error, no second try).
-- **Reading**: `ctx.inputs.get(kind, **params)` (sync) / `await ctx.inputs.aget(...)`.
+- **Reading**: `ctx.inputs.get(kind, **params)` (sync) / `await ctx.inputs.get_async(...)`.
   Inputs which were not requested up front (nodes created while templates render, code
   without a node context) are fetched on demand and recorded too (`store.on_demand`), so
   the lock file covers them and offline works for them as well.
@@ -215,7 +215,11 @@ resolve steps between renders.
   `NodeEnvironment.render_nodes()` / `render_string()` / `render_template()`. Override points
   (`get_content`, `to_md_unprocessed`, `get_node_resources`, renderer rules) are sync.
   4.6 kept the async API as deprecated wrappers next to `*_sync` methods; 5.0 removed the
-  wrappers and gave the sync methods the short names (no aliases).
+  wrappers and gave the sync methods the short names (no aliases). Naming rule: the plain
+  name is sync, an async twin gets an `_async` suffix (`InputKind.fetch` / `fetch_async`,
+  `InputStore.get` / `get_async`, `iconcache.get_icon_svg` / `get_icon_svg_async`,
+  `fetch_icon_svg` / `fetch_icon_svg_async`); async without a sync twin keeps its name
+  (`InputStore.resolve`, `passes.resolve_pending`).
 - **Jinja**: environments are sync; `{{ node }}` compiles to `environment._render_output(node)`.
 - **Threads**: no event loop / thread per node. `coroutines.run_sync` remains for resolve steps
   (one loop per step) and async user code (build / route functions). DocBuilder workers render

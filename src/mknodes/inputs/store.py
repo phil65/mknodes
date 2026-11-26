@@ -338,7 +338,7 @@ class InputStore:
             kind = get_kind(request.kind)
             async with semaphore:
                 try:
-                    value = await kind.fetch(request.kwargs)
+                    value = await kind.fetch_async(request.kwargs)
                 except Exception as e:  # noqa: BLE001
                     log_fn = (
                         logger.debug if isinstance(e, InputUnavailableError) else logger.warning
@@ -375,11 +375,11 @@ class InputStore:
             return entry.value
         self._pending(kind, ident, params)
         logger.debug("Fetching input %s %r on demand", *ident)
-        value = input_kind.fetch_sync(params)
+        value = input_kind.fetch(params)
         self.on_demand.add(ident)
         return self._store(input_kind, ident, value).value
 
-    async def aget(self, kind: str, **params: Any) -> Any:
+    async def get_async(self, kind: str, **params: Any) -> Any:
         """Return an input (like `get`, missing inputs get fetched outside render passes).
 
         Raises:
@@ -394,7 +394,7 @@ class InputStore:
             return entry.value
         self._pending(kind, ident, params)
         logger.debug("Fetching input %s %r on demand", *ident)
-        value = await input_kind.fetch(params)
+        value = await input_kind.fetch_async(params)
         self.on_demand.add(ident)
         return self._store(input_kind, ident, value).value
 

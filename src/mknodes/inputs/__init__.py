@@ -29,7 +29,7 @@ from mknodes.inputs.store import (
     render_pass,
     use_store,
 )
-from mknodes.inputs.passes import PendingInputsError, run_passes, run_passes_async
+from mknodes.inputs.passes import PendingInputsError, run_passes
 
 __all__ = [
     "DEFAULT_LOCK_FILE",
@@ -53,6 +53,5 @@ __all__ = [
     "register_kind",
     "render_pass",
     "run_passes",
-    "run_passes_async",
     "use_store",
 ]

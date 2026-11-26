@@ -20,7 +20,8 @@ def _canonical(params: dict[str, Any]) -> str:
 class InputKind:
     """A kind of external input (icons, licenses, LLM texts, ...).
 
-    Subclasses define `name`, `source`, `fetch` and optionally `key_id` / `fetch_sync`.
+    Subclasses define `name`, `source`, `fetch_async` and optionally `key_id` / `fetch`
+    (sync; the default runs `fetch_async` in an event loop).
     """
 
     name: ClassVar[str]
@@ -46,13 +47,13 @@ class InputKind:
         """Return the id of the input (key in the lock file)."""
         return _canonical({k: v for k, v in params.items() if v is not None})
 
-    async def fetch(self, params: dict[str, Any]) -> Any:
+    async def fetch_async(self, params: dict[str, Any]) -> Any:
         """Fetch the value (JSON-serializable)."""
         raise NotImplementedError
 
-    def fetch_sync(self, params: dict[str, Any]) -> Any:
+    def fetch(self, params: dict[str, Any]) -> Any:
         """Fetch the value from sync code."""
-        return coroutines.run_sync(self.fetch(params))
+        return coroutines.run_sync(self.fetch_async(params))
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}({self.name!r})"
@@ -74,12 +75,12 @@ class IconInput(InputKind):
         }
         return f"{icon}?{urllib.parse.urlencode(rest)}" if rest else icon
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         from mknodes.utils import iconcache
 
         return await iconcache.fetch_icon_svg_async(**params)
 
-    def fetch_sync(self, params: dict[str, Any]) -> str:
+    def fetch(self, params: dict[str, Any]) -> str:
         from mknodes.utils import iconcache
 
         return iconcache.fetch_icon_svg(**params)
@@ -98,12 +99,12 @@ class IconPrefixesInput(InputKind):
     def key_id(self, params: dict[str, Any]) -> str:
         return "collections"
 
-    async def fetch(self, params: dict[str, Any]) -> list[str]:
+    async def fetch_async(self, params: dict[str, Any]) -> list[str]:
         from mknodes.utils import iconcache
 
         return await asyncio.to_thread(iconcache.fetch_icon_prefixes)
 
-    def fetch_sync(self, params: dict[str, Any]) -> list[str]:
+    def fetch(self, params: dict[str, Any]) -> list[str]:
         from mknodes.utils import iconcache
 
         return iconcache.fetch_icon_prefixes()
@@ -118,7 +119,7 @@ class LicenseInput(InputKind):
     def key_id(self, params: dict[str, Any]) -> str:
         return params["name"].lower()
 
-    async def fetch(self, params: dict[str, Any]) -> dict[str, Any]:
+    async def fetch_async(self, params: dict[str, Any]) -> dict[str, Any]:
         import dataclasses
 
         from mknodes.info import license as lic
@@ -140,7 +141,7 @@ class RemoteFileInput(InputKind):
     def key_id(self, params: dict[str, Any]) -> str:
         return params["url"]
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         return (await _fetch_bytes(params["url"])).decode()
 
 
@@ -153,7 +154,7 @@ class RemoteBinaryFileInput(InputKind):
     def key_id(self, params: dict[str, Any]) -> str:
         return params["url"]
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         import base64
 
         return base64.b64encode(await _fetch_bytes(params["url"])).decode("ascii")
@@ -190,7 +191,7 @@ class LlmInput(InputKind):
             return False
         return True
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         from mknodes.templatenodes.mkllm import complete_llm
 
         if not self.available():
@@ -207,12 +208,12 @@ class ChangelogInput(InputKind):
     source = "git-changelog"
     locked = False
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         from mknodes.templatenodes.mkchangelog import get_changelog
 
         return await asyncio.to_thread(get_changelog, **params)
 
-    def fetch_sync(self, params: dict[str, Any]) -> str:
+    def fetch(self, params: dict[str, Any]) -> str:
         from mknodes.templatenodes.mkchangelog import get_changelog
 
         return get_changelog(**params)
@@ -225,12 +226,12 @@ class PipDepTreeInput(InputKind):
     source = "pipdeptree"
     locked = False
 
-    async def fetch(self, params: dict[str, Any]) -> str:
+    async def fetch_async(self, params: dict[str, Any]) -> str:
         from mknodes.templatenodes.mkpipdeptree import get_mermaid
 
         return await asyncio.to_thread(get_mermaid, **params)
 
-    def fetch_sync(self, params: dict[str, Any]) -> str:
+    def fetch(self, params: dict[str, Any]) -> str:
         from mknodes.templatenodes.mkpipdeptree import get_mermaid
 
         return get_mermaid(**params)
@@ -246,10 +247,10 @@ class PyDepsInput(InputKind):
     source = "pydeps"
     locked = False
 
-    async def fetch(self, params: dict[str, Any]) -> str:
-        return await asyncio.to_thread(self.fetch_sync, params)
+    async def fetch_async(self, params: dict[str, Any]) -> str:
+        return await asyncio.to_thread(self.fetch, params)
 
-    def fetch_sync(self, params: dict[str, Any]) -> str:
+    def fetch(self, params: dict[str, Any]) -> str:
         from mknodes.templatenodes.mkpydeps import get_dependency_svg
 
         return get_dependency_svg(**params)
@@ -265,10 +266,10 @@ class CommandInput(InputKind):
     source = "subprocess"
     locked = False
 
-    async def fetch(self, params: dict[str, Any]) -> str | None:
-        return await asyncio.to_thread(self.fetch_sync, params)
+    async def fetch_async(self, params: dict[str, Any]) -> str | None:
+        return await asyncio.to_thread(self.fetch, params)
 
-    def fetch_sync(self, params: dict[str, Any]) -> str | None:
+    def fetch(self, params: dict[str, Any]) -> str | None:
         from jinjarope import envglobals
 
         return envglobals.get_output_from_call(params["call"], cwd=params.get("cwd"))

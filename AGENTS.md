@@ -197,8 +197,11 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
   `ty check` still reports ~77 findings, mostly container `get_items` overrides and
   navigation router unions, so the switch is a separate task).
 - Rendering APIs are sync (`node.to_markdown()`, `str(node)`, `DocBuilder().build()`);
-  only fetching inputs is async (`InputKind.fetch`, `InputStore.resolve`). Tests use
-  pytest-asyncio with `asyncio_mode = "auto"` for those.
+  only resolving inputs is async (`InputStore.resolve`, `InputKind.fetch_async`). Naming:
+  the plain name is sync, an async twin gets an `_async` suffix (`InputKind.fetch` /
+  `fetch_async`, `InputStore.get` / `get_async`, `iconcache.get_icon_svg` /
+  `get_icon_svg_async`); no `*_sync` names. Tests use pytest-asyncio with
+  `asyncio_mode = "auto"` for the async parts.
 - Tests live in `tests/`, one file per area. `tests/test_nodefiles.py` renders every node's
   `metadata.toml` examples, checks that `[output.markdown]` templates match `to_md_unprocessed()`,
   and snapshots per-node resources in `tests/snapshots/`; update with `uv run pytest --snapshot-update`

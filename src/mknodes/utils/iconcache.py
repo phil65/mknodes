@@ -340,5 +340,5 @@ async def get_icon_svg_async(
         color=color, height=height, width=width, flip=flip, rotate=rotate, box=box
     )
     if (store := inputs.active_store()) is not None:
-        return await store.aget("icon", icon=icon, **params)
+        return await store.get_async("icon", icon=icon, **params)
     return await fetch_icon_svg_async(icon, **params)
