@@ -106,10 +106,13 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
   | `icon` | yes | icon spec (+ `?param=value` for SVG params) | `MkIcon`, and every `iconcache.get_icon_svg[_async]` call during a build (themes, emoji index, Jinja `get_icon_svg`, `MkBinaryImage.for_icon`, zensical writer page / social icons) |
   | `license` | yes | SPDX id / name (lowercase) | `MkLicense(license_type=...)` |
   | `icon_prefixes` | yes | `collections` (one entry: all Iconify icon set prefixes) | `iconcache.get_pyconify_key` for specs without a prefix separator (`:fa-brands-github:`): GitHub / mdBook flavour `icon_img`, `icons.get_emoji_slug`, `icon_for_url` |
-  | `file` | yes | http(s) URL | `MkInclude` with a URL target (local paths stay unlocked) |
+  | `file` | yes | remote URL (http(s) or another fsspec protocol) | `MkInclude`, `MkText.from_url`, the Jinja `load_file` filter, `MkCodeImage.for_file`, `MkTimeline` / `MkShowcase` item files, `MkPage.from_file`, everything reading via `pathhelpers.load_file[_cached]` (local paths stay unlocked) |
+  | `binary_file` | yes | remote URL (value: base64) | `MkBinaryImage.for_file`, inventories (`Inventory.from_url`), `pathhelpers.load_bytes` |
   | `llm` | yes | `<model>:<sha256 of model + prompts + context>` | `MkLlm` |
   | `changelog` | no (local git, per commit) | params JSON | `MkChangelog` |
   | `pipdeptree` | no (installed environment) | params JSON | `MkPipDepTree` |
+  | `pydeps` | no (local sources) | params JSON | `MkPyDeps` (pydeps + Graphviz `dot`) |
+  | `command` | no (local environment) | params JSON (`call`, `cwd`) | `MkCommandOutput`, the Jinja `check_output` filter |
 
   Unlocked kinds are local and deterministic for a checkout / environment: resolved in the
   resolve phase like the others (concurrently, off the event loop), never written to the
@@ -178,7 +181,57 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
   node-file example renders while collecting tests: with `OPENAI_API_KEY` set this made a
   paid call on every test run before).
 
-## Remaining I/O sites (step 2: pure sync rendering)
+## Part C: pure sync rendering (step 2, 2026-11-26)
+
+Rendering is synchronous and never fetches. Fetching (async, concurrent) only happens in
+resolve steps between renders.
+
+- **Remaining I/O moved to the store** (kinds above): pydeps, shell commands, remote files of
+  any fsspec protocol (text + binary), `FolderInfo.license_text` (SPDX text without a license
+  file, kind `license`), inventories. Code without a node context reads
+  `inputs.get_input(kind, ...)` (`default_store()`: the active store, else a process-wide
+  memory store).
+- **Clock**: `utils.buildtime.build_time()` (once per process; `SOURCE_DATE_EPOCH` wins) for the
+  default copyright year and the `now()` / `utcnow()` globals of node environments.
+- **Render passes** (`inputs/passes.py`): inputs only known while rendering (nodes created by
+  templates, the page Jinja pass, `iconcache.get_icon_svg`, Jinja `load_file` /
+  `check_output`) used to be fetched in the middle of a render. Now every top-level render runs
+  inside `inputs.render_pass()`: `store.get()` of a missing input records it in the pass and
+  raises `InputPendingError`. `Renderer.render()` turns that into an empty render of that node
+  and the tree walk skips the children of a template node that raised, so one pass finds all
+  independent missing inputs. The pass is discarded together with the diagnostics it reported
+  (`diagnostics.deferred()`), the recorded inputs get resolved, the template render caches
+  dropped (`rendercache.invalidate_all()`) and the render runs again (max. 8 passes, then
+  `PendingInputsError`). With a complete lock file: one pass.
+  - DocBuilder: tree walk (request pass), declared inputs (`get_input_requests`) resolved
+    concurrently, pages (each page its own pass: only pages which read a missing input render
+    again), nav / theme resources and page templates.
+  - SiteGenerator: the walk for the link excludes.
+  - `to_markdown_sync()` / `str(node)` / `get_resources_sync()` at the top level; nested inside a
+    render they just render.
+  - Outside passes (setup, build functions, writers) `store.get()` still fetches on demand.
+- **Sync API**: `to_markdown_sync()` / `str(node)`, `get_resources_sync()`, `to_html_sync()`,
+  `get_toc_sync()`, `DocBuilder.build_sync()`, `MarkdownExporter.export_sync()`,
+  `NodeEnvironment.render_nodes()` / `render_string()` / `render_template()`. Override points
+  (`get_content`, `to_md_unprocessed`, `get_node_resources`, renderer rules) are sync. The
+  async `to_markdown()` / `get_resources()` / `to_html()` / `get_toc()`, `render_*_async()`,
+  `DocBuilder.build()`, `MarkdownExporter.export()` are deprecated wrappers (removed in 5.0);
+  templates calling `node.to_html()` get the sync version (`NodeContext.call`).
+- **Jinja**: environments are sync; `{{ node }}` compiles to `environment._render_output(node)`.
+- **Threads**: no event loop / thread per node. `coroutines.run_sync` remains for resolve steps
+  (one loop per step) and async user code (build / route functions). DocBuilder workers render
+  pages in `contextvars.copy_context().run`. Kinds whose fetch touches process-wide state run
+  under a lock: git-changelog (`redirect_stdout`), pipdeptree (not thread-safe), pydeps (chdir).
+- Tests: `tests/test_inputs.py` (`test_rendering_does_no_io`: a build with inputs only found
+  while rendering makes no socket connect / subprocess / fetch inside a render pass; discarded
+  passes drop their diagnostics; top-level `str(node)` resolves first).
+
+Not covered: jinjarope filters with I/O other than `load_file` / `check_output` (e.g.
+`llm_complete`, `online()`): generic jinjarope, not used by mknodes templates. Setup-time git
+(`GitContext`, GitPython) and githarbor (inert) stay at context creation. Route functions still
+run in a thread pool (`navigation.py`, `_materialized` is set before they ran).
+
+## Remaining I/O sites before step 2 (historical)
 
 Not migrated (still I/O while building, bypassing the store):
 
