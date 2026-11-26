@@ -158,6 +158,7 @@ writer (zensical: docs dir + `mkdocs.generated.yml`).
 | CLI | `src/mknodes/cli/__init__.py` |
 | Markdown extensions | `src/mknodes/mdext/` |
 | Project docs content | `src/mknodes/manual/` + `docs/*.jinja` |
+| External inputs (network, git, environment), `ctx.inputs`, `mknodes.lock` | `src/mknodes/inputs/`, inventory + design: `design/inputs-store.md` |
 | Docs site config | `mkdocs.yml` (settings in the `mknodes` plugins entry: `build_fn: mknodes.manual.root:Build.build`) |
 | Site generator settings / CLI / writers | `src/mknodes/site/`, `src/mknodes/cli/` |
 
