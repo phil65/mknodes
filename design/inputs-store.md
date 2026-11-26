@@ -21,6 +21,7 @@ build, in a site writer.
 | `info/license.py` (`License.from_name`, SPDX db + details JSON from GitHub raw / spdx.org via anyenv) | `MkLicense(license_type=...)` (render), `FolderInfo.license_text` (setup, only without a license file; `run_sync`) | license text + metadata | SPDX id / name | yes (rarely changes) | anyenv HTTP cache (`~/.cache/anyenv`) | render / setup |
 | `utils/downloadhelpers.download` / `pathhelpers.load_file_cached` (anyenv, any fsspec URL) | `MkInclude` (render), `MkText.from_url` (setup), Jinja `load_file` filter (jinjarope, render) | file content | URL / path | mostly (remote files change) | anyenv HTTP cache | render / setup |
 | `utils/inventorymanager.Inventory.from_url` | `LinkProvider.add_inv_file` (setup; only the bundled stdlib inventory is loaded today, `ProjectContext.populate_linkprovider` is never called) | `objects.inv` | URL | mostly | anyenv HTTP cache | setup |
+| `rendering/github.py` `icon_img` -> jinjarope `get_pyconify_key` -> pycons `api.collections()` | `MkIcon` in the GitHub / mdBook flavours (render) | Iconify collection list (prefix mapping) | - | mostly | anyenv HTTP cache; fails on a cold cache inside the build's event loop (anyio "Already running asyncio") | render |
 | githarbor (`GitRepository.__init__` -> `githarbor.create_repository`) | `GitContext.repo_hoster`, `edit_uri` (setup) | GitHub repo + owner (PyGithub, 2 API calls) | repo URL | mostly | none | setup |
 | `GitHubContext.from_url` (githarbor: workflows, user profile) | nothing (dead: `ctx.github` stays the empty default) | - | repo URL | - | - | - |
 | `extranodes/mkcodeimage.for_file`, `MkBinaryImage.for_file` (fsspec) | setup | file bytes (local or URL) | path / URL | mostly | none | setup |
@@ -85,52 +86,62 @@ Notes:
 
 | Kind | Sites | Of which at render time |
 | --- | --- | --- |
-| Network | 8 (icons, LLM, license, file download, inventories, githarbor, file-based images; GitHubContext dead) | 4 (MkIcon / Jinja icons, MkLlm, MkLicense, MkInclude / `load_file`) |
+| Network | 9 (icons, icon collection list, LLM, license, file download, inventories, githarbor, file-based images; GitHubContext dead) | 5 (MkIcon / Jinja icons, GitHub-flavour icon prefixes, MkLlm, MkLicense, MkInclude / `load_file`) |
 | Subprocess / git | 6 (changelog, GitPython context, clone, pydeps, command output, exec) | 3 (MkChangelog, MkPyDeps, MkCommandOutput) |
 | Environment | 4 | 2 (MkPipDepTree, griffe / clinspector-based nodes) |
 | Time | 2 (+ git dates) | 1 (jinjarope `now`, unused) |
 | `run_sync` | 10 call sites | 7 |
 
-## Part B: inputs store
+## Part B: inputs store (implemented, step 1)
 
 Package `mknodes.inputs` (core; no `mknodes.site` imports).
 
-- **Input kinds** (`InputKind`): one per kind of external data, with a `name` (lock-file
-  namespace), whether it is `locked` (written to the lock file), a `source` (shown in the
-  lock file), `key_id(params)` (the id under which the value is stored) and an async
-  `fetch(params)` (+ `fetch_sync` for sync callers). Values are JSON-serializable.
-  Registered in `inputs.KINDS`; built in:
+- **Input kinds** (`InputKind`, `inputs.KINDS`, `register_kind`): one per kind of external
+  data: `name` (lock-file namespace), `locked` (pinned in the lock file), `source` (shown
+  in the lock file), `key_id(params)` (id of an input), async `fetch(params)` + `fetch_sync`,
+  `available()` (e.g. optional extra installed). Values are JSON-serializable. Built in:
 
   | Kind | Locked | Key id | Used by |
   | --- | --- | --- | --- |
-  | `icon` | yes | icon spec (+ `?param=value` for SVG params) | `MkIcon` |
+  | `icon` | yes | icon spec (+ `?param=value` for SVG params) | `MkIcon`, and every `iconcache.get_icon_svg[_async]` call during a build (themes, emoji index, Jinja `get_icon_svg`, `MkBinaryImage.for_icon`, zensical writer page / social icons) |
   | `license` | yes | SPDX id / name (lowercase) | `MkLicense(license_type=...)` |
-  | `llm` | yes | sha256 of model + prompts + context | `MkLlm` |
+  | `llm` | yes | `<model>:<sha256 of model + prompts + context>` | `MkLlm` |
   | `changelog` | no (local git, per commit) | params JSON | `MkChangelog` |
   | `pipdeptree` | no (installed environment) | params JSON | `MkPipDepTree` |
 
-  Unlocked kinds are local and deterministic for a checkout / environment: they are
-  resolved in the resolve phase like the others (concurrently, off the event loop), but
-  never written to the lock file and also computed in offline mode.
+  Unlocked kinds are local and deterministic for a checkout / environment: resolved in the
+  resolve phase like the others (concurrently, off the event loop), never written to the
+  lock file, also computed in offline mode.
 
-- **Requests**: nodes declare what they need with `MkNode.get_input_requests()` (default:
-  none), returning `inputs.InputRequest(kind, params)`.
-- **Resolve phase**: `DocBuilder` walks the tree (as before), collects the requests of all
-  nodes, and resolves the missing ones concurrently (`InputStore.resolve(requests)`,
-  bounded by `max_concurrency`, default 8) before rendering any page. Failed fetches are
-  remembered (the node gets the error when it reads the input, as before; no second try).
-- **Reading**: nodes read with `ctx.inputs.get(kind, **params)` (sync) or
-  `await ctx.inputs.aget(...)`. Inputs which were not requested (nodes created while
-  templates render, migrated nodes outside a build) fall back to fetching on demand and
-  get recorded as well, so the lock file covers them too.
-- **Modes** (`InputStore.mode`): `live` (default: use locked values, fetch missing ones,
-  add them to the lock file; nothing gets pruned), `refresh` (re-fetch every input used
-  by the build, rewrite the lock file with exactly these: prunes unused entries),
-  `offline` (only the lock file: a missing locked input raises `MissingInputError`; the
-  lock file is never written).
-- **Lock file**: `mknodes.lock` in the project dir (setting `lock_file`, `""` disables;
-  CLI `build` / `generate` / `serve` take `--offline` and `--refresh-inputs`). Written
-  after the build if it changed. Deterministic JSON (sorted keys, 2-space indent):
+- **Requests**: `MkNode.get_input_requests()` (default `[]`) returns
+  `InputRequest.create(kind, **params)`.
+- **Resolve phase**: `DocBuilder._build` walks the tree (as before), collects the requests of
+  all nodes (per store) and calls `await store.resolve(requests)`: missing inputs are fetched
+  concurrently (`max_concurrency`, default 8) before any page renders. Failed fetches are
+  logged and remembered (reading the input raises the error, no second try).
+- **Reading**: `ctx.inputs.get(kind, **params)` (sync) / `await ctx.inputs.aget(...)`.
+  Inputs which were not requested up front (nodes created while templates render, code
+  without a node context) are fetched on demand and recorded too (`store.on_demand`), so
+  the lock file covers them and offline works for them as well.
+- **Active store**: `inputs.use_store(store)` / `inputs.active_store()` (process-wide, so
+  worker threads see it). `SiteGenerator` activates the build's store for the whole build
+  (+ the CLI for the writer) and points the fallback context (nodes outside the tree,
+  e.g. rendered examples) at it. `iconcache.get_icon_svg[_async]` read from the active
+  store; outside builds they use the on-disk cache directly (`fetch_icon_svg[_async]`).
+- **Modes**: `live` (default: locked values first, fetch missing ones and add them;
+  nothing gets pruned, so partial builds / tests can't shrink the file), `refresh`
+  (re-fetch every input the build uses, the lock keeps exactly these), `offline` (lock file
+  only: a missing locked input raises `MissingInputError`, listing all missing inputs in
+  the resolve phase; the lock file is never written). Offline, a missing input of an
+  unavailable kind (`MkLlm` without agentpool) raises `InputUnavailableError` instead and
+  the node uses its placeholder.
+- **Settings / CLI**: `lock_file = "mknodes.lock"` (`[tool.mknodes]`, relative to the
+  project dir, `""` disables) and `inputs_mode`; `mknodes build | generate | serve` take
+  `--offline` / `--refresh-inputs`. The CLI exits with the `MissingInputError` message
+  (no traceback, also when a template wrapped it).
+- **Lock file**: written after the build (and after the writer) if its content changed.
+  Deterministic JSON (sorted keys, 2-space indent, UTF-8, trailing newline); entries of
+  kinds unknown to this version are kept:
 
   ```json
   {
@@ -147,6 +158,31 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
   }
   ```
 
-- Where it lives: `ProjectContext.inputs` (default: an in-memory store in live mode, so
-  nodes outside the site generator work as before). `SiteGenerator` creates the store
-  from the settings and saves it after the build.
+  The manual's lock file (`mknodes.lock`, committed) holds 16 icons + 1 license (~47 KB).
+  The icon disk cache (`~/.cache/mknodes/icons`) stays as the second level behind the store.
+- Tests: `tests/test_inputs.py` (resolve concurrency / dedup, lock round trip, live / refresh
+  / offline, remembered failures, migrated nodes rendering from a lock file with network
+  failing, builder resolve phase, active store, CLI `--offline`). `tests/conftest.py` gives
+  every test a fresh fallback store and replaces `complete_llm` with a fake (the `MkLlm`
+  node-file example renders while collecting tests: with `OPENAI_API_KEY` set this made a
+  paid call on every test run before).
+
+## Remaining I/O sites (step 2: pure sync rendering)
+
+Not migrated (still I/O while building, bypassing the store):
+
+- Render time: `MkInclude` / `MkText.from_url` / Jinja `load_file` (downloads), `MkPyDeps`
+  (pydeps + dot), `MkCommandOutput` (Jinja `check_output`), GitHub-flavour icon prefix lookup
+  (`rendering/github.py` `icon_img`: Iconify collection list), `MkCodeImage.for_file` /
+  `MkBinaryImage.for_file` (fsspec reads), griffe / clinspector based nodes (local sources,
+  imports: deterministic, stay unlocked), `MkBadge` (CPU only, `to_thread`).
+- Setup: `FolderInfo.license_text` (SPDX lookup via `run_sync` when there is no license
+  file), `GitContext` / `GitRepository` (whole history, at context creation),
+  githarbor in `GitRepository.__init__` (inert without a provider), remote clones,
+  `LinkProvider.add_inv_file` (inventories).
+- Time: default copyright year (`build/output.py`), jinjarope `now()` / `utcnow()`.
+- Still async while rendering: nodes read with `await ctx.inputs.aget(...)`; with all inputs
+  resolved up front, step 2 can switch them to `get` and make `get_content` sync. Nodes created
+  while templates render are only known after the template ran (on-demand fetch today): step 2
+  needs a request pass over templates (or a render-collect-resolve-render loop).
+- `run_sync` call sites (10) unchanged.
