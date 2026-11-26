@@ -79,7 +79,7 @@ class MkIcon(mknode.MkNode):
         """The icon SVG (from the inputs store, fetched now if it is not there yet)."""
         try:
             return self.ctx.inputs.get("icon", icon=self.icon_name, **self._svg_params())
-        except inputs.MissingInputError:
+        except inputs.MissingInputError, inputs.InputPendingError:
             raise
         except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)
@@ -89,7 +89,7 @@ class MkIcon(mknode.MkNode):
         """Return the icon SVG (from the inputs store, fetched now if it is not there yet)."""
         try:
             return await self.ctx.inputs.aget("icon", icon=self.icon_name, **self._svg_params())
-        except inputs.MissingInputError:
+        except inputs.MissingInputError, inputs.InputPendingError:
             raise
         except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)

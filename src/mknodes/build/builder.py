@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 import logfire
 
-from mknodes import rendering
+from mknodes import inputs, rendering
 from mknodes.build import fencecheck, pagetemplates
 from mknodes.build.output import BuildOutput, Script, SiteMetadata, nav_from_dict
 from mknodes.mdlib import mdconverter
@@ -71,6 +71,17 @@ class PageResult:
     path: str
     markdown: str
     resources: resources.Resources
+
+
+@dataclasses.dataclass
+class _Attempt:
+    """A page rendered in a render pass (`render` non-empty: inputs were missing)."""
+
+    page: mk.MkPage
+    result: PageResult | None
+    render: inputs.RenderPass
+    diagnostics: list[diagnostics.Diagnostic]
+    error: Exception | None
 
 
 class DocBuilder:
@@ -138,10 +149,17 @@ class DocBuilder:
         # Walk the tree in the target flavour: template nodes render once while their
         # children get collected and reuse that render for their content (renders
         # differ by whether a Jinja pass follows, see `rendering.literal()`).
+        # Request pass: the walk runs in render passes (inputs read by templates while
+        # rendering children get resolved, then the tree gets walked again), then the
+        # inputs declared by the nodes get resolved concurrently.
         pass_env = root.env if self.render_jinja else None
-        with rendering.use(self.renderer), rendering.jinja_pass(pass_env):
-            theme_nodes = list(theme.iter_nodes()) if theme else []
-            all_nodes = [*theme_nodes, *root.iter_nodes()]
+
+        async def walk() -> list[tuple[int, mk.MkNode]]:
+            with rendering.use(self.renderer), rendering.jinja_pass(pass_env):
+                theme_nodes = list(theme.iter_nodes()) if theme else []
+                return [*theme_nodes, *root.iter_nodes()]
+
+        all_nodes = await inputs.run_passes_async(walk)
         for _, node in all_nodes:
             files |= node.files
             match node:
@@ -156,7 +174,12 @@ class DocBuilder:
             pagetemplates.update_nav_template(nav)
         with rendering.use(self.renderer):
             results = await self._render_pages(pages)
-            nav_resources = [(await self.renderer.render(nav)).resources for nav in navs]
+
+        async def render_navs() -> list[resources.Resources]:
+            with rendering.use(self.renderer):
+                return [(await self.renderer.render(nav)).resources for nav in navs]
+
+        nav_resources = await inputs.run_passes_async(render_navs)
 
         req = resources.Resources()
         for result in results:
@@ -176,13 +199,15 @@ class DocBuilder:
                 location, _, message = problem.partition(": ")
                 diagnostics.report("fence", message, page=path, location=location)
         if theme:
-            req.merge(await theme.get_resources())
+            req.merge(await inputs.run_passes_async(theme.get_resources))
             theme.adapt_extensions(req.markdown_extensions)
         self._add_resources(output, req)
         templates = [p.template for p in pages] + [n.page_template for n in navs]
         if theme:
             templates += list(theme.templates)
-        await self._add_templates(output, [t for t in templates if t])
+        await inputs.run_passes_async(
+            lambda: self._add_templates(output, [t for t in templates if t])
+        )
         output.nav = nav_from_dict(root.nav.to_nav_dict())
         if theme:
             theme.adapt_extras(output.extra)
@@ -190,19 +215,54 @@ class DocBuilder:
         return output
 
     async def _render_pages(self, pages: list[mk.MkPage]) -> list[PageResult]:
+        """Render pages in render passes: pages which read missing inputs render again.
+
+        Rendering never fetches. A page reading an input which is not resolved yet gets
+        discarded (with its diagnostics); after the pass the missing inputs of all pages
+        get resolved and these pages render again.
+        """
+        done: dict[int, PageResult] = {}
+        todo = pages
+        for _ in range(inputs.passes.MAX_PASSES):
+            missing = inputs.RenderPass()
+            for attempt in await self._render_attempts(todo):
+                if attempt.render:
+                    missing.merge(attempt.render)
+                    continue
+                diagnostics.emit(attempt.diagnostics)
+                if attempt.error is not None:
+                    raise attempt.error
+                assert attempt.result is not None
+                done[id(attempt.page)] = attempt.result
+            if not missing:
+                return [done[id(page)] for page in pages]
+            await inputs.passes.resolve_pending(missing)
+            todo = [page for page in todo if id(page) not in done]
+        raise inputs.passes.pending_error(missing)
+
+    async def _render_attempts(self, pages: list[mk.MkPage]) -> list[_Attempt]:
         if not self.max_workers or self.max_workers <= 1:
-            return [await self._render_page(page) for page in pages]
+            return [await self._attempt(page) for page in pages]
         loop = asyncio.get_running_loop()
         with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
-            futures = [loop.run_in_executor(pool, self._render_page_sync, p) for p in pages]
+            futures = [loop.run_in_executor(pool, self._attempt_sync, p) for p in pages]
             return list(await asyncio.gather(*futures))
 
-    def _render_page_sync(self, page: mk.MkPage) -> PageResult:
+    async def _attempt(self, page: mk.MkPage) -> _Attempt:
+        """Render a page in its own render pass (missing inputs: render discarded)."""
+        with diagnostics.deferred() as held, inputs.render_pass() as render:
+            try:
+                result = await self._render_page(page)
+            except Exception as e:  # noqa: BLE001
+                return _Attempt(page, None, render, held, e)
+        return _Attempt(page, result, render, held, None)
+
+    def _attempt_sync(self, page: mk.MkPage) -> _Attempt:
         """Render a page in a worker thread (own event loop, renderer set explicitly)."""
         loop = asyncio.new_event_loop()
         try:
             with rendering.use(self.renderer):
-                return loop.run_until_complete(self._render_page(page))
+                return loop.run_until_complete(self._attempt(page))
         finally:
             loop.close()
 

@@ -150,14 +150,18 @@ class SiteGenerator:
         result = self.settings.get_builder()(theme=theme, root=root)
         if inspect.iscoroutine(result):
             run_sync(result)
+
         # Walk the tree in the target flavour: template nodes render once (for their
         # children) and reuse that render for their content.
-        with rendering.use(rendering.get_renderer(self.flavor)):
-            paths = [
-                pathlib.Path(node.resolved_file_path).stem
-                for _level, node in root.iter_nodes()
-                if isinstance(node, mk.MkPage | mk.MkNav)
-            ]
+        def walk() -> list[str]:
+            with rendering.use(rendering.get_renderer(self.flavor)):
+                return [
+                    pathlib.Path(node.resolved_file_path).stem
+                    for _level, node in root.iter_nodes()
+                    if isinstance(node, mk.MkPage | mk.MkNav)
+                ]
+
+        paths = inputs.run_passes(walk)
         ctx.links.set_excludes(paths)
         # Link output depends on the excludes: templates rendered by the walk above
         # (pages can come from templates) render again in the build.

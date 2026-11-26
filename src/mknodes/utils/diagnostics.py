@@ -42,6 +42,10 @@ current_page: contextvars.ContextVar[str | None] = contextvars.ContextVar(
 
 _lock = threading.Lock()
 _collectors: list[list[Diagnostic]] = []
+# Reports inside a `deferred()` block (a render which may get discarded) wait here.
+_deferred: contextvars.ContextVar[list[Diagnostic] | None] = contextvars.ContextVar(
+    "mknodes_deferred_diagnostics", default=None
+)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -96,6 +100,15 @@ def report(
         location: Where on the page (line, node, first line of the block)
     """
     diag = Diagnostic(kind, message, page or current_page.get(), location)
+    if (deferred := _deferred.get()) is not None:
+        with _lock:
+            deferred.append(diag)
+        return diag
+    _emit(diag)
+    return diag
+
+
+def _emit(diag: Diagnostic) -> None:
     logger.warning("%s", diag)
     with _lock:
         for collector in _collectors:
@@ -106,7 +119,27 @@ def report(
                 f.write(json.dumps(diag.to_dict()) + "\n")
         except OSError as e:
             logger.debug("Could not write diagnostic to %s: %s", path, e)
-    return diag
+
+
+@contextlib.contextmanager
+def deferred() -> Iterator[list[Diagnostic]]:
+    """Hold back the reports inside the block (also from threads running in its context).
+
+    For renders which may get discarded (missing inputs, see `mknodes.inputs.passes`):
+    `emit()` the yielded list if the render is kept, drop it otherwise.
+    """
+    held: list[Diagnostic] = []
+    token = _deferred.set(held)
+    try:
+        yield held
+    finally:
+        _deferred.reset(token)
+
+
+def emit(diagnostics: list[Diagnostic]) -> None:
+    """Report held back diagnostics (see `deferred()`)."""
+    for diag in diagnostics:
+        report(diag.kind, diag.message, page=diag.page, location=diag.location)
 
 
 @contextlib.contextmanager

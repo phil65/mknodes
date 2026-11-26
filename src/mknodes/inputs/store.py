@@ -2,6 +2,7 @@
 
 import asyncio
 import contextlib
+import contextvars
 import dataclasses
 import datetime as dt
 import json
@@ -44,6 +45,74 @@ class MissingInputError(LookupError):
             f"mode:\n{items}\nBuild once without --offline to add them."
         )
         super().__init__(msg)
+
+
+class InputPendingError(LookupError):
+    """An input was read while rendering, but it was not resolved before.
+
+    Rendering never fetches: the read gets recorded in the active `RenderPass`, the
+    render is discarded, the input gets resolved and the render runs again (see
+    `mknodes.inputs.passes`).
+    """
+
+    def __init__(self, kind: str, key_id: str) -> None:
+        self.kind = kind
+        self.key_id = key_id
+        super().__init__(f"Input {kind} {key_id!r} is not resolved yet (rendering again)")
+
+
+@dataclasses.dataclass(eq=False)
+class RenderPass:
+    """Inputs which renders inside a `render_pass()` block read but which were missing."""
+
+    pending: dict[int, tuple[InputStore, dict[tuple[str, str], InputRequest]]] = dataclasses.field(
+        default_factory=dict
+    )
+    _lock: threading.Lock = dataclasses.field(default_factory=threading.Lock, repr=False)
+
+    def add(self, store: InputStore, ident: tuple[str, str], request: InputRequest) -> None:
+        with self._lock:
+            self.pending.setdefault(id(store), (store, {}))[1].setdefault(ident, request)
+
+    def __bool__(self) -> bool:
+        return bool(self.pending)
+
+    def merge(self, other: RenderPass) -> None:
+        """Add the missing inputs of another pass."""
+        for store, requests in other.requests():
+            for request in requests:
+                kind = store._ident_of(request)
+                self.add(store, kind, request)
+
+    def requests(self) -> list[tuple[InputStore, list[InputRequest]]]:
+        """The missing inputs (per store)."""
+        with self._lock:
+            return [(store, list(reqs.values())) for store, reqs in self.pending.values()]
+
+
+_pass: contextvars.ContextVar[RenderPass | None] = contextvars.ContextVar(
+    "mknodes_render_pass", default=None
+)
+
+
+@contextlib.contextmanager
+def render_pass(render: RenderPass | None = None) -> Iterator[RenderPass]:
+    """Render inside the block without fetching: missing inputs raise `InputPendingError`.
+
+    The missing inputs get recorded in the yielded `RenderPass` (also from worker
+    threads running in a copy of the context).
+    """
+    render = render or RenderPass()
+    token = _pass.set(render)
+    try:
+        yield render
+    finally:
+        _pass.reset(token)
+
+
+def current_pass() -> RenderPass | None:
+    """Return the active render pass (None: reads of missing inputs fetch them)."""
+    return _pass.get()
 
 
 @dataclasses.dataclass(frozen=True)
@@ -196,6 +265,11 @@ class InputStore:
     def _ident(self, kind: InputKind, params: dict[str, Any]) -> tuple[str, str]:
         return kind.name, kind.key_id(params)
 
+    def _ident_of(self, request: InputRequest) -> tuple[str, str]:
+        from mknodes.inputs.kinds import get_kind
+
+        return self._ident(get_kind(request.kind), request.kwargs)
+
     def _cached(self, kind: InputKind, ident: tuple[str, str]) -> InputEntry | None:
         """Return the stored entry (raise the error of a failed fetch, or if offline)."""
         with self._lock:
@@ -277,11 +351,21 @@ class InputStore:
 
         await asyncio.gather(*(fetch(i, r) for i, r in todo.items()))
 
+    def _pending(self, kind: str, ident: tuple[str, str], params: dict[str, Any]) -> None:
+        """Inside a render pass: record the missing input and raise `InputPendingError`."""
+        if (render := _pass.get()) is not None:
+            render.add(self, ident, InputRequest.create(kind, **params))
+            raise InputPendingError(*ident)
+
     def get(self, kind: str, **params: Any) -> Any:
-        """Return an input (sync). Inputs not resolved yet get fetched now.
+        """Return an input (sync).
+
+        Inside a render pass a missing input raises `InputPendingError` (it gets
+        resolved before the next pass), outside it gets fetched now.
 
         Raises:
             MissingInputError: Offline mode and the input is not in the lock file.
+            InputPendingError: Rendering, the input was not resolved yet.
         """
         from mknodes.inputs.kinds import get_kind
 
@@ -289,16 +373,18 @@ class InputStore:
         ident = self._ident(input_kind, params)
         if (entry := self._cached(input_kind, ident)) is not None:
             return entry.value
+        self._pending(kind, ident, params)
         logger.debug("Fetching input %s %r on demand", *ident)
         value = input_kind.fetch_sync(params)
         self.on_demand.add(ident)
         return self._store(input_kind, ident, value).value
 
     async def aget(self, kind: str, **params: Any) -> Any:
-        """Return an input. Inputs not resolved yet get fetched now.
+        """Return an input (like `get`, missing inputs get fetched outside render passes).
 
         Raises:
             MissingInputError: Offline mode and the input is not in the lock file.
+            InputPendingError: Rendering, the input was not resolved yet.
         """
         from mknodes.inputs.kinds import get_kind
 
@@ -306,6 +392,7 @@ class InputStore:
         ident = self._ident(input_kind, params)
         if (entry := self._cached(input_kind, ident)) is not None:
             return entry.value
+        self._pending(kind, ident, params)
         logger.debug("Fetching input %s %r on demand", *ident)
         value = await input_kind.fetch(params)
         self.on_demand.add(ident)

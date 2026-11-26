@@ -12,7 +12,7 @@ from mknodes import inputs
 from mknodes.build import DocBuilder
 from mknodes.info import contexts
 from mknodes.inputs import InputRequest, InputStore, MissingInputError
-from mknodes.utils import iconcache
+from mknodes.utils import diagnostics, iconcache
 
 
 SVG = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0"/></svg>'
@@ -481,3 +481,96 @@ def test_build_time_is_fixed_and_honours_source_date_epoch(monkeypatch):
         assert node.to_markdown_sync() == "2023"
     finally:
         buildtime.build_time.cache_clear()
+
+
+@pytest.fixture
+def io_guard(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    """Record network / subprocess / fetch calls made inside a render pass."""
+    import socket
+    import subprocess
+
+    violations: list[str] = []
+
+    def guard(name: str, fn: Any) -> Any:
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            if inputs.current_pass() is not None:
+                violations.append(name)
+            return fn(*args, **kwargs)
+
+        return wrapper
+
+    monkeypatch.setattr(socket.socket, "connect", guard("connect", socket.socket.connect))
+    monkeypatch.setattr(
+        subprocess.Popen, "__init__", guard("subprocess", subprocess.Popen.__init__)
+    )
+    for kind in inputs.KINDS.values():
+        monkeypatch.setattr(kind, "fetch", guard(f"fetch {kind.name}", kind.fetch))
+        monkeypatch.setattr(kind, "fetch_sync", guard(f"fetch {kind.name}", kind.fetch_sync))
+    return violations
+
+
+async def test_rendering_does_no_io(io_guard: list[str], monkeypatch: pytest.MonkeyPatch):
+    """Inputs only known while rendering (templates) get resolved between render passes."""
+    from mknodes.inputs import kinds
+
+    monkeypatch.setattr(iconcache, "_fetch", lambda icon, **_kw: SVG.replace("M0", icon))
+
+    async def fake_bytes(url: str) -> bytes:
+        return f"text of {url}".encode()
+
+    monkeypatch.setattr(kinds, "_fetch_bytes", fake_bytes)
+    ctx = contexts.ProjectContext(inputs=InputStore())
+    nav = mk.MkNav(context=ctx)
+    page = nav.add_page("Index", is_index=True)
+    page += mk.MkIcon("mdi:declared")  # declared: resolve phase
+    # Only known while rendering: page Jinja pass, template node, filters.
+    page += "{{ 'mdi:in-page-pass' | MkIcon }}"
+    page += mk.MkText(
+        "{{ 'mdi:in-template' | MkIcon }} {{ 'https://example.com/x.md' | load_file }}"
+        " {{ 'echo from-shell' | check_output }}",
+        render_jinja=True,
+    )
+    page += mk.MkCommandOutput(["echo", "declared-command"])
+    with diagnostics.collect() as collected:
+        output = await DocBuilder().build(nav)
+    md = output.pages["index.md"]
+    for icon in ("mdi:declared", "mdi:in-page-pass", "mdi:in-template"):
+        assert SVG.replace("M0", icon) in md
+    assert "text of https://example.com/x.md" in md
+    assert "from-shell" in md
+    assert "declared-command" in md
+    assert io_guard == []
+    assert ctx.inputs.on_demand == set()
+    assert list(collected) == []
+
+
+async def test_render_passes_discard_diagnostics_of_retried_renders(monkeypatch):
+    """A render which read a missing input is discarded with what it reported."""
+    monkeypatch.setattr(iconcache, "_fetch", lambda icon, **_kw: SVG)
+    ctx = contexts.ProjectContext(inputs=InputStore())
+    node = mk.MkText("{{ 'mdi:x' | MkIcon }}", render_jinja=True, context=ctx)
+    calls: list[bool] = []
+
+    def flaky_render() -> str:
+        has_icon = ("icon", "mdi:x") in ctx.inputs.entries
+        calls.append(has_icon)
+        if not has_icon:
+            diagnostics.report("node", "broken while the icon is missing")
+        return node.to_markdown_sync()
+
+    with diagnostics.collect() as collected:
+        md = inputs.run_passes(flaky_render)
+    assert SVG in md
+    assert calls == [False, True]
+    assert list(collected) == []
+    with inputs.render_pass() as render, pytest.raises(inputs.InputPendingError):
+        ctx.inputs.get("icon", icon="mdi:other")
+    assert render.requests()[0][1] == [InputRequest.create("icon", icon="mdi:other")]
+
+
+def test_str_of_a_node_resolves_its_inputs_first(io_guard, monkeypatch):
+    """Top-level `str(node)` / `to_markdown_sync()` run render passes too."""
+    monkeypatch.setattr(iconcache, "_fetch", lambda icon, **_kw: SVG)
+    node = mk.MkText("{{ 'mdi:y' | MkIcon }}", render_jinja=True)
+    assert SVG in str(node)
+    assert io_guard == []

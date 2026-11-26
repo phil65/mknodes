@@ -520,11 +520,19 @@ class MkNode:
             flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
                     Defaults to the active renderer (Material for MkDocs).
         """
+        from mknodes import inputs
+
         if flavor is not None:
             with rendering.use(rendering.get_renderer(flavor)):
                 return await self.to_markdown()
-        renderer = rendering.current()
-        return renderer.process(self, await renderer.render_markdown(self))
+
+        async def render() -> str:
+            renderer = rendering.current()
+            return renderer.process(self, await renderer.render_markdown(self))
+
+        # Top level: render passes (inputs found while rendering get resolved, then the
+        # node renders again). Nested inside a render: just renders.
+        return await inputs.run_passes_async(render)
 
     def to_markdown_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Blocking version of `to_markdown()` for sync code.
@@ -635,11 +643,16 @@ class MkNode:
             ),
         }
 
-        req = resources.Resources(markdown_extensions=extensions)
-        for node in nodes:
-            node_req = await node.get_node_resources()
-            req.merge(node_req)
-        return req
+        from mknodes import inputs
+
+        async def collect() -> resources.Resources:
+            req = resources.Resources(markdown_extensions=extensions)
+            for node in nodes:
+                node_req = await node.get_node_resources()
+                req.merge(node_req)
+            return req
+
+        return await inputs.run_passes_async(collect)
 
     @classmethod
     def with_context(
