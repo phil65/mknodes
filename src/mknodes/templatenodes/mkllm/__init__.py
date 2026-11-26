@@ -103,14 +103,14 @@ class MkLlm(mktext.MkText):
     def get_input_requests(self) -> list[inputs.InputRequest]:
         return [inputs.InputRequest.create("llm", **self._llm_params())]
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         """Generate text using the LLM (pinned in the lock file of the inputs store).
 
         Returns:
             Generated text content.
         """
         try:
-            return await self.ctx.inputs.aget("llm", **self._llm_params())
+            return self.ctx.inputs.get("llm", **self._llm_params())
         except inputs.InputUnavailableError as e:
             logger.warning("MkLlm: %s, using a placeholder", e)
             return UNAVAILABLE_TEXT

@@ -68,7 +68,7 @@ class MkCode(mkcontainer.MkContainer):
         self._fence_level = fence_level
         super().__init__(content=content, **kwargs)
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         """Text content."""
         return "\n".join(str(i) for i in self.get_items())
 
@@ -107,20 +107,20 @@ class MkCode(mkcontainer.MkContainer):
             attr_str = " " + attr_str
         return f"{{{classes}{attr_str}}}"
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get code block markdown and resources."""
         space = " " if self.fence_title else ""
-        text = await self.get_text()
+        text = self.get_text()
         fence = self.fence_for(text)
         md = f"{fence}{space}{self.fence_title}\n{text}\n{fence}"
 
         # Get own resources (don't aggregate children since we format them as text)
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
 
         return resources.NodeContent(markdown=md, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
     @classmethod

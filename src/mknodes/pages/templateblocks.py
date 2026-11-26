@@ -62,7 +62,7 @@ class BaseBlock(mknode.MkNode):
     def block_content(self, md: markdown.Markdown | None = None):
         raise NotImplementedError
 
-    async def to_markdown(
+    def to_markdown_sync(
         self,
         flavor: str | rendering.Renderer | None = None,
         *,
@@ -296,4 +296,4 @@ class StylesBlock(BaseBlock):
 
 if __name__ == "__main__":
     block = StylesBlock()
-    print(block.to_markdown())
+    print(block.to_markdown_sync())

@@ -35,7 +35,7 @@ class MkKeys(mknode.MkNode):
             case list():
                 self.keys = [i.lower() for i in keys]
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         key_str = "+".join(self.keys)
         return f"++{key_str}++"
 

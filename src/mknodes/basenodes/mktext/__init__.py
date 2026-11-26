@@ -36,24 +36,24 @@ class MkText(TemplateRenderMixin, mknode.MkNode):
         self._text = str(text or "")
         self.render_jinja = render_jinja
 
-    async def get_section(self, section_name: str) -> Self | None:
-        markdown = await self.get_text()
+    def get_section(self, section_name: str) -> Self | None:
+        markdown = self.get_text()
         section_text = mdfilters.extract_header_section(markdown, section_name)
         return None if section_text is None else type(self)(section_text)
 
     def render_kwargs(self) -> dict[str, Any]:
         return dict(string=self._text, variables=self.variables)
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         if not self.render_jinja:
             return self._text
-        return (await self.get_render_result_async()).markdown
+        return (self.current_render_result()).markdown
 
     def set_text(self, value: str) -> None:
         self._text = value
 
-    async def to_md_unprocessed(self) -> str:
-        return await self.get_text()
+    def to_md_unprocessed(self) -> str:
+        return self.get_text()
 
     def get_children(self) -> list[mknode.MkNode]:
         """Return children nodes.

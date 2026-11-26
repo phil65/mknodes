@@ -15,8 +15,11 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
 
 - `src/mknodes/__init__.py`: public API; re-exports every node class (`mk.MkPage`, `mk.MkNav`, ...).
 - `basenodes/mknode/__init__.py`: `MkNode`, the base class. Tree handling (parent/children,
-  `iter_nodes`), `ctx` (project context), `env` (Jinja env), `to_markdown()`, `get_resources()`,
-  `to_html()`. Most rendering is async.
+  `iter_nodes`), `ctx` (project context), `env` (Jinja env), `to_markdown_sync()` / `str(node)`,
+  `get_resources_sync()`, `to_html_sync()`. Rendering is **sync and pure** (since 4.6): nodes
+  only read resolved data (`ctx.inputs`), no event loops / threads per node. The async
+  `to_markdown()` / `get_resources()` / `to_html()` / `get_toc()` are deprecated wrappers
+  (removed in 5.0); override points (`get_content`, `to_md_unprocessed`, rules) are sync.
 - `basenodes/`: primitive nodes (`mktext`, `mkadmonition`, `mkcode`, `mktable`, `mkcontainer`, ...).
   Each node is a package with `__init__.py` plus a `metadata.toml` ("node file", parsed by
   `info/nodefile.py`) holding metadata, required extensions/CSS, examples (`python`/`jinja`) and
@@ -34,11 +37,14 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `pyproject.py`, `linkprovider.py`, registries for packages/repos/griffe.
 - `jinja/`: `NodeEnvironment` (`nodeenvironment.py`, a `jinjarope.Environment` exposing all nodes
   as filters/globals) and `filters.py`. Registered as `jinjarope.environment` entry point.
-  Nodes created by a template are collected **per render** (`NodeEnvironment.render_nodes[_async]()`
+  Nodes created by a template are collected **per render** (`NodeEnvironment.render_nodes()`
   -> `RenderResult(markdown, nodes, children, resources)`, collector in a context variable; nested
-  renders of the same env add to the outer one). `{{ node }}` is awaited in the running loop via
-  `NodeCodeGenerator` (hooks Jinja's private `_output_child_pre/_post`: re-check on Jinja updates)
-  instead of `str(node)` -> `run_sync`. Template nodes (`MkTemplate`, `MkTemplatePage`,
+  renders of the same env add to the outer one). Templates are sync (no `enable_async`);
+  `{{ node }}` renders via `NodeCodeGenerator` (hooks Jinja's private `_output_child_pre/_post`:
+  re-check on Jinja updates) -> `environment._render_output(node)`, which keeps the node's
+  resources for the render. `NodeContext.call` maps template calls of the deprecated async node
+  methods (`node.to_html()`) to the sync ones. I/O filters / globals of jinjarope (`load_file`,
+  `check_output`, `now`, `utcnow`) are replaced by store-backed / build-time versions. Template nodes (`MkTemplate`, `MkTemplatePage`,
   `MkTemplateTable`, `MkText(render_jinja=True)`) use `jinja/rendercache.TemplateRenderMixin`:
   one render per flavour serves children and content; setting an attribute drops the cache,
   in-place mutation (e.g. `node.variables["x"] = 1`) does not. `env.rendered_nodes` /
@@ -97,7 +103,7 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `serve`, `generate` (`--engine zensical|mkdocs|mdbook|sphinx|docsify|markdown`, `--flavor`); `render.py`: `render`,
   `render-folder`. Entry point `cli:main` (configures logfire).
 - `rendering/`: Markdown flavours. A `Renderer` (`base.py`) per flavour holds rules
-  (node type -> `async def rule(node, renderer) -> str`, registered with
+  (node type -> `def rule(node, renderer) -> str`, registered with
   `@GithubRenderer.rule(mk.MkAdmonition)`). Lookup walks the node MRO: Python rule, then an
   `[output.<template_key>]` template of the class's `metadata.toml`, and stops at a class
   that renders itself (`get_content` / `to_md_unprocessed`); no rule -> the node renders
@@ -190,8 +196,9 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - mypy is the type checker in CI and pre-commit (template deviation: the template uses ty;
   `ty check` still reports ~77 findings, mostly container `get_items` overrides and
   navigation router unions, so the switch is a separate task).
-- Rendering APIs are async (`await node.to_markdown()`, `await node.get_resources()`); tests use
-  pytest-asyncio with `asyncio_mode = "auto"`.
+- Rendering APIs are sync (`node.to_markdown_sync()`, `str(node)`, `DocBuilder().build_sync()`);
+  only fetching inputs is async (`InputKind.fetch`, `InputStore.resolve`). Tests use
+  pytest-asyncio with `asyncio_mode = "auto"` for those.
 - Tests live in `tests/`, one file per area. `tests/test_nodefiles.py` renders every node's
   `metadata.toml` examples, checks that `[output.markdown]` templates match `to_md_unprocessed()`,
   and snapshots per-node resources in `tests/snapshots/`; update with `uv run pytest --snapshot-update`
@@ -211,8 +218,14 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
   break docs builds and the `MkIcon` tests), `MkPyDeps` needs Graphviz (`dot`) and the dev-only
   `pydeps` package, `MkLlm` needs an LLM API key (only to refresh the lock file), git-based nodes need
   a git checkout with history.
-- External inputs (icons, icon set prefixes, licenses, included URLs, `MkLlm` texts) go through `ctx.inputs` (`mknodes.inputs`):
-  nodes declare them in `get_input_requests()`, the builder resolves them before rendering,
+- External inputs (icons, icon set prefixes, licenses, remote files, `MkLlm` texts, pydeps graphs,
+  command output, changelogs) go through `ctx.inputs` (`mknodes.inputs`):
+  nodes declare them in `get_input_requests()`, the builder resolves them before rendering;
+  inputs only found while rendering (templates) make the render raise `InputPendingError`
+  inside a render pass, the pass gets discarded, the inputs resolved and the render repeated
+  (`inputs/passes.py`). Code catching broad exceptions in render paths must re-raise
+  `InputPendingError` / `MissingInputError`. Process-wide state (e.g. `redirect_stdout`) in a
+  kind's fetch needs a lock: fetches run concurrently in threads.
   site builds pin them in `mknodes.lock` (committed for the manual; CI docs builds run
   `--offline`, a missing input fails them: refresh with `uv run duty refresh-inputs`). New network / subprocess work in nodes should be an input kind, see
   `design/inputs-store.md`. Tests replace `complete_llm` with a fake (`tests/conftest.py`).
@@ -221,7 +234,7 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - New container-like nodes must render children via `rendering.current().render_child(item)`
   (not `item.get_content()` + `item.get_processors()`), otherwise flavours don't reach them.
   Threads don't inherit the active renderer: set it with `rendering.use()` inside the thread
-  (`coroutines.run_sync` copies the context already).
+  (or run in `contextvars.copy_context().run`, as `DocBuilder` does for its workers).
 - Container nodes (`MkContainerBase` subclasses) render via `get_content()`; a subclass that only
   overrides `to_md_unprocessed()` is detected by `_overrides_markdown_only()` in
   `basenodes/mkcontainer/__init__.py`. Check nested rendering (`page += node`) when adding nodes.

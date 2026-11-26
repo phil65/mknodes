@@ -1,10 +1,11 @@
 """DocBuilder: renders a node tree into an engine-neutral `BuildOutput`."""
 
-import asyncio
 from concurrent.futures import ThreadPoolExecutor
+import contextvars
 import dataclasses
 import pathlib
 from typing import TYPE_CHECKING
+import warnings
 
 import logfire
 
@@ -13,7 +14,7 @@ from mknodes.build import fencecheck, pagetemplates
 from mknodes.build.output import BuildOutput, Script, SiteMetadata, nav_from_dict
 from mknodes.mdlib import mdconverter
 from mknodes.pages.mkpage import MkPage  # noqa: TC001  (logfire.instrument reads the signature)
-from mknodes.utils import diagnostics, log, resources
+from mknodes.utils import coroutines, diagnostics, log, resources
 
 
 if TYPE_CHECKING:
@@ -29,7 +30,7 @@ logger = log.get_logger(__name__)
 ASSETS_DIR = "assets"
 
 
-async def _render_page_jinja(page: mk.MkPage, md: str) -> str:
+def _render_page_jinja(page: mk.MkPage, md: str) -> str:
     """Render the page Markdown with Jinja (skipped if it contains no Jinja syntax).
 
     Compiling a whole page is expensive; text without delimiters renders to itself
@@ -38,16 +39,17 @@ async def _render_page_jinja(page: mk.MkPage, md: str) -> str:
     env = page.env
     markers = (env.variable_start_string, env.block_start_string, env.comment_start_string)
     if env.line_statement_prefix or env.line_comment_prefix or any(m in md for m in markers):
-        return await env.render_string_async(md)
+        return env.render_string(md)
     md = md.replace("\r\n", "\n").replace("\r", "\n")
     if not env.keep_trailing_newline and md.endswith("\n"):
         md = md[:-1]
     return md.replace("\n", env.newline_sequence)
 
 
-async def resolve_inputs(nodes: Iterable[mk.MkNode]) -> None:
+def resolve_inputs(nodes: Iterable[mk.MkNode]) -> None:
     """Resolve the external inputs requested by given nodes (per inputs store).
 
+    The fetches run concurrently in one event loop (a helper thread if one is running).
     Nodes whose requests can't be computed are skipped (they fail when rendering).
     """
     stores: dict[int, tuple[InputStore, list[InputRequest]]] = {}
@@ -60,7 +62,12 @@ async def resolve_inputs(nodes: Iterable[mk.MkNode]) -> None:
         if requests:
             store = node.ctx.inputs
             stores.setdefault(id(store), (store, []))[1].extend(requests)
-    for store, requests in stores.values():
+    if stores:
+        coroutines.run_sync(_resolve(list(stores.values())))
+
+
+async def _resolve(stores: list[tuple[InputStore, list[InputRequest]]]) -> None:
+    for store, requests in stores:
         await store.resolve(requests)
 
 
@@ -121,7 +128,24 @@ class DocBuilder:
         self.max_workers = max_workers
 
     async def build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
+        """Deprecated (removed in 5.0): rendering is sync, use `build_sync()`.
+
+        Args:
+            root: Root nav of the tree.
+            theme: Theme whose resources, templates and extras get included.
+        """
+        msg = (
+            "DocBuilder.build() is deprecated (rendering is sync), use build_sync(). "
+            "Removed in mknodes 5.0."
+        )
+        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        return self.build_sync(root, theme)
+
+    def build_sync(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
         """Render given tree.
+
+        Rendering is sync and never fetches: the inputs of the nodes get resolved first,
+        inputs found while rendering between render passes (see `mknodes.inputs`).
 
         Problems which don't stop the build (failed nodes, broken code fences, ...) get
         logged and collected in `BuildOutput.diagnostics`.
@@ -131,11 +155,11 @@ class DocBuilder:
             theme: Theme whose resources, templates and extras get included.
         """
         with diagnostics.collect() as collected:
-            output = await self._build(root, theme)
+            output = self._build(root, theme)
         output.diagnostics = list(collected)
         return output
 
-    async def _build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
+    def _build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
         import mknodes as mk
 
         logger.info("Building documentation (flavor: %s)...", self.renderer.name)
@@ -154,12 +178,12 @@ class DocBuilder:
         # inputs declared by the nodes get resolved concurrently.
         pass_env = root.env if self.render_jinja else None
 
-        async def walk() -> list[tuple[int, mk.MkNode]]:
+        def walk() -> list[tuple[int, mk.MkNode]]:
             with rendering.use(self.renderer), rendering.jinja_pass(pass_env):
                 theme_nodes = list(theme.iter_nodes()) if theme else []
                 return [*theme_nodes, *root.iter_nodes()]
 
-        all_nodes = await inputs.run_passes_async(walk)
+        all_nodes = inputs.run_passes(walk)
         for _, node in all_nodes:
             files |= node.files
             match node:
@@ -168,18 +192,18 @@ class DocBuilder:
                 case mk.MkNav() as nav:
                     navs.append(nav)
         # Resolve phase: fetch the external inputs of all nodes concurrently.
-        await resolve_inputs(node for _, node in all_nodes)
+        resolve_inputs(node for _, node in all_nodes)
         # Nav templates first: pages inherit the template reference of their navs.
         for nav in navs:
             pagetemplates.update_nav_template(nav)
         with rendering.use(self.renderer):
-            results = await self._render_pages(pages)
+            results = self._render_pages(pages)
 
-        async def render_navs() -> list[resources.Resources]:
+        def render_navs() -> list[resources.Resources]:
             with rendering.use(self.renderer):
-                return [(await self.renderer.render(nav)).resources for nav in navs]
+                return [self.renderer.render(nav).resources for nav in navs]
 
-        nav_resources = await inputs.run_passes_async(render_navs)
+        nav_resources = inputs.run_passes(render_navs)
 
         req = resources.Resources()
         for result in results:
@@ -199,22 +223,20 @@ class DocBuilder:
                 location, _, message = problem.partition(": ")
                 diagnostics.report("fence", message, page=path, location=location)
         if theme:
-            req.merge(await inputs.run_passes_async(theme.get_resources))
+            req.merge(inputs.run_passes(theme.get_resources))
             theme.adapt_extensions(req.markdown_extensions)
         self._add_resources(output, req)
         templates = [p.template for p in pages] + [n.page_template for n in navs]
         if theme:
             templates += list(theme.templates)
-        await inputs.run_passes_async(
-            lambda: self._add_templates(output, [t for t in templates if t])
-        )
+        inputs.run_passes(lambda: self._add_templates(output, [t for t in templates if t]))
         output.nav = nav_from_dict(root.nav.to_nav_dict())
         if theme:
             theme.adapt_extras(output.extra)
         logger.info("Built %s pages, %s assets", len(output.pages), len(output.assets))
         return output
 
-    async def _render_pages(self, pages: list[mk.MkPage]) -> list[PageResult]:
+    def _render_pages(self, pages: list[mk.MkPage]) -> list[PageResult]:
         """Render pages in render passes: pages which read missing inputs render again.
 
         Rendering never fetches. A page reading an input which is not resolved yet gets
@@ -225,7 +247,7 @@ class DocBuilder:
         todo = pages
         for _ in range(inputs.passes.MAX_PASSES):
             missing = inputs.RenderPass()
-            for attempt in await self._render_attempts(todo):
+            for attempt in self._render_attempts(todo):
                 if attempt.render:
                     missing.merge(attempt.render)
                     continue
@@ -236,64 +258,56 @@ class DocBuilder:
                 done[id(attempt.page)] = attempt.result
             if not missing:
                 return [done[id(page)] for page in pages]
-            await inputs.passes.resolve_pending(missing)
+            coroutines.run_sync(inputs.passes.resolve_pending(missing))
             todo = [page for page in todo if id(page) not in done]
         raise inputs.passes.pending_error(missing)
 
-    async def _render_attempts(self, pages: list[mk.MkPage]) -> list[_Attempt]:
-        if not self.max_workers or self.max_workers <= 1:
-            return [await self._attempt(page) for page in pages]
-        loop = asyncio.get_running_loop()
+    def _render_attempts(self, pages: list[mk.MkPage]) -> list[_Attempt]:
+        if not self.max_workers or self.max_workers <= 1 or len(pages) <= 1:
+            return [self._attempt(page) for page in pages]
+        # Every page renders in a copy of the current context (active renderer, ...).
+        contexts = [contextvars.copy_context() for _ in pages]
         with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
-            futures = [loop.run_in_executor(pool, self._attempt_sync, p) for p in pages]
-            return list(await asyncio.gather(*futures))
+            futures = [pool.submit(c.run, self._attempt, p) for c, p in zip(contexts, pages)]
+            return [future.result() for future in futures]
 
-    async def _attempt(self, page: mk.MkPage) -> _Attempt:
+    def _attempt(self, page: mk.MkPage) -> _Attempt:
         """Render a page in its own render pass (missing inputs: render discarded)."""
         with diagnostics.deferred() as held, inputs.render_pass() as render:
             try:
-                result = await self._render_page(page)
+                result = self._render_page(page)
             except Exception as e:  # noqa: BLE001
                 return _Attempt(page, None, render, held, e)
         return _Attempt(page, result, render, held, None)
 
-    def _attempt_sync(self, page: mk.MkPage) -> _Attempt:
-        """Render a page in a worker thread (own event loop, renderer set explicitly)."""
-        loop = asyncio.new_event_loop()
-        try:
-            with rendering.use(self.renderer):
-                return loop.run_until_complete(self._attempt(page))
-        finally:
-            loop.close()
-
     @logfire.instrument("Rendering page {page.title}")
-    async def _render_page(self, page: MkPage) -> PageResult:
+    def _render_page(self, page: MkPage) -> PageResult:
         path = pathlib.PurePath(page.resolved_file_path).as_posix()
         with diagnostics.page_context(path):
-            return await self._render_page_content(page, path)
+            return self._render_page_content(page, path)
 
-    async def _render_page_content(self, page: mk.MkPage, path: str) -> PageResult:
+    def _render_page_content(self, page: mk.MkPage, path: str) -> PageResult:
         logger.debug("Rendering page %s", path)
         render = page.metadata.get("render_macros")
         render_jinja = self.render_jinja if render is None else render
         # Data rendered into the page (docstrings, ...) gets protected from the Jinja pass.
         with rendering.jinja_pass(page.env if render_jinja else None):
-            content = await self.renderer.render(page)
+            content = self.renderer.render(page)
             md = content.markdown
             if self.global_resources:
                 req = content.resources
             else:
-                req = await pagetemplates.move_resources_to_template(page, content.resources)
+                req = pagetemplates.move_resources_to_template(page, content.resources)
             show_info = page.resolved_metadata.get("show_page_info")
             if self.show_page_info if show_info is None else show_info:
-                info = await self.renderer.render(pagetemplates.create_page_info(page, req))
+                info = self.renderer.render(pagetemplates.create_page_info(page, req))
                 md = f"{md}\n\n{info.markdown}"
                 req.merge(info.resources)
             # The template must be known before the metadata header gets rendered.
             pagetemplates.update_page_template(page)
             md = self.renderer.process(page, md)
         if render_jinja:
-            md = await _render_page_jinja(page, md)
+            md = _render_page_jinja(page, md)
         return PageResult(path=path, markdown=md, resources=req)
 
     @staticmethod
@@ -335,10 +349,10 @@ class DocBuilder:
             output.assets[asset_path] = asset.content
 
     @staticmethod
-    async def _add_templates(output: BuildOutput, templates: list[mk.PageTemplate]) -> None:
+    def _add_templates(output: BuildOutput, templates: list[mk.PageTemplate]) -> None:
         """Render page templates (theme overrides) to HTML."""
         exts = output.markdown_extensions
         md = mdconverter.MdConverter(extensions=list(exts), extension_configs=exts)
         for template in templates:
-            if template.filename and (html := await template.build_html(md)):
+            if template.filename and (html := template.build_html(md)):
                 output.templates[template.filename] = html

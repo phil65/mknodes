@@ -1,6 +1,5 @@
 """Render commands: Markdown files / folders with the MkNodes Jinja environment."""
 
-import asyncio
 from pathlib import Path
 import sys
 
@@ -44,11 +43,12 @@ def render(
         mknodes render -i template.md -o output.md
         cat template.md | mknodes render -i - > output.md
     """
-    asyncio.run(_render_async(input_file, output_file, repo_url))
+    _render(input_file, output_file, repo_url)
 
 
-async def _render_async(input_file: str, output_file: str, repo_url: str | None) -> None:
-    """Async implementation of render command."""
+def _render(input_file: str, output_file: str, repo_url: str | None) -> None:
+    """Implementation of the render command."""
+    from mknodes import inputs
     from mknodes.jinja import nodeenvironment
 
     # Read input
@@ -70,7 +70,7 @@ async def _render_async(input_file: str, output_file: str, repo_url: str | None)
     env = nodeenvironment.NodeEnvironment(node=page)
 
     # Render the content
-    rendered = await env.render_string_async(content)
+    rendered = inputs.run_passes(lambda: env.render_string(content))
 
     # Write output
     if output_file == "-":
@@ -100,10 +100,10 @@ def render_folder(
         mknodes render-folder -i ./src/docs -o ./docs
         mknodes render-folder -i ./templates -o ./output --glob "**/*.md" --no-copy-other
     """
-    asyncio.run(_render_folder_async(input_dir, output_dir, repo_url, glob, copy_other, workers))
+    _render_folder(input_dir, output_dir, repo_url, glob, copy_other, workers)
 
 
-async def _render_folder_async(
+def _render_folder(
     input_dir: Path,
     output_dir: Path,
     repo_url: str | None,
@@ -111,10 +111,11 @@ async def _render_folder_async(
     copy_other: bool,
     max_workers: int | None,
 ) -> None:
-    """Async implementation of render_folder command."""
+    """Implementation of the render_folder command."""
     from concurrent.futures import ThreadPoolExecutor
     import shutil
 
+    from mknodes import inputs
     from mknodes.jinja import nodeenvironment
 
     if not input_dir.exists():
@@ -140,14 +141,14 @@ async def _render_folder_async(
     # Ensure output directory exists
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    async def render_file(src: Path) -> None:
+    def render_file(src: Path) -> None:
         """Render a single file."""
         rel_path = src.relative_to(input_dir)
         dest = output_dir / rel_path
         dest.parent.mkdir(parents=True, exist_ok=True)
 
         content = src.read_text(encoding="utf-8")
-        rendered = await env.render_string_async(content)
+        rendered = inputs.run_passes(lambda: env.render_string(content))
         dest.write_text(rendered, encoding="utf-8")
         logger.debug("Rendered: %s -> %s", src, dest)
 
@@ -161,16 +162,13 @@ async def _render_folder_async(
 
     # Render matching files
     for src in matching_files:
-        await render_file(src)
+        render_file(src)
 
     # Copy non-matching files if requested
     if copy_other and non_matching_files:
-        loop = asyncio.get_event_loop()
         workers = max_workers or min(32, len(non_matching_files))
         with ThreadPoolExecutor(max_workers=workers) as executor:
-            await asyncio.gather(*[
-                loop.run_in_executor(executor, copy_file, f) for f in non_matching_files
-            ])
+            list(executor.map(copy_file, non_matching_files))
 
     logger.info(
         "Render complete: %d rendered, %d copied to %s",

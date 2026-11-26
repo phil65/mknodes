@@ -1,6 +1,7 @@
 import contextlib
 import functools
 import io
+import threading
 
 from typing import Any, Literal, TYPE_CHECKING
 
@@ -15,6 +16,9 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
+
+
+_LOCK = threading.Lock()
 
 
 @helpers.list_to_tuple
@@ -35,7 +39,9 @@ def get_changelog(
         sections: Optionally filter sections
         filter_commits: The Git revision-range used to filter commits in git-log.
     """
-    with contextlib.redirect_stdout(io.StringIO()):
+    # git-changelog writes to `sys.stdout` (swapped by redirect_stdout, process-wide):
+    # one changelog at a time, the resolve phase builds them in worker threads.
+    with _LOCK, contextlib.redirect_stdout(io.StringIO()):
         try:
             _changelog, text = git_changelog.build_and_render(
                 repository=repository,
@@ -118,8 +124,8 @@ class MkChangelog(mktext.MkText):
     def get_input_requests(self) -> list[inputs.InputRequest]:
         return [inputs.InputRequest.create("changelog", **self._changelog_params())]
 
-    async def get_text(self) -> str:
-        return await self.ctx.inputs.aget("changelog", **self._changelog_params())
+    def get_text(self) -> str:
+        return self.ctx.inputs.get("changelog", **self._changelog_params())
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ import inspect
 import os
 import pathlib
 from typing import TYPE_CHECKING, Any
+import warnings
 
 import jinja2
 from jinja2 import compiler
@@ -13,7 +14,7 @@ import jinjarope
 from jinjarope import inspectfilters
 
 from mknodes import inputs, rendering
-from mknodes.utils import buildtime, coroutines, diagnostics, log, pathhelpers
+from mknodes.utils import buildtime, diagnostics, log, pathhelpers
 
 
 if TYPE_CHECKING:
@@ -61,31 +62,52 @@ class RenderResult:
         """Created nodes which are direct children of the environment's node (cached)."""
         return [i for i in self.nodes if i.parent is self.owner]
 
-    async def get_resources(self, node: mk.MkNode) -> Resources:
+    def get_resources(self, node: mk.MkNode) -> Resources:
         """Resources of given created node (rendered only if it was not written out)."""
         if (res := self.resources.get(id(node))) is not None:
             return res
-        return (await node.get_content()).resources
+        return (node.get_content()).resources
 
 
 class NodeCodeGenerator(compiler.CodeGenerator):
-    """Code generator awaiting the rendering of nodes written with `{{ node }}`.
+    """Code generator rendering nodes written with `{{ node }}` via the environment.
 
-    `{{ x }}` normally compiles to `str(x)`, which for a node means
-    `run_sync(node.to_markdown())` (a thread with an own event loop when called
-    from a running loop). In async mode this generates
-    `str(x if not isinstance(x, MkNode) else await environment._render_output(x))`.
+    `{{ x }}` normally compiles to `str(x)`. For nodes this generates
+    `str(x if not isinstance(x, MkNode) else environment._render_output(x))`, which
+    renders the node in the active flavour and remembers its resources for the render.
     """
 
     def _output_child_pre(self, node: Any, frame: Any, finalize: Any) -> None:
         super()._output_child_pre(node, frame, finalize)
-        if self.environment.is_async:
-            self.write("(_mk_v if not isinstance((_mk_v := ")
+        self.write("(_mk_v if not isinstance((_mk_v := ")
 
     def _output_child_post(self, node: Any, frame: Any, finalize: Any) -> None:
-        if self.environment.is_async:
-            self.write("), environment.node_type) else await environment._render_output(_mk_v))")
+        self.write("), environment.node_type) else environment._render_output(_mk_v))")
         super()._output_child_post(node, frame, finalize)
+
+
+# Deprecated async node methods -> their sync versions, for templates calling them.
+_SYNC_METHODS = {
+    "to_markdown": "to_markdown_sync",
+    "to_html": "to_html_sync",
+    "get_resources": "get_resources_sync",
+    "get_toc": "get_toc_sync",
+}
+
+
+class NodeContext(jinjarope.environment.Context):
+    """Template context: `node.to_markdown()` etc. call the sync versions.
+
+    Templates are sync; the async methods of `MkNode` (deprecated) would return
+    coroutines. Removed in mknodes 5.0 together with the async methods.
+    """
+
+    def call(self, obj: Any, /, *args: Any, **kwargs: Any) -> Any:
+        name = getattr(obj, "__name__", None)
+        owner = getattr(obj, "__self__", None)
+        if name in _SYNC_METHODS and isinstance(owner, self.environment.node_type):  # type: ignore[attr-defined]
+            obj = getattr(owner, _SYNC_METHODS[name])
+        return super().call(obj, *args, **kwargs)
 
 
 class NodeEnvironment(jinjarope.Environment):
@@ -95,8 +117,9 @@ class NodeEnvironment(jinjarope.Environment):
 
     - Sets the parent for the filters
     - Puts node context in jinja namespace
-    - collects the nodes created by a render (per render call, see `render_nodes_async`)
-    - renders nodes written with `{{ node }}` in the running event loop
+    - collects the nodes created by a render (per render call, see `render_nodes`)
+    - renders nodes written with `{{ node }}` in the active flavour (sync: templates
+      only read resolved inputs, see `mknodes.inputs`)
     """
 
     code_generator_class = NodeCodeGenerator
@@ -110,10 +133,11 @@ class NodeEnvironment(jinjarope.Environment):
         """
         import mknodes as mk
 
-        super().__init__(enable_async=True, **kwargs)
+        super().__init__(**kwargs)
+        self.context_class = NodeContext
         self.node = node
         self.node_type = mk.MkNode
-        # Deprecated: nodes of the last render (use `render_nodes[_async]()`).
+        # Deprecated: nodes of the last render (use `render_nodes()`).
         self.rendered_nodes: list[mk.MkNode] = list()
         self.rendered_children: list[mk.MkNode] = list()
 
@@ -234,26 +258,25 @@ class NodeEnvironment(jinjarope.Environment):
         if collector is not None:
             collector.nodes.append(node)
 
-    async def _render_output(self, node: mk.MkNode) -> str:
-        """Render a node written by `{{ node }}` (awaited by the generated template code).
+    def _render_output(self, node: mk.MkNode) -> str:
+        """Render a node written by `{{ node }}` (called by the generated template code).
 
-        Same result as `str(node)`, but rendered in the running event loop instead of
-        a thread. The resources get remembered, so template nodes don't need to render
-        their children again for them.
+        Same result as `str(node)`. The resources get remembered, so template nodes
+        don't need to render their children again for them.
         """
         renderer = rendering.current()
-        content = await renderer.render(node)
+        content = renderer.render(node)
         if not renderer.supports(type(node)) and (collector := _collector.get()) is not None:
             collector.resources[id(node)] = content.resources
         return renderer.process(node, content.markdown)
 
-    async def _string_filter(self, value: Any) -> str:
-        """`string` filter: nodes get rendered in the running loop (no run_sync thread)."""
+    def _string_filter(self, value: Any) -> str:
+        """`string` filter: nodes get rendered like `{{ node }}`."""
         if isinstance(value, self.node_type):
-            return await self._render_output(value)
+            return self._render_output(value)
         return jinja2.filters.soft_str(value)
 
-    async def render_nodes_async(
+    def render_nodes(
         self,
         template_name: str | None = None,
         *,
@@ -282,10 +305,10 @@ class NodeEnvironment(jinjarope.Environment):
         token = _collector.set(collector)
         try:
             if string is not None:
-                markdown = await super().render_string_async(string, variables)
+                markdown = super().render_string(string, variables)
             else:
                 assert template_name is not None
-                markdown = await super().render_template_async(
+                markdown = super().render_template(
                     template_name,
                     variables=variables,
                     block_name=block_name,
@@ -302,7 +325,7 @@ class NodeEnvironment(jinjarope.Environment):
         self.rendered_children = result.children
         return result
 
-    def render_nodes(
+    async def render_nodes_async(
         self,
         template_name: str | None = None,
         *,
@@ -311,15 +334,15 @@ class NodeEnvironment(jinjarope.Environment):
         block_name: str | None = None,
         parent_template: str | None = None,
     ) -> RenderResult:
-        """Sync version of `render_nodes_async`."""
-        coro = self.render_nodes_async(
+        """Deprecated (removed in 5.0): rendering is sync, use `render_nodes()`."""
+        _deprecated("NodeEnvironment.render_nodes_async()", "render_nodes()")
+        return self.render_nodes(
             template_name,
             string=string,
             variables=variables,
             block_name=block_name,
             parent_template=parent_template,
         )
-        return coroutines.run_sync(coro)
 
     def render_template(
         self,
@@ -329,7 +352,7 @@ class NodeEnvironment(jinjarope.Environment):
         parent_template: str | None = None,
         **kwargs: Any,
     ) -> str:
-        """Render a loaded template (sync version).
+        """Render a loaded template.
 
         Args:
             template_name: Template name
@@ -354,22 +377,15 @@ class NodeEnvironment(jinjarope.Environment):
         parent_template: str | None = None,
         **kwargs: Any,
     ) -> str:
-        """Render a loaded template (async version).
-
-        Args:
-            template_name: Template name
-            variables: Extra variables for this render call
-            block_name: Render specific block from the template
-            parent_template: The name of the parent template importing this template
-            kwargs: Additional variables for the render call
-        """
-        result = await self.render_nodes_async(
+        """Deprecated (removed in 5.0): rendering is sync, use `render_template()`."""
+        _deprecated("NodeEnvironment.render_template_async()", "render_template()")
+        return self.render_template(
             template_name,
-            variables=(variables or {}) | kwargs,
+            variables,
             block_name=block_name,
             parent_template=parent_template,
+            **kwargs,
         )
-        return result.markdown
 
     def render_string(
         self,
@@ -377,7 +393,7 @@ class NodeEnvironment(jinjarope.Environment):
         variables: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> str:
-        """Render a template string (sync version).
+        """Render a template string.
 
         Args:
             string: String to render
@@ -392,15 +408,14 @@ class NodeEnvironment(jinjarope.Environment):
         variables: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> str:
-        """Render a template string (async version).
+        """Deprecated (removed in 5.0): rendering is sync, use `render_string()`."""
+        _deprecated("NodeEnvironment.render_string_async()", "render_string()")
+        return self.render_string(string, variables, **kwargs)
 
-        Args:
-            string: String to render
-            variables: Extra variables for the environment
-            kwargs: Additional variables for the render call
-        """
-        result = await self.render_nodes_async(string=string, variables=(variables or {}) | kwargs)
-        return result.markdown
+
+def _deprecated(name: str, replacement: str) -> None:
+    msg = f"{name} is deprecated (rendering is sync), use {replacement}. Removed in mknodes 5.0."
+    warnings.warn(msg, DeprecationWarning, stacklevel=3)
 
 
 class _WrappedClasses(dict[str, type]):

@@ -1,6 +1,7 @@
 """Exporters writing a `BuildOutput` to disk."""
 
 from typing import TYPE_CHECKING, Protocol
+import warnings
 
 import upath
 
@@ -19,7 +20,7 @@ SUMMARY_FILE = "SUMMARY.md"
 class Exporter(Protocol):
     """Protocol for exporters."""
 
-    async def export(self, output: BuildOutput, target: str | PathLike[str]) -> None:
+    def export_sync(self, output: BuildOutput, target: str | PathLike[str]) -> None:
         """Export build output to target directory."""
         ...
 
@@ -48,6 +49,12 @@ class MarkdownExporter:
         return files
 
     async def export(self, output: BuildOutput, target: str | PathLike[str]) -> None:
+        """Deprecated (removed in 5.0): use `export_sync()`."""
+        msg = "MarkdownExporter.export() is deprecated, use export_sync(). Removed in mknodes 5.0."
+        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        self.export_sync(output, target)
+
+    def export_sync(self, output: BuildOutput, target: str | PathLike[str]) -> None:
         """Write the files of given output into target folder (local path or fsspec URL)."""
         target_path = upath.UPath(target)
         target_path.mkdir(parents=True, exist_ok=True)

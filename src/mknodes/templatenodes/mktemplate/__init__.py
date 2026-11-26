@@ -48,26 +48,24 @@ class MkTemplate(TemplateRenderMixin, mkcontainer.MkContainer):
     def get_items(self):
         return self.get_render_result().children
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Render the template once: Markdown + resources of the created nodes."""
-        result = await self.get_render_result_async()
+        result = self.current_render_result()
         # Strip YAML frontmatter if present
         _, md = metadata.Metadata.parse(result.markdown)
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child in result.children:
-            aggregated.merge(await result.get_resources(child))
+            aggregated.merge(result.get_resources(child))
         return resources.NodeContent(markdown=md, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
 
 if __name__ == "__main__":
 
-    async def main() -> None:
-        print(await MkTemplate("nodes_index.jinja").get_resources())
+    def main() -> None:
+        print(MkTemplate("nodes_index.jinja").get_resources_sync())
 
-    import asyncio
-
-    asyncio.run(main())
+    main()

@@ -1,4 +1,4 @@
-"""Markdown -> HTML per flavour (`MkNode.to_html()`, the "Html" tab of node examples).
+"""Markdown -> HTML per flavour (`MkNode.to_html_sync()`, the "Html" tab of node examples).
 
 Every flavour needs a parser that knows its syntax, otherwise the HTML shows raw markers
 (`[!WARNING]`, `:::{note}`):

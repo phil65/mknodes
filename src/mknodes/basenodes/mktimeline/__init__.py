@@ -71,7 +71,7 @@ class MkTimelineItem(mknode.MkNode):
     def get_children(self):
         return [self.content]
 
-    async def get_element(self) -> xml.Div:
+    def get_element(self) -> xml.Div:
         root = xml.Div("timeline-item")
         xml.Div("timeline-img", parent=root)
         dct = {"left": " js--fadeInLeft", "right": " js--fadeInRight"}
@@ -87,7 +87,7 @@ class MkTimelineItem(mknode.MkNode):
             xml.Header(2, self.title, parent=content_div)
         if self.label:
             xml.Div("date", text=self.label, parent=content_div)
-        text = f"<p>\n{await self.content.to_html()}\n</p>"
+        text = f"<p>\n{self.content.to_html_sync()}\n</p>"
         content_div.append(ET.fromstring(text))
         if self.link:
             xml.A("bnt-more", href=self.link, text=self.button_text, parent=content_div)
@@ -132,16 +132,16 @@ class MkTimeline(mkcontainer.MkContainer):
         """Return the list of timeline items."""
         return self._items  # type: ignore[return-value]
 
-    async def get_element(self) -> xml.Section:
+    def get_element(self) -> xml.Section:
         root = xml.Section("timeline")
         for i, item in enumerate(self.get_items()):
             item.fade_direction = "left" if i % 2 == 0 else "right"
-            elem = await item.get_element()
+            elem = item.get_element()
             root.append(elem)
         return root
 
-    async def to_md_unprocessed(self) -> str:
-        root = await self.get_element()
+    def to_md_unprocessed(self) -> str:
+        root = self.get_element()
         return "\n\n" + root.to_string(space="") + "\n\n"
 
     def add_item(

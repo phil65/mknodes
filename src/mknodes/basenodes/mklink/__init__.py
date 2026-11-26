@@ -62,13 +62,13 @@ class MkLink(mknode.MkNode):
     def icon(self) -> str:
         return icons.get_emoji_slug(self._icon) if self._icon else ""
 
-    async def get_url(self) -> str:
+    def get_url(self) -> str:
         if isinstance(self.target, str) and helpers.is_url(self.target):
             return self.target  # no project context needed
-        return await self.ctx.links.get_url(self.target)
+        return self.ctx.links.get_url(self.target)
 
-    async def get_title(self) -> str:
-        return self._title or await self.get_url()
+    def get_title(self) -> str:
+        return self._title or self.get_url()
 
     @classmethod
     def for_pydantic_playground(
@@ -125,10 +125,10 @@ class MkLink(mknode.MkNode):
         url = f"https://pydantic.run/new?files={encoded}"
         return cls(url, title, **kwargs)
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         prefix = f"{self.icon} " if self.icon else ""
         tooltip = f" {self.tooltip!r}" if self.tooltip else ""
-        return f"[{prefix}{await self.get_title()}]({await self.get_url()}{tooltip})"
+        return f"[{prefix}{self.get_title()}]({self.get_url()}{tooltip})"
 
 
 if __name__ == "__main__":

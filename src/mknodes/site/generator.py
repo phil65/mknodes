@@ -7,15 +7,13 @@ import re
 from typing import TYPE_CHECKING
 import urllib.parse
 
-from anyenv import run_sync
-
 import mknodes as mk
 from mknodes import inputs, rendering
 from mknodes.build import DocBuilder, refcheck
 from mknodes.info import contexts
 from mknodes.jinja import rendercache
 from mknodes.site import yamlconfig
-from mknodes.utils import diagnostics, linkreplacer, log
+from mknodes.utils import coroutines, diagnostics, linkreplacer, log
 
 
 if TYPE_CHECKING:
@@ -133,8 +131,8 @@ class SiteGenerator:
         Problems which don't stop the build (failed nodes, broken code fences,
         unresolved references) get logged and collected in `BuildOutput.diagnostics`.
 
-        Setup and the build function run synchronously (nodes may
-        do blocking I/O on creation), only the collection step runs in an event loop.
+        Setup, the build function and rendering run synchronously; external inputs get
+        resolved (async, concurrently) between render passes, see `mknodes.inputs`.
         """
         with diagnostics.collect() as collected, use_inputs(self.settings.input_store):
             output = self._generate()
@@ -148,8 +146,8 @@ class SiteGenerator:
         self.root, self.theme = root, theme
         logger.info("Running build function %s...", self.settings.build_fn)
         result = self.settings.get_builder()(theme=theme, root=root)
-        if inspect.iscoroutine(result):
-            run_sync(result)
+        if inspect.iscoroutine(result):  # async build function (user code)
+            coroutines.run_sync(result)
 
         # Walk the tree in the target flavour: template nodes render once (for their
         # children) and reuse that render for their content.
@@ -173,7 +171,7 @@ class SiteGenerator:
             show_page_info=self.settings.show_page_info,
             global_resources=self.settings.global_resources,
         )
-        output = run_sync(builder.build(root, theme))
+        output = builder.build_sync(root, theme)
         logger.info("Inputs: %s", ", ".join(f"{k} {v}" for k, v in ctx.inputs.stats().items()))
         ctx.inputs.save()
         resolve_url_collisions(output)

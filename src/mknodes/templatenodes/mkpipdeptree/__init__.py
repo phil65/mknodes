@@ -99,8 +99,8 @@ class MkPipDepTree(mkdiagram.MkDiagram):
     def get_input_requests(self) -> list[inputs.InputRequest]:
         return [inputs.InputRequest.create("pipdeptree", **self._tree_params())]
 
-    async def get_mermaid_code(self) -> str:
-        return await self.ctx.inputs.aget("pipdeptree", **self._tree_params())
+    def get_mermaid_code(self) -> str:
+        return self.ctx.inputs.get("pipdeptree", **self._tree_params())
 
 
 if __name__ == "__main__":

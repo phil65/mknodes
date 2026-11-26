@@ -201,12 +201,12 @@ def details(summary: str, text: str, *, open_: bool = False) -> str:
 
 
 @GithubRenderer.rule(mk.MkAdmonition)
-async def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
+def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
     if not node.title and not node.get_items():
         return ""
-    text = await r.render_children(node.get_items())
+    text = r.render_children(node.get_items())
     if node.annotations:
-        text = f"{text}\n\n{await r.render_markdown(node.annotations)}"
+        text = f"{text}\n\n{r.render_markdown(node.annotations)}"
     if node.collapsible:
         summary = node.title or node.typ.capitalize()
         return details(summary, text, open_=bool(node.expanded))
@@ -229,23 +229,23 @@ def _inside_alert(node: mknode.MkNode) -> bool:
 
 
 @GithubRenderer.rule(mk.MkCompactAdmonition)
-async def render_compact_admonition(node: mk.MkCompactAdmonition, r: base.Renderer) -> str:
-    text = await node.get_text()
+def render_compact_admonition(node: mk.MkCompactAdmonition, r: base.Renderer) -> str:
+    text = node.get_text()
     if isinstance(text, mk.MkNode):
-        text = (await r.render_child(text)).markdown
+        text = (r.render_child(text)).markdown
     return alert(node.typ or "note", text)
 
 
 @GithubRenderer.rule(mk.MkDetailsBlock)
-async def render_details_block(node: mk.MkDetailsBlock, r: base.Renderer) -> str:
-    text = await r.render_children(node.get_items())
+def render_details_block(node: mk.MkDetailsBlock, r: base.Renderer) -> str:
+    text = r.render_children(node.get_items())
     return details(node.title or node.typ.capitalize(), text, open_=bool(node.expanded))
 
 
 @GithubRenderer.rule(mk.MkBlock)
-async def render_block(node: mk.MkBlock, r: base.Renderer) -> str:
+def render_block(node: mk.MkBlock, r: base.Renderer) -> str:
     """Unknown PyMdown blocks: keep the content, drop the block."""
-    return await r.render_children(node.get_items())
+    return r.render_children(node.get_items())
 
 
 # Elements whose content is not Markdown (and must not get blank lines inserted).
@@ -253,13 +253,13 @@ RAW_HTML_TAGS = {"pre", "code", "canvas", "math", "option", "script", "style", "
 
 
 @GithubRenderer.rule(mk.MkHtmlBlock)
-async def render_html_block(node: mk.MkHtmlBlock, r: base.Renderer) -> str:
+def render_html_block(node: mk.MkHtmlBlock, r: base.Renderer) -> str:
     """The element itself (`/// html | picture` -> `<picture>...</picture>`).
 
     Markdown content gets surrounded by blank lines (GitHub only parses Markdown
     separated from HTML tags), HTML / raw content stays tight.
     """
-    text = (await r.render_children(node.get_items())).strip()
+    text = (r.render_children(node.get_items())).strip()
     tag = node.argument or "div"
     attrs = "".join(
         f' {k}="{html.escape(str(v), quote=True)}"'
@@ -280,14 +280,14 @@ def _markdown_in_html(tag: str, text: str, attrs: str = "") -> str:
 
 
 @GithubRenderer.rule(mk.MkSpeechBubble)
-async def render_speech_bubble(node: mk.MkSpeechBubble, r: base.Renderer) -> str:
-    text = await r.render_children(node.get_items())
+def render_speech_bubble(node: mk.MkSpeechBubble, r: base.Renderer) -> str:
+    text = r.render_children(node.get_items())
     klass = f"speech {node.arrow}" if node.arrow else "speech"
     return _markdown_in_html("div", text, f' class="{klass}"')
 
 
 @GithubRenderer.rule(mk.MkHtmlTable)
-async def render_html_table(node: mk.MkHtmlTable, r: base.Renderer) -> str:
+def render_html_table(node: mk.MkHtmlTable, r: base.Renderer) -> str:
     """HTML table with unescaped Markdown cells (Material: `<table markdown="1">`)."""
     data = node.data
     if not any(data[k] for k in data):
@@ -295,7 +295,7 @@ async def render_html_table(node: mk.MkHtmlTable, r: base.Renderer) -> str:
     head = "".join(f"<th>{html.escape(str(k))}</th>" for k in data)
     rows = [f"<tr>{head}</tr>"]
     for row in node.iter_rows():
-        cells = [_markdown_in_html("td", (await r.render_child(item)).markdown) for item in row]
+        cells = [_markdown_in_html("td", (r.render_child(item)).markdown) for item in row]
         rows.append("<tr>\n{}\n</tr>".format("\n".join(cells)))
     return "<table>\n{}\n</table>".format("\n".join(rows))
 
@@ -312,22 +312,22 @@ def shields_badge_url(label: str, value: str | None = None, color: str | None = 
 
 
 @GithubRenderer.rule(mk.MkBadge)
-async def render_badge(node: mk.MkBadge, r: base.Renderer) -> str:
+def render_badge(node: mk.MkBadge, r: base.Renderer) -> str:
     """A shields.io badge image (GitHub drops inline SVG)."""
     url = shields_badge_url(node.label, node.value, node.badge_color)
     alt = f"{node.label}: {node.value}" if node.value else node.label
     image = f"![{alt}]({url})"
-    return f"[{image}]({target})" if (target := await node.get_url()) else image
+    return f"[{image}]({target})" if (target := node.get_url()) else image
 
 
 @GithubRenderer.rule(mk.MkTab, mk.MkTabBlock)
-async def render_tab(node: mk.MkTab | mk.MkTabBlock, r: base.Renderer) -> str:
-    text = await r.render_children(node.get_items())
+def render_tab(node: mk.MkTab | mk.MkTabBlock, r: base.Renderer) -> str:
+    text = r.render_children(node.get_items())
     return details(node.title, text, open_=bool(node.select))
 
 
 @GithubRenderer.rule(mk.MkTabContainer)
-async def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str:
+def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str:
     """Tabs become `<details>` blocks, the selected (or first) one expanded."""
     tabs = node.get_items()
     if not tabs:
@@ -337,22 +337,22 @@ async def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str
         selected = node._get_tab_pos(selected)
     parts = []
     for i, tab in enumerate(tabs):
-        text = await r.render_children(tab.get_items())
+        text = r.render_children(tab.get_items())
         parts.append(details(tab.title, text, open_=i == selected))
     return "\n".join(parts)
 
 
 @GithubRenderer.rule(mk.MkCode)
-async def render_code(node: mk.MkCode, r: base.Renderer) -> str:
+def render_code(node: mk.MkCode, r: base.Renderer) -> str:
     """Fenced code block with plain language info string (no attributes)."""
-    text = await node.get_text()
+    text = node.get_text()
     fence = node.fence_for(text)
     code = f"{fence}{node.language or ''}\n{text}\n{fence}"
     return f"**{node.title}**\n\n{code}" if node.title else code
 
 
 @GithubRenderer.rule(mk.MkKeys)
-async def render_keys(node: mk.MkKeys, r: base.Renderer) -> str:
+def render_keys(node: mk.MkKeys, r: base.Renderer) -> str:
     return "+".join(f"<kbd>{html.escape(key.capitalize())}</kbd>" for key in node.keys)
 
 
@@ -360,8 +360,8 @@ CRITIC_TAGS = {"addition": "ins", "deletion": "del", "highlight": "mark"}
 
 
 @GithubRenderer.rule(mk.MkCritic)
-async def render_critic(node: mk.MkCritic, r: base.Renderer) -> str:
-    text = await r.render_children(node.get_items())
+def render_critic(node: mk.MkCritic, r: base.Renderer) -> str:
+    text = r.render_children(node.get_items())
     if node.typ == "comment":
         return f"<!-- {text} -->"
     tag = CRITIC_TAGS[node.typ]
@@ -369,7 +369,7 @@ async def render_critic(node: mk.MkCritic, r: base.Renderer) -> str:
 
 
 @GithubRenderer.rule(mk.MkProgressBar)
-async def render_progress_bar(node: mk.MkProgressBar, r: base.Renderer) -> str:
+def render_progress_bar(node: mk.MkProgressBar, r: base.Renderer) -> str:
     filled = round(node.percentage / 100 * PROGRESS_WIDTH)
     bar = "█" * filled + "░" * (PROGRESS_WIDTH - filled)
     label = f" {node.label}" if node.label else ""
@@ -377,11 +377,11 @@ async def render_progress_bar(node: mk.MkProgressBar, r: base.Renderer) -> str:
 
 
 @GithubRenderer.rule(mk.MkDefinitionList)
-async def render_definition_list(node: mk.MkDefinitionList, r: base.Renderer) -> str:
+def render_definition_list(node: mk.MkDefinitionList, r: base.Renderer) -> str:
     items = []
     for key, value in node.data.items():
         if isinstance(value, mk.MkNode):
-            value = (await r.render_child(value)).markdown
+            value = (r.render_child(value)).markdown
         text = value
         items.append(f"<dt>{html.escape(key)}</dt>\n<dd>\n\n{text.strip()}\n\n</dd>")
     return "<dl>\n" + "\n".join(items) + "\n</dl>\n"
@@ -407,7 +407,7 @@ def api_docs(obj: str | griffe.Object | griffe.Alias, options: dict[str, Any] | 
 
 
 @GithubRenderer.rule(mk.MkDocStrings)
-async def render_docstrings(node: mk.MkDocStrings, r: base.Renderer) -> str:
+def render_docstrings(node: mk.MkDocStrings, r: base.Renderer) -> str:
     """API docs rendered from Griffe (GitHub has no mkdocstrings)."""
     obj = node.obj if isinstance(node.obj, griffe.Object) else node.obj_path
     return api_docs(obj, node.options)
@@ -429,22 +429,22 @@ def icon_img(icon: str, *, height: str | int = 16, color: str | None = None) -> 
 
 
 @GithubRenderer.rule(mk.MkLink)
-async def render_link(node: mk.MkLink, r: base.Renderer) -> str:
+def render_link(node: mk.MkLink, r: base.Renderer) -> str:
     prefix = f"{icon_img(node._icon)} " if node._icon else ""
     tooltip = f' "{node.tooltip}"' if node.tooltip else ""
-    return f"[{prefix}{await node.get_title()}]({await node.get_url()}{tooltip})"
+    return f"[{prefix}{node.get_title()}]({node.get_url()}{tooltip})"
 
 
 @GithubRenderer.rule(mk.MkIcon)
-async def render_icon(node: mk.MkIcon, r: base.Renderer) -> str:
+def render_icon(node: mk.MkIcon, r: base.Renderer) -> str:
     return icon_img(node.icon_name, height=node.height or 24, color=node.color)
 
 
 @GithubRenderer.rule(mk.MkMaterialBadge)
-async def render_material_badge(node: mk.MkMaterialBadge, r: base.Renderer) -> str:
+def render_material_badge(node: mk.MkMaterialBadge, r: base.Renderer) -> str:
     icon = icon_img(node.icon) if node.icon else ""
-    content = f"{icon} <code>{html.escape(await node.get_text())}</code>".strip()
+    content = f"{icon} <code>{html.escape(node.get_text())}</code>".strip()
     if not node.target:
         return content
-    url = await mk.MkLink(node.target, parent=node).get_url()
+    url = mk.MkLink(node.target, parent=node).get_url()
     return f"[{content}]({url})"

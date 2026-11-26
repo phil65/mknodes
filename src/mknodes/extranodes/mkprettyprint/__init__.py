@@ -77,4 +77,4 @@ class MkPrettyPrint(mktemplate.MkTemplate):
 
 if __name__ == "__main__":
     section = MkPrettyPrint([dict(a="test " * 5)] * 5)
-    print(section.to_markdown())
+    print(section)

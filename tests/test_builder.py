@@ -34,8 +34,8 @@ def build_tree() -> mk.MkNav:
     return root
 
 
-async def test_build_output():
-    output = await DocBuilder().build(build_tree())
+def test_build_output():
+    output = DocBuilder().build_sync(build_tree())
     assert set(output.pages) == {"index.md", "Section/details.md"}
     assert output.flavor == "material"
     assert "!!! warning" in output.pages["Section/details.md"]
@@ -59,28 +59,28 @@ async def test_build_output():
     assert "admonition" in output.page_resources["Section/details.md"].markdown_extensions
 
 
-async def test_build_output_github_flavor():
-    output = await DocBuilder(flavor="github").build(build_tree())
+def test_build_output_github_flavor():
+    output = DocBuilder(flavor="github").build_sync(build_tree())
     assert output.flavor == "github"
     assert output.pages["Section/details.md"].startswith("# Details\n\n> [!WARNING]")
 
 
-async def test_non_global_resources_go_into_page_template():
-    output = await DocBuilder(global_resources=False).build(build_tree())
+def test_non_global_resources_go_into_page_template():
+    output = DocBuilder(global_resources=False).build_sync(build_tree())
     assert output.extra_javascript == []
     assert JS_PATH in output.assets
     assert JS_PATH in output.templates["index.html"]
 
 
-async def test_parallel_rendering_gives_same_pages():
-    sequential = await DocBuilder(flavor="github").build(build_tree())
-    parallel = await DocBuilder(flavor="github", max_workers=4).build(build_tree())
+def test_parallel_rendering_gives_same_pages():
+    sequential = DocBuilder(flavor="github").build_sync(build_tree())
+    parallel = DocBuilder(flavor="github", max_workers=4).build_sync(build_tree())
     assert parallel.pages == sequential.pages
 
 
-async def test_markdown_exporter(tmp_path: pathlib.Path):
-    output = await DocBuilder(flavor="github").build(build_tree())
-    await MarkdownExporter().export(output, tmp_path)
+def test_markdown_exporter(tmp_path: pathlib.Path):
+    output = DocBuilder(flavor="github").build_sync(build_tree())
+    MarkdownExporter().export_sync(output, tmp_path)
     assert (tmp_path / "Section" / "details.md").read_text().startswith("# Details")
     assert (tmp_path / JS_PATH).is_file()
     summary = (tmp_path / "SUMMARY.md").read_text()

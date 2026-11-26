@@ -42,9 +42,9 @@ class MkInclude(mktext.MkText):
             return [inputs.InputRequest.create("file", url=url)]
         return []
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         if url := self._remote_url():
-            return await self.ctx.inputs.aget("file", url=url)
+            return self.ctx.inputs.get("file", url=url)
         match self.target:
             case os.PathLike() | str():
                 return pathhelpers.load_file_cached(os.fspath(self.target))

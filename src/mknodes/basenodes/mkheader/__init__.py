@@ -34,12 +34,12 @@ class MkHeader(mknode.MkNode):
         self.level = level
         self.exclude_from_search = exclude_from_search
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         level_str = "#" * self.level
         suffix = " { data-search-exclude }" if self.exclude_from_search else ""
         return f"{level_str} {self._text}{suffix}"
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         return self._text
 
 

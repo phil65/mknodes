@@ -56,7 +56,7 @@ class MkList(mkcontainer.MkContainer):
         text = self._prep(item).rstrip("\n").replace("\n", "\n" + " " * len(marker))
         return marker + re.sub(r"^ +$", "", text, flags=re.MULTILINE)
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         items = self.get_items()
         if not items:
             return ""
@@ -66,7 +66,7 @@ class MkList(mkcontainer.MkContainer):
             lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
 
-    async def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
+    def to_html_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Formats list in html as one single line (same in every flavour).
 
         Can be useful for including in Tables.

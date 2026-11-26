@@ -46,14 +46,14 @@ class MkTemplatePage(TemplateRenderMixin, mkpage.MkPage):
         """Extra variables for the environment. Can be overridden by subclasses."""
         return {}
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Render the template once: Markdown + resources of the created nodes."""
-        result = await self.get_render_result_async()
-        aggregated = await self._build_node_resources()
+        result = self.current_render_result()
+        aggregated = self._build_node_resources()
         for child in result.children:
-            aggregated.merge(await result.get_resources(child))
+            aggregated.merge(result.get_resources(child))
         return resources.NodeContent(markdown=result.markdown, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown

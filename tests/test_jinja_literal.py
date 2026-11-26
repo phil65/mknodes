@@ -48,7 +48,7 @@ def pkg(tmp_path_factory):
 
 
 @pytest.mark.parametrize("flavor", ["github", "mdbook", "myst", "material"])
-async def test_docstrings_skip_the_jinja_pass(pkg: str, flavor: str):
+def test_docstrings_skip_the_jinja_pass(pkg: str, flavor: str):
     nav = mk.MkNav()
     nav.add_doc(pkg, section_name="API")
     page = nav.add_page("Mixed")
@@ -56,7 +56,7 @@ async def test_docstrings_skip_the_jinja_pass(pkg: str, flavor: str):
     page += mk.MkDocStrings(f"{pkg}.Condition")
     condition = importlib.import_module(pkg).Condition
     page += mk.MkClassTable([condition], layout="compact")  # docstring summary via get_doc
-    output = await DocBuilder(flavor=flavor).build(nav)
+    output = DocBuilder(flavor=flavor).build_sync(nav)
     text = "\n".join(output.pages.values())
     assert "2 from Jinja" in text
     assert "{{ 1 + 1 }}" not in text
@@ -72,17 +72,17 @@ async def test_docstrings_skip_the_jinja_pass(pkg: str, flavor: str):
     assert "Return whether {% if value %} holds {# not a comment #}." in text
 
 
-async def test_docstrings_unchanged_without_jinja_pass(pkg: str):
+def test_docstrings_unchanged_without_jinja_pass(pkg: str):
     nav = mk.MkNav()
     page = nav.add_page("API")
     page += mk.MkDocStrings(f"{pkg}.Condition")
-    output = await DocBuilder(flavor="github", render_jinja=False).build(nav)
+    output = DocBuilder(flavor="github", render_jinja=False).build_sync(nav)
     text = "\n".join(output.pages.values())
     assert "Evaluates {{ ctx.foo }} for each message." in text
     assert "raw %}" not in text
 
 
-async def test_dataclass_info_is_literal():
+def test_dataclass_info_is_literal():
     @dataclasses.dataclass
     class Info:
         """Shows {{ ctx.foo }}."""
@@ -92,7 +92,7 @@ async def test_dataclass_info_is_literal():
     nav = mk.MkNav()
     page = nav.add_page("Info")
     page += mk.MkDataClassInfo(Info())
-    output = await DocBuilder().build(nav)
+    output = DocBuilder().build_sync(nav)
     text = "\n".join(output.pages.values())
     assert "Shows {{ ctx.foo }}." in text
     assert "'{% if x %}'" in text

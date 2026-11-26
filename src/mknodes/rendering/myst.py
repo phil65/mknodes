@@ -264,12 +264,12 @@ class MystRenderer(github.GithubRenderer):
 
 
 @MystRenderer.rule(mk.MkAdmonition)
-async def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
+def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
     if not node.title and not node.get_items():
         return ""
-    text = await r.render_children(node.get_items())
+    text = r.render_children(node.get_items())
     if node.annotations:
-        text = f"{text}\n\n{await r.render_markdown(node.annotations)}"
+        text = f"{text}\n\n{r.render_markdown(node.annotations)}"
     if node.collapsible:
         title = node.title or node.typ.capitalize()
         return dropdown(title, text, node.typ, open_=bool(node.expanded))
@@ -277,29 +277,29 @@ async def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
 
 
 @MystRenderer.rule(mk.MkCompactAdmonition)
-async def render_compact_admonition(node: mk.MkCompactAdmonition, r: base.Renderer) -> str:
-    text = await node.get_text()
+def render_compact_admonition(node: mk.MkCompactAdmonition, r: base.Renderer) -> str:
+    text = node.get_text()
     if isinstance(text, mk.MkNode):
-        text = (await r.render_child(text)).markdown
+        text = (r.render_child(text)).markdown
     return admonition(node.typ or "note", text)
 
 
 @MystRenderer.rule(mk.MkDetailsBlock)
-async def render_details_block(node: mk.MkDetailsBlock, r: base.Renderer) -> str:
-    text = await r.render_children(node.get_items())
+def render_details_block(node: mk.MkDetailsBlock, r: base.Renderer) -> str:
+    text = r.render_children(node.get_items())
     title = node.title or node.typ.capitalize()
     return dropdown(title, text, node.typ, open_=bool(node.expanded))
 
 
 @MystRenderer.rule(mk.MkTab, mk.MkTabBlock)
-async def render_tab(node: mk.MkTab | mk.MkTabBlock, r: base.Renderer) -> str:
+def render_tab(node: mk.MkTab | mk.MkTabBlock, r: base.Renderer) -> str:
     """A single tab outside a tab container: a dropdown."""
-    text = await r.render_children(node.get_items())
+    text = r.render_children(node.get_items())
     return dropdown(node.title, text, open_=bool(node.select))
 
 
 @MystRenderer.rule(mk.MkTabContainer)
-async def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str:
+def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str:
     """A sphinx-design tab set, the selected (or first) tab selected."""
     tabs = node.get_items()
     if not tabs:
@@ -307,14 +307,14 @@ async def render_tab_container(node: mk.MkTabContainer, r: base.Renderer) -> str
     selected = node.select_tab if node.select_tab is not None else 0
     if isinstance(selected, str):
         selected = node._get_tab_pos(selected)
-    items = [(tab.title, await r.render_children(tab.get_items())) for tab in tabs]
+    items = [(tab.title, r.render_children(tab.get_items())) for tab in tabs]
     return tab_set(items, selected)
 
 
 @MystRenderer.rule(mk.MkCode)
-async def render_code(node: mk.MkCode, r: base.Renderer) -> str:
+def render_code(node: mk.MkCode, r: base.Renderer) -> str:
     """Code block, a `{code-block}` directive for title / line numbers / highlights."""
-    text = await node.get_text()
+    text = node.get_text()
     return code_block(
         text,
         node.language or "",

@@ -74,12 +74,12 @@ def test_metadata():
     ],
     ids=lambda x: type(x).__name__,
 )
-async def test_nested_node_keeps_its_own_markdown(node: mk.MkNode):
+def test_nested_node_keeps_its_own_markdown(node: mk.MkNode):
     """Containers must not discard markdown of subclasses overriding to_md_unprocessed."""
-    expected = await node.to_md_unprocessed()
+    expected = node.to_md_unprocessed()
     page = mk.MkPage()
     page += node
-    assert expected.strip() in await page.to_markdown()
+    assert expected.strip() in page.to_markdown_sync()
 
 
 if __name__ == "__main__":

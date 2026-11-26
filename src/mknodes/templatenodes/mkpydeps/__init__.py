@@ -117,13 +117,13 @@ class MkPyDeps(mknode.MkNode):
     def get_input_requests(self) -> list[inputs.InputRequest]:
         return [inputs.InputRequest.create("pydeps", **self._pydeps_params())]
 
-    async def get_svg(self) -> str:
+    def get_svg(self) -> str:
         # pydeps + Graphviz run in the resolve phase (inputs store kind `pydeps`).
         content = self.ctx.inputs.get("pydeps", **self._pydeps_params())
         return insert_links(content, self.ctx.links.inv_manager)  # type: ignore  # pyright: ignore[reportArgumentType]
 
-    async def to_md_unprocessed(self) -> str:
-        return f"<body>\n\n{await self.get_svg()}\n\n</body>\n"
+    def to_md_unprocessed(self) -> str:
+        return f"<body>\n\n{self.get_svg()}\n\n</body>\n"
 
 
 if __name__ == "__main__":

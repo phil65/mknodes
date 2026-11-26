@@ -153,8 +153,8 @@ class MkPage(mkcontainer.MkContainer):
         path = "/".join(self.resolved_parts) + "/" + self.path
         return path.lstrip("/")
 
-    async def get_url(self) -> str:
-        return await self.ctx.links.get_url(self)
+    def get_url(self) -> str:
+        return self.ctx.links.get_url(self)
 
     @property
     def previous_page(self) -> MkPage | None:

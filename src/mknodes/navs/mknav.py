@@ -124,7 +124,7 @@ class MkNav(mknode.MkNode):
         self.nav.register(navi)
         return navi
 
-    async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
+    def to_markdown_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Return the nav as literate-nav Markdown (the same for every flavour)."""
         return self.nav.to_literate_nav()
 

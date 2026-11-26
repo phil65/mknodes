@@ -47,34 +47,34 @@ class MkContainerBase(mknode.MkNode):
         self.append(other)
         return self
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         if _overrides_markdown_only(type(self)):
             # Reached via super() from a subclass override: return the joined children.
-            content = await self._get_children_content()
+            content = self._get_children_content()
         else:
-            content = await self.get_content()
+            content = self.get_content()
         return content.markdown
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: collect markdown and resources from children."""
-        content = await self._get_children_content()
+        content = self._get_children_content()
         if _overrides_markdown_only(type(self)):
-            content.markdown = await self.to_md_unprocessed()
+            content.markdown = self.to_md_unprocessed()
         return content
 
-    async def _get_children_content(self) -> resources.NodeContent:
+    def _get_children_content(self) -> resources.NodeContent:
         """Join the children's markdown and merge own and children's resources."""
         items = self.get_items()
 
         # Collect content from all children in one pass
         renderer = rendering.current()
-        child_contents = [await renderer.render_child(item) for item in items]
+        child_contents = [renderer.render_child(item) for item in items]
         child_markdowns = [content.markdown for content in child_contents]
 
         md = self.block_separator.join(child_markdowns)
 
         # Aggregate resources: own + all children
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child_content in child_contents:
             aggregated.merge(child_content.resources)
 

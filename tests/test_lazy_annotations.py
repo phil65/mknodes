@@ -23,9 +23,9 @@ def test_get_repr_with_type_checking_only_annotations() -> None:
     assert reprhelpers.get_nondefault_repr(node).startswith("MkAdmonition(")
 
 
-async def test_jinja_node_error_message_with_type_checking_only_annotations() -> None:
+def test_jinja_node_error_message_with_type_checking_only_annotations() -> None:
     page = mk.MkPage()
-    await page.env.render_string_async(r"{{ 'x' | MkAdmonition(not_a_param=1) }}")
+    page.env.render_string(r"{{ 'x' | MkAdmonition(not_a_param=1) }}")
     node = page.env.rendered_nodes[-1]
     assert isinstance(node, mk.MkText)
     assert "Signature: MkAdmonition(content" in str(node._text)

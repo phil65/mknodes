@@ -72,18 +72,18 @@ class MkAdmonition(mkcontainer.MkContainer):
         optional = ann_marker + inline_label
         return f"{block_start} {self.typ}{optional}{title}"
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get markdown with custom admonition formatting and resources."""
         items = self.get_items()
         if not items and not self.title:
             return resources.NodeContent(
                 markdown="",
-                resources=await self._build_node_resources(),
+                resources=self._build_node_resources(),
             )
 
         # Collect content from children
         renderer = rendering.current()
-        child_contents = [await renderer.render_child(item) for item in items]
+        child_contents = [renderer.render_child(item) for item in items]
         child_markdowns = [content.markdown for content in child_contents]
 
         text = "\n".join(child_markdowns)
@@ -92,14 +92,14 @@ class MkAdmonition(mkcontainer.MkContainer):
         md = f"{self.title_line}\n{indented}\n{annotations}"
 
         # Aggregate resources
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child_content in child_contents:
             aggregated.merge(child_content.resources)
 
         return resources.NodeContent(markdown=md, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
 

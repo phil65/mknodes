@@ -57,28 +57,28 @@ class MkBlock(mkcontainer.MkContainer):
         lines = [f"    {k}: {v}" for k, v in self.attributes.items() if v is not None]
         return "\n".join(lines) + "\n"
 
-    async def get_content_block(self) -> str:
+    def get_content_block(self) -> str:
         """Returns the block content. Can be reimplemented by subclasses."""
-        content = await super().get_content()
+        content = super().get_content()
         return textwrap.indent(content.markdown, self.indent).rstrip("\n") + "\n"
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get content with block formatting and resources."""
         # Get content from children
-        parent_content = await super().get_content()
+        parent_content = super().get_content()
 
         # Build the block-formatted markdown
         boundary = self.fence_boundary
         base = f"{boundary} {self.name}"
         if self.argument:
             base += f" | {self.argument}"
-        content_text = await self.get_content_block()
+        content_text = self.get_content_block()
         md = f"{base}\n{self.attributes_block}\n{content_text}{boundary}\n"
 
         return resources.NodeContent(markdown=md, resources=parent_content.resources)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
 

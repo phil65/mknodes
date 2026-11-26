@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from mknodes.basenodes import mklink
 from mknodes.navs import mknav
 from mknodes.pages import mkpage
-from mknodes.utils import log
+from mknodes.utils import coroutines, log
 
 
 if TYPE_CHECKING:
@@ -52,12 +52,12 @@ class NavRouter:
             fn: AnyNavSubTypeCallable,
             path: tuple[str, ...] = path,
         ) -> AnyNavSubTypeCallable:
-            async def register() -> None:
+            def register() -> None:
                 result = fn()
-                if inspect.iscoroutine(result):
-                    node = await result
-                else:
-                    node = result
+                # async route function (user code): run in an own event loop
+                node: NavSubType = (
+                    coroutines.run_sync(result) if inspect.iscoroutine(result) else result  # type: ignore[assignment]
+                )
                 node.parent = self._nav
                 if isinstance(node, mkpage.MkPage):
                     node.created_by = fn
@@ -97,12 +97,11 @@ class NavRouter:
             path: tuple[str, ...] = path,
             kwargs: dict[str, Any] = kwargs,
         ) -> AnyNavCallable:
-            async def register() -> None:
+            def register() -> None:
                 node = mknav.MkNav(path[-1], parent=self._nav, **kwargs)
                 result = fn(node)
-                if inspect.iscoroutine(result):
-                    awaited = await result
-                    final = awaited or node
+                if inspect.iscoroutine(result):  # async route function (user code)
+                    final = coroutines.run_sync(result) or node
                 else:
                     final = result or node
                 final.parent = self._nav
@@ -144,13 +143,12 @@ class NavRouter:
             path: tuple[str, ...] = path,
             kwargs: dict[str, Any] = kwargs,
         ) -> AnyPageCallable:
-            async def register() -> None:
+            def register() -> None:
                 p = path[-1] if path else (self._nav.title or "Home")
                 node = mkpage.MkPage(title=p, parent=self._nav, **kwargs)
                 result = fn(node)
-                if inspect.iscoroutine(result):
-                    awaited = await result
-                    final = awaited or node
+                if inspect.iscoroutine(result):  # async route function (user code)
+                    final = coroutines.run_sync(result) or node
                 else:
                     final = result or node
                 final.parent = self._nav
@@ -172,7 +170,7 @@ if __name__ == "__main__":
     router = NavRouter(nav)
 
     @router.page("Test")
-    async def _(_page: mkpage.MkPage) -> None:
+    def _(_page: mkpage.MkPage) -> None:
         pass
 
     print(nav.nav.get_pages())

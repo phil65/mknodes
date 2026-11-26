@@ -262,7 +262,7 @@ class LinkProvider:
         path = path.replace(".md", "/") if self.use_directory_urls else path.replace(".md", ".html")
         return self.base_url + path
 
-    async def url_for_header(self, header: mk.MkHeader) -> str:
+    def url_for_header(self, header: mk.MkHeader) -> str:
         """Return the final URL for given MkHeader.
 
         Args:
@@ -272,10 +272,10 @@ class LinkProvider:
         if page is None:
             msg = "Need a parent page for MkHeader in order to link to it"
             raise RuntimeError(msg)
-        suffix = "#" + textfilters.slugify(await header.get_text())
+        suffix = "#" + textfilters.slugify(header.get_text())
         return self.url_for_page(page) + suffix
 
-    async def get_link(
+    def get_link(
         self,
         target: LinkableType,
         title: str | None = None,
@@ -294,10 +294,10 @@ class LinkProvider:
             return self.link_for_klass(target, from_page=from_page)
         if isinstance(target, types.ModuleType) and not title:
             return self.link_for_module(target, from_page=from_page)
-        url = await self.get_url(target)
+        url = self.get_url(target)
         return linked(url, title)
 
-    async def get_url(self, target: LinkableType) -> str:  # type: ignore  # noqa: PLR0911
+    def get_url(self, target: LinkableType) -> str:  # type: ignore  # noqa: PLR0911
         """Get a url for given target.
 
         Target can be a class, a module, a MkPage, MkNav or a string.
@@ -313,7 +313,7 @@ class LinkProvider:
             case mk.MkNav():
                 return self.url_for_nav(target)
             case mk.MkHeader():
-                return await self.url_for_header(target)
+                return self.url_for_header(target)
             case type():
                 return self.url_for_klass(target) or ""
             case types.ModuleType():
@@ -325,7 +325,7 @@ class LinkProvider:
             case str() if target in mk.MkNode._name_registry:
                 node = mk.MkNode.get_node(target)
                 if isinstance(node, mk.MkPage | mk.MkNav):
-                    return await self.get_url(node)
+                    return self.get_url(node)
                 msg = f"Cannot get link for {node!r}"
                 raise TypeError(msg)
             case str() if target:

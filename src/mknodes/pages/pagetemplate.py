@@ -1,7 +1,5 @@
 from typing import TYPE_CHECKING
 
-import anyenv
-
 from mknodes.mdlib import mdconverter
 from mknodes.pages import templateblocks
 from mknodes.utils import reprhelpers
@@ -57,7 +55,7 @@ class PageTemplate:
         return any(self.blocks)  # or self.extends
 
     def __hash__(self):
-        return hash(anyenv.run_sync(self.build_html()))
+        return hash(self.build_html())
 
     @property
     def blocks(self) -> list[templateblocks.BaseBlock]:
@@ -108,7 +106,7 @@ class PageTemplate:
     def content(self, value) -> None:
         self.content_block.content = value
 
-    async def build_html(self, md: markdown.Markdown | None = None) -> str | None:
+    def build_html(self, md: markdown.Markdown | None = None) -> str | None:
         """Convert given PageTemplate to HTML.
 
         Args:
@@ -116,20 +114,18 @@ class PageTemplate:
         """
         md = md or mdconverter.MdConverter()
         blocks = [r'{% extends "' + self.extends + '" %}\n'] if self.extends else []
-        blocks.extend([await block.to_markdown(md=md) for block in self.blocks if block])
+        blocks.extend([block.to_markdown_sync(md=md) for block in self.blocks if block])
         return "\n".join(blocks) + "\n" if blocks else None
 
 
 if __name__ == "__main__":
     import mknodes as mk
 
-    async def main() -> None:
+    def main() -> None:
         md = mdconverter.MdConverter()
         template = PageTemplate(filename="main.html")
         template.announce.content = mk.MkAdmonition("test")
-        html = await template.build_html(md)
+        html = template.build_html(md)
         print(html)
 
-    import asyncio
-
-    asyncio.run(main())
+    main()

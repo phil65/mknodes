@@ -115,7 +115,7 @@ class MkClassDiagram(mkdiagram.MkDiagram):
             case _:
                 raise ValueError(self.mode)
 
-    async def get_mermaid_code(self) -> str:
+    def get_mermaid_code(self) -> str:
         return self.builder.get_graph_connection_text()
 
 

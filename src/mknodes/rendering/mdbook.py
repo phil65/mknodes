@@ -120,31 +120,31 @@ def _uses_admonish(r: base.Renderer) -> bool:
 
 
 @MdbookRenderer.rule(mk.MkAdmonition)
-async def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
+def render_admonition(node: mk.MkAdmonition, r: base.Renderer) -> str:
     if not _uses_admonish(r):
-        return await github.render_admonition(node, r)
+        return github.render_admonition(node, r)
     if not node.title and not node.get_items():
         return ""
-    text = await r.render_children(node.get_items())
+    text = r.render_children(node.get_items())
     if node.annotations:
-        text = f"{text}\n\n{await r.render_markdown(node.annotations)}"
+        text = f"{text}\n\n{r.render_markdown(node.annotations)}"
     return admonish(node.typ, text, node.title, collapsible=node.collapsible)
 
 
 @MdbookRenderer.rule(mk.MkCompactAdmonition)
-async def render_compact_admonition(node: mk.MkCompactAdmonition, r: base.Renderer) -> str:
+def render_compact_admonition(node: mk.MkCompactAdmonition, r: base.Renderer) -> str:
     if not _uses_admonish(r):
-        return await github.render_compact_admonition(node, r)
-    text = await node.get_text()
+        return github.render_compact_admonition(node, r)
+    text = node.get_text()
     if isinstance(text, mk.MkNode):
-        text = (await r.render_child(text)).markdown
+        text = (r.render_child(text)).markdown
     return admonish(node.typ or "note", text)
 
 
 @MdbookRenderer.rule(mk.MkDetailsBlock)
-async def render_details_block(node: mk.MkDetailsBlock, r: base.Renderer) -> str:
+def render_details_block(node: mk.MkDetailsBlock, r: base.Renderer) -> str:
     if not _uses_admonish(r):
-        return await github.render_details_block(node, r)
-    text = await r.render_children(node.get_items())
+        return github.render_details_block(node, r)
+    text = r.render_children(node.get_items())
     title = node.title or node.typ.capitalize()
     return admonish(node.typ, text, title, collapsible=True)

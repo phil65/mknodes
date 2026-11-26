@@ -14,7 +14,7 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
 
     STATUS = "new"
 
-    async def get_element(self) -> xml.Table | None:
+    def get_element(self) -> xml.Table | None:
         table_data = self.data  # property
         if not any(table_data[k] for k in table_data):
             return None
@@ -29,8 +29,8 @@ class MkHtmlTable(mkbasetable.MkBaseTable):
                 td.text = "\n" + item + "\n"
         return root
 
-    async def to_md_unprocessed(self) -> str:
-        root = await self.get_element()
+    def to_md_unprocessed(self) -> str:
+        root = self.get_element()
         return root.to_string(space="") if root is not None else ""
 
 

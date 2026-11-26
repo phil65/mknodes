@@ -78,14 +78,14 @@ def test_working_blocks_report_nothing():
 
 
 @pytest.mark.parametrize("flavor", ["material", "github"])
-async def test_build_output_collects_diagnostics(flavor: str):
+def test_build_output_collects_diagnostics(flavor: str):
     root = mk.MkNav()
     page = root.add_page("Broken")
     page += mk.MkText("{{ 'x' | MkAdmonition(nonsense=3) }}", render_jinja=True)
     page += "```python\nnever closed\n"
     fine = root.add_page("Fine")
     fine += "All good."
-    output = await DocBuilder(flavor=flavor).build(root)
+    output = DocBuilder(flavor=flavor).build_sync(root)
     kinds = sorted(d.kind for d in output.diagnostics)
     assert kinds == ["fence", "node"]
     assert {d.page for d in output.diagnostics} == {"broken.md"}

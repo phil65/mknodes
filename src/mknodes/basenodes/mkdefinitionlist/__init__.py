@@ -33,14 +33,14 @@ class MkDefinition(mkcontainer.MkContainer):
         super().__init__(content=content, **kwargs)
         self.title = title
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get content with definition formatting and resources."""
-        content = await super().get_content()
+        content = super().get_content()
         md = f"{self.title}\n:   {filters.do_indent(content.markdown)}\n"
         return resources.NodeContent(markdown=md, resources=content.resources)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
 
@@ -81,7 +81,7 @@ class MkDefinitionList(mkcontainer.MkContainer):
             case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise TypeError(data)
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         items = [f"{k}\n:   {filters.do_indent(str(v))}\n" for k, v in self.data.items()]
         return "".join(items)
 

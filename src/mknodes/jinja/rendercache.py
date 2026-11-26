@@ -45,7 +45,7 @@ class TemplateRenderMixin:
     env: NodeEnvironment
 
     def render_kwargs(self) -> dict[str, Any]:
-        """Keyword arguments for `NodeEnvironment.render_nodes[_async]()`."""
+        """Keyword arguments for `NodeEnvironment.render_nodes()`."""
         raise NotImplementedError
 
     def __setattr__(self, name: str, value: Any) -> None:
@@ -70,12 +70,12 @@ class TemplateRenderMixin:
             state.tree = result
         return state.tree
 
-    async def get_render_result_async(self) -> RenderResult:
+    def current_render_result(self) -> RenderResult:
         """Return the render for the active renderer (renders if needed)."""
         state = self._get_state()
         key = cache_key()
         if (result := state.results.get(key)) is None:
-            result = await self.env.render_nodes_async(**self.render_kwargs())
+            result = self.env.render_nodes(**self.render_kwargs())
             state.results[key] = result
         if state.tree is None:
             state.tree = result

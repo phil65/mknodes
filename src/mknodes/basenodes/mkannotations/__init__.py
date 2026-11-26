@@ -34,13 +34,13 @@ class MkAnnotation(mkcontainer.MkContainer):
     def __repr__(self) -> str:
         return reprhelpers.get_repr(self, num=self.num, content=self.get_items())
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get content with annotation formatting and resources."""
         items = self.get_items()
 
         # Collect content from children
         renderer = rendering.current()
-        child_contents = [await renderer.render_child(item) for item in items]
+        child_contents = [renderer.render_child(item) for item in items]
         child_markdowns = [content.markdown for content in child_contents]
 
         item_str = "\n\n".join(child_markdowns)
@@ -48,14 +48,14 @@ class MkAnnotation(mkcontainer.MkContainer):
         md = f"{prefix:<4}{filters.do_indent(item_str)}\n"
 
         # Aggregate resources
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child_content in child_contents:
             aggregated.merge(child_content.resources)
 
         return resources.NodeContent(markdown=md, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
 
@@ -143,33 +143,33 @@ class MkAnnotations(mkcontainer.MkContainer):
         else:
             items.append(node)
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get content from sorted annotations and resources."""
         items = self.get_items()
         if not items:
             return resources.NodeContent(
                 markdown="",
-                resources=await self._build_node_resources(),
+                resources=self._build_node_resources(),
             )
 
         items = sorted(items, key=lambda x: x.num)
 
         # Collect content from children
         renderer = rendering.current()
-        child_contents = [await renderer.render_child(item) for item in items]
+        child_contents = [renderer.render_child(item) for item in items]
         child_markdowns = [content.markdown for content in child_contents]
 
         md = "".join(child_markdowns)
 
         # Aggregate resources
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child_content in child_contents:
             aggregated.merge(child_content.resources)
 
         return resources.NodeContent(markdown=md, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
     def annotate_text(self, markdown: str) -> str:

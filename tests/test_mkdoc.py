@@ -207,7 +207,7 @@ def test_module_pages_list_defined_and_reexported_classes(pkg):
     assert not schema.reexported
 
 
-async def test_links_point_to_class_pages(pkg):
+def test_links_point_to_class_pages(pkg):
     doc = _build(pkg, recursive=True)
     pages = {p.resolved_file_path: p for p in _iter_pages(doc)}
     schema_cls = sys.modules["apidocpkg.schema"].Schema
@@ -221,10 +221,10 @@ async def test_links_point_to_class_pages(pkg):
     )
     module = sys.modules["apidocpkg.sub"]
     assert links.link_for_module(module, from_page=from_foo) == "[apidocpkg.sub](../index.md)"
-    md = await pages["API/index.md"].to_markdown()
+    md = pages["API/index.md"].to_markdown_sync()
     assert "(schema/Schema.md)" in md
     assert "(sub/impl/Foo.md)" in md
-    md = await from_foo.to_markdown()  # "Base classes" table
+    md = from_foo.to_markdown_sync()  # "Base classes" table
     assert "(../../schema/Schema.md)" in md
     # same folder: keep a folder part, so link replacers leave the link alone
     from_helper = pages["API/schema/SchemaHelper.md"]

@@ -20,6 +20,6 @@ DocStrings = """
 """
 Members = """
 {% if module | hasattr("__all__") %}
-{{ (module.__all__ | MkList(as_links=True, shorten_after=10)).to_html() }}
+{{ (module.__all__ | MkList(as_links=True, shorten_after=10)).to_html_sync() }}
 {% endif %}
 """

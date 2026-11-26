@@ -34,9 +34,9 @@ class MkLicense(mktext.MkText):
             return []
         return [inputs.InputRequest.create("license", name=self.license_type)]
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         if self.license_type:
-            data = await self.ctx.inputs.aget("license", name=self.license_type)
+            data = self.ctx.inputs.get("license", name=self.license_type)
             return data["content"]
         return self.ctx.metadata.license_text or ""
 

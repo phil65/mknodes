@@ -200,7 +200,7 @@ class MkDocStrings(mknode.MkNode):
             opts["show_root_heading"] = True
         return opts
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         md = f"::: {self.obj_path}\n"
         if not self.options:
             return md

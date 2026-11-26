@@ -56,7 +56,7 @@ via code of course though), but has a much larger built-in set of macros and fil
     # These assertions would pass then:
     assert type(node.get_items()[0]) == MkBadge
     assert node.get_items()[0].parent == node
-    resources = await node.get_resources()
+    resources = node.get_resources_sync()
     assert "admonition" in resources.markdown_extensions
     ```
 

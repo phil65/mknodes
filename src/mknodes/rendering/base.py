@@ -8,12 +8,13 @@ The active renderer is stored in a context variable, so nested nodes, Jinja temp
 (`{{ node }}`) and `str(node)` all render in the same flavour.
 """
 
-from collections.abc import Awaitable, Callable
+from collections.abc import Callable
 import contextlib
 import contextvars
 import re
 from typing import TYPE_CHECKING, Any, ClassVar
 
+from mknodes.inputs.store import InputPendingError, current_pass
 from mknodes.utils import log, resources
 
 
@@ -27,8 +28,8 @@ if TYPE_CHECKING:
 
 logger = log.get_logger(__name__)
 
-# Render function: `async def rule(node, renderer) -> str` (unprocessed Markdown).
-type Rule = Callable[[Any, Renderer], Awaitable[str]]
+# Render function: `def rule(node, renderer) -> str` (unprocessed Markdown).
+type Rule = Callable[[Any, Renderer], str]
 
 
 class Renderer:
@@ -109,21 +110,34 @@ class Renderer:
             root: The root nav of the build
         """
 
-    async def render(self, node: mknode.MkNode) -> resources.NodeContent:
-        """Render given node (unprocessed Markdown) and collect its resources."""
-        if rule := self.find_rule(type(node)):
-            # Rules only produce Markdown. Resources of nodes rendered by a rule
-            # are flavour-specific and not collected yet.
-            return resources.NodeContent(
-                markdown=await rule(node, self), resources=resources.Resources()
-            )
-        return await node.get_content()
+    def render(self, node: mknode.MkNode) -> resources.NodeContent:
+        """Render given node (unprocessed Markdown) and collect its resources.
 
-    async def render_markdown(self, node: mknode.MkNode) -> str:
-        """Render the unprocessed Markdown of given node."""
-        if rule := self.find_rule(type(node)):
-            return await rule(node, self)
-        return await node.to_md_unprocessed()
+        Inside a render pass, a node reading a missing input renders empty: the pass
+        gets discarded anyway, rendering on finds the other missing inputs as well.
+        """
+        try:
+            if rule := self.find_rule(type(node)):
+                # Rules only produce Markdown. Resources of nodes rendered by a rule
+                # are flavour-specific and not collected yet.
+                markdown = rule(node, self)
+                return resources.NodeContent(markdown=markdown, resources=resources.Resources())
+            return node.get_content()
+        except InputPendingError:
+            if current_pass() is None:
+                raise
+            return resources.NodeContent(markdown="", resources=resources.Resources())
+
+    def render_markdown(self, node: mknode.MkNode) -> str:
+        """Render the unprocessed Markdown of given node (see `render`)."""
+        try:
+            if rule := self.find_rule(type(node)):
+                return rule(node, self)
+            return node.to_md_unprocessed()
+        except InputPendingError:
+            if current_pass() is None:
+                raise
+            return ""
 
     def to_html(self, markdown: str, reqs: resources.Resources | None = None) -> str:
         """Convert Markdown of this flavour to HTML (with a parser knowing the flavour).
@@ -141,19 +155,19 @@ class Renderer:
             text = proc.run(text)
         return text
 
-    async def render_child(self, node: mknode.MkNode) -> resources.NodeContent:
+    def render_child(self, node: mknode.MkNode) -> resources.NodeContent:
         """Render a child node: content with the node's processors applied."""
-        content = await self.render(node)
+        content = self.render(node)
         content.markdown = self.process(node, content.markdown)
         return content
 
-    async def render_children(
+    def render_children(
         self,
         nodes: list[mknode.MkNode],
         separator: str = "\n\n",
     ) -> str:
         """Render given nodes as children and join their Markdown."""
-        return separator.join([(await self.render_child(node)).markdown for node in nodes])
+        return separator.join([(self.render_child(node)).markdown for node in nodes])
 
 
 def _get_template_rule(klass: type, renderers: list[type[Renderer]]) -> Rule | None:
@@ -173,8 +187,8 @@ def _get_template_rule(klass: type, renderers: list[type[Renderer]]) -> Rule | N
     if template is None:
         return None
 
-    async def render_template(node: mknode.MkNode, renderer: Renderer) -> str:
-        return await node.env.render_string_async(template)
+    def render_template(node: mknode.MkNode, renderer: Renderer) -> str:
+        return node.env.render_string(template)
 
     return render_template
 

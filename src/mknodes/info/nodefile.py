@@ -9,7 +9,7 @@ from mknodes.utils import resources
 
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import Iterator
     import os
     import pathlib
 
@@ -53,28 +53,28 @@ def find_file(klass: type) -> pathlib.Path | None:
     return None
 
 
-async def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
+def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkNode]:
     import mknodes as mk
 
-    nodes = (await parent.env.render_nodes_async(string=jinja)).nodes
+    nodes = (parent.env.render_nodes(string=jinja)).nodes
     node = mk.MkContainer(nodes) if len(nodes) > 1 else nodes[0]
     dct: dict[str, str | mk.MkNode] = dict(
         Jinja=mk.MkCode(jinja, language="jinja"),
         Repr=mk.MkCode(textfilters.format_code(repr(node))),
         Rendered=node.__copy__(),
         Markdown=mk.MkCode(node, language="markdown"),
-        Html=mk.MkCode(await node.to_html(), language="html"),
+        Html=mk.MkCode(node.to_html_sync(), language="html"),
     )
     nodefile = node.get_nodefile()
     assert nodefile
     if "rst" in nodefile.output:
-        output = await node.env.render_template_async("output/rst/template")
+        output = node.env.render_template("output/rst/template")
         dct["reST"] = mk.MkCode(output, language="rst")
     from mknodes import rendering
 
     github = rendering.get_renderer_class("github")
     if github.supports(type(node)):
-        output = await node.to_markdown(flavor="github")
+        output = node.to_markdown_sync(flavor="github")
         dct["GitHub"] = mk.MkCode(output, language="markdown")
     if len(node.get_children()) > 0:
         dct["Repr tree"] = mk.MkTreeView(node)
@@ -111,7 +111,7 @@ class NodeFile(configfile.TomlFile):
         """Return the examples section."""
         return {k: Example.model_validate(v) for k, v in self._data.get("examples", {}).items()}
 
-    async def get_examples(self, parent: mk.MkNode) -> dict[str, dict[str, Any]]:
+    def get_examples(self, parent: mk.MkNode) -> dict[str, dict[str, Any]]:
         """Return a dictionary containing examples.
 
         Contains example-name->dict-with-representations key-value pairs.
@@ -128,20 +128,17 @@ class NodeFile(configfile.TomlFile):
         """
         examples = {}
         for example in self.examples.values():
-            if example.condition and not await parent.env.render_condition_async(example.condition):
+            if example.condition and not parent.env.render_condition(example.condition):
                 continue
             if example.jinja:
-                examples[example.title or "Default"] = await get_representations(
-                    example.jinja, parent
-                )
+                examples[example.title or "Default"] = get_representations(example.jinja, parent)
         return examples
 
-    async def iter_example_instances(self, parent: mk.MkNode) -> AsyncIterator[mk.MkNode]:
+    def iter_example_instances(self, parent: mk.MkNode) -> Iterator[mk.MkNode]:
         for example in self.examples.values():
             if example.jinja:
-                result = await parent.env.render_nodes_async(string=example.jinja)
-                for child in result.children:
-                    yield child
+                result = parent.env.render_nodes(string=example.jinja)
+                yield from result.children
 
     @property
     def output(self) -> dict[str, Output]:

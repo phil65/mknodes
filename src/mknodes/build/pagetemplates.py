@@ -75,17 +75,17 @@ def update_nav_template(nav: mk.MkNav):
             nav.page_template.extends = extends
 
 
-async def move_resources_to_template(
+def move_resources_to_template(
     page: mk.MkPage, req: resources.Resources | None = None
 ) -> resources.Resources:
     """Add resources from page to its template and return the "filtered" resources.
 
     Args:
         page: Page to process resources for
-        req: Pre-computed resources. If None, will call page.get_resources()
+        req: Pre-computed resources. If None, will call page.get_resources_sync()
     """
     if req is None:
-        req = await page.get_resources()
+        req = page.get_resources_sync()
     js_reqs: list[resources.JSFile] = []
     prefix = "../" * (len(page.resolved_parts) + 1)
     for i in req.js:

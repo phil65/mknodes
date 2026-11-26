@@ -85,18 +85,18 @@ class MkIcon(mknode.MkNode):
             logger.warning("Could not find icon %r", self.icon_name)
             return ""
 
-    async def get_svg(self) -> str:
+    def get_svg(self) -> str:
         """Return the icon SVG (from the inputs store, fetched now if it is not there yet)."""
         try:
-            return await self.ctx.inputs.aget("icon", icon=self.icon_name, **self._svg_params())
+            return self.ctx.inputs.get("icon", icon=self.icon_name, **self._svg_params())
         except inputs.MissingInputError, inputs.InputPendingError:
             raise
         except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)
             return ""
 
-    async def to_md_unprocessed(self) -> str:
-        return await self.get_svg()
+    def to_md_unprocessed(self) -> str:
+        return self.get_svg()
 
 
 if __name__ == "__main__":

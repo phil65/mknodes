@@ -138,8 +138,8 @@ class MkPyodideTerminal(mknode.MkNode):
         self.terminal_id = terminal_id or f"pyodide-terminal-{id(self)}"
         self.pyodide_version = pyodide_version
 
-    async def _build_node_resources(self) -> resources.Resources:
-        res = await super()._build_node_resources()
+    def _build_node_resources(self) -> resources.Resources:
+        res = super()._build_node_resources()
         if self.pyodide_version != PYODIDE_VERSION:
             target_url = pyodide_js_url(self.pyodide_version)
             res.js = [
@@ -150,7 +150,7 @@ class MkPyodideTerminal(mknode.MkNode):
             ]
         return res
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         """Convert the terminal to HTML."""
         html = f"""
 <div id="{self.terminal_id}" style="height: {self.height}; width: {self.width};"></div>

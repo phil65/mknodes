@@ -51,11 +51,11 @@ class MkDiagram(mkcode.MkCode):
         self.names = iterfilters.reduce_list(names or [])
         self.connections = set(connections or [])
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         """MkCode override."""
-        return f"graph {self.direction}\n{await self.get_mermaid_code()}"
+        return f"graph {self.direction}\n{self.get_mermaid_code()}"
 
-    async def get_mermaid_code(self) -> str:
+    def get_mermaid_code(self) -> str:
         """Return code block, excluding fences and (graph type direction) line.
 
         Can be overriden by subclasses.

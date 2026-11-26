@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @jinja2.pass_environment
-async def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = None) -> str:
+def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = None) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -29,11 +29,11 @@ async def get_link(env: NodeEnvironment, target: LinkableType, title: str | None
 
     node = env.node
     page = node if isinstance(node, mk.MkPage) else node.parent_page
-    return await env.node.ctx.links.get_link(target, title, from_page=page)
+    return env.node.ctx.links.get_link(target, title, from_page=page)
 
 
 @jinja2.pass_environment
-async def get_url(env: NodeEnvironment, target: LinkableType) -> str:
+def get_url(env: NodeEnvironment, target: LinkableType) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -42,16 +42,16 @@ async def get_url(env: NodeEnvironment, target: LinkableType) -> str:
         env: jinja environment
         target: The thing to link to
     """
-    return await env.node.ctx.links.get_url(target)
+    return env.node.ctx.links.get_url(target)
 
 
-async def to_html(node: mk.MkNode) -> str:
+def to_html(node: mk.MkNode) -> str:
     """Return HTML for given node.
 
     Args:
         node: The node to add a mod to
     """
-    return await node.to_html()
+    return node.to_html_sync()
 
 
 def apply_mod(node: mk.MkNode, mod_name: str, **kwargs: Any) -> mk.MkNode:

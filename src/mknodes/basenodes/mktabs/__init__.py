@@ -124,13 +124,13 @@ class MkTab(mkcontainer.MkContainer):
         # we deal with attaching annotations ourselves.
         return text
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get content with tab formatting and resources."""
         items = self.get_items()
 
         # Collect content from children
         renderer = rendering.current()
-        child_contents = [await renderer.render_child(item) for item in items]
+        child_contents = [renderer.render_child(item) for item in items]
         child_markdowns = [content.markdown for content in child_contents]
 
         text = "\n\n".join(child_markdowns)
@@ -149,14 +149,14 @@ class MkTab(mkcontainer.MkContainer):
         md = "\n".join(lines) + "\n"
 
         # Aggregate resources
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child_content in child_contents:
             aggregated.merge(child_content.resources)
 
         return resources.NodeContent(markdown=md, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
 

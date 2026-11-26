@@ -4,11 +4,10 @@ import pathlib
 import threading
 from typing import TYPE_CHECKING, Any
 
-from anyenv import run_sync
-
 from mknodes.basenodes import mklink
 from mknodes.navs import navbuilder
 from mknodes.pages import mkpage
+from mknodes.utils import coroutines
 
 
 if TYPE_CHECKING:
@@ -39,17 +38,9 @@ class Navigation:
         self._max_workers: int | None = max_workers
         self._ranks: dict[tuple[Any, ...], int] = {}
 
-    async def materialize(self) -> None:
-        """Execute all pending route registrations (async)."""
-        if self._materialized:
-            return
-        pending = self._pending
-        self._pending = []
-        self._materialized = True
-        for fn in pending:
-            result = fn()
-            if inspect.iscoroutine(result):
-                await result
+    def materialize(self) -> None:
+        """Execute all pending route registrations."""
+        self._ensure_materialized()
 
     def _ensure_materialized(self) -> None:
         """Execute all pending route registrations."""
@@ -61,8 +52,8 @@ class Navigation:
 
         def run_fn(fn: PendingFn) -> None:
             result = fn()
-            if inspect.iscoroutine(result):
-                run_sync(result)
+            if inspect.iscoroutine(result):  # async route function (user code)
+                coroutines.run_sync(result)
 
         def run_ranked(rank: int, fn: PendingFn) -> None:
             _registration.current = (self, rank)

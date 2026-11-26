@@ -226,13 +226,13 @@ def test_link_references():
     assert "[" not in refcheck.ReferenceLinker({}).link("[MkFoo][mknodes.MkFoo]", "a.md")
 
 
-async def test_github_build_links_references():
+def test_github_build_links_references():
     from mknodes.build.builder import DocBuilder
 
     nav = mk.MkNav()
     nav += mk.MkPage("api", content=mk.MkDocStrings("mknodes.rendering.use"))
     nav += mk.MkPage("guide", content="See [use][mknodes.rendering.use].")
-    output = await DocBuilder(render_jinja=False, flavor="github").build(nav)
+    output = DocBuilder(render_jinja=False, flavor="github").build_sync(nav)
     assert "See [use](api.md#mknodes.rendering.use)." in output.pages["guide.md"]
-    output = await DocBuilder(render_jinja=False).build(nav)
+    output = DocBuilder(render_jinja=False).build_sync(nav)
     assert "See [use][mknodes.rendering.use]." in output.pages["guide.md"]

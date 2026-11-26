@@ -385,7 +385,7 @@ class ProjectContext(Context):
             inputs=inputs or InputStore(),
         )
 
-    async def populate_linkprovider(self) -> None:
+    def populate_linkprovider(self) -> None:
         if self.metadata.mkdocs_config is None:
             return
         invs = self.metadata.mkdocs_config.get_inventory_infos()

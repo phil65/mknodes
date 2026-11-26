@@ -62,12 +62,12 @@ class MkShowcase(mkcontainer.MkContainer):
             case _:
                 return super().to_child_node(item)
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Single-pass: get content with grid formatting and resources."""
         items = self.get_items()
         # Collect content from children
         renderer = rendering.current()
-        child_contents = [await renderer.render_child(item) for item in items]
+        child_contents = [renderer.render_child(item) for item in items]
         # Build markdown with grid formatting
         text = ""
         content_iter = iter(zip(items, child_contents))
@@ -82,14 +82,14 @@ class MkShowcase(mkcontainer.MkContainer):
             text += "\n</div>"
 
         # Aggregate resources
-        aggregated = await self._build_node_resources()
+        aggregated = self._build_node_resources()
         for child_content in child_contents:
             aggregated.merge(child_content.resources)
 
         return resources.NodeContent(markdown=text, resources=aggregated)
 
-    async def to_md_unprocessed(self) -> str:
-        content = await self.get_content()
+    def to_md_unprocessed(self) -> str:
+        content = self.get_content()
         return content.markdown
 
     def add_card(

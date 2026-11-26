@@ -2,6 +2,7 @@ import copy
 import functools
 import re
 from typing import TYPE_CHECKING, Any, Self
+import warnings
 
 from mknodes.basenodes import processors
 from mknodes.data import treestyles
@@ -9,7 +10,7 @@ from mknodes.info import contexts, nodefile
 from mknodes.jinja import nodeenvironment
 from mknodes.nodemods.modmanager import ModManager
 from mknodes import rendering
-from mknodes.utils import icons, log, reprhelpers, resources, coroutines
+from mknodes.utils import icons, log, reprhelpers, resources
 
 
 if TYPE_CHECKING:
@@ -28,6 +29,11 @@ HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 @functools.lru_cache
 def get_fallback_ctx() -> contexts.ProjectContext:
     return contexts.ProjectContext()
+
+
+def _deprecated(name: str, replacement: str) -> None:
+    msg = f"{name} is deprecated (rendering is sync), use {replacement}. Removed in mknodes 5.0."
+    warnings.warn(msg, DeprecationWarning, stacklevel=3)
 
 
 class IllegalArgumentError(ValueError):
@@ -252,8 +258,19 @@ class MkNode:
         if max_depth is not None and indent > max_depth:
             return
         yield indent, self
-        for child_item in self.get_children():
+        for child_item in self._children_for_walk():
             yield from child_item.iter_nodes(indent + 1)
+
+    def _children_for_walk(self) -> list[MkNode]:
+        """Children; inside a render pass none if a template read a missing input."""
+        from mknodes import inputs
+
+        try:
+            return self.get_children()
+        except inputs.InputPendingError:
+            if inputs.current_pass() is None:
+                raise
+            return []
 
     def get_tree_repr(
         self,
@@ -363,10 +380,10 @@ class MkNode:
         return nodeenvironment.NodeEnvironment(self)
 
     def __str__(self) -> str:
-        return coroutines.run_sync(self.to_markdown())
+        return self.to_markdown_sync()
 
     def __hash__(self):
-        return hash(coroutines.run_sync(self.to_markdown()))
+        return hash(self.to_markdown_sync())
 
     def __eq__(self, other: object):
         if type(other) is not type(self):
@@ -442,10 +459,16 @@ class MkNode:
         """Get a node from name registry."""
         return cls._name_registry[name]
 
-    async def get_toc(self):
+    def get_toc_sync(self):
+        """Return the table of contents of the node's Markdown."""
         from mknodes.pages import toc
 
-        return toc.get_toc(await self.to_markdown())
+        return toc.get_toc(self.to_markdown_sync())
+
+    async def get_toc(self):
+        """Deprecated (removed in 5.0): rendering is sync, use `get_toc_sync()`."""
+        _deprecated("MkNode.get_toc()", "get_toc_sync()")
+        return self.get_toc_sync()
 
     def get_input_requests(self) -> list[inputs.InputRequest]:
         """Return the external inputs this node needs to render (none by default).
@@ -455,11 +478,11 @@ class MkNode:
         """
         return []
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         """Return raw markdown for this node. Override in subclasses for custom markdown."""
         return ""
 
-    async def get_content(self) -> resources.NodeContent:
+    def get_content(self) -> resources.NodeContent:
         """Return markdown and resources for this node in a single pass.
 
         Override this method in subclasses to compute both markdown and resources
@@ -469,11 +492,11 @@ class MkNode:
         `_build_node_resources()` for backward compatibility.
         """
         return resources.NodeContent(
-            markdown=await self.to_md_unprocessed(),
-            resources=await self._build_node_resources(),
+            markdown=self.to_md_unprocessed(),
+            resources=self._build_node_resources(),
         )
 
-    async def _build_node_resources(self) -> resources.Resources:
+    def _build_node_resources(self) -> resources.Resources:
         """Build resources from class attributes and mods. Internal helper."""
         extension: dict[str, dict[str, Any]] = {
             k.extension_name: dict(k) for k in self.REQUIRED_EXTENSIONS
@@ -483,7 +506,7 @@ class MkNode:
         css_resources: list[resources.CSSType] = []
         for css in self.CSS + mod_resources.css:
             if isinstance(css, resources.CSSFile) and css.is_local():
-                text = await self.env.render_template_async(css.link)
+                text = self.env.render_template(css.link)
                 css_resource = resources.CSSText(text, css.link)
                 css_resources.append(css_resource)
             else:
@@ -491,7 +514,7 @@ class MkNode:
         js_resources: list[resources.JSType] = []
         for js_file in self.JS_FILES + mod_resources.js:
             if isinstance(js_file, resources.JSFile) and js_file.is_local():
-                text = await self.env.render_template_async(js_file.link)
+                text = self.env.render_template(js_file.link)
                 js_resource = resources.JSText(
                     text,
                     js_file.link,
@@ -511,10 +534,12 @@ class MkNode:
             css=css_resources,
         )
 
-    async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
-        """Outputs markdown for self and all children (a coroutine: `await` it).
+    def to_markdown_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Return the Markdown of this node and all children (same as `str(node)`).
 
-        Sync code (scripts, no running event loop) can use `to_markdown_sync()`.
+        Rendering is sync and only reads resolved inputs. At the top level it runs in
+        render passes: inputs found while rendering get resolved, then the node renders
+        again (see `mknodes.inputs.passes`); nested inside a render it just renders.
 
         Args:
             flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
@@ -524,27 +549,22 @@ class MkNode:
 
         if flavor is not None:
             with rendering.use(rendering.get_renderer(flavor)):
-                return await self.to_markdown()
+                return self.to_markdown_sync()
 
-        async def render() -> str:
+        def render() -> str:
             renderer = rendering.current()
-            return renderer.process(self, await renderer.render_markdown(self))
+            return renderer.process(self, renderer.render_markdown(self))
 
-        # Top level: render passes (inputs found while rendering get resolved, then the
-        # node renders again). Nested inside a render: just renders.
-        return await inputs.run_passes_async(render)
+        return inputs.run_passes(render)
 
-    def to_markdown_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
-        """Blocking version of `to_markdown()` for sync code.
-
-        Also works while an event loop is running (it then renders in a worker thread),
-        async code should `await node.to_markdown()` instead.
+    async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Deprecated (removed in 5.0): rendering is sync, use `to_markdown_sync()`.
 
         Args:
             flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
-                    Defaults to the active renderer (Material for MkDocs).
         """
-        return coroutines.run_sync(self.to_markdown(flavor))
+        _deprecated("MkNode.to_markdown()", "to_markdown_sync() / str(node)")
+        return self.to_markdown_sync(flavor)
 
     def get_processors(self) -> list[processors.TextProcessor]:
         """Return list of processors used to created markdown."""
@@ -618,17 +638,23 @@ class MkNode:
         """
         self.mods._css_classes.append(class_name)
 
-    async def get_node_resources(self) -> resources.Resources:
+    def get_node_resources(self) -> resources.Resources:
         """Return the resources specific for this node.
 
         Default implementation calls `_build_node_resources()`. Override
         `get_content()` if you need to compute markdown and resources together.
         """
-        return await self._build_node_resources()
+        return self._build_node_resources()
 
     async def get_resources(self) -> resources.Resources:
-        """Return the "final" resources object."""
-        nodes = [*list(self.descendants), self]
+        """Deprecated (removed in 5.0): rendering is sync, use `get_resources_sync()`."""
+        _deprecated("MkNode.get_resources()", "get_resources_sync()")
+        return self.get_resources_sync()
+
+    def get_resources_sync(self) -> resources.Resources:
+        """Return the resources of this node and all children (extensions, CSS, JS, ...)."""
+        from mknodes import inputs
+
         extensions: dict[str, dict[str, Any]] = {
             "attr_list": {},
             "md_in_html": {},
@@ -643,16 +669,15 @@ class MkNode:
             ),
         }
 
-        from mknodes import inputs
-
-        async def collect() -> resources.Resources:
+        def collect() -> resources.Resources:
             req = resources.Resources(markdown_extensions=extensions)
-            for node in nodes:
-                node_req = await node.get_node_resources()
+            # Inside the pass: walking the children renders templates.
+            for node in [*list(self.descendants), self]:
+                node_req = node.get_node_resources()
                 req.merge(node_req)
             return req
 
-        return await inputs.run_passes_async(collect)
+        return inputs.run_passes(collect)
 
     @classmethod
     def with_context(
@@ -667,6 +692,15 @@ class MkNode:
         return cls(*args, **kwargs, context=ctx)
 
     async def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
+        """Deprecated (removed in 5.0): rendering is sync, use `to_html_sync()`.
+
+        Args:
+            flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
+        """
+        _deprecated("MkNode.to_html()", "to_html_sync()")
+        return self.to_html_sync(flavor)
+
+    def to_html_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Convert node to HTML using the resources from node + children.
 
         The Markdown is rendered in given flavour (default: the active one) and converted
@@ -677,6 +711,6 @@ class MkNode:
         """
         renderer = rendering.get_renderer(flavor)
         with rendering.use(renderer):
-            md = await self.to_markdown()
-            reqs = await self.get_resources()
+            md = self.to_markdown_sync()
+            reqs = self.get_resources_sync()
         return renderer.to_html(md, reqs)

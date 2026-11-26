@@ -94,7 +94,7 @@ class MkDefaultWebsite(mk.MkNav):
         populate_default_website(self, static_pages)
 
 
-async def parse(root: mk.MkNav, theme: mk.Theme, pages: list[Any] | None = None) -> mk.MkNav:
+def parse(root: mk.MkNav, theme: mk.Theme, pages: list[Any] | None = None) -> mk.MkNav:
     """Default build function.
 
     Builds the nav from the `pages` setting if given, otherwise creates a default
@@ -106,5 +106,5 @@ async def parse(root: mk.MkNav, theme: mk.Theme, pages: list[Any] | None = None)
 
     from mknodes.navs.navparser import parse_new_style_nav
 
-    await parse_new_style_nav(root, pages)
+    parse_new_style_nav(root, pages)
     return root

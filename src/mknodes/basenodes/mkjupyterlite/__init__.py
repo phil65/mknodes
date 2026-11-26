@@ -26,7 +26,7 @@ class MkJupyterLite(mknode.MkNode):
         self.height = height
         self.width = width
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         encoded_code = quote(self.code)
         html = f"""
 <iframe
@@ -46,4 +46,4 @@ if __name__ == "__main__":
         app = ConfigGeneratorApp()
         app.run()
     """)
-    print(terminal.to_markdown())
+    print(terminal)

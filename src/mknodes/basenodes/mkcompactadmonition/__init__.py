@@ -34,7 +34,7 @@ class MkCompactAdmonition(mknode.MkNode):
         self.typ = typ
         super().__init__(**kwargs)
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         kls = f"mdx-grid-wrapper mdx-admo--{self.typ}" if self.typ else "mdx-grid-wrapper"
         root = xmlhelpers.Div(kls)
         xmlhelpers.Div("mdx-grid-child mdx-grid-child--icon", parent=root)
@@ -42,7 +42,7 @@ class MkCompactAdmonition(mknode.MkNode):
         text_div.text = str(self._text)
         return root.to_string()
 
-    async def get_text(self) -> str | mknode.MkNode:
+    def get_text(self) -> str | mknode.MkNode:
         return self._text
 
 

@@ -29,10 +29,10 @@ class MkSnippet(mknode.MkNode):
         super().__init__(**kwargs)
         self.path = path
 
-    async def to_md_unprocessed(self) -> str:
+    def to_md_unprocessed(self) -> str:
         return f"--8<--\n{self.path}\n--8<--\n"
 
 
 if __name__ == "__main__":
     section = MkSnippet("test.md")
-    print(section.to_markdown())
+    print(section)

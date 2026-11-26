@@ -4,8 +4,8 @@
 import mknodes as mk
 
 node = mk.MkAdmonition("Careful!", typ="warning")
-await node.to_markdown()  # Material for MkDocs (default)
-await node.to_markdown(flavor="github")  # GitHub: > [!WARNING] ...
+node.to_markdown_sync()  # Material for MkDocs (default)
+node.to_markdown_sync(flavor="github")  # GitHub: > [!WARNING] ...
 ```
 """
 

@@ -92,7 +92,7 @@ class MkTreeView(mkcode.MkCode):
         self.reverse_sort = reverse_sort
         self.date_format = date_format
 
-    async def get_text(self) -> str:
+    def get_text(self) -> str:
         match self.tree:
             case str() | os.PathLike() | upath.UPath():
                 # Convert exclude_patterns list to regex pattern
@@ -154,12 +154,11 @@ class MkTreeView(mkcode.MkCode):
 
 
 if __name__ == "__main__":
-    import asyncio
 
-    async def main() -> None:
+    def main() -> None:
         """Example."""
         p = upath.UPath("github://phil65:jinjarope@main/tests/testresources")
         node = MkTreeView(p, style="ascii", maximum_depth=2)
-        print(await node.to_markdown())
+        print(node)
 
-    asyncio.run(main())
+    main()
