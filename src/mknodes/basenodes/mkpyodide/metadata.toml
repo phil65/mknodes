@@ -14,7 +14,7 @@ link = "https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"
 is_library = true
 
 [[resources.js]]
-link = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"
+link = "https://cdn.jsdelivr.net/pyodide/v314.0.8/full/pyodide.js"
 is_library = true
 
 [[resources.js]]

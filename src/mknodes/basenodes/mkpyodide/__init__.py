@@ -11,7 +11,15 @@ logger = log.get_logger(__name__)
 XTERM_CSS = "https://cdn.jsdelivr.net/npm/xterm/css/xterm.css"
 XTERM_JS = "https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"
 XTERM_FIT = "https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"
-PYODIDE_JS = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"
+PYODIDE_VERSION = "314.0.8"
+
+
+def pyodide_js_url(version: str = PYODIDE_VERSION) -> str:
+    """Return the jsDelivr CDN URL for a given Pyodide version."""
+    return f"https://cdn.jsdelivr.net/pyodide/v{version}/full/pyodide.js"
+
+
+PYODIDE_JS = pyodide_js_url()
 
 INIT_SCRIPT = """
 class PyodideTerminal {
@@ -108,6 +116,7 @@ class MkPyodideTerminal(mknode.MkNode):
         height: str = "400px",
         width: str = "100%",
         terminal_id: str | None = None,
+        pyodide_version: str = PYODIDE_VERSION,
         **kwargs: Any,
     ) -> None:
         """Constructor.
@@ -119,6 +128,7 @@ class MkPyodideTerminal(mknode.MkNode):
             height: Terminal height (CSS value)
             width: Terminal width (CSS value)
             terminal_id: Optional ID for the terminal element
+            pyodide_version: Pyodide version to load from jsDelivr CDN
             kwargs: Keyword arguments passed to parent
         """
         super().__init__(**kwargs)
@@ -128,6 +138,19 @@ class MkPyodideTerminal(mknode.MkNode):
         self.height = height
         self.width = width
         self.terminal_id = terminal_id or f"pyodide-terminal-{id(self)}"
+        self.pyodide_version = pyodide_version
+
+    async def _build_node_resources(self) -> resources.Resources:
+        res = await super()._build_node_resources()
+        if self.pyodide_version != PYODIDE_VERSION:
+            target_url = pyodide_js_url(self.pyodide_version)
+            res.js = [
+                resources.JSFile(target_url, is_library=True)
+                if isinstance(js, resources.JSFile) and js.link == PYODIDE_JS
+                else js
+                for js in res.js
+            ]
+        return res
 
     async def to_md_unprocessed(self) -> str:
         """Convert the terminal to HTML."""
@@ -148,8 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {{
 if __name__ == "__main__":
     # Example usage in your documentation pages:
     terminal = MkPyodideTerminal("""
-        from llmling_textual.creator import ConfigGeneratorApp
-        app = ConfigGeneratorApp()
-        app.run()
+        import sys
+        import micropip
+
+        print(sys.version)
+        await micropip.install("packaging")
     """)
-    print(terminal.to_markdown())
+    print(terminal.to_markdown_sync())

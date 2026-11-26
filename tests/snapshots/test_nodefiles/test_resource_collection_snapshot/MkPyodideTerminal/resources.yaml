@@ -4,7 +4,7 @@ css:
 js:
 - https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js
 - https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js
-- https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js
+- https://cdn.jsdelivr.net/pyodide/v314.0.8/full/pyodide.js
 - JSText(filename='pyodide-terminal_763f363.js')
 markdown_extensions:
   attr_list: {}
