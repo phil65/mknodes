@@ -56,7 +56,7 @@ def test_docstrings_skip_the_jinja_pass(pkg: str, flavor: str):
     page += mk.MkDocStrings(f"{pkg}.Condition")
     condition = importlib.import_module(pkg).Condition
     page += mk.MkClassTable([condition], layout="compact")  # docstring summary via get_doc
-    output = DocBuilder(flavor=flavor).build_sync(nav)
+    output = DocBuilder(flavor=flavor).build(nav)
     text = "\n".join(output.pages.values())
     assert "2 from Jinja" in text
     assert "{{ 1 + 1 }}" not in text
@@ -76,7 +76,7 @@ def test_docstrings_unchanged_without_jinja_pass(pkg: str):
     nav = mk.MkNav()
     page = nav.add_page("API")
     page += mk.MkDocStrings(f"{pkg}.Condition")
-    output = DocBuilder(flavor="github", render_jinja=False).build_sync(nav)
+    output = DocBuilder(flavor="github", render_jinja=False).build(nav)
     text = "\n".join(output.pages.values())
     assert "Evaluates {{ ctx.foo }} for each message." in text
     assert "raw %}" not in text
@@ -92,7 +92,7 @@ def test_dataclass_info_is_literal():
     nav = mk.MkNav()
     page = nav.add_page("Info")
     page += mk.MkDataClassInfo(Info())
-    output = DocBuilder().build_sync(nav)
+    output = DocBuilder().build(nav)
     text = "\n".join(output.pages.values())
     assert "Shows {{ ctx.foo }}." in text
     assert "'{% if x %}'" in text

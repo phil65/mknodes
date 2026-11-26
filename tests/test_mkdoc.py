@@ -221,10 +221,10 @@ def test_links_point_to_class_pages(pkg):
     )
     module = sys.modules["apidocpkg.sub"]
     assert links.link_for_module(module, from_page=from_foo) == "[apidocpkg.sub](../index.md)"
-    md = pages["API/index.md"].to_markdown_sync()
+    md = pages["API/index.md"].to_markdown()
     assert "(schema/Schema.md)" in md
     assert "(sub/impl/Foo.md)" in md
-    md = from_foo.to_markdown_sync()  # "Base classes" table
+    md = from_foo.to_markdown()  # "Base classes" table
     assert "(../../schema/Schema.md)" in md
     # same folder: keep a folder part, so link replacers leave the link alone
     from_helper = pages["API/schema/SchemaHelper.md"]

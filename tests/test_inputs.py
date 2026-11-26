@@ -218,7 +218,7 @@ async def test_migrated_nodes_render_from_lock_without_network(no_network, tmp_p
     page += mk.MkIcon("mdi:file", color="red")
     page += mk.MkLicense("MIT")
     page += llm
-    md = page.to_markdown_sync()
+    md = page.to_markdown()
     assert SVG in md
     assert "M1" in md
     assert "MIT license text" in md
@@ -229,7 +229,7 @@ async def test_migrated_nodes_render_from_lock_without_network(no_network, tmp_p
 async def test_migrated_node_missing_offline_is_an_error(no_network, tmp_path):
     ctx = _offline_ctx(tmp_path, {"icon": {}})
     with pytest.raises(MissingInputError):
-        mk.MkIcon("mdi:folder", context=ctx).to_markdown_sync()
+        mk.MkIcon("mdi:folder", context=ctx).to_markdown()
 
 
 async def test_mkllm_offline_without_agentpool_uses_placeholder(monkeypatch, tmp_path):
@@ -241,8 +241,8 @@ async def test_mkllm_offline_without_agentpool_uses_placeholder(monkeypatch, tmp
     page = mk.MkPage(context=ctx)
     llm = mk.MkLlm("Say hi")
     page += llm
-    DocBuilder().build_sync(_nav_with(page, ctx))  # no MissingInputError
-    assert llm.to_markdown_sync() == mkllm.UNAVAILABLE_TEXT
+    DocBuilder().build(_nav_with(page, ctx))  # no MissingInputError
+    assert llm.to_markdown() == mkllm.UNAVAILABLE_TEXT
 
 
 def test_pyconify_key_reads_icon_prefixes_from_the_store(no_network, tmp_path):
@@ -267,7 +267,7 @@ async def test_github_flavour_icon_offline(no_network, tmp_path):
     lock = {"icon_prefixes": {"collections": ["fa-brands", "mdi"]}}
     ctx = _offline_ctx(tmp_path, lock)
     with inputs.use_store(ctx.inputs):
-        md = mk.MkIcon(":fa-brands-github:", context=ctx).to_markdown_sync(flavor="github")
+        md = mk.MkIcon(":fa-brands-github:", context=ctx).to_markdown(flavor="github")
     assert "https://api.iconify.design/fa-brands/github.svg" in md
 
 
@@ -276,11 +276,11 @@ async def test_mkinclude_url_from_lock_without_network(no_network, tmp_path):
     ctx = _offline_ctx(tmp_path, {"file": {url: "# Included from the lock"}})
     node = mk.MkInclude(url, context=ctx)
     assert node.get_input_requests() == [InputRequest.create("file", url=url)]
-    assert "Included from the lock" in node.to_markdown_sync()
+    assert "Included from the lock" in node.to_markdown()
     local = tmp_path / "local.md"
     local.write_text("local text")
     assert mk.MkInclude(str(local), context=ctx).get_input_requests() == []
-    assert mk.MkInclude(str(local), context=ctx).to_markdown_sync() == "local text"
+    assert mk.MkInclude(str(local), context=ctx).to_markdown() == "local text"
 
 
 def _nav_with(page: mk.MkPage, ctx: contexts.ProjectContext) -> mk.MkNav:
@@ -304,7 +304,7 @@ async def test_builder_resolves_inputs_before_rendering(fake_kinds, monkeypatch)
     page = nav.add_page("Icons", is_index=True)
     for name in ("mdi:a", "mdi:b", "mdi:c", "mdi:a"):
         page += mk.MkIcon(name)
-    output = DocBuilder().build_sync(nav)
+    output = DocBuilder().build(nav)
     assert sorted(fetched) == ["mdi:a", "mdi:b", "mdi:c"]
     assert ctx.inputs.on_demand == set()  # all came from the resolve phase
     assert "mdi:b" in output.pages["index.md"]
@@ -421,7 +421,7 @@ async def test_jinja_load_file_reads_remote_files_from_the_store(no_network, tmp
     ctx = _offline_ctx(tmp_path, {"file": {url: "snippet from the lock"}})
     with inputs.use_store(ctx.inputs):
         node = mk.MkText(f"{{{{ '{url}' | load_file }}}}", render_jinja=True, context=ctx)
-        assert node.to_markdown_sync() == "snippet from the lock"
+        assert node.to_markdown() == "snippet from the lock"
 
 
 async def test_mkpydeps_and_mkcommandoutput_run_in_the_resolve_phase(monkeypatch):
@@ -448,7 +448,7 @@ async def test_mkpydeps_and_mkcommandoutput_run_in_the_resolve_phase(monkeypatch
     page += mk.MkPyDeps("src/mknodes", max_bacon=1)
     page += mk.MkCommandOutput(["mytool", "--help"])
     page += mk.MkText("{{ ['other', '--version'] | check_output }}", render_jinja=True)
-    output = DocBuilder().build_sync(nav)
+    output = DocBuilder().build(nav)
     md = output.pages["index.md"]
     assert "<svg>deps</svg>" in md
     assert md.count("command output") == 2  # noqa: PLR2004
@@ -478,7 +478,7 @@ def test_build_time_is_fixed_and_honours_source_date_epoch(monkeypatch):
         assert buildtime.build_time().year == 2023  # noqa: PLR2004
         assert buildtime.utcnow() == buildtime.build_time()
         node = mk.MkText("{{ utcnow().year }}", render_jinja=True)
-        assert node.to_markdown_sync() == "2023"
+        assert node.to_markdown() == "2023"
     finally:
         buildtime.build_time.cache_clear()
 
@@ -532,7 +532,7 @@ async def test_rendering_does_no_io(io_guard: list[str], monkeypatch: pytest.Mon
     )
     page += mk.MkCommandOutput(["echo", "declared-command"])
     with diagnostics.collect() as collected:
-        output = DocBuilder().build_sync(nav)
+        output = DocBuilder().build(nav)
     md = output.pages["index.md"]
     for icon in ("mdi:declared", "mdi:in-page-pass", "mdi:in-template"):
         assert SVG.replace("M0", icon) in md
@@ -556,7 +556,7 @@ async def test_render_passes_discard_diagnostics_of_retried_renders(monkeypatch)
         calls.append(has_icon)
         if not has_icon:
             diagnostics.report("node", "broken while the icon is missing")
-        return node.to_markdown_sync()
+        return node.to_markdown()
 
     with diagnostics.collect() as collected:
         md = inputs.run_passes(flaky_render)
@@ -569,7 +569,7 @@ async def test_render_passes_discard_diagnostics_of_retried_renders(monkeypatch)
 
 
 def test_str_of_a_node_resolves_its_inputs_first(io_guard, monkeypatch):
-    """Top-level `str(node)` / `to_markdown_sync()` run render passes too."""
+    """Top-level `str(node)` / `to_markdown()` run render passes too."""
     monkeypatch.setattr(iconcache, "_fetch", lambda icon, **_kw: SVG)
     node = mk.MkText("{{ 'mdi:y' | MkIcon }}", render_jinja=True)
     assert SVG in str(node)

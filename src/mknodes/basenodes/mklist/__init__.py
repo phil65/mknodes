@@ -66,7 +66,7 @@ class MkList(mkcontainer.MkContainer):
             lines.append(f"  {prefix} ...")
         return "\n".join(lines) + "\n"
 
-    def to_html_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
+    def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Formats list in html as one single line (same in every flavour).
 
         Can be useful for including in Tables.

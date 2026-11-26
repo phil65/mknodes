@@ -51,7 +51,7 @@ def to_html(node: mk.MkNode) -> str:
     Args:
         node: The node to add a mod to
     """
-    return node.to_html_sync()
+    return node.to_html()
 
 
 def apply_mod(node: mk.MkNode, mod_name: str, **kwargs: Any) -> mk.MkNode:

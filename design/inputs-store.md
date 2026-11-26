@@ -70,7 +70,7 @@ Notes:
 
 | Where | Why |
 | --- | --- |
-| `basenodes/mknode` `__str__`, `__hash__`, `to_markdown_sync` (3) | sync API over async rendering (`str(node)`: ~460 uses in node code, e.g. MkTable widths, MkCode) |
+| `basenodes/mknode` `__str__`, `__hash__`, `to_markdown` (3) | sync API over async rendering (`str(node)`: ~460 uses in node code, e.g. MkTable widths, MkCode) |
 | `templatenodes/mktemplatetable` (1) | renders cells synchronously |
 | `jinja/nodeenvironment.py` (1) | sync template render (`render_string` / `render_template`) |
 | `pages/pagetemplate.py` `__hash__` (1, anyenv) | hash of rendered HTML |
@@ -207,16 +207,15 @@ resolve steps between renders.
     concurrently, pages (each page its own pass: only pages which read a missing input render
     again), nav / theme resources and page templates.
   - SiteGenerator: the walk for the link excludes.
-  - `to_markdown_sync()` / `str(node)` / `get_resources_sync()` at the top level; nested inside a
+  - `to_markdown()` / `str(node)` / `get_resources()` at the top level; nested inside a
     render they just render.
   - Outside passes (setup, build functions, writers) `store.get()` still fetches on demand.
-- **Sync API**: `to_markdown_sync()` / `str(node)`, `get_resources_sync()`, `to_html_sync()`,
-  `get_toc_sync()`, `DocBuilder.build_sync()`, `MarkdownExporter.export_sync()`,
+- **Sync API**: `to_markdown()` / `str(node)`, `get_resources()`, `to_html()`,
+  `get_toc()`, `DocBuilder.build()`, `MarkdownExporter.export()`,
   `NodeEnvironment.render_nodes()` / `render_string()` / `render_template()`. Override points
-  (`get_content`, `to_md_unprocessed`, `get_node_resources`, renderer rules) are sync. The
-  async `to_markdown()` / `get_resources()` / `to_html()` / `get_toc()`, `render_*_async()`,
-  `DocBuilder.build()`, `MarkdownExporter.export()` are deprecated wrappers (removed in 5.0);
-  templates calling `node.to_html()` get the sync version (`NodeContext.call`).
+  (`get_content`, `to_md_unprocessed`, `get_node_resources`, renderer rules) are sync.
+  4.6 kept the async API as deprecated wrappers next to `*_sync` methods; 5.0 removed the
+  wrappers and gave the sync methods the short names (no aliases).
 - **Jinja**: environments are sync; `{{ node }}` compiles to `environment._render_output(node)`.
 - **Threads**: no event loop / thread per node. `coroutines.run_sync` remains for resolve steps
   (one loop per step) and async user code (build / route functions). DocBuilder workers render

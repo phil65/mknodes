@@ -171,7 +171,7 @@ class SiteGenerator:
             show_page_info=self.settings.show_page_info,
             global_resources=self.settings.global_resources,
         )
-        output = builder.build_sync(root, theme)
+        output = builder.build(root, theme)
         logger.info("Inputs: %s", ", ".join(f"{k} {v}" for k, v in ctx.inputs.stats().items()))
         ctx.inputs.save()
         resolve_url_collisions(output)

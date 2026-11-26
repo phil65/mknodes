@@ -36,7 +36,7 @@ class MkGrid(mkcontainer.MkContainer):
         items = self.get_items()
         if not items:
             return root
-        result = [f"-   {filters.do_indent(item.to_markdown_sync())}" for item in items]
+        result = [f"-   {filters.do_indent(item.to_markdown())}" for item in items]
         content = "\n".join(result)
         root.text = "\n\n" + content + "\n"
         return root

@@ -1,4 +1,4 @@
-"""Flavour-aware `MkNode.to_html_sync()` (the "Html" tab of node examples)."""
+"""Flavour-aware `MkNode.to_html()` (the "Html" tab of node examples)."""
 
 import pytest
 
@@ -26,7 +26,7 @@ def assert_rendered(html: str) -> None:
 )
 def test_admonition_html_per_flavor(flavor: str, expected: str):
     node = mk.MkAdmonition("Careful **now**!", typ="warning")
-    html = node.to_html_sync(flavor=flavor)
+    html = node.to_html(flavor=flavor)
     assert expected in html
     assert "<strong>now</strong>" in html
     assert_rendered(html)
@@ -35,13 +35,13 @@ def test_admonition_html_per_flavor(flavor: str, expected: str):
 def test_active_flavor_is_used():
     node = mk.MkAdmonition("Careful!", typ="warning")
     with rendering.use(rendering.get_renderer("github")):
-        html = node.to_html_sync()
+        html = node.to_html()
     assert "markdown-alert-warning" in html
 
 
 def test_myst_titled_admonition():
     node = mk.MkAdmonition("Body", typ="warning", title="Heads up")
-    html = node.to_html_sync(flavor="myst")
+    html = node.to_html(flavor="myst")
     assert '<p class="admonition-title">Heads up</p>' in html
     assert_rendered(html)
 
@@ -49,7 +49,7 @@ def test_myst_titled_admonition():
 def test_myst_dropdown_and_tabs():
     adm = mk.MkAdmonition("inner *text*", typ="note", title="More", collapsible=True)
     node = mk.MkTabbed({"First": "a text", "Second": adm})
-    html = node.to_html_sync(flavor="myst")
+    html = node.to_html(flavor="myst")
     assert '<div class="sd-tab-set">' in html
     assert '<p class="sd-tab-label">Second</p>' in html
     assert "<details" in html
@@ -60,7 +60,7 @@ def test_myst_dropdown_and_tabs():
 
 def test_myst_code_block_with_caption():
     node = mk.MkCode("print(1)", language="py", title="t.py")
-    html = node.to_html_sync(flavor="myst")
+    html = node.to_html(flavor="myst")
     assert '<div class="code-block-caption">t.py</div>' in html
     assert '<code class="language-py">print(1)' in html
     assert "{code-block}" not in html

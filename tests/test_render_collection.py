@@ -109,8 +109,8 @@ def test_template_rerenders_after_attribute_change(executions: list[str]):
 def test_render_is_cached_per_flavor(executions: list[str]):
     node = mk.MkText("{{ 'hi' | MkAdmonition(typ='bug') }}", render_jinja=True)
     children = node.get_children()
-    assert (node.to_markdown_sync()).startswith("!!! bug")
-    assert (node.to_markdown_sync(flavor="github")).strip() == "> [!CAUTION]\n> hi"
+    assert (node.to_markdown()).startswith("!!! bug")
+    assert (node.to_markdown(flavor="github")).strip() == "> [!CAUTION]\n> hi"
     assert len(executions) == 2  # material (tree + content), github (content)  # noqa: PLR2004
     assert node.get_children() is children
 

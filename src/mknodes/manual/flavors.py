@@ -32,8 +32,8 @@ with MyST directives (admonitions, dropdowns, tab sets, `{code-block}`) for Sphi
 import mknodes as mk
 
 node = mk.MkAdmonition("Careful!", typ="warning")
-node.to_markdown_sync()  # Material (default)
-node.to_markdown_sync(flavor="github")  # > [!WARNING] ...
+node.to_markdown()  # Material (default)
+node.to_markdown(flavor="github")  # > [!WARNING] ...
 ```
 
 A whole site can be generated in a flavour with the CLI. The `markdown` engine writes
@@ -112,15 +112,15 @@ class FlavorComparison(mk.MkNode):
 
     def to_md_unprocessed(self) -> str:
         outputs = {
-            "Material": self.node.to_markdown_sync(flavor="material"),
-            "GitHub": self.node.to_markdown_sync(flavor="github"),
+            "Material": self.node.to_markdown(flavor="material"),
+            "GitHub": self.node.to_markdown(flavor="github"),
         }
         fence_level = max(0, *(_longest_backtick_run(v) - 2 for v in outputs.values()))
         # The code blocks render in the active flavour (the page's).
         blocks = [
             mk.MkCode(
                 text.strip(), language="markdown", title=title, fence_level=fence_level
-            ).to_markdown_sync()
+            ).to_markdown()
             for title, text in outputs.items()
         ]
         content = "\n\n".join(blocks)

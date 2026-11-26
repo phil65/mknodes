@@ -15,11 +15,11 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
 
 - `src/mknodes/__init__.py`: public API; re-exports every node class (`mk.MkPage`, `mk.MkNav`, ...).
 - `basenodes/mknode/__init__.py`: `MkNode`, the base class. Tree handling (parent/children,
-  `iter_nodes`), `ctx` (project context), `env` (Jinja env), `to_markdown_sync()` / `str(node)`,
-  `get_resources_sync()`, `to_html_sync()`. Rendering is **sync and pure** (since 4.6): nodes
-  only read resolved data (`ctx.inputs`), no event loops / threads per node. The async
-  `to_markdown()` / `get_resources()` / `to_html()` / `get_toc()` are deprecated wrappers
-  (removed in 5.0); override points (`get_content`, `to_md_unprocessed`, rules) are sync.
+  `iter_nodes`), `ctx` (project context), `env` (Jinja env), `to_markdown()` / `str(node)`,
+  `get_resources()`, `to_html()`, `get_toc()`. Rendering is **sync and pure** (since 4.6;
+  5.0 dropped the async wrappers and the `*_sync` names): nodes only read resolved data
+  (`ctx.inputs`), no event loops / threads per node. Override points (`get_content`,
+  `to_md_unprocessed`, rules) are sync.
 - `basenodes/`: primitive nodes (`mktext`, `mkadmonition`, `mkcode`, `mktable`, `mkcontainer`, ...).
   Each node is a package with `__init__.py` plus a `metadata.toml` ("node file", parsed by
   `info/nodefile.py`) holding metadata, required extensions/CSS, examples (`python`/`jinja`) and
@@ -42,8 +42,8 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   renders of the same env add to the outer one). Templates are sync (no `enable_async`);
   `{{ node }}` renders via `NodeCodeGenerator` (hooks Jinja's private `_output_child_pre/_post`:
   re-check on Jinja updates) -> `environment._render_output(node)`, which keeps the node's
-  resources for the render. `NodeContext.call` maps template calls of the deprecated async node
-  methods (`node.to_html()`) to the sync ones. I/O filters / globals of jinjarope (`load_file`,
+  resources for the render. Templates call node methods directly (`node.to_html()`, sync).
+  I/O filters / globals of jinjarope (`load_file`,
   `check_output`, `now`, `utcnow`) are replaced by store-backed / build-time versions. Template nodes (`MkTemplate`, `MkTemplatePage`,
   `MkTemplateTable`, `MkText(render_jinja=True)`) use `jinja/rendercache.TemplateRenderMixin`:
   one render per flavour serves children and content; setting an attribute drops the cache,
@@ -196,7 +196,7 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - mypy is the type checker in CI and pre-commit (template deviation: the template uses ty;
   `ty check` still reports ~77 findings, mostly container `get_items` overrides and
   navigation router unions, so the switch is a separate task).
-- Rendering APIs are sync (`node.to_markdown_sync()`, `str(node)`, `DocBuilder().build_sync()`);
+- Rendering APIs are sync (`node.to_markdown()`, `str(node)`, `DocBuilder().build()`);
   only fetching inputs is async (`InputKind.fetch`, `InputStore.resolve`). Tests use
   pytest-asyncio with `asyncio_mode = "auto"` for those.
 - Tests live in `tests/`, one file per area. `tests/test_nodefiles.py` renders every node's

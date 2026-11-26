@@ -79,7 +79,7 @@ def test_nested_node_keeps_its_own_markdown(node: mk.MkNode):
     expected = node.to_md_unprocessed()
     page = mk.MkPage()
     page += node
-    assert expected.strip() in page.to_markdown_sync()
+    assert expected.strip() in page.to_markdown()
 
 
 if __name__ == "__main__":

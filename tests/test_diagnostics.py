@@ -85,7 +85,7 @@ def test_build_output_collects_diagnostics(flavor: str):
     page += "```python\nnever closed\n"
     fine = root.add_page("Fine")
     fine += "All good."
-    output = DocBuilder(flavor=flavor).build_sync(root)
+    output = DocBuilder(flavor=flavor).build(root)
     kinds = sorted(d.kind for d in output.diagnostics)
     assert kinds == ["fence", "node"]
     assert {d.page for d in output.diagnostics} == {"broken.md"}

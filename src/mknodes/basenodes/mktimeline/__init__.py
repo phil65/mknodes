@@ -87,7 +87,7 @@ class MkTimelineItem(mknode.MkNode):
             xml.Header(2, self.title, parent=content_div)
         if self.label:
             xml.Div("date", text=self.label, parent=content_div)
-        text = f"<p>\n{self.content.to_html_sync()}\n</p>"
+        text = f"<p>\n{self.content.to_html()}\n</p>"
         content_div.append(ET.fromstring(text))
         if self.link:
             xml.A("bnt-more", href=self.link, text=self.button_text, parent=content_div)

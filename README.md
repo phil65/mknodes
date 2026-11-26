@@ -80,8 +80,8 @@ page += mk.MkAdmonition("Generated with MkNodes!", typ="tip", title="Note")
 page += mk.MkTable({"Feature": ["Nodes", "Templating"], "Status": ["yes", "yes"]})
 page += mk.MkCode("print('hello')", language="py")
 
-print(page.to_markdown_sync())  # same as str(page)
-print(page.to_markdown_sync(flavor="github"))  # GitHub flavour (READMEs)
+print(page.to_markdown())  # same as str(page)
+print(page.to_markdown(flavor="github"))  # GitHub flavour (READMEs)
 ```
 
 ## Features

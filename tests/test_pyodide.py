@@ -31,7 +31,7 @@ def test_default_terminal_uses_default_pyodide_version() -> None:
     terminal = mkpyodide.MkPyodideTerminal("print('hello')")
     assert terminal.pyodide_version == mkpyodide.PYODIDE_VERSION
 
-    node_resources = terminal.get_resources_sync()
+    node_resources = terminal.get_resources()
     js_links = [js.link for js in node_resources.js if isinstance(js, resources.JSFile)]
     assert mkpyodide.PYODIDE_JS in js_links
 
@@ -47,7 +47,7 @@ def test_custom_pyodide_version() -> None:
 
     assert terminal.pyodide_version == custom_version
 
-    node_resources = terminal.get_resources_sync()
+    node_resources = terminal.get_resources()
     js_links = [js.link for js in node_resources.js if isinstance(js, resources.JSFile)]
     assert expected_url in js_links
     assert mkpyodide.PYODIDE_JS not in js_links

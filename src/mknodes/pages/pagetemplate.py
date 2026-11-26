@@ -114,7 +114,7 @@ class PageTemplate:
         """
         md = md or mdconverter.MdConverter()
         blocks = [r'{% extends "' + self.extends + '" %}\n'] if self.extends else []
-        blocks.extend([block.to_markdown_sync(md=md) for block in self.blocks if block])
+        blocks.extend([block.to_markdown(md=md) for block in self.blocks if block])
         return "\n".join(blocks) + "\n" if blocks else None
 
 

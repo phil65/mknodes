@@ -107,6 +107,6 @@ if __name__ == "__main__":
 
     def main() -> None:
         doc = MkClassPage(mk.MkCode, template_path="classpage_custom.jinja")
-        print(doc.get_resources_sync())
+        print(doc.get_resources())
 
     main()

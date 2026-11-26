@@ -188,7 +188,7 @@ def test_code_block_options_degrade(flavor: str):
     page += '``` py title="Setup `x`" hl_lines="2"\nx = 1\n```'
     page += "```rust,ignore\nfn main() {}\n```"
     page += mk.MkCode("y = 2", language="python", title="y.py")
-    md = page.to_markdown_sync(flavor=flavor)
+    md = page.to_markdown(flavor=flavor)
     assert "```rust,ignore\n" in md
     assert "**Setup `x`**\n\n```py\nx = 1\n```" in md
     assert "**y.py**\n\n```python\ny = 2\n```" in md
@@ -209,7 +209,7 @@ def test_hand_written_blocks_degrade(flavor: str):
     page += '/// details | "Why?"\n    type: warning\nBecause.\n///'
     page += "/// html | div[style='x']\nInside\n///"
     page += "::: mknodes.rendering.github.alert\n    options:\n      show_root_heading: true"
-    md = page.to_markdown_sync(flavor=flavor)
+    md = page.to_markdown(flavor=flavor)
     assert "<details>\n<summary>Why?</summary>\n\nBecause." in md
     assert "///" not in md
     assert "Inside" in md
@@ -221,7 +221,7 @@ def test_admonish_blocks():
     page = mk.MkPage("Blocks")
     page += '!!! tip "Hint"\n    Text'
     page += "/// details | More\nHidden\n///"
-    md = page.to_markdown_sync(flavor=MdbookRenderer(admonish=True))
+    md = page.to_markdown(flavor=MdbookRenderer(admonish=True))
     assert '```admonish tip title="Hint"\nText\n```' in md
     assert '```admonish note title="More" collapsible=true\nHidden\n```' in md
 
@@ -378,7 +378,7 @@ def test_myst_flavour():
         "Text": mk.MkText("!!! note\n    converted"),
         "Empty": "",
     })
-    md = page.to_markdown_sync(flavor="myst")
+    md = page.to_markdown(flavor="myst")
     assert "::::{admonition} Outer\n:class: warning\n\n:::{tip}\n\ninner\n\n:::\n\n::::" in md
     assert ":::{dropdown} Click\n:color: info\n\nhidden\n\n:::" in md
     code = "```{code-block} py\n:caption: a.py\n:linenos:\n:lineno-start: 3\n:emphasize-lines: 1\nx = 1\n```"
@@ -393,7 +393,7 @@ def test_myst_hand_written_blocks():
     page += '!!! tip "Hint"\n    Text\n\n=== "A"\n    a\n=== "B"\n    b\n'
     page += '```py title="t.py" linenums="1" hl_lines="1 3-4"\nx\n```'
     page += "/// details | More\nHidden\n///"
-    md = page.to_markdown_sync(flavor="myst")
+    md = page.to_markdown(flavor="myst")
     assert "```{admonition} Hint\n:class: tip\n\nText\n\n```" in md
     assert "````{tab-set}\n\n```{tab-item} A\n:selected:\n\na\n\n```" in md
     assert "```{code-block} py\n:caption: t.py\n:linenos:\n:emphasize-lines: 1,3,4\nx\n```" in md

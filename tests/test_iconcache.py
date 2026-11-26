@@ -181,7 +181,7 @@ def test_fetch_inside_running_loop(
 
     async def render() -> str:
         if use_async:
-            return mk.MkIcon("mdi:file").to_markdown_sync()
+            return mk.MkIcon("mdi:file").to_markdown()
         return iconcache.get_icon_svg("mdi:file")
 
     assert run_sync(render()) == SVG

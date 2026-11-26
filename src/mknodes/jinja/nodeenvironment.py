@@ -6,7 +6,6 @@ import inspect
 import os
 import pathlib
 from typing import TYPE_CHECKING, Any
-import warnings
 
 import jinja2
 from jinja2 import compiler
@@ -86,30 +85,6 @@ class NodeCodeGenerator(compiler.CodeGenerator):
         super()._output_child_post(node, frame, finalize)
 
 
-# Deprecated async node methods -> their sync versions, for templates calling them.
-_SYNC_METHODS = {
-    "to_markdown": "to_markdown_sync",
-    "to_html": "to_html_sync",
-    "get_resources": "get_resources_sync",
-    "get_toc": "get_toc_sync",
-}
-
-
-class NodeContext(jinjarope.environment.Context):
-    """Template context: `node.to_markdown()` etc. call the sync versions.
-
-    Templates are sync; the async methods of `MkNode` (deprecated) would return
-    coroutines. Removed in mknodes 5.0 together with the async methods.
-    """
-
-    def call(self, obj: Any, /, *args: Any, **kwargs: Any) -> Any:
-        name = getattr(obj, "__name__", None)
-        owner = getattr(obj, "__self__", None)
-        if name in _SYNC_METHODS and isinstance(owner, self.environment.node_type):  # type: ignore[attr-defined]
-            obj = getattr(owner, _SYNC_METHODS[name])
-        return super().call(obj, *args, **kwargs)
-
-
 class NodeEnvironment(jinjarope.Environment):
     """Jinja Node environment.
 
@@ -134,7 +109,6 @@ class NodeEnvironment(jinjarope.Environment):
         import mknodes as mk
 
         super().__init__(**kwargs)
-        self.context_class = NodeContext
         self.node = node
         self.node_type = mk.MkNode
         # Deprecated: nodes of the last render (use `render_nodes()`).
@@ -325,25 +299,6 @@ class NodeEnvironment(jinjarope.Environment):
         self.rendered_children = result.children
         return result
 
-    async def render_nodes_async(
-        self,
-        template_name: str | None = None,
-        *,
-        string: str | None = None,
-        variables: dict[str, Any] | None = None,
-        block_name: str | None = None,
-        parent_template: str | None = None,
-    ) -> RenderResult:
-        """Deprecated (removed in 5.0): rendering is sync, use `render_nodes()`."""
-        _deprecated("NodeEnvironment.render_nodes_async()", "render_nodes()")
-        return self.render_nodes(
-            template_name,
-            string=string,
-            variables=variables,
-            block_name=block_name,
-            parent_template=parent_template,
-        )
-
     def render_template(
         self,
         template_name: str,
@@ -369,24 +324,6 @@ class NodeEnvironment(jinjarope.Environment):
         )
         return result.markdown
 
-    async def render_template_async(
-        self,
-        template_name: str,
-        variables: dict[str, Any] | None = None,
-        block_name: str | None = None,
-        parent_template: str | None = None,
-        **kwargs: Any,
-    ) -> str:
-        """Deprecated (removed in 5.0): rendering is sync, use `render_template()`."""
-        _deprecated("NodeEnvironment.render_template_async()", "render_template()")
-        return self.render_template(
-            template_name,
-            variables,
-            block_name=block_name,
-            parent_template=parent_template,
-            **kwargs,
-        )
-
     def render_string(
         self,
         string: str,
@@ -401,21 +338,6 @@ class NodeEnvironment(jinjarope.Environment):
             kwargs: Additional variables for the render call
         """
         return self.render_nodes(string=string, variables=(variables or {}) | kwargs).markdown
-
-    async def render_string_async(
-        self,
-        string: str,
-        variables: dict[str, Any] | None = None,
-        **kwargs: Any,
-    ) -> str:
-        """Deprecated (removed in 5.0): rendering is sync, use `render_string()`."""
-        _deprecated("NodeEnvironment.render_string_async()", "render_string()")
-        return self.render_string(string, variables, **kwargs)
-
-
-def _deprecated(name: str, replacement: str) -> None:
-    msg = f"{name} is deprecated (rendering is sync), use {replacement}. Removed in mknodes 5.0."
-    warnings.warn(msg, DeprecationWarning, stacklevel=3)
 
 
 class _WrappedClasses(dict[str, type]):

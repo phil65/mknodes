@@ -27,7 +27,7 @@ if __name__ == "__main__":
 @pytest.mark.parametrize("flavor", ["material", "github"])
 def test_multi_line_items_are_indented(flavor: str):
     node = mk.MkList([mk.MkAdmonition("Nested!", typ="info"), "second"])
-    md = node.to_markdown_sync(flavor=flavor)
+    md = node.to_markdown(flavor=flavor)
     first, second = md.split("\n  * ")
     assert first.startswith("  * ")
     assert all(line.startswith("    ") for line in first.splitlines()[1:] if line)

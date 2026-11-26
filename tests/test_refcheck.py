@@ -232,7 +232,7 @@ def test_github_build_links_references():
     nav = mk.MkNav()
     nav += mk.MkPage("api", content=mk.MkDocStrings("mknodes.rendering.use"))
     nav += mk.MkPage("guide", content="See [use][mknodes.rendering.use].")
-    output = DocBuilder(render_jinja=False, flavor="github").build_sync(nav)
+    output = DocBuilder(render_jinja=False, flavor="github").build(nav)
     assert "See [use](api.md#mknodes.rendering.use)." in output.pages["guide.md"]
-    output = DocBuilder(render_jinja=False).build_sync(nav)
+    output = DocBuilder(render_jinja=False).build(nav)
     assert "See [use][mknodes.rendering.use]." in output.pages["guide.md"]

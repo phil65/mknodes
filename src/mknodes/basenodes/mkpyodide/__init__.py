@@ -175,4 +175,4 @@ if __name__ == "__main__":
         print(sys.version)
         await micropip.install("packaging")
     """)
-    print(terminal.to_markdown_sync())
+    print(terminal.to_markdown())

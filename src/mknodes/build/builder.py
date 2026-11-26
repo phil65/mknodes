@@ -5,7 +5,6 @@ import contextvars
 import dataclasses
 import pathlib
 from typing import TYPE_CHECKING
-import warnings
 
 import logfire
 
@@ -127,21 +126,7 @@ class DocBuilder:
         self.global_resources = global_resources
         self.max_workers = max_workers
 
-    async def build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
-        """Deprecated (removed in 5.0): rendering is sync, use `build_sync()`.
-
-        Args:
-            root: Root nav of the tree.
-            theme: Theme whose resources, templates and extras get included.
-        """
-        msg = (
-            "DocBuilder.build() is deprecated (rendering is sync), use build_sync(). "
-            "Removed in mknodes 5.0."
-        )
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
-        return self.build_sync(root, theme)
-
-    def build_sync(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
+    def build(self, root: mk.MkNav, theme: mk.Theme | None = None) -> BuildOutput:
         """Render given tree.
 
         Rendering is sync and never fetches: the inputs of the nodes get resolved first,

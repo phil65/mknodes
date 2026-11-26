@@ -63,7 +63,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
         Repr=mk.MkCode(textfilters.format_code(repr(node))),
         Rendered=node.__copy__(),
         Markdown=mk.MkCode(node, language="markdown"),
-        Html=mk.MkCode(node.to_html_sync(), language="html"),
+        Html=mk.MkCode(node.to_html(), language="html"),
     )
     nodefile = node.get_nodefile()
     assert nodefile
@@ -74,7 +74,7 @@ def get_representations(jinja: str, parent: mk.MkNode) -> dict[str, str | mk.MkN
 
     github = rendering.get_renderer_class("github")
     if github.supports(type(node)):
-        output = node.to_markdown_sync(flavor="github")
+        output = node.to_markdown(flavor="github")
         dct["GitHub"] = mk.MkCode(output, language="markdown")
     if len(node.get_children()) > 0:
         dct["Repr tree"] = mk.MkTreeView(node)

@@ -82,10 +82,10 @@ def move_resources_to_template(
 
     Args:
         page: Page to process resources for
-        req: Pre-computed resources. If None, will call page.get_resources_sync()
+        req: Pre-computed resources. If None, will call page.get_resources()
     """
     if req is None:
-        req = page.get_resources_sync()
+        req = page.get_resources()
     js_reqs: list[resources.JSFile] = []
     prefix = "../" * (len(page.resolved_parts) + 1)
     for i in req.js:

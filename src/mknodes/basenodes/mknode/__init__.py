@@ -2,7 +2,6 @@ import copy
 import functools
 import re
 from typing import TYPE_CHECKING, Any, Self
-import warnings
 
 from mknodes.basenodes import processors
 from mknodes.data import treestyles
@@ -29,11 +28,6 @@ HEADER_REGEX = re.compile(r"^(#{1,6}) (.*)")
 @functools.lru_cache
 def get_fallback_ctx() -> contexts.ProjectContext:
     return contexts.ProjectContext()
-
-
-def _deprecated(name: str, replacement: str) -> None:
-    msg = f"{name} is deprecated (rendering is sync), use {replacement}. Removed in mknodes 5.0."
-    warnings.warn(msg, DeprecationWarning, stacklevel=3)
 
 
 class IllegalArgumentError(ValueError):
@@ -380,10 +374,10 @@ class MkNode:
         return nodeenvironment.NodeEnvironment(self)
 
     def __str__(self) -> str:
-        return self.to_markdown_sync()
+        return self.to_markdown()
 
     def __hash__(self):
-        return hash(self.to_markdown_sync())
+        return hash(self.to_markdown())
 
     def __eq__(self, other: object):
         if type(other) is not type(self):
@@ -459,16 +453,11 @@ class MkNode:
         """Get a node from name registry."""
         return cls._name_registry[name]
 
-    def get_toc_sync(self):
+    def get_toc(self):
         """Return the table of contents of the node's Markdown."""
         from mknodes.pages import toc
 
-        return toc.get_toc(self.to_markdown_sync())
-
-    async def get_toc(self):
-        """Deprecated (removed in 5.0): rendering is sync, use `get_toc_sync()`."""
-        _deprecated("MkNode.get_toc()", "get_toc_sync()")
-        return self.get_toc_sync()
+        return toc.get_toc(self.to_markdown())
 
     def get_input_requests(self) -> list[inputs.InputRequest]:
         """Return the external inputs this node needs to render (none by default).
@@ -534,7 +523,7 @@ class MkNode:
             css=css_resources,
         )
 
-    def to_markdown_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
+    def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Return the Markdown of this node and all children (same as `str(node)`).
 
         Rendering is sync and only reads resolved inputs. At the top level it runs in
@@ -549,22 +538,13 @@ class MkNode:
 
         if flavor is not None:
             with rendering.use(rendering.get_renderer(flavor)):
-                return self.to_markdown_sync()
+                return self.to_markdown()
 
         def render() -> str:
             renderer = rendering.current()
             return renderer.process(self, renderer.render_markdown(self))
 
         return inputs.run_passes(render)
-
-    async def to_markdown(self, flavor: str | rendering.Renderer | None = None) -> str:
-        """Deprecated (removed in 5.0): rendering is sync, use `to_markdown_sync()`.
-
-        Args:
-            flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
-        """
-        _deprecated("MkNode.to_markdown()", "to_markdown_sync() / str(node)")
-        return self.to_markdown_sync(flavor)
 
     def get_processors(self) -> list[processors.TextProcessor]:
         """Return list of processors used to created markdown."""
@@ -646,12 +626,7 @@ class MkNode:
         """
         return self._build_node_resources()
 
-    async def get_resources(self) -> resources.Resources:
-        """Deprecated (removed in 5.0): rendering is sync, use `get_resources_sync()`."""
-        _deprecated("MkNode.get_resources()", "get_resources_sync()")
-        return self.get_resources_sync()
-
-    def get_resources_sync(self) -> resources.Resources:
+    def get_resources(self) -> resources.Resources:
         """Return the resources of this node and all children (extensions, CSS, JS, ...)."""
         from mknodes import inputs
 
@@ -691,16 +666,7 @@ class MkNode:
         ctx = contexts.ProjectContext.for_project(repo_url or ".", base_url=base_url)
         return cls(*args, **kwargs, context=ctx)
 
-    async def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
-        """Deprecated (removed in 5.0): rendering is sync, use `to_html_sync()`.
-
-        Args:
-            flavor: Markdown flavour (renderer name like `"github"` or a `Renderer`).
-        """
-        _deprecated("MkNode.to_html()", "to_html_sync()")
-        return self.to_html_sync(flavor)
-
-    def to_html_sync(self, flavor: str | rendering.Renderer | None = None) -> str:
+    def to_html(self, flavor: str | rendering.Renderer | None = None) -> str:
         """Convert node to HTML using the resources from node + children.
 
         The Markdown is rendered in given flavour (default: the active one) and converted
@@ -711,6 +677,6 @@ class MkNode:
         """
         renderer = rendering.get_renderer(flavor)
         with rendering.use(renderer):
-            md = self.to_markdown_sync()
-            reqs = self.get_resources_sync()
+            md = self.to_markdown()
+            reqs = self.get_resources()
         return renderer.to_html(md, reqs)

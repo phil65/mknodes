@@ -65,7 +65,7 @@ def build_tree() -> mk.MkNav:
 
 @pytest.mark.parametrize("flavor", ["material", "github"])
 def test_code_block_with_attributes_survives_build(flavor: str):
-    output = DocBuilder(flavor=flavor).build_sync(build_tree())
+    output = DocBuilder(flavor=flavor).build(build_tree())
     md = output.pages["code.md"]
     assert fencecheck.check_fences(md) == []
     assert "<.python" not in md
@@ -92,7 +92,7 @@ def test_commented_code_renders_jinja_in_comments_only(flavor: str):
     page.metadata.render_macros = False
     page += mk.MkCommentedCode(_commented, style="text", render_comments=True)
     page += mk.MkCode.for_object(_commented)
-    md = (DocBuilder(flavor=flavor).build_sync(root)).pages["tour.md"]
+    md = (DocBuilder(flavor=flavor).build(root)).pages["tour.md"]
     assert "Result: 2" in md
     assert "# Result: {{ 1 + 1 }}" in md  # the raw source stays as it is
     assert fencecheck.check_fences(md) == []

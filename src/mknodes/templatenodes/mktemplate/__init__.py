@@ -66,6 +66,6 @@ class MkTemplate(TemplateRenderMixin, mkcontainer.MkContainer):
 if __name__ == "__main__":
 
     def main() -> None:
-        print(MkTemplate("nodes_index.jinja").get_resources_sync())
+        print(MkTemplate("nodes_index.jinja").get_resources())
 
     main()

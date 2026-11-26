@@ -15,7 +15,7 @@ class Meta(type):
 
 def test_mro_mode_with_metaclass():
     diagram = mk.MkClassDiagram(Meta, mode="mro")
-    md = diagram.to_markdown_sync()
+    md = diagram.to_markdown()
     assert "Meta" in md
     assert "type" in md
 
@@ -23,13 +23,13 @@ def test_mro_mode_with_metaclass():
 @pytest.mark.parametrize("template", ["classpage.md", "classpage_tabbed.md"])
 def test_class_page_for_metaclass(template: str):
     page = mk.MkClassPage(Meta, template_path=template)
-    md = page.to_markdown_sync()
+    md = page.to_markdown()
     assert "Base classes" in md
 
 
 def test_class_table_with_classes_unknown_to_griffe():
     # griffe's builtins module has no `type` / `object` members
-    md = mk.MkClassTable([type, object]).to_markdown_sync()
+    md = mk.MkClassTable([type, object]).to_markdown()
     assert "type" in md
     assert "object" in md
 

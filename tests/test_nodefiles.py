@@ -49,7 +49,7 @@ def test_resource_collection_snapshot(node: mk.MkNode, snapshot):
     required by each node type. If this test fails after changes, verify that the
     new resource requirements are intentional and update snapshots with --snapshot-update.
     """
-    resources = node.get_resources_sync()
+    resources = node.get_resources()
 
     # Convert to serializable dict
     snapshot_data = {

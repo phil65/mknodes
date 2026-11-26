@@ -65,11 +65,10 @@ The [MkNavs / Using decorators](<../MkNavs/Using decorators/index.md>) section i
     "MkNode": """\
 The base class of every node, page and nav: tree handling (`parent`, `children`,
 `iter_nodes()`), the project context (`ctx`), the Jinja environment (`env`) and the
-rendering API (`node.to_markdown_sync()` / `str(node)`, `to_html_sync()`,
-`get_resources_sync()`). Rendering is synchronous and never fetches: external inputs
-(icons, remote files, LLM texts, ...) come from the inputs store, resolved before rendering
-(the async `to_markdown()` / `to_html()` / `get_resources()` are deprecated wrappers, removed
-in 5.0). `to_html_sync(flavor=...)` converts with a parser that knows the flavour:
+rendering API (`node.to_markdown()` / `str(node)`, `to_html()`,
+`get_resources()`). Rendering is synchronous and never fetches: external inputs
+(icons, remote files, LLM texts, ...) come from the inputs store, resolved before rendering.
+`to_html(flavor=...)` converts with a parser that knows the flavour:
 Python-Markdown for `material`, comrak for `github` / `mdbook`, markdown-it-py with the MyST
 plugins (directives mapped to Sphinx-like HTML, an approximation) for `myst`; the last two
 need the `html` extra (`pip install mknodes[html]`). Its node page
@@ -125,10 +124,10 @@ def _(nav: mk.MkNav):
 import mknodes as mk
 
 node = mk.MkAdmonition("Careful!", typ="warning")
-markdown = node.to_markdown_sync()  # same as str(node)
-html = node.to_html_sync()
-github_html = node.to_html_sync(flavor="github")  # needs mknodes[html]
-resources = node.get_resources_sync()  # Markdown extensions, CSS, JS
+markdown = node.to_markdown()  # same as str(node)
+html = node.to_html()
+github_html = node.to_html(flavor="github")  # needs mknodes[html]
+resources = node.get_resources()  # Markdown extensions, CSS, JS
 """,
     "Theming": """\
 import mknodes as mk
@@ -149,15 +148,15 @@ nav = mk.MkNav()
 page = nav.add_page("Usage", is_index=True)
 page += mk.MkAdmonition("Install with `pip install mknodes`.", typ="tip")
 
-output = mk.DocBuilder(flavor="github").build_sync(nav)
-mk.MarkdownExporter().export_sync(output, "site/")  # index.md + SUMMARY.md
+output = mk.DocBuilder(flavor="github").build(nav)
+mk.MarkdownExporter().export(output, "site/")  # index.md + SUMMARY.md
 """,
     "Rendering": """\
 import mknodes as mk
 from mknodes import rendering
 
 node = mk.MkAdmonition("Careful!", typ="warning")
-node.to_markdown_sync(flavor="github")  # > [!WARNING] ...
+node.to_markdown(flavor="github")  # > [!WARNING] ...
 
 with rendering.use(rendering.get_renderer("github")):
     str(node)  # nested nodes, templates and str() render in that flavour
