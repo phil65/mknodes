@@ -203,6 +203,7 @@ class NodeEnvironment(jinjarope.Environment):
 
         self.filters.update(self._node_filters)
         self.filters["string"] = self._string_filter
+        self.filters["get_doc"] = _get_doc
         self.globals["parent_page"] = self.node.parent_page  # pyright: ignore[reportArgumentType]
         self.globals["parent_nav"] = i[-1] if (i := self.node.parent_navs) else None  # pyright: ignore[reportArgumentType]
         self.globals["node"] = self.node  # pyright: ignore[reportArgumentType]
@@ -422,6 +423,11 @@ class _WrappedClasses(dict[str, type]):
         _WrappedMkNode.__qualname__ = "<locals>." + _WrappedMkNode.__qualname__
         self[kls_name] = _WrappedMkNode
         return _WrappedMkNode
+
+
+def _get_doc(obj: Any, **kwargs: Any) -> str:
+    """`get_doc` filter: docstrings are data, the page's Jinja pass must not render them."""
+    return rendering.literal(inspectfilters.get_doc(obj, **kwargs))
 
 
 if __name__ == "__main__":

@@ -401,7 +401,8 @@ def api_docs(obj: str | griffe.Object | griffe.Alias, options: dict[str, Any] | 
             logger.warning("Could not load API docs for %s: %s", path, e)
             return f"`{path}`"
     try:
-        return apidocs.render(obj, options)
+        # Docstrings and signatures are data, not templates.
+        return base.literal(apidocs.render(obj, options))
     except (griffe.AliasResolutionError, griffe.CyclicAliasError) as e:
         logger.warning("Could not render API docs for %s: %s", path, e)
         return f"`{path}`"

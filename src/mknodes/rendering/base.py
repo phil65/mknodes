@@ -13,6 +13,7 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 import contextlib
 import contextvars
+import re
 from typing import TYPE_CHECKING, Any, ClassVar
 
 from mknodes.utils import log, resources
@@ -205,3 +206,55 @@ def use(renderer: Renderer) -> Generator[Renderer]:
         yield renderer
     finally:
         _current.reset(token)
+
+
+# Jinja environment of the page currently rendered for a later Jinja pass (or None).
+_jinja_pass: contextvars.ContextVar[Any] = contextvars.ContextVar(
+    "mknodes_jinja_pass",
+    default=None,
+)
+
+
+@contextlib.contextmanager
+def jinja_pass(env: Any) -> Generator[None]:
+    """Mark that the Markdown rendered inside the context goes through a Jinja pass.
+
+    Text marked with `literal()` inside the context gets protected from that pass.
+
+    Args:
+        env: The Jinja environment of the pass (None: no pass)
+    """
+    token = _jinja_pass.set(env)
+    try:
+        yield
+    finally:
+        _jinja_pass.reset(token)
+
+
+def in_jinja_pass() -> bool:
+    """Return whether the Markdown rendered now goes through a Jinja pass."""
+    return _jinja_pass.get() is not None
+
+
+def literal(text: str) -> str:
+    """Mark text as data (docstrings, signatures, ...): the page's Jinja pass keeps it as is.
+
+    Outside a `jinja_pass()` context (no pass follows) or for text without Jinja
+    syntax, the text is returned unchanged. Otherwise it gets wrapped into a raw block
+    of the pass's environment.
+    """
+    env = _jinja_pass.get()
+    if env is None:
+        return text
+    markers = (env.variable_start_string, env.block_start_string, env.comment_start_string)
+    has_line_syntax = env.line_statement_prefix or env.line_comment_prefix
+    if not has_line_syntax and not any(m in text for m in markers):
+        return text
+    start, end = env.block_start_string, env.block_end_string
+    # `+` keeps the whitespace around the tags (lstrip_blocks / trim_blocks).
+    raw, endraw = f"{start}+ raw {end}", f"{start}+ endraw +{end}"
+    # An `endraw` tag inside the text would end the block: emit it as a string expression.
+    pattern = re.compile(rf"{re.escape(start)}[-+]?\s*endraw\s*[-+]?{re.escape(end)}")
+    var_start, var_end = env.variable_start_string, env.variable_end_string
+    text = pattern.sub(lambda m: f"{endraw}{var_start} {m.group()!r} {var_end}{raw}", text)
+    return f"{raw}{text}{endraw}"

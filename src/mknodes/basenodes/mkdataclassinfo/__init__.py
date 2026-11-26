@@ -4,6 +4,7 @@ from typing import Any
 
 from fieldz import fields
 
+from mknodes import rendering
 from mknodes.basenodes import mknode
 from mknodes.utils import log
 
@@ -77,7 +78,8 @@ class MkDataClassInfo(mknode.MkNode):
                 value = getattr(self.obj, field.name)
                 lines.append(f"| {name} | `{value!r}` | {desc} |")
 
-        return "\n".join(lines)
+        # Docstrings, descriptions and values are data, not templates.
+        return rendering.literal("\n".join(lines))
 
 
 if __name__ == "__main__":

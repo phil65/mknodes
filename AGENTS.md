@@ -107,7 +107,10 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   so nested nodes and `{{ node }}` in Jinja keep the flavour. `github.py`: GitHub flavour
   (alerts, `<details>`, `<kbd>`, Iconify `<img>` icons, title heading instead of front matter).
   `apidocs.py`: API docs from Griffe objects (for flavours without mkdocstrings; GitHub's
-  `MkDocStrings` rule, `api_docs()`). `materialtext.py`: converts hand-written Material
+  `MkDocStrings` rule, `api_docs()`). Docstrings are data, not templates: text rendered into a page
+  (API docs, `get_doc` filter, `MkDataClassInfo`) goes through `rendering.literal()`, which
+  wraps it into a raw block when the page's Jinja pass follows (`rendering.jinja_pass()`, set
+  by `DocBuilder`; template renders are cached per renderer class and pass). `materialtext.py`: converts hand-written Material
   blocks (`!!!`, `???`, `===`, `/// block`, `::: path`, code fence options) in page text;
   GitHub runs it as a page processor. `mdbook.py`: `MdbookRenderer` (GitHub flavour;
   `admonish=True` writes `mdbook-admonish` blocks). `myst.py`: `MystRenderer` (GitHub

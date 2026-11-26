@@ -137,8 +137,10 @@ class DocBuilder:
         navs: list[mk.MkNav] = []
         files: dict[str, str | bytes] = {}
         # Walk the tree in the target flavour: template nodes render once while their
-        # children get collected and reuse that render for their content.
-        with rendering.use(self.renderer):
+        # children get collected and reuse that render for their content (renders
+        # differ by whether a Jinja pass follows, see `rendering.literal()`).
+        pass_env = root.env if self.render_jinja else None
+        with rendering.use(self.renderer), rendering.jinja_pass(pass_env):
             theme_nodes = list(theme.iter_nodes()) if theme else []
             all_nodes = [*theme_nodes, *root.iter_nodes()]
         for _, node in all_nodes:
@@ -213,22 +215,25 @@ class DocBuilder:
 
     async def _render_page_content(self, page: mk.MkPage, path: str) -> PageResult:
         logger.debug("Rendering page %s", path)
-        content = await self.renderer.render(page)
-        md = content.markdown
-        if self.global_resources:
-            req = content.resources
-        else:
-            req = await pagetemplates.move_resources_to_template(page, content.resources)
-        show_info = page.resolved_metadata.get("show_page_info")
-        if self.show_page_info if show_info is None else show_info:
-            info = await self.renderer.render(pagetemplates.create_page_info(page, req))
-            md = f"{md}\n\n{info.markdown}"
-            req.merge(info.resources)
-        # The template must be known before the metadata header gets rendered.
-        pagetemplates.update_page_template(page)
-        md = self.renderer.process(page, md)
         render = page.metadata.get("render_macros")
-        if self.render_jinja if render is None else render:
+        render_jinja = self.render_jinja if render is None else render
+        # Data rendered into the page (docstrings, ...) gets protected from the Jinja pass.
+        with rendering.jinja_pass(page.env if render_jinja else None):
+            content = await self.renderer.render(page)
+            md = content.markdown
+            if self.global_resources:
+                req = content.resources
+            else:
+                req = await pagetemplates.move_resources_to_template(page, content.resources)
+            show_info = page.resolved_metadata.get("show_page_info")
+            if self.show_page_info if show_info is None else show_info:
+                info = await self.renderer.render(pagetemplates.create_page_info(page, req))
+                md = f"{md}\n\n{info.markdown}"
+                req.merge(info.resources)
+            # The template must be known before the metadata header gets rendered.
+            pagetemplates.update_page_template(page)
+            md = self.renderer.process(page, md)
+        if render_jinja:
             md = await _render_page_jinja(page, md)
         return PageResult(path=path, markdown=md, resources=req)
 

@@ -13,7 +13,16 @@ from __future__ import annotations
 
 import importlib
 
-from mknodes.rendering.base import MaterialRenderer, Renderer, Rule, current, use
+from mknodes.rendering.base import (
+    MaterialRenderer,
+    Renderer,
+    Rule,
+    current,
+    in_jinja_pass,
+    jinja_pass,
+    literal,
+    use,
+)
 
 
 # Flavour name -> renderer class (or `module:Class` path, imported on first use).
@@ -65,6 +74,9 @@ __all__ = [
     "current",
     "get_renderer",
     "get_renderer_class",
+    "in_jinja_pass",
+    "jinja_pass",
+    "literal",
     "register",
     "use",
 ]

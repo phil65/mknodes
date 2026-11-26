@@ -20,20 +20,26 @@ def invalidate_all() -> None:
     _epoch += 1
 
 
+def cache_key() -> tuple[type, bool]:
+    """Key for renders: active renderer class and whether a Jinja pass follows."""
+    return type(rendering.current()), rendering.in_jinja_pass()
+
+
 class _State:
     __slots__ = ("epoch", "results", "tree")
 
     def __init__(self) -> None:
         self.epoch = _epoch
-        self.results: dict[type, RenderResult] = {}
+        self.results: dict[tuple[type, bool], RenderResult] = {}
         self.tree: RenderResult | None = None
 
 
 class TemplateRenderMixin:
     """Renders the node's template once and serves both children and content from it.
 
-    `{{ node }}` output depends on the active renderer (flavour), so results are cached
-    per renderer class. The tree (`get_render_result()`, used for children) is the first
+    `{{ node }}` output depends on the active renderer (flavour) and on whether a Jinja
+    pass follows (`rendering.literal()`), so results are cached per renderer class and
+    pass. The tree (`get_render_result()`, used for children) is the first
     result, so children stay the same objects whatever gets rendered afterwards.
     Setting any attribute of the node drops the cache (the template may use it).
     """
@@ -59,20 +65,20 @@ class TemplateRenderMixin:
         """Return the render the node's children come from (sync, renders if needed)."""
         state = self._get_state()
         if state.tree is None:
-            renderer = type(rendering.current())
-            if (result := state.results.get(renderer)) is None:
+            key = cache_key()
+            if (result := state.results.get(key)) is None:
                 result = self.env.render_nodes(**self.render_kwargs())
-                state.results[renderer] = result
+                state.results[key] = result
             state.tree = result
         return state.tree
 
     async def get_render_result_async(self) -> RenderResult:
         """Return the render for the active renderer (renders if needed)."""
         state = self._get_state()
-        renderer = type(rendering.current())
-        if (result := state.results.get(renderer)) is None:
+        key = cache_key()
+        if (result := state.results.get(key)) is None:
             result = await self.env.render_nodes_async(**self.render_kwargs())
-            state.results[renderer] = result
+            state.results[key] = result
         if state.tree is None:
             state.tree = result
         return result

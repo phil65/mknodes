@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Any, TYPE_CHECKING
 
-from mknodes import rendering
+from mknodes.jinja import rendercache
 from mknodes.basenodes import mknode
 from mknodes.utils import coroutines, resources
 
@@ -29,17 +29,17 @@ class MkTemplateTable(mknode.MkNode):
         assert nodefile
         return nodefile._data.get("layouts", {}).get(self.layout)
 
-    def _cells_cache(self) -> tuple[str, dict[type, list[list[RenderResult]]]]:
-        """Cell renders per renderer class (dropped when the layout changes)."""
+    def _cells_cache(self) -> tuple[str, dict[tuple[type, bool], list[list[RenderResult]]]]:
+        """Cell renders per renderer class and Jinja pass (dropped when the layout changes)."""
         cache = self.__dict__.get("_cells")
         if cache is None or cache[0] != self.layout:
             cache = self.__dict__["_cells"] = (self.layout, {})
         return cache
 
     async def _render_cells(self) -> list[list[RenderResult]]:
-        renderer = type(rendering.current())
+        key = rendercache.cache_key()
         _, by_renderer = self._cells_cache()
-        if (cells := by_renderer.get(renderer)) is not None:
+        if (cells := by_renderer.get(key)) is not None:
             return cells
         layout = self._get_layout()
         cells = [
@@ -49,7 +49,7 @@ class MkTemplateTable(mknode.MkNode):
             ]
             for dct in self.iter_items()
         ]
-        by_renderer[renderer] = cells
+        by_renderer[key] = cells
         if self.__dict__.get("_tree_cells", (None,))[0] != self.layout:
             self.__dict__["_tree_cells"] = (self.layout, cells)
         return cells
