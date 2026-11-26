@@ -1,4 +1,5 @@
 import functools
+import threading
 import types
 
 from typing import Any, Literal
@@ -9,6 +10,9 @@ from mknodes.utils import helpers, log, resources
 
 
 logger = log.get_logger(__name__)
+
+
+_LOCK = threading.Lock()
 
 
 @helpers.list_to_tuple
@@ -39,14 +43,16 @@ def get_mermaid(
         case list() | tuple():
             packages = ",".join(package)
     try:
-        text = pipdeptree.render(
-            packages=packages,
-            exclude=exclude or None,
-            output_format="mermaid",
-            reverse=reverse,
-            local_only=local_only,
-            user_only=user_only,
-        )
+        # pipdeptree is not thread-safe (resolve phase: worker threads, free threading).
+        with _LOCK:
+            text = pipdeptree.render(
+                packages=packages,
+                exclude=exclude or None,
+                output_format="mermaid",
+                reverse=reverse,
+                local_only=local_only,
+                user_only=user_only,
+            )
     except ValueError:
         msg = f"Error when building tree for {packages}. Is the package on PyPi?."
         logger.exception(msg)

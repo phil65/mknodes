@@ -1,4 +1,5 @@
 import functools
+import threading
 import os
 import types
 
@@ -13,6 +14,9 @@ if TYPE_CHECKING:
 
 
 logger = log.get_logger(__name__)
+
+
+_LOCK = threading.Lock()
 
 
 @functools.cache
@@ -45,7 +49,8 @@ def get_dependency_svg(
     colors.START_COLOR = options["start_color"]
     target = Target(options["fname"])
     logger.debug("run py2dep for folder %r", str(folder_name))
-    with target.chdir_work():
+    # pydeps changes the working directory (process-wide): one graph at a time.
+    with _LOCK, target.chdir_work():
         dep_graph = py2depgraph.py2dep(target, **options)  # pyright: ignore[reportUnknownMemberType]
     logger.debug("run depgraph_to_dotsrc")
     dot_src = depgraph_to_dotsrc(target, dep_graph, **options)
