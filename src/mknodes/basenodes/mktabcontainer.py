@@ -81,8 +81,10 @@ class MkTabContainer(mkcontainer.MkContainer):
 
     def _get_tab_pos(self, tab_title: str) -> int:
         items = self.get_items()
-        item = next(i for i in items if i.title == tab_title)
-        return items.index(item)
+        for i, item in enumerate(items):
+            if item.title == tab_title:
+                return i
+        raise KeyError(tab_title)
 
     def set_selected(self, index: int | str) -> None:
         """Set tab with given index as selected.
