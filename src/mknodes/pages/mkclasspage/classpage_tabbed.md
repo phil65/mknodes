@@ -7,9 +7,9 @@
 {{ subclasses | MkClassTable | string | indent(first=True) }}
 {% endif %}
 
-{% if cls.__mro__ | length > 2 %}
+{% if cls | getattr("__mro__") | length > 2 %}
 === "Base classes"
-{{ cls.__bases__ | MkClassTable | string | indent(first=True) }}
+{{ cls | getattr("__bases__") | MkClassTable | string | indent(first=True) }}
 === "⋔ Inheritance diagram"
 {{ cls | MkClassDiagram(mode="baseclasses") | string | indent(first=True) }}
 {% endif %}

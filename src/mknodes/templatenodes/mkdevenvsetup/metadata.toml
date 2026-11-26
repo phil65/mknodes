@@ -18,7 +18,7 @@ jinja = """
 
 [output.markdown]
 template = """
-{% set folder_name = node.repo_url.removesuffix(".git").split("/")[-1] %}
+{% set folder_name = (node.repo_url | removesuffix(".git")).split("/")[-1] %}
 All development for this library happens in the
 {{ node.repo_url | MkLink(folder_name) }} repo on GitHub.
 First, you'll need to download the source code and install an

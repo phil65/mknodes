@@ -13,7 +13,6 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import jinjarope
-    import mknodes as mk
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +41,21 @@ def setup_env(env: jinjarope.Environment) -> None:
         logger.warning("Could not setup jinjarope environment: %s", e)
 
 
+class NodeClasses(dict[str, type]):
+    """Node classes by name; attribute access works too (`_mk.MkText(...)`).
+
+    minijinja calls `_mk.MkText(...)` as a method (getattr only, no item fallback).
+    """
+
+    def __getattr__(self, name: str) -> type:
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name) from None
+
+
 @functools.cache
-def get_nodes() -> dict[str, type[mk.MkNode]]:
+def get_nodes() -> NodeClasses:
     import mknodes as mk
 
-    return {k.__name__: k for k in inspectfilters.list_subclasses(mk.MkNode)}
+    return NodeClasses({k.__name__: k for k in inspectfilters.list_subclasses(mk.MkNode)})

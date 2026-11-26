@@ -14,8 +14,8 @@ jinja = """
 template = """
 {% set inspected = node.get_mknode() %}
 {% if inspected %}
-{% if node._node is string_like %}
-{{ node._node | MkTab(title="Jinja") }}
+{% if node | getattr("_node") is string_like %}
+{{ node | getattr("_node") | MkTab(title="Jinja") }}
 {% endif %}
 {{ inspected | repr | MkCode | MkTab(title="Repr", new=True) }}
 {{ inspected | MkCode(language="markdown") | MkTab(title="Raw") }}

@@ -38,10 +38,10 @@ mk.MkDataClassInfo(obj)
 
 [output.markdown]
 template = """
-### {{ (node.obj if node.is_class else node.obj.__class__).__name__ }}
-{% if node.include_docstring and node.obj.__doc__ %}
+### {{ (node.obj if node.is_class else node.obj | getattr("__class__")) | getattr("__name__") }}
+{% if node.include_docstring and node.obj | getattr("__doc__") %}
 
-{{ node.obj.__doc__.strip() }}
+{{ (node.obj | getattr("__doc__")).strip() }}
 {% endif %}
 
 {% if node.is_class %}

@@ -5,9 +5,9 @@
 {{ subclasses | MkClassTable }}
 {% endif %}
 
-{% if cls.__mro__ | length > 2 %}
+{% if cls | getattr("__mro__") | length > 2 %}
 {{ "Base classes" | MkHeader(level=3) }}
-{{ cls.__bases__ | MkClassTable }}
+{{ cls | getattr("__bases__") | MkClassTable }}
 {{ "⋔ Inheritance diagram" | MkHeader(level=3) }}
 {{ cls | MkClassDiagram(mode="baseclasses") }}
 {% endif %}
