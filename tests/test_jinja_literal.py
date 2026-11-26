@@ -6,6 +6,7 @@ import sys
 import textwrap
 
 import jinja2
+import jinjarope
 import pytest
 
 import mknodes as mk
@@ -120,6 +121,17 @@ def test_literal_round_trip(env: jinja2.Environment, text: str):
         wrapped = rendering.literal(text)
     source = f"before\n\n{wrapped}\n\nafter"
     assert env.from_string(source).render() == f"before\n\n{text}\n\nafter"
+
+
+@pytest.mark.parametrize("engine", ["jinja2", "minijinja"])
+@pytest.mark.parametrize("text", ["\n{{ x }}\n", "\n\n  {% if a %}\n", "{{ x }}\n\n"])
+def test_literal_round_trip_engines(engine: str, text: str):
+    if engine == "minijinja":
+        pytest.importorskip("minijinja")
+    env = jinjarope.create_environment(engine)
+    with rendering.jinja_pass(env):
+        wrapped = rendering.literal(text)
+    assert env.render_string(f"before\n{wrapped}after") == f"before\n{text}after"
 
 
 def test_literal_outside_jinja_pass():

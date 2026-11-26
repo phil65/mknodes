@@ -269,4 +269,6 @@ def literal(text: str) -> str:
     pattern = re.compile(rf"{re.escape(start)}[-+]?\s*endraw\s*[-+]?{re.escape(end)}")
     var_start, var_end = env.variable_start_string, env.variable_end_string
     text = pattern.sub(lambda m: f"{endraw}{var_start} {m.group()!r} {var_end}{raw}", text)
-    return f"{raw}{text}{endraw}"
+    # Leading newlines stay outside: minijinja's trim_blocks drops one after the raw tag.
+    body = text.lstrip("\n")
+    return f"{text[: len(text) - len(body)]}{raw}{body}{endraw}"
