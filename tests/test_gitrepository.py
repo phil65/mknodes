@@ -6,10 +6,11 @@ from mknodes.info import gitrepository
 
 
 @pytest.mark.skipif(not bool(os.getenv("CI")), reason="Only run Git tests in CI")
-def test_gitrepository():
+def test_gitrepository(tmp_path):
+    # a fresh target per run: CI runs the suite once per template engine in the same job
     repo = gitrepository.GitRepository.clone_from(
         "https://github.com/phil65/mknodes",
-        "testclone",
+        tmp_path / "testclone",
     )
     assert repo.get_version_for_commit("fdd6a0f6") == "v0.49.5"  # one commit before bump
     assert repo.get_version_for_commit("82b61f02") == "v0.49.5"  # bump commit
