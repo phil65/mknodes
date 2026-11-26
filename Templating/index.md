@@ -1,0 +1,131 @@
+# Templating
+
+**MkNodes** contains an expansive **Jinja2** Environment. It is comparable to
+the **MkDocs-macros** plugin. It has less settings (you can modify the environment in every way you want
+via code of course though), but has a much larger built-in set of macros and filters as well as some unique features.
+
+<details>
+<summary>Some terms explained</summary>
+
+**MkNodes** (as well as **MkDocs**) contains a lot of different processes which are vaguely related to
+"templating". In order to avoid confusion, we will list all the different templating-related entities / processses here:
+
+- *Page / Static templates*. These are HTML templates to define / modify the appearance of the actual websites.
+  This can go beyond modifying the main content section which is usually used and "modified" when working with **MkDocs** or similar on a pure markdown level.
+  Page templates contain smaller blocks wrapping specific website elements which can be overridden. The available blocks which can be modified depend on the theme chosen.
+- *MkTemplatePage and its subclasses* ([MkClassPage](../MkPages/mkclasspage.md#mknodes.MkClassPage) / [MkModulePage](../MkPages/mkmodulepage.md#mknodes.MkModulePage)): These are [MkPage](../Core%20API/navs_and_pages.md#mknodes.MkPage) subclasses
+  which render **jinja2** templates to display information about classes / modules.
+  The rendered information is shown in the main content area of the Website.
+- *The MkDocs-specific template environment*: This one is used to resolve the mentioned Page / Static templates and is used by **MkDocs** itself. This environment can be modified during the event hooks by all add-ons.
+- *The **MkNodes**-specific template environment*: This one is used for resolving CSS files as well as content
+  pages. In fact, the page you are looking at was rendered with the **MkNodes** environment.
+  The [MkTemplate](../The%20nodes/Base%20nodes/mktemplate.md#mknodes.MkTemplate) node is mainly used to render stuff with the **MkNodes**
+  environment. When speaking about the "Jinja environment" on this page, then this one is usually meant.
+
+  You can find more general information about the used python templating engine **jinja2**
+  [here](https://jinja.palletsprojects.com/).
+  The [MkDocs-Material website](https://squidfunk.github.io/mkdocs-material/customization/#overriding-blocks) as well as the [MkDocs website](https://www.mkdocs.org/dev-guide/themes/) also contain useful information.
+
+</details>
+
+### The main features of the MkNodes environment:
+
+* All [MkNode](../Core%20API/mknode.md#mknodes.MkNode) classes can be used as filters as well as macros:
+
+    * Example for use as a filter: `{ { "classifiers" | MkMetadataBadges } }`
+    * Example for use as a macro: `{ { mk.MkHeader("some header") } }`
+
+    Nodes used as macro / filter know about the context, so they can get their information
+    from the project.
+
+    Example: `{ { "classifiers" | MkMetadataBadges } }` would automatically show classifier badges
+              for the distribution associated to the current context. (in most cases, the current context is the package you are writing / coding docs for)
+
+* Project metadata is also available in the **jinja2** environment namespace.
+  You can see all available info in the subsections of this page.
+
+    * Example: `{ { metadata.license_name } }`
+
+* Nodes rendered with [MkTemplate](../The%20nodes/Base%20nodes/mktemplate.md#mknodes.MkTemplate) actually become virtual children of that node.
+  This means that they will get iterated when the tree is traversed.
+  In other words: If you use a node which requires resources (CSS, JS, static files, ...) inside a template,
+  then these resources will automatically get added to the website build (aka to the config and the page templates) without any further interaction.
+
+    A short example:
+    ``` py
+    node = MkTemplate("my_template.jinja")
+    # lets assume "my_template.jinja" uses an MkBadge node right at the start as a filter.
+    # This could look like { { "A label" | MkBadge } } at the very start of the template file.
+    # These assertions would pass then:
+    assert type(node.get_items()[0]) == MkBadge
+    assert node.get_items()[0].parent == node
+    resources = node.get_resources()
+    assert "admonition" in resources.markdown_extensions
+    ```
+
+* Each node environment contains a bunch of loaders, with some of them being context-specific. These are:
+    * A loader for the `docs` folder to load documentation files
+    * A filesystem loader for the folder of the python file with given node class
+      (this allows to easily load resource files next to the node file)
+    * A `NestedDictLoader` allowing direct access to the Node metadata file, giving access
+      examples as well as output templates. (Example path: "examples/some_example/jinja")
+    * An `FsSpecProtocolPathLoader` to directly access templates via an fsspec protocol URL (example: `github://phil65:mknodes@main/pyproject.toml`)
+      This is especially useful for developing / debugging.
+
+<details>
+<summary>Why not use the **MkDocs** environment?</summary>
+
+**MkNodes** cannot just re-use the **MkDocs** jinja environment
+because at that stage of the build process, our nodes already became text and we need
+the nodes for context (mainly to attach a parent to the MkNodes used as macros / filters)
+Apart from that, it's probably not a wise idea to allow lot of add-ons to mess with the environment
+since this could lead to namespace conflics.
+
+</details>
+
+<details>
+<summary>Page info</summary>
+
+<details>
+<summary>Code for this section</summary>
+
+**mknodes.manual.templating_section._**
+
+```python
+@nav.route.page(is_index=True)
+def _(page: mk.MkPage) -> None:
+    page += mk.MkTemplate("templating/template_index.jinja")
+
+```
+
+</details>
+
+<details>
+<summary>Resources</summary>
+
+```python
+Resources(css=[],
+          markdown_extensions={},
+          plugins=[],
+          js=[],
+          assets=[],
+          packages=[])
+```
+
+</details>
+
+<details>
+<summary>Metadata</summary>
+
+```yaml
+created:
+  source_filename: /home/runner/work/mknodes/mknodes/src/mknodes/manual/templating_section.py
+  source_function: _
+  source_line_no: 24
+title: Templating
+
+```
+
+</details>
+
+</details>

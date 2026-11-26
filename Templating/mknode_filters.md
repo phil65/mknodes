@@ -1,0 +1,100 @@
+# MkNode filters
+
+All approx. 70 different **MkNodes** are available as filters in the **MkNodes** jinja environment, thus makin the environment a powerful tool for writing Markdown. This section shows a few example cases and how to use them.
+
+> [!NOTE]
+> An important consideration for some situations: The node filters arent a `type` aka a class, they are a partial function. That is required in order to automatically have the correct parent for the nodes set.
+> In some cases we can workaround that fact because a lot of **MkNodes** take both a type or a string as an input (example: [MkDocStrings](../Get%20started/a_quick_node_tour.md#mknodes.MkDocStrings)). In these cases we can simply pass a string.
+> If there ever arises a need to have the "real" [MkNode](../Core%20API/mknode.md#mknodes.MkNode) classes in the **jinja2** namespace, then they will get added with a prefix or a similar solution.
+
+### Example 1: show MkDocStrings for MkPage
+
+```
+"mknodes.MkPage" | MkDocStrings
+```
+
+### Example 2: Show classifier badges for current context.
+```
+"classifiers" | MkMetadataBadges
+```
+<details>
+<summary>Info</summary>
+
+If a [MkNode](../Core%20API/mknode.md#mknodes.MkNode) uses the **MkNodes** **jinja2** environment (which can get accessed by every node via `mknodes.MkNode.env`), then the filter-nodes already have the calling node set as their parent, and, because of that, also have access to the same context. If this would not be the case (or if the caller itself doesnt have a context), then the following line would be required in order for the command to work:
+```
+"classifiers" | MkMetadataBadges(package="mknodes")
+```
+
+</details>
+
+### Example 3: Show nested MkNode
+
+**jinja2** filters can get chained using the pipe operator. This allows a concise syntax to deeply nest **MkNodes** with one command.
+
+```
+"mknodes.MkNode" | MkClassDiagram(mode="subclasses") | MkAdmonition
+```
+
+A nice feature: If the caller (the node which renders a template) is a [MkTemplate](../The%20nodes/Base%20nodes/mktemplate.md#mknodes.MkTemplate) (which is the most common case), then it will collect the rendered nodes and can infer the required resources. In the example above, that would mean that the [MkTemplate](../The%20nodes/Base%20nodes/mktemplate.md#mknodes.MkTemplate) knows that it needs the `Admonition` extension as well as the `Superfence` extension including the correct custom mermaid fences in order to render its content correctly.
+
+If that Node would go through the build pipeline afterwards, these extensions would be included for the markdown-HTML conversion.
+
+> [!NOTE]
+> **Filter blocks**
+>
+> When using **MkNodes** as filter blocks (check the **jinja2** docs), the result
+> needs to get stringified.
+> **Example**
+>
+> ```jinja
+> { % filter Mkheader | string % }
+> Example text.
+> { % endfilter % }
+> ```
+
+<details>
+<summary>Page info</summary>
+
+<details>
+<summary>Code for this page</summary>
+
+**mknodes.manual.templating_section._**
+
+```python
+@nav.route.page("MkNode filters")
+def _(page: mk.MkPage) -> None:
+    page += mk.MkTemplate("templating/jinja_mknode_filters.jinja")
+
+```
+
+</details>
+
+<details>
+<summary>Resources</summary>
+
+```python
+Resources(css=[],
+          markdown_extensions={},
+          plugins=[],
+          js=[],
+          assets=[],
+          packages=[])
+```
+
+</details>
+
+<details>
+<summary>Metadata</summary>
+
+```yaml
+created:
+  source_filename: /home/runner/work/mknodes/mknodes/src/mknodes/manual/templating_section.py
+  source_function: _
+  source_line_no: 55
+title: MkNode filters
+
+```
+
+</details>
+
+</details>

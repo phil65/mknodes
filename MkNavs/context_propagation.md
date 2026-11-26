@@ -1,0 +1,121 @@
+# Context propagation
+
+## Context propagation
+
+**MkNodes** which are part of the node tree can have a context attached. If this is the case,
+the context gets propagated to all children of given node.
+
+The most common case is to have one single context for one website. That context usually contains information
+about the package you want to document. It is set automatically for the root nav.
+
+``` py
+def build(root: mk.MkNav):
+    assert root.ctx.metadata.distribution_name == "mknodes"
+```
+
+Once a node has access to the context, that context will become injected into the jinja2 namespace of given node.
+
+``` py
+@nav.route.page("My page")
+def _(page):
+    node = mk.MkText(">=3.14", render_jinja=True)
+    assert str(node) == ""  # not connected to any context, so returns empty string
+    page += node  # Add node to the nav and allow accessing its context (assuming that nav is connected to root nav).
+    assert str(node) != ""  # this now returns the required python version for the context.
+```
+
+Some nodes will also show the context metadata by default if no other data is explicitely set.
+
+``` py
+@nav.route.page("My page")
+def _(page):
+    node = mk.MkLicense()
+    assert str(node) == ""  # not connected to any context, so returns empty string
+    page += node  # Add MkLicense to the nav and allow accessing its context (assuming that nav is connected to root nav).
+    assert str(node) != ""  # this now returns the license text for the context.
+```
+
+The following graph illustrates how the context propagation works.
+Any element from the tree can be attached to a context, no matter whether it is a nav, a page or any other node.
+
+```mermaid
+flowchart
+  style 437499 fill:#0000AA
+  style 553415 fill:#0000AA
+  style 618757 fill:#660000
+  style 683622 fill:#660000
+  style 332511 fill:#9f00df
+  style 893065 fill:#9f00df
+  714252["MkNav"] --- 463152["MkPage"]
+  553415[("Project X")] --- 714252
+  618757[("Project Y")] --- 471096["Root MkNav"]
+  471096 --- 714252
+  332511[("Project Z")] --- 463152
+  subgraph 683622["Context Y"]
+    310485["MkNav"] --- 831529["MkPage"]
+    831529 --- 412394["MkNode"]
+    831529 --- 591080["..."]
+    167774["MkPage"] --- 512291["MkNode"]
+    167774 --- 545444["..."]
+    471096 --- 310485
+    471096 --- 167774
+  end
+  subgraph 437499["Context X"]
+    103229["MkPage"] --- 601764["MkNode"]
+    103229 --- 769363["..."]
+    714252 --- 103229
+  end
+  subgraph 893065["Context Z"]
+    463152 --- 920059["MkNode"]
+    463152 --- 503161["..."]
+    920059 --- 645054["MkNode"]
+    920059 --- 549467["..."]
+  end
+```
+
+<details>
+<summary>Page info</summary>
+
+<details>
+<summary>Code for this page</summary>
+
+**mknodes.manual.navs_section._**
+
+```python
+@nav.route.page("Context propagation")
+def _(page: mk.MkPage) -> None:
+    page += mk.MkTemplate("context_propagation.jinja")
+
+```
+
+</details>
+
+<details>
+<summary>Resources</summary>
+
+```python
+Resources(css=[],
+          markdown_extensions={},
+          plugins=[],
+          js=[],
+          assets=[],
+          packages=[])
+```
+
+</details>
+
+<details>
+<summary>Metadata</summary>
+
+```yaml
+created:
+  source_filename: /home/runner/work/mknodes/mknodes/src/mknodes/manual/navs_section.py
+  source_function: _
+  source_line_no: 59
+title: Context propagation
+
+```
+
+</details>
+
+</details>

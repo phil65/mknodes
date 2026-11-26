@@ -1,0 +1,73 @@
+# Welcome to the **MkNodes** universe!
+
+Features
+
+* Move parts of the documentation generation process into the python space. You can easily switch between programmatically generating documentation and hand-writing documentation.
+
+* Easy access to more "advanced" theme customization options.
+The process of generating HTML page templates in MkDocs can be a bit cumbersome. Using MkNodes, you dont need to mess with HTML, and you dont have to manage a separate folder structure for the templates. Modifying `MkPage.template` will trigger an automated template generation process which also covers template inheritance, meaning you can also define templates for a complete tree section.
+
+* Write your site navigation using idiomatic python. As known from frameworks like flask, you can create the website tree hierarchy using a decorator-based routing approach. Moving the navigation part into the python space allows to easily create documentation parts programatically.
+Also, visual aspects like page icons / subtitles can be defined in the site navigation instead of in the page header metadata.
+
+* A large library of python classes representing different kinds of Markdown fragments (the **MkNodes**). These nodes range from basic elements like lists or tables up to nodes which will generate large documentation chunks for you automatically. A complete API documentation can get created with a handful lines of code.
+
+* A dead simple API. Working with **MkNodes** basically means: Create nodes, attach them to the tree and forget about them. For most nodes, you only need to learn about the `__init__`signature.
+
+* A fully-loaded **jinja2** environment, with all information about your project available in the environment namespace. Also, all the **MkNodes** (approx 70 different nodes right now) are available as **Jinja2** filters.
+
+* Separate content from layout. The nodes are context-aware, meaning that they show information of the project they are used in. You can write your own website template and use it for multiple projects.
+
+* Create complex, composable and re-usable "documentation widgets" yourself. It's easy to write your own **MkNodes**. If desired then these can be composed of other **MkNodes**, making them small sub-trees of your site tree. It is even possible to create nodes which represent a whole website.
+
+* Automatic resource management: The MkNodes know about the resources they require, like CSS, Javascript or markdown extensions. When the website gets assembled, this information can be used to automatically add all the required resources to the right place, like to the MkDocs config or to the HTML head by automatically creating HTML page templates.
+
+<details>
+<summary>Page info</summary>
+
+<details>
+<summary>Code for this page</summary>
+
+**mknodes.manual.get_started_section._**
+
+```python
+@nav.route.page("Why should I use MkNodes?", hide="toc", icon="ri:question-line")
+def _(page: mk.MkPage) -> None:
+    page += mk.MkTemplate("why_mknodes.jinja")
+
+```
+
+</details>
+
+<details>
+<summary>Resources</summary>
+
+```python
+Resources(css=[],
+          markdown_extensions={},
+          plugins=[],
+          js=[],
+          assets=[],
+          packages=[])
+```
+
+</details>
+
+<details>
+<summary>Metadata</summary>
+
+```yaml
+created:
+  source_filename: /home/runner/work/mknodes/mknodes/src/mknodes/manual/get_started_section.py
+  source_function: _
+  source_line_no: 38
+hide:
+- toc
+icon: ri:question-line
+title: Why should I use MkNodes?
+
+```
+
+</details>
+
+</details>
