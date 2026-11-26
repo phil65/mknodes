@@ -55,3 +55,8 @@ def _(page: mk.MkPage) -> None:
 @nav.route.page("MkNode filters")
 def _(page: mk.MkPage) -> None:
     page += mk.MkTemplate("templating/jinja_mknode_filters.jinja")
+
+
+@nav.route.page("Template engines")
+def _(page: mk.MkPage) -> None:
+    page += mk.MkTemplate("templating/template_engines.jinja")

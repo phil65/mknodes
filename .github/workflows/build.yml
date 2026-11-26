@@ -59,6 +59,13 @@ jobs:
       - name: Run tests
         run: uv run --no-group docs pytest --cov-report=xml --cov=src/mknodes/ --cov-report=term-missing
 
+      # Project-specific: the minijinja template engine (jinja_engine = "minijinja").
+      - name: Run tests with minijinja
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          MKNODES_JINJA_ENGINE: minijinja
+        run: uv run --no-group docs pytest -q
+
       - name: Upload test results to Codecov
         # The upload sometimes hangs; never let it fail or block the build.
         timeout-minutes: 5

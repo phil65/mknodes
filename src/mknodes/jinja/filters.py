@@ -10,12 +10,12 @@ if TYPE_CHECKING:
 
     import mknodes as mk
     from mknodes.info.linkprovider import LinkableType
-    from mknodes.jinja.nodeenvironment import NodeEnvironment
+    from mknodes.jinja.nodeenvironment import NodeEnvironmentBase
     from mknodes.utils.resources import JSFile, JSText
 
 
 @jinja2.pass_environment
-def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = None) -> str:
+def get_link(env: NodeEnvironmentBase, target: LinkableType, title: str | None = None) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.
@@ -33,7 +33,7 @@ def get_link(env: NodeEnvironment, target: LinkableType, title: str | None = Non
 
 
 @jinja2.pass_environment
-def get_url(env: NodeEnvironment, target: LinkableType) -> str:
+def get_url(env: NodeEnvironmentBase, target: LinkableType) -> str:
     """Return a markdown link for given target.
 
     Target can be a class, a module, a MkPage, MkNav or a string.

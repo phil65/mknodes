@@ -53,7 +53,7 @@ dependencies = [
   "gitpython",
   "griffelib",
   "jinja2",
-  "jinjarope[icons]>=1.2.1",
+  "jinjarope[icons]>=1.3.0",
   "logfire>=3.0",
   "markdown>=3.5",
   "markupsafe>=2.1",
@@ -99,6 +99,8 @@ mknodes = "mknodes.jinja:setup_env"
 # Flavour-aware `to_html()`: comrak for GitHub / mdBook, markdown-it-py + MyST plugins for MyST.
 html = ["markdown-it-py>=3", "mdit-py-plugins>=0.4", "mkconvert[comrak]>=2.1.0"]
 llm = ["agentpool>=2.10"]
+# Jinja templates rendered with minijinja (`jinja_engine = "minijinja"`).
+minijinja = ["jinjarope[minijinja]>=1.3.0"]
 mkdocs = ["mkdocs>=1.6", "mkdocs-material>=9.6"]
 sphinx = ["furo>=2024.8", "myst-parser>=4", "sphinx>=8", "sphinx-design>=0.6"]
 

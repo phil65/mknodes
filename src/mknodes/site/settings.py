@@ -104,6 +104,10 @@ class GeneratorSettings:
     `extensions` (added to `myst_parser` / `sphinx_design`); any other key becomes a
     `conf.py` variable (e.g. `html_theme_options`, `suppress_warnings`).
     """
+    jinja_engine: str | None = None
+    """Template engine for the Jinja templates: `jinja2` or `minijinja` (needs the
+    `minijinja` extra). Default: the `MKNODES_JINJA_ENGINE` environment variable, else
+    `jinja2`. See `jinjarope.engine` for the differences."""
     jinja_loaders: list[dict[str, Any]] | None = None
     jinja_extensions: list[str] | None = None
     jinja_block_start_string: str | None = None
@@ -166,12 +170,16 @@ class GeneratorSettings:
     def get_jinja_config(self) -> jinjarope.EnvConfig:
         import jinjarope
 
+        # fail early for unknown engines / a missing minijinja extra
+        jinjarope.get_engine_class(self.jinja_engine)
+
         cfg = jinjarope.EnvConfig(
             block_start_string=self.jinja_block_start_string or "{%",
             block_end_string=self.jinja_block_end_string or "%}",
             variable_start_string=self.jinja_variable_start_string or r"{{",
             variable_end_string=self.jinja_variable_end_string or r"}}",
             loader=jinjarope.loaders.from_json(self.jinja_loaders),
+            engine=self.jinja_engine,
         )
         if self.jinja_extensions:
             cfg.extensions = list(self.jinja_extensions)

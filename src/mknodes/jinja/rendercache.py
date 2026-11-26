@@ -6,7 +6,7 @@ from mknodes import rendering
 
 
 if TYPE_CHECKING:
-    from mknodes.jinja.nodeenvironment import NodeEnvironment, RenderResult
+    from mknodes.jinja.nodeenvironment import NodeEnvironmentBase, RenderResult
 
 
 _epoch = 0
@@ -42,7 +42,7 @@ class TemplateRenderMixin:
     Setting any attribute of the node drops the cache (the template may use it).
     """
 
-    env: NodeEnvironment
+    env: NodeEnvironmentBase
 
     def render_kwargs(self) -> dict[str, Any]:
         """Keyword arguments for `NodeEnvironment.render_nodes()`."""

@@ -11,6 +11,7 @@ import jinja2
 from jinja2 import compiler
 import jinjarope
 from jinjarope import inspectfilters
+import jinjarope.engine
 
 from mknodes import inputs, rendering
 from mknodes.utils import buildtime, diagnostics, log, pathhelpers
@@ -32,7 +33,7 @@ logger = log.get_logger(__name__)
 class _Collector:
     """Nodes created during one render call of `env`."""
 
-    env: NodeEnvironment
+    env: NodeEnvironmentBase
     parent: _Collector | None
     nodes: list[mk.MkNode] = dataclasses.field(default_factory=list)
     resources: dict[int, Resources] = dataclasses.field(default_factory=dict)
@@ -85,30 +86,34 @@ class NodeCodeGenerator(compiler.CodeGenerator):
         super()._output_child_post(node, frame, finalize)
 
 
-class NodeEnvironment(jinjarope.Environment):
-    """Jinja Node environment.
-
-    A Jinja Environment specifically for MkNode instances.
+class NodeEnvironmentBase:
+    """Jinja environment of a node, independent of the template engine backend.
 
     - Sets the parent for the filters
     - Puts node context in jinja namespace
     - collects the nodes created by a render (per render call, see `render_nodes`)
     - renders nodes written with `{{ node }}` in the active flavour (sync: templates
       only read resolved inputs, see `mknodes.inputs`)
+
+    Mixed into an environment class of jinjarope (`jinjarope.engine.TemplateEngine`):
+    `NodeEnvironment` (Jinja2) or `MiniJinjaNodeEnvironment` (minijinja). Use
+    `create_node_environment()` to get the one of the configured engine.
     """
 
-    code_generator_class = NodeCodeGenerator
+    node: mk.MkNode
+    node_type: type[mk.MkNode]
+    filters: dict[str, Callable[..., Any]]
+    globals: dict[str, Any]
+    loader: Any
 
-    def __init__(self, node: mk.MkNode, **kwargs: Any) -> None:
-        """Constructor.
+    def _init_node(self, node: mk.MkNode) -> None:
+        """Set up the node parts (called by the constructors after the engine's init).
 
         Args:
             node: Node this environment belongs to.
-            kwargs: Optional keyword arguments passed to parent
         """
         import mknodes as mk
 
-        super().__init__(**kwargs)
         self.node = node
         self.node_type = mk.MkNode
         # Deprecated: nodes of the last render (use `render_nodes()`).
@@ -279,10 +284,10 @@ class NodeEnvironment(jinjarope.Environment):
         token = _collector.set(collector)
         try:
             if string is not None:
-                markdown = super().render_string(string, variables)
+                markdown = super().render_string(string, variables)  # type: ignore[misc]
             else:
                 assert template_name is not None
-                markdown = super().render_template(
+                markdown = super().render_template(  # type: ignore[misc]
                     template_name,
                     variables=variables,
                     block_name=block_name,
@@ -340,12 +345,64 @@ class NodeEnvironment(jinjarope.Environment):
         return self.render_nodes(string=string, variables=(variables or {}) | kwargs).markdown
 
 
+class NodeEnvironment(NodeEnvironmentBase, jinjarope.Environment):
+    """Node environment rendering with Jinja2 (the default engine)."""
+
+    code_generator_class = NodeCodeGenerator
+
+    def __init__(self, node: mk.MkNode, **kwargs: Any) -> None:
+        """Constructor.
+
+        Args:
+            node: Node this environment belongs to.
+            kwargs: Optional keyword arguments passed to `jinjarope.Environment`
+        """
+        jinjarope.Environment.__init__(self, **kwargs)
+        self._init_node(node)
+
+
+ENGINE_ENV_VAR = "MKNODES_JINJA_ENGINE"
+"""Environment variable naming the template engine where nothing else configures one."""
+
+
+def get_engine_name(node: mk.MkNode | None = None) -> str:
+    """Return the template engine for a node: context config, env variable, Jinja2."""
+    configured = node.ctx.env_config.engine if node is not None else None
+    return configured or os.environ.get(ENGINE_ENV_VAR) or jinjarope.engine.DEFAULT_ENGINE
+
+
+def create_node_environment(node: mk.MkNode) -> NodeEnvironmentBase:
+    """Create the environment of a node for the configured template engine.
+
+    The engine comes from the node's context (`env_config.engine`, set by the site
+    generator from the `jinja_engine` setting), else from the `MKNODES_JINJA_ENGINE`
+    environment variable, else Jinja2.
+    """
+    match name := get_engine_name(node):
+        case "jinja2":
+            return NodeEnvironment(node)
+        case "minijinja":
+            from mknodes.jinja.minijinjaenv import MiniJinjaNodeEnvironment
+
+            return MiniJinjaNodeEnvironment(node)
+        case _:
+            msg = f"Unknown template engine {name!r} (one of {', '.join(jinjarope.engine.ENGINES)})"
+            raise ValueError(msg)
+
+
 class _WrappedClasses(dict[str, type]):
     """`mk` namespace of templates: node classes whose instances get attached to the node."""
 
-    def __init__(self, env: NodeEnvironment) -> None:
+    def __init__(self, env: NodeEnvironmentBase) -> None:
         super().__init__()
         self.env = env
+
+    def __getattr__(self, kls_name: str) -> type:
+        # minijinja calls `mk.MkXyz(...)` as a method: getattr only, no item fallback
+        try:
+            return self[kls_name]
+        except KeyError:
+            raise AttributeError(kls_name) from None
 
     def __missing__(self, kls_name: str) -> type:
         import mknodes as mk
@@ -405,7 +462,7 @@ if __name__ == "__main__":
     import mknodes as mk
 
     node = mk.MkText.with_context()
-    env = NodeEnvironment(node)
+    env = create_node_environment(node)
     # txt = "{{ metadata.required_python_version | MkAdmonition | apply_mod('ParallaxEffect') }}"
     # print(env.render_string(txt))
     # print(env.rendered_nodes)

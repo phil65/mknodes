@@ -65,7 +65,9 @@ class ShiftHeaderLevelProcessor(TextProcessor):
 class RenderJinjaProcessor(TextProcessor):
     ID = "render_jinja_templates"
 
-    def __init__(self, env: jinjarope.Environment, variables: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, env: jinjarope.TemplateEngine, variables: dict[str, Any] | None = None
+    ) -> None:
         self.env = env
         self.variables = variables or {}
 

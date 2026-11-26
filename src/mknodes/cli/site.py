@@ -44,6 +44,11 @@ FLAVOR_HELP = (
     "flavour (zensical / mkdocs: `material`, mdbook: `mdbook`, sphinx: `myst`, "
     "docsify / markdown: `github`)."
 )
+JINJA_ENGINE_HELP = (
+    "Template engine for the Jinja templates: `jinja2` (default) or `minijinja` (needs the "
+    "`minijinja` extra). Default: `jinja_engine` of [tool.mknodes], else the "
+    "MKNODES_JINJA_ENGINE environment variable, else jinja2."
+)
 WATCH_HELP = "Keep running and regenerate when project sources change."
 GEN_DIR_HELP = "Folder for generated pages (default: the docs dir)."
 OFFLINE_HELP = (
@@ -60,6 +65,7 @@ CFG_PATH_CMDS = "-p", "--config-path"
 STRICT_CMDS = "-s", "--strict"
 ENGINE_CMDS = "-e", "--engine"
 FLAVOR_CMDS = ("--flavor",)
+JINJA_ENGINE_CMDS = ("--jinja-engine",)
 DEFAULT_ENGINE = "zensical"
 
 
@@ -107,6 +113,9 @@ def build(
     strict: bool = t.Option(None, *STRICT_CMDS, help=STRICT_HELP, show_default=False),
     engine: str = _engine_option(),
     flavor: str = t.Option(None, *FLAVOR_CMDS, help=FLAVOR_HELP, show_default=False),
+    jinja_engine: str = t.Option(
+        None, *JINJA_ENGINE_CMDS, help=JINJA_ENGINE_HELP, show_default=False
+    ),
     offline: bool = _offline_option(),
     refresh_inputs: bool = _refresh_option(),
     _verbose: bool = verbose_option(),
@@ -132,6 +141,7 @@ def build(
         clone_depth=clone_depth,
         site_dir=site_dir,
         flavor=flavor,
+        jinja_engine=jinja_engine,
         strict=strict,
         inputs_mode=_inputs_mode(offline, refresh_inputs),
     )
@@ -178,6 +188,9 @@ def serve(
     config_path: str = t.Option(paths.CFG_DEFAULT, *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     engine: str = _engine_option(),
     flavor: str = t.Option(None, *FLAVOR_CMDS, help=FLAVOR_HELP, show_default=False),
+    jinja_engine: str = t.Option(
+        None, *JINJA_ENGINE_CMDS, help=JINJA_ENGINE_HELP, show_default=False
+    ),
     offline: bool = _offline_option(),
     refresh_inputs: bool = _refresh_option(),
     _verbose: bool = verbose_option(),
@@ -198,6 +211,7 @@ def serve(
         repo_path=repo_path,
         clone_depth=clone_depth,
         flavor=flavor,
+        jinja_engine=jinja_engine,
         inputs_mode=_inputs_mode(offline, refresh_inputs),
     )
     settings = _load_settings(**opts)
@@ -231,6 +245,9 @@ def generate(
     config_path: str = t.Option(paths.CFG_DEFAULT, *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     engine: str = _engine_option(),
     flavor: str = t.Option(None, *FLAVOR_CMDS, help=FLAVOR_HELP, show_default=False),
+    jinja_engine: str = t.Option(
+        None, *JINJA_ENGINE_CMDS, help=JINJA_ENGINE_HELP, show_default=False
+    ),
     generated_dir: str = t.Option(None, "--generated-dir", help=GEN_DIR_HELP),
     watch: bool = t.Option(False, "-w", "--watch", help=WATCH_HELP),
     strict: bool = t.Option(None, *STRICT_CMDS, help=STRICT_HELP, show_default=False),
@@ -258,6 +275,7 @@ def generate(
         clone_depth=clone_depth,
         generated_dir=generated_dir,
         flavor=flavor,
+        jinja_engine=jinja_engine,
         inputs_mode=_inputs_mode(offline, refresh_inputs),
     )
     settings = _load_settings(**opts, strict=strict)
@@ -354,6 +372,7 @@ def _generate_args(engine: str, **opts: Any) -> list[str]:
         "clone_depth": "--clone-depth",
         "generated_dir": "--generated-dir",
         "flavor": "--flavor",
+        "jinja_engine": "--jinja-engine",
     }
     args = ["--engine", engine]
     for key, value in opts.items():

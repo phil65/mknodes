@@ -14,8 +14,9 @@ from mknodes.utils import coroutines
 def executions(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     """Record every Jinja execution (jinjarope level, below NodeEnvironment)."""
     calls: list[str] = []
-    orig_t = jinjarope.Environment.render_template
-    orig_s = jinjarope.Environment.render_string
+    engine = jinjarope.get_engine_class(mk.MkText().env.engine_name)
+    orig_t = engine.render_template
+    orig_s = engine.render_string
 
     def render_template(self, name, *args, **kwargs):
         calls.append(name)
@@ -25,8 +26,8 @@ def executions(monkeypatch: pytest.MonkeyPatch) -> list[str]:
         calls.append(string)
         return orig_s(self, string, *args, **kwargs)
 
-    monkeypatch.setattr(jinjarope.Environment, "render_template", render_template)
-    monkeypatch.setattr(jinjarope.Environment, "render_string", render_string)
+    monkeypatch.setattr(engine, "render_template", render_template)
+    monkeypatch.setattr(engine, "render_string", render_string)
     return calls
 
 
@@ -43,7 +44,7 @@ def test_result_has_markdown_and_nodes():
 
 def test_set_attribute_macro_and_filter_block():
     template = """\
-{% set n = "abc" | MkText %}{{ n._text | upper }}
+{% set n = "abc" | MkText %}{{ n.get_text() | upper }}
 {% macro box(t) %}{{ t | MkAdmonition }}{% endmacro %}{{ box("m") | indent(2, first=True) }}
 {% filter upper %}{{ "f" | MkHeader }}{% endfilter %}"""
     result = mk.MkPage().env.render_nodes(string=template)

@@ -35,8 +35,13 @@ dependencies and must not be imported by library code (`MkPluginFlow` was remove
   `GitContext`, `ThemeContext`, ...), `folderinfo.py`, `projectlayout.py` (distribution /
   import packages / layout, see `design/project-metadata.md`), `packageinfo.py`, `gitrepository.py`,
   `pyproject.py`, `linkprovider.py`, registries for packages/repos/griffe.
-- `jinja/`: `NodeEnvironment` (`nodeenvironment.py`, a `jinjarope.Environment` exposing all nodes
-  as filters/globals) and `filters.py`. Registered as `jinjarope.environment` entry point.
+- `jinja/`: node environments exposing all nodes as filters/globals: `NodeEnvironmentBase`
+  (`nodeenvironment.py`, engine-independent, uses jinjarope's `TemplateEngine` protocol),
+  `NodeEnvironment` (Jinja2, default) and `MiniJinjaNodeEnvironment` (`minijinjaenv.py`,
+  extra `minijinja`); `create_node_environment()` picks one (`jinja_engine` setting /
+  `--jinja-engine` / `MKNODES_JINJA_ENGINE`). `filters.py`. Registered as
+  `jinjarope.environment` entry point. Templates must work with both engines (no `obj._x`:
+  use the `getattr` filter; CI runs the tests with `MKNODES_JINJA_ENGINE=minijinja` too).
   Nodes created by a template are collected **per render** (`NodeEnvironment.render_nodes()`
   -> `RenderResult(markdown, nodes, children, resources)`, collector in a context variable; nested
   renders of the same env add to the outer one). Templates are sync (no `enable_async`);

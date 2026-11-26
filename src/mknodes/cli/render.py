@@ -67,7 +67,7 @@ def _render(input_file: str, output_file: str, repo_url: str | None) -> None:
     nav = mk.MkNav.with_context(repo_url=repo_url) if repo_url else mk.MkNav()
 
     page = nav.add_page("render", is_index=True)
-    env = nodeenvironment.NodeEnvironment(node=page)
+    env = nodeenvironment.create_node_environment(page)
 
     # Render the content
     rendered = inputs.run_passes(lambda: env.render_string(content))
@@ -129,7 +129,7 @@ def _render_folder(
     # Create context for rendering
     nav = mk.MkNav.with_context(repo_url=repo_url) if repo_url else mk.MkNav()
     page = nav.add_page("render", is_index=True)
-    env = nodeenvironment.NodeEnvironment(node=page)
+    env = nodeenvironment.create_node_environment(page)
 
     # Collect files to process
     matching_files = list(input_dir.glob(glob))

@@ -56,7 +56,8 @@ def test_describe_exception_follows_causes():
 
 
 def test_failing_blocks_render_error_and_report():
-    text = '/// mknodes\n{{ 1 / 0 }}\n///\n\n```python exec="true"\nraise ValueError("boom")\n```\n'
+    block = '{{ "no_such_module_xyz" | import_module }}'
+    text = f'/// mknodes\n{block}\n///\n\n```python exec="true"\nraise ValueError("boom")\n```\n'
     with diagnostics.collect() as found, diagnostics.page_context("page.md"):
         html = _markdown().convert(text)
     # The error stays visible in the page (non-strict dev use).
@@ -64,8 +65,8 @@ def test_failing_blocks_render_error_and_report():
     assert "Execution Error: ValueError" in html
     kinds = {d.kind: d for d in found}
     assert kinds["mknodes-block"].page == "page.md"
-    assert "ZeroDivisionError" in kinds["mknodes-block"].message
-    assert kinds["mknodes-block"].location == "/// mknodes block: {{ 1 / 0 }}"
+    assert "ModuleNotFoundError" in kinds["mknodes-block"].message
+    assert kinds["mknodes-block"].location == f"/// mknodes block: {block}"
     assert kinds["exec"].message == "ValueError: boom"
     assert kinds["exec"].location == 'python exec block: raise ValueError("boom")'
 

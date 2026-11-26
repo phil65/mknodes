@@ -18,7 +18,7 @@ from mknodes.utils import diagnostics, icons
 
 
 if TYPE_CHECKING:
-    from mknodes.jinja.nodeenvironment import NodeEnvironment
+    from mknodes.jinja.nodeenvironment import NodeEnvironmentBase
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class MkNodesBlock(Block):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the MkNodes block processor."""
         super().__init__(*args, **kwargs)
-        self._node_env: NodeEnvironment | None = None
+        self._node_env: NodeEnvironmentBase | None = None
 
     def _get_node_environment(self):
         """Get or create a NodeEnvironment for rendering."""
@@ -55,9 +55,9 @@ class MkNodesBlock(Block):
 
             node = mk.MkText.with_context() if use_context else mk.MkText()
 
-            from mknodes.jinja.nodeenvironment import NodeEnvironment
+            from mknodes.jinja.nodeenvironment import create_node_environment
 
-            self._node_env = NodeEnvironment(node)
+            self._node_env = create_node_environment(node)
         return self._node_env
 
     def on_create(self, parent: ET.Element) -> ET.Element:

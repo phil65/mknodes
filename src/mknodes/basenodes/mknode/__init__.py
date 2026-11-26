@@ -371,7 +371,7 @@ class MkNode:
         The environment has additional loaders for the class file path
         as well as the resolved parent nav file path.
         """
-        return nodeenvironment.NodeEnvironment(self)
+        return nodeenvironment.create_node_environment(self)
 
     def __str__(self) -> str:
         return self.to_markdown()
