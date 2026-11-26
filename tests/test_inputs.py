@@ -70,7 +70,9 @@ def no_network(monkeypatch: pytest.MonkeyPatch) -> None:
         fail()
 
     monkeypatch.setattr(iconcache, "_fetch", fail)
+    monkeypatch.setattr(iconcache, "fetch_icon_prefixes", fail)
     monkeypatch.setattr("anyenv.get_json", afail)
+    monkeypatch.setattr("anyenv.get_bytes", afail)
     monkeypatch.setattr("mknodes.templatenodes.mkllm.complete_llm", afail)
 
 
@@ -243,6 +245,44 @@ async def test_mkllm_offline_without_agentpool_uses_placeholder(monkeypatch, tmp
     page += llm
     await DocBuilder().build(_nav_with(page, ctx))  # no MissingInputError
     assert await llm.to_markdown() == mkllm.UNAVAILABLE_TEXT
+
+
+def test_pyconify_key_reads_icon_prefixes_from_the_store(no_network, tmp_path):
+    """Specs with a prefix need no lookup, others use the locked icon set prefixes."""
+    store = _offline_ctx(tmp_path, {"icon_prefixes": {}}).inputs
+    with inputs.use_store(store):
+        # no lookup needed: no MissingInputError although the prefixes are not locked
+        assert iconcache.get_pyconify_key("mdi:file") == "mdi:file"
+        assert iconcache.get_pyconify_key("material/file") == "mdi:file"
+        assert iconcache.get_pyconify_key(":material-file:") == "mdi:file"
+        with pytest.raises(MissingInputError):
+            iconcache.get_pyconify_key(":fa-brands-github:")
+    lock = {"icon_prefixes": {"collections": ["fa", "fa-brands", "mdi"]}}
+    with inputs.use_store(_offline_ctx(tmp_path, lock).inputs):
+        assert iconcache.get_pyconify_key(":fa-brands-github:") == "fa-brands:github"
+        assert iconcache.get_pyconify_key("fa-check") == "fa:check"
+        assert iconcache.get_pyconify_key("folder") == "mdi:folder"
+
+
+async def test_github_flavour_icon_offline(no_network, tmp_path):
+    """The GitHub flavour's icon `<img>` URLs need no network with a lock file."""
+    lock = {"icon_prefixes": {"collections": ["fa-brands", "mdi"]}}
+    ctx = _offline_ctx(tmp_path, lock)
+    with inputs.use_store(ctx.inputs):
+        md = await mk.MkIcon(":fa-brands-github:", context=ctx).to_markdown(flavor="github")
+    assert "https://api.iconify.design/fa-brands/github.svg" in md
+
+
+async def test_mkinclude_url_from_lock_without_network(no_network, tmp_path):
+    url = "https://example.com/README.md"
+    ctx = _offline_ctx(tmp_path, {"file": {url: "# Included from the lock"}})
+    node = mk.MkInclude(url, context=ctx)
+    assert node.get_input_requests() == [InputRequest.create("file", url=url)]
+    assert "Included from the lock" in await node.to_markdown()
+    local = tmp_path / "local.md"
+    local.write_text("local text")
+    assert mk.MkInclude(str(local), context=ctx).get_input_requests() == []
+    assert await mk.MkInclude(str(local), context=ctx).to_markdown() == "local text"
 
 
 def _nav_with(page: mk.MkPage, ctx: contexts.ProjectContext) -> mk.MkNav:

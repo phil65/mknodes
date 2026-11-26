@@ -419,9 +419,9 @@ ICONIFY_URL = "https://api.iconify.design/{prefix}/{name}.svg"
 
 def icon_img(icon: str, *, height: str | int = 16, color: str | None = None) -> str:
     """Return an `<img>` of an Iconify icon (GitHub strips inline SVG and has no shortcodes)."""
-    from jinjarope import iconfilters
+    from mknodes.utils import iconcache
 
-    prefix, _, name = iconfilters.get_pyconify_key(icon).partition(":")
+    prefix, _, name = iconcache.get_pyconify_key(icon).partition(":")
     params = {"height": str(height).removesuffix("px")}
     if color:
         params["color"] = color

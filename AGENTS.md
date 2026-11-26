@@ -193,12 +193,12 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 - Many nodes need network or external tools: icons come from the Iconify API via
   `jinjarope`/`pycons` (meant to be cached by anyenv in `~/.cache/anyenv`; 429 rate limits
   break docs builds and the `MkIcon` tests), `MkPyDeps` needs Graphviz (`dot`) and the dev-only
-  `pydeps` package, `MkLlm` needs an LLM API key (`OPENAI_API_KEY` in CI), git-based nodes need
+  `pydeps` package, `MkLlm` needs an LLM API key (only to refresh the lock file), git-based nodes need
   a git checkout with history.
-- External inputs (icons, licenses, `MkLlm` texts) go through `ctx.inputs` (`mknodes.inputs`):
+- External inputs (icons, icon set prefixes, licenses, included URLs, `MkLlm` texts) go through `ctx.inputs` (`mknodes.inputs`):
   nodes declare them in `get_input_requests()`, the builder resolves them before rendering,
-  site builds pin them in `mknodes.lock` (committed for the manual; `--offline` /
-  `--refresh-inputs`). New network / subprocess work in nodes should be an input kind, see
+  site builds pin them in `mknodes.lock` (committed for the manual; CI docs builds run
+  `--offline`, a missing input fails them: refresh with `uv run duty refresh-inputs`). New network / subprocess work in nodes should be an input kind, see
   `design/inputs-store.md`. Tests replace `complete_llm` with a fake (`tests/conftest.py`).
 - Tests that run git must clear `GIT_*` env vars (the pre-commit hook runs pytest with
   `GIT_DIR`/`GIT_INDEX_FILE` set), see `tests/test_gitrepository.py`.

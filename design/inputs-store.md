@@ -105,6 +105,8 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
   | --- | --- | --- | --- |
   | `icon` | yes | icon spec (+ `?param=value` for SVG params) | `MkIcon`, and every `iconcache.get_icon_svg[_async]` call during a build (themes, emoji index, Jinja `get_icon_svg`, `MkBinaryImage.for_icon`, zensical writer page / social icons) |
   | `license` | yes | SPDX id / name (lowercase) | `MkLicense(license_type=...)` |
+  | `icon_prefixes` | yes | `collections` (one entry: all Iconify icon set prefixes) | `iconcache.get_pyconify_key` for specs without a prefix separator (`:fa-brands-github:`): GitHub / mdBook flavour `icon_img`, `icons.get_emoji_slug`, `icon_for_url` |
+  | `file` | yes | http(s) URL | `MkInclude` with a URL target (local paths stay unlocked) |
   | `llm` | yes | `<model>:<sha256 of model + prompts + context>` | `MkLlm` |
   | `changelog` | no (local git, per commit) | params JSON | `MkChangelog` |
   | `pipdeptree` | no (installed environment) | params JSON | `MkPipDepTree` |
@@ -158,7 +160,16 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
   }
   ```
 
-  The manual's lock file (`mknodes.lock`, committed) holds 16 icons + 1 license (~47 KB).
+  The manual's lock file (`mknodes.lock`, committed) holds 16 icons, 1 license, the included
+  README (`MkInclude` example) and the `MkLlm` example text (~57 KB). The LLM entry is a
+  recorded placeholder (no paid calls by agents): `OPENAI_API_KEY=... uv run duty
+  refresh-inputs` replaces it with a real completion (cheaper: delete the `llm` section and
+  run `uv run mknodes generate`, live mode only fetches missing inputs).
+- **CI** (`documentation.yml`): every engine build runs `--offline` (no network or LLM
+  calls, no icon / HTTP caches, no `OPENAI_API_KEY`); a missing input fails the build with
+  the `MissingInputError` list. `duty refresh-inputs` refreshes (and prunes) with the default
+  engine, then generates the other engines in live mode, so inputs only used by other
+  flavours stay in the lock file. Verified locally with sockets disabled and cold caches.
   The icon disk cache (`~/.cache/mknodes/icons`) stays as the second level behind the store.
 - Tests: `tests/test_inputs.py` (resolve concurrency / dedup, lock round trip, live / refresh
   / offline, remembered failures, migrated nodes rendering from a lock file with network
@@ -171,9 +182,8 @@ Package `mknodes.inputs` (core; no `mknodes.site` imports).
 
 Not migrated (still I/O while building, bypassing the store):
 
-- Render time: `MkInclude` / `MkText.from_url` / Jinja `load_file` (downloads), `MkPyDeps`
-  (pydeps + dot), `MkCommandOutput` (Jinja `check_output`), GitHub-flavour icon prefix lookup
-  (`rendering/github.py` `icon_img`: Iconify collection list), `MkCodeImage.for_file` /
+- Render time: `MkText.from_url` / Jinja `load_file` (downloads), `MkPyDeps`
+  (pydeps + dot), `MkCommandOutput` (Jinja `check_output`), `MkCodeImage.for_file` /
   `MkBinaryImage.for_file` (fsspec reads), griffe / clinspector based nodes (local sources,
   imports: deterministic, stay unlocked), `MkBadge` (CPU only, `to_thread`).
 - Setup: `FolderInfo.license_text` (SPDX lookup via `run_sync` when there is no license

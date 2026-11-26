@@ -65,6 +65,10 @@ binary), [Sphinx](https://www.sphinx-doc.org) with MyST (`pip install mknodes[sp
 [Docsify](https://docsify.js.org) (no build step), or writes plain Markdown. MkDocs is not required. (The generator used to be the
 separate `mkdocs-mknodes` package.)
 
+External inputs (icons, license texts, LLM texts) get pinned in `mknodes.lock`: commit it,
+use `mknodes build --refresh-inputs` to update it and `mknodes build --offline` in CI (no network
+or LLM calls).
+
 ## Quickstart
 
 ```py

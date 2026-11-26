@@ -21,9 +21,6 @@ defaults:
     run:
         shell: bash
 
-env:
-    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -43,16 +40,10 @@ jobs:
             - name: Install dependencies
               run: |
                   uv sync --all-extras
-            # Iconify's public API rate-limits shared runner IPs; reuse fetched icons
-            # (mknodes' icon cache never expires) and HTTP responses (anyenv).
-            - name: Cache icons and HTTP responses
-              uses: actions/cache@v6
-              with:
-                  path: |
-                      ~/.cache/mknodes
-                      ~/.cache/anyenv
-                  key: docs-http-${{ runner.os }}-${{ github.run_id }}
-                  restore-keys: docs-http-${{ runner.os }}-
+            # External inputs (icons, license texts, included files, MkLlm texts) come
+            # from the committed mknodes.lock: every build runs --offline, no network or
+            # LLM calls. A missing input fails the build; refresh the lock locally with
+            # `uv run duty refresh-inputs` (needs OPENAI_API_KEY for the MkLlm texts).
             # Install mdBook (prebuilt binary, same 0.5.x as used locally)
             - name: Install mdBook
               uses: taiki-e/install-action@v2
@@ -63,38 +54,29 @@ jobs:
             # Sphinx at /sphinx/, Docsify at /docsify/.
             # Zensical runs first: its --clean would remove the other variants.
             - name: Build (Zensical)
-              env:
-                  MKNODES_CACHE_DIR: ~/.cache/mknodes
-              run: uv run mknodes build -v --strict
+              run: uv run mknodes build -v --offline --strict
             # Not strict: mkdocs-autorefs warns about objects documented on two pages
             # ("Multiple primary URLs found"). CI=false disables the social plugin.
             - name: Build (MkDocs)
               env:
-                  MKNODES_CACHE_DIR: ~/.cache/mknodes
                   CI: "false"
                   NO_MKDOCS_2_WARNING: "1"
               run: |
                   printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/mkdocs/\n' > mkdocs.variant.yml
-                  uv run mknodes build -v --engine mkdocs -p mkdocs.variant.yml -d site/mkdocs
+                  uv run mknodes build -v --offline --engine mkdocs -p mkdocs.variant.yml -d site/mkdocs
             - name: Build (mdBook)
-              env:
-                  MKNODES_CACHE_DIR: ~/.cache/mknodes
               run: |
                   printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/mdbook/\n' > mkdocs.variant.yml
-                  uv run mknodes build -v --strict --engine mdbook -p mkdocs.variant.yml -d site/mdbook
+                  uv run mknodes build -v --offline --strict --engine mdbook -p mkdocs.variant.yml -d site/mdbook
             - name: Build (Sphinx)
-              env:
-                  MKNODES_CACHE_DIR: ~/.cache/mknodes
               run: |
                   printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/sphinx/\n' > mkdocs.variant.yml
-                  uv run mknodes build -v --strict --engine sphinx -p mkdocs.variant.yml -d site/sphinx
+                  uv run mknodes build -v --offline --strict --engine sphinx -p mkdocs.variant.yml -d site/sphinx
             # No build step: the generated folder (index.html, _sidebar.md, pages) is the site.
             - name: Build (Docsify)
-              env:
-                  MKNODES_CACHE_DIR: ~/.cache/mknodes
               run: |
                   printf 'INHERIT: mkdocs.yml\nsite_url: https://phil65.github.io/mknodes/docsify/\n' > mkdocs.variant.yml
-                  uv run mknodes build -v --strict --engine docsify -p mkdocs.variant.yml -d site/docsify
+                  uv run mknodes build -v --offline --strict --engine docsify -p mkdocs.variant.yml -d site/docsify
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v5
               with:
@@ -132,19 +114,9 @@ jobs:
             - name: Install dependencies
               run: |
                   uv sync --all-extras
-            - name: Cache icons and HTTP responses
-              uses: actions/cache@v6
-              with:
-                  path: |
-                      ~/.cache/mknodes
-                      ~/.cache/anyenv
-                  key: docs-http-${{ runner.os }}-${{ github.run_id }}-markdown
-                  restore-keys: docs-http-${{ runner.os }}-
             - name: Generate
-              env:
-                  MKNODES_CACHE_DIR: ~/.cache/mknodes
               run: |
-                  uv run mknodes generate -v --strict --engine markdown --generated-dir .docs-github
+                  uv run mknodes generate -v --offline --strict --engine markdown --generated-dir .docs-github
                   cd .docs-github
                   rm .gitignore  # generated-files manifest, lists every file
                   {

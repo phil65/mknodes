@@ -3,7 +3,9 @@ from __future__ import annotations
 import os
 
 from typing import Any
+from urllib import parse
 
+from mknodes import inputs
 from mknodes.basenodes import mktext
 from mknodes.pages import mkpage
 from mknodes.utils import log, pathhelpers
@@ -32,7 +34,23 @@ class MkInclude(mktext.MkText):
         super().__init__(**kwargs)
         self.target = target
 
+    def _remote_url(self) -> str | None:
+        """Return the target if it is an http(s) URL (pinned in the lock file)."""
+        if isinstance(self.target, str) and parse.urlsplit(self.target).scheme in {
+            "http",
+            "https",
+        }:
+            return self.target
+        return None
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        if url := self._remote_url():
+            return [inputs.InputRequest.create("file", url=url)]
+        return []
+
     async def get_text(self) -> str:
+        if url := self._remote_url():
+            return await self.ctx.inputs.aget("file", url=url)
         match self.target:
             case os.PathLike() | str():
                 return pathhelpers.load_file_cached(os.fspath(self.target))

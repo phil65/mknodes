@@ -23,6 +23,21 @@ def serve(ctx, *args: str):
 
 
 @duty(capture=False)
+def refresh_inputs(ctx):
+    """Fetch the manual's external inputs again and rewrite `mknodes.lock`.
+
+    Icons, license texts, included files and the `MkLlm` texts (paid LLM calls: needs
+    `OPENAI_API_KEY`; it fails without one). The first run refreshes
+    (and prunes) the lock, the other engines add what only their flavours use.
+    Commit the changed `mknodes.lock`: CI builds the docs with `--offline`.
+    """
+    ctx.run("uv run mknodes generate --refresh-inputs")
+    for engine in ("mkdocs", "mdbook", "sphinx", "docsify"):
+        ctx.run(f"uv run mknodes generate --engine {engine}")
+    ctx.run("uv run mknodes generate --engine markdown --generated-dir .docs-github")
+
+
+@duty(capture=False)
 def test(ctx, *args: str):
     """Serve a MkNodes page."""
     os.environ["PYTHON_GIL"] = "0"

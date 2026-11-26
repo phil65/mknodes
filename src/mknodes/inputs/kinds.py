@@ -87,6 +87,30 @@ class IconInput(InputKind):
         return iconcache.fetch_icon_svg(**params)
 
 
+class IconPrefixesInput(InputKind):
+    """Prefixes of all Iconify icon sets (no params).
+
+    Needed to turn icon specs without a prefix separator (":fa-brands-github:") into
+    pyconify keys (`iconcache.get_pyconify_key`).
+    """
+
+    name = "icon_prefixes"
+    source = "api.iconify.design"
+
+    def key_id(self, params: dict[str, Any]) -> str:
+        return "collections"
+
+    async def fetch(self, params: dict[str, Any]) -> list[str]:
+        from mknodes.utils import iconcache
+
+        return await asyncio.to_thread(iconcache.fetch_icon_prefixes)
+
+    def fetch_sync(self, params: dict[str, Any]) -> list[str]:
+        from mknodes.utils import iconcache
+
+        return iconcache.fetch_icon_prefixes()
+
+
 class LicenseInput(InputKind):
     """License texts from the SPDX license list (params: `name`, an SPDX id or name)."""
 
@@ -103,6 +127,26 @@ class LicenseInput(InputKind):
 
         obj = await lic.License.from_name(params["name"])
         return dataclasses.asdict(obj)
+
+
+class RemoteFileInput(InputKind):
+    """Text of a remote file (params: `url`, an http(s) URL), e.g. for `MkInclude`."""
+
+    name = "file"
+    source = "http"
+
+    def key_id(self, params: dict[str, Any]) -> str:
+        return params["url"]
+
+    async def fetch(self, params: dict[str, Any]) -> str:
+        import anyenv
+
+        return (await anyenv.get_bytes(params["url"], cache=True)).decode()
+
+    def fetch_sync(self, params: dict[str, Any]) -> str:
+        from mknodes.utils import downloadhelpers
+
+        return downloadhelpers.download(params["url"]).decode()
 
 
 class LlmInput(InputKind):
@@ -190,5 +234,13 @@ def get_kind(name: str) -> InputKind:
         raise KeyError(msg) from None
 
 
-for _kind in (IconInput(), LicenseInput(), LlmInput(), ChangelogInput(), PipDepTreeInput()):
+for _kind in (
+    IconInput(),
+    IconPrefixesInput(),
+    LicenseInput(),
+    RemoteFileInput(),
+    LlmInput(),
+    ChangelogInput(),
+    PipDepTreeInput(),
+):
     register_kind(_kind)

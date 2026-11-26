@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import contextvars
+import functools
 import hashlib
 import os
 import pathlib
@@ -30,6 +31,8 @@ from mknodes.utils import log
 
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from jinjarope.iconfilters import Flip, Rotation
 
 
@@ -129,12 +132,59 @@ def _write(path: pathlib.Path, text: str) -> None:
         logger.debug("Could not cache icon at %s: %s", path, e)
 
 
+def fetch_icon_prefixes() -> list[str]:
+    """Return the prefixes of all Iconify icon sets (network, anyenv HTTP cache).
+
+    Runs in an empty context, like [fetch_icon_svg][mknodes.utils.iconcache.fetch_icon_svg]
+    (pycons' sync bridge fails inside a running event loop otherwise).
+    """
+    from jinjarope import icons
+
+    return sorted(contextvars.Context().run(icons._get_collection_map))
+
+
+@functools.cache
+def _fetch_icon_prefixes_cached() -> tuple[str, ...]:
+    return tuple(fetch_icon_prefixes())
+
+
+def get_icon_prefixes() -> Sequence[str]:
+    """Return the prefixes of all Iconify icon sets.
+
+    During a site build they come from the active inputs store (kind `icon_prefixes`,
+    pinned in the lock file), otherwise they get fetched once per process.
+    """
+    from mknodes import inputs
+
+    if (store := inputs.active_store()) is not None:
+        return store.get("icon_prefixes")
+    return _fetch_icon_prefixes_cached()
+
+
+def get_pyconify_key(icon: str) -> str:
+    """Convert an icon spec to a pyconify key ("prefix:name").
+
+    Like jinjarope's ``get_pyconify_key``, but the list of icon sets is only needed
+    (and read from the inputs store during builds) for specs without a prefix
+    separator, like ":fa-brands-github:". The longest matching icon set prefix wins,
+    specs without a known prefix fall back to "mdi".
+
+    Args:
+        icon: Icon spec ("mdi:file", "material/file", ":material-file:", "fa-brands-github")
+    """
+    key = _local_key(icon)
+    if ":" in key:
+        return key
+    for prefix in sorted(get_icon_prefixes(), key=len, reverse=True):
+        if key.startswith(f"{prefix}-"):
+            return f"{prefix}:{key.removeprefix(f'{prefix}-')}"
+    return f"mdi:{key}"
+
+
 def _fetch_unisolated(icon: str, **params: Any) -> str:
-    from jinjarope import iconfilters
     from pycons.iconify import api
 
-    key = iconfilters.get_pyconify_key(icon)
-    return api.svg(key, **params).decode()
+    return api.svg(get_pyconify_key(icon), **params).decode()
 
 
 def _fetch(icon: str, **params: Any) -> str:

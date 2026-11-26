@@ -4,7 +4,7 @@ import functools
 from typing import TYPE_CHECKING, Any
 import xml.etree.ElementTree as ET
 
-from jinjarope import iconfilters, icons
+from jinjarope import icons
 
 from mknodes.utils import iconcache
 
@@ -34,7 +34,7 @@ def icon_for_url(url: str) -> str | None:
     domain = netloc.split(".")[-2]
     icon_index = icons.load_icon_index()
     if (icon_name := f":fa-brands-{domain}:") in icon_index:
-        return iconfilters.get_pyconify_key(icon_index[icon_name]["name"])
+        return iconcache.get_pyconify_key(icon_index[icon_name]["name"])
 
     return None
 
@@ -104,7 +104,7 @@ def get_emoji_slug(icon: str) -> str:
     Args:
         icon: The string to convert to an emoji slug.
     """
-    return f":{iconfilters.get_pyconify_key(icon).replace(':', '-')}:"
+    return f":{iconcache.get_pyconify_key(icon).replace(':', '-')}:"
 
 
 def get_icon_xml(icon: str) -> ET.Element:
