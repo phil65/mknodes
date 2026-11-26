@@ -1,7 +1,5 @@
 """Exporters writing a `BuildOutput` to disk."""
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Protocol
 
 import upath

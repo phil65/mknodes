@@ -5,8 +5,6 @@ settings on "Site generator -> Configuration". This section covers the rest of t
 public API users work with directly.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 import mknodes as mk

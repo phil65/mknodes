@@ -1,7 +1,5 @@
 """Page templates: wiring templates to pages and moving page resources into them."""
 
-from __future__ import annotations
-
 import pathlib
 import pprint
 

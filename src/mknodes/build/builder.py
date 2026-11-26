@@ -1,7 +1,5 @@
 """DocBuilder: renders a node tree into an engine-neutral `BuildOutput`."""
 
-from __future__ import annotations
-
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import dataclasses
@@ -14,6 +12,7 @@ from mknodes import rendering
 from mknodes.build import fencecheck, pagetemplates
 from mknodes.build.output import BuildOutput, Script, SiteMetadata, nav_from_dict
 from mknodes.mdlib import mdconverter
+from mknodes.pages.mkpage import MkPage  # noqa: TC001  (logfire.instrument reads the signature)
 from mknodes.utils import diagnostics, log, resources
 
 
@@ -208,7 +207,7 @@ class DocBuilder:
             loop.close()
 
     @logfire.instrument("Rendering page {page.title}")
-    async def _render_page(self, page: mk.MkPage) -> PageResult:
+    async def _render_page(self, page: MkPage) -> PageResult:
         path = pathlib.PurePath(page.resolved_file_path).as_posix()
         with diagnostics.page_context(path):
             return await self._render_page_content(page, path)

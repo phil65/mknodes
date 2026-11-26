@@ -1,7 +1,5 @@
 """Memoize methods per instance, keyed on attributes of the instance."""
 
-from __future__ import annotations
-
 import functools
 from typing import TYPE_CHECKING, Any
 

@@ -1,7 +1,5 @@
 """Node for LLM-based text generation using LiteLlm."""
 
-from __future__ import annotations
-
 from typing import Any, TYPE_CHECKING
 from upathtools import to_upath
 

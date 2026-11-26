@@ -4,8 +4,6 @@ Nodes without a rule here (and without an `[output.github]` template in their no
 file) render their default (Material) Markdown.
 """
 
-from __future__ import annotations
-
 import html
 from typing import TYPE_CHECKING, Any
 import urllib.parse

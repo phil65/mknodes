@@ -1,7 +1,5 @@
 """Docstrings are data: the page's Jinja pass must render them literally."""
 
-from __future__ import annotations
-
 import dataclasses
 import importlib
 import sys

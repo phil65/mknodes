@@ -5,8 +5,6 @@ A fence the Markdown engine doesn't recognise (e.g. an attribute list mangled fr
 code gets shown as prose and prose as code until the end of the page.
 """
 
-from __future__ import annotations
-
 import re
 
 

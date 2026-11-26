@@ -4,8 +4,6 @@ This file demonstrates the different ways to configure the context option
 for the MkNodes extension, both globally via mkdocs.yml and per-block.
 """
 
-from __future__ import annotations
-
 import markdown
 
 

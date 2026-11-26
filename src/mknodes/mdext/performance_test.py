@@ -4,8 +4,6 @@ This script demonstrates the performance difference between full context
 and fallback context modes.
 """
 
-from __future__ import annotations
-
 import time
 
 import markdown

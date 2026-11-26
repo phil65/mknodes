@@ -1,7 +1,5 @@
 """Site generator commands: build, serve, generate."""
 
-from __future__ import annotations
-
 import contextlib
 import os
 import pathlib

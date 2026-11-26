@@ -1,7 +1,5 @@
 """The MkDocs and mdBook site engines (writers + mdBook flavour)."""
 
-from __future__ import annotations
-
 import importlib.util
 import shutil
 import subprocess

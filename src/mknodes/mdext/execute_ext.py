@@ -21,8 +21,6 @@ Options:
     id: optional ID for the code block
 """
 
-from __future__ import annotations
-
 from collections import defaultdict
 from functools import partial
 from io import StringIO

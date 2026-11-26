@@ -11,8 +11,6 @@ Settings are read from (later sources win):
 Without any configuration, the default website (`mknodes.site:parse`) gets generated.
 """
 
-from __future__ import annotations
-
 import dataclasses
 import functools
 import pathlib

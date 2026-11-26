@@ -10,8 +10,6 @@ The folder (the `site_dir` setting / `-d`, default `site/`; `generated_dir` for
 folder. `serve` runs a static file server (Python's `http.server`).
 """
 
-from __future__ import annotations
-
 import html
 import json
 import sys

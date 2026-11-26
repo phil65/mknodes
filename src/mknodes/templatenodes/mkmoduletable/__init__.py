@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 from mknodes.info import grifferegistry
 from mknodes.templatenodes import mktemplatetable
 from mknodes.utils import classhelpers, helpers, log

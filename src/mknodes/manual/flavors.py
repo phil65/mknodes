@@ -4,8 +4,6 @@ Everything shown on the page is generated from the renderers, so it stays correc
 when rules get added or changed.
 """
 
-from __future__ import annotations
-
 import inspect
 import re
 from typing import TYPE_CHECKING, Any

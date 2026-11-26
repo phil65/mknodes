@@ -1,7 +1,5 @@
 """Regressions found by building a GitHub profile README with mknodes."""
 
-from __future__ import annotations
-
 import inspect
 
 import markdown

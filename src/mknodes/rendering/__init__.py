@@ -9,8 +9,6 @@ await node.to_markdown(flavor="github")  # GitHub: > [!WARNING] ...
 ```
 """
 
-from __future__ import annotations
-
 import importlib
 
 from mknodes.rendering.base import (

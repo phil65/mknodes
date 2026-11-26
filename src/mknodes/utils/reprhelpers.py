@@ -1,10 +1,10 @@
-from __future__ import annotations
-
+import annotationlib
+import inspect
 import os
 import reprlib
 from typing import TYPE_CHECKING, Any
 
-from jinjarope import inspectfilters, textfilters, utils
+from jinjarope import textfilters, utils
 
 from mknodes.utils import log
 
@@ -172,7 +172,11 @@ def get_nondefault_repr(
     """
     args: list[Any] = []
     kwargs: dict[str, Any] = {}
-    signature = inspectfilters.get_signature(instance.__init__)  # type: ignore[misc]
+    # only names / defaults needed: FORWARDREF never fails on TYPE_CHECKING-only annotations
+    signature = inspect.signature(
+        instance.__init__,  # type: ignore[misc]
+        annotation_format=annotationlib.Format.FORWARDREF,
+    )
     for arg, v in signature.parameters.items():
         if v.kind in {v.VAR_POSITIONAL, v.VAR_KEYWORD}:
             continue

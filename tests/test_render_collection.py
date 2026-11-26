@@ -1,7 +1,5 @@
 """Per-render node collection (`NodeEnvironment.render_nodes[_async]`) and render-once nodes."""
 
-from __future__ import annotations
-
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 

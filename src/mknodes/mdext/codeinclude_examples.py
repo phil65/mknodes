@@ -4,8 +4,6 @@ This extension automatically wraps included files in fenced code blocks
 with syntax highlighting and filename as title.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 import tempfile
 

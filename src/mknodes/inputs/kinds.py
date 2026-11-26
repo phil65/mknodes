@@ -1,7 +1,5 @@
 """Input kinds: how a kind of external input gets identified and fetched."""
 
-from __future__ import annotations
-
 import asyncio
 import hashlib
 import json

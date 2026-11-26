@@ -1,7 +1,5 @@
 """Writers turning a `BuildOutput` into the input of a static site engine."""
 
-from __future__ import annotations
-
 from mknodes.site.writers.base import EngineNotFoundError, GeneratedFolder, Writer
 from mknodes.site.writers.docsify import DocsifyWriter
 from mknodes.site.writers.markdown import MarkdownWriter

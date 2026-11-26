@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+import annotationlib
 import contextvars
 import dataclasses
 import functools
@@ -136,7 +135,10 @@ class NodeEnvironment(jinjarope.Environment):
                     self._record(node)
                 except Exception as e:  # noqa: BLE001
                     # Create error message with signature
-                    sig = inspect.signature(kls.__init__)
+                    # only names / defaults needed: FORWARDREF never fails on annotations
+                    sig = inspect.signature(
+                        kls.__init__, annotation_format=annotationlib.Format.FORWARDREF
+                    )
                     params = []
                     for param_name, param in sig.parameters.items():
                         if param_name in ("self", "parent"):

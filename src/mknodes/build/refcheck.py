@@ -18,8 +18,6 @@ The check is conservative: only dotted Python paths of packages documented on th
 slugs or to other projects never produce false positives.
 """
 
-from __future__ import annotations
-
 from collections import Counter
 import dataclasses
 import difflib

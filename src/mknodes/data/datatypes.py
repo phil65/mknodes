@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from collections.abc import Callable
 import types
 from typing import TYPE_CHECKING, Any, ClassVar, Literal, Protocol, runtime_checkable

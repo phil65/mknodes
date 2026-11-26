@@ -1,7 +1,5 @@
 """Flavour-aware `MkNode.to_html()` (the "Html" tab of node examples)."""
 
-from __future__ import annotations
-
 import pytest
 
 import mknodes as mk

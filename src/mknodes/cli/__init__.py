@@ -1,7 +1,5 @@
 """MkNodes CLI: `build` / `serve` / `generate` (site generator), `render` / `render-folder`."""
 
-from __future__ import annotations
-
 import logfire
 
 from mknodes.cli import render, site

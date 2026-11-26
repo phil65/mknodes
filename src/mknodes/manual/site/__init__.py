@@ -1,7 +1,5 @@
 """Manual section for the site generator (`mknodes build` / `serve` / `generate`)."""
 
-from __future__ import annotations
-
 import mknodes as mk
 from mknodes.manual.site import cli_section, use_cases_section
 from mknodes.site import paths

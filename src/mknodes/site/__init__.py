@@ -5,8 +5,6 @@ Runs a MkNodes build function, collects the result into an engine-neutral
 (see `mknodes.site.writers`) produce the input files for a site engine.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from mknodes.build import BuildOutput, NavItem, Script, SiteMetadata

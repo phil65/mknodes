@@ -1,7 +1,5 @@
 """The core (nodes, rendering, build) must not depend on the site generator."""
 
-from __future__ import annotations
-
 import subprocess
 import sys
 

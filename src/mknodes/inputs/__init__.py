@@ -5,8 +5,6 @@ them concurrently before rendering, nodes read them from `ctx.inputs`. Locked ki
 pinned in a lock file (`mknodes.lock`). Design + inventory: `design/inputs-store.md`.
 """
 
-from __future__ import annotations
-
 from mknodes.inputs.kinds import (
     KINDS,
     InputKind,

@@ -12,8 +12,6 @@ contain Material syntax. This converts the common blocks:
 Content of the blocks is indented by four spaces. Code inside fences is left untouched.
 """
 
-from __future__ import annotations
-
 import dataclasses
 import re
 import textwrap

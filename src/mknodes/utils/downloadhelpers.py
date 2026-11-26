@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from urllib import parse
 
 import anyenv

@@ -1,7 +1,5 @@
 """Inputs store: resolve phase, lock file, offline / refresh modes, migrated nodes."""
 
-from __future__ import annotations
-
 import asyncio
 import json
 import pathlib

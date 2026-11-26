@@ -17,8 +17,6 @@ The comrak / markdown-it-py parsers come with the `html` extra (`mknodes[html]`)
 it, the HTML is rendered with Python-Markdown and starts with a comment saying so.
 """
 
-from __future__ import annotations
-
 import html
 import re
 from typing import TYPE_CHECKING, Any

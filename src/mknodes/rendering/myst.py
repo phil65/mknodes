@@ -14,8 +14,6 @@ Hand-written Material blocks (`!!!`, `???`, `===`, `/// details`, `::: path`, co
 options) in page text get converted to the same directives.
 """
 
-from __future__ import annotations
-
 import dataclasses
 import re
 from typing import TYPE_CHECKING

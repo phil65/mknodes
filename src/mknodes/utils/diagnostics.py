@@ -13,8 +13,6 @@ Strict mode (`mknodes build --strict`, `strict = true` in `[tool.mknodes]`) fail
 build if any diagnostic was reported (`StrictModeError`).
 """
 
-from __future__ import annotations
-
 import contextlib
 import contextvars
 import dataclasses

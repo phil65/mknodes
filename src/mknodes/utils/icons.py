@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import functools
 from typing import TYPE_CHECKING, Any
 import xml.etree.ElementTree as ET

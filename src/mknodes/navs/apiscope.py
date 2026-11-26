@@ -18,8 +18,6 @@ reserved names `index` / `README` / `SUMMARY` gets the suffix `-class`, which ca
 with a module name since module names are identifiers.
 """
 
-from __future__ import annotations
-
 import dataclasses
 import importlib
 import inspect

@@ -10,8 +10,6 @@ Every rendered object gets an HTML anchor (`<a id="dotted.path"></a>`, in its he
 so references to it can be linked.
 """
 
-from __future__ import annotations
-
 import re
 from typing import TYPE_CHECKING, Any
 

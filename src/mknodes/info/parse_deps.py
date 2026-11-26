@@ -1,7 +1,5 @@
 """Helper for parsing optional dependencies from pyproject.toml with comment descriptions."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 import re
 import tomllib

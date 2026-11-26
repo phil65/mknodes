@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Any, Literal, TYPE_CHECKING
 from urllib import parse
 

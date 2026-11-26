@@ -4,8 +4,6 @@ This example shows how to use the MkNodes markdown extension to render
 Jinja templates containing MkNodes components within markdown documents.
 """
 
-from __future__ import annotations
-
 import markdown
 
 

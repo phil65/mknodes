@@ -8,8 +8,6 @@ The active renderer is stored in a context variable, so nested nodes, Jinja temp
 (`{{ node }}`) and `str(node)` all render in the same flavour.
 """
 
-from __future__ import annotations
-
 from collections.abc import Awaitable, Callable
 import contextlib
 import contextvars

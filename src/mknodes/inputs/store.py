@@ -1,7 +1,5 @@
 """The inputs store: external data resolved before rendering, pinned in a lock file."""
 
-from __future__ import annotations
-
 import asyncio
 import contextlib
 import dataclasses

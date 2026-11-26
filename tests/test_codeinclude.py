@@ -1,7 +1,5 @@
 """Tests for the CodeInclude markdown extension."""
 
-from __future__ import annotations
-
 from pathlib import Path
 import tempfile
 

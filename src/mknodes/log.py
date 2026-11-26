@@ -1,7 +1,5 @@
 """Logging configuration for mknodes."""
 
-from __future__ import annotations
-
 import logging
 
 

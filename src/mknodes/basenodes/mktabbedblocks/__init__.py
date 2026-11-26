@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from mknodes.basenodes import mktabs, mktabcontainer
 from mknodes.utils import log, resources
 

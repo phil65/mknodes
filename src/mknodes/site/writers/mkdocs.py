@@ -7,8 +7,6 @@ Build with `mkdocs build -f mkdocs.generated.yml` (or `mknodes build --engine mk
 Needs the `mkdocs` extra (`mkdocs`, `mkdocs-material`).
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from mknodes.site.writers.base import EngineNotFoundError

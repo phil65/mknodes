@@ -4,8 +4,6 @@ The result is a folder of Markdown pages plus a `SUMMARY.md` table of contents, 
 on GitHub (or in any Markdown viewer) without a build step.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from mknodes.build import MarkdownExporter

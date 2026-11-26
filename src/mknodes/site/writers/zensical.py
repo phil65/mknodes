@@ -6,8 +6,6 @@ and adds the nav, the required Markdown extensions, extra CSS / JS and site meta
 Build with `zensical build -f mkdocs.generated.yml` (or `mknodes build`).
 """
 
-from __future__ import annotations
-
 import copy
 import os
 import pathlib

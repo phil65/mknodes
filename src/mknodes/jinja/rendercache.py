@@ -1,7 +1,5 @@
 """Render-once cache for nodes whose children / content come from a Jinja template."""
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from mknodes import rendering

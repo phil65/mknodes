@@ -1,7 +1,5 @@
 """Render commands: Markdown files / folders with the MkNodes Jinja environment."""
 
-from __future__ import annotations
-
 import asyncio
 from pathlib import Path
 import sys

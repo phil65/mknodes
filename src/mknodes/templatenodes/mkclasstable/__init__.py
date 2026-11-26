@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import griffe
 
 from mknodes.info import grifferegistry

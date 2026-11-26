@@ -1,14 +1,12 @@
 """Build output: everything a node tree produced, independent of the target."""
 
-from __future__ import annotations
-
 import dataclasses
 from datetime import datetime
 import pathlib
 import posixpath
 from typing import TYPE_CHECKING, Any
 
-from mknodes.utils import resources
+from mknodes.utils.resources import Resources
 
 
 if TYPE_CHECKING:
@@ -104,7 +102,7 @@ class BuildOutput:
     """Site metadata inferred from the project."""
     edit_paths: dict[str, str] = dataclasses.field(default_factory=dict)
     """Page path -> repository path of the source that generated it."""
-    page_resources: dict[str, resources.Resources] = dataclasses.field(default_factory=dict)
+    page_resources: dict[str, Resources] = dataclasses.field(default_factory=dict)
     """Page path -> resources required by that page."""
     flavor: str = "material"
     """Markdown flavour the pages are rendered in."""
@@ -117,9 +115,9 @@ class BuildOutput:
         return {**self.assets, **self.pages}
 
     @property
-    def resources(self) -> resources.Resources:
+    def resources(self) -> Resources:
         """Resources of all pages merged into one."""
-        merged = resources.Resources()
+        merged = Resources()
         for res in self.page_resources.values():
             merged.merge(res)
         return merged

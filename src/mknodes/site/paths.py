@@ -1,7 +1,5 @@
 """Path constants of the site generator."""
 
-from __future__ import annotations
-
 from mknodes import paths
 
 

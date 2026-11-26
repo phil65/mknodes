@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from mknodes.basenodes import mkbasetable
 from mknodes.utils import log, xmlhelpers as xml
 

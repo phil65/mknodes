@@ -7,8 +7,6 @@ admonitions use the fenced syntax of the `mdbook-admonish` preprocessor
 (all Material admonition types, titles, collapsible blocks).
 """
 
-from __future__ import annotations
-
 import dataclasses
 from typing import TYPE_CHECKING
 

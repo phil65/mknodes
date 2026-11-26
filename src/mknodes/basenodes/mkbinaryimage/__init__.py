@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import upath
 
 from typing import Any, Literal, Self, TYPE_CHECKING

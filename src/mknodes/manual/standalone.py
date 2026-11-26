@@ -4,8 +4,6 @@ Usage:
     mknodes -s mknodes.manual.standalone:build -o ./docs
 """
 
-from __future__ import annotations
-
 import mknodes as mk
 from mknodes.manual import (
     dev_section,

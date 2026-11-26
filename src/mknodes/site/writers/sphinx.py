@@ -11,8 +11,6 @@ the site dir (default `site/`).
 Needs the `sphinx` extra (`mknodes[sphinx]`: sphinx, myst-parser, sphinx-design, furo).
 """
 
-from __future__ import annotations
-
 import importlib.util
 import pprint
 import re

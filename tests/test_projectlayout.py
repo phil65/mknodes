@@ -1,7 +1,5 @@
 """Project metadata model: distribution, import packages, repository."""
 
-from __future__ import annotations
-
 import os
 import sys
 import textwrap

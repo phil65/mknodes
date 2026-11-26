@@ -6,8 +6,6 @@ and dumps them back unchanged, so a generated config can safely repeat values of
 config it inherits from.
 """
 
-from __future__ import annotations
-
 import dataclasses
 import os
 import pathlib

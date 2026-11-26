@@ -20,8 +20,6 @@ The primary package is `[tool.mknodes] package`, else the one matching the norma
 distribution name, else the first one.
 """
 
-from __future__ import annotations
-
 import dataclasses
 import fnmatch
 import importlib

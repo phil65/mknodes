@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import dataclasses
 
 from mknodes.utils import color, log

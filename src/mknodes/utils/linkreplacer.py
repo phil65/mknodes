@@ -1,7 +1,5 @@
 """Link replacer."""
 
-from __future__ import annotations
-
 import collections
 import posixpath
 import re

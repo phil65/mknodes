@@ -1,7 +1,5 @@
 """Utilities for working with coroutines."""
 
-from __future__ import annotations
-
 import asyncio
 import contextvars
 from typing import TYPE_CHECKING, Any

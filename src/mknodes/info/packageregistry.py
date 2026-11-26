@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from abc import ABCMeta
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING

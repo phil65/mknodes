@@ -4,8 +4,6 @@ A pymdownx-based block extension that allows rendering Jinja templates
 using the MkNodes NodeEnvironment within markdown documents.
 """
 
-from __future__ import annotations
-
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any

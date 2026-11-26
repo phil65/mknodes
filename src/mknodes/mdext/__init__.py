@@ -1,7 +1,5 @@
 """Markdown extensions for mknodes."""
 
-from __future__ import annotations
-
 from .codeinclude import CodeIncludeExtension, makeExtension as makeCodeIncludeExtension
 from .execute_ext import ExecuteExtension, makeExtension as makeExecuteExtension
 from .mknodes_ext import MkNodesExtension, makeExtension as makeMkNodesExtension

@@ -1,7 +1,5 @@
 """The MkNodes Typer app and options shared by all commands."""
 
-from __future__ import annotations
-
 import logging
 
 import typer as t

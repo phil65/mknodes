@@ -1,7 +1,5 @@
 """Run a MkNodes build function and collect the result as a `BuildOutput`."""
 
-from __future__ import annotations
-
 import contextlib
 import inspect
 import pathlib

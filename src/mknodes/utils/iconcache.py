@@ -15,8 +15,6 @@ the loop). During a site build, [get_icon_svg][] reads from the active inputs st
 (`mknodes.inputs`, lock file), which fetches via [fetch_icon_svg][].
 """
 
-from __future__ import annotations
-
 import asyncio
 import contextvars
 import functools

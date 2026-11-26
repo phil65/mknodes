@@ -181,7 +181,12 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 
 ## Conventions
 
-- Python >= 3.14, `from __future__ import annotations`, ruff (line length 100, Google docstrings).
+- Python >= 3.14, ruff (line length 100, Google docstrings). No `from __future__ import annotations`
+  (PEP 649; banned via ruff TID251): annotations naming `TYPE_CHECKING`-only imports raise
+  `NameError` when evaluated, so code that only needs parameter names reads signatures with
+  `annotation_format=annotationlib.Format.FORWARDREF`, and decorators that evaluate them
+  (`logfire.instrument`) need runtime imports. In class bodies, an attribute/property named like
+  an imported module shadows it in annotations (see `build/output.py`).
 - mypy is the type checker in CI and pre-commit (template deviation: the template uses ty;
   `ty check` still reports ~77 findings, mostly container `get_items` overrides and
   navigation router unions, so the switch is a separate task).
