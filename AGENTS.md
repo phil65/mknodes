@@ -181,8 +181,10 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 
 ## Conventions
 
-- Python >= 3.13, `from __future__ import annotations`, ruff (line length 100, Google docstrings).
-- mypy is the type checker in CI and pre-commit; there is no ty setup.
+- Python >= 3.14, `from __future__ import annotations`, ruff (line length 100, Google docstrings).
+- mypy is the type checker in CI and pre-commit (template deviation: the template uses ty;
+  `ty check` still reports ~77 findings, mostly container `get_items` overrides and
+  navigation router unions, so the switch is a separate task).
 - Rendering APIs are async (`await node.to_markdown()`, `await node.get_resources()`); tests use
   pytest-asyncio with `asyncio_mode = "auto"`.
 - Tests live in `tests/`, one file per area. `tests/test_nodefiles.py` renders every node's
@@ -193,7 +195,12 @@ uv run duty lint | test | build | serve   # wrappers in duties.py
 
 ## Pitfalls
 
-- Not copier-managed: pyproject, workflows and pre-commit config are edited by hand.
+- Managed with the copier-phil65 template (`.copier-answers.yml`; `copier update` merges
+  template changes). Deviations to keep on updates: `documentation.yml` is mknodes' own
+  (multi-engine build with `--offline`, the `docs-github` branch job), `build.yml` adds
+  Graphviz, a full-history checkout and mypy instead of ty, the `docs` group has no
+  `mknodes` (self) entry, ruff also ignores E501 / RUF012, `codspeed.yml` is not from the
+  template.
 - Many nodes need network or external tools: icons come from the Iconify API via
   `jinjarope`/`pycons` (meant to be cached by anyenv in `~/.cache/anyenv`; 429 rate limits
   break docs builds and the `MkIcon` tests), `MkPyDeps` needs Graphviz (`dot`) and the dev-only

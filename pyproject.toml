@@ -6,7 +6,8 @@ version = "4.5.1"
 description = "Build Markdown documentation in Python from composable, project-aware nodes."
 readme = "README.md"
 requires-python = ">=3.14"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
   { name = "Philipp Temminghoff", email = "philipptemminghoff@gmail.com" },
 ]
@@ -35,6 +36,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
+  # Only add below (Copier)
   # TODO: make these optional
   "anybadge",
   "anyenv[httpx2]>=2.1.0",
@@ -63,8 +65,8 @@ dependencies = [
   "pymdown-extensions>=10.0",
   # Tools
   "pytest-asyncio>=1.3.0",
-  "pyyaml",
   "python-dotenv",
+  "pyyaml",
   "requests>=2.28",
   "rich>=13.0",
   # Serialization
@@ -81,7 +83,6 @@ dependencies = [
 "Code coverage" = "https://app.codecov.io/gh/phil65/mknodes"
 Discussions = "https://github.com/phil65/mknodes/discussions"
 Documentation = "https://phil65.github.io/mknodes/"
-Homepage = "https://phil65.github.io/mknodes/"
 Issues = "https://github.com/phil65/mknodes/issues"
 Source = "https://github.com/phil65/mknodes"
 
@@ -103,33 +104,45 @@ sphinx = ["furo>=2024.8", "myst-parser>=4", "sphinx>=8", "sphinx-design>=0.6"]
 
 [dependency-groups]
 dev = [
+  # Only add below (Copier)
   # black is used by mkdocstrings to format signatures
   "black",
   # Material Social addon
   "cairosvg; python_version < '3.14'",
+  "deptry",
+  "devtools",
   "markdown-exec[ansi]",
   # Docs
   "mkdocstrings[python]",
-  # Linting
-  "mypy",
   "pillow; python_version < '3.14'",
   "pydeps",
   "pygments",
-  "pyinstrument",
   "pymdown-extensions",
-  # Debugging
   "pyreadline3",
-  # Testing
   "pytest",
+  # Testing
   "pytest-codspeed",
   "pytest-cov",
   "pytest-snapshot>=0.9.0",
-  "ruff",
+  "zensical",
+]
+benchmark = ["pyinstrument"]
+docs = [
+  "mkdocstrings[python]",
+  # Only add below (Copier)
+  # (no "mknodes" here: this is mknodes)
+]
+lint = [
+  # Only add below (Copier)
+  # Project-specific: mknodes is type-checked with mypy (ty: not yet, see AGENTS.md).
+  "mypy",  # Pinned on purpose: CI, pre-commit and editors all run exactly these versions.
+  # Bump them here (template) and roll out via `copier update`.
+  "ruff==0.17.6",
+  "ty==0.0.110",
   "types-Markdown",
   "types-python-dateutil",
   "types-pyyaml>=6.0.12.20250915",
   "types-requests",
-  "zensical",
 ]
 
 [build-system]
@@ -187,7 +200,6 @@ reportSelfClsParameterName = false
 reportPrivateImportUsage = false
 
 [tool.pytest]
-addopts = ["--cov-report=term-missing", "--cov=mknodes/"]
 log_cli = true
 log_date_format = "%Y-%m-%d %H:%M:%S"
 log_format = "%(asctime)s %(levelname)s %(message)s"
@@ -195,9 +207,9 @@ markers = [
   "integration: marks tests as integration tests (deselected by default)",
 ]
 minversion = "9.0"
-testpaths = ["tests"]
-asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests/"]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 line-length = 100
@@ -271,6 +283,7 @@ ignore = [
   "C408",  # Unnecessary {obj_type} call (rewrite as a literal)
   "B905",  # zip() without an explicit strict= parameter
   "C901",  # {name} is too complex ({complexity} > {max_complexity})
+  "COM812",
   # "CPY001", # Missing copyright notice at top of file
   "D100",  # Missing docstring in public module
   "D101",  # Missing docstring in public class
@@ -292,28 +305,22 @@ ignore = [
   "D408",  # Section underline should be in the line following the section's name ("{name}")
   "D409",  # Section underline should match the length of its name ("{name}")
   "D413",  # Missing blank line after last section ("{name}")
-  "N813",
-  "PLC0415",  # imports at top of file
-  "PLC2701",  # private import
-  "PLR0904",  # Too many public methods
+  "EM101",  # Exception must not use a string literal, assign to variable first
+  "EM102",  # Exception must not use an f-string literal, assign to variable first
+  "ISC001",
+  "PLC0415",
   "PLR0912",  # Too many branches
   "PLR0913",  # Too many arguments to function call
   "PLR0915",  # Too many statements
-  "PLR0917",  # Function with too many params
-  "PLR6301",  # Function could be static, ...
+  "PLR0917",  # Too many positional arguments
+  # "PLR2004", # Magic values instead of named consts
   "SLF001",  # Private member accessed
-  "RUF012",  # Mutable class attributes should be annotated
   "TRY003",  # Avoid specifying long messages outside the exception class
-  "COM812",
-  "COM819",
-  "D206",
-  "E501",
-  "ISC001",
-  "Q000",
-  "Q001",
-  "Q002",
-  "Q003",
-  "W191",  # for ruff-format
+  "TC006",  # runtime-cast-value
+  # Project-specific: long literals (Markdown / Jinja examples, test fixtures) the
+  # formatter can't wrap, and node classes declaring class-level list metadata.
+  "E501",  # Line too long
+  "RUF012",  # Mutable class attributes should be annotated
 ]
 
 [tool.ruff.lint.flake8-quotes]
@@ -341,6 +348,9 @@ lines-after-imports = 2
 force-sort-within-sections = true
 combine-as-imports = true
 
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402", "I001"]
 "scripts/*" = ["INP001"]
@@ -349,6 +359,27 @@ combine-as-imports = true
 [tool.ruff.format]
 preview = true
 docstring-code-format = true
+
+[tool.ty.environment]
+python-version = "3.14"
+python-platform = "all"
+
+[tool.ty.src]
+# `ty check` (hooks, CI, editors) type-checks the package code only.
+include = ["src"]
+
+[tool.ty.analysis]
+# Optional dependencies that are not always installed, e.g. "numpy", "numpy.**".
+# Unresolved imports are errors otherwise, so broken imports are caught.
+allowed-unresolved-imports = []
+
+[tool.ty.rules]
+# Narrowing an overridden class attribute (e.g. pydantic discriminators,
+# `Config` attributes) is an intentional pattern.
+incompatible-mutable-override = "ignore"
+
+[tool.uv]
+default-groups = ["dev", "lint", "docs"]
 
 [tool.uv.build-backend]
 wheel-exclude = [

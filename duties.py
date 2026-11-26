@@ -1,3 +1,5 @@
+"""Project tasks."""
+
 from __future__ import annotations
 
 import os
@@ -72,6 +74,13 @@ def lint_check(ctx):
     ctx.run("uv run ruff check .")
     ctx.run("uv run ruff format --check .")
     ctx.run("uv run mypy src/ --fixed-format-cache")
+
+
+@duty(capture=False)
+def changelog(ctx, *args: str):
+    """Write the whole release history to CHANGELOG.md (git-cliff, see cliff.toml)."""
+    args_str = " " + " ".join(args) if args else ""
+    ctx.run(f"uvx git-cliff --output CHANGELOG.md{args_str}")
 
 
 @duty(capture=False)
