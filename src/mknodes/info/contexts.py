@@ -133,10 +133,16 @@ class PackageContext(Context):
     """Information about a package."""
 
     # PackageInfo
+    package_name: str = ""
+    """Name of the primary import package (`[tool.mknodes] package`, else the one
+    matching the distribution name, else the first one)."""
+    package_names: list[str] = dataclasses.field(default_factory=list)
+    """Names of all import packages (top-level modules) of the distribution, primary
+    package first. See `mknodes.info.projectlayout`."""
     module: types.ModuleType | None = None
-    """The module object itself."""
+    """The primary import package (module object)."""
     griffe_module: Module | Alias | None = None
-    """The module object itself."""
+    """The primary import package (griffe object)."""
     docstring_style: str | None = None
     """The style used for DocStrings."""
     distribution_name: str = ""
@@ -423,6 +429,8 @@ def get_default_project_context():
         pretty_name="MkNodes",
         version="1.0.0",
         distribution_name="mknodes",
+        package_name="mknodes",
+        package_names=["mknodes"],
         summary="Don't write docs. Code them.",
         description="Long text with description.",
         author_name="Philipp Temminghoff",

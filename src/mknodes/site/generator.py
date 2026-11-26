@@ -190,11 +190,13 @@ class SiteGenerator:
         Returns:
             The references which could not get fixed.
         """
-        package = root.ctx.metadata.distribution_name.replace("-", "_")
+        metadata = root.ctx.metadata
+        names = metadata.package_names or [metadata.distribution_name.replace("-", "_")]
+        packages = list(dict.fromkeys(name.split(".")[0] for name in names))
         issues = refcheck.check_output(
             output,
             root,
-            packages=[package],
+            packages=packages,
             inventory=root.ctx.links.inv_manager,
         )
         fixed = refcheck.fix_references(output, issues)

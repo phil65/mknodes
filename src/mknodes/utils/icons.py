@@ -15,28 +15,38 @@ if TYPE_CHECKING:
     import markdown
 
 
-def icon_for_url(url: str) -> str | None:
-    """Return a pyconify icon key for given url."""
+SOCIAL_ICONS = {
+    "matrix.to": "fa-brands:gitter",
+    "x.com": "fa-brands:twitter",
+    "fosstodon.org": "fa-brands:mastodon",
+}
+
+
+def icon_for_url(url: str, default: str | None = None) -> str | None:
+    """Return a pyconify icon key for given url.
+
+    Known social hosts get their icon, other hosts the Font Awesome brand icon named
+    like their domain (`gitlab.com` -> `fa-brands:gitlab`) if there is one.
+
+    Args:
+        url: The URL to get an icon for (anything unparsable gets the default)
+        default: Icon to return if there is no icon for the host
+    """
     from urllib import parse
 
-    socials = {
-        "matrix.to": "fa-brands:gitter",
-        "x.com": "fa-brands:twitter",
-        "fosstodon.org": "fa-brands:mastodon",
-    }
-    netloc = parse.urlsplit(url).netloc.lower()
-
-    # First check exact matches
-    if icon := socials.get(netloc):
+    try:
+        host = (parse.urlsplit(url.strip()).hostname or "").lower()
+    except ValueError:
+        return default
+    if icon := SOCIAL_ICONS.get(host.removeprefix("www.")):
         return icon
-
-    # Try to find a matching brand icon
-    domain = netloc.split(".")[-2]
+    labels = [label for label in host.split(".") if label]
+    if len(labels) < 2:  # noqa: PLR2004
+        return default
     icon_index = icons.load_icon_index()
-    if (icon_name := f":fa-brands-{domain}:") in icon_index:
+    if (icon_name := f":fa-brands-{labels[-2]}:") in icon_index:
         return iconcache.get_pyconify_key(icon_index[icon_name]["name"])
-
-    return None
+    return default
 
 
 @functools.cache

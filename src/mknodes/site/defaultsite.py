@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import importlib
 from typing import Any
 
 import mknodes as mk
+from mknodes.utils import log
+
+
+logger = log.get_logger(__name__)
 
 
 README_NAMES = ("README.md", ".github/README.md", "readme.md")
@@ -23,6 +28,27 @@ def add_index_page(nav: mk.MkNav) -> mk.MkPage:
     return page
 
 
+def add_api_docs(nav: mk.MkNav, section_name: str = "API") -> mk.MkNav | mk.MkDoc:
+    """Add API docs for the import packages of the project.
+
+    One package: an API section for it. Several packages (like `agentpool`,
+    `agentpool_config`, ...): an API section with one sub-section per package.
+    Packages which fail to import get skipped (with a warning).
+    """
+    names = nav.ctx.metadata.package_names
+    if len(names) <= 1:
+        return nav.add_doc(section_name=section_name, recursive=True)
+    api = nav.add_nav(section_name)
+    for name in names:
+        try:
+            module = importlib.import_module(name)
+        except Exception as e:  # noqa: BLE001
+            logger.warning("Skipping API docs for %s: import failed (%s)", name, e)
+            continue
+        api.add_doc(module=module, section_name=name, recursive=True)
+    return api
+
+
 def populate_default_website(
     nav: mk.MkNav,
     static_pages: dict[str, str | dict | list] | None = None,
@@ -31,7 +57,7 @@ def populate_default_website(
     add_index_page(nav)
     if static_pages:
         nav.parse.json(static_pages)
-    nav.add_doc(section_name="API", recursive=True)
+    add_api_docs(nav)
     nav.page_template.announcement_bar = mk.MkMetadataBadges("websites")
     if nav.ctx.metadata.cli or nav.ctx.metadata.cli_info:
         page = nav.add_page("CLI", hide="nav")

@@ -60,6 +60,16 @@ class PyProject(configfile.TomlFile):
         return self.get_section("tool", "mknodes") or {}
 
     @property
+    def data(self) -> dict[str, Any]:
+        """The parsed file content."""
+        return self._data
+
+    @property
+    def package(self) -> str | None:
+        """The primary import package (`[tool.mknodes] package`), if configured."""
+        return self.mknodes_section.get("package")
+
+    @property
     def name(self) -> str | None:
         """Project name."""
         return self.project.get("name")

@@ -4,7 +4,7 @@ import collections
 import contextlib
 import functools
 from importlib import metadata
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import clinspector
 import epregistry
@@ -13,20 +13,113 @@ from requests import structures
 from mknodes.utils import log, packagehelpers, reprhelpers
 
 
+if TYPE_CHECKING:
+    import os
+    import pathlib
+
+
 logger = log.get_logger(__name__)
+
+
+def _split_project_url(value: str) -> tuple[str, str]:
+    """Split a `Project-URL` metadata value (`Label, URL`); labels may contain commas."""
+    label, sep, url = value.rpartition(", ")
+    if not sep:
+        label, _, url = value.partition(",")
+    return label.strip(), url.strip()
+
+
+def _format_person(person: dict[str, str]) -> str:
+    name, email = person.get("name", ""), person.get("email", "")
+    return f"{name} <{email}>" if name and email else email or name
+
+
+class PyProjectDistribution(metadata.Distribution):
+    """A distribution built from `pyproject.toml` (for projects which are not installed).
+
+    Provides the core metadata (`METADATA`) and the entry points of the `[project]` table,
+    so `PackageInfo` works the same as for an installed distribution.
+    """
+
+    def __init__(self, data: dict[str, Any], root: pathlib.Path) -> None:
+        self._project: dict[str, Any] = data.get("project") or {}
+        self._root = root
+
+    def locate_file(self, path: str | os.PathLike[str]) -> pathlib.Path:
+        return self._root / path
+
+    def read_text(self, filename: str) -> str | None:
+        if filename == "METADATA":
+            return self._metadata_text()
+        if filename == "entry_points.txt":
+            return self._entry_points_text()
+        return None
+
+    def _metadata_text(self) -> str:
+        p = self._project
+        lines = ["Metadata-Version: 2.4", f"Name: {p.get('name', '')}"]
+        lines.append(f"Version: {p.get('version') or '0.0.0'}")
+        if summary := p.get("description"):
+            lines.append(f"Summary: {summary}")
+        if keywords := p.get("keywords"):
+            lines.append(f"Keywords: {','.join(keywords)}")
+        if authors := [_format_person(a) for a in p.get("authors") or []]:
+            lines.append(f"Author-email: {', '.join(a for a in authors if a)}")
+        if isinstance(lic := p.get("license"), str):
+            lines.append(f"License-Expression: {lic}")
+        lines += [f"Classifier: {c}" for c in p.get("classifiers") or []]
+        if requires_python := p.get("requires-python"):
+            lines.append(f"Requires-Python: {requires_python}")
+        lines += [f"Project-URL: {k}, {v}" for k, v in (p.get("urls") or {}).items()]
+        lines += [f"Requires-Dist: {dep}" for dep in p.get("dependencies") or []]
+        for extra, deps in (p.get("optional-dependencies") or {}).items():
+            lines.append(f"Provides-Extra: {extra}")
+            lines += [f'Requires-Dist: {dep}; extra == "{extra}"' for dep in deps]
+        text = "\n".join(lines) + "\n"
+        if description := self._readme_text():
+            text += f"\n{description}"
+        return text
+
+    def _readme_text(self) -> str:
+        readme = self._project.get("readme")
+        if isinstance(readme, dict):
+            if text := readme.get("text"):
+                return str(text)
+            readme = readme.get("file")
+        if isinstance(readme, str) and (path := self._root / readme).is_file():
+            return path.read_text(encoding="utf-8")
+        return ""
+
+    def _entry_points_text(self) -> str:
+        groups = {
+            "console_scripts": self._project.get("scripts") or {},
+            "gui_scripts": self._project.get("gui-scripts") or {},
+            **(self._project.get("entry-points") or {}),
+        }
+        sections = [
+            f"[{group}]\n" + "".join(f"{k} = {v}\n" for k, v in eps.items())
+            for group, eps in groups.items()
+            if eps
+        ]
+        return "\n".join(sections)
 
 
 class PackageInfo:
     """Class containing metadata.distribution-related information."""
 
-    def __init__(self, pkg_name: str) -> None:
+    def __init__(
+        self,
+        pkg_name: str,
+        distribution: metadata.Distribution | None = None,
+    ) -> None:
         """Constructor.
 
         Args:
-            pkg_name: Name of the package
+            pkg_name: Name of the distribution
+            distribution: The distribution (default: the installed one named `pkg_name`)
         """
         self.package_name = pkg_name
-        self.distribution = metadata.distribution(pkg_name)
+        self.distribution = distribution or metadata.distribution(pkg_name)
         logger.debug("Loaded package info: '%s'", pkg_name)
         self.metadata: dict[str, Any] = self.distribution.metadata.json
         self.classifiers: list[str] = self.metadata.get("classifier") or []  # type: ignore[assignment]
@@ -47,10 +140,7 @@ class PackageInfo:
 
         Example: {"Documentation": "http://github.io/...", ...}
         """
-        urls = {
-            v.split(",")[0].strip(): v.split(",")[1].strip()
-            for v in self.metadata.get("project_url", [])
-        }
+        urls = dict(_split_project_url(v) for v in self.metadata.get("project_url", []))
         if hp := self.metadata.get("home_page"):
             urls["home_page"] = hp.strip()
         return structures.CaseInsensitiveDict(urls)

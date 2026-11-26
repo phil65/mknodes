@@ -4,12 +4,12 @@ import contextlib
 import dataclasses
 import functools
 import importlib
+from importlib import metadata
 import pathlib
 import re
 from typing import TYPE_CHECKING
 
 from anyenv import run_sync
-import epregistry
 import yamling
 
 from mknodes.data import installmethods, taskrunners, tools
@@ -19,6 +19,7 @@ from mknodes.info import (
     license as lic,
     mkdocsconfigfile,
     packageregistry,
+    projectlayout,
     pyproject,
     reporegistry,
 )
@@ -87,32 +88,61 @@ class FolderInfo:
         return str(self.path)
 
     @functools.cached_property
-    def _module_name(self) -> str:
-        # The repository name decides if there is a remote, else the pyproject name
-        # (the folder name of a repo without remote says nothing about the package).
-        name = self.git.repo_name
-        if not self.git.remote_url and self.pyproject.name:
-            name = self.pyproject.name
-        return epregistry.distribution_to_package(name, fallback=True)
+    def layout(self) -> projectlayout.ProjectLayout:
+        """Distribution name, import packages and source layout of the project."""
+        return projectlayout.ProjectLayout.resolve(
+            self.path, self.pyproject.data, fallback_name=self.git.repo_name
+        )
+
+    @functools.cached_property
+    def distribution_name(self) -> str:
+        """Name of the distribution (`[project.name]`, else the repository name)."""
+        return self.layout.distribution
+
+    @functools.cached_property
+    def package_names(self) -> list[str]:
+        """Names of all import packages of the distribution (primary package first)."""
+        return self.layout.package_names
+
+    @functools.cached_property
+    def package_name(self) -> str:
+        """Name of the primary import package."""
+        if primary := self.layout.primary:
+            return primary.name
+        return projectlayout.normalize_name(self.distribution_name)
 
     @functools.cached_property
     def module(self) -> types.ModuleType:
-        """Return the module itself."""
-        return importlib.import_module(self._module_name)
+        """Return the primary import package."""
+        if primary := self.layout.primary:
+            return primary.import_module()
+        return importlib.import_module(self.package_name)
 
     @functools.cached_property
     def griffe_module(self) -> griffe.Module | Alias:
         """Return a griffe Module containing information about the module."""
         # Long-term ideally we would pull all information from here.
-        return grifferegistry.get_module(self._module_name)
+        self.module  # noqa: B018  (makes a not installed package importable for griffe)
+        return grifferegistry.get_module(self.package_name)
 
     def __repr__(self) -> str:
         return reprhelpers.get_repr(self, path=self.path)
 
     @functools.cached_property
     def info(self) -> packageinfo.PackageInfo:
-        """Return a PackageInfo object for given distribution."""
-        return packageregistry.get_info(self.pyproject.name or self.git.repo_name)
+        """Return a PackageInfo object for the distribution.
+
+        Uses the installed distribution, else the metadata from `pyproject.toml`.
+        """
+        from mknodes.info import packageinfo
+
+        name = self.distribution_name
+        try:
+            return packageregistry.get_info(name)
+        except metadata.PackageNotFoundError:
+            logger.info("Distribution %s is not installed, using pyproject.toml", name)
+            dist = packageinfo.PyProjectDistribution(self.pyproject.data, self.path)
+            return packageinfo.PackageInfo(name, distribution=dist)
 
     @functools.cached_property
     def extras(self) -> dict[str, PackageExtra]:
@@ -126,11 +156,15 @@ class FolderInfo:
     def repository_url(self) -> str:
         """Return url of the repository by querying multiple sources.
 
-        Checks MkDocs config file, Git repository info and project metadata.
+        Checks the MkDocs config (`repo_url`), `[project.urls]`, the git remote and the
+        installed metadata.
         Returns an empty string if none of them contains a repository url.
         """
         if url := self.mkdocs_config.get("repo_url"):
             return url  # type: ignore[no-any-return]
+        urls = self.pyproject.project.get("urls") or {}
+        if url := projectlayout.repository_url_from_urls(urls):
+            return url
         if url := self.git.repo_url:
             return url
         if url := self.info.repository_url:
@@ -158,11 +192,6 @@ class FolderInfo:
         if url := self.mkdocs_config.get("site_url"):
             return f"{url.rstrip('/')}/objects.inv"
         return None
-
-    @functools.cached_property
-    def package_name(self) -> str:
-        """Return name of the package."""
-        return self.info.package_name
 
     @functools.cached_property
     def package_repos(self) -> list[installmethods.InstallMethod]:
@@ -232,7 +261,7 @@ class FolderInfo:
         result.append(
             dict(
                 icon="fa-brands:python",
-                link=f"https://pypi.org/project/{self.module.__name__}/",
+                link=f"https://pypi.org/project/{self.distribution_name}/",
             ),
         )
         return result
@@ -258,6 +287,8 @@ class FolderInfo:
             description=self.info.description,
             summary=self.info.summary,
             authors=self.info.authors,
+            package_name=self.package_name,
+            package_names=self.package_names,
             module=self.module,
             griffe_module=self.griffe_module,
             urls=self.info.urls,
