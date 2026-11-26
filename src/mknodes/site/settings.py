@@ -28,6 +28,8 @@ if TYPE_CHECKING:
 
     import jinjarope
 
+    from mknodes.inputs import InputStore
+
 
 CONFIG_NAMES = ("mkdocs.yml", "mkdocs.yaml")
 GENERATED_CONFIG = "mkdocs.generated.yml"
@@ -79,6 +81,13 @@ class GeneratorSettings:
     for `sphinx`: the Sphinx source folder (default `sphinx`), for `docsify`: the site
     folder (default: `site_dir`).
     """
+    lock_file: str = "mknodes.lock"
+    """Lock file for external inputs (icons, licenses, LLM texts), relative to the project
+    dir. Empty: no lock file. See `mknodes.inputs`."""
+    inputs_mode: str = "live"
+    """How external inputs get resolved: `live` (lock file first, fetch + add missing
+    ones), `refresh` (fetch all again, prune unused lock entries) or `offline` (lock
+    file only, missing inputs are an error)."""
     generated_config: str = GENERATED_CONFIG
     """Filename of the generated site config (relative to the project dir)."""
     site_dir: str | None = None
@@ -116,6 +125,23 @@ class GeneratorSettings:
         if self.generated_dir:
             return self.project_dir / self.generated_dir
         return self.resolved_docs_dir
+
+    @property
+    def lock_path(self) -> pathlib.Path | None:
+        return self.project_dir / self.lock_file if self.lock_file else None
+
+    @functools.cached_property
+    def input_store(self) -> InputStore:
+        """The store for external inputs (configured lock file / mode), one per settings.
+
+        Shared by the generator (nodes) and the writer (page icons).
+        """
+        from mknodes.inputs import MODES, InputStore
+
+        if self.inputs_mode not in MODES:
+            msg = f"Invalid inputs_mode {self.inputs_mode!r} (one of {', '.join(MODES)})"
+            raise ValueError(msg)
+        return InputStore(self.lock_path, mode=self.inputs_mode)  # type: ignore[arg-type]
 
     @property
     def generated_config_path(self) -> pathlib.Path:

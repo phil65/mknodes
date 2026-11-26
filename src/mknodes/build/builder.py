@@ -18,7 +18,10 @@ from mknodes.utils import diagnostics, log, resources
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     import mknodes as mk
+    from mknodes.inputs import InputRequest, InputStore
 
 
 logger = log.get_logger(__name__)
@@ -41,6 +44,25 @@ async def _render_page_jinja(page: mk.MkPage, md: str) -> str:
     if not env.keep_trailing_newline and md.endswith("\n"):
         md = md[:-1]
     return md.replace("\n", env.newline_sequence)
+
+
+async def resolve_inputs(nodes: Iterable[mk.MkNode]) -> None:
+    """Resolve the external inputs requested by given nodes (per inputs store).
+
+    Nodes whose requests can't be computed are skipped (they fail when rendering).
+    """
+    stores: dict[int, tuple[InputStore, list[InputRequest]]] = {}
+    for node in nodes:
+        try:
+            requests = node.get_input_requests()
+        except Exception as e:  # noqa: BLE001
+            logger.debug("Could not get input requests of %r: %s", node, e)
+            continue
+        if requests:
+            store = node.ctx.inputs
+            stores.setdefault(id(store), (store, []))[1].extend(requests)
+    for store, requests in stores.values():
+        await store.resolve(requests)
 
 
 @dataclasses.dataclass
@@ -126,6 +148,8 @@ class DocBuilder:
                     pages.append(page)
                 case mk.MkNav() as nav:
                     navs.append(nav)
+        # Resolve phase: fetch the external inputs of all nodes concurrently.
+        await resolve_inputs(node for _, node in all_nodes)
         # Nav templates first: pages inherit the template reference of their navs.
         for nav in navs:
             pagetemplates.update_nav_template(nav)

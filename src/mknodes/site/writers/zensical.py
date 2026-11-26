@@ -297,7 +297,7 @@ class ZensicalWriter(Writer):
         folder = GeneratedFolder(gen_dir, owned=mirror)
         if mirror:
             self._mirror_docs(docs_dir, folder, output)
-        icons = IconResolver(bundled=bundled_icons_dir(self.theme_package))
+        icons = IconResolver(fetch=self._fetch_icon, bundled=bundled_icons_dir(self.theme_package))
         pages = {path: icons.update_page(md) for path, md in output.pages.items()}
         social = icons.update_social(output.metadata.social)
         for path, content in {**output.assets, **pages}.items():
@@ -322,6 +322,18 @@ class ZensicalWriter(Writer):
         )
         self.folder = folder
         return cfg_path
+
+    def _fetch_icon(self, key: str) -> str | None:
+        """Return the SVG of an Iconify key from the inputs store (lock file)."""
+        from mknodes.inputs import MissingInputError
+
+        try:
+            return self.settings.input_store.get("icon", icon=key) or None
+        except MissingInputError:
+            raise
+        except Exception:  # noqa: BLE001
+            logger.warning("Could not fetch icon %s", key)
+            return None
 
     def _write_templates(self, templates: dict[str, str]) -> str | None:
         """Write theme template overrides (and icons) into the theme's custom_dir."""

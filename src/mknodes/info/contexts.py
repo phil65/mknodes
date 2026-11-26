@@ -11,6 +11,7 @@ import jinjarope
 import mknodes as mk
 from mknodes.data import buildsystems
 from mknodes.info import linkprovider, packageregistry, pyproject
+from mknodes.inputs import InputStore
 from mknodes.utils import log, superdict
 
 
@@ -325,6 +326,8 @@ class ProjectContext(Context):
     env_config: jinjarope.EnvConfig = dataclasses.field(
         default_factory=lambda: jinjarope.EnvConfig(loader=DEFAULT_LOADER)
     )
+    inputs: InputStore = dataclasses.field(default_factory=InputStore)
+    """Resolved external inputs (icons, licenses, git data, ...), see `mknodes.inputs`."""
     # resources: Resources = dataclasses.field(default_factory=Resources)
     # pyproject: pyproject.PyProject = dataclasses.field(
     #     default_factory=pyproject.PyProject,
@@ -340,6 +343,7 @@ class ProjectContext(Context):
         use_directory_urls: bool = True,
         theme: ThemeContext | None = None,
         env_config: jinjarope.EnvConfig | None = None,
+        inputs: InputStore | None = None,
     ) -> ProjectContext:
         """Create the context for a project (local folder or remote repository URL).
 
@@ -352,6 +356,7 @@ class ProjectContext(Context):
             use_directory_urls: Whether pages are served as `page/` instead of `page.html`
             theme: Theme context (default: an empty one)
             env_config: Jinja environment config (default: templates from `docs/`)
+            inputs: Store for external inputs (default: in memory, no lock file)
         """
         from mknodes.info import folderinfo as fi, reporegistry
 
@@ -373,6 +378,7 @@ class ProjectContext(Context):
             theme=theme or ThemeContext(),
             links=links,
             env_config=env_config or jinjarope.EnvConfig(loader=DEFAULT_LOADER),
+            inputs=inputs or InputStore(),
         )
 
     async def populate_linkprovider(self) -> None:

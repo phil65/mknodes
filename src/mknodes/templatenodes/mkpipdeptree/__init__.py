@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import asyncio
 import functools
 import types
 
 from typing import Any, Literal
 
+from mknodes import inputs
 from mknodes.basenodes import mkdiagram
 from mknodes.utils import helpers, log, resources
 
@@ -95,10 +95,14 @@ class MkPipDepTree(mkdiagram.MkDiagram):
             case _:
                 return self._package
 
+    def _tree_params(self) -> dict[str, Any]:
+        return dict(package=self.package, local_only=self.local_only, user_only=self.user_only)
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        return [inputs.InputRequest.create("pipdeptree", **self._tree_params())]
+
     async def get_mermaid_code(self) -> str:
-        return await asyncio.to_thread(
-            get_mermaid, self.package, local_only=self.local_only, user_only=self.user_only
-        )
+        return await self.ctx.inputs.aget("pipdeptree", **self._tree_params())
 
 
 if __name__ == "__main__":

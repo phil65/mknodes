@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from mknodes.basenodes import mktext
-from mknodes.info import license as lic
+from mknodes import inputs
 from mknodes.utils import log
 
 
@@ -31,10 +31,15 @@ class MkLicense(mktext.MkText):
         super().__init__(**kwargs)
         self.license_type = license_type
 
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        if not self.license_type:
+            return []
+        return [inputs.InputRequest.create("license", name=self.license_type)]
+
     async def get_text(self) -> str:
         if self.license_type:
-            obj = await lic.License.from_name(self.license_type)
-            return obj.content
+            data = await self.ctx.inputs.aget("license", name=self.license_type)
+            return data["content"]
         return self.ctx.metadata.license_text or ""
 
 

@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     import types
 
     from mknodes.data import datatypes
+    from mknodes import inputs
     import mknodes as mk
 
 
@@ -447,6 +448,14 @@ class MkNode:
         from mknodes.pages import toc
 
         return toc.get_toc(await self.to_markdown())
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        """Return the external inputs this node needs to render (none by default).
+
+        The builder resolves the inputs of all nodes concurrently before rendering;
+        the node reads them from `self.ctx.inputs`.
+        """
+        return []
 
     async def to_md_unprocessed(self) -> str:
         """Return raw markdown for this node. Override in subclasses for custom markdown."""

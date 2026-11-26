@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import inspect
 import pathlib
 import re
@@ -11,7 +12,7 @@ import urllib.parse
 from anyenv import run_sync
 
 import mknodes as mk
-from mknodes import rendering
+from mknodes import inputs, rendering
 from mknodes.build import DocBuilder, refcheck
 from mknodes.info import contexts
 from mknodes.jinja import rendercache
@@ -20,8 +21,11 @@ from mknodes.utils import diagnostics, linkreplacer, log
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from mknodes.build import BuildOutput, NavItem
     from mknodes.build.refcheck import RefIssue
+    from mknodes.inputs import InputStore
     from mknodes.site.settings import GeneratorSettings
 
 
@@ -76,6 +80,25 @@ def resolve_url_collisions(output: BuildOutput) -> None:
     rename(output.nav)
 
 
+@contextlib.contextmanager
+def use_inputs(store: InputStore) -> Iterator[None]:
+    """Make given inputs store the one of the build.
+
+    Active store for code without a node context (themes, icon helpers), and the store of
+    the fallback context (nodes which are not part of the tree, like rendered examples).
+    """
+    from mknodes.basenodes import mknode
+
+    fallback = mknode.get_fallback_ctx()
+    old = fallback.inputs
+    fallback.inputs = store
+    try:
+        with inputs.use_store(store):
+            yield
+    finally:
+        fallback.inputs = old
+
+
 class SiteGenerator:
     """Runs the configured build function and returns an engine-neutral `BuildOutput`."""
 
@@ -103,6 +126,7 @@ class SiteGenerator:
             use_directory_urls=site_cfg.get("use_directory_urls", True),
             theme=theme.context,
             env_config=self.settings.get_jinja_config(),
+            inputs=self.settings.input_store,
         )
 
     def generate(self) -> BuildOutput:
@@ -114,7 +138,7 @@ class SiteGenerator:
         Setup and the build function run synchronously (nodes may
         do blocking I/O on creation), only the collection step runs in an event loop.
         """
-        with diagnostics.collect() as collected:
+        with diagnostics.collect() as collected, use_inputs(self.settings.input_store):
             output = self._generate()
         output.diagnostics = list(collected)
         return output
@@ -148,6 +172,8 @@ class SiteGenerator:
             global_resources=self.settings.global_resources,
         )
         output = run_sync(builder.build(root, theme))
+        logger.info("Inputs: %s", ", ".join(f"{k} {v}" for k, v in ctx.inputs.stats().items()))
+        ctx.inputs.save()
         resolve_url_collisions(output)
         self.replace_links(output)
         self.check_references(output, root)

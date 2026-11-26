@@ -11,7 +11,8 @@ environment variable is set, otherwise in the platform's user cache directory
 Lookups are resolved without network access, so a build with all icons cached
 works offline. Icons are fetched correctly from sync code as well as from inside a
 running event loop; async code should use [get_icon_svg_async][] (it does not block
-the loop).
+the loop). During a site build, [get_icon_svg][] reads from the active inputs store
+(`mknodes.inputs`, lock file), which fetches via [fetch_icon_svg][].
 """
 
 from __future__ import annotations
@@ -158,7 +159,7 @@ def _store(path: pathlib.Path, svg: str) -> None:
         _write(path, svg)
 
 
-async def get_icon_svg_async(
+async def fetch_icon_svg_async(
     icon: str,
     color: str | None = None,
     height: str | int | None = None,
@@ -167,7 +168,7 @@ async def get_icon_svg_async(
     rotate: Rotation | None = None,
     box: bool | None = None,
 ) -> str:
-    """Async version of [get_icon_svg][mknodes.utils.iconcache.get_icon_svg].
+    """Async version of [fetch_icon_svg][mknodes.utils.iconcache.fetch_icon_svg].
 
     Icons missing from the cache are fetched in a worker thread, so the event loop
     keeps running.
@@ -194,7 +195,7 @@ async def get_icon_svg_async(
     return label
 
 
-def get_icon_svg(
+def fetch_icon_svg(
     icon: str,
     color: str | None = None,
     height: str | int | None = None,
@@ -203,7 +204,7 @@ def get_icon_svg(
     rotate: Rotation | None = None,
     box: bool | None = None,
 ) -> str:
-    """Return svg for given icon, using the on-disk icon cache.
+    """Return svg for given icon, using the on-disk icon cache (not the inputs store).
 
     Drop-in replacement for ``jinjarope.iconfilters.get_icon_svg``: accepts the same
     icon specs ("mdi:file", "material/file", ":material-file:", "file") and
@@ -229,3 +230,67 @@ def get_icon_svg(
             _store(path, svg)
         label += svg
     return label
+
+
+def get_icon_svg(
+    icon: str,
+    color: str | None = None,
+    height: str | int | None = None,
+    width: str | int | None = None,
+    flip: Flip | None = None,
+    rotate: Rotation | None = None,
+    box: bool | None = None,
+) -> str:
+    """Return svg for given icon.
+
+    During a site build the icon comes from the active inputs store (lock file, see
+    `mknodes.inputs`), otherwise from [fetch_icon_svg][mknodes.utils.iconcache.fetch_icon_svg]
+    (on-disk cache, fetched if missing).
+
+    Args:
+        icon: Icon spec(s) ("mdi:file", "material/file", ":material-file:", "a|b")
+        color: Icon color. Replaces currentColor with specific color.
+        height: Icon height
+        width: Icon width
+        flip: Flip icon
+        rotate: Rotate icon. If an integer is provided, it is assumed to be in degrees.
+        box: Add an empty rectangle matching the icon's viewBox
+    """
+    from mknodes import inputs
+
+    params: dict[str, Any] = dict(
+        color=color, height=height, width=width, flip=flip, rotate=rotate, box=box
+    )
+    if (store := inputs.active_store()) is not None:
+        return store.get("icon", icon=icon, **params)
+    return fetch_icon_svg(icon, **params)
+
+
+async def get_icon_svg_async(
+    icon: str,
+    color: str | None = None,
+    height: str | int | None = None,
+    width: str | int | None = None,
+    flip: Flip | None = None,
+    rotate: Rotation | None = None,
+    box: bool | None = None,
+) -> str:
+    """Async version of [get_icon_svg][mknodes.utils.iconcache.get_icon_svg].
+
+    Args:
+        icon: Icon spec(s) ("mdi:file", "material/file", ":material-file:", "a|b")
+        color: Icon color. Replaces currentColor with specific color.
+        height: Icon height
+        width: Icon width
+        flip: Flip icon
+        rotate: Rotate icon. If an integer is provided, it is assumed to be in degrees.
+        box: Add an empty rectangle matching the icon's viewBox
+    """
+    from mknodes import inputs
+
+    params: dict[str, Any] = dict(
+        color=color, height=height, width=width, flip=flip, rotate=rotate, box=box
+    )
+    if (store := inputs.active_store()) is not None:
+        return await store.aget("icon", icon=icon, **params)
+    return await fetch_icon_svg_async(icon, **params)

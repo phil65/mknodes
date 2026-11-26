@@ -20,6 +20,7 @@ from mknodes.utils import diagnostics, log
 
 if TYPE_CHECKING:
     from mknodes.build import BuildOutput
+    from mknodes.inputs import MissingInputError
     from mknodes.site.writers import Writer
 
 
@@ -47,6 +48,13 @@ FLAVOR_HELP = (
 )
 WATCH_HELP = "Keep running and regenerate when project sources change."
 GEN_DIR_HELP = "Folder for generated pages (default: the docs dir)."
+OFFLINE_HELP = (
+    "Take external inputs (icons, licenses, LLM texts) only from the lock file "
+    "(`mknodes.lock`): fail if one is missing, never write the lock file."
+)
+REFRESH_HELP = (
+    "Fetch all external inputs again and rewrite the lock file with exactly the used ones."
+)
 SITE_DIR_CMDS = "-d", "--site-dir"
 BUILD_CMS = "-b", "--build-fn"
 DEPTH_CMDS = "-c", "--clone-depth"
@@ -71,6 +79,22 @@ def check_engine(value: str) -> str:
     return value
 
 
+def _offline_option() -> Any:
+    return t.Option(False, "--offline", help=OFFLINE_HELP)
+
+
+def _refresh_option() -> Any:
+    return t.Option(False, "--refresh-inputs", help=REFRESH_HELP)
+
+
+def _inputs_mode(offline: bool, refresh: bool) -> str | None:
+    """Return the `inputs_mode` setting for the CLI flags (None: keep the configured)."""
+    if offline and refresh:
+        msg = "--offline and --refresh-inputs can't be combined."
+        raise t.BadParameter(msg)
+    return "offline" if offline else "refresh" if refresh else None
+
+
 def _engine_option() -> Any:
     return t.Option(DEFAULT_ENGINE, *ENGINE_CMDS, help=ENGINE_HELP, callback=check_engine)
 
@@ -85,6 +109,8 @@ def build(
     strict: bool = t.Option(None, *STRICT_CMDS, help=STRICT_HELP, show_default=False),
     engine: str = _engine_option(),
     flavor: str = t.Option(None, *FLAVOR_CMDS, help=FLAVOR_HELP, show_default=False),
+    offline: bool = _offline_option(),
+    refresh_inputs: bool = _refresh_option(),
     _verbose: bool = verbose_option(),
     _quiet: bool = quiet_option(),
 ):
@@ -109,6 +135,7 @@ def build(
         site_dir=site_dir,
         flavor=flavor,
         strict=strict,
+        inputs_mode=_inputs_mode(offline, refresh_inputs),
     )
     _ensure_available(settings, engine)
     writer, output = _generate(settings, engine)
@@ -153,6 +180,8 @@ def serve(
     config_path: str = t.Option(paths.CFG_DEFAULT, *CFG_PATH_CMDS, help=CFG_PATH_HELP),
     engine: str = _engine_option(),
     flavor: str = t.Option(None, *FLAVOR_CMDS, help=FLAVOR_HELP, show_default=False),
+    offline: bool = _offline_option(),
+    refresh_inputs: bool = _refresh_option(),
     _verbose: bool = verbose_option(),
     _quiet: bool = quiet_option(),
 ):
@@ -171,6 +200,7 @@ def serve(
         repo_path=repo_path,
         clone_depth=clone_depth,
         flavor=flavor,
+        inputs_mode=_inputs_mode(offline, refresh_inputs),
     )
     settings = _load_settings(**opts)
     _ensure_available(settings, engine)
@@ -206,6 +236,8 @@ def generate(
     generated_dir: str = t.Option(None, "--generated-dir", help=GEN_DIR_HELP),
     watch: bool = t.Option(False, "-w", "--watch", help=WATCH_HELP),
     strict: bool = t.Option(None, *STRICT_CMDS, help=STRICT_HELP, show_default=False),
+    offline: bool = _offline_option(),
+    refresh_inputs: bool = _refresh_option(),
     _verbose: bool = verbose_option(),
     _quiet: bool = quiet_option(),
 ):
@@ -228,6 +260,7 @@ def generate(
         clone_depth=clone_depth,
         generated_dir=generated_dir,
         flavor=flavor,
+        inputs_mode=_inputs_mode(offline, refresh_inputs),
     )
     settings = _load_settings(**opts, strict=strict)
     _writer, output = _generate(settings, engine)
@@ -284,12 +317,35 @@ def _ensure_available(settings: GeneratorSettings, engine: str) -> None:
 
 def _generate(settings: GeneratorSettings, engine: str) -> tuple[Writer, BuildOutput]:
     from mknodes.site import generate_output
+    from mknodes.site.generator import use_inputs
 
     writer = _create_writer(settings, engine)
-    output = generate_output(settings, flavor=writer.get_renderer())
-    cfg_path = writer.write(output)
+    try:
+        output = generate_output(settings, flavor=writer.get_renderer())
+        with use_inputs(settings.input_store):
+            cfg_path = writer.write(output)
+    except Exception as e:
+        if (missing := _missing_input_error(e)) is None:
+            raise
+        logger.error("%s", missing)  # noqa: TRY400
+        raise t.Exit(1) from None
+    settings.input_store.save()  # the writer may have added inputs (page icons)
     logger.info("Generated %s pages, config: %s", len(output.pages), cfg_path)
     return writer, output
+
+
+def _missing_input_error(error: BaseException) -> MissingInputError | None:
+    """Return the `MissingInputError` causing given error (templates wrap errors)."""
+    from mknodes.inputs import MissingInputError
+
+    seen: set[int] = set()
+    current: BaseException | None = error
+    while current is not None and id(current) not in seen:
+        if isinstance(current, MissingInputError):
+            return current
+        seen.add(id(current))
+        current = current.__cause__ or current.__context__
+    return None
 
 
 def _generate_args(engine: str, **opts: Any) -> list[str]:
@@ -303,6 +359,11 @@ def _generate_args(engine: str, **opts: Any) -> list[str]:
     }
     args = ["--engine", engine]
     for key, value in opts.items():
-        if value is not None:
-            args += [names[key], str(value)]
+        if value is None:
+            continue
+        if key == "inputs_mode":
+            # Regenerating never refreshes again: the first run did.
+            args += ["--offline"] if value == "offline" else []
+            continue
+        args += [names[key], str(value)]
     return args

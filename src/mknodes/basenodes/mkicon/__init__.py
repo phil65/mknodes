@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from mknodes import inputs
 from mknodes.basenodes import mknode
-from mknodes.utils import iconcache, log
+from mknodes.utils import log
 
 
 if TYPE_CHECKING:
@@ -72,19 +73,26 @@ class MkIcon(mknode.MkNode):
             box=self.box,
         )
 
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        return [inputs.InputRequest.create("icon", icon=self.icon_name, **self._svg_params())]
+
     @property
     def svg(self) -> str:
-        """The icon SVG (blocking fetch if not cached, async code should use `get_svg`)."""
+        """The icon SVG (from the inputs store, fetched now if it is not there yet)."""
         try:
-            return iconcache.get_icon_svg(self.icon_name, **self._svg_params())
+            return self.ctx.inputs.get("icon", icon=self.icon_name, **self._svg_params())
+        except inputs.MissingInputError:
+            raise
         except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)
             return ""
 
     async def get_svg(self) -> str:
-        """Return the icon SVG, fetching it without blocking the event loop."""
+        """Return the icon SVG (from the inputs store, fetched now if it is not there yet)."""
         try:
-            return await iconcache.get_icon_svg_async(self.icon_name, **self._svg_params())
+            return await self.ctx.inputs.aget("icon", icon=self.icon_name, **self._svg_params())
+        except inputs.MissingInputError:
+            raise
         except Exception:  # noqa: BLE001
             logger.warning("Could not find icon %r", self.icon_name)
             return ""

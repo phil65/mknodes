@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, TYPE_CHECKING
 from upathtools import to_upath
 
+from mknodes import inputs
 from mknodes.basenodes import mktext
 from mknodes.utils import log, resources
 from anyio import functools as anyio_functools
@@ -91,26 +92,30 @@ class MkLlm(mktext.MkText):
 
         return context_items
 
+    def _llm_params(self) -> dict[str, Any]:
+        context_items = self._process_extra_files()
+        combined_context = "\n".join(filter(None, [self._context, *context_items]))
+        return dict(
+            user_prompt=self.user_prompt,
+            system_prompt=self.system_prompt or "",
+            model=self._model,
+            context=combined_context,
+        )
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        return [inputs.InputRequest.create("llm", **self._llm_params())]
+
     async def get_text(self) -> str:
-        """Generate text using the LLM.
+        """Generate text using the LLM (pinned in the lock file of the inputs store).
 
         Returns:
             Generated text content.
         """
-        context_items = self._process_extra_files()
-        combined_context = "\n".join(filter(None, [self._context, *context_items])) or None
         try:
-            import agentpool.functional  # noqa: F401
-        except ImportError as e:  # optional extra (`mknodes[llm]`), missing or broken
-            logger.warning("MkLlm: agentpool unavailable (%s), using a placeholder", e)
+            return await self.ctx.inputs.aget("llm", **self._llm_params())
+        except inputs.InputUnavailableError as e:
+            logger.warning("MkLlm: %s, using a placeholder", e)
             return UNAVAILABLE_TEXT
-
-        return await complete_llm(
-            self.user_prompt,
-            self.system_prompt or "",
-            model=self._model,
-            context=combined_context or "",
-        )
 
 
 if __name__ == "__main__":

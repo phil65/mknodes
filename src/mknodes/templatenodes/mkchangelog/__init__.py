@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import contextlib
 import functools
 import io
@@ -9,6 +8,7 @@ from typing import Any, Literal, TYPE_CHECKING
 
 import git_changelog
 
+from mknodes import inputs
 from mknodes.basenodes import mktext
 from mknodes.utils import helpers, log, resources
 
@@ -103,20 +103,25 @@ class MkChangelog(mktext.MkText):
             case _:
                 return self._repository
 
-    async def get_text(self) -> str:
+    def _changelog_params(self) -> dict[str, Any]:
         filter_commits = None
         if self._repository is None and (
             cfg := self.ctx.metadata.pyproject_file.tool.get("git-changelog")
         ):
             filter_commits = cfg.get("filter-commits")
-        return await asyncio.to_thread(
-            get_changelog,
+        return dict(
             repository=str(self.repository),
             template=self.template,
             convention=self.convention,
-            sections=tuple(self.sections) if self.sections else None,
+            sections=list(self.sections) if self.sections else None,
             filter_commits=filter_commits,
         )
+
+    def get_input_requests(self) -> list[inputs.InputRequest]:
+        return [inputs.InputRequest.create("changelog", **self._changelog_params())]
+
+    async def get_text(self) -> str:
+        return await self.ctx.inputs.aget("changelog", **self._changelog_params())
 
 
 if __name__ == "__main__":
